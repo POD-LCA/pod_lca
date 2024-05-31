@@ -8,7 +8,7 @@ for i in range(50): print('')
 
 
 
-main = os.path.join(pod_lca.DATA, 'Ethan_Concrete_Mix')
+main = os.path.join(pod_lca.TEMP, 'Ethan_Concrete_Mix')
 
 # # Flows - - - - - -
 
@@ -28,38 +28,72 @@ main = os.path.join(pod_lca.DATA, 'Ethan_Concrete_Mix')
 
 # processes - - - - 
 
-folder = os.path.join(main, 'processes')
-file = '0a0cd095-925f-367c-a0d8-57e82fe24916.json'
+# folder = os.path.join(main, 'processes')
+# file = '0a0cd095-925f-367c-a0d8-57e82fe24916.json'
 
-filepath = os.path.join(folder, file)
+# filepath = os.path.join(folder, file)
 
-with open(filepath, 'r') as fp:
-    data = json.load(fp)
+# with open(filepath, 'r') as fp:
+#     data = json.load(fp)
 
-for k in data:
-    print(k)
-    print('')
+# for k in data:
+#     print(k)
+#     print('')
 
-data = data['exchanges']
-for k in data:
-    print(k)
-    print('')
+# data = data['exchanges']
+# for k in data:
+#     print(k)
+#     print('')
 
 
 
 
 # product systems - - - - 
 
-# folder = os.path.join(main,'product_systems')
-# file = 'c66b5fa6-e289-4b5e-8fe4-a088e2cc2201.json'
-# filepath = os.path.join(folder, file)
+folder = os.path.join(main,'product_systems')
+file = 'c66b5fa6-e289-4b5e-8fe4-a088e2cc2201.json'
+filepath = os.path.join(folder, file)
 
-# with open(filepath, 'r') as fp:
-#     data = json.load(fp)
+with open(filepath, 'r') as fp:
+    data = json.load(fp)
 
-# # for k in data:
-# #     print(k)
-# #     print('')
+# for k in data:
+#     print(k)
+#     print('')
+
+# print(data['targetUnit'])
+
+
+folder_dict = {'Process': 'processes', 'Result': 'results'}
+
+processes = data['processes']
+
+# indices = [1]
+indices = range(len(processes))
+
+for i in indices:
+    print(i)
+    # print(processes[i].keys())
+    id = processes[i]['@id']
+    type = processes[i]['@type']
+    name = processes[i]['name']
+    # ok = processes[i]['location']
+    # print(ok)
+
+
+
+    filepath = os.path.join(main, folder_dict[type], '{}.json'.format(id))
+    with open(filepath, 'r') as fp:
+        data_ = json.load(fp)
+    print('')
+    id = data_['@id']
+    type = data_['@type']
+    print(type, id)
+    # print(data_['exchanges'])
+
+
+
+
 
 # i = 2288
 # data = data['processes']
