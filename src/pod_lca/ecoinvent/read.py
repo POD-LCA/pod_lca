@@ -27,6 +27,8 @@ def create_ecoinvent_maps(path):
 
 if __name__ == '__main__':
 
+    # TODO: How dies TRACI relate to Ecoinvent? Does it?
+
     for i in range(50): print('')
 
     # path = os.path.join(pod_lca.TEMP, 'ecoinvent_391_en15804gd_upr_n2_20230629')
@@ -38,7 +40,7 @@ if __name__ == '__main__':
     pro1 = 'cement production, Portland | cement, Portland | EN15804, U'
     pro2 = 'gravel production, crushed | gravel, crushed | EN15804, U'
 
-    file = pro_map[pro2] + '.json'
+    file = pro_map[pro1] + '.json'
     fp = os.path.join(pod_lca.TEMP, 'ecoinvent_391_en15804gd_upr_n2_20230629', 'processes', file)
     with open(fp, 'r') as fp:
         data = json.load(fp)
@@ -47,4 +49,13 @@ if __name__ == '__main__':
         print(k)
         print('')
 
-    print(data['exchanges'])
+    print(data['processDocumentation'])
+
+    # for i in range(10):
+    #     for k in data['exchanges'][i]:
+    #         print(k, data['exchanges'][i][k])
+    #         print('')
+    #     print('')
+    #     print('')
+    #     print('')
+    
