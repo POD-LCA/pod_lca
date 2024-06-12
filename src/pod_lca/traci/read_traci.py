@@ -13,10 +13,7 @@ __version__ = "0.1.0"
 all = []
 
 
-def read_traci_categories(path):
-    path = os.path.join(path, 'lcia_methods')
-    file = 'ed2353f9-9db5-32b0-b6a8-7bf29f6f46c8.json'
-    filepath = os.path.join(path, file)
+def read_traci_categories(filepath):
     with open(filepath, 'r') as fp:
         traci = json.load(fp)
 
@@ -30,21 +27,15 @@ def read_traci_categories(path):
 
     return category_dict
 
-def lookup_impact(category, id, category_dict):
-    path = os.path.join(pod_lca.TEMP, 'TRACI_2.1_json_v1.0.0', 'lcia_categories')
-    file = '{}.json'.format(category_dict[category]['id'])
-    filepath = os.path.join(path, file)
-    
-    with open(filepath, 'r') as fp:
-        traci = json.load(fp)
-    ifacts = traci['impactFactors']
-    # print(len(ifacts))
-
-    i = 17
-    for k in ifacts[i]:
-        print(k)
-        print(ifacts[i][k])
-        print('')
+def read_traci_impacts(cpath, category_dict):
+    traci = {}
+    for ck in category_dict:
+        file = '{}.json'.format(category_dict[ck]['id'])
+        filepath = os.path.join(cpath, file)
+        with open(filepath, 'r') as fp:
+            traci_impact = json.load(fp)
+        traci[ck] = traci_impact
+    return traci
         
 
 
@@ -56,10 +47,10 @@ if __name__ == '__main__':
     for i in range(50): print('')
     path = os.path.join(pod_lca.TEMP, 'TRACI_2.1_json_v1.0.0')
     category_dict = read_traci_categories(path)
-    # print(category_dict.keys())
+    print(category_dict.keys())
 
-    category = 'Global warming'
-    # category = 'Smog formation'
-    lookup_impact(category, id, category_dict)
+    # category = 'Global warming'
+    # # category = 'Smog formation'
+    # lookup_impact(category, id, category_dict)
 
     # print(category_dict[category])
