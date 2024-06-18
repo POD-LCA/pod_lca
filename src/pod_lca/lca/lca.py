@@ -15,6 +15,7 @@ from pod_lca.traci import read_traci_categories
 from pod_lca.traci import read_traci_impacts
 
 
+
 class LCA(object):
     def __init__(self):
         self.graph              = {}
@@ -58,6 +59,22 @@ class LCA(object):
         impact_categories = read_traci_categories(os.path.join(mpath, filename))
         self.traci = read_traci_impacts(cpath, impact_categories)
 
+    def compute_elementary_flow_impacts(self, process_name):
+        for k in lca.graph[process_name]:
+            fn = lca.graph[process_name][k]['flow_name']
+            ft  = lca.graph[process_name][k]['flow_type']
+            fid = lca.graph[process_name][k]['flow_id']
+            # print(ft)
+            for impact_cat_k in lca.traci:
+                if ft == 'ELEMENTARY_FLOW':
+                    # print(fn)
+                    if fid in lca.traci[impact_cat_k]:
+                        impact = lca.traci[impact_cat_k][fid]
+                    else:
+                        impact = 0
+                    print(impact_cat_k)
+                    print(fn, impact)
+                    print('')
 
 if __name__ == '__main__':
     
@@ -65,17 +82,17 @@ if __name__ == '__main__':
 
     lca = LCA()
     lca.ecoinvent_path = os.path.join(pod_lca.TEMP, 'ecoinvent_391_en15804gd_upr_n2_20230629')
-    lca.traci_path = os.path.join(pod_lca.TEMP, 'TRACI_2.1_json_v1.0.0')
+    # lca.traci_path = os.path.join(pod_lca.TEMP, 'TRACI_2.1_json_v1.0.0')
     lca.read_ecoinvent_maps()
+    # lca.read_ecoinvent_lcia()
 
     process_name = 'cement production, Portland | cement, Portland | EN15804, U'
     lca.run_ecoinvent_process(process_name)
-    lca.read_traci_impacts()
+    
 
-    for k in lca.graph[process_name]:
-        ft  = lca.graph[process_name][k]['flow_type']
-        fid = lca.graph[process_name][k]['flow_id']
-        if ft == 'ELEMENTARY_FLOW':
-            flow_id = lca.graph[process_name]
-            impact = lca.traci['Global warming'][fid]
-            print(impact)
+
+
+    # lca.read_traci_impacts()  #TODO: THIS NEEDS TO BE REPLACED WITH A ECOINVENT METHODS, METHOD
+    # lca.compute_elementary_flow_impacts(process_name)
+    # print(type(lca.traci['Global warming']))
+

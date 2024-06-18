@@ -34,7 +34,12 @@ def read_traci_impacts(cpath, category_dict):
         filepath = os.path.join(cpath, file)
         with open(filepath, 'r') as fp:
             traci_impact = json.load(fp)
-        traci[ck] = traci_impact
+        traci_dict = {}
+        # print(traci_impact['impactFactors'][0].keys())
+        for impf in traci_impact['impactFactors']:
+            iid = impf['flow']['@id']
+            traci_dict[iid] = impf
+        traci[ck] = traci_dict
     return traci
         
 
