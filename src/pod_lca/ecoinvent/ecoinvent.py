@@ -11,21 +11,28 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 def create_ecoinvent_maps(path):
-    folders = ['processes',
-               'flows',
-               'flow_properties',
-               'flow_properties',]
+    # folders = ['processes',
+    #            'flows',
+    #            'flow_properties',
+    #            'flow_properties',]
+
+    folders = ['processes']
 
     for folder in folders:
         path_ = os.path.join(path, folder)
         files = os.listdir(path_)
+        # print(len(files))
         map = {}
         for file in files:
             with open(os.path.join(path_, file), 'r') as fp:
                 data = json.load(fp)
+            # print(data.keys())
             name = data['name']
-            map[name] = os.path.splitext(file)[0]
-
+            if name in map:
+                map[name].append(os.path.splitext(file)[0])
+            else:
+                map[name] = [os.path.splitext(file)[0]]
+        # print(len(map))
         with open(os.path.join(pod_lca.DATA, 'maps', 'ecoinvent_{}_map.json'.format(folder)), 'w') as f:
             json.dump(map, f)
 
@@ -54,19 +61,19 @@ if __name__ == '__main__':
 
     # LCIA ---------------------------------------------------------------------
 
-    path = os.path.join(pod_lca.TEMP, 'ecoinvent_3_9_1_LCIA_Methods_openLCA_2_(1)')
-    category_dict = create_ecoinvent_maps_lcia_maps(path)
-    for k in category_dict:
-        print(k)
-        print(category_dict[k])
-        print('')
+    # path = os.path.join(pod_lca.TEMP, 'ecoinvent_3_9_1_LCIA_Methods_openLCA_2_(1)')
+    # category_dict = create_ecoinvent_maps_lcia_maps(path)
+    # for k in category_dict:
+    #     print(k)
+    #     print(category_dict[k])
+    #     print('')
 
 
 
     # # CREATE MAP ---------------------------------------------------------------
 
-    # # path = os.path.join(pod_lca.TEMP, 'ecoinvent_391_en15804gd_upr_n2_20230629')
-    # # create_ecoinvent_maps(path)
+    path = os.path.join(pod_lca.TEMP, 'ecoinvent_391_en15804gd_upr_n2_20230629')
+    create_ecoinvent_maps(path)
 
     # # OPEN JSON FILES FROM MAPS ------------------------------------------------
 
