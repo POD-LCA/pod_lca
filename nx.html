@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 1000px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "gravel production, crushed | gravel, crushed | EN15804, U", "label": "gravel production, crushed | gravel, crushed | EN15804, U", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "0-gravel, crushed", "label": "0-gravel, crushed", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1-gravel/sand quarry infrastructure", "label": "1-gravel/sand quarry infrastructure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-Particulate Matter, \u003c 2.5 um", "label": "2-Particulate Matter, \u003c 2.5 um", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3-diesel, burned in building machine", "label": "3-diesel, burned in building machine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4-Water, unspecified natural origin", "label": "4-Water, unspecified natural origin", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-Particulate Matter, \u003e 10 um", "label": "5-Particulate Matter, \u003e 10 um", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "6-electricity, medium voltage", "label": "6-electricity, medium voltage", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "7-Transformation, from unspecified", "label": "7-Transformation, from unspecified", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "8-industrial machine, heavy, unspecified", "label": "8-industrial machine, heavy, unspecified", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "9-Particulate Matter, \u003e 2.5 um and \u003c 10um", "label": "9-Particulate Matter, \u003e 2.5 um and \u003c 10um", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "10-Occupation, unspecified", "label": "10-Occupation, unspecified", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "11-Water", "label": "11-Water", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "12-limestone quarry infrastructure", "label": "12-limestone quarry infrastructure", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "13-explosive, tovex", "label": "13-explosive, tovex", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "14-Water", "label": "14-Water", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "15-waste mineral oil", "label": "15-waste mineral oil", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "16-Transformation, to mineral extraction site", "label": "16-Transformation, to mineral extraction site", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "17-Gravel", "label": "17-Gravel", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "18-conveyor belt", "label": "18-conveyor belt", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "19-lubricating oil", "label": "19-lubricating oil", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"amount": 1.0, "flow_id": "37eceabd-b33f-4757-a4b9-5c51dee1710d", "flow_name": "gravel, crushed", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "0-gravel, crushed", "width": 1}, {"amount": 4.75e-11, "flow_id": "a7dee235-cd6e-415d-843e-db3eb8440071", "flow_name": "gravel/sand quarry infrastructure", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "1-gravel/sand quarry infrastructure", "width": 1}, {"amount": 2.17e-07, "flow_id": "21e46cb8-6233-4c99-bac3-c41d2ab99498", "flow_name": "Particulate Matter, \u003c 2.5 um", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "2-Particulate Matter, \u003c 2.5 um", "width": 1}, {"amount": 0.0297307776181502, "flow_id": "b0f4c2fb-5081-474a-8ffa-1457da8345db", "flow_name": "diesel, burned in building machine", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "3-diesel, burned in building machine", "width": 1}, {"amount": 2.3e-05, "flow_id": "831f249e-53f2-49cf-a93c-7cee105f048e", "flow_name": "Water, unspecified natural origin", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "4-Water, unspecified natural origin", "width": 1}, {"amount": 2.71e-06, "flow_id": "66020d27-7ae4-4e59-83a3-89214b72c40a", "flow_name": "Particulate Matter, \u003e 10 um", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "5-Particulate Matter, \u003e 10 um", "width": 1}, {"amount": 0.0027975, "flow_id": "759b89bd-3aa6-42ad-b767-5bb9ef5d331d", "flow_name": "electricity, medium voltage", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "6-electricity, medium voltage", "width": 1}, {"amount": 7.7966e-05, "flow_id": "29630a65-f38c-48a5-9744-c0121f586640", "flow_name": "Transformation, from unspecified", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "7-Transformation, from unspecified", "width": 1}, {"amount": 9.51e-05, "flow_id": "4cc87eb6-20a4-4968-ab90-6d344d46755d", "flow_name": "industrial machine, heavy, unspecified", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "8-industrial machine, heavy, unspecified", "width": 1}, {"amount": 2.78e-06, "flow_id": "b967e1bf-f09b-4c89-8740-ace21db47bba", "flow_name": "Particulate Matter, \u003e 2.5 um and \u003c 10um", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "9-Particulate Matter, \u003e 2.5 um and \u003c 10um", "width": 1}, {"amount": 0.0005, "flow_id": "c7cb5880-4219-4051-9357-10fdd08c6f2b", "flow_name": "Occupation, unspecified", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "10-Occupation, unspecified", "width": 1}, {"amount": 1.15e-05, "flow_id": "075e433b-4be4-448e-9510-9a5029c1ce94", "flow_name": "Water", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "11-Water", "width": 1}, {"amount": 5.25e-11, "flow_id": "1e278342-7e3b-426d-b000-58eab8104573", "flow_name": "limestone quarry infrastructure", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "12-limestone quarry infrastructure", "width": 1}, {"amount": 7.08532e-05, "flow_id": "b14de8f8-490f-40d5-9b13-0d8f7487cf80", "flow_name": "explosive, tovex", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "13-explosive, tovex", "width": 1}, {"amount": 1.15e-05, "flow_id": "2404b41a-2eed-4e9d-8ab6-783946fdf5d6", "flow_name": "Water", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "14-Water", "width": 1}, {"amount": 2.5e-06, "flow_id": "1b30b018-ac39-41f4-a9e0-92057eef8bb8", "flow_name": "waste mineral oil", "flow_type": "WASTE_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "15-waste mineral oil", "width": 1}, {"amount": 7.7966e-05, "flow_id": "626915e9-2424-4059-8b6a-fae47161acdf", "flow_name": "Transformation, to mineral extraction site", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "16-Transformation, to mineral extraction site", "width": 1}, {"amount": 1.0, "flow_id": "238f8ea9-98df-41dc-ab93-ea5b549a0b96", "flow_name": "Gravel", "flow_type": "ELEMENTARY_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "17-Gravel", "width": 1}, {"amount": 9.51e-08, "flow_id": "26f457d5-9138-4502-a0b5-a3726ca8efa6", "flow_name": "conveyor belt", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "18-conveyor belt", "width": 1}, {"amount": 2.5e-06, "flow_id": "ea75b944-c676-4a13-85b8-2bea98f765a4", "flow_name": "lubricating oil", "flow_type": "PRODUCT_FLOW", "from": "gravel production, crushed | gravel, crushed | EN15804, U", "to": "19-lubricating oil", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
