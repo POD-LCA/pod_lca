@@ -10,12 +10,14 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 import pod_lca
+import networkx as nx
 
 
 
 class LCA(object):
     def __init__(self):
         self.graph                  = {}
+        self.network                = nx.Graph()
         self.process_map            = None
         self.lcia_map               = None
         self.ecoinvent_path         = None
@@ -26,35 +28,50 @@ class LCA(object):
         with open(os.path.join(pod_lca.DATA, 'maps', 'ecoinvent_{}_map.json'.format('processes')), 'r') as fp:
             self.process_map = json.load(fp)
 
-    def recursion(self, process_name):
-        uuids = self.process_map[process_name]
-        print(uuids)
-        for uuid in uuids:
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid))
-            with open(fp, 'r') as fp:
-                process = json.load(fp)
-            if process['location']['name'] == 'United States':
-                break
-        print('')
+    def nested_loops(self, process_name):
+        self.network.add_node(process_name, color='black', size=20)
+        uuid = self.process_map[process_name]
+        fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid))
+        with open(fp, 'r') as fp:
+            process = json.load(fp)
         exchanges = process['exchanges']
-        print(len(exchanges))
-        # for exchange in exchanges[:1]:
-        #     print(exchange.keys())
-        #     print(exchange['flow']['name'], exchange['flow']['@id'])
-
-        #     print(exchange.keys())
-        #     print('')
-        #     flow = exchange['flow']
-        #     print(flow)
-        #     print('')
-        #     file = flow['@id'] + '.json'
-        #     fp = os.path.join(self.ecoinvent_path, 'flows', file)
-        #     with open(fp, 'r') as fp:
-        #         flow2 = json.load(fp)
-        #     print(flow2)
-        #     break
-        #     # exchanges2 = process['exchanges']
-        #     # print(len(exchanges2))
+        for exchange in exchanges:
+            is_input = exchange['isInput']
+            if is_input:
+                uuid2 = exchange['defaultProvider']['@id']
+                fp2 = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid2))
+                with open(fp2, 'r') as fp2:
+                    process2 = json.load(fp2)
+                process_name2 = process2['name']
+                self.network.add_node(process_name2, color=2)
+                self.network.add_edge(process_name, process_name2, color='light grey')
+                exchanges2 = process2['exchanges']
+                for exchange2 in exchanges2:
+                    is_input = exchange2['isInput']
+                    is_not_elementary = exchange2['flow']['flowType'] != 'ELEMENTARY_FLOW'
+                    if is_input and is_not_elementary:
+                        uuid3 = exchange2['defaultProvider']['@id']
+                        fp3 = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid3))
+                        with open(fp3, 'r') as fp3:
+                            process3 = json.load(fp3)
+                        process_name3 = process3['name']
+                        self.network.add_node(process_name3, color=3)
+                        self.network.add_edge(process_name2, process_name3, color='light grey')
+                        exchanges3 = process3['exchanges']
+                        for exchange3 in exchanges3:
+                            is_input = exchange3['isInput']
+                            is_not_elementary = exchange3['flow']['flowType'] != 'ELEMENTARY_FLOW'
+                            if is_input and is_not_elementary:
+                                uuid4 = exchange3['defaultProvider']['@id']
+                                fp4 = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid4))
+                                with open(fp4, 'r') as fp4:
+                                    process4 = json.load(fp4)
+                                process_name4 = process4['name']
+                                self.network.add_node(process_name4, color=4)
+                                self.network.add_edge(process_name3, process_name4, color='light grey')
+                            if not is_not_elementary:
+                                self.network.add_node(exchange3['flow']['name'], color='red')
+                                self.network.add_edge(process_name3, exchange3['flow']['name'], color='light grey')
 
     def run_ecoinvent_process(self, process_name):
         #TODO: This function should run the entire network.
@@ -116,11 +133,11 @@ class LCA(object):
                     #     print('')
 
     def plot_graph(self):
-        import networkx as nx
+
         from pyvis.network import Network
         nt = Network('1000px', '1700px')
 
-        G = nx.from_dict_of_dicts(self.graph)
+        G = self.network
         nt.from_nx(G)
         nt.show('nx.html')
         nx.draw(G)
@@ -158,7 +175,7 @@ if __name__ == '__main__':
     # process_name = 'sand quarry operation, extraction from river bed | sand | EN15804, U'
     # process_name = 'gravel production, crushed | gravel, crushed | EN15804, U'
     # lca.run_ecoinvent_process(process_name)
-    lca.recursion(process_name)
+    lca.nested_loops(process_name)
     # lca.compute_elementary_flow_impacts(process_name)
 
-    # lca.plot_graph()
+    lca.plot_graph()
