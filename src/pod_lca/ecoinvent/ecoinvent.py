@@ -44,7 +44,7 @@ def create_ecoinvent_maps(path):
                 locations = map[key]['locations']
                 if 'United States' in locations:
                     i = locations.index('United States')
-                elif 'Gobal' in locations:
+                elif 'Global' in locations:
                     i = locations.index('Global')
                 elif 'Rest-of-World' in locations:
                     i = locations.index('Rest-of-World')
