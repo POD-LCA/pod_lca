@@ -13,15 +13,15 @@ __version__ = "0.1.0"
 
 import pod_lca
 from pod_lca.utilities import lbs_to_kgs
-
-
-
+from pod_lca.lca.process import Process
+from pod_lca.lca.process import Flow
 
 class LCA(object):
 
     def __init__(self):
         self.graph                  = {}
         self.outputs                = {}
+        self.processes              = {}
         self.network                = nx.Graph()
         self.process_map            = None
         self.lcia_map               = None
@@ -363,7 +363,7 @@ class LCA(object):
                                     else:
                                         self.outputs[process_name][key3] = {'name': fn3, 'flow_type': ft3, 'amount': fam3, 'id':fid3, 'unit': unit3}
 
-    def find_upstream_impacts_while(self, processes_, amounts):
+    def find_upstream_impacts_while_uuids(self, processes_, amounts):
 
         processes = [self.process_map[process_name] for process_name in processes_]
         adict = {'source': {}}
@@ -425,7 +425,7 @@ class LCA(object):
         print('total number of iterations', counter)
         print('')
         print('')
-        with open('{}/adict.json'.format(pod_lca.TEMP), 'w') as fp:
+        with open('{}/adict_uuids.json'.format(pod_lca.TEMP), 'w') as fp:
             json.dump(adict, fp)
 
     def find_upstream_impacts_while_name(self, processes, amounts):
@@ -434,14 +434,6 @@ class LCA(object):
         for i in range(len(processes)):
             adict['source'][processes[i]] = amounts[processes[i]]
         
-        #############################################################################################
-        #############################################################################################
-        #############################################################################################
-        #TODO: THE ADICT DICTIONARY IS INCORRECT, CONNECTS IUNRELATED PROCESSES WHEN COMPARED TO OLCA
-        #############################################################################################
-        #############################################################################################
-        #############################################################################################
-
         current = 'source'
         counter = 0
         while len(processes) > 0:
@@ -501,95 +493,6 @@ class LCA(object):
         print('')
         
         with open('{}/adict_name.json'.format(pod_lca.TEMP), 'w') as fp:
-            json.dump(adict, fp)
-
-        with open('{}/upstream.json'.format(pod_lca.TEMP), 'w') as fp:
-            json.dump(self.outputs, fp)
-
-    def find_upstream_impacts_while_uuid_name(self, processes_, amounts):
-
-        #TODO: create special keys for the adict dict, combining UUIDs and Names
-
-        processes = [self.process_map[process_name] for process_name in processes_]
-
-        with open('{}/uuids.json'.format(pod_lca.TEMP), 'w') as fp:
-            json.dump(uuids, fp)
-
-        adict = {'source': {}}
-        for i in range(len(processes_)):
-            adict['source']['{}_{}'.format(processes_[i], processes[i])] = amounts[processes_[i]]
-        
-        current = 'source'
-        counter = 0
-        while len(processes) > 0:
-            counter += 1
-            print('length', len(processes)) 
-            uuid0 = processes.pop(0)
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
-            with open(fp, 'r') as fp:
-                process0 = json.load(fp)
-            pname0 = process0['name']
-            akey0 = '{}_{}'.format(pname0, uuid0)
-
-            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
-
-            for oex0 in output_exchanges0:
-                fn0 = oex0['flow']['name']
-                ft0 = oex0['flow']['flowType']
-                fid0 = oex0['flow']['@id']
-
-                # self.network.add_edge(uuid0, fid0)
-
-                # print('current', current)
-                # print('uuid0  ', uuid0)
-                fam0 = oex0['amount'] * adict[current][akey0]
-                unit0 = oex0['unit']['name']
-                key0 = fid0
-                if ft0 == 'ELEMENTARY_FLOW':
-                    if key0 in self.outputs:
-                        self.outputs[key0]['amount'] += fam0
-                    else:
-                        self.outputs[key0] = {'name': fn0, 'flow_type': ft0, 'amount': fam0, 'id':fid0, 'unit': unit0}
-            last_inex = None
-            for inex0 in input_exchanges0:
-                uuid1 = inex0['flow']['@id']
-                pname1 = inex0['flow']['name']
-                akey1 = '{}_{}'.format(pname1, uuid1)
-                # self.network.add_edge(uuid0, uuid1)
-                
-                fam1 = inex0['amount'] * adict[current][akey0]
-                if fam1 > .0001:
-                    last_inex = inex0
-                    processes.insert(0, inex0['defaultProvider']['@id'])
-                    if akey0 in adict:
-                        adict[akey0].update({akey1: fam1})
-                    else:
-                        adict[akey0] = {akey1: fam1}
-            if len(processes) > 0:
-                # WHAT TO DO WHEN THE BOTTOM IS FOUND SND THE AKEY2 IS NEEDED????
-                if akey0 in adict:
-                    if not last_inex:
-                        akey2 = '{}_{}'.format(processes[0], uuids[processes[0]])
-                    else:
-                        akey2 = '{}_{}'.format(last_inex['defaultProvider']['name'], processes[0])
-                    adict[akey0][akey2] = adict[current][akey0] * fam1
-                else:
-                    adict[akey0] = {akey2: adict[current][akey0] * fam1}
-                current = akey0
-
-            with open('{}/adict_uuid_name.json'.format(pod_lca.TEMP), 'w') as fp:
-                json.dump(adict, fp)
-
-            print('length', len(processes))
-            # print(processes[0])
-            print('')
-        print('total number of iterations', counter)
-        print('')
-        print('')
-
-
-        with open('{}/adict_uuid_name.json'.format(pod_lca.TEMP), 'w') as fp:
             json.dump(adict, fp)
 
     def compute_elementary_flow_impacts(self, processes, loops=True):
@@ -652,9 +555,159 @@ class LCA(object):
         # for ic in self.total:
         #     self.total[ic] *= amounts[process_name]
 
-if __name__ == '__main__': 
+    def find_upstream_network(self, processes_):
 
-    # TODO: FIX THE PROCESS MAP TO HAVE ALL VERSIONS OF EACH PROCESS!!!
+        #TODO: The processes taken off should be dicts with uuid (not unique) and levek level
+             # Additionally, all processes should be saved in a separate dict, containing all data, using unique uuids as keys
+             # The graph should be saved purely as topology (probably only unique uuids)
+
+        processes = []
+        for process_name in processes_:
+            p = {'uuid': self.process_map[process_name], 'level': 0}
+            processes.append(p)
+
+        self.graph.update({'{}_{}'.format(p['uuid'], 0):{} for p in processes})
+        seen = []
+        counter = 1
+
+        # print('count   levl    seen    proc    ')
+
+        while len(processes) > 0:
+            p = processes.pop(-1)
+            level = p['level']
+            uuid0 = p['uuid']
+            key0 = '{}_{}'.format(uuid0, level)
+            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
+            with open(fp, 'r') as fp:
+                process0 = json.load(fp)
+            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
+            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
+
+            # print('{}       {}       {}         {}       '.format(counter, level,  len(seen), len(processes)))
+
+            for oex0 in output_exchanges0:
+                fn0 = oex0['flow']['name']
+                ft0 = oex0['flow']['flowType']
+                fid0 = oex0['flow']['@id']
+                key2 = '{}_{}'.format(fid0, level+1)
+                if ft0 == 'ELEMENTARY_FLOW':
+                    self.graph[key0].update({key2: 'elementary'})
+                    self.graph[key2] = {'output': True, 'name': fn0, 'is_end': True, 'level': level+1}
+
+            for inex0 in input_exchanges0:
+                uuid1 = inex0['defaultProvider']['@id']
+                key1 = '{}_{}'.format(uuid1, level+1)
+                pname = inex0['flow']['name']
+
+                if uuid1 not in seen:
+                    processes.append({'uuid': uuid1, 'level': level+1})
+                    if key0 in self.graph:
+                        self.graph[key0].update({key1:{'name': pname, 'level': level+1}}) 
+                    else:
+                        self.graph[key0][key1] = {'name': pname, 'level': level+1}
+                    self.graph[key1] = {'name': pname, 'level': level+1}
+                    seen.append(uuid1)
+
+            if level == 0:
+                seen = []
+
+            counter += 1
+            # if counter == 5:
+            #     break
+                    
+        with open('{}/graph.json'.format(pod_lca.TEMP), 'w') as fp:
+            json.dump(self.graph, fp)
+
+    def find_upstream_impacts_while_uuids2(self, processes_, amounts, units):
+
+
+        temp_processes = []
+        for pname in processes_:
+            uuid = self.process_map[pname]
+            key = '{}_{}'.format(uuid, 0)
+            p = Process()
+            p.uuid = uuid
+            p.pname = pname
+            p.amount = amounts[pname]
+            p.unit = units[pname]
+            p.level = 0
+            p.key = key
+            p.parent = 'source'
+            self.processes[key] = p
+            
+            temp_processes.append(key)
+            self.graph[key] = {}
+
+        counter = 0
+        while len(temp_processes) > 0:
+            counter += 1
+            print('length', len(temp_processes)) 
+            pro_key = temp_processes.pop(-1)
+            pro = self.processes[pro_key]
+            pro_uuid   = pro.uuid
+            pro_amount = pro.amount
+            pro_level   = pro.level
+
+            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(pro_uuid))
+            with open(fp, 'r') as fp:
+                process = json.load(fp)
+
+            input_exchanges  = [ e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
+            output_exchanges = [ e for e in process['exchanges'] if not e['isInput']]
+
+            for oex in output_exchanges:
+                fname = oex['flow']['name']
+                ftype = oex['flow']['flowType']
+                fuuid = oex['flow']['@id']
+                funit = oex['unit']['name']
+                famnt = oex['amount']
+                fkey = '{}_{}'.format(fuuid, pro_level + 1)
+
+                f = Flow()
+                f.name = fname
+                f.flow_type = ftype
+                f.uuid = fuuid
+                f.amount = famnt 
+                f.scaling_factor = famnt * pro_amount
+                f.unit = funit
+                pro.outputs[fkey] = f
+            
+
+            for inex in input_exchanges:
+                euuid = inex['flow']['@id']
+                eamnt = inex['amount']
+                e_scaling_factor = eamnt * pro_amount
+                e_pro_uuid = inex['defaultProvider']['@id']
+                e_pro_key = '{}_{}'.format(e_pro_uuid, pro_level + 1)
+
+                if e_scaling_factor > .0001:
+                    temp_processes.append(e_pro_key)
+
+                    
+                    # processes.insert(0, )
+                    # if uuid0 in adict:
+                    #     adict[uuid0].update({uuid1: fam1})
+                    # else:
+                    #     adict[uuid0] = {uuid1: fam1}
+
+            # if len(processes) > 0:
+            #     if uuid0 in adict:
+            #         adict[uuid0][processes[0]] = adict[current][uuid0] * fam1
+            #     else:
+            #         adict[uuid0] = {processes[0]: adict[current][uuid0] * fam1}
+            #     current = uuid0
+
+            # print('length', len(processes))
+            # print(processes[0])
+            # print('')
+        # print('total number of iterations', counter)
+        # print('')
+        # print('')
+
+
+
+
+if __name__ == '__main__': 
 
     for i in range(50): print('')
 
@@ -682,36 +735,69 @@ if __name__ == '__main__':
                    'particulate matter formation - particulate matter formation potential (PMFP)':0.097404705,
                    'photochemical oxidant formation - maximum incremental reactivity (MIR)':14.20324672,}
 
-
-
-    p1 = 'cement production, Portland | cement, Portland | EN15804, U'
-    p2 = 'market for tap water | tap water | EN15804, U'
-    p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U'
-    p4 = 'gravel production, crushed | gravel, crushed | EN15804, U'
+    p1 = 'cement production, Portland | cement, Portland | EN15804, U - United States'
+    p2 = 'market for tap water | tap water | EN15804, U - Rest-of-World'
+    p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U - Rest-of-World'
+    p4 = 'gravel production, crushed | gravel, crushed | EN15804, U - Rest-of-World'
     # p5 = 'clinker production | clinker | EN15804, U'
     processes = [p1, p2, p3, p4]
     # processes = [p1]
     amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
 
     amounts = {k:lbs_to_kgs(amounts[k]) for k in amounts}  # tansform to kgs
+    units = {k: 'kg' for k in amounts}
+
+    # WHILE LOOP VERSION 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    lca.find_upstream_impacts_while_uuids2(processes, amounts, units)
+
+
+    # FOR LOOP version - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     # lca.find_upstream_impacts_loops(processes, amounts)
     # lca.compute_elementary_flow_impacts(processes, loops=True)
 
-    lca.find_upstream_impacts_while_uuid_name(processes, amounts)
-    lca.compute_elementary_flow_impacts(processes, loops=False)
+    # for ek in lca.total:
+    #     print(ek)
+    #     print('{:.2f}%'.format(100*(lca.total[ek] / exp_results[ek])))
+    #     print(lca.total[ek])
+    #     print('')
+
+
+    # WHILE LOOP version - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    # lca.find_upstream_impacts_while_uuids(processes, amounts)
+    # lca.compute_elementary_flow_impacts(processes, loops=False)
     
-
-
     # ic = 'climate change - global warming potential (GWP100)'
     # print(lca.total[ic])
     # print('{:.2f}%'.format(100*(lca.total[ic] / exp_results[ic])))
 
-    for ek in lca.total:
-        print(ek)
-        print('{:.2f}%'.format(100*(lca.total[ek] / exp_results[ek])))
-        print(lca.total[ek])
-        print('')
+    # for ek in lca.total:
+    #     print(ek)
+    #     print('{:.2f}%'.format(100*(lca.total[ek] / exp_results[ek])))
+    #     print(lca.total[ek])
+    #     print('')
 
 
-    # lca.plot_graph()
+    # ISURU Version (keeping a list of "seen" processes) - - - - - - - - - -  - - - - - - - - -
+
+    # lca.find_upstream_network(processes)
+
+    # lca.find_upstream_network([p1])
+    # lca.find_upstream_network([p2])
+    # lca.find_upstream_network([p3])
+    # lca.find_upstream_network([p4])
+
+    # key = lca.process_map[p4] + '_0'
+    # print(key)
+    # print('')
+    # for key2 in lca.graph[key]:
+    #     print(key2)
+    #     print(lca.graph[key][key2].keys())
+    #     print('')
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
