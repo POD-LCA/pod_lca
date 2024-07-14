@@ -22,13 +22,13 @@ class LCA(object):
         self.graph                  = {}
         self.outputs                = {}
         self.processes              = {}
-        self.network                = nx.Graph()
         self.process_map            = None
         self.lcia_map               = None
         self.ecoinvent_path         = None
         self.ecoinvent_lcia_path    = None
         self.ecoinvent_lcia         = {}
         self.environmental_impacts  = {}
+        self.min_amount             = .01
 
     def read_ecoinvent_maps(self):
         with open(os.path.join(pod_lca.DATA, 'maps', 'ecoinvent_{}_map.json'.format('processes')), 'r') as fp:
@@ -59,135 +59,6 @@ class LCA(object):
         # nx.draw(G)
         # print(G.edges)
 
-    def run_ecoinvent_recursive(self, uuid, seen):
-        fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid))
-        with open(fp, 'r') as fp:
-            process = json.load(fp)
-        self.network.add_node(uuid)
-        seen.append(uuid)
-        exchanges = process['exchanges']
-        for exchange in exchanges:
-            is_input = exchange['isInput']
-            is_not_elementary = exchange['flow']['flowType'] != 'ELEMENTARY_FLOW'
-            if is_input: 
-                if is_not_elementary:
-                    uuid2 = exchange['defaultProvider']['@id']
-                    if uuid2 not in seen:
-                        self.network.add_node(uuid2)
-                        self.network.add_edge(uuid, uuid2)
-                        return self.run_ecoinvent_recursive(uuid2, seen)
-                    else:
-                        self.network.add_node(uuid2)
-                        self.network.add_edge(uuid, uuid2)
-                else:
-                    uuid2 = exchange['flow']['@id']
-                    self.network.add_node(uuid2, color='red')
-                    self.network.add_edge(uuid, uuid2)
-            else:
-                continue
-
-    def run_ecoinvent_while(self, uuid):
-        fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid))
-        with open(fp, 'r') as fp:
-            process = json.load(fp)
-
-        ex_map = {ex['flow']['@id']: ex for ex in process['exchanges']}
-        q = [ex['flow']['@id'] for ex in process['exchanges']]
-        seen = []
-
-        while q:
-            exid = q.pop(0)
-            if exit not in seen:
-                exchange = ex_map[exid]
-                is_input = exchange['isInput']
-                is_not_elementary = exchange['flow']['flowType'] != 'ELEMENTARY_FLOW'
-                if is_input and is_not_elementary:
-                    pid = exchange['defaultProvider']['@id']
-                    fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(pid))
-                    with open(fp, 'r') as fp:
-                        process = json.load(fp)
-                    if 'exchanges' in process:
-                        uuids = [ex['flow']['@id'] for ex in process['exchanges']]
-                        for uuid in uuids:
-                            if uuid not in seen:
-                                self.network.add_edge(exid, uuid)
-                                q.append(uuid)
-                                seen.append(uuid)
-                        ex_map_temp = {ex['flow']['@id']: ex for ex in process['exchanges']}
-                        ex_map.update(ex_map_temp)
-            print(len(q))
-
-    def run_ecoinvent_processes_loops(self, processes):
-        for process_name in processes:
-            self.graph[process_name] = {}
-            self.network.add_node(process_name, color='black', size=20)
-            uuid = self.process_map[process_name]
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid))
-            with open(fp, 'r') as fp:
-                process = json.load(fp)
-            exchanges = process['exchanges']
-            for exchange in exchanges:
-                is_input = exchange['isInput']
-                is_not_elementary = exchange['flow']['flowType'] != 'ELEMENTARY_FLOW'
-
-                flow_id = exchange['flow']['@id']
-                self.graph[process_name][flow_id] = {'flow_name':exchange['flow']['name'],
-                                                     'flow_type':exchange['flow']['flowType'],
-                                                     'flow_id':exchange['flow']['@id'],
-                                                     'amount': exchange['amount'],
-                                                     }
-                if is_input and is_not_elementary:
-                    uuid2 = exchange['defaultProvider']['@id']
-                    fp2 = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid2))
-                    with open(fp2, 'r') as fp2:
-                        process2 = json.load(fp2)
-                    process_name2 = process2['name']
-                    self.network.add_node(process_name2, color=2)
-                    self.network.add_edge(process_name, process_name2, color='light grey')
-                    exchanges2 = process2['exchanges']
-                    for exchange2 in exchanges2:
-                        is_input = exchange2['isInput']
-                        is_not_elementary = exchange2['flow']['flowType'] != 'ELEMENTARY_FLOW'
-                       
-                        flow_id = exchange2['flow']['@id']
-                        self.graph[process_name][flow_id] = {'flow_name':exchange2['flow']['name'],
-                                                             'flow_type':exchange2['flow']['flowType'],
-                                                             'flow_id':exchange2['flow']['@id'],
-                                                             'amount': exchange2['amount'],
-                                                             }
-                        if is_input and is_not_elementary:
-                            uuid3 = exchange2['defaultProvider']['@id']
-                            fp3 = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid3))
-                            with open(fp3, 'r') as fp3:
-                                process3 = json.load(fp3)
-                            process_name3 = process3['name']
-                            self.network.add_node(process_name3, color=3)
-                            self.network.add_edge(process_name2, process_name3, color='light grey')
-                            exchanges3 = process3['exchanges']
-                            for exchange3 in exchanges3:
-                                is_input = exchange3['isInput']
-                                is_not_elementary = exchange3['flow']['flowType'] != 'ELEMENTARY_FLOW'
-                                
-                                flow_id = exchange3['flow']['@id']
-                                self.graph[process_name][flow_id] = {'flow_name':exchange3['flow']['name'],
-                                                             'flow_type':exchange3['flow']['flowType'],
-                                                             'flow_id':exchange3['flow']['@id'],
-                                                             'amount': exchange3['amount'],
-                                                             }
-                                
-                                if is_input and is_not_elementary:
-                                    uuid4 = exchange3['defaultProvider']['@id']
-                                    fp4 = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid4))
-                                    with open(fp4, 'r') as fp4:
-                                        process4 = json.load(fp4)
-                                    process_name4 = process4['name']
-
-                                    self.network.add_node(process_name4, color=4)
-                                    self.network.add_edge(process_name3, process_name4, color='light grey')
-                                if not is_not_elementary:
-                                    self.network.add_node(exchange3['flow']['name'], color='red')
-                                    self.network.add_edge(process_name3, exchange3['flow']['name'], color='light grey')
-
     def compute_impact_from_single_process(self, process_name, impact_category):
         uuid = self.process_map[process_name]
         fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid))
@@ -211,415 +82,7 @@ class LCA(object):
                 total_impact += impact
         return total_impact
 
-    def find_upstream_impacts_loops(self, processes, amounts):
-
-        #TODO: What to do with input elementary flows? They should be counted. Might explain low %%%
-
-        self.outputs = {pk:{} for pk in processes}
-
-        # loop 0 -------------------------------------------------------------------------------------------------------
-        for process_name in processes:
-            # print(process_name)
-            amount0 = amounts[process_name]
-            uuid0 = self.process_map[process_name]
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
-            with open(fp, 'r') as fp:
-                process0 = json.load(fp)
-            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW'] 
-            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
-            in_elm_exchanges  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW'] 
-            names = []
-            if in_elm_exchanges:
-                amnts = [ex['amount']* amount0 for ex in in_elm_exchanges]
-                # print(max(amnts))
-                output_exchanges0.extend(in_elm_exchanges)
-                names = [ex['flow']['name'] for ex in in_elm_exchanges]
-            else:
-                pass
-                # print('no elms')
-            for oex0 in output_exchanges0:
-                fn0 = oex0['flow']['name']
-                ft0 = oex0['flow']['flowType']
-                fid0 = oex0['flow']['@id']
-                fam0 = oex0['amount'] * amount0
-                unit0 = oex0['unit']['name']
-                key0 = fid0
-                if ft0 == 'ELEMENTARY_FLOW':
-                    # if fn0 in names:
-                    #     # print(fn0)
-                    #     for ic in self.ecoinvent_lcia:
-                    #         print(fid0 in self.ecoinvent_lcia[ic])
-                        # print('')
-                    self.network.add_node(process_name, color='black', size=20)
-                    self.network.add_node(fn0, color='red', size=5)
-                    self.network.add_edge(process_name, fn0)
-
-                    if key0 in self.outputs[process_name]:
-                        self.outputs[process_name][key0]['amount'] += fam0
-                    else:
-                        self.outputs[process_name][key0] = {'name': fn0, 'flow_type': ft0, 'amount': fam0, 'id':fid0, 'unit': unit0}
-            # print('')
-            # loop 1 ---------------------------------------------------------------------------------------------------
-            for iex1 in input_exchanges0:
-                amount1 = iex1['amount'] * amount0
-                uuid1 = iex1['defaultProvider']['@id']
-                fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid1))
-                with open(fp, 'r') as fp:
-                    process1 = json.load(fp)
-                
-                self.network.add_edge(process_name, iex1['flow']['name'])
-
-                input_exchanges1  = [ e for e in process1['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-                output_exchanges1 = [ e for e in process1['exchanges'] if not e['isInput']]
-                in_elm_exchanges  = [ e for e in process1['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW'] 
-                if in_elm_exchanges:
-                    # for ex in in_elm_exchanges: print(ex['amount']* amount1)
-                    output_exchanges1.extend(in_elm_exchanges)
-                for oex1 in output_exchanges1:
-                    fn1 = oex1['flow']['name']
-                    ft1 = oex1['flow']['flowType']
-                    fid1 = oex1['flow']['@id']
-                    fam1 = oex1['amount'] * amount1
-                    unit1 = oex1['unit']['name']
-                    key1 = fid1
-                    if ft1 == 'ELEMENTARY_FLOW':
-
-                        self.network.add_node(fn1, color='red', size=5)
-                        self.network.add_edge(iex1['flow']['name'], fn1)
-
-                        if key1 in self.outputs[process_name]:
-                            self.outputs[process_name][key1]['amount'] += fam1
-                        else:
-                            self.outputs[process_name][key1] = {'name': fn1, 'flow_type': ft1, 'amount': fam1, 'id':fid1, 'unit': unit1}
-
-
-                # loop 2 ---------------------------------------------------------------------------------------------
-                for iex2 in input_exchanges1:
-                    amount2 = iex2['amount'] * amount1
-                    if iex2['flow']['flowType'] != 'ELEMENTARY_FLOW':
-                        uuid2 = iex2['defaultProvider']['@id']
-                        fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid2))
-                        with open(fp, 'r') as fp:
-                            process2 = json.load(fp)
-
-                        self.network.add_edge(iex1['flow']['name'], iex2['flow']['name'])
-
-                        input_exchanges2  = [ e for e in process2['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-                        output_exchanges2 = [ e for e in process2['exchanges'] if not e['isInput']]
-                        in_elm_exchanges  = [ e for e in process2['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW'] 
-                        if in_elm_exchanges:
-                            # for ex in in_elm_exchanges: print(ex['amount']* amount2)
-                            output_exchanges2.extend(in_elm_exchanges)
-
-                        for oex2 in output_exchanges2:
-                            fn2 = oex2['flow']['name']
-                            ft2 = oex2['flow']['flowType']
-                            fid2 = oex2['flow']['@id']
-                            fam2 = oex2['amount'] * amount2
-                            unit2 = oex2['unit']['name']
-                            key2 = fid2
-                            if ft2 == 'ELEMENTARY_FLOW':
-
-                                self.network.add_node(fn2, color='red', size=5)
-                                self.network.add_edge(iex2['flow']['name'], fn2)
-
-                                if key2 in self.outputs[process_name]:
-                                    self.outputs[process_name][key2]['amount'] += fam2
-                                else:
-                                    self.outputs[process_name][key2] = {'name': fn2, 'flow_type': ft2, 'amount': fam2, 'id':fid2, 'unit': unit2}
-
-                    # loop 3 ---------------------------------------------------------------------------------------------
-                    for iex3 in input_exchanges2:
-                        amount3 = iex3['amount'] * amount2
-                        if iex3['flow']['flowType'] != 'ELEMENTARY_FLOW':
-                            uuid3 = iex3['defaultProvider']['@id']
-                            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid3))
-                            with open(fp, 'r') as fp:
-                                process3 = json.load(fp)
-
-                            self.network.add_edge(iex2['flow']['name'], iex3['flow']['name'])
-
-                            input_exchanges3  = [ e for e in process3['exchanges'] if e['isInput']and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-                            output_exchanges3 = [ e for e in process3['exchanges'] if not e['isInput']]
-                            in_elm_exchanges  = [ e for e in process3['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW'] 
-                            if in_elm_exchanges:
-                                # for ex in in_elm_exchanges: print(ex['amount']* amount3)
-                                output_exchanges3.extend(in_elm_exchanges)
-
-                            for oex3 in output_exchanges3:
-                                fn3 = oex3['flow']['name']
-                                ft3 = oex3['flow']['flowType']
-                                fid3 = oex3['flow']['@id']
-                                fam3 = oex3['amount'] * amount3
-                                unit3 = oex3['unit']['name']
-                                key3 = fid3
-                                if ft3 == 'ELEMENTARY_FLOW':
-
-                                    self.network.add_node(fn3, color='red', size=5)
-                                    self.network.add_edge(iex3['flow']['name'], fn3)
-
-                                    if key3 in self.outputs[process_name]:
-                                        self.outputs[process_name][key3]['amount'] += fam3
-                                    else:
-                                        self.outputs[process_name][key3] = {'name': fn3, 'flow_type': ft3, 'amount': fam3, 'id':fid3, 'unit': unit3}
-
-    def find_upstream_impacts_while_uuids(self, processes_, amounts):
-
-        processes = [self.process_map[process_name] for process_name in processes_]
-        adict = {'source': {}}
-        for i in range(len(processes_)):
-            adict['source'][processes[i]] = amounts[processes_[i]]
-        
-        current = 'source'
-        counter = 0
-        while len(processes) > 0:
-            counter += 1
-            print('length', len(processes)) 
-            uuid0 = processes.pop(0)
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
-            with open(fp, 'r') as fp:
-                process0 = json.load(fp)
-            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
-
-            for oex0 in output_exchanges0:
-                fn0 = oex0['flow']['name']
-                ft0 = oex0['flow']['flowType']
-                fid0 = oex0['flow']['@id']
-
-                self.network.add_edge(uuid0, fid0)
-
-                # print('current', current)
-                # print('uuid0  ', uuid0)
-                fam0 = oex0['amount'] * adict[current][uuid0]
-                unit0 = oex0['unit']['name']
-                key0 = fid0
-                if ft0 == 'ELEMENTARY_FLOW':
-                    if key0 in self.outputs:
-                        self.outputs[key0]['amount'] += fam0
-                    else:
-                        self.outputs[key0] = {'name': fn0, 'flow_type': ft0, 'amount': fam0, 'id':fid0, 'unit': unit0}
-            
-            for inex0 in input_exchanges0:
-                uuid1 = inex0['flow']['@id']
-
-                self.network.add_edge(uuid0, uuid1)
-                
-                fam1 = inex0['amount'] * adict[current][uuid0]
-                if fam1 > .0001:
-                    processes.insert(0, inex0['defaultProvider']['@id'])
-                    if uuid0 in adict:
-                        adict[uuid0].update({uuid1: fam1})
-                    else:
-                        adict[uuid0] = {uuid1: fam1}
-            if len(processes) > 0:
-                if uuid0 in adict:
-                    adict[uuid0][processes[0]] = adict[current][uuid0] * fam1
-                else:
-                    adict[uuid0] = {processes[0]: adict[current][uuid0] * fam1}
-                current = uuid0
-
-            print('length', len(processes))
-            # print(processes[0])
-            print('')
-        print('total number of iterations', counter)
-        print('')
-        print('')
-        with open('{}/adict_uuids.json'.format(pod_lca.TEMP), 'w') as fp:
-            json.dump(adict, fp)
-
-    def find_upstream_impacts_while_name(self, processes, amounts):
- 
-        adict = {'source': {}}
-        for i in range(len(processes)):
-            adict['source'][processes[i]] = amounts[processes[i]]
-        
-        current = 'source'
-        counter = 0
-        while len(processes) > 0:
-            counter += 1
-            print('length', len(processes)) 
-            pname0 = processes.pop(0)
-            uuid0 = self.process_map[pname0]
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
-            with open(fp, 'r') as fp:
-                process0 = json.load(fp)
-            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
-
-            for oex0 in output_exchanges0:
-                fn0 = oex0['flow']['name']
-                ft0 = oex0['flow']['flowType']
-                fid0 = oex0['flow']['@id']
-
-                self.network.add_edge(pname0, fn0)
-
-                # print('current', current)
-                # print('uuid0  ', uuid0)
-                fam0 = oex0['amount'] * adict[current][pname0]
-                unit0 = oex0['unit']['name']
-                key0 = fid0
-                if ft0 == 'ELEMENTARY_FLOW':
-                    if key0 in self.outputs:
-                        self.outputs[key0]['amount'] += fam0
-                    else:
-                        self.outputs[key0] = {'name': fn0, 'flow_type': ft0, 'amount': fam0, 'id':fid0, 'unit': unit0}
-            
-            for inex0 in input_exchanges0:
-                uuid1 = inex0['flow']['@id']
-                pname1 = inex0['flow']['name']
-
-                self.network.add_edge(pname0, pname1)
-                
-                fam1 = inex0['amount'] * adict[current][pname0]
-                if fam1 > .0001:
-                    processes.insert(0, inex0['defaultProvider']['name'])
-                    if pname0 in adict:
-                        adict[pname0].update({pname1: fam1})
-                    else:
-                        adict[pname0] = {pname1: fam1}
-            if len(processes) > 0:
-                if pname0 in adict:
-                    adict[pname0][processes[0]] = adict[current][pname0] * fam1
-                else:
-                    adict[pname0] = {processes[0]: adict[current][pname0] * fam1}
-                current = pname0
-
-            print('length', len(processes))
-            # print(processes[0])
-            print('')
-        print('total number of iterations', counter)
-        print('')
-        print('')
-        
-        with open('{}/adict_name.json'.format(pod_lca.TEMP), 'w') as fp:
-            json.dump(adict, fp)
-
-    def compute_elementary_flow_impacts(self, processes, loops=True):
-        #TODO: This will have to be redone after the final graph structure is set. 
-
-        if loops:
-            self.total = {k: 0 for k in self.ecoinvent_lcia}
-            for process_name in processes:
-                for ok in self.outputs[process_name]:
-                    fn  = self.outputs[process_name][ok]['name']
-                    fid = self.outputs[process_name][ok]['id']
-                    ft  = self.outputs[process_name][ok]['flow_type']
-                    fam = self.outputs[process_name][ok]['amount']
-                    for impact_cat_k in self.ecoinvent_lcia:
-                        if ft == 'ELEMENTARY_FLOW':
-                            if fid in self.ecoinvent_lcia[impact_cat_k]:
-                                impact = self.ecoinvent_lcia[impact_cat_k][fid]['value'] * fam   #* amounts[process_name]
-                                self.total[impact_cat_k] += impact
-                                # if impact_cat_k == 'climate change - global warming potential (GWP100)':
-                                #     print(process_name)
-                                #     print(self.ecoinvent_lcia[impact_cat_k][fid]['value'])
-                                #     print(fam)
-                                #     print(impact)
-                                #     print('')
-        else:
-            self.total = {k: 0 for k in self.ecoinvent_lcia}
-            for ok in self.outputs:
-                fn  = self.outputs[ok]['name']
-                fid = self.outputs[ok]['id']
-                ft  = self.outputs[ok]['flow_type']
-                fam = self.outputs[ok]['amount']
-                for impact_cat_k in self.ecoinvent_lcia:
-                    if ft == 'ELEMENTARY_FLOW':
-                        if fid in self.ecoinvent_lcia[impact_cat_k]:
-                            impact = self.ecoinvent_lcia[impact_cat_k][fid]['value'] * fam   #* amounts[process_name]
-                            self.total[impact_cat_k] += impact
-
-        # self.environmental_impacts = {k: {} for k in processes}
-        # for process_name in processes:
-        #     for impact_cat_k in self.ecoinvent_lcia:
-        #         self.environmental_impacts[process_name][impact_cat_k] = 0
-        #         for ok in self.outputs[process_name]:
-        #             fn  = self.outputs[process_name][ok]['name']
-        #             fid = self.outputs[process_name][ok]['id']
-        #             ft  = self.outputs[process_name][ok]['flow_type']
-        #             fam = self.outputs[process_name][ok]['amount']
-        #             if fid in self.ecoinvent_lcia[impact_cat_k]:
-        #                 impact = self.ecoinvent_lcia[impact_cat_k][fid]['value'] * fam 
-        #                 self.environmental_impacts[process_name][impact_cat_k] += impact
-        #                 if impact_cat_k == 'climate change - global warming potential (GWP100)':
-        #                     print(process_name)
-        #                     print(impact)
-        #                     print('')
-
-        # self.total = {k:0 for k in self.ecoinvent_lcia}
-        # for pk in self.environmental_impacts:
-        #     for ick in self.environmental_impacts[pk]:
-        #         self.total[ick] += self.environmental_impacts[pk][ick]
-
-        # for ic in self.total:
-        #     self.total[ic] *= amounts[process_name]
-
-    def find_upstream_network(self, processes_):
-
-        #TODO: The processes taken off should be dicts with uuid (not unique) and levek level
-             # Additionally, all processes should be saved in a separate dict, containing all data, using unique uuids as keys
-             # The graph should be saved purely as topology (probably only unique uuids)
-
-        processes = []
-        for process_name in processes_:
-            p = {'uuid': self.process_map[process_name], 'level': 0}
-            processes.append(p)
-
-        self.graph.update({'{}_{}'.format(p['uuid'], 0):{} for p in processes})
-        seen = []
-        counter = 1
-
-        # print('count   levl    seen    proc    ')
-
-        while len(processes) > 0:
-            p = processes.pop(-1)
-            level = p['level']
-            uuid0 = p['uuid']
-            key0 = '{}_{}'.format(uuid0, level)
-            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
-            with open(fp, 'r') as fp:
-                process0 = json.load(fp)
-            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
-
-            # print('{}       {}       {}         {}       '.format(counter, level,  len(seen), len(processes)))
-
-            for oex0 in output_exchanges0:
-                fn0 = oex0['flow']['name']
-                ft0 = oex0['flow']['flowType']
-                fid0 = oex0['flow']['@id']
-                key2 = '{}_{}'.format(fid0, level+1)
-                if ft0 == 'ELEMENTARY_FLOW':
-                    self.graph[key0].update({key2: 'elementary'})
-                    self.graph[key2] = {'output': True, 'name': fn0, 'is_end': True, 'level': level+1}
-
-            for inex0 in input_exchanges0:
-                uuid1 = inex0['defaultProvider']['@id']
-                key1 = '{}_{}'.format(uuid1, level+1)
-                pname = inex0['flow']['name']
-
-                if uuid1 not in seen:
-                    processes.append({'uuid': uuid1, 'level': level+1})
-                    if key0 in self.graph:
-                        self.graph[key0].update({key1:{'name': pname, 'level': level+1}}) 
-                    else:
-                        self.graph[key0][key1] = {'name': pname, 'level': level+1}
-                    self.graph[key1] = {'name': pname, 'level': level+1}
-                    seen.append(uuid1)
-
-            if level == 0:
-                seen = []
-
-            counter += 1
-            # if counter == 5:
-            #     break
-                    
-        with open('{}/graph.json'.format(pod_lca.TEMP), 'w') as fp:
-            json.dump(self.graph, fp)
-
-    def find_upstream_impacts_while_uuids2(self, processes_, amounts, units):
-
+    def find_upstream_impacts_sequential(self, processes_, amounts, units):
 
         temp_processes = []
         for pname in processes_:
@@ -627,8 +90,9 @@ class LCA(object):
             key = '{}_{}'.format(uuid, 0)
             p = Process()
             p.uuid = uuid
-            p.pname = pname
+            p.name = pname
             p.amount = amounts[pname]
+            p.scaling_factor = amounts[pname]
             p.unit = units[pname]
             p.level = 0
             p.key = key
@@ -641,11 +105,11 @@ class LCA(object):
         counter = 0
         while len(temp_processes) > 0:
             counter += 1
-            print('length', len(temp_processes)) 
-            pro_key = temp_processes.pop(-1)
+            # print('length', len(temp_processes))
+            pro_key = temp_processes.pop(0)
             pro = self.processes[pro_key]
             pro_uuid   = pro.uuid
-            pro_amount = pro.amount
+            pro_scaling_factor = pro.scaling_factor
             pro_level   = pro.level
 
             fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(pro_uuid))
@@ -661,50 +125,55 @@ class LCA(object):
                 fuuid = oex['flow']['@id']
                 funit = oex['unit']['name']
                 famnt = oex['amount']
-                fkey = '{}_{}'.format(fuuid, pro_level + 1)
+                fkey = '{}_{}_{}'.format(fuuid, pro_level + 1, counter)
 
                 f = Flow()
                 f.name = fname
                 f.flow_type = ftype
                 f.uuid = fuuid
                 f.amount = famnt 
-                f.scaling_factor = famnt * pro_amount
+                f.scaling_factor = famnt * pro_scaling_factor
                 f.unit = funit
-                pro.outputs[fkey] = f
+                pro.outputs.append(fkey)
+                self.outputs[fkey] = f
             
 
             for inex in input_exchanges:
-                euuid = inex['flow']['@id']
+                ename = inex['flow']['name']
                 eamnt = inex['amount']
-                e_scaling_factor = eamnt * pro_amount
+                eunit = inex['unit']['name']
+                e_scaling_factor = eamnt * pro_scaling_factor
                 e_pro_uuid = inex['defaultProvider']['@id']
                 e_pro_key = '{}_{}'.format(e_pro_uuid, pro_level + 1)
 
-                if e_scaling_factor > .0001:
+                if e_scaling_factor > self.min_amount:
                     temp_processes.append(e_pro_key)
+                    epro = Process()
+                    epro.uuid = e_pro_uuid
+                    epro.name = ename
+                    epro.amount = eamnt
+                    epro.scaling_factor = pro_scaling_factor * eamnt
+                    epro.unit = eunit
+                    epro.level = pro_level + 1
+                    epro.key = e_pro_key
+                    epro.parent = pro_key
 
-                    
-                    # processes.insert(0, )
-                    # if uuid0 in adict:
-                    #     adict[uuid0].update({uuid1: fam1})
-                    # else:
-                    #     adict[uuid0] = {uuid1: fam1}
+                    if e_pro_key in self.processes:
+                        e_pro_key = '{}_{}'.format(e_pro_key, counter)
 
-            # if len(processes) > 0:
-            #     if uuid0 in adict:
-            #         adict[uuid0][processes[0]] = adict[current][uuid0] * fam1
-            #     else:
-            #         adict[uuid0] = {processes[0]: adict[current][uuid0] * fam1}
-            #     current = uuid0
+                    self.processes[e_pro_key] = epro
 
-            # print('length', len(processes))
-            # print(processes[0])
-            # print('')
-        # print('total number of iterations', counter)
-        # print('')
-        # print('')
+                    pro.inputs[e_pro_key] = epro
 
-
+    def compute_environmental_impacts(self):
+        self.environmental_impacts = {ick:0 for ick in self.ecoinvent_lcia}
+        for fkey in self.outputs:
+            flow = self.outputs[fkey]
+            if flow.flow_type == 'ELEMENTARY_FLOW':
+                for ick in self.ecoinvent_lcia:
+                    if flow.uuid in self.ecoinvent_lcia[ick]:
+                        impact = self.ecoinvent_lcia[ick][flow.uuid]['value'] * flow.scaling_factor
+                        self.environmental_impacts[ick] += impact
 
 
 if __name__ == '__main__': 
@@ -749,7 +218,17 @@ if __name__ == '__main__':
 
     # WHILE LOOP VERSION 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    lca.find_upstream_impacts_while_uuids2(processes, amounts, units)
+
+
+    lca.find_upstream_impacts_sequential(processes, amounts, units)
+    lca.compute_environmental_impacts()
+
+    for ek in lca.environmental_impacts:
+        print(ek)
+        print('{:.2f}%'.format(100*(lca.environmental_impacts[ek] / exp_results[ek])))
+        print(lca.environmental_impacts[ek],'    ', exp_results[ek])
+        print('')
+
 
 
     # FOR LOOP version - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

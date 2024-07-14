@@ -15,17 +15,17 @@ class Process(object):
 
     def __init__(self):
         self.uuid           = None
-        self.pname          = None
+        self.name          = None
         self.amount         = None
         self.scaling_factor = None
         self.level          = None
-        self.outputs        = {}
+        self.outputs        = []
         self.inputs         = {}
         self.parent         = None
         self.unit           = None
 
     def __repr__(self):
-        return 'pod_lca process - <{}>'.format(self.pname)
+        return 'pod_lca process - <{}>'.format(self.name)
 
 
 class Flow(object):
