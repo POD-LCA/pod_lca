@@ -83,7 +83,7 @@ class LCA(object):
         return total_impact
 
     def find_upstream_impacts_sequential(self, processes_, amounts, units):
-
+        self.graph['source'] = {}
         temp_processes = []
         for pname in processes_:
             uuid = self.process_map[pname]
@@ -101,6 +101,7 @@ class LCA(object):
             
             temp_processes.append(key)
             self.graph[key] = {}
+            self.graph['source'].update({key: {}})
 
         counter = 0
         while len(temp_processes) > 0:
@@ -228,9 +229,12 @@ if __name__ == '__main__':
 
     # WHILE LOOP VERSION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    lca.min_amount = .1
+    lca.min_amount = .01
     lca.find_upstream_impacts_sequential(processes, amounts, units)
     lca.compute_environmental_impacts()
+
+    # pro1 = lca.graph['source']
+    # print(pro1)
 
     for ek in lca.environmental_impacts:
         print(ek)
@@ -238,6 +242,6 @@ if __name__ == '__main__':
         print(lca.environmental_impacts[ek],'    ', exp_results[ek])
         print('')
 
-    lca.run_units_test()
+    # lca.run_units_test()
 
 

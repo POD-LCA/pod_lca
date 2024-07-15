@@ -15,7 +15,7 @@ class Process(object):
 
     def __init__(self):
         self.uuid           = None
-        self.name          = None
+        self.name           = None
         self.amount         = None
         self.scaling_factor = None
         self.level          = None
