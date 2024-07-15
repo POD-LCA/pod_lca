@@ -28,7 +28,7 @@ class LCA(object):
         self.ecoinvent_lcia_path    = None
         self.ecoinvent_lcia         = {}
         self.environmental_impacts  = {}
-        self.min_amount             = .01
+        self.min_amount             = .001
 
     def read_ecoinvent_maps(self):
         with open(os.path.join(pod_lca.DATA, 'maps', 'ecoinvent_{}_map.json'.format('processes')), 'r') as fp:
@@ -118,6 +118,8 @@ class LCA(object):
 
             input_exchanges  = [ e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
             output_exchanges = [ e for e in process['exchanges'] if not e['isInput']]
+            # waste_exchanges = [ e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] != 'WASTE_FLOW']
+
 
             for oex in output_exchanges:
                 fname = oex['flow']['name']
@@ -175,6 +177,14 @@ class LCA(object):
                         impact = self.ecoinvent_lcia[ick][flow.uuid]['value'] * flow.scaling_factor
                         self.environmental_impacts[ick] += impact
 
+    def run_units_test(self):
+        units = set()
+        for pk in self.processes:
+            pro = self.processes[pk]
+            punit = pro.unit
+            units.add(punit)
+        print(units)
+
 
 if __name__ == '__main__': 
 
@@ -216,10 +226,9 @@ if __name__ == '__main__':
     amounts = {k:lbs_to_kgs(amounts[k]) for k in amounts}  # tansform to kgs
     units = {k: 'kg' for k in amounts}
 
-    # WHILE LOOP VERSION 2 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # WHILE LOOP VERSION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-
-
+    lca.min_amount = .1
     lca.find_upstream_impacts_sequential(processes, amounts, units)
     lca.compute_environmental_impacts()
 
@@ -229,54 +238,6 @@ if __name__ == '__main__':
         print(lca.environmental_impacts[ek],'    ', exp_results[ek])
         print('')
 
-
-
-    # FOR LOOP version - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # lca.find_upstream_impacts_loops(processes, amounts)
-    # lca.compute_elementary_flow_impacts(processes, loops=True)
-
-    # for ek in lca.total:
-    #     print(ek)
-    #     print('{:.2f}%'.format(100*(lca.total[ek] / exp_results[ek])))
-    #     print(lca.total[ek])
-    #     print('')
-
-
-    # WHILE LOOP version - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    # lca.find_upstream_impacts_while_uuids(processes, amounts)
-    # lca.compute_elementary_flow_impacts(processes, loops=False)
-    
-    # ic = 'climate change - global warming potential (GWP100)'
-    # print(lca.total[ic])
-    # print('{:.2f}%'.format(100*(lca.total[ic] / exp_results[ic])))
-
-    # for ek in lca.total:
-    #     print(ek)
-    #     print('{:.2f}%'.format(100*(lca.total[ek] / exp_results[ek])))
-    #     print(lca.total[ek])
-    #     print('')
-
-
-    # ISURU Version (keeping a list of "seen" processes) - - - - - - - - - -  - - - - - - - - -
-
-    # lca.find_upstream_network(processes)
-
-    # lca.find_upstream_network([p1])
-    # lca.find_upstream_network([p2])
-    # lca.find_upstream_network([p3])
-    # lca.find_upstream_network([p4])
-
-    # key = lca.process_map[p4] + '_0'
-    # print(key)
-    # print('')
-    # for key2 in lca.graph[key]:
-    #     print(key2)
-    #     print(lca.graph[key][key2].keys())
-    #     print('')
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+    lca.run_units_test()
 
 
