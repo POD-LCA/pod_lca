@@ -117,12 +117,21 @@ class LCA(object):
             with open(fp, 'r') as fp:
                 process = json.load(fp)
 
-            input_exchanges  = [ e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
-            output_exchanges = [ e for e in process['exchanges'] if not e['isInput']]
-            # waste_exchanges = [ e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] != 'WASTE_FLOW']
+            input_exchanges  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
+            # output_exchanges = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW']
+            # waste_exchanges  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'WASTE_FLOW']
 
+            in_pro  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'PRODUCT_FLOW']
+            in_elm  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW']
+            # in_was  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'WASTE_FLOW']
+            # out_pro  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'PRODUCT_FLOW']
+            out_elm  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW']
+            out_was  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'WASTE_FLOW']
 
-            for oex in output_exchanges:
+            to_upstream = in_pro + out_was
+            to_elementary = in_elm + out_elm
+
+            for oex in to_elementary:
                 fname = oex['flow']['name']
                 ftype = oex['flow']['flowType']
                 fuuid = oex['flow']['@id']
@@ -141,12 +150,12 @@ class LCA(object):
                 self.outputs[fkey] = f
             
 
-            for inex in input_exchanges:
-                ename = inex['flow']['name']
-                eamnt = inex['amount']
-                eunit = inex['unit']['name']
+            for upex in to_upstream:
+                ename = upex['flow']['name']
+                eamnt = upex['amount']
+                eunit = upex['unit']['name']
                 e_scaling_factor = eamnt * pro_scaling_factor
-                e_pro_uuid = inex['defaultProvider']['@id']
+                e_pro_uuid = upex['defaultProvider']['@id']
                 e_pro_key = '{}_{}'.format(e_pro_uuid, pro_level + 1)
 
                 if e_scaling_factor > self.min_amount:
@@ -219,10 +228,10 @@ if __name__ == '__main__':
     p2 = 'market for tap water | tap water | EN15804, U - Rest-of-World'
     p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U - Rest-of-World'
     p4 = 'gravel production, crushed | gravel, crushed | EN15804, U - Rest-of-World'
-    # p5 = 'clinker production | clinker | EN15804, U'
+    p5 = 'clinker production | clinker | EN15804, U - United States'
     processes = [p1, p2, p3, p4]
-    # processes = [p1]
-    amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
+    # processes = [p2]
+    amounts = {p1:810, p2:2143, p3:1663, p4:40, p5:0}  # this is in lbs
 
     amounts = {k:lbs_to_kgs(amounts[k]) for k in amounts}  # tansform to kgs
     units = {k: 'kg' for k in amounts}
@@ -238,8 +247,8 @@ if __name__ == '__main__':
 
     for ek in lca.environmental_impacts:
         print(ek)
-        print('{:.2f}%'.format(100*(lca.environmental_impacts[ek] / exp_results[ek])))
-        print(lca.environmental_impacts[ek],'    ', exp_results[ek])
+        print('{:.2f}% compared to OLCA'.format(100*(lca.environmental_impacts[ek] / exp_results[ek])))
+        print(lca.environmental_impacts[ek],'  out of   ', exp_results[ek])
         print('')
 
     # lca.run_units_test()
