@@ -29,30 +29,9 @@ def create_ecoinvent_maps(path):
             # print(data.keys())
             name = data['name']
             location = data['location']['name']
-            # print(location)
-            if name in map:
-                map[name]['uuids'].append(os.path.splitext(file)[0])
-                map[name]['locations'].append(location)
-            else:
-                map[name] = {}
-                map[name]['uuids'] = [os.path.splitext(file)[0]]
-                map[name]['locations'] = [location]
-        
-        #TODO: This way of picking the best process based on location is not great!!!!
-        for key in map:
-            if len(map[key]['uuids']) > 1:
-                locations = map[key]['locations']
-                if 'United States' in locations:
-                    i = locations.index('United States')
-                elif 'Global' in locations:
-                    i = locations.index('Global')
-                elif 'Rest-of-World' in locations:
-                    i = locations.index('Rest-of-World')
-                else:
-                    i = 0
-                map[key] = map[key]['uuids'][i]
-            else:
-                map[key] = map[key]['uuids'][0]
+            key = '{} - {}'.format(name, location)
+            uuid = os.path.splitext(file)[0]
+            map[key] = uuid
 
         with open(os.path.join(pod_lca.DATA, 'maps', 'ecoinvent_{}_map.json'.format(folder)), 'w') as f:
             json.dump(map, f)
