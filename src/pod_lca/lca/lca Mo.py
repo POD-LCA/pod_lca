@@ -493,7 +493,7 @@ if __name__ == '__main__':
     p2 = 'market for tap water | tap water | EN15804, U'
     p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U'
     p4 = 'gravel production, crushed | gravel, crushed | EN15804, U'
-    # p5 = 'clinker production | clinker | EN15804, U'
+    #p5 = 'clinker production | clinker | EN15804, U'
     processes = [p1, p2, p3, p4]
     # processes = [p1]
     amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
