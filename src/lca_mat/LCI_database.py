@@ -20,6 +20,17 @@ class LCIDatabase():
 
         pass
 
-    def get_unit_process():
+    def get_unit_processess():
+
+        # TODO: implement method
+        pass
+
+class UnitProcess():
+
+    def __init__(self):
+        self.exchanges = {}
+
+    def get_exchanges():
 
         pass
+    
