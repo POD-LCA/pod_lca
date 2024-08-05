@@ -59,10 +59,10 @@ class Problem(object):
         unit_processes = database.get_unit_processess()
         for unit_process in unit_processes:
             exchanges = unit_process.get_exchanges()
-            for exchange in exchanges:
+            for exchange in exchanges.keys():
                 inventory_vector.add_inventory_item(exchange)
-                ## this only give the exchange name... how to transfer the other details of the exchange
-            P.add_process()
+                ## this only give the exchange name... how to transfer the other properties of the exchange
+            P.add_process(exchanges)
 
 
     def solve():
