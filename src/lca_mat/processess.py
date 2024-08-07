@@ -14,6 +14,8 @@ class ProcessessMatrix():
         self.mat_data = {}
         self.basis = InventoryVector()
         self.process_ids = {}
+        self.no_rows = 0
+        self.no_cols = 0
 
     # =================================
     # Setters / Getters
@@ -31,6 +33,22 @@ class ProcessessMatrix():
         """ Gets basis (i.e., inventory vector) of the processes space.
         """
         return self.basis
+    
+    def get_no_rows(self):
+        """ Gets number of rows in the Process matrix.
+        """
+        return self.no_rows
+    
+    def get_no_cols(self):
+        """ Gets number of cols in the Process matrix.
+        """
+        return self.no_cols
+    
+    def get_process_ids(self):
+        """ Gets a dictionary of process ids corresponding to columns of the Process matrix.
+        """
+        return self.process_ids
+
 
     # =================================
     # Methods
@@ -55,6 +73,9 @@ class ProcessessMatrix():
             new_process[inventory_item.get_row_num()] = inventory_item.get_qty()
         mat_data[col] = new_process
         self.process_ids[unit_process_id] = col
+
+        self.no_rows = inventory.get_inventory_size()
+        self.no_cols = col + 1
 
 # =================================
 # INVENTORY VECCTOR CLASS
@@ -123,6 +144,7 @@ class InventoryItem():
         self.row = row
         self.qty = 0.0
         self.unit = None
+        self.unit_process_id = None
 
     def get_row_num(self):
         """ Get row number of the inventory item in the process matrix basis.
@@ -155,3 +177,6 @@ class InventoryItem():
         
         if 'unit' in properties:
             self.unit = properties['unit']
+
+        if 'unit_process_id' in properties:
+            self.unit_process_id = properties['unit_process_id']           
