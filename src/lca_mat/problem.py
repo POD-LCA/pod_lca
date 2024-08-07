@@ -56,7 +56,7 @@ class Problem(object):
         P = ProcessessMatrix()
         inventory_vector = P.get_basis()
         database = self.get_database()
-        unit_processes = database.get_unit_processess()
+        unit_processes = database.get_unit_processess_all()
         for unit_process in unit_processes:
             exchanges = unit_process.get_exchanges()
             for exchange in exchanges.keys():
