@@ -14,14 +14,11 @@ class LCIDatabase():
     def __init__(self):
 
         self.name = None
-        self.data = None
 
     def get_unit_processess():
         """  Returns a list of UnitProcess Objects.
         
         """
-
-        # TODO: implement method
         pass
 
 # =================================
@@ -31,6 +28,7 @@ class LCIDatabase():
 class UnitProcess():
 
     def __init__(self):
+        self.unit_process_id = None
         self.exchanges = {}
         # TODO: Check other properties needed to be stored
 
@@ -55,7 +53,12 @@ class Exchange():
         self.name = None
         self.qty = 0.0
         self.unit = None
+        self.flow_id = None
+        self.is_elementary_flow = True
+        self.unit_process_id = None
 
     def get_qty(self):
 
         return self.qty
+
+    # TODO: create getters and setters
