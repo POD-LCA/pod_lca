@@ -16,7 +16,7 @@ class LCIDatabase():
         self.name = None
 
     def get_unit_processess():
-        """  Returns a list of UnitProcess Objects.
+        """  Returns a list of corresponding UnitProcess Objects.
         
         """
         pass
@@ -31,6 +31,10 @@ class UnitProcess():
         self.unit_process_id = None
         self.exchanges = {}
         # TODO: Check other properties needed to be stored
+
+    def get_process_id(self):
+
+        return self.unit_process_id
 
     def get_exchanges(self):
 

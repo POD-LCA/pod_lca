@@ -7,10 +7,10 @@ import time
 
 class EcoinventDatabase(LCIDatabase):
 
-    def __init__(self):
+    def __init__(self, file_path=None):
 
         self.name = "Ecoinvent"
-        self.file_path = None
+        self.file_path = file_path
 
     # =================================
     # Setters / Getters
@@ -23,6 +23,16 @@ class EcoinventDatabase(LCIDatabase):
     # =================================
     # Methods
     # =================================
+
+    def get_unit_processess(self, process_id=None):
+        """ Returns a list of corresponding UnitProcess Objects.
+        """
+
+        if process_id is None:
+            return self.get_unit_processess_all()
+        else:
+            return self.get_unit_processes_tree(process_id)
+
 
     def get_unit_processess_all(self):
         """ Returns a list of all UnitProcess Objects.
@@ -61,12 +71,10 @@ class EcoinventDatabase(LCIDatabase):
 
             i += 1
             n = len(id_list)
-            # print(i,n)
 
             unit_processes.extend([unit_process])
 
         return unit_processes
-
 
     @staticmethod
     def get_dependent_processes(unit_process):
@@ -111,7 +119,8 @@ class EcoinventDatabase(LCIDatabase):
 
             fp.close()
             return unit_process
-
+    # TODO: Else condition
+    
     # TODO: use getters and setters
     # TODO: docstrings
 
