@@ -1,5 +1,7 @@
 from lca_mat.processess import ProcessessMatrix
 
+from numpy import zeros
+
 import time
 
 __author__ = ["POD/LCA Team"]
@@ -18,6 +20,7 @@ class Problem(object):
         self.database = None
         self.demand = {}
         self.process_matrix = None
+        self.selection_matrix = None
         self.problem_settings = None
 
     # =================================
@@ -44,10 +47,20 @@ class Problem(object):
         
         Inputs:
         ------
-            database    : LCIDatabase obj.
+            process_matrix    : dict.
         
         """
         self.process_matrix = process_matrix
+
+    def set_selection_matrix(self, selection_matrix):
+        """ Sets selection matrix for the problem.
+        
+        Inputs:
+        ------
+            selection_matrix    : array.
+        
+        """
+        self.selection_matrix = selection_matrix
 
     def get_process_matrix(self):
         """ Gets process matrix for the problem.
@@ -82,6 +95,24 @@ class Problem(object):
 
         self.set_process_matrix(P)
 
+    def generate_selection_matrix(self):
+        
+        rows = self.get_process_matrix().get_no_rows()
+        cols = self.get_process_matrix().get_no_cols()
+
+        selecion_matrix = zeros((rows, cols), dtype = 'bool')
+
+        inventory_dict = self.get_process_matrix().get_basis().get_inventory_dict()
+        process_ids = self.get_process_matrix().get_process_ids()
+
+        for item in inventory_dict.keys():
+            if inventory_dict[item].unit_process_id is not None:
+                row = inventory_dict[item].get_row_num()
+                col = process_ids[inventory_dict[item].unit_process_id]
+                selecion_matrix[row][col] = True
+        
+        self.set_selection_matrix(selecion_matrix)
+
 
     def solve():
         """ Solves the LCI problem.
@@ -102,13 +133,28 @@ if __name__ == '__main__':
     from lca_mat import HOME
     from lca_mat.ecoinvent_database import EcoinventDatabase
 
+    from numpy import sum as npsum
+
     test_problem = Problem()
 
     database_path = HOME + '\Archive\ecoinvent_391_en15804gd_upr_n2_20230629'
     database = EcoinventDatabase(database_path)
 
     test_problem.set_database(database)
-    start = time.time()
     test_problem.create_process_matrix("a4c20f01-adb5-41ad-80af-fdc2b175585b")
-    end = time.time()
-    print(start - end)
+    test_problem.generate_selection_matrix()
+    
+    # why there more processes than inventory items??
+    npsum(test_problem.selection_matrix, axis=0)
+    npsum(test_problem.selection_matrix, axis=1)
+
+    # set demand
+    # solve
+        # determine the unit processe (cols) in the system
+        # determine corresponding rows
+        # partition and invert process matrix
+        # update inventory
+
+    # start = time.time()
+    # end = time.time()
+    # print(start - end)
