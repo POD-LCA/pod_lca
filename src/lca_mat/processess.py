@@ -54,7 +54,7 @@ class ProcessessMatrix():
     # Methods
     # =================================
 
-    def add_process(self, exchanges, unit_process_id):
+    def add_process(self, inventory_ids, unit_process_id):
         """ Adds a process to the Processes Matrix (P).
         
         Inputs:
@@ -68,8 +68,8 @@ class ProcessessMatrix():
 
         inventory = self.get_basis()
         new_process = {}
-        for exchange in exchanges.keys():
-            inventory_item = inventory.get_inventory_dict()[exchange]
+        for id in inventory_ids:
+            inventory_item = inventory.get_inventory_dict()[id]
             new_process[inventory_item.get_row_num()] = inventory_item.get_qty()
         mat_data[col] = new_process
         self.process_ids[unit_process_id] = col
@@ -86,6 +86,7 @@ class InventoryVector():
     def __init__(self):
         self.q = {}
         self.n = 0
+        self.flow_ids = {}
 
     # =================================
     # Setters / Getters
@@ -102,6 +103,10 @@ class InventoryVector():
 
         return self.n
     
+    def get_flow_ids(self):
+
+        return self.flow_ids
+    
     def set_inventory_size(self, n):
         """ Sets the number of items in the inventory.
         """
@@ -112,7 +117,16 @@ class InventoryVector():
     # Methods
     # =================================
 
-    def add_inventory_item(self, id, properties={}):
+    def add_inventory_items(self, exchanges):
+
+        inventory_ids = []
+        for exchange in exchanges.keys():
+            inventory_id = self.add_inventory_item(exchanges[exchange].get_flow_id(), exchanges[exchange].__dict__)
+            inventory_ids.extend([inventory_id])
+
+        return inventory_ids
+
+    def add_inventory_item(self, flow_id, properties={}):
         """ Adds a new item to the inventory (q).
         
         Inputs:
@@ -125,12 +139,30 @@ class InventoryVector():
         """
         
         inventory = self.get_inventory_dict()
+        flow_ids = self.get_flow_ids()
         n = self.get_inventory_size()
-        if not (id in inventory.keys()):
-            new_inventory_item = InventoryItem(id, n)
+
+        if flow_id in flow_ids.keys():
+            row = flow_ids[flow_id]
+            existing_product = inventory[row]
+            unit_process = existing_product.get_unit_process_id()
+            if properties['unit_process_id'] == unit_process:
+                new = False
+            else:
+                new = True                
+        else:
+            new = True
+
+        if new:
+            row = n
+            new_inventory_item = InventoryItem(flow_id, row)
             new_inventory_item.set_properties(properties)
-            inventory[id] = new_inventory_item
+            inventory[row] = new_inventory_item
+            flow_ids[flow_id] = row
             self.set_inventory_size(n+1)
+
+        return row
+        
 
 # =================================
 # INVENTORY ITEM CLASS
@@ -145,6 +177,11 @@ class InventoryItem():
         self.qty = 0.0
         self.unit = None
         self.unit_process_id = None
+        self.location = None
+
+    def get_name(self):
+
+        return self.name
 
     def get_row_num(self):
         """ Get row number of the inventory item in the process matrix basis.
@@ -164,6 +201,14 @@ class InventoryItem():
 
         return self.unit
     
+    def get_unit_process_id(self):
+
+        return self.unit_process_id
+    
+    def get_location(self):
+
+        return self.location
+    
     
     def set_properties(self, properties={}):
         """ Set propertise of the inventory item.
@@ -179,4 +224,7 @@ class InventoryItem():
             self.unit = properties['unit']
 
         if 'unit_process_id' in properties:
-            self.unit_process_id = properties['unit_process_id']           
+            self.unit_process_id = properties['unit_process_id']       
+
+        if 'location' in properties:
+            self.location = properties['location']      
