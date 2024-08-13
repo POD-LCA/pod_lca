@@ -31,6 +31,7 @@ class UnitProcess():
         self.unit_process_id = None
         self.name = name
         self.exchanges = {}
+        self.location = None
         # TODO: Check other properties needed to be stored
 
     def get_name(self):
@@ -44,6 +45,10 @@ class UnitProcess():
     def get_exchanges(self):
 
         return self.exchanges
+    
+    def get_location(self):
+
+        return self.location
     
     def set_exchange(self, name, exchange):
 
@@ -63,7 +68,9 @@ class Exchange():
         self.qty = 0.0
         self.unit = None
         self.flow_id = None
-        self.is_elementary_flow = True
+        self.is_elementary_flow = False
+        self.is_product_flow = False
+        self.is_waste_flow = False
         self.unit_process_id = None
         self.location = None
 

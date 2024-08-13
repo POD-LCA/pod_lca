@@ -40,6 +40,23 @@ class EcoinventDatabase(LCIDatabase):
     def print_exchange(self):
 
         pass
+
+    # =================================
+    # Searchers
+    # =================================
+
+    def find_process_by_name(self, name):
+        
+        process_lst = []
+
+        unit_processes = self.get_unit_processess()
+        for unit_process in unit_processes.keys():
+            if name in unit_processes[unit_process].get_name():
+                process_lst.extend([unit_processes[unit_process]])
+            
+        return process_lst
+
+
     # =================================
     # Methods
     # =================================
@@ -127,20 +144,31 @@ class EcoinventDatabase(LCIDatabase):
             name = lcia["name"]
             unit_process = UnitProcess(name)
             unit_process.unit_process_id = lcia["@id"] #+ '_' +  lcia["location"]["name"]
+            unit_process.location = lcia["location"]["name"]
         
             exchange_data = lcia["exchanges"]
             for item in exchange_data: 
                 exchange = Exchange()
+                
                 exchange.name = item["flow"]["name"]
                 exchange.qty = item["amount"]
                 exchange.unit = item["flow"]["refUnit"]
                 exchange.flow_id = item["flow"]["@id"]
-                if item["flow"]["flowType"] == "PRODUCT_FLOW":
-                    exchange.is_elementary_flow = False
-                    if item["isInput"]:
+
+                exchange.is_elementary_flow = True if item['flow']['flowType'] == 'ELEMENTARY_FLOW' else False
+                exchange.is_waste_flow = True if item['flow']['flowType'] == 'WASTE_FLOW' else False
+                exchange.is_product_flow = True if item['flow']['flowType'] == 'PRODUCT_FLOW' else False
+
+                if item["isInput"]:
+                    if exchange.is_product_flow:
                         exchange.unit_process_id = item["defaultProvider"]["@id"]
                         location = item["defaultProvider"]["location"] if isinstance(item["defaultProvider"]["location"], str) else item["defaultProvider"]["location"]["name"]
                         exchange.location = location
+                else:
+                    exchange.unit_process_id = unit_process.unit_process_id
+                    location = unit_process.location
+                    exchange.qty *= -1
+
                 exchange_key = item["internalId"]
                 unit_process.exchanges[exchange_key] = exchange
 

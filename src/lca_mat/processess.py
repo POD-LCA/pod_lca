@@ -54,7 +54,7 @@ class ProcessessMatrix():
     # Methods
     # =================================
 
-    def add_process(self, inventory_ids, unit_process_id):
+    def add_process(self, unit_process_id, inventory_ids, exchange_qtys):
         """ Adds a process to the Processes Matrix (P).
         
         Inputs:
@@ -68,9 +68,9 @@ class ProcessessMatrix():
 
         inventory = self.get_basis()
         new_process = {}
-        for id in inventory_ids:
-            inventory_item = inventory.get_inventory_dict()[id]
-            new_process[inventory_item.get_row_num()] = inventory_item.get_qty()
+        for i in range(len(inventory_ids)):
+            inventory_item = inventory.get_inventory_dict()[inventory_ids[i]]
+            new_process[inventory_item.get_row_num()] = exchange_qtys[i]
         mat_data[col] = new_process
         self.process_ids[unit_process_id] = col
 
@@ -119,12 +119,15 @@ class InventoryVector():
 
     def add_inventory_items(self, exchanges):
 
-        inventory_ids = []
+        inventory_ids, exchange_qtys = [], []
         for exchange in exchanges.keys():
             inventory_id = self.add_inventory_item(exchanges[exchange].get_flow_id(), exchanges[exchange].__dict__)
-            inventory_ids.extend([inventory_id])
+            exchange_qty = exchanges[exchange].get_qty()
+            
+            inventory_ids.extend([inventory_id])   
+            exchange_qtys.extend([exchange_qty])
 
-        return inventory_ids
+        return inventory_ids, exchange_qtys
 
     def add_inventory_item(self, flow_id, properties={}):
         """ Adds a new item to the inventory (q).
@@ -142,23 +145,24 @@ class InventoryVector():
         flow_ids = self.get_flow_ids()
         n = self.get_inventory_size()
 
+        new = True
         if flow_id in flow_ids.keys():
-            row = flow_ids[flow_id]
-            existing_product = inventory[row]
-            unit_process = existing_product.get_unit_process_id()
-            if properties['unit_process_id'] == unit_process:
-                new = False
-            else:
-                new = True                
-        else:
-            new = True
+            rows = flow_ids[flow_id]
+            for row in rows:
+                existing_product = inventory[row]
+                unit_process = existing_product.get_unit_process_id()
+                if properties['unit_process_id'] == unit_process:
+                    new = False
 
         if new:
             row = n
             new_inventory_item = InventoryItem(flow_id, row)
             new_inventory_item.set_properties(properties)
             inventory[row] = new_inventory_item
-            flow_ids[flow_id] = row
+            if flow_id in flow_ids.keys():
+                flow_ids[flow_id].extend([row])
+            else:
+                flow_ids[flow_id] = [row]
             self.set_inventory_size(n+1)
 
         return row
@@ -216,9 +220,6 @@ class InventoryItem():
         
         if 'name' in properties:
             self.name = properties['name']
-        
-        if 'qty' in properties:
-            self.qty = properties['qty']
         
         if 'unit' in properties:
             self.unit = properties['unit']
