@@ -1,0 +1,165 @@
+import tkinter as tk
+
+class Process():
+
+    def __init__(self, name):
+        self.unit_process_id = None
+        self.name = name
+        self.exchanges = {}
+
+class ProcessVisualizer(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Process Visualizer")
+        self.geometry("800x600")
+        
+        # Canvas where objects will be dragged and dropped
+        self.canvas = tk.Canvas(self, bg="white", width=600, height=600)
+        self.canvas.pack(side=tk.RIGHT)
+        
+        # Menu for selecting objects
+        self.menu_frame = tk.Frame(self, bg="grey", width=200, height=600)
+        self.menu_frame.pack(side=tk.LEFT, fill=tk.Y)
+        
+        self.create_menu()
+        self.drag_data = {"item": None, "x": 0, "y": 0}
+        self.connector_data = {"line": None, "start_x": 0, "start_y": 0}
+        self.connectors = []  # Store connector information
+
+        # self.process_data = {}
+
+    def create_menu(self):
+        # Add buttons or items in the menu to select objects
+        object_button = tk.Button(self.menu_frame, text="Process", command=self.create_rectangle)
+        object_button.pack(pady=10)
+        
+        connector_button = tk.Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
+        connector_button.pack(pady=10)
+        
+    def create_rectangle(self):
+        # Create a rectangle on the canvas with a unique tag
+        rect = self.canvas.create_rectangle(50, 50, 150, 100, fill="blue", tags="process")
+        self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
+        self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+        self.canvas.tag_bind(rect, "<ButtonRelease-1>", self.on_stop_drag)
+
+        # Create process object
+        self.process_data[rect] = Process()
+
+    def start_drawing_connector(self):
+        # Prepare the canvas for drawing a connector
+        self.canvas.bind("<ButtonPress-1>", self.on_start_connector)
+        self.canvas.bind("<B1-Motion>", self.on_draw_connector)
+        self.canvas.bind("<ButtonRelease-1>", self.on_finish_connector)
+
+        # Disable movement of rectangles while drawing a connector
+        for rect in self.canvas.find_withtag("process"):
+            self.canvas.tag_unbind(rect, "<ButtonPress-1>")
+            self.canvas.tag_unbind(rect, "<B1-Motion>")
+
+    def on_start_connector(self, event):
+        # Identify if the click is on a rectangle
+        start_item = self.canvas.find_closest(event.x, event.y)
+        if "process" in self.canvas.gettags(start_item):
+            self.connector_data["start_item"] = start_item
+            self.connector_data["start_x"] = event.x
+            self.connector_data["start_y"] = event.y
+            
+            # Create a line that will be updated as the user drags the mouse
+            self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
+
+    def on_draw_connector(self, event):
+        # Update the line as the user moves the mouse
+        if self.connector_data["line"] is not None:
+            self.canvas.coords(self.connector_data["line"], self.connector_data["start_x"], self.connector_data["start_y"], event.x, event.y)
+
+    def on_finish_connector(self, event):
+       # Identify if the release is on another rectangle
+        end_item = self.canvas.find_closest(event.x, event.y)
+        if self.connector_data["start_item"] is not None and "process" in self.canvas.gettags(end_item):
+            # Snap the line to the closest rectangle's coordinates
+            start_coords = self.canvas.coords(self.connector_data["start_item"])
+            end_coords = self.canvas.coords(end_item)
+            
+            # Calculate the center of the rectangles
+            start_center_x = (start_coords[0] + start_coords[2]) / 2
+            start_center_y = (start_coords[1] + start_coords[3]) / 2
+            end_center_x = (end_coords[0] + end_coords[2]) / 2
+            end_center_y = (end_coords[1] + end_coords[3]) / 2
+            
+            # Update the connector line to connect the centers of the rectangles
+            self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+            
+            # Store the connector with references to the connected rectangles
+            self.connectors.append({
+                "line": self.connector_data["line"],
+                "start_item": self.connector_data["start_item"],
+                "end_item": end_item
+            })
+
+            self.enable_rectangle_movement()
+
+        else:
+            # If not released on a rectangle, delete the line
+            self.canvas.delete(self.connector_data["line"])
+
+        # Reset connector data
+        self.connector_data = {"line": None, "start_item": None, "start_x": 0, "start_y": 0}
+        
+        # Re-enable movement of rectangles
+        for rect in self.canvas.find_withtag("process"):
+            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
+            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+
+        # Unbind the connector drawing functions
+        self.canvas.unbind("<ButtonPress-1>")
+        self.canvas.unbind("<B1-Motion>")
+        self.canvas.unbind("<ButtonRelease-1>")
+
+    def on_start_drag(self, event):
+        # Record the item and its starting position
+        self.drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
+        self.drag_data["x"] = event.x
+        self.drag_data["y"] = event.y
+
+    def on_drag(self, event):
+        # Compute how much the mouse has moved
+        dx = event.x - self.drag_data["x"]
+        dy = event.y - self.drag_data["y"]
+        
+        # Move the object the appropriate amount
+        self.canvas.move(self.drag_data["item"], dx, dy)
+        
+        # Update the starting position for the next movement
+        self.drag_data["x"] = event.x
+        self.drag_data["y"] = event.y
+
+        # Update any connectors attached to this item
+        self.update_connectors(self.drag_data["item"])
+    
+    def on_stop_drag(self, event):
+        # Update the connectors once the drag is complete
+        self.update_connectors(self.drag_data["item"])
+
+    def update_connectors(self, item):
+        item_id = item if isinstance(item, int) else item[0]
+        for connector in self.connectors:
+            start_item_id = connector["start_item"] if isinstance(connector["start_item"], int) else connector["start_item"][0]
+            end_item_id = connector["end_item"] if isinstance(connector["end_item"], int) else connector["end_item"][0]
+
+            if start_item_id == item_id or end_item_id == item_id:
+                start_coords = self.canvas.coords(connector["start_item"])
+                end_coords = self.canvas.coords(connector["end_item"])
+                
+                # Calculate the center of the rectangles
+                start_center_x = (start_coords[0] + start_coords[2]) / 2
+                start_center_y = (start_coords[1] + start_coords[3]) / 2
+                end_center_x = (end_coords[0] + end_coords[2]) / 2
+                end_center_y = (end_coords[1] + end_coords[3]) / 2
+                
+                # Update the connector line to stay connected to the rectangles
+                self.canvas.coords(connector["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+
+if __name__ == "__main__":
+    app = ProcessVisualizer()
+    app.mainloop()
