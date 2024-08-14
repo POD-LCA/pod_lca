@@ -1,4 +1,4 @@
-class Model():
+class Model:
 
     def __init__(self):
         self.processes = {}
@@ -28,20 +28,43 @@ class Model():
         return flow
 
 
-class Process():
+class Process:
 
     def __init__(self):
         self.id = None
         self.unit_process_id = None
         self.name = None
-        self.exchanges = {}
+        self.life_cycle_stage = None
+        self.year = 1900
+        self.impacts = Impacts()
 
-class Flow():
+class transportationProcess(Process):
+
+    def __init__(self):
+        super.__init__(self)
+        self.transported_distance = 0.0
+        self.transported_weight = 0.0
+
+class Flow:
 
     def __init__(self):
         self.id = None
-        self.flow_id = None
         self.name = None
+        self.type = None
+        self.category = None
+        self.qty = 0.0
+        self.units = None
+        self.impacts = Impacts()
+
+class Impacts:
+
+    def __init__(self):
+        self.process = None
+        self.GWP = 0.0
+        self.acid_pot = 0.0
+        self.eutro_pot = 0.0
+        self.ozone_dep = 0.0
+        self.smog = 0.0
 
 class Calculator():
 
