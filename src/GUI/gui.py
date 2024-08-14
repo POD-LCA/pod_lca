@@ -1,6 +1,4 @@
-from GUI.processes import Process
-from GUI.flows import Flow
-from GUI.calculator import Calculator
+from GUI.model import Calculator, Flow, Model, Process
 
 import tkinter as tk
 from tkinter import simpledialog
@@ -29,9 +27,11 @@ class ProcessVisualizer(tk.Tk):
 
         self.process_data = {}
         self.flow_data = {}
-        self.calculator = Calculator(self.process_data, self.flow_data, self.connector_data)
 
         self.tooltips = {}
+
+        # back-end
+        self.model = Model()
 
     # =================================
     # MENU
@@ -74,9 +74,13 @@ class ProcessVisualizer(tk.Tk):
         self.canvas.tag_bind(prc, "<ButtonRelease-1>", self.on_stop_drag)
         self.canvas.tag_bind(prc, "<Button-3>", self.show_process_context_menu) 
 
-        self.process_data[prc] = Process()
+        self.process_data[prc] = self.model.create_process()
 
         self.tooltips[prc] = Tooltip(self.canvas, f"This is a process")
+
+    def update_process(self):
+        
+        pass
 
 
     def show_process_context_menu(self, event):
@@ -110,9 +114,10 @@ class ProcessVisualizer(tk.Tk):
         self.canvas.tag_bind(flw, "<B1-Motion>", self.on_drag)
         self.canvas.tag_bind(flw, "<ButtonRelease-1>", self.on_stop_drag)
 
-        self.flow_data[flw] = Flow()
+        self.flow_data[flw] = self.model.create_flow()
 
         self.tooltips[flw] = Tooltip(self.canvas, f"This is a flow")
+
     # =================================
     # Exchanges
     # =================================
@@ -245,7 +250,7 @@ class ProcessVisualizer(tk.Tk):
 
     def calculate(self):
         
-        result = self.calculator.calculate()
+        result = self.model.calculator.calculate()
         
         self.output_box.config(state=tk.NORMAL)
         self.output_box.delete(1.0, tk.END)
