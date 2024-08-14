@@ -83,3 +83,23 @@ class Exchange():
         return self.flow_id
 
     # TODO: create getters and setters
+
+# =================================
+# IMPACT CLASS
+# =================================
+
+class Impact():
+
+    def __init__(self, name, id):
+        self.id = id
+        self.name = name
+        self.unit = None
+        self.qty = 0.0
+        self.flow_impacts = {}
+
+    def add_qty(self, qty):
+
+        self.qty += qty
+
+    
+        
