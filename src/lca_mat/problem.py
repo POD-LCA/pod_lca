@@ -1,6 +1,9 @@
 from lca_mat.processess import ProcessessMatrix
+from lca_mat.linear_algebra import LinearAlgebra
 
-from numpy import where, zeros
+from numpy import array, ones
+from numpy.linalg import inv
+from scipy.sparse import csr_matrix
 
 import os
 import shutil
@@ -92,7 +95,7 @@ class Problem(object):
         """
         return self.product_process_matrix
     
-    def get_product_exchange_matrix(self):
+    def get_process_exchange_matrix(self):
 
         return self.process_exchange_matrix
     
@@ -180,9 +183,12 @@ class Problem(object):
         inventory_vector = P.get_basis()
         database = self.get_database()
         unit_processes = database.get_unit_processess(process_id)
+        start = time.time()
         for unit_process in unit_processes.keys():
             inventory_ids, exchange_qtys = inventory_vector.add_inventory_items(unit_processes[unit_process].get_exchanges())
             P.add_process(unit_processes[unit_process].get_process_id(), inventory_ids, exchange_qtys)
+        end = time.time() 
+        print(end - start) ## TODO: Improve efficiency --- takes 140 -180 s to open
 
         self.set_process_matrix(P)
 
@@ -195,17 +201,27 @@ class Problem(object):
         rows = self.get_process_matrix().get_no_rows()
         cols = self.get_process_matrix().get_no_cols()
 
-        product_process_matrix = zeros((rows, cols), dtype = 'bool')
-
         inventory_dict = self.get_process_matrix().get_basis().get_inventory_dict()
         process_ids = self.get_process_matrix().get_process_ids()
+
+        data = []
+        row_indices = []
+        col_indices = []
 
         for item in inventory_dict.keys():
             if inventory_dict[item].unit_process_id is not None:
                 row = inventory_dict[item].get_row_num()
                 col = process_ids[inventory_dict[item].unit_process_id]
-                product_process_matrix[row][col] = True
-        
+
+                row_indices.append(row)
+                col_indices.append(col)
+                data.append(True) 
+            # else:
+            #     if not inventory_dict[item].is_elementary_flow:
+            #         raise NotImplementedError
+
+        product_process_matrix = csr_matrix((data, (row_indices, col_indices)), shape=(rows, cols))
+
         self.set_product_process_matrix(product_process_matrix)
 
 
@@ -214,19 +230,24 @@ class Problem(object):
         rows = self.get_process_matrix().get_no_rows()
         cols = self.get_process_matrix().get_no_cols()
 
-        process_exchange_matrix = zeros((rows, cols), dtype = 'bool')
-
         process_mat_data = self.get_process_matrix().get_mat_data()
+
+        data = []
+        row_indices = []
+        col_indices = []
 
         for col in range(cols):
             for row in process_mat_data[col].keys():
-                process_exchange_matrix[row][col] = True
-
+                row_indices.append(row)
+                col_indices.append(col)
+                data.append(True) 
+                
+        process_exchange_matrix = csr_matrix((data, (row_indices, col_indices)), shape=(rows, cols))
 
         self.set_process_exchange_matrix(process_exchange_matrix)
 
 
-    def solve():
+    def solve(self):
         """ Solves the LCI problem.
         
         Inputs:
@@ -237,7 +258,29 @@ class Problem(object):
         -------
         
         """
-        pass
+        
+        rows, cols, product_rows = self._partition_process_matrix()
+
+        P = LinearAlgebra.mat_data_to_np_mat(self.get_process_matrix().get_mat_data())
+        d = self.get_demand()
+
+        A = P[product_rows, :][:, cols]
+        if len(product_rows) == len(cols):
+            # TODO: convert d into an array first. (Is there an advantage to keeping d as a dictionary --- could be an array)
+            # s = inv(A) * d[rows]
+            pass
+        else:
+            print("Product matrix is not square. Pseudo-inverse is considered.")
+            pass
+        
+        mask = ones(P.shape[0], dtype=bool)
+        mask[product_rows] = False
+        B = P[mask, :][:, cols]
+
+        # g = B * s   
+        # solve
+            # update inventory
+
     
     # =================================
     # Private Methods
@@ -245,36 +288,36 @@ class Problem(object):
 
     def _partition_process_matrix(self, tol = 0.001):
 
-
-        P = self.get_process_matrix()
         PP = self.get_product_process_matrix()
-        PE = self.get_product_exchange_matrix()
+        PE = self.get_process_exchange_matrix()
 
-        rows = set()
-        cols = set()
+        rows = []
+        cols = []
 
         d = self.get_demand()
         for row in d.keys():
             if d[row] > tol:
-                rows.add(row)
+                rows.extend([row])
 
         no_rows, no_cols = len(rows), len(cols)
         update = True
         while update:
-            cols.update(where(PP[list(rows),:])[1].tolist())
-            rows.update(where(PE[:, list(cols)])[0].tolist())
+            
+            cols.extend(PP[rows,:].nonzero()[1].tolist())
+            rows.extend(PE[:, cols].nonzero()[0].tolist())
+
+            cols = list(set(cols))
+            rows = list(set(rows))
 
             if (no_rows == len(rows)) and (no_cols == len(cols)):
                 update = False
             else:
                 no_rows, no_cols = len(rows), len(cols)
 
-        # TODO: get the rows corresponding to processes
+        product_rows = PP[:,cols].nonzero()[0].tolist()
 
-        return list(rows), list(cols)
-        
-
-
+        return list(set(rows)), list(set(cols)), product_rows
+    
 
 if __name__ == '__main__':
 
@@ -289,7 +332,7 @@ if __name__ == '__main__':
     database = EcoinventDatabase(database_path)
 
     test_problem.set_database(database)
-    test_problem.create_process_matrix() # "a4c20f01-adb5-41ad-80af-fdc2b175585b"
+    test_problem.create_process_matrix()
     test_problem.generate_product_process_matrix()
     test_problem.generate_process_exchange_matrix()
 
@@ -317,28 +360,21 @@ if __name__ == '__main__':
     # p3 = 'f51d7ccf-0bee-430d-98a3-8334adbe39fc'
     # p4 = '37eceabd-b33f-4757-a4b9-5c51dee1710d'
 
-    # col = test_problem.get_process_matrix().get_process_ids()['c8671c12-d160-44e7-9d93-e99d373cbd4a']
-    # output_row = [key for key, value in test_problem.get_process_matrix().get_mat_data()[col].items() if value < 0]
+    col = test_problem.get_process_matrix().get_process_ids()['b6d92fa7-13c9-448b-9231-4736c9c4005a']
+    output_row = [key for key, value in test_problem.get_process_matrix().get_mat_data()[col].items() if value < 0]
 
     # product row
-    # p1 = 250132
-    # p2 = 104168
-    # p3 = 211522
-    # p4 = 243025
+    # p1 = 13319
+    # p2 = 
+    # p3 = 
+    # p4 = 
 
-    test_problem.set_demand(250132, val=5)
-
-    test_problem.print_unit_processes()
+    # test_problem.print_unit_processes()
     # test_problem.print_inventory()
 
-    rows, cols = test_problem._partition_process_matrix()
-    # TODO: Compare tree method with matrix method (see they get the same number of process)
+    test_problem.set_demand(13319, val=5)
 
-    # solve
-        # determine the unit processe (cols) in the system
-        # determine corresponding rows
-        # partition and invert process matrix
-        # update inventory
+    test_problem.solve()
 
     # start = time.time()
     # end = time.time()

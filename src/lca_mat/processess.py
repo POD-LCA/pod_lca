@@ -153,6 +153,7 @@ class InventoryVector():
                 unit_process = existing_product.get_unit_process_id()
                 if properties['unit_process_id'] == unit_process:
                     new = False
+                    break
 
         if new:
             row = n
@@ -182,6 +183,7 @@ class InventoryItem():
         self.unit = None
         self.unit_process_id = None
         self.location = None
+        self.is_elementary_flow = False
 
     def get_name(self):
 
@@ -228,4 +230,7 @@ class InventoryItem():
             self.unit_process_id = properties['unit_process_id']       
 
         if 'location' in properties:
-            self.location = properties['location']      
+            self.location = properties['location']     
+
+        if 'is_elementary_flow' in properties:
+            self.is_elementary_flow = properties['is_elementary_flow'] 

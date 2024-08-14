@@ -23,7 +23,7 @@ class LinearAlgebra():
             if max_nnz_row > no_row:
                 no_row = max_nnz_row
         
-        mat = zeros((no_row, no_col))
+        mat = zeros((no_row + 1, no_col))
         
         for col in mat_data.keys():
             for row in mat_data[col].keys():

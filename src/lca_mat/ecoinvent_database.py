@@ -125,9 +125,8 @@ class EcoinventDatabase(LCIDatabase):
 
         exchanges = unit_process.get_exchanges()
         for exchange in exchanges.keys():
-            if not exchanges[exchange].is_elementary_flow:
-                if exchanges[exchange].unit_process_id is not None:
-                    dependent_processes.extend([exchanges[exchange].unit_process_id])
+            if exchanges[exchange].is_product_flow:
+                dependent_processes.extend([exchanges[exchange].unit_process_id])
 
         return dependent_processes
     
@@ -165,7 +164,8 @@ class EcoinventDatabase(LCIDatabase):
                         location = item["defaultProvider"]["location"] if isinstance(item["defaultProvider"]["location"], str) else item["defaultProvider"]["location"]["name"]
                         exchange.location = location
                 else:
-                    exchange.unit_process_id = unit_process.unit_process_id
+                    if exchange.is_product_flow:
+                        exchange.unit_process_id = unit_process.unit_process_id
                     location = unit_process.location
                     exchange.qty *= -1
 
