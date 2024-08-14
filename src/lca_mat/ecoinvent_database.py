@@ -1,4 +1,4 @@
-from lca_mat.LCI_database import Exchange, LCIDatabase, UnitProcess
+from lca_mat.LCI_database import Exchange, LCIDatabase, UnitProcess, Impact
 
 import json
 import os
@@ -7,19 +7,25 @@ import time
 
 class EcoinventDatabase(LCIDatabase):
 
-    def __init__(self, file_path=None):
+    def __init__(self, process_file_path=None, impact_file_path=None):
 
         self.name = "Ecoinvent"
-        self.file_path = file_path
+        self.process_file_path = process_file_path
+        self.impact_file_path = impact_file_path
         self.unit_processes = {}
+        self.impacts = {}
 
     # =================================
     # Setters / Getters
     # =================================
 
-    def set_file_path(self, file_path):
+    def set_process_file_path(self, file_path):
 
-        self.file_path = file_path
+        self.process_file_path = file_path
+
+    def set_impact_file_path(self, file_path):
+
+        self.impact_file_path = file_path
 
     def set_unit_processes(self, unit_processes):
 
@@ -82,7 +88,7 @@ class EcoinventDatabase(LCIDatabase):
 
         unit_processes = {}
 
-        path = os.path.join(self.file_path, 'processes')
+        path = os.path.join(self.process_file_path, 'processes')
         files = os.listdir(path)
         for file in files:
             if file.endswith('json'):
@@ -98,7 +104,7 @@ class EcoinventDatabase(LCIDatabase):
 
         unit_processes = {}
 
-        path = os.path.join(self.file_path, 'processes')
+        path = os.path.join(self.process_file_path, 'processes')
         id_list = [root_id]
         n = len(id_list)
         i = 0
@@ -115,6 +121,25 @@ class EcoinventDatabase(LCIDatabase):
 
             unit_processes[process_id] = unit_process
         return unit_processes
+
+    def get_impacts(self):
+
+        folder = os.path.join(self.impact_file_path, 'lcia_categories')
+        files = os.listdir(folder)
+        for file in files:
+            file_path = os.path.join(folder, file)
+            if file.endswith('json'):
+                with open(file_path, 'r', encoding='utf-8') as fp:
+                    lcia = json.load(fp)
+
+                id = os.path.splitext(file)[0]
+                name = lcia["name"]   
+                impact = Impact(name, id)
+                impact.unit = lcia["refUnit"]
+                for impact_factor in  lcia["impactFactors"]:
+                    impact.flow_impacts[impact_factor["flow"]["@id"]] = impact_factor["value"]
+
+                self.impacts[file] = impact
 
     @staticmethod
     def get_dependent_processes(unit_process):
@@ -185,11 +210,10 @@ if __name__ == '__main__':
     from lca_mat import HOME
 
     database = EcoinventDatabase()
-    database.set_file_path(HOME + '\Archive\ecoinvent_391_en15804gd_upr_n2_20230629')
+    database.set_process_file_path(HOME + '\Archive\ecoinvent_391_en15804gd_upr_n2_20230629')
+    database.set_impact_file_path(HOME + '\Archive\ecoinvent_3_9_1_LCIA_Methods_openLCA_2_(1)')
 
     start = time.time()
-    # database.get_unit_processess_all()
-    database.get_unit_processes_tree("a4c20f01-adb5-41ad-80af-fdc2b175585b")
-    end = time.time()
-    elapsed = start - end
-    print(elapsed)
+    database.get_unit_processess_all()
+    # database.get_unit_processes_tree("a4c20f01-adb5-41ad-80af-fdc2b175585b")
+    database.get_impacts()

@@ -1,8 +1,8 @@
 from lca_mat.processess import ProcessessMatrix
 from lca_mat.linear_algebra import LinearAlgebra
 
-from numpy import array, ones
-from numpy.linalg import inv
+from numpy import zeros, ones, matmul
+from scipy.linalg import inv
 from scipy.sparse import csr_matrix
 
 import os
@@ -24,10 +24,11 @@ class Problem(object):
     def __init__(self):
         self.database = None
         self.process_matrix = None
-        self.demand = {}
+        self.demand = None
         self.product_process_matrix = None
         self.process_exchange_matrix = None
         self.problem_settings = None
+        self.impacts = None
 
     # =================================
     # Setters / Getters
@@ -75,10 +76,10 @@ class Problem(object):
 
     def set_demand(self, row, val):
 
-        if self.get_demand():
-            self.demand[row] = val
-        else:
+        if self.get_demand() is None:
             print("No inventory to set demand. Create process matrix before setting demand.")
+        else:
+            self.demand[row] = val
 
     def get_database(self):
         """ Gets database for the problem.
@@ -183,20 +184,60 @@ class Problem(object):
         inventory_vector = P.get_basis()
         database = self.get_database()
         unit_processes = database.get_unit_processess(process_id)
-        start = time.time()
         for unit_process in unit_processes.keys():
             inventory_ids, exchange_qtys = inventory_vector.add_inventory_items(unit_processes[unit_process].get_exchanges())
             P.add_process(unit_processes[unit_process].get_process_id(), inventory_ids, exchange_qtys)
-        end = time.time() 
-        print(end - start) ## TODO: Improve efficiency --- takes 140 -180 s to open
 
         self.set_process_matrix(P)
 
+        self._generate_product_process_matrix()
+        self._generate_process_exchange_matrix()
+
         # create demand matrix with all zeros
         rows = self.get_process_matrix().get_no_rows()
-        self.demand = dict.fromkeys(range(rows), 0)
+        self.demand = zeros(rows)
 
-    def generate_product_process_matrix(self):
+    def solve(self):
+        """ Solves the LCI problem.
+        
+        Inputs:
+        ------
+        
+        
+        Returns:
+        -------
+        
+        """
+        
+        _, cols, product_rows = self._partition_process_matrix()
+
+        P = LinearAlgebra.mat_data_to_np_mat(self.get_process_matrix().get_mat_data())
+        d = self.get_demand()
+        f = d[product_rows]
+
+        A = P[product_rows, :][:, cols]
+        if len(product_rows) == len(cols):
+            s = matmul(inv(A), f)
+        else:
+            print("Product matrix is not square. Pseudo-inverse is considered.")
+            pass
+        
+        mask = ones(P.shape[0], dtype=bool)
+        mask[product_rows] = False
+        B = P[mask, :][:, cols]
+
+        g =  matmul(B, s)
+        d[mask] = g
+
+        # update inventory
+        # calculate impacts
+
+    
+    # =================================
+    # Private Methods
+    # =================================
+
+    def _generate_product_process_matrix(self):
         
         rows = self.get_process_matrix().get_no_rows()
         cols = self.get_process_matrix().get_no_cols()
@@ -225,7 +266,7 @@ class Problem(object):
         self.set_product_process_matrix(product_process_matrix)
 
 
-    def generate_process_exchange_matrix(self):
+    def _generate_process_exchange_matrix(self):
         
         rows = self.get_process_matrix().get_no_rows()
         cols = self.get_process_matrix().get_no_cols()
@@ -246,46 +287,6 @@ class Problem(object):
 
         self.set_process_exchange_matrix(process_exchange_matrix)
 
-
-    def solve(self):
-        """ Solves the LCI problem.
-        
-        Inputs:
-        ------
-        
-        
-        Returns:
-        -------
-        
-        """
-        
-        rows, cols, product_rows = self._partition_process_matrix()
-
-        P = LinearAlgebra.mat_data_to_np_mat(self.get_process_matrix().get_mat_data())
-        d = self.get_demand()
-
-        A = P[product_rows, :][:, cols]
-        if len(product_rows) == len(cols):
-            # TODO: convert d into an array first. (Is there an advantage to keeping d as a dictionary --- could be an array)
-            # s = inv(A) * d[rows]
-            pass
-        else:
-            print("Product matrix is not square. Pseudo-inverse is considered.")
-            pass
-        
-        mask = ones(P.shape[0], dtype=bool)
-        mask[product_rows] = False
-        B = P[mask, :][:, cols]
-
-        # g = B * s   
-        # solve
-            # update inventory
-
-    
-    # =================================
-    # Private Methods
-    # =================================
-
     def _partition_process_matrix(self, tol = 0.001):
 
         PP = self.get_product_process_matrix()
@@ -295,7 +296,7 @@ class Problem(object):
         cols = []
 
         d = self.get_demand()
-        for row in d.keys():
+        for row in range(len(d)):
             if d[row] > tol:
                 rows.extend([row])
 
@@ -318,6 +319,13 @@ class Problem(object):
 
         return list(set(rows)), list(set(cols)), product_rows
     
+    def _set_impacts(self):
+
+        pass
+        # for each impact
+            # for each flow
+                # get flow in inventory
+                #   
 
 if __name__ == '__main__':
 
@@ -333,8 +341,6 @@ if __name__ == '__main__':
 
     test_problem.set_database(database)
     test_problem.create_process_matrix()
-    test_problem.generate_product_process_matrix()
-    test_problem.generate_process_exchange_matrix()
 
     # processess
     # p1 = 'cement production, Portland | cement, Portland | EN15804, U - United States'
@@ -360,8 +366,8 @@ if __name__ == '__main__':
     # p3 = 'f51d7ccf-0bee-430d-98a3-8334adbe39fc'
     # p4 = '37eceabd-b33f-4757-a4b9-5c51dee1710d'
 
-    col = test_problem.get_process_matrix().get_process_ids()['b6d92fa7-13c9-448b-9231-4736c9c4005a']
-    output_row = [key for key, value in test_problem.get_process_matrix().get_mat_data()[col].items() if value < 0]
+    # col = test_problem.get_process_matrix().get_process_ids()['b6d92fa7-13c9-448b-9231-4736c9c4005a']
+    # output_row = [key for key, value in test_problem.get_process_matrix().get_mat_data()[col].items() if value < 0]
 
     # product row
     # p1 = 13319
@@ -376,6 +382,4 @@ if __name__ == '__main__':
 
     test_problem.solve()
 
-    # start = time.time()
-    # end = time.time()
-    # print(start - end)
+    # print impacts
