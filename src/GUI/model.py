@@ -41,7 +41,7 @@ class Process:
 class transportationProcess(Process):
 
     def __init__(self):
-        super.__init__(self)
+        super().__init__(self)
         self.transported_distance = 0.0
         self.transported_weight = 0.0
 
