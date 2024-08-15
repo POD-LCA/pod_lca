@@ -8,12 +8,10 @@ import time
 class EcoinventDatabase(LCIDatabase):
 
     def __init__(self, process_file_path=None, impact_file_path=None):
-
+        super().__init__()
         self.name = "Ecoinvent"
         self.process_file_path = process_file_path
         self.impact_file_path = impact_file_path
-        self.unit_processes = {}
-        self.impacts = {}
 
     # =================================
     # Setters / Getters
@@ -95,6 +93,8 @@ class EcoinventDatabase(LCIDatabase):
                 process_id = os.path.splitext(file)[0]    
                 unit_process = EcoinventDatabase.get_unit_process(process_id, path)
                 unit_processes[process_id] = unit_process
+        
+        self.unit_processes = unit_processes
                         
         return unit_processes
     
@@ -120,9 +120,12 @@ class EcoinventDatabase(LCIDatabase):
             n = len(id_list)
 
             unit_processes[process_id] = unit_process
+        
+        self.unit_processes = unit_processes
+
         return unit_processes
 
-    def get_impacts(self):
+    def load_impacts(self):
 
         folder = os.path.join(self.impact_file_path, 'lcia_categories')
         files = os.listdir(folder)
@@ -140,6 +143,8 @@ class EcoinventDatabase(LCIDatabase):
                     impact.flow_impacts[impact_factor["flow"]["@id"]] = impact_factor["value"]
 
                 self.impacts[file] = impact
+
+        return self.impacts
 
     @staticmethod
     def get_dependent_processes(unit_process):
@@ -216,4 +221,4 @@ if __name__ == '__main__':
     start = time.time()
     database.get_unit_processess_all()
     # database.get_unit_processes_tree("a4c20f01-adb5-41ad-80af-fdc2b175585b")
-    database.get_impacts()
+    database.load_impacts()

@@ -28,7 +28,6 @@ class Problem(object):
         self.product_process_matrix = None
         self.process_exchange_matrix = None
         self.problem_settings = None
-        self.impacts = None
 
     # =================================
     # Setters / Getters
@@ -43,7 +42,8 @@ class Problem(object):
         
         """
         self.database = database
-    
+        database.load_impacts()
+
     def set_process_matrix(self, process_matrix):
         """ Sets process matrix for the problem.
         
@@ -103,6 +103,10 @@ class Problem(object):
     def get_demand(self):
 
         return self.demand
+    
+    def get_impacts(self):
+
+        return self.get_database().get_impacts()
 
     # =================================
     # Printer Methods
@@ -136,6 +140,8 @@ class Problem(object):
 
     def print_inventory(self, n=100):
 
+        # TODO: update with an option to only print non-zero quantity inventory items
+
         terminal_size = shutil.get_terminal_size()
         lines_per_page = terminal_size.lines - 2 
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -162,6 +168,21 @@ class Problem(object):
                     ctr += 1
         else:
             print("Create process matrix to load unit processess.")
+
+        
+    def print_impacts(self):
+
+        impacts = self.get_impacts()
+
+        if impacts:
+            print("impact name | qty ")
+            for impact in impacts:
+                prt_str = impacts[impact].get_name()
+                prt_str += (" | " + "{:.2f}".format(impacts[impact].get_qty()))
+                prt_str += (" " + impacts[impact].get_unit())
+                print(prt_str)
+        else:
+            print("Load database to print impacts.")
 
 
     # =================================
@@ -229,8 +250,12 @@ class Problem(object):
         g =  matmul(B, s)
         d[mask] = g
 
-        # update inventory
-        # calculate impacts
+        inventory = self.get_process_matrix().get_basis()
+        inventory_dict = inventory.get_inventory_dict()
+        for i in range(inventory.get_inventory_size()):
+            inventory_dict[i].set_qty(d[i])
+
+        self._set_impacts()
 
     
     # =================================
@@ -249,10 +274,12 @@ class Problem(object):
         row_indices = []
         col_indices = []
 
+
         for item in inventory_dict.keys():
             if inventory_dict[item].unit_process_id is not None:
+                process_id = inventory_dict[item].unit_process_id
                 row = inventory_dict[item].get_row_num()
-                col = process_ids[inventory_dict[item].unit_process_id]
+                col = process_ids[process_id]
 
                 row_indices.append(row)
                 col_indices.append(col)
@@ -321,11 +348,24 @@ class Problem(object):
     
     def _set_impacts(self):
 
-        pass
-        # for each impact
-            # for each flow
-                # get flow in inventory
-                #   
+        inventory = self.get_process_matrix().get_basis()
+        inventory_dict = inventory.get_inventory_dict()
+        inventory_flows = inventory.get_flow_ids()
+
+        impacts = self.get_impacts()
+
+        for impact in impacts.keys():
+            flows = impacts[impact].get_flows()
+            for flow in flows.keys():
+                rows = inventory_flows[flow]
+                unit_impact = flows[flow]
+                for row in rows:
+                    qty = abs(inventory_dict[row].get_qty())
+                    # TODO: check unit consistency
+                    # flow_unit = inventory_dict[row].get_unit()
+                    # impact_per_unit_ = impacts[impact]   (??)
+                    impacts[impact].add_qty(unit_impact * qty)
+
 
 if __name__ == '__main__':
 
@@ -336,8 +376,11 @@ if __name__ == '__main__':
 
     test_problem = Problem()
 
-    database_path = HOME + '\Archive\ecoinvent_391_en15804gd_upr_n2_20230629'
-    database = EcoinventDatabase(database_path)
+    process_database_path = HOME + '\Archive\ecoinvent_391_en15804gd_upr_n2_20230629'
+    impact_database_path = HOME + '\Archive\ecoinvent_3_9_1_LCIA_Methods_openLCA_2_(1)'
+
+    database = EcoinventDatabase(process_file_path=process_database_path,
+                                 impact_file_path=impact_database_path)
 
     test_problem.set_database(database)
     test_problem.create_process_matrix()
@@ -378,8 +421,8 @@ if __name__ == '__main__':
     # test_problem.print_unit_processes()
     # test_problem.print_inventory()
 
-    test_problem.set_demand(13319, val=5)
+    test_problem.set_demand(13319, val=367.41)
 
     test_problem.solve()
 
-    # print impacts
+    test_problem.print_impacts()

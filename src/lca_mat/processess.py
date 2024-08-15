@@ -214,6 +214,10 @@ class InventoryItem():
     def get_location(self):
 
         return self.location
+
+    def set_qty(self, qty):
+
+        self.qty = qty
     
     
     def set_properties(self, properties={}):

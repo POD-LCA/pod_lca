@@ -14,12 +14,25 @@ class LCIDatabase():
     def __init__(self):
 
         self.name = None
+        self.unit_processes = {}
+        self.impacts = {}
 
-    def get_unit_processess():
+    def get_unit_processess(self):
         """  Returns a list of corresponding UnitProcess Objects.
         
         """
         pass
+
+    def load_impacts(self):
+
+        pass
+
+    def get_impacts(self):
+
+        if self.impacts:
+            return self.impacts
+        else:
+            return self.load_impacts()
 
 # =================================
 # UNIT PROCESS CLASS
@@ -32,6 +45,8 @@ class UnitProcess():
         self.name = name
         self.exchanges = {}
         self.location = None
+        self.qty = None
+        self.unit = None
         # TODO: Check other properties needed to be stored
 
     def get_name(self):
@@ -96,6 +111,22 @@ class Impact():
         self.unit = None
         self.qty = 0.0
         self.flow_impacts = {}
+
+    def get_flows(self):
+
+        return self.flow_impacts
+    
+    def get_name(self):
+
+        return self.name
+    
+    def get_unit(self):
+
+        return self.unit
+    
+    def get_qty(self):
+
+        return self.qty
 
     def add_qty(self, qty):
 
