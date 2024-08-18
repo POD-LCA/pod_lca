@@ -116,6 +116,12 @@ class LCA(object):
             with open(fp, 'r') as fp:
                 process = json.load(fp)
 
+            in_pro  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'PRODUCT_FLOW']
+            in_elm  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW']
+            in_was  = [e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] == 'WASTE_FLOW']
+            # out_pro  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'PRODUCT_FLOW']
+            out_elm  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW']
+            out_was  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'WASTE_FLOW']
             input_exchanges  = [ e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
             output_exchanges = [ e for e in process['exchanges'] if not e['isInput']]
             # waste_exchanges = [ e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] != 'WASTE_FLOW']
@@ -225,8 +231,11 @@ if __name__ == '__main__':
     p2 = 'market for tap water | tap water | EN15804, U - Rest-of-World'
     p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U - Rest-of-World'
     p4 = 'gravel production, crushed | gravel, crushed | EN15804, U - Rest-of-World'
+    # p5 = 'clinker production | clinker | EN15804, U - United States'
     # p5 = 'clinker production | clinker | EN15804, U'
     processes = [p1, p2, p3, p4]
+    # processes = [p1]
+    amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
     # processes = [p1]
     amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
 
@@ -235,6 +244,7 @@ if __name__ == '__main__':
 
     # WHILE LOOP VERSION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+    lca.min_amount = .001
     lca.min_amount = .1
     lca.find_upstream_impacts_sequential(processes, amounts, units)
     lca.compute_environmental_impacts()
