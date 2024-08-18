@@ -1,0 +1,302 @@
+from GUI.model import Calculator, Flow, Model, Process
+
+import tkinter as tk
+from tkinter import simpledialog
+
+# =================================
+# CANVAS
+# =================================
+
+class ProcessVisualizer(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Process Visualizer")
+        self.geometry("800x600")
+        
+        self.canvas = tk.Canvas(self, bg="white", width=600, height=600)
+        self.canvas.pack(side=tk.RIGHT)
+        
+        # Menu
+        self.menu_frame = tk.Frame(self, bg="grey", width=200, height=600)
+        self.menu_frame.pack(side=tk.LEFT, fill=tk.Y)
+        
+        self.create_menu()
+        self.drag_data = {"item": None, "x": 0, "y": 0}
+        self.connector_data = {"line": None, "start_x": 0, "start_y": 0}
+        self.connectors = []
+
+        self.process_data = {}
+        self.flow_data = {}
+
+        self.tooltips = {}
+
+        # back-end
+        self.model = Model()
+
+    # =================================
+    # MENU
+    # =================================
+
+    def create_menu(self):
+        flow_object_button = tk.Button(self.menu_frame, text="Flow", command=self.create_flow)
+        flow_object_button.pack(pady=10)
+
+        process_object_button = tk.Button(self.menu_frame, text="Process", command=self.create_process)
+        process_object_button.pack(pady=10)
+
+        connector_button = tk.Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
+        connector_button.pack(pady=10)
+
+        output_frame = tk.Frame(self)
+        output_frame.pack(side=tk.BOTTOM, pady=10, fill="none")
+
+        self.output_box = tk.Text(output_frame, height=2, width=10, wrap="word")
+        self.output_box.pack(side=tk.LEFT, expand=True, fill=tk.X)
+        self.output_box.tag_configure("right", justify="right")
+        self.output_box.config(state=tk.DISABLED)
+
+        self.unit_label = tk.Label(output_frame, text="GWP")
+        self.unit_label.pack(side=tk.RIGHT, padx=(5, 0))
+
+        calculate_button = tk.Button(self, text="Calculate", command=self.calculate)
+        calculate_button.pack(side=tk.BOTTOM, pady=10)
+
+
+    # =================================
+    # Process Objects
+    # =================================
+        
+    def create_process(self):
+
+        prc = self.canvas.create_rectangle(50, 50, 150, 100, fill="blue", tags="process")
+        self.canvas.tag_bind(prc, "<ButtonPress-1>", self.on_start_drag)
+        self.canvas.tag_bind(prc, "<B1-Motion>", self.on_drag)
+        self.canvas.tag_bind(prc, "<ButtonRelease-1>", self.on_stop_drag)
+        self.canvas.tag_bind(prc, "<Button-3>", self.show_process_context_menu) 
+
+        self.process_data[prc] = self.model.create_process()
+
+        self.tooltips[prc] = Tooltip(self.canvas, f"This is a process")
+
+    def update_process(self):
+        
+        pass
+
+
+    def show_process_context_menu(self, event):
+        # Get the item ID under the mouse pointer
+        item = self.canvas.find_closest(event.x, event.y)[0]
+        self.context_menu = tk.Menu(self, tearoff=0)
+        self.context_menu.add_command(label="Change Color", command=lambda: self.change_color(item))
+        self.context_menu.add_command(label="Change Text", command=lambda: self.change_text(item))
+        self.context_menu.post(event.x_root, event.y_root)
+
+    def change_color(self, item):
+        color = simpledialog.askstring("Input", "Enter the color:")
+        if color:
+            self.canvas.itemconfig(item, fill=color)
+
+    def change_text(self, item):
+        pass
+        # current_text = self.canvas.itemcget(self.canvas.find_withtag("rectangle_text")[0], "text")
+        # new_text = simpledialog.askstring("Input", "Enter new text:", initialvalue=current_text)
+        # if new_text:
+        #     self.canvas.itemconfig(self.canvas.find_withtag("rectangle_text")[0], text=new_text)
+
+    # =================================
+    # Flow Objects
+    # =================================
+        
+    def create_flow(self):
+
+        flw = self.canvas.create_rectangle(50, 50, 150, 100, fill="pink", tags="flow")
+        self.canvas.tag_bind(flw, "<ButtonPress-1>", self.on_start_drag)
+        self.canvas.tag_bind(flw, "<B1-Motion>", self.on_drag)
+        self.canvas.tag_bind(flw, "<ButtonRelease-1>", self.on_stop_drag)
+
+        self.flow_data[flw] = self.model.create_flow()
+
+        self.tooltips[flw] = Tooltip(self.canvas, f"This is a flow")
+
+    # =================================
+    # Exchanges
+    # =================================
+
+    def start_drawing_connector(self):
+        self.canvas.bind("<ButtonPress-1>", self.on_start_connector)
+        self.canvas.bind("<B1-Motion>", self.on_draw_connector)
+        self.canvas.bind("<ButtonRelease-1>", self.on_finish_connector)
+
+        for rect in self.canvas.find_withtag("process"):
+            self.canvas.tag_unbind(rect, "<ButtonPress-1>")
+            self.canvas.tag_unbind(rect, "<B1-Motion>")
+
+        for rect in self.canvas.find_withtag("flow"):
+            self.canvas.tag_unbind(rect, "<ButtonPress-1>")
+            self.canvas.tag_unbind(rect, "<B1-Motion>")
+
+    def on_start_connector(self, event):
+        overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
+        start_item = None
+        
+        for item in overlapping_items:
+            if "process" in self.canvas.gettags(item) or "flow" in self.canvas.gettags(item):
+                start_item = item
+                break
+        
+        if start_item:
+            self.connector_data["start_item"] = start_item
+            self.connector_data["start_x"] = event.x
+            self.connector_data["start_y"] = event.y
+            
+            self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
+
+    def on_draw_connector(self, event):
+        if self.connector_data["line"] is not None:
+            self.canvas.coords(self.connector_data["line"], self.connector_data["start_x"], self.connector_data["start_y"], event.x, event.y)
+
+    def on_finish_connector(self, event):
+        overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
+        end_item = None
+        
+        for item in overlapping_items:
+            if "process" in self.canvas.gettags(item) or "flow" in self.canvas.gettags(item):
+                end_item = item
+                break
+
+        if self.connector_data["start_item"] is not None and ("process" in self.canvas.gettags(end_item) or "flow" in self.canvas.gettags(end_item)):
+            start_coords = self.canvas.coords(self.connector_data["start_item"])
+            end_coords = self.canvas.coords(end_item)
+            
+            start_center_x = (start_coords[0] + start_coords[2]) / 2
+            start_center_y = (start_coords[1] + start_coords[3]) / 2
+            end_center_x = (end_coords[0] + end_coords[2]) / 2
+            end_center_y = (end_coords[1] + end_coords[3]) / 2
+            
+            # connector line connects to the centers of the rectangles
+            self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+            self.canvas.itemconfig(self.connector_data["line"], arrow=tk.LAST)
+
+            self.connectors.append({
+                "line": self.connector_data["line"],
+                "start_item": self.connector_data["start_item"],
+                "end_item": end_item
+            })
+
+        else:
+            self.canvas.delete(self.connector_data["line"])
+
+        self.connector_data = {"line": None, "start_item": None, "start_x": 0, "start_y": 0}
+        
+        # Release rectangles
+        for rect in self.canvas.find_withtag("process"):
+            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
+            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+        
+        for rect in self.canvas.find_withtag("flow"):
+            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
+            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+
+        self.canvas.unbind("<ButtonPress-1>")
+        self.canvas.unbind("<B1-Motion>")
+        self.canvas.unbind("<ButtonRelease-1>")
+
+    # =================================
+    # On Canvas
+    # =================================
+
+    def on_start_drag(self, event):
+        self.drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
+        self.drag_data["x"] = event.x
+        self.drag_data["y"] = event.y
+
+    def on_drag(self, event):
+        dx = event.x - self.drag_data["x"]
+        dy = event.y - self.drag_data["y"]
+        
+        self.canvas.move(self.drag_data["item"], dx, dy)
+        
+        self.drag_data["x"] = event.x
+        self.drag_data["y"] = event.y
+
+        self.update_connectors(self.drag_data["item"])
+    
+    def on_stop_drag(self, event):
+
+        self.update_connectors(self.drag_data["item"])
+
+    def update_connectors(self, item):
+
+        item_id = item if isinstance(item, int) else item[0]
+        for connector in self.connectors:
+            start_item_id = connector["start_item"] if isinstance(connector["start_item"], int) else connector["start_item"][0]
+            end_item_id = connector["end_item"] if isinstance(connector["end_item"], int) else connector["end_item"][0]
+
+            if start_item_id == item_id or end_item_id == item_id:
+                start_coords = self.canvas.coords(connector["start_item"])
+                end_coords = self.canvas.coords(connector["end_item"])
+                
+                start_center_x = (start_coords[0] + start_coords[2]) / 2
+                start_center_y = (start_coords[1] + start_coords[3]) / 2
+                end_center_x = (end_coords[0] + end_coords[2]) / 2
+                end_center_y = (end_coords[1] + end_coords[3]) / 2
+                
+                # Connector line ends at the centroid of the rectangle
+                self.canvas.coords(connector["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+    
+    # =================================
+    # Calculate
+    # =================================
+
+    def calculate(self):
+        
+        result = self.model.calculator.calculate()
+        
+        self.output_box.config(state=tk.NORMAL)
+        self.output_box.delete(1.0, tk.END)
+        self.output_box.insert(tk.END, result, "right")
+        self.output_box.config(state=tk.DISABLED)
+
+# =================================
+# Tooltip
+# =================================
+
+class Tooltip:
+    # TODO: Debugging needed
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip = None
+        self.widget.bind("<Enter>", self.show_tooltip)
+        self.widget.bind("<Leave>", self.hide_tooltip)
+    
+    def show_tooltip(self, event):
+        if self.tooltip:
+            self.hide_tooltip(None)
+        
+        # Get the item ID where the mouse is hovering
+        item = self.widget.find_closest(event.x, event.y)[0]
+        bbox = self.widget.bbox(item)
+        if bbox:
+            x1, y1, x2, y2 = bbox
+            x = (x1 + x2) / 2
+            y = (y1 + y2) / 2
+            x = int(x + self.widget.winfo_rootx() + 25)  # Convert to int
+            y = int(y + self.widget.winfo_rooty() + 25)  # Convert to int
+            self.tooltip = tk.Toplevel(self.widget)
+            self.tooltip.wm_overrideredirect(True)
+            self.tooltip.wm_geometry(f"+{x}+{y}")
+            label = tk.Label(self.tooltip, text=self.text, background="lightyellow", borderwidth=1, relief="solid")
+            label.pack()
+    
+    def hide_tooltip(self, event):
+        if self.tooltip:
+            self.tooltip.destroy()
+            self.tooltip = None
+
+
+
+
+if __name__ == "__main__":
+    app = ProcessVisualizer()
+    app.mainloop()
