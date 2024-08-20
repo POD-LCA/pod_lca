@@ -1,7 +1,10 @@
-from GUI.model import Calculator, Flow, Model, Process
+from POD_LCA_MATERIAL.projectManager.projectManager import Project
+from GUI.GUI_inputManager import GUIInputManager
+from GUI.GUI_outputManager import GUIOutputManager
+from GUI.tooltip import Tooltip
 
 import tkinter as tk
-from tkinter import simpledialog
+from tkinter import messagebox, simpledialog, ttk
 
 # =================================
 # CANVAS
@@ -31,7 +34,7 @@ class ProcessVisualizer(tk.Tk):
         self.tooltips = {}
 
         # back-end
-        self.model = Model()
+        self.project = Project()
 
     # =================================
     # MENU
@@ -41,7 +44,7 @@ class ProcessVisualizer(tk.Tk):
         flow_object_button = tk.Button(self.menu_frame, text="Flow", command=self.create_flow)
         flow_object_button.pack(pady=10)
 
-        process_object_button = tk.Button(self.menu_frame, text="Process", command=self.create_process)
+        process_object_button = tk.Button(self.menu_frame, text="Process", command=self.open_popup_process)
         process_object_button.pack(pady=10)
 
         connector_button = tk.Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
@@ -65,8 +68,59 @@ class ProcessVisualizer(tk.Tk):
     # =================================
     # Process Objects
     # =================================
+
+    def open_popup_process(self):
+
+        popup = tk.Toplevel(self)
+        popup.title("Input Pop-Up")
+        popup.geometry("300x200")
         
-    def create_process(self):
+        name =  ProcessVisualizer._popup_input_field(popup, "Process name: ")    
+        life_cycle_stage = ProcessVisualizer._popup_input_field(popup, "Life cycle stage: ")  
+        qty = ProcessVisualizer._popup_input_field(popup, "qty: ")
+        units = ProcessVisualizer._popup_input_combo(popup, "units: ", ["m3", "kg"])  
+
+        button_frame = tk.Frame(popup)
+        button_frame.pack(pady=20)
+
+        ok_button = tk.Button(button_frame, text="OK", command=lambda: self.create_process(popup, name.get(), qty.get(), units.get()))
+        ok_button.pack(side=tk.LEFT, padx=10)
+
+        cancel_button = tk.Button(button_frame, text="Cancel", command=popup.destroy)
+        cancel_button.pack(side=tk.LEFT, padx=10)
+
+    @staticmethod
+    def _popup_input_field(popup, text):
+
+        input_frame = tk.Frame(popup)
+        input_frame.pack(pady=5, padx=10, anchor="w")
+        
+        label = tk.Label(input_frame, text=text)
+        label.pack(side=tk.LEFT, padx=(0, 10))
+        
+        data = tk.Entry(input_frame)
+        data.pack(side=tk.LEFT)
+
+        return data
+    
+    @staticmethod
+    def _popup_input_combo(popup, text, drop_down_list):
+
+        input_frame = tk.Frame(popup)
+        input_frame.pack(pady=5, padx=10, anchor="w")
+        
+        label = tk.Label(input_frame, text=text)
+        label.pack(side=tk.LEFT, padx=(0, 10))
+        
+        # Dropdown (Combobox) for Input 2
+        dropdown_values = drop_down_list
+        dropdown = ttk.Combobox(input_frame, values=dropdown_values)
+        dropdown.pack(side=tk.LEFT)
+        dropdown.current(0)
+
+        return dropdown
+        
+    def create_process(self, popup, name, qty, units):
 
         prc = self.canvas.create_rectangle(50, 50, 150, 100, fill="blue", tags="process")
         self.canvas.tag_bind(prc, "<ButtonPress-1>", self.on_start_drag)
@@ -74,9 +128,11 @@ class ProcessVisualizer(tk.Tk):
         self.canvas.tag_bind(prc, "<ButtonRelease-1>", self.on_stop_drag)
         self.canvas.tag_bind(prc, "<Button-3>", self.show_process_context_menu) 
 
-        self.process_data[prc] = self.model.create_process()
+        self.process_data[prc] = GUIInputManager.create_process(self.project.model, name, self.project)
 
         self.tooltips[prc] = Tooltip(self.canvas, f"This is a process")
+
+        popup.destroy()
 
     def update_process(self):
         
@@ -109,12 +165,12 @@ class ProcessVisualizer(tk.Tk):
         
     def create_flow(self):
 
-        flw = self.canvas.create_rectangle(50, 50, 150, 100, fill="pink", tags="flow")
+        flw = self.canvas.create_rectangle(50, 50, 150, 100, fill="pink", tags="product")
         self.canvas.tag_bind(flw, "<ButtonPress-1>", self.on_start_drag)
         self.canvas.tag_bind(flw, "<B1-Motion>", self.on_drag)
         self.canvas.tag_bind(flw, "<ButtonRelease-1>", self.on_stop_drag)
 
-        self.flow_data[flw] = self.model.create_flow()
+        self.flow_data[flw] = self.project.input_manger.create_product()
 
         self.tooltips[flw] = Tooltip(self.canvas, f"This is a flow")
 
@@ -256,46 +312,6 @@ class ProcessVisualizer(tk.Tk):
         self.output_box.delete(1.0, tk.END)
         self.output_box.insert(tk.END, result, "right")
         self.output_box.config(state=tk.DISABLED)
-
-# =================================
-# Tooltip
-# =================================
-
-class Tooltip:
-    # TODO: Debugging needed
-    def __init__(self, widget, text):
-        self.widget = widget
-        self.text = text
-        self.tooltip = None
-        self.widget.bind("<Enter>", self.show_tooltip)
-        self.widget.bind("<Leave>", self.hide_tooltip)
-    
-    def show_tooltip(self, event):
-        if self.tooltip:
-            self.hide_tooltip(None)
-        
-        # Get the item ID where the mouse is hovering
-        item = self.widget.find_closest(event.x, event.y)[0]
-        bbox = self.widget.bbox(item)
-        if bbox:
-            x1, y1, x2, y2 = bbox
-            x = (x1 + x2) / 2
-            y = (y1 + y2) / 2
-            x = int(x + self.widget.winfo_rootx() + 25)  # Convert to int
-            y = int(y + self.widget.winfo_rooty() + 25)  # Convert to int
-            self.tooltip = tk.Toplevel(self.widget)
-            self.tooltip.wm_overrideredirect(True)
-            self.tooltip.wm_geometry(f"+{x}+{y}")
-            label = tk.Label(self.tooltip, text=self.text, background="lightyellow", borderwidth=1, relief="solid")
-            label.pack()
-    
-    def hide_tooltip(self, event):
-        if self.tooltip:
-            self.tooltip.destroy()
-            self.tooltip = None
-
-
-
 
 if __name__ == "__main__":
     app = ProcessVisualizer()
