@@ -83,7 +83,7 @@ class LCA(object):
         return total_impact
 
     def find_upstream_impacts_sequential(self, processes_, amounts, units):
-        self.graph['source'] = {}
+
         temp_processes = []
         for pname in processes_:
             uuid = self.process_map[pname]
@@ -101,7 +101,6 @@ class LCA(object):
             
             temp_processes.append(key)
             self.graph[key] = {}
-            self.graph['source'].update({key: {}})
 
         counter = 0
         while len(temp_processes) > 0:
@@ -123,11 +122,19 @@ class LCA(object):
             # out_pro  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'PRODUCT_FLOW']
             out_elm  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'ELEMENTARY_FLOW']
             out_was  = [e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] == 'WASTE_FLOW']
+            input_exchanges  = [ e for e in process['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
+            output_exchanges = [ e for e in process['exchanges'] if not e['isInput']]
+            # waste_exchanges = [ e for e in process['exchanges'] if not e['isInput'] and e['flow']['flowType'] != 'WASTE_FLOW']
 
-            to_upstream = in_pro + out_was
-            to_elementary = in_elm + out_elm
+            print('length', len(processes)) 
+            uuid0 = processes.pop(0)
+            fp = os.path.join(self.ecoinvent_path, 'processes', '{}.json'.format(uuid0))
+            with open(fp, 'r', encoding='utf-8') as fp:
+                process0 = json.load(fp)
+            input_exchanges0  = [ e for e in process0['exchanges'] if e['isInput'] and e['flow']['flowType'] != 'ELEMENTARY_FLOW']
+            output_exchanges0 = [ e for e in process0['exchanges'] if not e['isInput']]
 
-            for oex in to_elementary:
+            for oex in output_exchanges:
                 fname = oex['flow']['name']
                 ftype = oex['flow']['flowType']
                 fuuid = oex['flow']['@id']
@@ -146,12 +153,12 @@ class LCA(object):
                 self.outputs[fkey] = f
             
 
-            for upex in to_upstream:
-                ename = upex['flow']['name']
-                eamnt = upex['amount']
-                eunit = upex['unit']['name']
+            for inex in input_exchanges:
+                ename = inex['flow']['name']
+                eamnt = inex['amount']
+                eunit = inex['unit']['name']
                 e_scaling_factor = eamnt * pro_scaling_factor
-                e_pro_uuid = upex['defaultProvider']['@id']
+                e_pro_uuid = inex['defaultProvider']['@id']
                 e_pro_key = '{}_{}'.format(e_pro_uuid, pro_level + 1)
 
                 if e_scaling_factor > self.min_amount:
@@ -225,7 +232,10 @@ if __name__ == '__main__':
     p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U - Rest-of-World'
     p4 = 'gravel production, crushed | gravel, crushed | EN15804, U - Rest-of-World'
     # p5 = 'clinker production | clinker | EN15804, U - United States'
+    # p5 = 'clinker production | clinker | EN15804, U'
     processes = [p1, p2, p3, p4]
+    # processes = [p1]
+    amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
     # processes = [p1]
     amounts = {p1:810, p2:2143, p3:1663, p4:40}  # this is in lbs
 
@@ -235,18 +245,16 @@ if __name__ == '__main__':
     # WHILE LOOP VERSION - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     lca.min_amount = .001
+    lca.min_amount = .1
     lca.find_upstream_impacts_sequential(processes, amounts, units)
     lca.compute_environmental_impacts()
 
-    # pro1 = lca.graph['source']
-    # print(pro1)
-
     for ek in lca.environmental_impacts:
         print(ek)
-        print('{:.2f}% compared to OLCA'.format(100*(lca.environmental_impacts[ek] / exp_results[ek])))
-        print(lca.environmental_impacts[ek],'  out of   ', exp_results[ek])
+        print('{:.2f}%'.format(100*(lca.environmental_impacts[ek] / exp_results[ek])))
+        print(lca.environmental_impacts[ek],'    ', exp_results[ek])
         print('')
 
-    # lca.run_units_test()
+    lca.run_units_test()
 
 
