@@ -45,7 +45,7 @@ class Process:
 
         self.process_data[prc] = GUIInputManager.create_process(self.project.model, name, self.project, units, float(qty), stage)
 
-        slider = Slider("Qty", min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.project, self.process_data[prc], x))
+        slider = Slider("Qty", min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.process_data[prc], x))
         slider.place(in_=self.canvas, x=x1, y=y2)
         slider.update_value(qty)
         

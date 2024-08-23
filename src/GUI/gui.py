@@ -7,8 +7,9 @@ from GUI.process import Process
 from GUI.product import Product
 from GUI.connectors import Connectors
 
-from tkinter import Menu, Frame, Button, Canvas, Tk
-from tkinter import RIGHT, LEFT, Y, BOTH
+from tkinter import Menu, Frame, Button, Canvas, Tk, Label
+from tkinter import RIGHT, LEFT, Y, BOTH, TOP
+from tkinter.ttk import Combobox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # =================================
@@ -29,15 +30,32 @@ class ProcessVisualizer(Tk, Menubar, Plots, Process, Product, Connectors):
         
         # Canvas
         self.content_frame = Frame(self, width=600, height=600)
-        self.content_frame.pack(side=LEFT, fill=BOTH, expand=True)
+        self.content_frame.pack(side=TOP, fill=BOTH, expand=True)
 
         self.canvas = Canvas(self.content_frame, bg="white", width=600, height=600)
         self.canvas.pack(side=LEFT, padx=10, pady=10)
 
         # Figure
-        self.plot_data = {'A1':10.0, 'A2':5.0, 'A3':6.0}
-        self.ax = None
+        self.plot_frame = Frame(self.content_frame, width=300, height=300)
+        self.plot_frame.pack(side=RIGHT, fill=BOTH, expand=True)
 
+        input_frame = Frame(self.plot_frame)
+        input_frame.pack(pady=5, padx=10, anchor="w")
+        
+        label = Label(input_frame, text="Environemnt Impact")
+        label.pack(side=TOP, padx=(0, 10))
+        
+        self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone_dep':'kg CFC-11 eq', 'smog':'kg O3 eq'}
+        dropdown = Combobox(input_frame, values=list(self.impact_categories.keys()))
+        dropdown.pack(side=TOP)
+        dropdown.current(0)
+        dropdown.bind("<<ComboboxSelected>>", lambda x:self._update_plot_from_combo(x))
+
+        self.plot_data = {}
+        for impact in self.impact_categories.keys():
+            self.plot_data[impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
+        self.ax = None
+        self.plot_impact_cat = dropdown.get()
         fig = self.create_plot()
 
         self.canvas_plot = FigureCanvasTkAgg(fig, master=self.content_frame)
@@ -87,9 +105,9 @@ class ProcessVisualizer(Tk, Menubar, Plots, Process, Product, Connectors):
     def set_impacts(self, item, process=False, product=False):
 
         if product:
-            cmd = lambda: GUIInputManager.set_impact_data(self, self.project, self.product_data[item], impact.get())
+            cmd = lambda: GUIInputManager.set_impact_data(self, self.product_data[item], impact.get())
         elif process:
-            cmd = lambda: GUIInputManager.set_impact_data(self, self.project, self.process_data[item], impact.get())
+            cmd = lambda: GUIInputManager.set_impact_data(self, self.process_data[item], impact.get())
         else:
             raise NotImplementedError
         popup = Popup(self, "Set Impacts", "300x200")
@@ -150,9 +168,9 @@ class ProcessVisualizer(Tk, Menubar, Plots, Process, Product, Connectors):
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])
 
         if product:
-            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.project, self.product_data[item], life_cycle_stage.get())
+            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.product_data[item], life_cycle_stage.get())
         elif process:
-            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.project, self.process_data[item], life_cycle_stage.get())
+            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.process_data[item], life_cycle_stage.get())
         else:
             raise NotImplementedError
 
