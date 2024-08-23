@@ -45,7 +45,7 @@ class Product:
 
         self.product_data[flw] = GUIInputManager.create_product(self.project.model, name, self.project, units, float(qty), stage)
 
-        slider = Slider("Qty", min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.project, self.product_data[flw], x))
+        slider = Slider("Qty", min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.product_data[flw], x))
         slider.place(in_=self.canvas, x=x1, y=y2)
         slider.update_value(qty)
         

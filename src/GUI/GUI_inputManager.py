@@ -25,11 +25,11 @@ class GUIInputManager(InputManager, DatabaseManager):
         return product
     
     @staticmethod
-    def update_qty(visualizer, project, item, qty):
+    def update_qty(visualizer, item, qty):
 
         item.update_qty(qty)
-        visualizer.set_plot_data(project, impact_category='GWP')
-        visualizer.update_plot(visualizer.canvas_plot)
+        visualizer.set_plot_data()
+        visualizer.update_plot()
 
     @staticmethod
     def get_impact_data(project, row):
@@ -37,18 +37,18 @@ class GUIInputManager(InputManager, DatabaseManager):
         return project.get_database().get_impact_data(row)
     
     @staticmethod
-    def set_impact_data(visualizer, project, item, database_row):
+    def set_impact_data(visualizer, item, database_row):
 
         item.set_database_row(database_row)
-        visualizer.set_plot_data(project, impact_category='GWP')
-        visualizer.update_plot(visualizer.canvas_plot)
+        visualizer.set_plot_data()
+        visualizer.update_plot()
 
     @staticmethod
-    def update_life_cycle_stage(visualizer, project, item, stage):
+    def update_life_cycle_stage(visualizer, item, stage):
 
         item.update_life_cycle_stage(stage)
-        visualizer.set_plot_data(project, impact_category='GWP')
-        visualizer.update_plot(visualizer.canvas_plot)
+        visualizer.set_plot_data()
+        visualizer.update_plot()
     
     @staticmethod
     def import_data_from_JSON(file_path, project):
