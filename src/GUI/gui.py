@@ -1,37 +1,67 @@
-from POD_LCA_MATERIAL.projectManager.projectManager import Project
+from material.projectManager.projectManager import Project
 from GUI.GUI_inputManager import GUIInputManager
-from GUI.GUI_outputManager import GUIOutputManager
-from GUI.tooltip import Tooltip
+from GUI.popup import Popup
+from GUI.menubar import Menubar
+from GUI.plots import Plots
+from GUI.process import Process
+from GUI.product import Product
+from GUI.connectors import Connectors
 
-import tkinter as tk
-from tkinter import messagebox, simpledialog, ttk
+from tkinter import Menu, Frame, Button, Canvas, Tk
+from tkinter import RIGHT, LEFT, Y, BOTH
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # =================================
 # CANVAS
 # =================================
 
-class ProcessVisualizer(tk.Tk):
+class ProcessVisualizer(Tk, Menubar, Plots, Process, Product, Connectors):
     def __init__(self):
         super().__init__()
         self.title("Process Visualizer")
-        self.geometry("800x600")
-        
-        self.canvas = tk.Canvas(self, bg="white", width=600, height=600)
-        self.canvas.pack(side=tk.RIGHT)
-        
+        self.geometry("1500x600")
+
         # Menu
-        self.menu_frame = tk.Frame(self, bg="grey", width=200, height=600)
-        self.menu_frame.pack(side=tk.LEFT, fill=tk.Y)
+        self.menu_frame = Frame(self, bg="grey", width=200, height=600)
+        self.menu_frame.pack(side=LEFT, fill=Y)
         
         self.create_menu()
+        
+        # Canvas
+        self.content_frame = Frame(self, width=600, height=600)
+        self.content_frame.pack(side=LEFT, fill=BOTH, expand=True)
+
+        self.canvas = Canvas(self.content_frame, bg="white", width=600, height=600)
+        self.canvas.pack(side=LEFT, padx=10, pady=10)
+
+        # Figure
+        self.plot_data = {'A1':10.0, 'A2':5.0, 'A3':6.0}
+        self.ax = None
+
+        fig = self.create_plot()
+
+        self.canvas_plot = FigureCanvasTkAgg(fig, master=self.content_frame)
+        self.canvas_plot.draw()
+        self.canvas_plot.get_tk_widget().pack(side=RIGHT, padx=10, pady=10)
+
+        # Menu bar
+        self.database_file_path = ''
+
+        menubar = Menu(self, tearoff=False)
+        self.config(menu=menubar)
+
+        self.create_file_menu(menubar)
+        self.create_edit_menu(menubar)
+        self.create_database_menu(menubar)
+        
+        # background data
         self.drag_data = {"item": None, "x": 0, "y": 0}
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0}
         self.connectors = []
+        self.tooltips = {}
 
         self.process_data = {}
-        self.flow_data = {}
-
-        self.tooltips = {}
+        self.product_data = {}
 
         # back-end
         self.project = Project()
@@ -41,221 +71,102 @@ class ProcessVisualizer(tk.Tk):
     # =================================
 
     def create_menu(self):
-        flow_object_button = tk.Button(self.menu_frame, text="Flow", command=self.create_flow)
+        flow_object_button = Button(self.menu_frame, text="Product", command=self.open_popup_product)
         flow_object_button.pack(pady=10)
 
-        process_object_button = tk.Button(self.menu_frame, text="Process", command=self.open_popup_process)
+        process_object_button = Button(self.menu_frame, text="Process", command=self.open_popup_process)
         process_object_button.pack(pady=10)
 
-        connector_button = tk.Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
+        connector_button = Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
         connector_button.pack(pady=10)
 
-        output_frame = tk.Frame(self)
-        output_frame.pack(side=tk.BOTTOM, pady=10, fill="none")
-
-        self.output_box = tk.Text(output_frame, height=2, width=10, wrap="word")
-        self.output_box.pack(side=tk.LEFT, expand=True, fill=tk.X)
-        self.output_box.tag_configure("right", justify="right")
-        self.output_box.config(state=tk.DISABLED)
-
-        self.unit_label = tk.Label(output_frame, text="GWP")
-        self.unit_label.pack(side=tk.RIGHT, padx=(5, 0))
-
-        calculate_button = tk.Button(self, text="Calculate", command=self.calculate)
-        calculate_button.pack(side=tk.BOTTOM, pady=10)
-
-
     # =================================
-    # Process Objects
+    # PROCESS/PRODUCT COMMANDS
     # =================================
 
-    def open_popup_process(self):
+    def set_impacts(self, item, process=False, product=False):
 
-        popup = tk.Toplevel(self)
-        popup.title("Input Pop-Up")
-        popup.geometry("300x200")
-        
-        name =  ProcessVisualizer._popup_input_field(popup, "Process name: ")    
-        life_cycle_stage = ProcessVisualizer._popup_input_field(popup, "Life cycle stage: ")  
-        qty = ProcessVisualizer._popup_input_field(popup, "qty: ")
-        units = ProcessVisualizer._popup_input_combo(popup, "units: ", ["m3", "kg"])  
+        if product:
+            cmd = lambda: GUIInputManager.set_impact_data(self, self.project, self.product_data[item], impact.get())
+        elif process:
+            cmd = lambda: GUIInputManager.set_impact_data(self, self.project, self.process_data[item], impact.get())
+        else:
+            raise NotImplementedError
+        popup = Popup(self, "Set Impacts", "300x200")
 
-        button_frame = tk.Frame(popup)
+        if not GUIInputManager.get_database_data(self.project) is None:
+            impact = popup._popup_input_combo("Impact : ", GUIInputManager.get_database_data(self.project)['Flow'].tolist())
+
+            button_frame = Frame(popup)
+            button_frame.pack(pady=20)
+
+            ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+            ok_button.pack(side=LEFT, padx=10)
+
+            cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+            cancel_button.pack(side=LEFT, padx=10)
+
+            apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+            apply_button.pack(side=LEFT, padx=10)
+        else:
+            label = popup._popup_label("Impact database not loaded.\nGo to Database menu and import database.", justify='left')
+            label.bind('<Configure>', lambda e: label.config(wraplength=label.winfo_width()))
+
+            button_frame = Frame(popup)
+            button_frame.pack(pady=20)
+
+            close_button = Button(button_frame, text="Close", command=popup.destroy)
+            close_button.pack(side=LEFT, padx=10)
+
+    def view_impacts(self, item, process=False, product=False):
+
+        popup = Popup(self, "View Impacts", "300x200")
+
+        if product:
+            row = GUIInputManager.get_database_row(self.product_data[item])
+        elif process:
+            row = GUIInputManager.get_database_row(self.process_data[item])
+        else:
+            raise NotImplementedError
+
+        if row is not None:
+            impact_data = GUIInputManager.get_impact_data(self.project, row)
+            data_list = row, impact_data["Global warming potential (kg CO2 eq)"], impact_data["Acidification potential (kg SO2 eq)"], impact_data["Eutrophication potential (kg N eq)"], impact_data["Ozone depletion potential (kg CFC-11 eq)"], impact_data["Smog potential (kg O3 eq)"]
+        else:
+            data_list = "unasigned", 0.0, 0.0, 0.0, 0.0, 0.0
+
+        text_str = "{0} \n GWP : {1:.2f} kg CO2 eq \n Acidification potential : {2:.2f} kg SO2 eq \n Eutrophication potential : {3:.2f} kg N eq \n Ozone depletion potential : {4:.2f} kg CFC-11 eq\n Smog potential : {5:.2f} kg O3 eq".format(*data_list)        
+        popup._popup_label(text_str, justify='left')
+
+        button_frame = Frame(popup)
         button_frame.pack(pady=20)
 
-        ok_button = tk.Button(button_frame, text="OK", command=lambda: self.create_process(popup, name.get(), qty.get(), units.get()))
-        ok_button.pack(side=tk.LEFT, padx=10)
+        close_button = Button(button_frame, text="Close", command=popup.destroy)
+        close_button.pack(side=LEFT, padx=10)
 
-        cancel_button = tk.Button(button_frame, text="Cancel", command=popup.destroy)
-        cancel_button.pack(side=tk.LEFT, padx=10)
+    def update_life_cycle_stage(self, item, process=False, product=False):
 
-    @staticmethod
-    def _popup_input_field(popup, text):
+        popup = Popup(self, "Update life cycle stage", "300x200")
+        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])
 
-        input_frame = tk.Frame(popup)
-        input_frame.pack(pady=5, padx=10, anchor="w")
-        
-        label = tk.Label(input_frame, text=text)
-        label.pack(side=tk.LEFT, padx=(0, 10))
-        
-        data = tk.Entry(input_frame)
-        data.pack(side=tk.LEFT)
-
-        return data
-    
-    @staticmethod
-    def _popup_input_combo(popup, text, drop_down_list):
-
-        input_frame = tk.Frame(popup)
-        input_frame.pack(pady=5, padx=10, anchor="w")
-        
-        label = tk.Label(input_frame, text=text)
-        label.pack(side=tk.LEFT, padx=(0, 10))
-        
-        # Dropdown (Combobox) for Input 2
-        dropdown_values = drop_down_list
-        dropdown = ttk.Combobox(input_frame, values=dropdown_values)
-        dropdown.pack(side=tk.LEFT)
-        dropdown.current(0)
-
-        return dropdown
-        
-    def create_process(self, popup, name, qty, units):
-
-        prc = self.canvas.create_rectangle(50, 50, 150, 100, fill="blue", tags="process")
-        self.canvas.tag_bind(prc, "<ButtonPress-1>", self.on_start_drag)
-        self.canvas.tag_bind(prc, "<B1-Motion>", self.on_drag)
-        self.canvas.tag_bind(prc, "<ButtonRelease-1>", self.on_stop_drag)
-        self.canvas.tag_bind(prc, "<Button-3>", self.show_process_context_menu) 
-
-        self.process_data[prc] = GUIInputManager.create_process(self.project.model, name, self.project)
-
-        self.tooltips[prc] = Tooltip(self.canvas, f"This is a process")
-
-        popup.destroy()
-
-    def update_process(self):
-        
-        pass
-
-
-    def show_process_context_menu(self, event):
-        # Get the item ID under the mouse pointer
-        item = self.canvas.find_closest(event.x, event.y)[0]
-        self.context_menu = tk.Menu(self, tearoff=0)
-        self.context_menu.add_command(label="Change Color", command=lambda: self.change_color(item))
-        self.context_menu.add_command(label="Change Text", command=lambda: self.change_text(item))
-        self.context_menu.post(event.x_root, event.y_root)
-
-    def change_color(self, item):
-        color = simpledialog.askstring("Input", "Enter the color:")
-        if color:
-            self.canvas.itemconfig(item, fill=color)
-
-    def change_text(self, item):
-        pass
-        # current_text = self.canvas.itemcget(self.canvas.find_withtag("rectangle_text")[0], "text")
-        # new_text = simpledialog.askstring("Input", "Enter new text:", initialvalue=current_text)
-        # if new_text:
-        #     self.canvas.itemconfig(self.canvas.find_withtag("rectangle_text")[0], text=new_text)
-
-    # =================================
-    # Flow Objects
-    # =================================
-        
-    def create_flow(self):
-
-        flw = self.canvas.create_rectangle(50, 50, 150, 100, fill="pink", tags="product")
-        self.canvas.tag_bind(flw, "<ButtonPress-1>", self.on_start_drag)
-        self.canvas.tag_bind(flw, "<B1-Motion>", self.on_drag)
-        self.canvas.tag_bind(flw, "<ButtonRelease-1>", self.on_stop_drag)
-
-        self.flow_data[flw] = self.project.input_manger.create_product()
-
-        self.tooltips[flw] = Tooltip(self.canvas, f"This is a flow")
-
-    # =================================
-    # Exchanges
-    # =================================
-
-    def start_drawing_connector(self):
-        self.canvas.bind("<ButtonPress-1>", self.on_start_connector)
-        self.canvas.bind("<B1-Motion>", self.on_draw_connector)
-        self.canvas.bind("<ButtonRelease-1>", self.on_finish_connector)
-
-        for rect in self.canvas.find_withtag("process"):
-            self.canvas.tag_unbind(rect, "<ButtonPress-1>")
-            self.canvas.tag_unbind(rect, "<B1-Motion>")
-
-        for rect in self.canvas.find_withtag("flow"):
-            self.canvas.tag_unbind(rect, "<ButtonPress-1>")
-            self.canvas.tag_unbind(rect, "<B1-Motion>")
-
-    def on_start_connector(self, event):
-        overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
-        start_item = None
-        
-        for item in overlapping_items:
-            if "process" in self.canvas.gettags(item) or "flow" in self.canvas.gettags(item):
-                start_item = item
-                break
-        
-        if start_item:
-            self.connector_data["start_item"] = start_item
-            self.connector_data["start_x"] = event.x
-            self.connector_data["start_y"] = event.y
-            
-            self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
-
-    def on_draw_connector(self, event):
-        if self.connector_data["line"] is not None:
-            self.canvas.coords(self.connector_data["line"], self.connector_data["start_x"], self.connector_data["start_y"], event.x, event.y)
-
-    def on_finish_connector(self, event):
-        overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
-        end_item = None
-        
-        for item in overlapping_items:
-            if "process" in self.canvas.gettags(item) or "flow" in self.canvas.gettags(item):
-                end_item = item
-                break
-
-        if self.connector_data["start_item"] is not None and ("process" in self.canvas.gettags(end_item) or "flow" in self.canvas.gettags(end_item)):
-            start_coords = self.canvas.coords(self.connector_data["start_item"])
-            end_coords = self.canvas.coords(end_item)
-            
-            start_center_x = (start_coords[0] + start_coords[2]) / 2
-            start_center_y = (start_coords[1] + start_coords[3]) / 2
-            end_center_x = (end_coords[0] + end_coords[2]) / 2
-            end_center_y = (end_coords[1] + end_coords[3]) / 2
-            
-            # connector line connects to the centers of the rectangles
-            self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
-            self.canvas.itemconfig(self.connector_data["line"], arrow=tk.LAST)
-
-            self.connectors.append({
-                "line": self.connector_data["line"],
-                "start_item": self.connector_data["start_item"],
-                "end_item": end_item
-            })
-
+        if product:
+            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.project, self.product_data[item], life_cycle_stage.get())
+        elif process:
+            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.project, self.process_data[item], life_cycle_stage.get())
         else:
-            self.canvas.delete(self.connector_data["line"])
+            raise NotImplementedError
 
-        self.connector_data = {"line": None, "start_item": None, "start_x": 0, "start_y": 0}
-        
-        # Release rectangles
-        for rect in self.canvas.find_withtag("process"):
-            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
-            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
-        
-        for rect in self.canvas.find_withtag("flow"):
-            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
-            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+        button_frame = Frame(popup)
+        button_frame.pack(pady=20)
 
-        self.canvas.unbind("<ButtonPress-1>")
-        self.canvas.unbind("<B1-Motion>")
-        self.canvas.unbind("<ButtonRelease-1>")
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        ok_button.pack(side=LEFT, padx=10)
+
+        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        cancel_button.pack(side=LEFT, padx=10)
+
+        apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+        apply_button.pack(side=LEFT, padx=10)
 
     # =================================
     # On Canvas
@@ -266,52 +177,44 @@ class ProcessVisualizer(tk.Tk):
         self.drag_data["x"] = event.x
         self.drag_data["y"] = event.y
 
+        closest_item = self.canvas.find_closest(event.x, event.y)[0]
+        
+        tags = self.canvas.gettags(closest_item)
+        for tag in tags:
+            if tag.startswith("group_"):
+                self.current_item = tag
+                bbox = self.canvas.bbox(self.current_item)
+                
+                self.offset_x = event.x - bbox[0]
+                self.offset_y = event.y - bbox[1]
+                break
+
+
     def on_drag(self, event):
         dx = event.x - self.drag_data["x"]
         dy = event.y - self.drag_data["y"]
+
+        tags = self.canvas.gettags(self.drag_data["item"])
+        for tag in tags:
+            if tag.startswith("group_"):
+                group_tag = tag
+                break
         
-        self.canvas.move(self.drag_data["item"], dx, dy)
+        self.canvas.move(group_tag, dx, dy)
         
         self.drag_data["x"] = event.x
         self.drag_data["y"] = event.y
 
         self.update_connectors(self.drag_data["item"])
+
+    def move_slider(self, event, slider):
+        x1, y1, x2, y2 = self.canvas.bbox(self.drag_data["item"])
+        slider.place(in_=self.canvas, x=x1, y=y2)
     
     def on_stop_drag(self, event):
 
         self.update_connectors(self.drag_data["item"])
 
-    def update_connectors(self, item):
-
-        item_id = item if isinstance(item, int) else item[0]
-        for connector in self.connectors:
-            start_item_id = connector["start_item"] if isinstance(connector["start_item"], int) else connector["start_item"][0]
-            end_item_id = connector["end_item"] if isinstance(connector["end_item"], int) else connector["end_item"][0]
-
-            if start_item_id == item_id or end_item_id == item_id:
-                start_coords = self.canvas.coords(connector["start_item"])
-                end_coords = self.canvas.coords(connector["end_item"])
-                
-                start_center_x = (start_coords[0] + start_coords[2]) / 2
-                start_center_y = (start_coords[1] + start_coords[3]) / 2
-                end_center_x = (end_coords[0] + end_coords[2]) / 2
-                end_center_y = (end_coords[1] + end_coords[3]) / 2
-                
-                # Connector line ends at the centroid of the rectangle
-                self.canvas.coords(connector["line"], start_center_x, start_center_y, end_center_x, end_center_y)
-    
-    # =================================
-    # Calculate
-    # =================================
-
-    def calculate(self):
-        
-        result = self.model.calculator.calculate()
-        
-        self.output_box.config(state=tk.NORMAL)
-        self.output_box.delete(1.0, tk.END)
-        self.output_box.insert(tk.END, result, "right")
-        self.output_box.config(state=tk.DISABLED)
 
 if __name__ == "__main__":
     app = ProcessVisualizer()

@@ -1,14 +1,68 @@
-from POD_LCA_MATERIAL.projectManager.inputManager import InputManager
+from material.projectManager.inputManager import InputManager
+from material.databaseManager.databaseManager import DatabaseManager
 
-class GUIInputManager(InputManager):
+import pandas
+
+class GUIInputManager(InputManager, DatabaseManager):
 
     @staticmethod
-    def create_process(model, name, project):
+    def create_process(model, name, project, unit, qty, stage):
 
-        model.create_process(name, project)
+        process =  model.create_process(name, project, stage)
+        process.set_unit(unit)
+        process.update_qty(qty)
+
+        return process
 
 
-    @classmethod
-    def create_product():
+    @staticmethod
+    def create_product(model, name, project, unit, qty, stage):
 
-        pass
+        product = model.create_product(name, project, stage)
+        product.set_unit(unit)
+        product.update_qty(qty)
+
+        return product
+    
+    @staticmethod
+    def update_qty(visualizer, project, item, qty):
+
+        item.update_qty(qty)
+        visualizer.set_plot_data(project, impact_category='GWP')
+        visualizer.update_plot(visualizer.canvas_plot)
+
+    @staticmethod
+    def get_impact_data(project, row):
+
+        return project.get_database().get_impact_data(row)
+    
+    @staticmethod
+    def set_impact_data(visualizer, project, item, database_row):
+
+        item.set_database_row(database_row)
+        visualizer.set_plot_data(project, impact_category='GWP')
+        visualizer.update_plot(visualizer.canvas_plot)
+
+    @staticmethod
+    def update_life_cycle_stage(visualizer, project, item, stage):
+
+        item.update_life_cycle_stage(stage)
+        visualizer.set_plot_data(project, impact_category='GWP')
+        visualizer.update_plot(visualizer.canvas_plot)
+    
+    @staticmethod
+    def import_data_from_JSON(file_path, project):
+
+        impacts = pandas.read_csv(filepath_or_buffer=file_path)
+
+        project.get_database().set_data(impacts)
+
+    @staticmethod
+    def get_database_data(project):
+
+        return project.get_database().get_data()
+    
+    @staticmethod
+    def get_database_row(item):
+
+        return item.get_database_row()

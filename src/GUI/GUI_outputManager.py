@@ -1,8 +1,8 @@
-from POD_LCA_MATERIAL.projectManager.outputManager import OutputManager
+from material.projectManager.outputManager import OutputManager
 
 class GUIOutputManager(OutputManager):
 
     @staticmethod
-    def get_output_data():
+    def get_output_data(project, impact_category):
 
-        pass
+        return project.get_calculator().get_data_by_LCstage(impact_category='GWP')
