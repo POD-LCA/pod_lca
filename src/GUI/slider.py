@@ -1,11 +1,10 @@
-from tkinter import Scale
+from tkinter import Scale, Label
 from tkinter import HORIZONTAL
 
 class Slider(Scale):
 
-    def __init__(self, label, min, max, command):
-        super().__init__(from_=min, to=max, orient=HORIZONTAL, command=command)
-        self.label = label
+    def __init__(self, root, txt, min, max, command):
+        super().__init__(master=root, label=txt, from_=min, to=max, orient=HORIZONTAL, command=command)
 
     def update_value(self, value):
         self.set(value)

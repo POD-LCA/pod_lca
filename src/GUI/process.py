@@ -2,7 +2,7 @@ from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 from GUI.slider import Slider
 
-from tkinter import Menu, Frame, Button
+from tkinter import Menu, Frame, Button, Label
 from tkinter import LEFT
 
 class Process:
@@ -44,11 +44,11 @@ class Process:
         text_id = self.canvas.create_text(id_x, id_y, text=str(prc), tags="process")
 
         self.process_data[prc] = GUIInputManager.create_process(self.project.model, name, self.project, units, float(qty), stage)
-
-        slider = Slider("Qty", min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.process_data[prc], x))
+    
+        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.process_data[prc], x))
         slider.place(in_=self.canvas, x=x1, y=y2)
         slider.update_value(qty)
-        
+
         group_tag = f"group_{prc}"
         self.canvas.addtag_withtag(group_tag, prc)
         self.canvas.addtag_withtag(group_tag, text_item)
