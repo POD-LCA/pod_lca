@@ -8,7 +8,7 @@ class GUIInputManager(InputManager, DatabaseManager):
     @staticmethod
     def create_process(model, name, project, unit, qty, stage):
 
-        process =  model.create_process(name, project, stage)
+        process =  model.create_process(name, stage)
         process.set_unit(unit)
         process.update_qty(qty)
 
@@ -18,7 +18,7 @@ class GUIInputManager(InputManager, DatabaseManager):
     @staticmethod
     def create_product(model, name, project, unit, qty, stage):
 
-        product = model.create_product(name, project, stage)
+        product = model.create_product(name, stage)
         product.set_unit(unit)
         product.update_qty(qty)
 
