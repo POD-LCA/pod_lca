@@ -11,6 +11,9 @@ class Product:
         self.impacts = Impacts(self)
         self.database_item = None
         self.qty = 0.0
+        self.weight = 0.0
+        self.density = 1.0 # the weight of 1 unit of prodcut
+        self.transporter = None
         self.unit = None
         self.is_material = False
         self.is_energy = False
@@ -33,6 +36,7 @@ class Product:
                 raise TypeError
             
         self.qty = qty
+        self.weight = self.qty * self.density
 
         self.set_impacts_qtys()
 
@@ -93,6 +97,22 @@ class Product:
         
         self.unit = unit
 
+    def set_transporter(self, transporter):
+        
+        self.transporter = transporter
+
+    def get_units(self):
+
+        return self.unit
+    
+    def get_qty(self):
+
+        return self.qty
+    
+    def get_weight(self):
+
+        return self.weight
+
     def get_impacts(self):
 
         return self.impacts 
@@ -113,6 +133,10 @@ class Product:
 
         return self.database_item
     
+    def get_transporter(self):
+
+        return self.transporter
+
 class Fuel(Product):
 
     def __init__(self, id, name, project):

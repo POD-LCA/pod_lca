@@ -1,3 +1,5 @@
+from GUI.GUI_inputManager import GUIInputManager
+
 from tkinter import LAST
 
 class Connectors:
@@ -49,24 +51,30 @@ class Connectors:
                 break
 
         if self.connector_data["start_item"] is not None and ("process" in self.canvas.gettags(end_item) or "product" in self.canvas.gettags(end_item)):
-            start_coords = self.canvas.coords(self.connector_data["start_item"])
-            end_coords = self.canvas.coords(end_item)
-            
-            start_center_x = (start_coords[0] + start_coords[2]) / 2
-            start_center_y = (start_coords[1] + start_coords[3]) / 2
-            end_center_x = (end_coords[0] + end_coords[2]) / 2
-            end_center_y = (end_coords[1] + end_coords[3]) / 2
-            
-            # connector line connects to the centers of the rectangles
-            self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
-            self.canvas.itemconfig(self.connector_data["line"], arrow=LAST)
+            if self.allow_to_connect(end_item):
+                start_coords = self.canvas.coords(self.connector_data["start_item"])
+                end_coords = self.canvas.coords(end_item)
+                
+                start_center_x = (start_coords[0] + start_coords[2]) / 2
+                start_center_y = (start_coords[1] + start_coords[3]) / 2
+                end_center_x = (end_coords[0] + end_coords[2]) / 2
+                end_center_y = (end_coords[1] + end_coords[3]) / 2
+                
+                # connector line connects to the centers of the rectangles
+                self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+                self.canvas.itemconfig(self.connector_data["line"], arrow=LAST)
 
-            self.connectors.append({
-                "line": self.connector_data["line"],
-                "start_item": self.connector_data["start_item"],
-                "end_item": end_item
-            })
+                self.connectors.append({
+                    "line": self.connector_data["line"],
+                    "start_item": self.connector_data["start_item"],
+                    "end_item": end_item
+                })
 
+                connects_to_transport = "transportation" in self.canvas.gettags(item)
+                if connects_to_transport:
+                    GUIInputManager.set_transported_products(self, self.process_data[end_item], self.product_data[self.connector_data["start_item"]])
+            else:
+                self.canvas.delete(self.connector_data["line"])
         else:
             self.canvas.delete(self.connector_data["line"])
 
@@ -103,3 +111,23 @@ class Connectors:
                 
                 # Connector line ends at the centroid of the rectangle
                 self.canvas.coords(connector["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+
+    def allow_to_connect(self, item):
+        """ Checks if connections is a valid connection for the flow diagram.
+            This are logic rules imposed.
+        """
+
+        is_from_product = self.connector_data["start_item"] in self.product_data
+        is_to_process = "process" in self.canvas.gettags(item)
+        is_to_transport = "transportation" in self.canvas.gettags(item)
+
+        create = True
+        if is_from_product:
+            if not is_to_process:
+                create = False
+
+        if is_to_transport:
+            if not is_from_product:
+                create = False
+
+        return create

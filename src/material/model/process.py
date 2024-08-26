@@ -1,4 +1,5 @@
 from material.model.impacts import Impacts
+from material.model.product import Product
 
 class Process:
 
@@ -13,7 +14,7 @@ class Process:
         self.qty = 0.0
         self.unit = None
 
-    def update_qty(self, qty):
+    def update_qty(self, qty:float):
         """ Update the qty of the process.
             This will also re-set the corresponding impact quantities.
             
@@ -34,7 +35,7 @@ class Process:
         
         self.set_impacts_qtys()
 
-    def update_life_cycle_stage(self, stage):
+    def update_life_cycle_stage(self, stage:str):
         """ Update the life cycle stage of the product.
             This will also move the corresponding impact object to the relvant dictionary in the model object.
             
@@ -74,7 +75,7 @@ class Process:
                                          smog=unit_impacts["Smog potential (kg O3 eq)"] * self.qty)
 
 
-    def set_database_row(self, database_item):
+    def set_database_row(self, database_item:str):
         """ Sets the database (impacts) entry corresponding to the product.
             This method will also update the corresponding impact quanitities.
         
@@ -91,6 +92,14 @@ class Process:
 
         self.unit = unit
 
+    def get_units(self):
+
+        return self.unit
+    
+    def get_qty(self):
+
+        return self.qty
+    
     def get_impacts(self):
 
         return self.impacts
@@ -113,19 +122,54 @@ class Process:
 
 class transportationProcess(Process):
 
-    def __init__(self):
-        super().__init__(self)
+    def __init__(self, id, name, model, stage):
+        super().__init__(id, name, model, stage)
         self.transported_distance = 0.0
         self.transported_weight = 0.0
+        self.transported_products = []
 
-    def update_travel_distance(self, qty):
+    def get_transported_distance(self):
+
+        return self.transported_distance
+    
+    def get_transported_weight(self):
+
+        return self.transported_weight
+    
+    def get_transported_products(self):
+
+        return self.transported_products
+
+    def set_transported_distance(self, qty:float):
+
+        if isinstance(qty, str):
+            try:
+                qty = float(qty)
+            except:
+                raise TypeError
 
         self.transported_distance = qty
 
+        self.update_qty(self.transported_distance * self.get_transported_weight())
+
+    def set_travel_weight(self):
+
+        weight = 0.0
+        products = self.get_transported_products()
+        for product in products:
+            weight += product.get_weight()
+        
+        self.transported_weight = weight
+
         self.update_qty(self.transported_distance * self.transported_weight)
 
-    def update_travel_weight(self, qty):
+    def set_transported_products(self, products):
 
-        self.transported_weight = qty
-
-        self.update_qty(self.transported_distance * self.transported_weight)
+        if isinstance(products, list):
+            self.get_transported_products().extend(products)
+        elif isinstance(products, Product) :
+            self.get_transported_products().append(products)
+        else:
+            raise TypeError
+        
+        self.set_travel_weight()

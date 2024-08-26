@@ -1,4 +1,5 @@
-from tkinter import Frame, Button, Label, Entry, LEFT, Toplevel
+from tkinter import Frame, Button, Label, Entry, Toplevel
+from tkinter import LEFT, NORMAL
 from tkinter.ttk import Combobox
 
 class Popup(Toplevel):
@@ -26,7 +27,7 @@ class Popup(Toplevel):
 
         return data
     
-    def _popup_input_combo(self, text, drop_down_list):
+    def _popup_input_combo(self, text, drop_down_list, default_entry=0, default_state='readonly'):
 
         input_frame = Frame(self)
         input_frame.pack(pady=5, padx=10, anchor="w")
@@ -35,9 +36,9 @@ class Popup(Toplevel):
         label.pack(side=LEFT, padx=(0, 10))
         
         dropdown_values = drop_down_list
-        dropdown = Combobox(input_frame, values=dropdown_values)
+        dropdown = Combobox(input_frame, values=dropdown_values, state=default_state)
         dropdown.pack(side=LEFT)
-        dropdown.current(0)
+        dropdown.current(default_entry)
 
         return dropdown
     
