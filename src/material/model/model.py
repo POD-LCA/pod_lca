@@ -1,4 +1,4 @@
-from material.model.process import Process
+from material.model.process import Process, transportationProcess
 from material.model.product import Product
 
 class Model:
@@ -29,6 +29,32 @@ class Model:
 
         n = len(self.processes)
         process = Process(n, name, self, stage)
+
+        self.processes.append(process)
+        self.impacts[stage].append(process.get_impacts())
+
+        return process
+    
+    def create_transportation_process(self, name:str, stage:str):
+        """ Create process object.
+            Then, append the process object and the corresponding impact objects to its properties.
+            Impact objects are kept in a dictionary based on the life cycle stage.
+
+        Parameters:
+        ----------
+        name : str.
+            Name of the process.
+        stage : str.
+            Life cycle stage: 'A1', 'A2', 'A3'.
+
+        Returns:
+        -------
+        Process Obj.
+            Process object created.
+        """
+
+        n = len(self.processes)
+        process = transportationProcess(n, name, self, stage)
 
         self.processes.append(process)
         self.impacts[stage].append(process.get_impacts())

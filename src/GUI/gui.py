@@ -6,6 +6,7 @@ from GUI.plots import Plots
 from GUI.process import Process
 from GUI.product import Product
 from GUI.connectors import Connectors
+from GUI.transportation import Transportation
 
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label
 from tkinter import RIGHT, LEFT, Y, BOTH, TOP
@@ -16,7 +17,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 # CANVAS
 # =================================
 
-class ProcessVisualizer(Tk, Menubar, Plots, Process, Product, Connectors):
+class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Connectors):
     def __init__(self):
         super().__init__()
         self.title("Process Visualizer")
@@ -94,6 +95,9 @@ class ProcessVisualizer(Tk, Menubar, Plots, Process, Product, Connectors):
 
         process_object_button = Button(self.menu_frame, text="Process", command=self.open_popup_process)
         process_object_button.pack(pady=10)
+
+        transportation_object_button = Button(self.menu_frame, text="Transportation", command=self.open_popup_transport_process)
+        transportation_object_button.pack(pady=10)
 
         connector_button = Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
         connector_button.pack(pady=10)

@@ -1,3 +1,4 @@
+import pandas
 
 class DatabaseManager:
 
@@ -18,14 +19,18 @@ class DatabaseManager:
 
         return self.impact_categories    
 
-    @staticmethod
-    def import_data_from_JSON(file_path):
-
-        pass
-
     def get_impact_data(self, row):
 
         if self.data is not None:
             row_id = self.data.index[self.data['Flow'] == row][0]
             return self.data.iloc[row_id]
-        # check the data type with line 20 of process.py
+    
+    # =================================
+    # DATA IMPORT METHODS
+    # =================================
+
+    def import_data_from_JSON(self, file_path):
+
+        impacts = pandas.read_csv(filepath_or_buffer=file_path)
+        # TODO: Update to asign columns by impact category
+        self.set_data(impacts)

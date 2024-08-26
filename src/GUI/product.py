@@ -16,10 +16,11 @@ class Product:
         popup = Popup(self, "Create product", "300x300")
         
         name =  popup._popup_input_field("Product name: ", default_val="new Product") 
-        type = popup._popup_input_combo("type: ", ["material", "energy"])     
+        # type = popup._popup_input_combo("type: ", ["material", "energy"])     
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])   
         qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["m3", "kg"])  
+        units = popup._popup_input_combo("units: ", ["kg", "m3", "MJ"])  
+        # TODO: if unoits are not weight, ask for density
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
