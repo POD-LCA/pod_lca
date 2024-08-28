@@ -43,7 +43,7 @@ class Process:
         id_x, id_y = x1 + id_pack , y1 + id_pack
         text_id = self.canvas.create_text(id_x, id_y, text=str(prc), tags="process")
 
-        self.process_data[prc] = GUIInputManager.create_process(self.project.model, name, self.project, units, float(qty), stage)
+        self.process_data[prc] = GUIInputManager.create_process(self.project.model, name, units, float(qty), stage)
     
         slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.process_data[prc], x))
         slider.place(in_=self.canvas, x=x1, y=y2)

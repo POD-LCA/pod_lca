@@ -97,6 +97,16 @@ class Product:
         
         self.unit = unit
 
+    def set_density(self, density):
+
+        if isinstance(density, str):
+            try:
+                density = float(density)
+            except:
+                raise TypeError
+    
+        self.density = density
+    
     def set_transporter(self, transporter):
         
         self.transporter = transporter
