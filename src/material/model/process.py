@@ -173,3 +173,17 @@ class transportationProcess(Process):
             raise TypeError
         
         self.set_travel_weight()
+
+    def remove_transported_product(self, item):
+
+        products = self.get_transported_products()
+        try:
+            products.remove(item)
+        except:
+            pass # item not in list
+
+        self.set_travel_weight()
+
+    
+
+

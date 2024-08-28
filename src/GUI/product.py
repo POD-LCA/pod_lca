@@ -20,18 +20,19 @@ class Product:
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])   
         qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
         units = popup._popup_input_combo("units: ", ["kg", "m3", "MJ"])  
-        # TODO: if unoits are not weight, ask for density
+        density = popup._popup_input_field("mass per unit product: ", validate_num=True, default_val=1.0)
+
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
 
-        ok_button = Button(button_frame, text="OK", command=lambda: self.create_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get()))
+        ok_button = Button(button_frame, text="OK", command=lambda: self.create_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get(), density.get()))
         ok_button.pack(side=LEFT, padx=10)
 
         cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
         cancel_button.pack(side=LEFT, padx=10)
         
-    def create_product(self, popup, name, qty, units, stage):
+    def create_product(self, popup, name, qty, units, stage, density):
 
         x1, y1, x2, y2, = 50, 50, 150, 100
  
@@ -42,9 +43,9 @@ class Product:
 
         id_pack = 5
         id_x, id_y = x1 + id_pack , y1 + id_pack
-        text_id = self.canvas.create_text(id_x, id_y, text=str(flw), tags="process")
+        text_id = self.canvas.create_text(id_x, id_y, text=str(flw), tags="product")
 
-        self.product_data[flw] = GUIInputManager.create_product(self.project.model, name, self.project, units, float(qty), stage)
+        self.product_data[flw] = GUIInputManager.create_product(self.project.model, name, units, float(qty), stage, density)
 
         slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.product_data[flw], x))
         slider.place(in_=self.canvas, x=x1, y=y2)
@@ -74,3 +75,4 @@ class Product:
         self.context_menu.add_separator()
         self.context_menu.add_command(label="Change life cycle stage", command=lambda: self.update_life_cycle_stage(item, product=True))
         self.context_menu.post(event.x_root, event.y_root)
+

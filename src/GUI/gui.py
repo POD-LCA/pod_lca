@@ -75,7 +75,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         
         # background data
         self.drag_data = {"item": None, "x": 0, "y": 0}
-        self.connector_data = {"line": None, "start_x": 0, "start_y": 0}
+        self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
         self.connectors = []
         self.tooltips = {}
 
@@ -84,6 +84,14 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
         # back-end
         self.project = Project()
+
+        # ctrl and shift press binding
+        self.shift_pressed = False
+        self.bind_all("<Control_L>", self.on_ctrl_press)
+        self.bind_all("<KeyRelease-Control_L>", self.on_ctrl_release)
+        self.bind_all("<KeyPress-Shift_L>", self.on_shift_press)
+        self.bind_all("<KeyRelease-Shift_L>", self.on_shift_release)
+        
 
     # =================================
     # MENU
@@ -99,8 +107,8 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         transportation_object_button = Button(self.menu_frame, text="Transportation", command=self.open_popup_transport_process)
         transportation_object_button.pack(pady=10)
 
-        connector_button = Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
-        connector_button.pack(pady=10)
+        # connector_button = Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
+        # connector_button.pack(pady=10)
 
     # =================================
     # PROCESS/PRODUCT COMMANDS
@@ -195,47 +203,49 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
     # =================================
 
     def on_start_drag(self, event):
-        self.drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
-        self.drag_data["x"] = event.x
-        self.drag_data["y"] = event.y
+        if not self.shift_pressed:
+            self.drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
+            self.drag_data["x"] = event.x
+            self.drag_data["y"] = event.y
 
-        closest_item = self.canvas.find_closest(event.x, event.y)[0]
-        
-        tags = self.canvas.gettags(closest_item)
-        for tag in tags:
-            if tag.startswith("group_"):
-                self.current_item = tag
-                bbox = self.canvas.bbox(self.current_item)
-                
-                self.offset_x = event.x - bbox[0]
-                self.offset_y = event.y - bbox[1]
-                break
+            closest_item = self.canvas.find_closest(event.x, event.y)[0]
+            
+            tags = self.canvas.gettags(closest_item)
+            for tag in tags:
+                if tag.startswith("group_"):
+                    self.current_item = tag
+                    bbox = self.canvas.bbox(self.current_item)
+                    
+                    self.offset_x = event.x - bbox[0]
+                    self.offset_y = event.y - bbox[1]
+                    break
 
 
     def on_drag(self, event):
-        dx = event.x - self.drag_data["x"]
-        dy = event.y - self.drag_data["y"]
+        if not self.shift_pressed:
+            dx = event.x - self.drag_data["x"]
+            dy = event.y - self.drag_data["y"]
 
-        tags = self.canvas.gettags(self.drag_data["item"])
-        for tag in tags:
-            if tag.startswith("group_"):
-                group_tag = tag
-                break
-        
-        self.canvas.move(group_tag, dx, dy)
-        
-        self.drag_data["x"] = event.x
-        self.drag_data["y"] = event.y
+            tags = self.canvas.gettags(self.drag_data["item"])
+            for tag in tags:
+                if tag.startswith("group_"):
+                    group_tag = tag
+                    break
+            
+            self.canvas.move(group_tag, dx, dy)
+            
+            self.drag_data["x"] = event.x
+            self.drag_data["y"] = event.y
 
-        self.update_connectors(self.drag_data["item"])
+            self.update_connectors(self.drag_data["item"])
 
     def move_slider(self, event, slider):
         x1, y1, x2, y2 = self.canvas.bbox(self.drag_data["item"])
         slider.place(in_=self.canvas, x=x1, y=y2)
     
     def on_stop_drag(self, event):
-
-        self.update_connectors(self.drag_data["item"])
+        if not self.shift_pressed:
+            self.update_connectors(self.drag_data["item"])
 
 
 if __name__ == "__main__":

@@ -7,8 +7,8 @@ class Connectors:
     # =================================
     # Connectors
     # =================================
+    def on_ctrl_press(self, event):
 
-    def start_drawing_connector(self):
         self.canvas.bind("<ButtonPress-1>", self.on_start_connector)
         self.canvas.bind("<B1-Motion>", self.on_draw_connector)
         self.canvas.bind("<ButtonRelease-1>", self.on_finish_connector)
@@ -20,6 +20,20 @@ class Connectors:
         for rect in self.canvas.find_withtag("product"):
             self.canvas.tag_unbind(rect, "<ButtonPress-1>")
             self.canvas.tag_unbind(rect, "<B1-Motion>")
+
+    def on_ctrl_release(self, event):
+
+        self.canvas.unbind("<ButtonPress-1>")
+        self.canvas.unbind("<B1-Motion>")
+        self.canvas.unbind("<ButtonRelease-1>")
+
+        for rect in self.canvas.find_withtag("process"):
+            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
+            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+        
+        for rect in self.canvas.find_withtag("product"):
+            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
+            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
 
     def on_start_connector(self, event):
         overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
@@ -35,11 +49,15 @@ class Connectors:
             self.connector_data["start_x"] = event.x
             self.connector_data["start_y"] = event.y
             
-            self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
+            if not self.shift_pressed:
+                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
 
     def on_draw_connector(self, event):
-        if self.connector_data["line"] is not None:
-            self.canvas.coords(self.connector_data["line"], self.connector_data["start_x"], self.connector_data["start_y"], event.x, event.y)
+        if not self.shift_pressed:
+            if self.connector_data["line"] is not None:
+                self.canvas.coords(self.connector_data["line"], self.connector_data["start_x"], self.connector_data["start_y"], event.x, event.y)
+        else:
+            self.canvas.delete(self.connector_data["line"])
 
     def on_finish_connector(self, event):
         overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
@@ -49,49 +67,55 @@ class Connectors:
             if "process" in self.canvas.gettags(item) or "product" in self.canvas.gettags(item):
                 end_item = item
                 break
+            
+        start_item = self.connector_data["start_item"]        
+        if start_item is not None and end_item is not None:
+                if self.shift_pressed:
+                    self.delete_connection(start_item, end_item)
+                else:
+                    if self.allow_to_connect(end_item) and not self.already_connected(start_item, end_item):
+                        start_coords = self.canvas.coords(self.connector_data["start_item"])
+                        end_coords = self.canvas.coords(end_item)
+                        
+                        start_center_x = (start_coords[0] + start_coords[2]) / 2
+                        start_center_y = (start_coords[1] + start_coords[3]) / 2
+                        end_center_x = (end_coords[0] + end_coords[2]) / 2
+                        end_center_y = (end_coords[1] + end_coords[3]) / 2
+                        
+                        # connector line connects to the centers of the rectangles
+                        self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+                        self.canvas.itemconfig(self.connector_data["line"], arrow=LAST)
 
-        if self.connector_data["start_item"] is not None and ("process" in self.canvas.gettags(end_item) or "product" in self.canvas.gettags(end_item)):
-            if self.allow_to_connect(end_item):
-                start_coords = self.canvas.coords(self.connector_data["start_item"])
-                end_coords = self.canvas.coords(end_item)
-                
-                start_center_x = (start_coords[0] + start_coords[2]) / 2
-                start_center_y = (start_coords[1] + start_coords[3]) / 2
-                end_center_x = (end_coords[0] + end_coords[2]) / 2
-                end_center_y = (end_coords[1] + end_coords[3]) / 2
-                
-                # connector line connects to the centers of the rectangles
-                self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
-                self.canvas.itemconfig(self.connector_data["line"], arrow=LAST)
+                        self.connectors.append({
+                            "line": self.connector_data["line"],
+                            "start_item": start_item,
+                            "end_item": end_item
+                        })
 
-                self.connectors.append({
-                    "line": self.connector_data["line"],
-                    "start_item": self.connector_data["start_item"],
-                    "end_item": end_item
-                })
-
-                connects_to_transport = "transportation" in self.canvas.gettags(item)
-                if connects_to_transport:
-                    GUIInputManager.set_transported_products(self, self.process_data[end_item], self.product_data[self.connector_data["start_item"]])
-            else:
-                self.canvas.delete(self.connector_data["line"])
+                        connects_to_transport = "transportation" in self.canvas.gettags(item)
+                        if connects_to_transport:
+                            GUIInputManager.set_transported_products(self, self.process_data[end_item], self.product_data[start_item])
+                    else:
+                        self.canvas.delete(self.connector_data["line"])
         else:
             self.canvas.delete(self.connector_data["line"])
 
         self.connector_data = {"line": None, "start_item": None, "start_x": 0, "start_y": 0}
-        
-        # Release rectangles
-        for rect in self.canvas.find_withtag("process"):
-            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
-            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
-        
-        for rect in self.canvas.find_withtag("product"):
-            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
-            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
 
-        self.canvas.unbind("<ButtonPress-1>")
-        self.canvas.unbind("<B1-Motion>")
-        self.canvas.unbind("<ButtonRelease-1>")  
+
+    def delete_connection(self, start_item, end_item):
+        for connector in self.connectors:
+            if connector["start_item"] == start_item and connector["end_item"] == end_item:
+                self.canvas.delete(connector["line"])
+                self.connectors.remove(connector)
+
+                if connector["start_item"] in self.product_data and connector["end_item"] in self.process_data:
+                    product = self.product_data[connector["start_item"]]
+                    process = self.process_data[connector["end_item"]]
+                    if GUIInputManager.is_transport(process):
+                        GUIInputManager.remove_transported_product(self, process, product)
+
+                break
 
     def update_connectors(self, item):
 
@@ -131,3 +155,18 @@ class Connectors:
                 create = False
 
         return create
+    
+    def already_connected(self, start_item, end_item):
+
+        for connector in self.connectors:
+            if ((connector["start_item"] == start_item and connector["end_item"]  == end_item) or 
+                (connector["start_item"] == end_item and connector["end_item"]  == start_item)):
+                return True
+
+        return False 
+    
+    def on_shift_press(self, event):
+        self.shift_pressed = True
+
+    def on_shift_release(self, event):
+        self.shift_pressed = False

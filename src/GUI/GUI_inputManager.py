@@ -1,5 +1,6 @@
 from material.projectManager.inputManager import InputManager
 from material.model.product import Product
+from material.model.process import Process, transportationProcess
 
 import pandas
 
@@ -10,16 +11,17 @@ class GUIInputManager(InputManager):
     # =================================
 
     @staticmethod
-    def create_product(model, name, project, unit, qty, stage):
+    def create_product(model, name, unit, qty, stage, density):
 
         product = model.create_product(name, stage)
         product.set_unit(unit)
         product.update_qty(qty)
+        product.set_density(density)
 
         return product
   
     @staticmethod
-    def create_process(model, name, project, unit, qty, stage):
+    def create_process(model, name, unit, qty, stage):
 
         process =  model.create_process(name, stage)
         process.set_unit(unit)
@@ -32,8 +34,9 @@ class GUIInputManager(InputManager):
 
         item.update_qty(qty)
 
-        if item.get_transporter() is not None:
-            item.get_transporter().set_travel_weight()
+        if isinstance(item, Product):
+            if item.get_transporter() is not None:
+                item.get_transporter().set_travel_weight()
 
         visualizer.set_plot_data()
         visualizer.update_plot()
@@ -66,6 +69,21 @@ class GUIInputManager(InputManager):
     def get_qty(item):
 
         return item.get_qty()
+    
+    @staticmethod
+    def is_product(item):
+
+        return isinstance(item, Product)
+    
+    @staticmethod
+    def is_process(item):
+
+        return isinstance(item, Process)
+    
+    @staticmethod
+    def is_transport(item):
+
+        return isinstance(item, transportationProcess)
     
     # =================================
     # Processes: Transportation
@@ -100,6 +118,15 @@ class GUIInputManager(InputManager):
             raise TypeError
         
         GUIInputManager.set_travel_weight(visualizer, item)
+
+    @staticmethod
+    def remove_transported_product(visualizer, item, product):
+
+        product.set_transporter(None)
+        item.remove_transported_product(product)
+        visualizer.set_plot_data()
+        visualizer.update_plot()  
+
 
     @staticmethod
     def set_travel_weight(visualizer, item):  
