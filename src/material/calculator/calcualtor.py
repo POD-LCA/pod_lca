@@ -2,7 +2,13 @@ class Calculator():
 
     def __init__(self, project):
         self.project = project
-
+ 
+    def __reduce__(self):
+        
+        return (self.__class__, (None), {"project": self.project})
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
     
     def get_data_by_LCstage(self, impact_category):
 
@@ -16,3 +22,7 @@ class Calculator():
                 vals[stage] += impact.get_impact(impact_category)
 
         return vals
+    
+
+    
+    

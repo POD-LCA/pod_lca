@@ -2,6 +2,7 @@ from material.databaseManager.databaseManager import DatabaseManager
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 
+import pickle
 from tkinter import Button, Menu, filedialog, END, LEFT, Frame
 
 class Menubar:
@@ -16,7 +17,9 @@ class Menubar:
         menubar.add_cascade(menu=menu_file, label='File')
 
         menu_file.add_command(label='New', command=self._newFile)
-        menu_file.add_command(label='Open...', command=self._openFile)
+        menu_file.add_command(label='Open', command=self._openFile)
+        menu_file.add_command(label='Save', command=self._saveFile)
+        menu_file.add_command(label='Load', command=self._loadFile)
         menu_file.add_command(label='Close', command=self._closeFile(self))
 
     def _newFile(self):
@@ -30,6 +33,22 @@ class Menubar:
     def _closeFile(self, app):
 
         app.quit
+
+    def _saveFile(self):
+        folder_selected = filedialog.askdirectory()
+
+        if folder_selected: 
+            file_path = filedialog.asksaveasfilename(initialdir=folder_selected, 
+                                                     title="Save As", 
+                                                     defaultextension=".pkl",
+                                                     filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*")))
+
+            if file_path:
+                self.save_state(file_path)
+
+    def _loadFile(self):
+
+        pass
 
     # =================================
     # EDIT MENU

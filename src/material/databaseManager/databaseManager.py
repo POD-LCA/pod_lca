@@ -7,6 +7,14 @@ class DatabaseManager:
         self.data = None
         self.impact_categories = ['GWP', 'acid_pot', 'eutro_pot', 'ozone_dep', 'smog']
 
+    def __reduce__(self):
+        
+        return (self.__class__, (None), {"project": self.project, "data": self.data, 
+                                         "impact_categories": self.impact_categories})
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
     def set_data(self, data):
 
         self.data = data

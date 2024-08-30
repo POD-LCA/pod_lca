@@ -3,8 +3,8 @@ from tkinter import HORIZONTAL
 
 class Slider(Scale):
 
-    def __init__(self, root, txt, min, max, command):
-        super().__init__(master=root, label=txt, from_=min, to=max, orient=HORIZONTAL, command=command)
+    def __init__(self, root, txt, min, max, width, command):
+        super().__init__(master=root, label=txt, from_=min, to=max, width=width, orient=HORIZONTAL, command=command)
 
     def update_value(self, value):
         self.set(value)

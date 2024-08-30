@@ -12,6 +12,16 @@ class Impacts:
         # self.impact_qtys = {}
         # self.set_impact_categories()
 
+    def __reduce__(self):
+
+        return (self.__class__, (None), {"parent": self.parent,
+                                         "GWP": self.GWP, "acid_pot":self.acid_pot,
+                                         "eutro_pot": self.eutro_pot, "ozone_pot":self.ozone_dep,
+                                         "smog": self.smog})
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
     # def set_impact_categories(self):
 
     #     impact_cats = self.get_parent().get_project().get_database().get_impact_categories()

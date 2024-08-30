@@ -33,7 +33,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.content_frame = Frame(self, width=600, height=600)
         self.content_frame.pack(side=TOP, fill=BOTH, expand=True)
 
-        self.canvas = Canvas(self.content_frame, bg="white", width=600, height=600)
+        self.canvas = Canvas(self.content_frame, bg="white", width=800, height=800)
         self.canvas.pack(side=LEFT, padx=10, pady=10)
 
         # Figure
@@ -77,7 +77,8 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.drag_data = {"item": None, "x": 0, "y": 0}
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
         self.connectors = []
-        self.tooltips = {}
+        self.sliders = []
+        # self.tooltips = {}
 
         self.process_data = {}
         self.product_data = {}
@@ -91,8 +92,42 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.bind_all("<KeyRelease-Control_L>", self.on_ctrl_release)
         self.bind_all("<KeyPress-Shift_L>", self.on_shift_press)
         self.bind_all("<KeyRelease-Shift_L>", self.on_shift_release)
-        
 
+        # Zoom and Pan settings
+        self.scale = 1.0
+        self.zoom_factor = 1.1
+        self.pan_start = None
+        self.default_slider_width = 10
+        self.min_slider_width = 3  # Minimum width for sliders to prevent disappearing
+        self.max_slider_width = 100  # Maximum width for sliders
+        self.constant_slider_height = 20  # Constant height for sliders
+
+        # self.canvas.bind("<ButtonPress-3>", self.start_pan)  # Right mouse button for panning
+        # self.canvas.bind("<B3-Motion>", self.do_pan)
+        # self.canvas.bind("<MouseWheel>", self.zoom)  # Mouse wheel for zoom
+        # self.bind_all("<Control-plus>", self.zoom_in)  # Ctrl + for zooming in
+        # self.bind_all("<Control-minus>", self.zoom_out)  # Ctrl - for zooming out
+
+        # window closing
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+    # =================================
+    # SAVE/LOAD
+    # =================================
+
+    def save_state(self, file_path):
+
+        # self.connectors = []
+        # self.sliders = []
+        # self.tooltips = {}
+
+        # self.process_data = {}
+        # self.product_data = {}
+
+        # self.project
+
+        pass
+        
     # =================================
     # MENU
     # =================================
@@ -199,7 +234,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         apply_button.pack(side=LEFT, padx=10)
 
     # =================================
-    # On Canvas
+    # On Canvas : Drag
     # =================================
 
     def on_start_drag(self, event):
@@ -247,6 +282,75 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         if not self.shift_pressed:
             self.update_connectors(self.drag_data["item"])
 
+    # =================================
+    # On Canvas: Zoom and pan
+    # =================================
+
+    def start_pan(self, event):
+        # Check if the click is on an object
+        item = self.canvas.find_withtag("current")
+        if not item:
+            self.pan_start = (event.x, event.y)
+
+    def do_pan(self, event):
+        if self.pan_start:
+            dx = event.x - self.pan_start[0]
+            dy = event.y - self.pan_start[1]
+
+            self.canvas.scan_dragto(-dx, -dy, gain=1)
+
+            self.pan_start = (event.x, event.y)
+
+    def zoom(self, event):
+        x = self.canvas.canvasx(event.x)
+        y = self.canvas.canvasy(event.y)
+
+        if event.delta > 0:
+            self.canvas.scale("all", x, y, self.zoom_factor, self.zoom_factor)
+            self.scale_widgets(self.zoom_factor)
+            self.scale *= self.zoom_factor
+        elif event.delta < 0:
+            self.canvas.scale("all", x, y, 1 / self.zoom_factor, 1 / self.zoom_factor)
+            self.scale_widgets(1 / self.zoom_factor)
+            self.scale /= self.zoom_factor
+
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def zoom_in(self, event):
+        x = self.winfo_pointerx() - self.canvas.winfo_rootx()
+        y = self.winfo_pointery() - self.canvas.winfo_rooty()
+        x = self.canvas.canvasx(x)
+        y = self.canvas.canvasy(y)
+        self.canvas.scale("all", x, y, self.zoom_factor, self.zoom_factor)
+        self.scale_widgets(self.zoom_factor)
+        self.scale *= self.zoom_factor
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def zoom_out(self, event):
+        x = self.winfo_pointerx() - self.canvas.winfo_rootx()
+        y = self.winfo_pointery() - self.canvas.winfo_rooty()
+        x = self.canvas.canvasx(x)
+        y = self.canvas.canvasy(y)
+        self.canvas.scale("all", x, y, 1 / self.zoom_factor, 1 / self.zoom_factor)
+        self.scale_widgets(1 / self.zoom_factor)
+        self.scale /= self.zoom_factor
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+    def scale_widgets(self, factor):
+        for slider_data in self.sliders:
+            slider = slider_data["widget"]
+            new_x = slider_data["x"] * factor
+            new_y = slider_data["y"] * factor
+            slider.place(x=new_x, y=new_y)
+
+            new_width = slider_data["width"] * factor
+            # new_width = max(self.min_slider_width, min(self.max_slider_width, new_width))  # Enforce limits
+
+            slider.config(width=int(new_width))
+
+    def on_closing(self):
+        self.quit()
+        self.destroy()
 
 if __name__ == "__main__":
     app = ProcessVisualizer()
