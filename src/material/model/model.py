@@ -4,11 +4,19 @@ from material.model.product import Product
 class Model:
 
     def __init__(self, project):
+        self.project = project
         self.processes = [] # maybe dicts
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}
-        self.project = project
-
+        
+    def __reduce__(self):
+        
+        return (self.__class__, (None), {"project": self.project, "processes":self.processes, 
+                                         "products": self.products, "impacts": self.impacts})
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+    
     def create_process(self, name, stage):
         """ Create process object.
             Then, append the process object and the corresponding impact objects to its properties.
@@ -87,8 +95,16 @@ class Model:
 
         return product
     
-    def get_impacts(self):
+    def get_processes(self):
 
+        return self.processes
+    
+    def get_products(self):
+
+        return self.products
+    
+    def get_impacts(self):
+        
         return self.impacts
     
     def get_project(self):

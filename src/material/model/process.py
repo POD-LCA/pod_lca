@@ -14,6 +14,15 @@ class Process:
         self.qty = 0.0
         self.unit = None
 
+    def __reduce__(self):
+        
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"year":self.year, "impacts": self.impacts,
+                                                                                    "database_item": self.database_item, 
+                                                                                    "qty": self.qty, "unit":self.unit})
+    
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
     def update_qty(self, qty:float):
         """ Update the qty of the process.
             This will also re-set the corresponding impact quantities.
@@ -73,7 +82,6 @@ class Process:
                                          eutro_pot=unit_impacts["Eutrophication potential (kg N eq)"] * self.qty,
                                          ozone_dep=unit_impacts["Ozone depletion potential (kg CFC-11 eq)"] * self.qty,
                                          smog=unit_impacts["Smog potential (kg O3 eq)"] * self.qty)
-
 
     def set_database_row(self, database_item:str):
         """ Sets the database (impacts) entry corresponding to the product.

@@ -31,9 +31,11 @@ class Transportation:
         
     def create_transport_process(self, popup, name, qty, units, stage):
 
-        x1, y1, x2, y2, = 50, 50, 150, 100
+        height = 50
+        width = 150
+        x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
 
-        prc = self.canvas.create_rectangle(50, 50, 150, 100, fill="blue", tags=("process","transportation"))
+        prc = self.canvas.create_rectangle( x1, y1, x2, y2, fill="blue", tags=("process","transportation"))
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
@@ -45,7 +47,8 @@ class Transportation:
 
         self.process_data[prc] = GUIInputManager.create_transport_process(self.project.model, name, self.project, units, float(qty), stage)
     
-        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, command=lambda x: GUIInputManager.update_transport_dist(self, self.process_data[prc], x))
+        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_transport_dist(self, self.process_data[prc], x))
+        self.sliders.append({"widget": slider, "x": x1, "y": y2, "width": self.default_slider_width})
         slider.place(in_=self.canvas, x=x1, y=y2)
         slider.update_value(qty)
 

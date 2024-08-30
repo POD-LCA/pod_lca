@@ -17,6 +17,16 @@ class Product:
         self.unit = None
         self.is_material = False
         self.is_energy = False
+    
+    def __reduce__(self):
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "year":self.year, "impacts": self.impacts,
+                                                                                    "database_item": self.database_item, 
+                                                                                    "qty": self.qty, "weight": self.weight, 
+                                                                                    "density": self.density, "unit":self.unit, 
+                                                                                    "is_material":self.is_material, "is_energy":self.is_energy})
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
 
     def update_qty(self, qty):
         """ Update the qty of the product.
@@ -61,7 +71,6 @@ class Product:
                 break
 
         self.get_project().get_model().impacts[stage].append(impact_obj)
-
 
     def set_impacts_qtys(self):
         """ Sets impacts quantities, based on database item asigned to the product and the product quantity.

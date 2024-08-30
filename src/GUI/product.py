@@ -22,7 +22,6 @@ class Product:
         units = popup._popup_input_combo("units: ", ["kg", "m3", "MJ"])  
         density = popup._popup_input_field("mass per unit product: ", validate_num=True, default_val=1.0)
 
-
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
 
@@ -34,7 +33,9 @@ class Product:
         
     def create_product(self, popup, name, qty, units, stage, density):
 
-        x1, y1, x2, y2, = 50, 50, 150, 100
+        height = 50
+        width = 150
+        x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
  
         flw = self.canvas.create_rectangle(x1, y1, x2, y2, fill="pink", tags="product")
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
@@ -47,7 +48,8 @@ class Product:
 
         self.product_data[flw] = GUIInputManager.create_product(self.project.model, name, units, float(qty), stage, density)
 
-        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, command=lambda x: GUIInputManager.update_qty(self, self.product_data[flw], x))
+        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_qty(self, self.product_data[flw], x))
+        self.sliders.append({"widget": slider, "x": x1, "y": y2, "width": self.default_slider_width})
         slider.place(in_=self.canvas, x=x1, y=y2)
         slider.update_value(qty)
         
