@@ -14,7 +14,7 @@ class Impacts:
 
     def __reduce__(self):
 
-        return (self.__class__, (None), {"parent": self.parent,
+        return (self.__class__, (None,), {"parent": self.parent,
                                          "GWP": self.GWP, "acid_pot":self.acid_pot,
                                          "eutro_pot": self.eutro_pot, "ozone_pot":self.ozone_dep,
                                          "smog": self.smog})

@@ -8,6 +8,7 @@ from GUI.product import Product
 from GUI.connectors import Connectors
 from GUI.transportation import Transportation
 
+import pickle
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label
 from tkinter import RIGHT, LEFT, Y, BOTH, TOP
 from tkinter.ttk import Combobox
@@ -82,9 +83,11 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
         self.process_data = {}
         self.product_data = {}
+        self.process_item_map = {}
+        self.product_item_map = {}
 
         # back-end
-        self.project = Project()
+        self.project = GUIInputManager.create_project()
 
         # ctrl and shift press binding
         self.shift_pressed = False
@@ -98,15 +101,13 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.zoom_factor = 1.1
         self.pan_start = None
         self.default_slider_width = 10
-        self.min_slider_width = 3  # Minimum width for sliders to prevent disappearing
-        self.max_slider_width = 100  # Maximum width for sliders
-        self.constant_slider_height = 20  # Constant height for sliders
+        # self.constant_slider_height = 20  # Constant height for sliders
 
-        # self.canvas.bind("<ButtonPress-3>", self.start_pan)  # Right mouse button for panning
-        # self.canvas.bind("<B3-Motion>", self.do_pan)
-        # self.canvas.bind("<MouseWheel>", self.zoom)  # Mouse wheel for zoom
-        # self.bind_all("<Control-plus>", self.zoom_in)  # Ctrl + for zooming in
-        # self.bind_all("<Control-minus>", self.zoom_out)  # Ctrl - for zooming out
+        self.canvas.bind("<ButtonPress-3>", self.start_pan)  # Right mouse button for panning
+        self.canvas.bind("<B3-Motion>", self.do_pan)
+        self.canvas.bind("<MouseWheel>", self.zoom)  # Mouse wheel for zoom
+        self.bind_all("<Control-plus>", self.zoom_in)  # Ctrl + for zooming in
+        self.bind_all("<Control-minus>", self.zoom_out)  # Ctrl - for zooming out
 
         # window closing
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -117,16 +118,81 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
     def save_state(self, file_path):
 
-        # self.connectors = []
-        # self.sliders = []
-        # self.tooltips = {}
+        state = {"sliders": [{"x": slider["x"], "y": slider["y"], "length": slider["length"]} for slider in self.sliders],
+                "processess": [], 
+                "products": [], 
+                "transportation": [],
+                "connectors": self.connectors,
+                "project": self.project,
+                "process_data": self.process_data,
+                "product_data": self.product_data
+                }
+        
+        for item_id in self.canvas.find_withtag("process"):
+            coords = self.canvas.coords(item_id)
+            fill_color = self.canvas.itemcget(item_id, "fill")
+            
+            state["processess"].append({"item_id":item_id, "coords": coords, "fill": fill_color})
 
-        # self.process_data = {}
-        # self.product_data = {}
+        for item_id in self.canvas.find_withtag("product"):
+            coords = self.canvas.coords(item_id)
+            fill_color = self.canvas.itemcget(item_id, "fill")
+            
+            state["products"].append({"item_id": item_id, "coords": coords, "fill": fill_color})
 
-        # self.project
+        with open(file_path, "wb") as file:
+            pickle.dump(state, file)
 
-        pass
+    def load_state(self, file_path):
+
+        with open(file_path, "rb") as file:
+            state = pickle.load(file)
+
+        self.connectors = state["connectors"]
+        self.project = state["project"]
+        self.process_data = state["process_data"]
+        self.product_data = state["product_data"]
+
+        item_id_map = {}
+        for rect_data in state["processess"]:
+            item_id = rect_data["item_id"]
+            process = self.process_data[item_id]
+            if GUIInputManager.is_transport(process):
+                new_item_id = self.restore_transportation_process(process, rect_data["coords"])
+            else:
+                new_item_id = self.restore_process(process, rect_data["coords"])
+            item_id_map[item_id] = new_item_id
+
+
+        for rect_data in state["products"]:
+            item_id = rect_data["item_id"]
+            process = self.product_data[item_id]
+            new_item_id = self.restore_product(process, rect_data["coords"])
+            item_id_map[item_id] = new_item_id
+
+        self.restore_connections(item_id_map)
+
+
+    def clear_state(self):
+
+        self.canvas.delete("all")
+
+        for slider_data in self.sliders:
+            slider_data["widget"].destroy()
+
+        self.connectors.clear()
+        self.sliders.clear()
+        self.process_data.clear()
+        self.product_data.clear()
+        self.process_item_map.clear()
+        self.product_item_map.clear()
+        self.clear_plot_data()
+
+        GUIInputManager.clear_project(self.project, database=False)
+
+        self.update_plot()
+
+        return self
         
     # =================================
     # MENU
@@ -274,9 +340,12 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
             self.update_connectors(self.drag_data["item"])
 
-    def move_slider(self, event, slider):
+    def move_slider(self, event, slider, slider_data):
         x1, y1, x2, y2 = self.canvas.bbox(self.drag_data["item"])
         slider.place(in_=self.canvas, x=x1, y=y2)
+
+        slider_data['x'] = x1
+        slider_data['y'] = y2
     
     def on_stop_drag(self, event):
         if not self.shift_pressed:
@@ -287,19 +356,31 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
     # =================================
 
     def start_pan(self, event):
-        # Check if the click is on an object
         item = self.canvas.find_withtag("current")
         if not item:
+            self.canvas.scan_mark(event.x, event.y)
+
             self.pan_start = (event.x, event.y)
 
+
     def do_pan(self, event):
-        if self.pan_start:
+        self.canvas.scan_dragto(event.x, event.y, gain=1)
+        for slider_data in self.sliders:
+            slider = slider_data["widget"]  
+
             dx = event.x - self.pan_start[0]
             dy = event.y - self.pan_start[1]
 
-            self.canvas.scan_dragto(-dx, -dy, gain=1)
+            current_x = slider_data['x'] + dx
+            current_y = slider_data['y'] + dy  
 
-            self.pan_start = (event.x, event.y)
+            slider.place(x=current_x, y=current_y)
+
+            slider_data['x'] = current_x
+            slider_data['y'] = current_y
+
+        self.pan_start = (event.x, event.y)
+
 
     def zoom(self, event):
         x = self.canvas.canvasx(event.x)
@@ -339,14 +420,15 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
     def scale_widgets(self, factor):
         for slider_data in self.sliders:
             slider = slider_data["widget"]
-            new_x = slider_data["x"] * factor
-            new_y = slider_data["y"] * factor
-            slider.place(x=new_x, y=new_y)
 
-            new_width = slider_data["width"] * factor
-            # new_width = max(self.min_slider_width, min(self.max_slider_width, new_width))  # Enforce limits
+            new_length = slider_data["length"] * factor
+            slider_data["length"]  = new_length
+            slider.config(length=int(new_length))
 
-            slider.config(width=int(new_width))
+            coords = self.canvas.coords(slider.rect)
+            slider.place(in_=self.canvas, x=coords[0], y=coords[3])
+            slider_data['x'] = coords[0]
+            slider_data['y'] = coords[3]
 
     def on_closing(self):
         self.quit()
