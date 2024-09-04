@@ -16,9 +16,10 @@ class Process:
 
     def __reduce__(self):
         
-        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"year":self.year, "impacts": self.impacts,
-                                                                                    "database_item": self.database_item, 
-                                                                                    "qty": self.qty, "unit":self.unit})
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, "year":self.year, 
+                                                                                     "impacts": self.impacts, 
+                                                                                     "database_item": self.database_item, 
+                                                                                     "qty": self.qty, "unit":self.unit})
     
     def __setstate__(self, state):
         self.__dict__.update(state)
@@ -100,9 +101,13 @@ class Process:
 
         self.unit = unit
 
-    def get_units(self):
+    def get_name(self):
 
-        return self.unit
+        return self.name
+
+    def get_id(self):
+
+        return self.id
     
     def get_qty(self):
 
@@ -128,6 +133,10 @@ class Process:
 
         return self.database_item
 
+    def get_unit(self):
+
+        return self.unit
+    
 class transportationProcess(Process):
 
     def __init__(self, id, name, model, stage):

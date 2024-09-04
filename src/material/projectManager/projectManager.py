@@ -6,16 +6,15 @@ import pickle
 
 class Project:
 
-    def __init__(self):
-        self.name = None
+    def __init__(self, name=None):
+        self.name = name
         self.model = Model(self)
         self.database = DatabaseManager(self)
         self.calculator = Calculator(self)
     
     def __reduce__(self):
         
-        return (self.__class__, (None), {"project": self.project, "processes":self.processes, 
-                                         "products": self.products, "impacts": self.impacts})
+        return (self.__class__, (self.name,), {"model":self.model, "database": self.database})
     
     def __setstate__(self, state):
         self.__dict__.update(state)
@@ -32,6 +31,15 @@ class Project:
 
         return self.calculator
     
+    def clear_project(self, model=True, database=True):
+
+        if model:
+            self.model = Model(self)
+
+        if database:
+            self.database = DatabaseManager(self)
+
+
     def save(self, file_path):
 
         with open(file_path, "wb") as file:

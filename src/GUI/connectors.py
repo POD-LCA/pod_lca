@@ -48,6 +48,7 @@ class Connectors:
             self.connector_data["start_item"] = start_item
             self.connector_data["start_x"] = event.x
             self.connector_data["start_y"] = event.y
+
             
             if not self.shift_pressed:
                 self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
@@ -74,23 +75,12 @@ class Connectors:
                     self.delete_connection(start_item, end_item)
                 else:
                     if self.allow_to_connect(end_item) and not self.already_connected(start_item, end_item):
-                        start_coords = self.canvas.coords(self.connector_data["start_item"])
-                        end_coords = self.canvas.coords(end_item)
-                        
-                        start_center_x = (start_coords[0] + start_coords[2]) / 2
-                        start_center_y = (start_coords[1] + start_coords[3]) / 2
-                        end_center_x = (end_coords[0] + end_coords[2]) / 2
-                        end_center_y = (end_coords[1] + end_coords[3]) / 2
-                        
-                        # connector line connects to the centers of the rectangles
-                        self.canvas.coords(self.connector_data["line"], start_center_x, start_center_y, end_center_x, end_center_y)
-                        self.canvas.itemconfig(self.connector_data["line"], arrow=LAST)
+                        self.draw_connection(self.connector_data["start_item"], end_item, self.connector_data["line"])
 
                         self.connectors.append({
                             "line": self.connector_data["line"],
                             "start_item": start_item,
-                            "end_item": end_item
-                        })
+                            "end_item": end_item})
 
                         connects_to_transport = "transportation" in self.canvas.gettags(item)
                         if connects_to_transport:
@@ -125,16 +115,32 @@ class Connectors:
             end_item_id = connector["end_item"] if isinstance(connector["end_item"], int) else connector["end_item"][0]
 
             if start_item_id == item_id or end_item_id == item_id:
-                start_coords = self.canvas.coords(connector["start_item"])
-                end_coords = self.canvas.coords(connector["end_item"])
-                
-                start_center_x = (start_coords[0] + start_coords[2]) / 2
-                start_center_y = (start_coords[1] + start_coords[3]) / 2
-                end_center_x = (end_coords[0] + end_coords[2]) / 2
-                end_center_y = (end_coords[1] + end_coords[3]) / 2
-                
-                # Connector line ends at the centroid of the rectangle
-                self.canvas.coords(connector["line"], start_center_x, start_center_y, end_center_x, end_center_y)
+                self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
+
+
+    def restore_connections(self, item_id_map):
+        """ Restoring connections after loading saved canvas.
+        """
+        for connector in self.connectors:
+            for tag in ["start_item", "end_item"]:
+                connector[tag] = item_id_map[connector[tag]]
+            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2)
+            self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
+
+    def draw_connection(self, start, end, line):
+
+        start_coords = self.canvas.coords(start)
+        end_coords = self.canvas.coords(end)
+        
+        start_center_x = (start_coords[0] + start_coords[2]) / 2
+        start_center_y = (start_coords[1] + start_coords[3]) / 2
+        end_center_x = (end_coords[0] + end_coords[2]) / 2
+        end_center_y = (end_coords[1] + end_coords[3]) / 2
+        
+        # connector line connects to the centers of the rectangles
+        self.canvas.coords(line, start_center_x, start_center_y, end_center_x, end_center_y)
+        self.canvas.itemconfig(line, arrow=LAST)
+
 
     def allow_to_connect(self, item):
         """ Checks if connections is a valid connection for the flow diagram.
