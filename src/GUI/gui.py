@@ -76,6 +76,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         
         # background data
         self.drag_data = {"item": None, "x": 0, "y": 0}
+        self.connector_type = 'spline' # 'straight', 'elbow', 'spline'
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
         self.connectors = []
         self.sliders = []
@@ -111,6 +112,12 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
         # window closing
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        # color palette
+        self.color_transport = "#e8c4a9"
+        self.color_process = "#bde8a2"
+        self.color_product = "#c3e7f7"
+
 
     # =================================
     # SAVE/LOAD

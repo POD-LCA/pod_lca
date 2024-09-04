@@ -40,7 +40,7 @@ class Product:
         width = 150
         x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
  
-        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill="pink", tags="product")
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_product, tags="product")
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
         text_item = self.canvas.create_text(text_x, text_y, text=text_str)
@@ -81,7 +81,7 @@ class Product:
         # TODO: additionally check if a transportation process
 
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
-        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill="pink", tags="product")
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_product, tags="product")
 
         name = GUIInputManager.get_name(product)
         units = GUIInputManager.get_unit(product)

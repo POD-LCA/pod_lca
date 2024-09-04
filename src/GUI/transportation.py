@@ -30,12 +30,12 @@ class Transportation:
         cancel_button.pack(side=LEFT, padx=10)
         
     def create_transport_process(self, popup, name, qty, units, stage):
-
+        
         height = 50
         width = 150
         x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
 
-        item_id = self.canvas.create_rectangle( x1, y1, x2, y2, fill="blue", tags=("process","transportation"))
+        item_id = self.canvas.create_rectangle( x1, y1, x2, y2, fill=self.color_transport, tags=("process","transportation"))
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
@@ -73,7 +73,7 @@ class Transportation:
     def restore_transportation_process(self, process, cords):
         
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
-        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill="blue", tags=("process","transportation"))
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_transport, tags=("process","transportation"))
 
         name = GUIInputManager.get_name(process)
         units = GUIInputManager.get_unit(process)

@@ -16,7 +16,7 @@ class Process:
         popup = Popup(self, "Create process", "300x200")
         
         name =  popup._popup_input_field("Process name: ", default_val="new Process")    
-        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])   
+        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"], default_entry=2)   
         qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
         units = popup._popup_input_combo("units: ", ["m3", "kg"])  
 
@@ -38,7 +38,7 @@ class Process:
         width = 150
         x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
 
-        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill="blue", tags="process")
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_process, tags="process")
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
@@ -79,7 +79,7 @@ class Process:
         
         # TODO: additionally check if a transportation process
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
-        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill="blue", tags="process")
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_process, tags="process")
 
         name = GUIInputManager.get_name(process)
         units = GUIInputManager.get_unit(process)
