@@ -51,7 +51,8 @@ class Connectors:
 
             
             if not self.shift_pressed:
-                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2)
+                smooth = True if self.connector_type == 'spline' else False
+                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2, smooth=smooth)
 
     def on_draw_connector(self, event):
         if not self.shift_pressed:
@@ -124,22 +125,43 @@ class Connectors:
         for connector in self.connectors:
             for tag in ["start_item", "end_item"]:
                 connector[tag] = item_id_map[connector[tag]]
-            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2)
+            smooth = True if self.connector_type == 'spline' else False
+            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth)
             self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
 
-    def draw_connection(self, start, end, line):
+    def draw_connection(self, start, end, line, connect_to='edge'):
 
         start_coords = self.canvas.coords(start)
         end_coords = self.canvas.coords(end)
-        
-        start_center_x = (start_coords[0] + start_coords[2]) / 2
-        start_center_y = (start_coords[1] + start_coords[3]) / 2
-        end_center_x = (end_coords[0] + end_coords[2]) / 2
-        end_center_y = (end_coords[1] + end_coords[3]) / 2
-        
-        # connector line connects to the centers of the rectangles
-        self.canvas.coords(line, start_center_x, start_center_y, end_center_x, end_center_y)
-        self.canvas.itemconfig(line, arrow=LAST)
+
+        if connect_to =='center':
+            start_x = (start_coords[0] + start_coords[2]) / 2
+            end_x = (end_coords[0] + end_coords[2]) / 2
+        elif connect_to =='edge':
+            start_x, end_x = self.get_closest_vertical_edges(start_coords, end_coords)
+        else:
+            raise NotImplementedError
+
+        start_y = (start_coords[1] + start_coords[3]) / 2
+        end_y = (end_coords[1] + end_coords[3]) / 2
+
+
+        if self.connector_type == 'straight':
+            self.canvas.coords(line, start_x, start_y, end_x, end_y)
+            self.canvas.itemconfig(line, arrow=LAST)
+        elif self.connector_type == 'elbow' or self.connector_type == 'spline':
+            offset = 50
+            control_point1 = (start_x + offset, start_y)
+            control_point2 = (end_x - offset, end_y)
+            
+            self.canvas.coords(line,
+                       start_x, start_y,
+                       control_point1[0], control_point1[1],  
+                       control_point2[0], control_point2[1],  
+                       end_x, end_y)  
+            self.canvas.itemconfig(line, arrow=LAST)
+        else:
+            raise NotImplementedError
 
 
     def allow_to_connect(self, item):
@@ -176,3 +198,12 @@ class Connectors:
 
     def on_shift_release(self, event):
         self.shift_pressed = False
+
+    def get_closest_vertical_edges(self, rect1_coords, rect2_coords):
+        left_edge1, right_edge1 = rect1_coords[0], rect1_coords[2]
+        left_edge2, right_edge2 = rect2_coords[0], rect2_coords[2]
+
+        if abs(right_edge1 - left_edge2) < abs(left_edge1 - right_edge2):
+            return (right_edge1, left_edge2)
+        else:
+            return (left_edge1, right_edge2)
