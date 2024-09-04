@@ -1,10 +1,21 @@
 from material.projectManager.inputManager import InputManager
+from material.projectManager.projectManager import Project
 from material.model.product import Product
 from material.model.process import Process, transportationProcess
 
 import pandas
 
 class GUIInputManager(InputManager):
+
+    @staticmethod
+    def create_project(name=None):
+
+        return Project(name)
+    
+    @staticmethod
+    def clear_project(project, model=True, database=True):
+
+        project.clear_project(model, database)
 
     # =================================
     # Products and Processes
@@ -84,6 +95,35 @@ class GUIInputManager(InputManager):
     def is_transport(item):
 
         return isinstance(item, transportationProcess)
+    
+    # =================================
+    # Processes/Products
+    # =================================
+
+    @staticmethod
+    def get_name(obj):
+
+        return obj.get_name()
+
+    @staticmethod
+    def get_unit(obj):
+
+        return obj.get_unit()
+
+    @staticmethod
+    def get_stage(obj):
+
+        return obj.get_life_cycle_stage()
+
+    @staticmethod
+    def get_qty(obj):
+
+        return obj.get_qty()
+    
+    @staticmethod
+    def get_id(obj):
+
+        return obj.get_id()   
     
     # =================================
     # Processes: Transportation

@@ -120,13 +120,21 @@ class Product:
         
         self.transporter = transporter
 
-    def get_units(self):
+    def get_name(self):
+
+        return self.name    
+    
+    def get_unit(self):
 
         return self.unit
     
     def get_qty(self):
 
         return self.qty
+
+    def get_id(self):
+
+        return self.id
     
     def get_weight(self):
 

@@ -2,6 +2,7 @@ from material.databaseManager.databaseManager import DatabaseManager
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 
+import os
 import pickle
 from tkinter import Button, Menu, filedialog, END, LEFT, Frame
 
@@ -19,36 +20,43 @@ class Menubar:
         menu_file.add_command(label='New', command=self._newFile)
         menu_file.add_command(label='Open', command=self._openFile)
         menu_file.add_command(label='Save', command=self._saveFile)
-        menu_file.add_command(label='Load', command=self._loadFile)
-        menu_file.add_command(label='Close', command=self._closeFile(self))
+        menu_file.add_command(label='Close', command=self._closeFile())
 
     def _newFile(self):
 
-        pass
+        # TODO: Add warning and ask to save
+
+        self.clear_state()
     
-    def _openFile(self):
 
         pass
 
-    def _closeFile(self, app):
+    def _closeFile(self):
 
-        app.quit
+        self.quit
 
     def _saveFile(self):
-        folder_selected = filedialog.askdirectory()
 
-        if folder_selected: 
-            file_path = filedialog.asksaveasfilename(initialdir=folder_selected, 
-                                                     title="Save As", 
-                                                     defaultextension=".pkl",
-                                                     filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*")))
+        home_dir = os.path.expanduser("~")
+        file_path = filedialog.asksaveasfilename(initialdir=home_dir, 
+                                                    title="Save As", 
+                                                    defaultextension=".pkl",
+                                                    filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*")))
 
-            if file_path:
-                self.save_state(file_path)
+        if file_path:
+            self.save_state(file_path)
 
-    def _loadFile(self):
+    def _openFile(self):
 
-        pass
+        home_dir = os.path.expanduser("~")
+        file_path = filedialog.askopenfilename(initialdir=home_dir, 
+                                                title="Open file", 
+                                                defaultextension=".pkl",
+                                                filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*")))
+
+        if file_path:
+            self.clear_state()
+            self.load_state(file_path)
 
     # =================================
     # EDIT MENU
