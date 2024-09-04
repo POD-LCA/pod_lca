@@ -33,41 +33,94 @@ class Product:
         
     def create_product(self, popup, name, qty, units, stage, density):
 
+        product = GUIInputManager.create_product(self.project.model, name, units, float(qty), stage, density)
+        product_id = GUIInputManager.get_id(product)
+
         height = 50
         width = 150
         x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
  
-        flw = self.canvas.create_rectangle(x1, y1, x2, y2, fill="pink", tags="product")
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_product, tags="product")
+        text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
+        text_str = name + '\n' + stage
+        text_item = self.canvas.create_text(text_x, text_y, text=text_str)
+
+        id_pack = 5
+        id_x, id_y = x1 + id_pack , y1 + id_pack
+        text_id = self.canvas.create_text(id_x, id_y, text=str(item_id))
+
+        self.product_data[item_id] = product
+
+        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_qty(self, product, x))
+        slider_data = {"widget": slider, "x": x1, "y": y2, "length": slider.cget("length")}
+        self.sliders.append(slider_data)
+        slider.place(in_=self.canvas, x=x1, y=y2)
+        slider.update_value(qty)
+        slider.rect = item_id
+        
+        group_tag = f"group_{item_id}"
+        self.canvas.addtag_withtag(group_tag, item_id)
+        self.canvas.addtag_withtag(group_tag, text_item)
+        self.canvas.addtag_withtag(group_tag, text_id)
+
+        self.canvas.tag_bind(item_id, "<ButtonPress-1>", self.on_start_drag)
+        self.canvas.tag_bind(item_id, "<B1-Motion>", self.on_drag)
+        self.canvas.tag_bind(item_id, "<ButtonRelease-1>", self.on_stop_drag)
+        self.canvas.tag_bind(item_id, "<Button-3>", self.show_product_context_menu)
+
+        self.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: self.move_slider(event, slider, slider_data))
+
+        self.product_item_map[product_id] = item_id
+
+        # self.tooltips[flw] = Tooltip(self.canvas, f"This is a flow")
+
+        popup.destroy()
+
+    def restore_product(self, product, cords):
+        
+        # TODO: additionally check if a transportation process
+
+        x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
+        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_product, tags="product")
+
+        name = GUIInputManager.get_name(product)
+        units = GUIInputManager.get_unit(product)
+        stage = GUIInputManager.get_stage(product)
+        qty = GUIInputManager.get_qty(product)
+        productID = GUIInputManager.get_id(product)
+
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
         text_item = self.canvas.create_text(text_x, text_y, text=text_str, tags="product")
 
         id_pack = 5
         id_x, id_y = x1 + id_pack , y1 + id_pack
-        text_id = self.canvas.create_text(id_x, id_y, text=str(flw), tags="product")
+        text_id = self.canvas.create_text(id_x, id_y, text=str(item_id), tags="product")
 
-        self.product_data[flw] = GUIInputManager.create_product(self.project.model, name, units, float(qty), stage, density)
-
-        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_qty(self, self.product_data[flw], x))
-        self.sliders.append({"widget": slider, "x": x1, "y": y2, "width": self.default_slider_width})
+        self.product_data[item_id] = product
+    
+        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_qty(self, product, x))
+        slider_data = {"widget": slider, "x": x1, "y": y2,  "length": slider.cget("length")}
+        self.sliders.append(slider_data)
         slider.place(in_=self.canvas, x=x1, y=y2)
         slider.update_value(qty)
-        
-        group_tag = f"group_{flw}"
-        self.canvas.addtag_withtag(group_tag, flw)
+        slider.rect = item_id
+
+        group_tag = f"group_{item_id}"
+        self.canvas.addtag_withtag(group_tag, item_id)
         self.canvas.addtag_withtag(group_tag, text_item)
         self.canvas.addtag_withtag(group_tag, text_id)
 
-        self.canvas.tag_bind(flw, "<ButtonPress-1>", self.on_start_drag)
-        self.canvas.tag_bind(flw, "<B1-Motion>", self.on_drag)
-        self.canvas.tag_bind(flw, "<ButtonRelease-1>", self.on_stop_drag)
-        self.canvas.tag_bind(flw, "<Button-3>", self.show_product_context_menu)
+        self.canvas.tag_bind(item_id, "<ButtonPress-1>", self.on_start_drag)
+        self.canvas.tag_bind(item_id, "<B1-Motion>", self.on_drag)
+        self.canvas.tag_bind(item_id, "<ButtonRelease-1>", self.on_stop_drag)
+        self.canvas.tag_bind(item_id, "<Button-3>", self.show_product_context_menu)
 
-        self.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: self.move_slider(event, slider))
+        self.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: self.move_slider(event, slider, slider_data))
 
-        # self.tooltips[flw] = Tooltip(self.canvas, f"This is a flow")
+        return item_id
 
-        popup.destroy()
+        # self.tooltips[prc] = Tooltip(self.canvas, f"This is a process")
 
     def show_product_context_menu(self, event):
         item = self.canvas.find_closest(event.x, event.y)[0]

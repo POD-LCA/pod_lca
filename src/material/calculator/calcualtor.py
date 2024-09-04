@@ -5,7 +5,7 @@ class Calculator():
  
     def __reduce__(self):
         
-        return (self.__class__, (None), {"project": self.project})
+        return (self.__class__, (None,), {"project": self.project})
     
     def __setstate__(self, state):
         self.__dict__.update(state)

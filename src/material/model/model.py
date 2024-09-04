@@ -11,7 +11,7 @@ class Model:
         
     def __reduce__(self):
         
-        return (self.__class__, (None), {"project": self.project, "processes":self.processes, 
+        return (self.__class__, (None,), {"project": self.project, "processes":self.processes, 
                                          "products": self.products, "impacts": self.impacts})
     
     def __setstate__(self, state):

@@ -14,6 +14,12 @@ class Plots:
     def get_plot_data(self):
 
         return self.plot_data
+    
+    def clear_plot_data(self):
+
+        self.plot_data.clear()
+        for impact in self.impact_categories.keys():
+            self.plot_data[impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
 
     def create_plot(self):
         
