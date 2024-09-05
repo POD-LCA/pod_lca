@@ -19,17 +19,17 @@ class Menubar:
 
         menu_file.add_command(label='New', command=self._newFile)
         menu_file.add_command(label='Open', command=self._openFile)
-        menu_file.add_command(label='Save', command=self._saveFile)
+        menu_file.add_separator()
+        menu_file.add_command(label='Save As', command=self._saveFile)
+        menu_file.add_separator()
         menu_file.add_command(label='Close', command=self._closeFile())
 
     def _newFile(self):
 
         # TODO: Add warning and ask to save
-
         self.clear_state()
     
 
-        pass
 
     def _closeFile(self):
 
@@ -66,6 +66,12 @@ class Menubar:
         
         menu_edit = Menu(menubar, tearoff=False)
         menubar.add_cascade(menu=menu_edit, label='Edit')
+
+        menu_edit.add_command(label='Settings', command=self._update_setting)
+
+    def _update_setting(self):
+
+        pass
 
     # =================================
     # DATABSE MENU
@@ -113,3 +119,24 @@ class Menubar:
 
         popup.lift()
         popup.focus_force()
+
+    # =================================
+    # HELP MENU
+    # =================================
+
+    def create_help_menu(self, menubar):
+        
+        menu_help = Menu(self, tearoff=False)
+        menubar.add_cascade(menu=menu_help, label='Help')
+
+        menu_help.add_command(label='Quick Start Guide', command=self._quick_start)
+        menu_help.add_separator()
+        menu_help.add_command(label='About', command=self._about)
+
+    def _about(self):
+
+        pass
+
+    def _quick_start(self):
+
+        pass

@@ -145,6 +145,16 @@ class transportationProcess(Process):
         self.transported_weight = 0.0
         self.transported_products = []
 
+    def __reduce__(self):
+        
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, "year":self.year, 
+                                                                                     "impacts": self.impacts, 
+                                                                                     "database_item": self.database_item, 
+                                                                                     "qty": self.qty, "unit":self.unit,
+                                                                                     "transported_distance": self.transported_distance,
+                                                                                     "transported_weight": self.transported_weight,
+                                                                                     "transported_products": self.transported_products})
+    
     def get_transported_distance(self):
 
         return self.transported_distance
