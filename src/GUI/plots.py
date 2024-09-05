@@ -1,6 +1,7 @@
 from GUI.GUI_outputManager import GUIOutputManager
 
 from matplotlib import pyplot
+import mplcursors
 from numpy import linspace
 
 class Plots:
@@ -35,6 +36,9 @@ class Plots:
         ax.set_ylabel(self.plot_impact_cat + " (" + self.impact_categories[self.plot_impact_cat] + ")")
         ax.set_title("title")
 
+        crs = mplcursors.cursor(ax,hover=True)
+        crs.connect("add", lambda sel: sel.annotation.set_text(f'Value: {sel.target[1]:.2f}'))
+
         self.ax = ax
 
         return fig
@@ -51,6 +55,9 @@ class Plots:
         self.ax.set_xlabel("Life Cycle Stage")
         self.ax.set_ylabel(self.plot_impact_cat + " (" + self.impact_categories[self.plot_impact_cat] + ")")
         self.ax.set_title("title")
+
+        crs = mplcursors.cursor(self.ax, hover=True)
+        crs.connect("add", lambda sel: sel.annotation.set_text(f'{life_cycle_stages[int(sel.index)]} : {sel.artist[sel.target.index].get_height():.1f}'))
         
         self.canvas_plot.draw() 
 
