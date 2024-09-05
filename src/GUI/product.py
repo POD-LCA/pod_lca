@@ -20,7 +20,7 @@ class Product(Item):
         # type = popup._popup_input_combo("type: ", ["material", "energy"])     
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])   
         qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["kg", "m3", "MJ"])  
+        units = popup._popup_input_combo("units: ", ["kg", "lb", "g", "m3"])  
         density = popup._popup_input_field("mass per unit product: ", validate_num=True, default_val=1.0)
 
         button_frame = Frame(popup)

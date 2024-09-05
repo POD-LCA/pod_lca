@@ -133,7 +133,7 @@ class GUIInputManager(InputManager):
     def create_transport_process(model, name, project, unit, qty, stage):
 
         transport_process =  model.create_transportation_process(name, stage)
-        transport_process.set_unit(unit)
+        transport_process.set_transported_distance_unit(unit)
         transport_process.set_transported_distance(qty)
 
         return transport_process
@@ -146,18 +146,14 @@ class GUIInputManager(InputManager):
         visualizer.update_plot()  
 
     @staticmethod
-    def set_transported_products(visualizer, item, products):
+    def set_transported_product(visualizer, item, product):
 
-        item.set_transported_products(products)
-        if isinstance(products, list):
-            for product in products:
-                product.set_transporter(item)
-        elif isinstance(products, Product) :
-            products.set_transporter(item)
-        else:
-            raise TypeError
+        product.set_transporter(item)
+        if len(item.get_transported_products()) == 0:
+            item.set_transported_weight_unit(product.get_unit())
+            item.set_unit()
         
-        GUIInputManager.set_travel_weight(visualizer, item)
+        item.set_transported_products(product)
 
     @staticmethod
     def remove_transported_product(visualizer, item, product):

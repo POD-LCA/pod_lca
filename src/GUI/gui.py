@@ -109,6 +109,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.project = GUIInputManager.create_project()
 
         # ctrl and shift press binding
+        self.ctrl_pressed = False
         self.shift_pressed = False
         self.bind_all("<Control_L>", self.on_ctrl_press)
         self.bind_all("<KeyRelease-Control_L>", self.on_ctrl_release)
@@ -231,9 +232,6 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
         transportation_object_button = Button(self.menu_frame, text="Transportation", command=self.open_popup_transport_process)
         transportation_object_button.pack(pady=10)
-
-        # connector_button = Button(self.menu_frame, text="Connector", command=self.start_drawing_connector)
-        # connector_button.pack(pady=10)
 
     # =================================
     # PROCESS/PRODUCT COMMANDS
@@ -365,11 +363,12 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
             self.update_connectors(self.drag_data["item"])
 
     def move_slider(self, event, slider, slider_data):
-        x1, y1, x2, y2 = self.canvas.bbox(self.drag_data["item"])
-        slider.place(in_=self.canvas, x=x1, y=y2)
+        if not self.ctrl_pressed:
+            x1, y1, x2, y2 = self.canvas.bbox(self.drag_data["item"])
+            slider.place(in_=self.canvas, x=x1, y=y2)
 
-        slider_data['x'] = x1
-        slider_data['y'] = y2
+            slider_data['x'] = x1
+            slider_data['y'] = y2
     
     def on_stop_drag(self, event):
         if not self.shift_pressed:
@@ -383,36 +382,37 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         item = self.canvas.find_withtag("current")
         if not item:
             self.canvas.scan_mark(event.x, event.y)
-
             self.pan_start = (event.x, event.y)
 
+            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def do_pan(self, event):
-        self.canvas.scan_dragto(event.x, event.y, gain=1)
-        
-        dx = event.x - self.pan_start[0]
-        dy = event.y - self.pan_start[1]
+        if self.pan_start:
+            self.canvas.scan_dragto(event.x, event.y, gain=1)
+            
+            dx = event.x - self.pan_start[0]
+            dy = event.y - self.pan_start[1]
 
-        self.offset_x += dx
-        self.offset_y += dy
+            self.offset_x += dx
+            self.offset_y += dy
 
-        self.canvas.move("all", dx, dy)
+            self.canvas.move("all", dx, dy)
 
-        for slider_data in self.sliders:
-            slider = slider_data["widget"]  
+            for slider_data in self.sliders:
+                slider = slider_data["widget"]  
 
-            current_x = slider_data['x'] + dx
-            current_y = slider_data['y'] + dy  
-                
-            slider.place(x=current_x, y=current_y)
-                
-            slider_data['x'] = current_x
-            slider_data['y'] = current_y
+                current_x = slider_data['x'] + dx
+                current_y = slider_data['y'] + dy  
+                    
+                slider.place(x=current_x, y=current_y)
+                    
+                slider_data['x'] = current_x
+                slider_data['y'] = current_y
 
-        if self.canvas_grid:
-            self.draw_grid()
+            if self.canvas_grid:
+                self.draw_grid()
 
-        self.pan_start = (event.x, event.y)
+            self.pan_start = (event.x, event.y)
 
     def zoom(self, event):
         x = self.canvas.canvasx(event.x)

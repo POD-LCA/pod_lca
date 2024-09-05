@@ -80,14 +80,16 @@ class Product:
 
         if self.database_item:
             unit_impacts = self.get_project().database.get_impact_data(self.database_item)
-            if self.unit == unit_impacts["Units"]:
-                pass 
+            conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Units"])
+
+            if conversion_factor is None:
+                raise ImportError
             
-            self.impacts.updateImpactQty(GWP=unit_impacts["Global warming potential (kg CO2 eq)"] * self.qty,
-                                         acid_pot=unit_impacts["Acidification potential (kg SO2 eq)"] * self.qty,
-                                         eutro_pot=unit_impacts["Eutrophication potential (kg N eq)"] * self.qty,
-                                         ozone_dep=unit_impacts["Ozone depletion potential (kg CFC-11 eq)"] * self.qty,
-                                         smog=unit_impacts["Smog potential (kg O3 eq)"] * self.qty)
+            self.impacts.updateImpactQty(GWP=unit_impacts["Global warming potential (kg CO2 eq)"] *conversion_factor * self.qty,
+                                         acid_pot=unit_impacts["Acidification potential (kg SO2 eq)"] *conversion_factor * self.qty,
+                                         eutro_pot=unit_impacts["Eutrophication potential (kg N eq)"] *conversion_factor * self.qty,
+                                         ozone_dep=unit_impacts["Ozone depletion potential (kg CFC-11 eq)"] *conversion_factor * self.qty,
+                                         smog=unit_impacts["Smog potential (kg O3 eq)"] *conversion_factor * self.qty)
 
     def set_database_row(self, database_item):
         """ Sets the database (impacts) entry corresponding to the product.
@@ -163,6 +165,10 @@ class Product:
     def get_transporter(self):
 
         return self.transporter
+    
+    def get_calculator(self):
+
+        return self.get_model().get_project().get_calculator()
 
 class Fuel(Product):
 
