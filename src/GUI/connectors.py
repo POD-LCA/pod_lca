@@ -21,6 +21,8 @@ class Connectors:
             self.canvas.tag_unbind(rect, "<ButtonPress-1>")
             self.canvas.tag_unbind(rect, "<B1-Motion>")
 
+        self.ctrl_pressed = True
+
     def on_ctrl_release(self, event):
 
         self.canvas.unbind("<ButtonPress-1>")
@@ -34,6 +36,8 @@ class Connectors:
         for rect in self.canvas.find_withtag("product"):
             self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
             self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
+
+        self.ctrl_pressed = False
 
     def on_start_connector(self, event):
         overlapping_items = self.canvas.find_overlapping(event.x, event.y, event.x, event.y)
@@ -85,7 +89,7 @@ class Connectors:
 
                         connects_to_transport = "transportation" in self.canvas.gettags(item)
                         if connects_to_transport:
-                            GUIInputManager.set_transported_products(self, self.process_data[end_item], self.product_data[start_item])
+                            GUIInputManager.set_transported_product(self, self.process_data[end_item], self.product_data[start_item])
                     else:
                         self.canvas.delete(self.connector_data["line"])
         else:
@@ -138,7 +142,7 @@ class Connectors:
             start_x = (start_coords[0] + start_coords[2]) / 2
             end_x = (end_coords[0] + end_coords[2]) / 2
         elif connect_to =='edge':
-            start_x, end_x = self.get_closest_vertical_edges(start_coords, end_coords)
+            start_x, end_x = self.get_vertical_edges(start_coords, end_coords)
         else:
             raise NotImplementedError
 
@@ -199,11 +203,8 @@ class Connectors:
     def on_shift_release(self, event):
         self.shift_pressed = False
 
-    def get_closest_vertical_edges(self, rect1_coords, rect2_coords):
+    def get_vertical_edges(self, rect1_coords, rect2_coords):
         left_edge1, right_edge1 = rect1_coords[0], rect1_coords[2]
         left_edge2, right_edge2 = rect2_coords[0], rect2_coords[2]
 
-        if abs(right_edge1 - left_edge2) < abs(left_edge1 - right_edge2):
-            return (right_edge1, left_edge2)
-        else:
-            return (left_edge1, right_edge2)
+        return (right_edge1, left_edge2)

@@ -75,8 +75,10 @@ class Process:
 
         if self.database_item:
             unit_impacts = self.get_project().get_database().get_impact_data(self.database_item)
-            if self.unit == unit_impacts["Units"]:
-                pass
+            conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Units"])
+
+            if conversion_factor is None:
+                raise ImportError
             
             self.impacts.updateImpactQty(GWP=unit_impacts["Global warming potential (kg CO2 eq)"] * self.qty,
                                          acid_pot=unit_impacts["Acidification potential (kg SO2 eq)"] * self.qty,
@@ -137,12 +139,18 @@ class Process:
 
         return self.unit
     
+    def get_calculator(self):
+
+        return self.get_model().get_project().get_calculator()
+    
 class transportationProcess(Process):
 
     def __init__(self, id, name, model, stage):
         super().__init__(id, name, model, stage)
         self.transported_distance = 0.0
         self.transported_weight = 0.0
+        self.transported_distance_unit = None
+        self.transported_weight_unit = None
         self.transported_products = []
 
     def __reduce__(self):
@@ -153,7 +161,9 @@ class transportationProcess(Process):
                                                                                      "qty": self.qty, "unit":self.unit,
                                                                                      "transported_distance": self.transported_distance,
                                                                                      "transported_weight": self.transported_weight,
-                                                                                     "transported_products": self.transported_products})
+                                                                                     "transported_products": self.transported_products,
+                                                                                     "transported_distance_unit": self.transported_distance_unit,
+                                                                                     "transported_weight_unit": self.transported_weight_unit})
     
     def get_transported_distance(self):
 
@@ -163,11 +173,19 @@ class transportationProcess(Process):
 
         return self.transported_weight
     
+    def get_transported_distance_unit(self):
+        
+        return self.transported_distance_unit
+    
+    def get_transported_weight_unit(self):
+
+        return self.transported_weight_unit
+    
     def get_transported_products(self):
 
         return self.transported_products
 
-    def set_transported_distance(self, qty:float):
+    def set_transported_distance(self, qty):
 
         if isinstance(qty, str):
             try:
@@ -184,12 +202,26 @@ class transportationProcess(Process):
         weight = 0.0
         products = self.get_transported_products()
         for product in products:
-            weight += product.get_weight()
+            weight_added = product.get_weight()
+            weight_conversion = self.get_calculator().conversion_factor(product.get_unit(), self.get_transported_weight_unit())
+            weight += (weight_added * weight_conversion)
         
         self.transported_weight = weight
 
         self.update_qty(self.transported_distance * self.transported_weight)
 
+    def set_transported_distance_unit(self, unit):
+        
+        self.transported_distance_unit = unit
+    
+    def set_transported_weight_unit(self, unit):
+
+        self.transported_weight_unit = unit
+
+    def set_unit(self):
+
+        self.unit = self.get_transported_weight_unit() + self.get_transported_distance_unit()
+    
     def set_transported_products(self, products):
 
         if isinstance(products, list):
