@@ -1,6 +1,7 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 from GUI.slider import Slider
+from GUI.item import Item
 
 from tkinter import Frame, Button, Label
 from tkinter import LEFT, DISABLED
@@ -31,82 +32,22 @@ class Transportation:
         
     def create_transport_process(self, popup, name, qty, units, stage):
         
-        height = 50
-        width = 150
-        x1, y1, x2, y2 = height*self.scale, height*self.scale, width*self.scale, width*self.scale
+        start = [50, 50]
+        height = 100
+        width = 100
 
-        item_id = self.canvas.create_rectangle( x1, y1, x2, y2, fill=self.color_transport, tags=("process","transportation"))
-
-        text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
-        text_str = name + '\n' + stage
-        text_item = self.canvas.create_text(text_x, text_y, text=text_str)
-
-        id_pack = 5
-        id_x, id_y = x1 + id_pack , y1 + id_pack
-        text_id = self.canvas.create_text(id_x, id_y, text=str(item_id))
-
-        self.process_data[item_id] = GUIInputManager.create_transport_process(self.project.model, name, self.project, units, float(qty), stage)
-    
-        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_transport_dist(self, self.process_data[item_id], x))
-        slider_data = {"widget": slider, "x": x1, "y": y2, "length": slider.cget("length")}
-        self.sliders.append(slider_data)
-        slider.place(in_=self.canvas, x=x1, y=y2)
-        slider.update_value(qty)
-        slider.rect = item_id
-
-        group_tag = f"group_{item_id}"
-        self.canvas.addtag_withtag(group_tag, item_id)
-        self.canvas.addtag_withtag(group_tag, text_item)
-        self.canvas.addtag_withtag(group_tag, text_id)
+        process = GUIInputManager.create_transport_process(self.project.model, name, self.project, units, float(qty), stage)
+        process_id = GUIInputManager.get_id(process)
         
-        self.canvas.tag_bind(item_id, "<ButtonPress-1>", self.on_start_drag)
-        self.canvas.tag_bind(item_id, "<B1-Motion>", self.on_drag)
-        self.canvas.tag_bind(item_id, "<ButtonRelease-1>", self.on_stop_drag)
-        self.canvas.tag_bind(item_id, "<Button-3>", self.show_process_context_menu) 
+        item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_transport, tags=("process", "transportation"))
+        slider, slider_data = Item.create_slider(self, start, height, width, process, qty, units, item_id, transport=True)
+        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, process=True)
 
-        self.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: self.move_slider(event, slider, slider_data))
-
-        # self.tooltips[prc] = Tooltip(self.canvas, f"This is a process")
+        self.process_data[item_id] = process
+        self.process_item_map[process_id] = item_id
 
         popup.destroy()
 
     def restore_transportation_process(self, process, cords):
         
-        x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
-        item_id = self.canvas.create_rectangle(x1, y1, x2, y2, fill=self.color_transport, tags=("process","transportation"))
-
-        name = GUIInputManager.get_name(process)
-        units = GUIInputManager.get_unit(process)
-        stage = GUIInputManager.get_stage(process)
-        qty = GUIInputManager.get_qty(process)
-
-        text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
-        text_str = name + '\n' + stage
-        text_item = self.canvas.create_text(text_x, text_y, text=text_str, tags="process")
-
-        id_pack = 5
-        id_x, id_y = x1 + id_pack , y1 + id_pack
-        text_id = self.canvas.create_text(id_x, id_y, text=str(item_id), tags="process")
-
-        self.process_data[item_id] = process
-    
-        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width, command=lambda x: GUIInputManager.update_transport_dist(self, process, x))
-        slider_data = {"widget": slider, "x": x1, "y": y2, "length": slider.cget("length")}
-        self.sliders.append(slider_data)
-        slider.place(in_=self.canvas, x=x1, y=y2)
-        slider.update_value(qty)
-        slider.rect = item_id
-
-        group_tag = f"group_{item_id}"
-        self.canvas.addtag_withtag(group_tag, item_id)
-        self.canvas.addtag_withtag(group_tag, text_item)
-        self.canvas.addtag_withtag(group_tag, text_id)
-        
-        self.canvas.tag_bind(item_id, "<ButtonPress-1>", self.on_start_drag)
-        self.canvas.tag_bind(item_id, "<B1-Motion>", self.on_drag)
-        self.canvas.tag_bind(item_id, "<ButtonRelease-1>", self.on_stop_drag)
-        self.canvas.tag_bind(item_id, "<Button-3>", self.show_process_context_menu) 
-
-        self.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: self.move_slider(event, slider, slider_data))
-
-        return item_id
+        return Item.restore_item(self, process, cords, self.color_transport, ("process","transportation"), process=True, transport=True)

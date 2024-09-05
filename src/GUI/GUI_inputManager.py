@@ -173,7 +173,13 @@ class GUIInputManager(InputManager):
 
         item.set_travel_weight()
         visualizer.set_plot_data()
-        visualizer.update_plot()   
+        visualizer.update_plot()
+
+    @staticmethod
+    def get_travel_distance(item):
+
+        return item.get_transported_distance()
+
 
     # =================================
     # Database
