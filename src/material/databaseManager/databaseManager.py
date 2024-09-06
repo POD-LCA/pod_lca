@@ -37,7 +37,7 @@ class DatabaseManager:
     # DATA IMPORT METHODS
     # =================================
 
-    def import_data_from_JSON(self, file_path):
+    def import_data_from_CSV(self, file_path):
 
         impacts = pandas.read_csv(filepath_or_buffer=file_path)
         # TODO: Update to asign columns by impact category
