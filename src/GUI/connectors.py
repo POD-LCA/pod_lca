@@ -56,7 +56,7 @@ class Connectors:
             
             if not self.shift_pressed:
                 smooth = True if self.connector_type == 'spline' else False
-                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2, smooth=smooth)
+                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2, smooth=smooth, tag="connector")
 
     def on_draw_connector(self, event):
         if not self.shift_pressed:
@@ -130,8 +130,18 @@ class Connectors:
             for tag in ["start_item", "end_item"]:
                 connector[tag] = item_id_map[connector[tag]]
             smooth = True if self.connector_type == 'spline' else False
-            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth)
+            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth, tag="connector")
             self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
+
+    def redraw_connections(self):
+
+        self.canvas.delete("connector")
+
+        for connector in self.connectors:
+            smooth = True if self.connector_type == 'spline' else False
+            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth, tag="connector")
+            self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
+
 
     def draw_connection(self, start, end, line, connect_to='edge'):
 
@@ -154,7 +164,7 @@ class Connectors:
             self.canvas.coords(line, start_x, start_y, end_x, end_y)
             self.canvas.itemconfig(line, arrow=LAST)
         elif self.connector_type == 'elbow' or self.connector_type == 'spline':
-            offset = 50
+            offset = self.connector_offset
             control_point1 = (start_x + offset, start_y)
             control_point2 = (end_x - offset, end_y)
             

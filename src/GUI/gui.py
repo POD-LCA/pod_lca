@@ -23,6 +23,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         super().__init__()
         self.title("Process Visualizer")
         self.geometry("1500x600")
+        self.save_path = None
 
         # color palette
         self.color_transport = "#e8c4a9"
@@ -94,7 +95,8 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         
         # background data
         self.drag_data = {"item": None, "x": 0, "y": 0}
-        self.connector_type = 'elbow' # 'straight', 'elbow', 'spline'
+        self.connector_type = 'elbow'
+        self.connector_offset = 50
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
         self.connectors = []
         self.sliders = []
@@ -492,6 +494,7 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
         for i in range(start_y, height, scaled_grid_size):
             self.canvas.create_line(0, i, width, i, fill="gray", dash=(2, 2), tags="grid")
+
 
     def on_closing(self):
         self.quit()
