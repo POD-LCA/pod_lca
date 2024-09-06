@@ -1,6 +1,6 @@
-from tkinter import Frame, Button, Label, Entry, Toplevel
-from tkinter import LEFT, NORMAL
-from tkinter.ttk import Combobox
+from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton, Checkbutton, IntVar
+from tkinter import LEFT, NORMAL, DISABLED
+from tkinter.ttk import Combobox, Separator
 
 class Popup(Toplevel):
 
@@ -42,15 +42,38 @@ class Popup(Toplevel):
 
         return dropdown
     
-    def _popup_label(self, text, justify='center'):
+    def _popup_label(self, text, justify='center', with_seperator=False, font=("Arial", 14)):
 
         input_frame = Frame(self)
         input_frame.pack(pady=5, padx=10, anchor="w")
         
-        label = Label(input_frame, text=text, justify=justify)
+        label = Label(input_frame, text=text, font=font, justify=justify)
         label.pack(side=LEFT, padx=(0, 10))
 
+        if with_seperator:
+            input_frame.pack(fill='x', padx=5, pady=10)
+
+            separator = Separator(input_frame, orient='horizontal')
+            separator.pack(fill='x', expand=True, side='left', padx=5)
+
         return label
+    
+    def _popup_radio_buttons(self, options:dict, default, cmd=None):
+
+        selected_option = StringVar(value=default)
+
+        for option in options:
+            radio = Radiobutton(self, text=option, variable=selected_option, value=options[option], command=cmd)
+            radio.pack(anchor='w', padx=10, pady=5)
+
+        return selected_option
+
+    @staticmethod
+    def update_entry_state(test, entry):
+        if test:
+            entry.config(state=NORMAL)
+        else:
+            entry.config(state=DISABLED)
 
     @staticmethod
     def _validate_input_num(value_if_allowed):
@@ -70,3 +93,9 @@ class Popup(Toplevel):
         
         if not is_apply:
             popup.destroy()
+
+    def seperator(self):
+
+        separator = Separator(self, orient='horizontal')
+        separator.pack(fill='x', padx=10, pady=10)
+
