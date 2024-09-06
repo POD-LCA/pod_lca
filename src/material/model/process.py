@@ -56,7 +56,7 @@ class Process:
         """
 
         previous_stage = self.get_life_cycle_stage()
-        self.life_cycle_stage = stage
+        self.set_life_cycle_stage(stage)
         
         impact_obj = self.get_impacts()
         parent_impacts_list = self.get_project().get_model().impacts[previous_stage]
@@ -66,6 +66,12 @@ class Process:
                 break
 
         self.get_project().get_model().impacts[stage].append(impact_obj)
+
+    def set_life_cycle_stage(self, stage):
+        """ Will just change the life cycle stage, without any knock-over effects.
+        """
+
+        self.life_cycle_stage = stage
 
     def set_impacts_qtys(self):
         """ Sets impacts quantities, based on database item asigned to the product and the product quantity.
@@ -224,12 +230,15 @@ class transportationProcess(Process):
     
     def set_transported_products(self, products):
 
+        if len(self.get_transported_products()) == 0:
+            weight_unit = products[0].get_unit() if isinstance(products, list) else products.get_unit()
+            self.set_transported_weight_unit(weight_unit)
+            self.set_unit()
+    
         if isinstance(products, list):
             self.get_transported_products().extend(products)
-        elif isinstance(products, Product) :
-            self.get_transported_products().append(products)
         else:
-            raise TypeError
+            self.get_transported_products().append(products)
         
         self.set_travel_weight()
 

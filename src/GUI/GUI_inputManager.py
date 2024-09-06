@@ -149,9 +149,9 @@ class GUIInputManager(InputManager):
     def set_transported_product(visualizer, item, product):
 
         product.set_transporter(item)
-        if len(item.get_transported_products()) == 0:
-            item.set_transported_weight_unit(product.get_unit())
-            item.set_unit()
+        # if len(item.get_transported_products()) == 0:
+        #     item.set_transported_weight_unit(product.get_unit())
+        #     item.set_unit()
         
         item.set_transported_products(product)
 
@@ -182,9 +182,9 @@ class GUIInputManager(InputManager):
     # =================================
 
     @staticmethod
-    def import_data_from_JSON(file_path, project):
+    def import_data_from_CSV(file_path, project):
 
-        project.get_database().import_data_from_JSON(file_path)
+        project.get_database().import_data_from_CSV(file_path)
 
     @staticmethod
     def get_database_data(project):

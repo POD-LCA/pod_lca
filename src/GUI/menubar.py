@@ -95,7 +95,7 @@ class Menubar:
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
 
-        cmd = lambda: GUIInputManager.import_data_from_JSON(file_path.get(), self.project)
+        cmd = lambda: GUIInputManager.import_data_from_CSV(file_path.get(), self.project)
 
         ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
         ok_button.pack(side=LEFT, padx=10)

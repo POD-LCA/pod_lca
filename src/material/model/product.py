@@ -61,7 +61,7 @@ class Product:
         """
 
         previous_stage = self.get_life_cycle_stage()
-        self.life_cycle_stage = stage
+        self.set_life_cycle_stage(stage)
         
         impact_obj = self.get_impacts()
         parent_impacts_list = self.get_project().get_model().impacts[previous_stage]
@@ -71,6 +71,12 @@ class Product:
                 break
 
         self.get_project().get_model().impacts[stage].append(impact_obj)
+
+    def set_life_cycle_stage(self, stage):
+        """ Will just change the life cycle stage, without any knock-over effects.
+        """
+
+        self.life_cycle_stage = stage
 
     def set_impacts_qtys(self):
         """ Sets impacts quantities, based on database item asigned to the product and the product quantity.
