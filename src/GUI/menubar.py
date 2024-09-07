@@ -159,7 +159,7 @@ class Menubar:
         menu_database = Menu(menubar, tearoff=False)
         menubar.add_cascade(menu=menu_database, label='Database')
 
-        menu_database.add_command(label='Import', command=lambda :self.import_database(menubar))
+        menu_database.add_command(label='Import', command=lambda :self.import_database(self))
 
     def import_database(self, menubar):
 
@@ -172,7 +172,7 @@ class Menubar:
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
 
-        cmd = lambda: GUIInputManager.import_data_from_CSV(file_path, self.project)
+        cmd = lambda: GUIInputManager.import_data_from_CSV(file_path.get(), self.project)
 
         ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
         ok_button.pack(side=LEFT, padx=10)

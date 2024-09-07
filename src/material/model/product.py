@@ -28,6 +28,10 @@ class Product:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
+    def overide_id(self, new_id):
+
+        self.id = new_id
+        
     def update_qty(self, qty):
         """ Update the qty of the product.
             This will also re-set the corresponding impact quantities.
@@ -127,6 +131,7 @@ class Product:
     def set_transporter(self, transporter):
         
         self.transporter = transporter
+        transporter.set_travel_weight()
 
     def get_name(self):
 

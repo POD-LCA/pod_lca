@@ -24,6 +24,10 @@ class Process:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
+    def overide_id(self, new_id):
+
+        self.id = new_id
+
     def update_qty(self, qty:float):
         """ Update the qty of the process.
             This will also re-set the corresponding impact quantities.
@@ -84,13 +88,14 @@ class Process:
             conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Units"])
 
             if conversion_factor is None:
-                raise ImportError
-            
-            self.impacts.updateImpactQty(GWP=unit_impacts["Global warming potential (kg CO2 eq)"] * self.qty,
-                                         acid_pot=unit_impacts["Acidification potential (kg SO2 eq)"] * self.qty,
-                                         eutro_pot=unit_impacts["Eutrophication potential (kg N eq)"] * self.qty,
-                                         ozone_dep=unit_impacts["Ozone depletion potential (kg CFC-11 eq)"] * self.qty,
-                                         smog=unit_impacts["Smog potential (kg O3 eq)"] * self.qty)
+                if not((type(self) is transportationProcess) and (len(self.get_transported_products()) == 0)):
+                    raise ImportError
+            else:
+                self.impacts.updateImpactQty(GWP=unit_impacts["Global warming potential (kg CO2 eq)"] * self.qty,
+                                            acid_pot=unit_impacts["Acidification potential (kg SO2 eq)"] * self.qty,
+                                            eutro_pot=unit_impacts["Eutrophication potential (kg N eq)"] * self.qty,
+                                            ozone_dep=unit_impacts["Ozone depletion potential (kg CFC-11 eq)"] * self.qty,
+                                            smog=unit_impacts["Smog potential (kg O3 eq)"] * self.qty)
 
     def set_database_row(self, database_item:str):
         """ Sets the database (impacts) entry corresponding to the product.

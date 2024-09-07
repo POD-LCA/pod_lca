@@ -7,18 +7,17 @@ from GUI.process import Process
 from GUI.product import Product
 from GUI.connectors import Connectors
 from GUI.transportation import Transportation
+from GUI.parameter import Parameter
+from GUI.relationships import Relationships
+from GUI.canvas_opps import CanvasOperations
 
 import pickle
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label
-from tkinter import RIGHT, LEFT, Y, BOTH, TOP
+from tkinter import RIGHT, LEFT, Y, BOTH, TOP, DISABLED
 from tkinter.ttk import Combobox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-# =================================
-# CANVAS
-# =================================
-
-class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Connectors):
+class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, Transportation, Parameter, Connectors, Relationships):
     def __init__(self):
         super().__init__()
         self.title("Process Visualizer")
@@ -29,7 +28,12 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.color_transport = "#e8c4a9"
         self.color_process = "#bde8a2"
         self.color_product = "#c3e7f7"
+        self.color_parameter = "#4287f5"
         self.color_canvas = "#dbdad7"
+        self.outline_color = 'black'
+        self.outline_width = 2
+        self.highlight_color = 'red'
+        self.highlight_width = 5
 
         # Zoom and Pan settings
         self.scale = 1.0
@@ -99,13 +103,14 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         self.connector_offset = 50
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
         self.connectors = []
-        self.sliders = []
+        self.sliders = {}
+        self.slider_map = {}
         # self.tooltips = {}
 
         self.process_data = {}
         self.product_data = {}
-        self.process_item_map = {}
-        self.product_item_map = {}
+        self.relationships = {}
+        self.dependents = {}
 
         # back-end
         self.project = GUIInputManager.create_project()
@@ -135,7 +140,9 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
     def save_state(self, file_path):
 
-        state = {"sliders": [{"x": slider["x"], "y": slider["y"], "length": slider["length"]} for slider in self.sliders],
+        state = {"sliders": {key:{"x": self.sliders[key]["x"], 
+                                  "y": self.sliders[key]["y"], 
+                                  "length": self.sliders[key]["length"]} for key in self.sliders},
                 "processess": [], 
                 "products": [], 
                 "transportation": [],
@@ -195,15 +202,14 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
         if self.canvas_grid:
             self.draw_grid()
 
-        for slider_data in self.sliders:
+        for item in self.sliders:
+            slider_data = self.sliders[item]
             slider_data["widget"].destroy()
 
         self.connectors.clear()
         self.sliders.clear()
         self.process_data.clear()
         self.product_data.clear()
-        self.process_item_map.clear()
-        self.product_item_map.clear()
         self.clear_plot_data()
 
         self.scale = 1.0
@@ -234,6 +240,9 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
         transportation_object_button = Button(self.menu_frame, text="Transportation", command=self.open_popup_transport_process)
         transportation_object_button.pack(pady=10)
+
+        parameter_object_button = Button(self.menu_frame, text="Parameter", command=self.open_popup_parameter)
+        parameter_object_button.pack(pady=10)
 
     # =================================
     # PROCESS/PRODUCT COMMANDS
@@ -272,6 +281,10 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
 
             close_button = Button(button_frame, text="Close", command=popup.destroy)
             close_button.pack(side=LEFT, padx=10)
+
+    def set_emissions(self, item, process=False, product=False):
+
+        pass
 
     def view_impacts(self, item, process=False, product=False):
 
@@ -375,126 +388,6 @@ class ProcessVisualizer(Tk, Menubar, Plots, Product, Process, Transportation, Co
     def on_stop_drag(self, event):
         if not self.shift_pressed:
             self.update_connectors(self.drag_data["item"])
-
-    # =================================
-    # On Canvas: Zoom and pan
-    # =================================
-
-    def start_pan(self, event):
-        item = self.canvas.find_withtag("current")
-        if not item:
-            self.canvas.scan_mark(event.x, event.y)
-            self.pan_start = (event.x, event.y)
-
-            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    def do_pan(self, event):
-        if self.pan_start:
-            self.canvas.scan_dragto(event.x, event.y, gain=1)
-            
-            dx = event.x - self.pan_start[0]
-            dy = event.y - self.pan_start[1]
-
-            self.offset_x += dx
-            self.offset_y += dy
-
-            self.canvas.move("all", dx, dy)
-
-            for slider_data in self.sliders:
-                slider = slider_data["widget"]  
-
-                current_x = slider_data['x'] + dx
-                current_y = slider_data['y'] + dy  
-                    
-                slider.place(x=current_x, y=current_y)
-                    
-                slider_data['x'] = current_x
-                slider_data['y'] = current_y
-
-            if self.canvas_grid:
-                self.draw_grid()
-
-            self.pan_start = (event.x, event.y)
-
-    def zoom(self, event):
-        x = self.canvas.canvasx(event.x)
-        y = self.canvas.canvasy(event.y)
-
-        if event.delta > 0:
-            self.canvas.scale("all", x, y, self.zoom_factor, self.zoom_factor)
-            self.scale_widgets(self.zoom_factor)
-            self.scale *= self.zoom_factor
-        elif event.delta < 0:
-            self.canvas.scale("all", x, y, 1 / self.zoom_factor, 1 / self.zoom_factor)
-            self.scale_widgets(1 / self.zoom_factor)
-            self.scale /= self.zoom_factor
-
-        if self.canvas_grid:
-            self.draw_grid()
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    def zoom_in(self, event):
-        x = self.winfo_pointerx() - self.canvas.winfo_rootx()
-        y = self.winfo_pointery() - self.canvas.winfo_rooty()
-        x = self.canvas.canvasx(x)
-        y = self.canvas.canvasy(y)
-        self.canvas.scale("all", x, y, self.zoom_factor, self.zoom_factor)
-        self.scale_widgets(self.zoom_factor)
-        self.scale *= self.zoom_factor
-
-        if self.canvas_grid:
-            self.draw_grid()
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    def zoom_out(self, event):
-        x = self.winfo_pointerx() - self.canvas.winfo_rootx()
-        y = self.winfo_pointery() - self.canvas.winfo_rooty()
-        x = self.canvas.canvasx(x)
-        y = self.canvas.canvasy(y)
-        self.canvas.scale("all", x, y, 1 / self.zoom_factor, 1 / self.zoom_factor)
-        self.scale_widgets(1 / self.zoom_factor)
-        self.scale /= self.zoom_factor
-
-        if self.canvas_grid:
-            self.draw_grid()
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-
-    def scale_widgets(self, factor):
-        for slider_data in self.sliders:
-            slider = slider_data["widget"]
-
-            new_length = slider_data["length"] * factor
-            slider_data["length"]  = new_length
-            slider.config(length=int(new_length))
-
-            coords = self.canvas.coords(slider.rect)
-            slider.place(in_=self.canvas, x=coords[0], y=coords[3])
-            slider_data['x'] = coords[0]
-            slider_data['y'] = coords[3]
-
-    def on_canvas_configure(self, event):
-        self.draw_grid()
-
-    def draw_grid(self):
-        """Draws a grid that updates based on current scale and offset.
-        """
-
-        self.canvas.delete("grid")
-
-        width = self.canvas.winfo_width()
-        height = self.canvas.winfo_height()
-
-        scaled_grid_size = int(self.canvas_grid_size * self.scale)
-
-        start_x = self.offset_x % scaled_grid_size
-        start_y = self.offset_y % scaled_grid_size
-
-        for i in range(start_x, width, scaled_grid_size):
-            self.canvas.create_line(i, 0, i, height, fill="gray", dash=(2, 2), tags="grid")
-
-        for i in range(start_y, height, scaled_grid_size):
-            self.canvas.create_line(0, i, width, i, fill="gray", dash=(2, 2), tags="grid")
-
 
     def on_closing(self):
         self.quit()

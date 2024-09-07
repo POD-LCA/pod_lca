@@ -12,12 +12,5 @@ class Slider(Scale):
 
     def get_value(self):
         return self.get()
-    
-    # def update_position(self, canvas, slider_data):
 
-    #     coords = canvas.coords(self.rect)
-    #     self.place(in_=canvas, x=coords[0], y=coords[3])
-
-    #     slider_data['x'] = coords[0]
-    #     slider_data['y'] = coords[3]
 

@@ -90,6 +90,8 @@ class Connectors:
                         connects_to_transport = "transportation" in self.canvas.gettags(item)
                         if connects_to_transport:
                             GUIInputManager.set_transported_product(self, self.process_data[end_item], self.product_data[start_item])
+                            self.set_plot_data()
+                            self.update_plot() 
                     else:
                         self.canvas.delete(self.connector_data["line"])
         else:

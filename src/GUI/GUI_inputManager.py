@@ -49,6 +49,8 @@ class GUIInputManager(InputManager):
             if item.get_transporter() is not None:
                 item.get_transporter().set_travel_weight()
 
+        visualizer.update_dependent_qtys(item, qty)
+
         visualizer.set_plot_data()
         visualizer.update_plot()
 
@@ -96,6 +98,11 @@ class GUIInputManager(InputManager):
 
         return isinstance(item, transportationProcess)
     
+    @staticmethod
+    def set_id(item, new_id):
+
+        item.overide_id(new_id)
+    
     # =================================
     # Processes/Products
     # =================================
@@ -125,6 +132,18 @@ class GUIInputManager(InputManager):
 
         return obj.get_id()   
     
+    @staticmethod
+    def get_impacts(obj):
+
+        return obj.get_impacts()
+    
+    @staticmethod
+    def delete(visualizer, obj):
+
+        model = visualizer.project.get_model().delete_obj(obj)
+        visualizer.set_plot_data()
+        visualizer.update_plot()
+
     # =================================
     # Processes: Transportation
     # =================================
@@ -149,10 +168,6 @@ class GUIInputManager(InputManager):
     def set_transported_product(visualizer, item, product):
 
         product.set_transporter(item)
-        # if len(item.get_transported_products()) == 0:
-        #     item.set_transported_weight_unit(product.get_unit())
-        #     item.set_unit()
-        
         item.set_transported_products(product)
 
     @staticmethod

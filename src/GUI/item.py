@@ -1,6 +1,8 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.slider import Slider
 
+import gc
+
 from tkinter import Menu
 from tkinter import LEFT
 
@@ -16,7 +18,8 @@ class Item:
 
         x1, y1, x2, y2 = start[0], start[1], start[0] + width*master.scale, start[1] + height*master.scale
 
-        item_id = master.canvas.create_rectangle(x1, y1, x2, y2, fill=color, tags=tags)
+        item_id = master.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=master.outline_color, width=master.outline_width,
+                                                 tags=tags)
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
@@ -39,10 +42,12 @@ class Item:
 
         slider = Slider(master.canvas, "Qty (in {})".format(units), min=0, max=100, width=master.default_slider_width*master.scale, length= width*master.scale, command=cmd)
         slider_data = {"widget": slider, "x": x, "y": y, "length": slider.cget("length")}
-        master.sliders.append(slider_data)
+        master.sliders[item_id] = slider_data
         slider.place(in_=master.canvas, x=x, y=y)
         slider.update_value(qty)
         slider.rect = item_id
+
+        master.slider_map[item_id] = slider
 
         return slider, slider_data
     
@@ -56,20 +61,32 @@ class Item:
         master.canvas.tag_bind(item_id, "<ButtonPress-1>", master.on_start_drag)
         master.canvas.tag_bind(item_id, "<B1-Motion>", master.on_drag)
         master.canvas.tag_bind(item_id, "<ButtonRelease-1>", master.on_stop_drag)
-        master.canvas.tag_bind(item_id, "<Button-3>", lambda event: Item.show_context_menu(master, event, product, process))
+        master.canvas.tag_bind(item_id, "<Button-3>", lambda event: Item.show_context_menu(master, event, slider, product, process))
+        master.canvas.tag_bind(item_id, "<ButtonRelease-3>", master.remove_highight)
 
         master.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: master.move_slider(event, slider, slider_data))
 
     @staticmethod
-    def show_context_menu(master, event, product=False, process=False):
+    def show_context_menu(master, event, slider, product=False, process=False):
 
-        item = master.canvas.find_closest(event.x, event.y)[0]
-        master.context_menu = Menu(master, tearoff=0)
-        master.context_menu.add_command(label="Set Impacts", command=lambda: master.set_impacts(item, product=product, process=process))
-        master.context_menu.add_command(label="View Unit Impacts", command=lambda: master.view_impacts(item, product=product, process=process))
-        master.context_menu.add_separator()
-        master.context_menu.add_command(label="Change life cycle stage", command=lambda: master.update_life_cycle_stage(item, product=product, process=process))
-        master.context_menu.post(event.x_root, event.y_root)
+        if master.shift_pressed:
+            master.highlight_dependents(event)
+        else:
+            item = master.canvas.find_closest(event.x, event.y)[0]
+            master.context_menu = Menu(master, tearoff=0)
+            master.context_menu.add_command(label="Set impacts", command=lambda: master.set_impacts(item, product=product, process=process))
+            master.context_menu.add_command(label="Set emissions", command=lambda: master.set_emissions(item, product=product, process=process))
+            master.context_menu.add_command(label="View unit impacts", command=lambda: master.view_impacts(item, product=product, process=process))
+            master.context_menu.add_separator()
+            master.context_menu.add_command(label="Change life cycle stage", command=lambda: master.update_life_cycle_stage(item, product=product, process=process))
+            master.context_menu.add_separator()
+            relationships_menu = Menu(master, tearoff=False)
+            master.context_menu.add_cascade(menu=relationships_menu, label="Relationships")
+            relationships_menu.add_command(label="Set relationship", command=lambda: master.set_relationship(item, slider))
+            relationships_menu.add_command(label="Clear relationship", command=lambda: master.clear_relationship(item))
+            master.context_menu.add_separator()
+            master.context_menu.add_command(label="Delete", command=lambda: Item.delete_item(master, item))
+            master.context_menu.post(event.x_root, event.y_root)
 
     @staticmethod
     def restore_item(master, item, cords, color, tags, product=False, process=False, transport=False):
@@ -88,8 +105,47 @@ class Item:
         slider, slider_data = Item.create_slider(master, start, height, width, item, qty, units, item_id, transport)
         Item.item_bind(master, item_id, text_item, text_id, slider, slider_data, product, process)
 
-        master.product_data[item_id] = item
+        if product:
+            master.product_data[item_id] = item
+        elif process:
+            master.process_data[item_id] = item
 
         return item_id
-
     
+    @staticmethod
+    def delete_item(master, item):
+
+        tags = master.canvas.gettags(item)
+        if 'process' in tags:
+            GUIInputManager.delete(master, master.process_data[item])
+            del master.process_data[item]
+        elif 'product' in tags:
+            GUIInputManager.delete(master, master.product_data[item])
+            del master.product_data[item]
+
+        master.sliders[item]["widget"].destroy()
+        del master.sliders[item]
+        group_tag = f"group_{item}"
+        master.canvas.delete(group_tag)
+
+        for connector in master.connectors[:]:
+            if (connector["start_item"] == item) or (connector["end_item"] == item):
+                master.canvas.delete(connector["line"])
+                master.connectors.remove(connector)
+
+        gc.collect()
+
+    @staticmethod
+    def item_from_id(master, id):
+
+        if id in master.product_data:
+            return master.product_data[id]
+        elif id in master.process_data:
+            return master.process_data[id]
+
+        
+
+
+
+
+

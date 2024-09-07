@@ -39,14 +39,13 @@ class Product(Item):
         width = 100
 
         product = GUIInputManager.create_product(self.project.model, name, units, float(qty), stage, density)
-        product_id = GUIInputManager.get_id(product)
 
         item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_product, tags="product")
         slider, slider_data = Item.create_slider(self, start, height, width, product, qty, units, item_id)
         Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, product=True)
 
+        GUIInputManager.set_id(product, item_id)
         self.product_data[item_id] = product
-        self.product_item_map[product_id] = item_id
 
         popup.destroy()
 
