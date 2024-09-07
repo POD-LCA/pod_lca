@@ -110,3 +110,25 @@ class Model:
     def get_project(self):
 
         return self.project
+    
+    def delete_obj(self, obj):
+        """ Removes products or processes, along with the impact objects.
+        """
+
+        impact = obj.get_impacts()
+
+        if type(obj) == Product:
+            self.get_products().remove(obj)
+            for process in self.get_processes():
+                if type(process) is transportationProcess:
+                    if obj in process.get_transported_products():
+                        process.get_transported_products().remove(obj)
+                        process.set_travel_weight()
+        elif type(obj) == Process:
+            self.get_processes().remove(obj)
+
+        impacts = self.get_impacts()
+        for stage in impacts:
+            if impact in impacts[stage]:
+                self.get_impacts()[stage].remove(impact)
+                break

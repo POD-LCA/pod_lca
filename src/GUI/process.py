@@ -37,14 +37,13 @@ class Process(Item):
         width = 100
 
         process = GUIInputManager.create_process(self.project.model, name, units, float(qty), stage)
-        process_id = GUIInputManager.get_id(process)
 
         item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_process, tags="process")
         slider, slider_data = Item.create_slider(self, start, height, width, process, qty, units, item_id)
         Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, process=True)
 
+        GUIInputManager.set_id(process, item_id)
         self.process_data[item_id] = process
-        self.process_item_map[process_id] = item_id
 
         popup.destroy()
 
