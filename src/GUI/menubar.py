@@ -17,22 +17,24 @@ class Menubar:
         menu_file = Menu(self, tearoff=False)
         menubar.add_cascade(menu=menu_file, label='File')
 
-        menu_file.add_command(label='New', command=self._newFile)
+        menu_file.add_command(label='New', command=lambda :self._newFile(menubar))
         menu_file.add_command(label='Open', command=self._openFile)
         menu_file.add_separator()
         menu_file.add_command(label='Save', command=self._quicksaveFile)
         menu_file.add_command(label='Save As', command=self._saveFile)
         menu_file.add_separator()
-        menu_file.add_command(label='Close', command=self._closeFile)
+        menu_file.add_command(label='Close', command=lambda : self._closeFile(menubar))
 
-    def _newFile(self):
+    def _newFile(self, menubar):
 
-        # TODO: Add warning and ask to save
-        self.clear_state()
+        cmd = self.clear_state
+        self._savePrompt(menubar, cmd)
+
     
-    def _closeFile(self):
+    def _closeFile(self, menubar):
 
-        sys.exit()
+        cmd = sys.exit
+        self._savePrompt(menubar, cmd)
 
     def _quicksaveFile(self):
 
@@ -64,6 +66,36 @@ class Menubar:
         if file_path:
             self.clear_state()
             self.load_state(file_path)
+
+    def _savePrompt(self, menubar, cmd):
+
+        popup = Popup(menubar, "Save Prompt", "300x125")
+        popup._popup_label("Do you want to save the current project? ", justify='left', font=("Arial", 10))
+
+        button_frame = Frame(popup)
+        button_frame.pack(pady=20)
+
+        ok_button = Button(button_frame, text="Yes", command=lambda: self._save_and_then(cmd))
+        ok_button.pack(side=LEFT, padx=10)
+
+        import_button = Button(button_frame, text="No", command=lambda: Menubar._notsave_and_then(cmd, popup))
+        import_button.pack(side=LEFT, padx=10)
+
+        close_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        close_button.pack(side=LEFT, padx=10)
+
+
+    def _save_and_then(self, cmd):
+
+        Menubar._quicksaveFile(self)
+        cmd()
+
+    @staticmethod
+    def _notsave_and_then(cmd, popup):
+
+        popup.destroy()
+        cmd()
+
 
     # =================================
     # EDIT MENU

@@ -3,8 +3,6 @@ from material.projectManager.projectManager import Project
 from material.model.product import Product
 from material.model.process import Process, transportationProcess
 
-import pandas
-
 class GUIInputManager(InputManager):
 
     @staticmethod
