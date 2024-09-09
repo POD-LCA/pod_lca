@@ -14,7 +14,7 @@ class Product(Item):
 
     def open_popup_product(self):
 
-        popup = Popup(self, "Create product", "300x300")
+        popup = Popup(self, "Create product", "300x225")
         
         name =  popup._popup_input_field("Product name: ", default_val="new Product") 
         # type = popup._popup_input_combo("type: ", ["material", "energy"])     

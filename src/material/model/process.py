@@ -1,5 +1,4 @@
 from material.model.impacts import Impacts
-from material.model.product import Product
 
 class Process:
 
