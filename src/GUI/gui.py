@@ -21,7 +21,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
     def __init__(self):
         super().__init__()
         self.title("Process Visualizer")
-        self.geometry("1500x600")
+        self.geometry("1500x800")
         self.save_path = None
 
         # color palette
@@ -313,6 +313,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         close_button.pack(side=LEFT, padx=10)
 
     def update_life_cycle_stage(self, item, process=False, product=False):
+        # TODO: Update label method
 
         popup = Popup(self, "Update life cycle stage", "300x200")
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])
@@ -335,6 +336,81 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
 
         apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
         apply_button.pack(side=LEFT, padx=10)
+
+    def edit_name(self, item, process=False, product=False):
+        # TODO: Update label method
+        pass
+
+        # popup = Popup(self, "Edit name", "300x200")
+        # name = popup._popup_input_field("Process name: ", default_val=GUIInputManager.get_name(item)) 
+
+        # cmd = lambda: GUIInputManager.set_name(item, name.get()) 
+
+        # button_frame = Frame(popup)
+        # button_frame.pack(pady=20)
+
+        # ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        # ok_button.pack(side=LEFT, padx=10)
+
+        # cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        # cancel_button.pack(side=LEFT, padx=10)
+
+        # apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+        # apply_button.pack(side=LEFT, padx=10)
+
+
+    def change_units(self, item, process=False, product=False):
+
+        pass
+
+        # popup = Popup(self, "Change units", "300x200")
+        # units = popup._popup_input_combo("units: ", ["m3", "kg"]) # TODO: Units to match current units
+
+        # # TODO: Update to set unit method...
+        # if product:
+        #     cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.product_data[item], units.get())
+        # elif process:
+        #     cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.process_data[item], units.get())
+        # else:
+        #     raise NotImplementedError
+
+        # button_frame = Frame(popup)
+        # button_frame.pack(pady=20)
+
+        # ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        # ok_button.pack(side=LEFT, padx=10)
+
+        # cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        # cancel_button.pack(side=LEFT, padx=10)
+
+        # apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+        # apply_button.pack(side=LEFT, padx=10)
+
+    def set_slider_properties(self, item):
+                
+        popup = Popup(self, "Set slider properties", "300x200")
+
+        slider = self.slider_map[item]
+        
+        qty_min = popup._popup_input_field("qty slider min: ", validate_num=True, default_val=slider.cget("from"))
+        qty_max = popup._popup_input_field("qty slider max: ", validate_num=True, default_val=slider.cget("to"))
+        qty_reolution = popup._popup_input_field("qty slider resolution: ", validate_num=True, default_val=slider.cget("resolution"))
+
+        cmd = lambda: slider.update_slider(qty_min.get(), qty_max.get(), qty_reolution.get())
+
+        button_frame = Frame(popup)
+        button_frame.pack(pady=20)
+
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        ok_button.pack(side=LEFT, padx=10)
+
+        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        cancel_button.pack(side=LEFT, padx=10)
+
+        apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+        apply_button.pack(side=LEFT, padx=10)
+
+
 
     # =================================
     # On Canvas : Drag

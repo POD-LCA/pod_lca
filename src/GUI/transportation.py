@@ -3,6 +3,7 @@ from GUI.popup import Popup
 from GUI.slider import Slider
 from GUI.item import Item
 
+from numpy import ceil, power, log10
 from tkinter import Frame, Button, Label
 from tkinter import LEFT, DISABLED
 
@@ -37,9 +38,13 @@ class Transportation:
         width = 100
 
         process = GUIInputManager.create_transport_process(self.project.model, name, self.project, units, float(qty), stage)
+
+        slider_min = 0.0
+        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+        resolution = (slider_max - slider_min) / 100
         
         item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_transport, tags=("process", "transportation"))
-        slider, slider_data = Item.create_slider(self, start, height, width, process, qty, units, item_id, transport=True)
+        slider, slider_data = Item.create_slider(self, start, height, width, process, qty, units, item_id, slider_min, slider_max, resolution, transport=True)
         Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, process=True)
 
         GUIInputManager.set_id(process, item_id)

@@ -3,6 +3,7 @@ from GUI.popup import Popup
 from GUI.slider import Slider
 from GUI.item import Item
 
+from numpy import ceil, power, log10
 from tkinter import Menu, Frame, Button
 from tkinter import LEFT
 
@@ -14,7 +15,7 @@ class Product(Item):
 
     def open_popup_product(self):
 
-        popup = Popup(self, "Create product", "300x225")
+        popup = Popup(self, "Create product", "300x250")
         
         name =  popup._popup_input_field("Product name: ", default_val="new Product") 
         # type = popup._popup_input_combo("type: ", ["material", "energy"])     
@@ -40,8 +41,12 @@ class Product(Item):
 
         product = GUIInputManager.create_product(self.project.model, name, units, float(qty), stage, density)
 
+        slider_min = 0.0
+        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+        resolution = (slider_max - slider_min) / 100
+
         item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_product, tags="product")
-        slider, slider_data = Item.create_slider(self, start, height, width, product, qty, units, item_id)
+        slider, slider_data = Item.create_slider(self, start, height, width, product, qty, units, item_id, slider_min, slider_max, resolution)
         Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, product=True)
 
         GUIInputManager.set_id(product, item_id)

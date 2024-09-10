@@ -31,7 +31,7 @@ class Item:
 
         return item_id, text_item, text_id
     
-    def create_slider(master, start, height, width, item, qty, units, item_id, transport=False):
+    def create_slider(master, start, height, width, item, qty, units, item_id, slider_min=0, slider_max=100, resolution=0.1, transport=False):
 
         x, y = start[0], start[1] + height*master.scale
         
@@ -40,7 +40,7 @@ class Item:
         else:
             cmd = lambda x: GUIInputManager.update_qty(master, item, x)
 
-        slider = Slider(master.canvas, "Qty (in {})".format(units), min=0, max=100, width=master.default_slider_width*master.scale, length= width*master.scale, command=cmd)
+        slider = Slider(master.canvas, "Qty (in {})".format(units), min=slider_min, max=slider_max, resolution=resolution, width=master.default_slider_width*master.scale, length= width*master.scale, command=cmd)
         slider_data = {"widget": slider, "x": x, "y": y, "length": slider.cget("length")}
         master.sliders[item_id] = slider_data
         slider.place(in_=master.canvas, x=x, y=y)
@@ -75,10 +75,13 @@ class Item:
             item = master.canvas.find_closest(event.x, event.y)[0]
             master.context_menu = Menu(master, tearoff=0)
             master.context_menu.add_command(label="Set impacts", command=lambda: master.set_impacts(item, product=product, process=process))
-            master.context_menu.add_command(label="Set emissions", command=lambda: master.set_emissions(item, product=product, process=process))
             master.context_menu.add_command(label="View unit impacts", command=lambda: master.view_impacts(item, product=product, process=process))
             master.context_menu.add_separator()
+            master.context_menu.add_command(label="Edit name", command=lambda: master.edit_name(item, product=product, process=process))
+            master.context_menu.add_command(label="Change units", command=lambda: master.change_units(item, product=product, process=process))
             master.context_menu.add_command(label="Change life cycle stage", command=lambda: master.update_life_cycle_stage(item, product=product, process=process))
+            master.context_menu.add_separator()
+            master.context_menu.add_command(label="Set slider properties", command=lambda: master.set_slider_properties(item))
             master.context_menu.add_separator()
             relationships_menu = Menu(master, tearoff=False)
             master.context_menu.add_cascade(menu=relationships_menu, label="Relationships")
