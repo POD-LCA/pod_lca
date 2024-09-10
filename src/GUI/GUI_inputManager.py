@@ -58,7 +58,11 @@ class GUIInputManager(InputManager):
         item.update_life_cycle_stage(stage)
         visualizer.set_plot_data()
         visualizer.update_plot()
-        
+
+    def edit_name(visulizer, item, name):
+
+        item.set_name(name)
+
     @staticmethod
     def get_impact_data(project, row):
 
