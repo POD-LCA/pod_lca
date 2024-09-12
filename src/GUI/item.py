@@ -12,14 +12,14 @@ class Item(ItemContextMenu):
     # Canvas Item Methods
     # =================================
 
-    @staticmethod
-    def create_canvas_item(master, name, stage, start, height, width, color, tags):
+    @classmethod
+    def create_canvas_item(cls, master, name, stage, start, height, width, color, tags):
 
-
+        tags.append("item")
         x1, y1, x2, y2 = start[0], start[1], start[0] + width*master.scale, start[1] + height*master.scale
 
         item_id = master.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=master.outline_color, width=master.outline_width,
-                                                 tags=tags)
+                                                 tags=tuple(tags))
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
@@ -33,12 +33,16 @@ class Item(ItemContextMenu):
 
         return item_id, text_item, text_id
     
-    def create_slider(master, start, height, width, item, qty, units, item_id, slider_min=0, slider_max=100, resolution=0.1, transport=False):
+    @classmethod 
+    def create_slider(cls, master, start, height, width, item, qty, units, item_id, slider_min=0, slider_max=100, resolution=0.1, 
+                      transport=False, parameter=False):
 
         x, y = start[0], start[1] + height*master.scale
         
         if transport: 
             cmd = lambda x: GUIInputManager.update_transport_dist(master, item, x)
+        elif parameter:
+            cmd = None
         else:
             cmd = lambda x: GUIInputManager.update_qty(master, item, x)
 
@@ -53,7 +57,8 @@ class Item(ItemContextMenu):
 
         return slider, slider_data
     
-    def item_bind(master, item_id, text_item, text_id, slider, slider_data):
+    @classmethod
+    def item_bind(cls, master, item_id, text_item, text_id, slider, slider_data):
 
         group_tag = f"group_{item_id}"
         master.canvas.addtag_withtag(group_tag, item_id)
@@ -63,13 +68,13 @@ class Item(ItemContextMenu):
         master.canvas.tag_bind(item_id, "<ButtonPress-1>", master.on_start_drag)
         master.canvas.tag_bind(item_id, "<B1-Motion>", master.on_drag)
         master.canvas.tag_bind(item_id, "<ButtonRelease-1>", master.on_stop_drag)
-        master.canvas.tag_bind(item_id, "<Button-3>", lambda event: Item.show_context_menu(master, event, slider))
+        master.canvas.tag_bind(item_id, "<Button-3>", lambda event: cls.show_context_menu(master, event, slider))
         master.canvas.tag_bind(item_id, "<ButtonRelease-3>", master.remove_highight)
 
         master.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: master.move_slider(event, slider, slider_data))
 
-    @staticmethod
-    def restore_item(master, item, cords, color, tags, transport=False):
+    @classmethod
+    def restore_item(cls, master, item, cords, color, tags, transport=False):
         
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
         start = [x1, y1]
@@ -81,9 +86,9 @@ class Item(ItemContextMenu):
         stage = GUIInputManager.get_stage(item)
         qty = GUIInputManager.get_travel_distance(item) if GUIInputManager.is_transport(item) else GUIInputManager.get_qty(item)
 
-        item_id, text_item, text_id = Item.create_canvas_item(master, name, stage, start, height, width, color, tags)
-        slider, slider_data = Item.create_slider(master, start, height, width, item, qty, units, item_id, transport)
-        Item.item_bind(master, item_id, text_item, text_id, slider, slider_data)
+        item_id, text_item, text_id = cls.create_canvas_item(master, name, stage, start, height, width, color, tags)
+        slider, slider_data = cls.create_slider(master, start, height, width, item, qty, units, item_id, transport)
+        cls.item_bind(master, item_id, text_item, text_id, slider, slider_data)
 
         master.item_map[item_id] = item
 

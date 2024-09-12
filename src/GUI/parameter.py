@@ -3,6 +3,7 @@ from GUI.popup import Popup
 from GUI.slider import Slider
 from GUI.item import Item
 
+from numpy import ceil, power, log10
 from tkinter import Menu, Frame, Button, Label
 from tkinter import LEFT
 
@@ -35,28 +36,63 @@ class Parameter(Item):
         height = 50
         width = 100
 
-        item_id, text_item, text_id = Item.create_canvas_item(self, name, '', start, height, width, self.color_parameter, tags="parameter")
-        slider, slider_data = self.create_slider(start, height, width, None, qty, units, item_id)
-        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, process=True)
+        slider_min = 0.0
+        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+        resolution = (slider_max - slider_min) / 100
+
+        item_id, text_item, text_id = Parameter.create_canvas_item(self, name, '', start, height, width, self.color_parameter, tags=["parameter"])
+        slider, slider_data = Parameter.create_slider(self, start, height, width, None, qty, units, item_id, slider_min, slider_max, resolution, parameter=True)
+        Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
+
+        self.item_map[item_id] = None
 
         popup.destroy()
 
-    def create_slider(self, start, height, width, item, qty, units, item_id, transport=False):
+    @staticmethod
+    def show_context_menu(master, event, slider):
 
-        x, y = start[0], start[1] + height * self.scale
+        if master.shift_pressed:
+            master.highlight_dependents(event)
+        else:
+            item = master.canvas.find_closest(event.x, event.y)[0]
+            if "parameter" in master.canvas.gettags(item):   
+                master.context_menu = Menu(master, tearoff=0)
+                master.context_menu.add_command(label="Edit name", command=lambda: Parameter.edit_name(master,item))
+                master.context_menu.add_command(label="Change units", command=lambda: Parameter.change_units(master,item))
+                master.context_menu.add_separator()
+                master.context_menu.add_command(label="Set slider properties", command=lambda: Parameter.set_slider_properties(master,item))
+                master.context_menu.add_separator()
+                relationships_menu = Menu(master, tearoff=False)
+                master.context_menu.add_cascade(menu=relationships_menu, label="Relationships")
+                relationships_menu.add_command(label="Set relationship", command=lambda: master.set_relationship(item, slider))
+                relationships_menu.add_command(label="Clear relationship", command=lambda: master.clear_relationship(item))
+                master.context_menu.add_separator()
+                master.context_menu.add_command(label="Delete", command=lambda: Parameter.delete_item(master, item))
+                master.context_menu.post(event.x_root, event.y_root)  
 
-        cmd = None
+    @classmethod
+    def edit_name(cls, master, item_id):
+        
+        pass
 
-        slider = Slider(self.canvas, "Qty (in {})".format(units), min=0, max=100, width=self.default_slider_width*self.scale, length= width*self.scale, command=cmd)
-        slider_data = {"widget": slider, "x": x, "y": y, "length": slider.cget("length")}
-        self.sliders.append(slider_data)
-        slider.place(in_=self.canvas, x=x, y=y)
-        slider.update_value(qty)
-        slider.rect = item_id
+        # item = master.item_map[item_id]
 
-        return slider, slider_data
+        # popup = Popup(master, "Edit name", "300x200")
+        # name = popup._popup_input_field("Process name: ", default_val=GUIInputManager.get_name(item)) 
 
-    def restore_process(self, item, cords):
+        # _cmd = lambda: GUIInputManager.edit_name(master, item, name.get()) 
+        # cmd = lambda: cls._update_label(master, item_id, _cmd)
+
+        # button_frame = Frame(popup)
+        # button_frame.pack(pady=20)
+
+        # ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        # ok_button.pack(side=LEFT, padx=10)
+
+        # cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        # cancel_button.pack(side=LEFT, padx=10)
+
+    def restore_parameter(self, item, cords):
 
         pass
         

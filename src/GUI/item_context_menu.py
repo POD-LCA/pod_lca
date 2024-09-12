@@ -13,34 +13,34 @@ class ItemContextMenu:
     # Item Context Menu
     # =================================
 
-    @staticmethod
-    def show_context_menu(master, event, slider):
+    @classmethod
+    def show_context_menu(cls, master, event, slider):
 
         if master.shift_pressed:
             master.highlight_dependents(event)
         else:
             item = master.canvas.find_closest(event.x, event.y)[0]
-            if "process" in master.canvas.gettags(item) or "product" in master.canvas.gettags(item):   
+            if "item" in master.canvas.gettags(item):   
                 master.context_menu = Menu(master, tearoff=0)
-                master.context_menu.add_command(label="Set impacts", command=lambda: ItemContextMenu.set_impacts(master, item))
-                master.context_menu.add_command(label="View unit impacts", command=lambda: ItemContextMenu.view_impacts(master,item))
+                master.context_menu.add_command(label="Set impacts", command=lambda: cls.set_impacts(master, item))
+                master.context_menu.add_command(label="View unit impacts", command=lambda: cls.view_impacts(master,item))
                 master.context_menu.add_separator()
-                master.context_menu.add_command(label="Edit name", command=lambda: ItemContextMenu.edit_name(master,item))
-                master.context_menu.add_command(label="Change units", command=lambda: ItemContextMenu.change_units(master,item))
-                master.context_menu.add_command(label="Change life cycle stage", command=lambda: ItemContextMenu.update_life_cycle_stage(master,item))
+                master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
+                master.context_menu.add_command(label="Change units", command=lambda: cls.change_units(master,item))
+                master.context_menu.add_command(label="Change life cycle stage", command=lambda: cls.update_life_cycle_stage(master,item))
                 master.context_menu.add_separator()
-                master.context_menu.add_command(label="Set slider properties", command=lambda: ItemContextMenu.set_slider_properties(master,item))
+                master.context_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
                 master.context_menu.add_separator()
                 relationships_menu = Menu(master, tearoff=False)
                 master.context_menu.add_cascade(menu=relationships_menu, label="Relationships")
                 relationships_menu.add_command(label="Set relationship", command=lambda: master.set_relationship(item, slider))
                 relationships_menu.add_command(label="Clear relationship", command=lambda: master.clear_relationship(item))
                 master.context_menu.add_separator()
-                master.context_menu.add_command(label="Delete", command=lambda: ItemContextMenu.delete_item(master, item))
+                master.context_menu.add_command(label="Delete", command=lambda: cls.delete_item(master, item))
                 master.context_menu.post(event.x_root, event.y_root)  
 
-    @staticmethod
-    def set_impacts(master, item):
+    @classmethod
+    def set_impacts(cls, master, item):
 
         cmd = lambda: GUIInputManager.set_impact_data(master, master.item_map[item], impact.get())
 
@@ -68,8 +68,8 @@ class ItemContextMenu:
             close_button.pack(side=LEFT, padx=10)
 
 
-    @staticmethod
-    def view_impacts(master, item):
+    @classmethod
+    def view_impacts(cls, master, item):
 
         popup = Popup(master, "View Impacts", "300x200")
 
@@ -90,8 +90,8 @@ class ItemContextMenu:
         close_button = Button(button_frame, text="Close", command=popup.destroy)
         close_button.pack(side=LEFT, padx=10)
 
-    @staticmethod
-    def update_life_cycle_stage(master, item_id):
+    @classmethod
+    def update_life_cycle_stage(cls, master, item_id):
         
         item = master.item_map[item_id]
 
@@ -99,7 +99,7 @@ class ItemContextMenu:
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])
 
         _cmd = lambda: GUIInputManager.update_life_cycle_stage(master, item, life_cycle_stage.get())
-        cmd = lambda: ItemContextMenu._update_label(master,item_id, _cmd)
+        cmd = lambda: cls._update_label(master,item_id, _cmd)
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
@@ -110,8 +110,8 @@ class ItemContextMenu:
         cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
         cancel_button.pack(side=LEFT, padx=10)
 
-    @staticmethod
-    def edit_name(master, item_id):
+    @classmethod
+    def edit_name(cls, master, item_id):
 
         item = master.item_map[item_id]
 
@@ -119,7 +119,7 @@ class ItemContextMenu:
         name = popup._popup_input_field("Process name: ", default_val=GUIInputManager.get_name(item)) 
 
         _cmd = lambda: GUIInputManager.edit_name(master, item, name.get()) 
-        cmd = lambda: ItemContextMenu._update_label(master, item_id, _cmd)
+        cmd = lambda: cls._update_label(master, item_id, _cmd)
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
@@ -130,8 +130,8 @@ class ItemContextMenu:
         cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
         cancel_button.pack(side=LEFT, padx=10)
 
-    @staticmethod
-    def _update_label(master, item_id, cmd):
+    @classmethod
+    def _update_label(cls, master, item_id, cmd):
 
         item = master.item_map[item_id]
         cmd()
@@ -140,8 +140,8 @@ class ItemContextMenu:
         text_item = master.label_map[item_id]
         master.canvas.itemconfig(text_item, text=text_str)
 
-    @staticmethod
-    def change_units(master, item_id):
+    @classmethod
+    def change_units(cls, master, item_id):
 
         popup = Popup(master, "Change units", "300x200")
         item = master.item_map[item_id]
@@ -150,7 +150,7 @@ class ItemContextMenu:
         default_entry = unit_list.index(GUIInputManager.get_unit(item))
         unit = popup._popup_input_combo("units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
 
-        cmd = lambda: ItemContextMenu._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
+        cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
@@ -161,8 +161,8 @@ class ItemContextMenu:
         cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
         cancel_button.pack(side=LEFT, padx=10)
 
-    @staticmethod
-    def _update_slider_label(master, item_id, new_unit, old_unit):
+    @classmethod
+    def _update_slider_label(cls, master, item_id, new_unit, old_unit):
 
         item = master.item_map[item_id]
         GUIInputManager.set_unit(item, new_unit)
@@ -173,17 +173,14 @@ class ItemContextMenu:
             old_val = master.sliders[item_id]["widget"].get()
             new_val = old_val * conversion_factor
 
-            if GUIInputManager.is_transport(item): 
-                GUIInputManager.update_transport_dist(master, item, new_val)
-            else:
-                GUIInputManager.update_qty(master, item, new_val)
+            GUIInputManager.update_qty(master, item, new_val)
 
             master.sliders[item_id]["widget"].update_value(new_val)
 
         master.slider_map[item_id].config(label= "Qty (in {})".format(new_unit))
 
-    @staticmethod
-    def set_slider_properties(master, item):
+    @classmethod
+    def set_slider_properties(cls, master, item):
                 
         popup = Popup(master, "Set slider properties", "300x200")
 
@@ -205,8 +202,8 @@ class ItemContextMenu:
         cancel_button.pack(side=LEFT, padx=10)
     
 
-    @staticmethod
-    def delete_item(master, item):
+    @classmethod
+    def delete_item(cls, master, item):
 
         GUIInputManager.delete(master, master.item_map[item])
         del master.item_map[item]
