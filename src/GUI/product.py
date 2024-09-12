@@ -45,9 +45,9 @@ class Product(Item):
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_product, tags="product")
-        slider, slider_data = Item.create_slider(self, start, height, width, product, qty, units, item_id, slider_min, slider_max, resolution)
-        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data)
+        item_id, text_item, text_id = Product.create_canvas_item(self, name, stage, start, height, width, self.color_product, tags=["product"])
+        slider, slider_data = Product.create_slider(self, start, height, width, product, qty, units, item_id, slider_min, slider_max, resolution)
+        Product.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(product, item_id)
         self.item_map[item_id] = product
@@ -56,6 +56,6 @@ class Product(Item):
 
     def restore_product(self, product, cords):
 
-        return Item.restore_item(self, product, cords, self.color_product, "product")
+        return Product.restore_item(self, product, cords, self.color_product, "product")
 
 

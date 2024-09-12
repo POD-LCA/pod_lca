@@ -43,9 +43,9 @@ class Process(Item):
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_process, tags="process")
-        slider, slider_data = Item.create_slider(self, start, height, width, process, qty, units, item_id, slider_min, slider_max, resolution)
-        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data)
+        item_id, text_item, text_id = Process.create_canvas_item(self, name, stage, start, height, width, self.color_process, tags=["process"])
+        slider, slider_data = Process.create_slider(self, start, height, width, process, qty, units, item_id, slider_min, slider_max, resolution)
+        Process.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(process, item_id)
         self.item_map[item_id] = process
@@ -54,4 +54,4 @@ class Process(Item):
 
     def restore_process(self, process, cords):
         
-        return Item.restore_item(self, process, cords, self.color_process, "process")
+        return Process.restore_item(self, process, cords, self.color_process, "process")
