@@ -105,10 +105,10 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         self.connectors = []
         self.sliders = {}
         self.slider_map = {}
+        self.label_map = {}
         # self.tooltips = {}
 
-        self.process_data = {}
-        self.product_data = {}
+        self.item_map = {}
         self.relationships = {}
         self.dependents = {}
 
@@ -148,8 +148,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
                 "transportation": [],
                 "connectors": self.connectors,
                 "project": self.project,
-                "process_data": self.process_data,
-                "product_data": self.product_data
+                "item_map": self.item_map
                 }
         
         for item_id in self.canvas.find_withtag("process"):
@@ -174,19 +173,18 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
 
         self.connectors = state["connectors"]
         self.project = state["project"]
-        self.process_data = state["process_data"]
-        self.product_data = state["product_data"]
+        self.item_map = state["item_map"]
 
         item_id_map = {}
         for rect_data in state["products"]:
             item_id = rect_data["item_id"]
-            process = self.product_data[item_id]
-            new_item_id = self.restore_product(process, rect_data["coords"])
+            product = self.item_map[item_id]
+            new_item_id = self.restore_product(product, rect_data["coords"])
             item_id_map[item_id] = new_item_id
 
         for rect_data in state["processess"]:
             item_id = rect_data["item_id"]
-            process = self.process_data[item_id]
+            process = self.item_map[item_id]
             if GUIInputManager.is_transport(process):
                 new_item_id = self.restore_transportation_process(process, rect_data["coords"])
             else:
@@ -208,8 +206,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
 
         self.connectors.clear()
         self.sliders.clear()
-        self.process_data.clear()
-        self.product_data.clear()
+        self.item_map.clear()
         self.clear_plot_data()
 
         self.scale = 1.0
@@ -248,14 +245,10 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
     # PROCESS/PRODUCT COMMANDS
     # =================================
 
-    def set_impacts(self, item, process=False, product=False):
+    def set_impacts(self, item):
 
-        if product:
-            cmd = lambda: GUIInputManager.set_impact_data(self, self.product_data[item], impact.get())
-        elif process:
-            cmd = lambda: GUIInputManager.set_impact_data(self, self.process_data[item], impact.get())
-        else:
-            raise NotImplementedError
+        cmd = lambda: GUIInputManager.set_impact_data(self, self.item_map[item], impact.get())
+
         popup = Popup(self, "Set Impacts", "300x200")
 
         if not GUIInputManager.get_database_data(self.project) is None:
@@ -282,20 +275,12 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
             close_button = Button(button_frame, text="Close", command=popup.destroy)
             close_button.pack(side=LEFT, padx=10)
 
-    def set_emissions(self, item, process=False, product=False):
 
-        pass
-
-    def view_impacts(self, item, process=False, product=False):
+    def view_impacts(self, item):
 
         popup = Popup(self, "View Impacts", "300x200")
 
-        if product:
-            row = GUIInputManager.get_database_row(self.product_data[item])
-        elif process:
-            row = GUIInputManager.get_database_row(self.process_data[item])
-        else:
-            raise NotImplementedError
+        row = GUIInputManager.get_database_row(self.item_map[item])
 
         if row is not None:
             impact_data = GUIInputManager.get_impact_data(self.project, row)
@@ -312,18 +297,15 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         close_button = Button(button_frame, text="Close", command=popup.destroy)
         close_button.pack(side=LEFT, padx=10)
 
-    def update_life_cycle_stage(self, item, process=False, product=False):
-        # TODO: Update label method
+    def update_life_cycle_stage(self, item_id):
+        
+        item = self.item_map[item_id]
 
         popup = Popup(self, "Update life cycle stage", "300x200")
         life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])
 
-        if product:
-            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.product_data[item], life_cycle_stage.get())
-        elif process:
-            cmd = lambda: GUIInputManager.update_life_cycle_stage(self, self.process_data[item], life_cycle_stage.get())
-        else:
-            raise NotImplementedError
+        _cmd = lambda: GUIInputManager.update_life_cycle_stage(self, item, life_cycle_stage.get())
+        cmd = lambda: self._update_label(item_id, _cmd)
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
@@ -337,29 +319,39 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
         apply_button.pack(side=LEFT, padx=10)
 
-    def edit_name(self, item, process=False, product=False):
-        # TODO: Update label method
-        pass
+    def edit_name(self, item_id):
 
-        # popup = Popup(self, "Edit name", "300x200")
-        # name = popup._popup_input_field("Process name: ", default_val=GUIInputManager.get_name(item)) 
+        item = self.item_map[item_id]
 
-        # cmd = lambda: GUIInputManager.set_name(item, name.get()) 
+        popup = Popup(self, "Edit name", "300x200")
+        name = popup._popup_input_field("Process name: ", default_val=GUIInputManager.get_name(item)) 
 
-        # button_frame = Frame(popup)
-        # button_frame.pack(pady=20)
+        _cmd = lambda: GUIInputManager.edit_name(self, item, name.get()) 
+        cmd = lambda: self._update_label(item_id, _cmd)
 
-        # ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        # ok_button.pack(side=LEFT, padx=10)
+        button_frame = Frame(popup)
+        button_frame.pack(pady=20)
 
-        # cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-        # cancel_button.pack(side=LEFT, padx=10)
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        ok_button.pack(side=LEFT, padx=10)
 
-        # apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
-        # apply_button.pack(side=LEFT, padx=10)
+        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        cancel_button.pack(side=LEFT, padx=10)
+
+        apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+        apply_button.pack(side=LEFT, padx=10)
+
+    def _update_label(self, item_id, cmd):
+
+        item = self.item_map[item_id]
+        cmd()
+
+        text_str = GUIInputManager.get_name(item) + '\n' + GUIInputManager.get_stage(item)
+        text_item = self.label_map[item_id]
+        self.canvas.itemconfig(text_item, text=text_str)
 
 
-    def change_units(self, item, process=False, product=False):
+    def change_units(self, item):
 
         pass
 
@@ -409,8 +401,6 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
 
         apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
         apply_button.pack(side=LEFT, padx=10)
-
-
 
     # =================================
     # On Canvas : Drag
