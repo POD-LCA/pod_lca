@@ -45,13 +45,13 @@ class Transportation:
         
         item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_transport, tags=("process", "transportation"))
         slider, slider_data = Item.create_slider(self, start, height, width, process, qty, units, item_id, slider_min, slider_max, resolution, transport=True)
-        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, process=True)
+        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(process, item_id)
-        self.process_data[item_id] = process
+        self.item_map[item_id] = process
 
         popup.destroy()
 
     def restore_transportation_process(self, process, cords):
         
-        return Item.restore_item(self, process, cords, self.color_transport, ("process","transportation"), process=True, transport=True)
+        return Item.restore_item(self, process, cords, self.color_transport, ("process","transportation"), transport=True)
