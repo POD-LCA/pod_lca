@@ -86,6 +86,16 @@ class GUIInputManager(InputManager):
         return item.get_qty()
     
     @staticmethod
+    def set_unit(obj, unit):
+
+        obj.set_unit(unit)
+
+    @staticmethod
+    def get_unit(obj):
+
+        return obj.get_unit()
+    
+    @staticmethod
     def is_product(item):
 
         return isinstance(item, Product)
@@ -104,6 +114,11 @@ class GUIInputManager(InputManager):
     def set_id(item, new_id):
 
         item.overide_id(new_id)
+
+    @staticmethod
+    def unit_conversion(project, old_unit, new_unit):
+        
+        return project.get_calculator().conversion_factor(from_unit=old_unit, to_unit=new_unit)
     
     # =================================
     # Processes/Products
@@ -192,7 +207,6 @@ class GUIInputManager(InputManager):
     def get_travel_distance(item):
 
         return item.get_transported_distance()
-
 
     # =================================
     # Database
