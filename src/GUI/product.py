@@ -47,15 +47,15 @@ class Product(Item):
 
         item_id, text_item, text_id = Item.create_canvas_item(self, name, stage, start, height, width, self.color_product, tags="product")
         slider, slider_data = Item.create_slider(self, start, height, width, product, qty, units, item_id, slider_min, slider_max, resolution)
-        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data, product=True)
+        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(product, item_id)
-        self.product_data[item_id] = product
+        self.item_map[item_id] = product
 
         popup.destroy()
 
     def restore_product(self, product, cords):
 
-        return Item.restore_item(self, product, cords, self.color_product, "product", product=True)
+        return Item.restore_item(self, product, cords, self.color_product, "product")
 
 

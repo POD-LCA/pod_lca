@@ -89,7 +89,7 @@ class Connectors:
 
                         connects_to_transport = "transportation" in self.canvas.gettags(item)
                         if connects_to_transport:
-                            GUIInputManager.set_transported_product(self, self.process_data[end_item], self.product_data[start_item])
+                            GUIInputManager.set_transported_product(self, self.item_map[end_item], self.item_map[start_item])
                             self.set_plot_data()
                             self.update_plot() 
                     else:
@@ -106,9 +106,10 @@ class Connectors:
                 self.canvas.delete(connector["line"])
                 self.connectors.remove(connector)
 
-                if connector["start_item"] in self.product_data and connector["end_item"] in self.process_data:
-                    product = self.product_data[connector["start_item"]]
-                    process = self.process_data[connector["end_item"]]
+                
+                if "product" in self.canvas.gettags(connector["start_item"]) and "process" in self.canvas.gettags(connector["end_item"]):
+                    product = self.item_map[connector["start_item"]]
+                    process = self.item_map[connector["end_item"]]
                     if GUIInputManager.is_transport(process):
                         GUIInputManager.remove_transported_product(self, process, product)
 
@@ -185,7 +186,7 @@ class Connectors:
             This are logic rules imposed.
         """
 
-        is_from_product = self.connector_data["start_item"] in self.product_data
+        is_from_product = "product" in self.canvas.gettags(self.connector_data["start_item"])
         is_to_process = "process" in self.canvas.gettags(item)
         is_to_transport = "transportation" in self.canvas.gettags(item)
 
