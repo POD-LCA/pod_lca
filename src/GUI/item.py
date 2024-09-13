@@ -2,6 +2,8 @@ from GUI.GUI_inputManager import GUIInputManager
 from GUI.slider import Slider
 from GUI.item_context_menu import ItemContextMenu
 
+from tkinter import DISABLED
+
 class Item(ItemContextMenu):
 
     # =================================
@@ -78,6 +80,10 @@ class Item(ItemContextMenu):
         item_id, text_item, text_id = cls.create_canvas_item(master, name, stage, start, height, width, color, tags)
         slider, slider_data = cls.create_slider(master, start, height, width, qty, units, item_id, slider_cmd)
         cls.item_bind(master, item_id, text_item, text_id, slider, slider_data)
+
+        dependents_all = [item for sublist in master.dependents.values() for item in sublist]
+        if item_id in dependents_all:
+            slider.config(state=DISABLED)
 
         master.item_map[item_id] = item
         GUIInputManager.set_id(item, item_id)
