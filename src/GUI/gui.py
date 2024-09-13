@@ -16,6 +16,9 @@ from tkinter import Menu, Frame, Button, Canvas, Tk, Label
 from tkinter import RIGHT, LEFT, Y, BOTH, TOP, DISABLED
 from tkinter.ttk import Combobox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import hmac
+import hashlib
+
 
 class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, Transportation, Parameter, Connectors, Relationships):
     def __init__(self):
@@ -147,6 +150,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
                 "parameter": [],
                 "connectors": self.connectors,
                 "relationships": self.relationships,
+                "dependents": self.dependents,
                 "project": self.project,
                 "item_map": self.item_map
                 }
@@ -172,11 +176,29 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         with open(file_path, "wb") as file:
             pickle.dump(state, file)
 
+        # signature = hmac.new(key, state, hashlib.sha256).digest()
+
+        # with open(file_path, 'wb') as file:
+        #     file.write(signature)  
+        #     file.write(state)
+
     def load_state(self, file_path):
 
         with open(file_path, "rb") as file:
+            # signature = file.read(32)
+            # state = file.read()
             state = pickle.load(file)
-
+        
+        # expected_signature = hmac.new(key, state, hashlib.sha256).digest()
+        # if hmac.compare_digest(signature, expected_signature):
+        #     pickled_data = pickle.loads(state)
+        # else:
+        #     raise ValueError("Data integrity check failed! File may have been tampered with.")
+                    
+        
+        # Read the pickled data
+        # pickled_data = file.read()
+        
         self.connectors = state["connectors"]
         self.project = state["project"]
         self.item_map = state["item_map"]
@@ -206,7 +228,8 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
             item_id_history[item_id] = new_item_id
 
         self.restore_connections(item_id_history)
-        self.restore_relationships()
+        self.dependents, self.relationships = self.restore_relationships(item_id_history, state["dependents"], 
+                                                                         state["relationships"])
 
     def clear_state(self):
 

@@ -98,6 +98,20 @@ class Relationships:
         if hasattr(self.canvas, 'current_highlight'):
             self.canvas.itemconfig(self.canvas.current_highlight, outline=self.outline_color, width=self.outline_width)
 
-    def restore_relationships(self):
+    def restore_relationships(self, item_id_history, old_dependents, old_relationships):
 
-        pass
+        new_dependents = {}
+        for entry in old_dependents:
+            new_dependents[item_id_history[entry]] = [item_id_history[id] for id in old_dependents[entry]]
+        
+        new_relationships = {}
+        for entry in old_relationships:
+            rel = old_relationships[entry]
+            for id in old_dependents:
+                old_str = '{' + str(id) + '}'
+                new_str = '{' + str(item_id_history[id]) + '}'
+                rel = rel.replace(old_str, new_str)
+            new_relationships[item_id_history[entry]] = rel
+        
+        return new_dependents, new_relationships
+
