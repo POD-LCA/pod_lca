@@ -144,7 +144,9 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
                 "processess": [], 
                 "products": [], 
                 "transportation": [],
+                "parameter": [],
                 "connectors": self.connectors,
+                "relationships": self.relationships,
                 "project": self.project,
                 "item_map": self.item_map
                 }
@@ -161,6 +163,12 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
             
             state["products"].append({"item_id": item_id, "coords": coords, "fill": fill_color})
 
+        for item_id in self.canvas.find_withtag("parameter"):
+            coords = self.canvas.coords(item_id)
+            fill_color = self.canvas.itemcget(item_id, "fill")
+            
+            state["parameter"].append({"item_id": item_id, "coords": coords, "fill": fill_color})
+
         with open(file_path, "wb") as file:
             pickle.dump(state, file)
 
@@ -173,12 +181,14 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         self.project = state["project"]
         self.item_map = state["item_map"]
 
-        item_id_map = {}
+        # products need to be restored first due to possible dependency of transportation processes
+        # on products
+        item_id_history = {}
         for rect_data in state["products"]:
             item_id = rect_data["item_id"]
             product = self.item_map[item_id]
             new_item_id = self.restore_product(product, rect_data["coords"])
-            item_id_map[item_id] = new_item_id
+            item_id_history[item_id] = new_item_id
 
         for rect_data in state["processess"]:
             item_id = rect_data["item_id"]
@@ -187,10 +197,16 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
                 new_item_id = self.restore_transportation_process(process, rect_data["coords"])
             else:
                 new_item_id = self.restore_process(process, rect_data["coords"])
-            item_id_map[item_id] = new_item_id
+            item_id_history[item_id] = new_item_id
 
-        self.restore_connections(item_id_map)
+        for rect_data in state["parameter"]:
+            item_id = rect_data["item_id"]
+            param = self.item_map[item_id]
+            new_item_id = self.restore_parameter(param, rect_data["coords"])
+            item_id_history[item_id] = new_item_id
 
+        self.restore_connections(item_id_history)
+        self.restore_relationships()
 
     def clear_state(self):
 
@@ -289,7 +305,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
             slider_data['y'] = y2
     
     def on_stop_drag(self, event):
-        if not self.shift_pressed:
+        if not self.shift_pressed and not self.ctrl_pressed:
             self.update_connectors(self.drag_data["item"])
 
     def on_closing(self):

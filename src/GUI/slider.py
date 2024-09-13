@@ -1,4 +1,4 @@
-from tkinter import Scale, Label
+from tkinter import Scale
 from tkinter import HORIZONTAL
 
 class Slider(Scale):

@@ -2,10 +2,6 @@ from GUI.GUI_inputManager import GUIInputManager
 from GUI.slider import Slider
 from GUI.item_context_menu import ItemContextMenu
 
-import gc
-
-from tkinter import LEFT
-
 class Item(ItemContextMenu):
 
     # =================================
@@ -34,17 +30,10 @@ class Item(ItemContextMenu):
         return item_id, text_item, text_id
     
     @classmethod 
-    def create_slider(cls, master, start, height, width, item, qty, units, item_id, slider_min=0, slider_max=100, resolution=0.1, 
-                      transport=False, parameter=False):
+    def create_slider(cls, master, start, height, width, qty, units, item_id, cmd,
+                      slider_min=0, slider_max=100, resolution=0.1):
 
         x, y = start[0], start[1] + height*master.scale
-        
-        if transport: 
-            cmd = lambda x: GUIInputManager.update_transport_dist(master, item, x)
-        elif parameter:
-            cmd = None
-        else:
-            cmd = lambda x: GUIInputManager.update_qty(master, item, x)
 
         slider = Slider(master.canvas, "Qty (in {})".format(units), min=slider_min, max=slider_max, resolution=resolution, width=master.default_slider_width*master.scale, length= width*master.scale, command=cmd)
         slider_data = {"widget": slider, "x": x, "y": y, "length": slider.cget("length")}
@@ -74,7 +63,7 @@ class Item(ItemContextMenu):
         master.canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: master.move_slider(event, slider, slider_data))
 
     @classmethod
-    def restore_item(cls, master, item, cords, color, tags, transport=False):
+    def restore_item(cls, master, item, cords, color, tags, slider_cmd):
         
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
         start = [x1, y1]
@@ -85,21 +74,14 @@ class Item(ItemContextMenu):
         units = GUIInputManager.get_unit(item)
         stage = GUIInputManager.get_stage(item)
         qty = GUIInputManager.get_travel_distance(item) if GUIInputManager.is_transport(item) else GUIInputManager.get_qty(item)
-
+        
         item_id, text_item, text_id = cls.create_canvas_item(master, name, stage, start, height, width, color, tags)
-        slider, slider_data = cls.create_slider(master, start, height, width, item, qty, units, item_id, transport)
+        slider, slider_data = cls.create_slider(master, start, height, width, qty, units, item_id, slider_cmd)
         cls.item_bind(master, item_id, text_item, text_id, slider, slider_data)
 
         master.item_map[item_id] = item
+        GUIInputManager.set_id(item, item_id)
 
         return item_id
-
-    @staticmethod
-    def item_from_id(master, id):
-
-        if id in master.product_data:
-            return master.product_data[id]
-        elif id in master.process_data:
-            return master.process_data[id]
 
         

@@ -1,4 +1,3 @@
-from material.databaseManager.databaseManager import DatabaseManager
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 
@@ -131,9 +130,6 @@ class Menubar:
                                                             cmd= lambda: Popup.update_entry_state(connector_type.get() != "straight", connector_offset))
         connector_offset = popup._popup_input_field("connector offset", default_val=self.connector_offset, validate_num=True)
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
         cmd = lambda: self._apply_settings( color_canvas.get(), 
                                             tag_colors = {"product":color_product.get(), 
                                                           "process":color_process.get(), 
@@ -143,14 +139,7 @@ class Menubar:
                                             grid_spacing=grid_spacing.get(),
                                             connector_offset=connector_offset.get())
 
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
-        close_button.pack(side=LEFT, padx=10)
-
-        import_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
-        import_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancelApply(cmd)
 
     def _apply_settings(self, color_canvas, tag_colors, canvas_grid, connector_type, grid_spacing, connector_offset):
 
@@ -201,19 +190,8 @@ class Menubar:
         browse_button  = Button(popup, text ="Select File", command=lambda: menubar._file_open_dialog(menubar, file_path, popup))
         browse_button.place(x=250,y=0)
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
         cmd = lambda: GUIInputManager.import_data_from_CSV(file_path.get(), self.project)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
-        close_button.pack(side=LEFT, padx=10)
-
-        import_button = Button(button_frame, text="Import", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
-        import_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancelApply(cmd)
 
 
     def _file_open_dialog(self, menubar, file_path, popup):

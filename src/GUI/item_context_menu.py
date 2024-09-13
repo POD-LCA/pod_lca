@@ -1,11 +1,10 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
-from tkinter import Menu, Frame, Button
+from tkinter import Menu
 
 import gc
 
 from tkinter import Menu
-from tkinter import LEFT
 
 class ItemContextMenu:
 
@@ -26,7 +25,7 @@ class ItemContextMenu:
                 master.context_menu.add_command(label="View unit impacts", command=lambda: cls.view_impacts(master,item))
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
-                master.context_menu.add_command(label="Change units", command=lambda: cls.change_units(master,item))
+                master.context_menu.add_command(label="Change units", command=lambda: cls.change_unit(master,item))
                 master.context_menu.add_command(label="Change life cycle stage", command=lambda: cls.update_life_cycle_stage(master,item))
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
@@ -48,24 +47,13 @@ class ItemContextMenu:
 
         if not GUIInputManager.get_database_data(master.project) is None:
             impact = popup._popup_input_combo("Impact : ", GUIInputManager.get_database_data(master.project)['Flow'].tolist())
-
-            button_frame = Frame(popup)
-            button_frame.pack(pady=20)
-
-            ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-            ok_button.pack(side=LEFT, padx=10)
-
-            cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-            cancel_button.pack(side=LEFT, padx=10)
+            
+            popup.button_pack_OKCancel(cmd)
         else:
             label = popup._popup_label("Impact database not loaded.\nGo to Database menu and import database.", justify='left')
             label.bind('<Configure>', lambda e: label.config(wraplength=label.winfo_width()))
 
-            button_frame = Frame(popup)
-            button_frame.pack(pady=20)
-
-            close_button = Button(button_frame, text="Close", command=popup.destroy)
-            close_button.pack(side=LEFT, padx=10)
+            popup.button_pack_Close()
 
 
     @classmethod
@@ -84,11 +72,7 @@ class ItemContextMenu:
         text_str = "{0} \n GWP : {1:.2f} kg CO2 eq \n Acidification potential : {2:.2f} kg SO2 eq \n Eutrophication potential : {3:.2f} kg N eq \n Ozone depletion potential : {4:.2f} kg CFC-11 eq\n Smog potential : {5:.2f} kg O3 eq".format(*data_list)        
         popup._popup_label(text_str, justify='left')
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
-        close_button.pack(side=LEFT, padx=10)
+        popup.button_pack_Close()
 
     @classmethod
     def update_life_cycle_stage(cls, master, item_id):
@@ -101,14 +85,7 @@ class ItemContextMenu:
         _cmd = lambda: GUIInputManager.update_life_cycle_stage(master, item, life_cycle_stage.get())
         cmd = lambda: cls._update_label(master,item_id, _cmd)
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-        cancel_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancel(cmd)
 
     @classmethod
     def edit_name(cls, master, item_id):
@@ -116,19 +93,12 @@ class ItemContextMenu:
         item = master.item_map[item_id]
 
         popup = Popup(master, "Edit name", "300x200")
-        name = popup._popup_input_field("Process name: ", default_val=GUIInputManager.get_name(item)) 
+        name = popup._popup_input_field("Name: ", default_val=GUIInputManager.get_name(item)) 
 
         _cmd = lambda: GUIInputManager.edit_name(master, item, name.get()) 
         cmd = lambda: cls._update_label(master, item_id, _cmd)
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-        cancel_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancel(cmd)
 
     @classmethod
     def _update_label(cls, master, item_id, cmd):
@@ -141,7 +111,7 @@ class ItemContextMenu:
         master.canvas.itemconfig(text_item, text=text_str)
 
     @classmethod
-    def change_units(cls, master, item_id):
+    def change_unit(cls, master, item_id):
 
         popup = Popup(master, "Change units", "300x200")
         item = master.item_map[item_id]
@@ -152,14 +122,7 @@ class ItemContextMenu:
 
         cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-        cancel_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancel(cmd)
 
     @classmethod
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):
@@ -192,14 +155,7 @@ class ItemContextMenu:
 
         cmd = lambda: slider.update_slider(qty_min.get(), qty_max.get(), qty_reolution.get())
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-        cancel_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancel(cmd)
     
 
     @classmethod
