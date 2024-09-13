@@ -1,4 +1,4 @@
-from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton, Checkbutton, IntVar
+from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton
 from tkinter import LEFT, NORMAL, DISABLED
 from tkinter.ttk import Combobox, Separator
 
@@ -86,6 +86,48 @@ class Popup(Toplevel):
         except ValueError:
             return False
         
+    def seperator(self):
+
+        separator = Separator(self, orient='horizontal')
+        separator.pack(fill='x', padx=10, pady=10)
+
+    # =================================
+    # Button Packs
+    # =================================
+
+    def button_pack_OKCancelApply(self, cmd):
+
+        button_frame = Frame(self)
+        button_frame.pack(pady=20)
+
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(self, cmd, is_apply=False))
+        ok_button.pack(side=LEFT, padx=10)
+
+        close_button = Button(button_frame, text="Close", command=self.destroy)
+        close_button.pack(side=LEFT, padx=10)
+
+        import_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(self, cmd, is_apply=True))
+        import_button.pack(side=LEFT, padx=10)
+    
+    def button_pack_OKCancel(self, cmd):
+
+        button_frame = Frame(self)
+        button_frame.pack(pady=20)
+
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(self, cmd, is_apply=False))
+        ok_button.pack(side=LEFT, padx=10)
+
+        cancel_button = Button(button_frame, text="Cancel", command=self.destroy)
+        cancel_button.pack(side=LEFT, padx=10)
+
+    def button_pack_Close(self):
+
+        button_frame = Frame(self)
+        button_frame.pack(pady=20)
+
+        close_button = Button(button_frame, text="Close", command=self.destroy)
+        close_button.pack(side=LEFT, padx=10)
+
     @staticmethod
     def _ok_apply_button(popup, cmd, is_apply=False):
 
@@ -93,9 +135,3 @@ class Popup(Toplevel):
         
         if not is_apply:
             popup.destroy()
-
-    def seperator(self):
-
-        separator = Separator(self, orient='horizontal')
-        separator.pack(fill='x', padx=10, pady=10)
-

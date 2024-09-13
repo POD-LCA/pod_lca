@@ -191,7 +191,7 @@ class GUIInputManager(InputManager):
     def remove_transported_product(visualizer, item, product):
 
         product.set_transporter(None)
-        item.remove_transported_product(product)
+        item.remove_transported_product(product) # TODO: Check if this is done properly and the corresponding materials removed
         visualizer.set_plot_data()
         visualizer.update_plot()  
 
