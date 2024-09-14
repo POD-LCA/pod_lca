@@ -51,7 +51,7 @@ class Menubar:
                                                     filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*")))
 
         if file_path:
-            self.save_state(file_path)
+            self.save_file(file_path)
             self.save_path = file_path
 
     def _openFile(self):
@@ -64,7 +64,7 @@ class Menubar:
 
         if file_path:
             self.clear_state()
-            self.load_state(file_path)
+            self.load_file(file_path)
 
     def _savePrompt(self, menubar, cmd):
 
