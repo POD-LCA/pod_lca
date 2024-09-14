@@ -2,7 +2,7 @@ from GUI.GUI_outputManager import GUIOutputManager
 
 from matplotlib import pyplot
 import mplcursors
-from numpy import linspace
+from numpy import log10, power, ceil
 
 class Plots:
 
@@ -30,16 +30,18 @@ class Plots:
         
         fig, ax = pyplot.subplots(figsize = (10, 5))
 
-        ax.bar(life_cycle_stages, values, color ='red', width = 0.4)
+        ax.bar(life_cycle_stages, values, color ='#8f2ab0', width = 0.4)
 
         ax.set_xlabel("Life Cycle Stage")
         ax.set_ylabel(self.plot_impact_cat + " (" + self.impact_categories[self.plot_impact_cat] + ")")
         ax.set_title("title")
+        ax.set_ylim([0, 10])
 
         crs = mplcursors.cursor(ax,hover=True)
         crs.connect("add", lambda sel: sel.annotation.set_text(f'Value: {sel.target[1]:.2f}'))
 
         self.ax = ax
+        pyplot.grid(True)
 
         return fig
     
@@ -49,15 +51,18 @@ class Plots:
         life_cycle_stages = list(plot_data.keys())
         values = list(plot_data.values())
         
-        self.ax.clear()  
+        self.ax.clear()
+        pyplot.grid(True)  
         
-        self.ax.bar(life_cycle_stages, values, color='red', width=0.4)
+        self.ax.bar(life_cycle_stages, values, color='#8f2ab0', width=0.4)
         self.ax.set_xlabel("Life Cycle Stage")
         self.ax.set_ylabel(self.plot_impact_cat + " (" + self.impact_categories[self.plot_impact_cat] + ")")
         self.ax.set_title("title")
+        self.ax.set_ylim([0, max(power(10,ceil(log10(max(values)))),10)])
 
         crs = mplcursors.cursor(self.ax, hover=True)
         crs.connect("add", lambda sel: sel.annotation.set_text(f'{life_cycle_stages[int(sel.index)]} : {sel.artist[sel.target.index].get_height():.1f}'))
+        
         
         self.canvas_plot.draw() 
 
