@@ -10,8 +10,8 @@ from GUI.relationships import Relationships
 from GUI.canvas_opps import CanvasOperations
 from GUI.save_load import SaveLoadMethods
 
-from tkinter import Menu, Frame, Button, Canvas, Tk, Label
-from tkinter import RIGHT, LEFT, Y, BOTH, TOP
+from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font
+from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
 from tkinter.ttk import Combobox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
@@ -29,7 +29,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         self.color_process = "#bde8a2"
         self.color_product = "#c3e7f7"
         self.color_parameter = "#4287f5"
-        self.color_canvas = "#dbdad7"
+        self.color_canvas = "#313131"
         self.outline_color = 'black'
         self.outline_width = 2
         self.highlight_color = 'red'
@@ -83,51 +83,82 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
 
     def create_frame(self):
 
-        content_frame = Frame(self, width=600, height=600)
+        content_frame = Frame(self, width=600, height=600, bg='#020f12')
         content_frame.pack(side=TOP, fill=BOTH, expand=True)
 
         return content_frame
 
     def create_palette(self, frame):
 
-        palette_frame = Frame(frame, bg="grey", width=200, height=600)
-        palette_frame.pack(side=LEFT, fill=Y)
+        palette_color = '#313131'
+        button_height = 3
+        button_width = 12
+        button_color = '#8f2ab0'
+        button_font_color='white'
+        button_font = ('Helvetica', 12,'bold')
+        button_side = LEFT
+        padx = 15
+        pady = 15
+
+        palette_frame = Frame(frame, bg=palette_color, width=200, height=600)
+        palette_frame.pack(side=TOP, anchor=NW, padx=0, pady=(0,10), fill=BOTH)
     
-        flow_object_button = Button(palette_frame, text="Product", command=self.open_popup_product)
-        flow_object_button.pack(pady=10)
+        flow_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
+                                    fg=button_font_color, height=button_height, width=button_width,font=button_font, 
+                                    text="Product", command=self.open_popup_product)
+        flow_object_button.pack(side=button_side, padx=padx, pady=pady)
 
-        process_object_button = Button(palette_frame, text="Process", command=self.open_popup_process)
-        process_object_button.pack(pady=10)
+        process_object_button = Button(palette_frame, bg=button_color, 
+                                       fg=button_font_color, height=button_height, width=button_width,font=button_font,  
+                                       text="Process", command=self.open_popup_process)
+        process_object_button.pack(side=LEFT, padx=padx, pady=pady)
 
-        transportation_object_button = Button(palette_frame, text="Transportation", command=self.open_popup_transport_process)
-        transportation_object_button.pack(pady=10)
+        transportation_object_button = Button(palette_frame, bg=button_color, 
+                                              fg=button_font_color, height=button_height, width=button_width,font=button_font,  
+                                              text="Transportation", command=self.open_popup_transport_process)
+        transportation_object_button.pack(side=LEFT,padx=padx, pady=pady)
 
-        parameter_object_button = Button(palette_frame, text="Parameter", command=self.open_popup_parameter)
-        parameter_object_button.pack(pady=10)
+        parameter_object_button = Button(palette_frame, bg=button_color, 
+                                         fg=button_font_color, height=button_height, width=button_width,font=button_font,  
+                                         text="Parameter", command=self.open_popup_parameter)
+        parameter_object_button.pack(side=LEFT, padx=padx, pady=pady)
 
         return palette_frame
 
-    def create_canvas(self,frame):
+    def create_canvas(self, frame):
 
-        canvas = Canvas(frame, bg=self.color_canvas, width=800, height=800)
-        canvas.pack(side=LEFT, padx=10, pady=10)
+        canvas_width = 800
+        canvas_height = 800
+        border_color = "#284387"
+        border_thickness = 0
+
+        canvas_frame = Frame(frame, highlightbackground=border_color, highlightthickness=border_thickness)
+        canvas_frame.pack(side=LEFT, padx=(10,5), pady=5, fill=BOTH)
+
+        canvas = Canvas(canvas_frame, bg=self.color_canvas, width=canvas_width, height=canvas_height)
+        canvas.pack(side=LEFT, padx=0, pady=0, fill=BOTH)
         canvas.bind("<Configure>", self.on_canvas_configure)
 
         return canvas
     
     def create_plotter(self, frame):
 
-        plot_frame = Frame(frame, width=300, height=300)
-        plot_frame.pack(side=RIGHT, fill=BOTH, expand=True)
+        border_color = "#284387"
+        background_color = "#313131"
+        border_thickness = 0
+    
+        plot_frame = Frame(frame, bg=background_color, width=300, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
+        plot_frame.pack(side=RIGHT, fill=BOTH, padx=(5,10), pady=5)
 
         input_frame = Frame(plot_frame)
-        input_frame.pack(pady=5, padx=10, anchor="w")
+        input_frame.pack(side=TOP, pady=10, padx=10)
         
-        label = Label(input_frame, text="Environemnt Impact")
-        label.pack(side=TOP, padx=(0, 10))
+        label = Label(input_frame, bg=background_color, fg='white', 
+                      text="Environemnt Impact", font = ('Helvetica', 12,'bold'))
+        label.pack(side=LEFT, padx=(0, 10))
         
         dropdown = Combobox(input_frame, values=list(self.impact_categories.keys()))
-        dropdown.pack(side=TOP)
+        dropdown.pack(side=RIGHT, fill=BOTH)
         dropdown.current(0)
         dropdown.bind("<<ComboboxSelected>>", lambda x:self._update_plot_from_combo(x))
 
@@ -138,7 +169,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         self.plot_impact_cat = dropdown.get()
         fig = self.create_plot()
 
-        canvas_plot = FigureCanvasTkAgg(fig, master=self.content_frame)
+        canvas_plot = FigureCanvasTkAgg(fig, master=plot_frame)
         canvas_plot.draw()
         canvas_plot.get_tk_widget().pack(side=RIGHT, padx=10, pady=10)
 
