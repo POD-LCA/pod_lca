@@ -3,6 +3,9 @@ from GUI.menubar import Menubar
 from GUI.plots import Plots
 from GUI.process import Process
 from GUI.product import Product
+from GUI.energy import EnergyProduct
+from GUI.emission import EmissionProduct
+from GUI.waste import WasteProduct
 from GUI.connectors import Connectors
 from GUI.transportation import Transportation
 from GUI.parameter import Parameter
@@ -12,14 +15,15 @@ from GUI.save_load import SaveLoadMethods
 
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font
 from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
-from tkinter.ttk import Combobox
+from tkinter.ttk import Combobox, Style
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, Transportation, Parameter, Connectors, 
-                        Relationships, SaveLoadMethods):
+class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transportation, EnergyProduct, EmissionProduct,
+                        WasteProduct, Parameter, Connectors, Relationships, SaveLoadMethods):
     def __init__(self):
         super().__init__()
+        Style().theme_use('vista')
         self.title("Process Visualizer")
         self.geometry("1500x800")
         self.save_path = None
@@ -28,9 +32,13 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         self.color_transport = "#e8c4a9"
         self.color_process = "#bde8a2"
         self.color_product = "#c3e7f7"
+        self.color_energy = "#e6d3b8"
+        self.color_emission = "#d9ccde"
+        self.color_waste = "#d9abbd"
         self.color_parameter = "#4287f5"
         self.color_canvas = "#313131"
         self.outline_color = 'black'
+        self.connector_color = '#FFFFFF'
         self.outline_width = 2
         self.highlight_color = 'red'
         self.highlight_width = 5
@@ -68,6 +76,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
         self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone_dep':'kg CFC-11 eq', 'smog':'kg O3 eq'}
 
         # GUI
+        # self.create_window()
         self.content_frame = self.create_frame()
         self.palette_frame = self.create_palette(self.content_frame)
         self.canvas = self.create_canvas(self.content_frame)
@@ -80,6 +89,26 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
     # =================================
     # GUI COMPONENTS
     # =================================
+
+    # def move_window(self, event):
+    #     self.geometry(f'+{event.x_root}+{event.y_root}')
+
+    # def close_window(self):
+    #     self.destroy()
+
+    # def create_window(self):
+    #     self.overrideredirect(True)
+
+    #     title_bar = Frame(self, bg='black', relief='raised', bd=2)
+    #     title_bar.pack(fill=X)
+
+    #     title_label = Label(title_bar, text="POD|LCA Material Calculator", bg='black', fg='white')
+    #     title_label.pack(side=LEFT, padx=10)
+
+    #     close_button = Button(title_bar, text='X', command=lambda:self.close_window(), bg='blue', fg='white')
+    #     close_button.pack(side=RIGHT)
+
+    #     title_bar.bind('<B1-Motion>', lambda event:self.move_window(event))
 
     def create_frame(self):
 
@@ -118,10 +147,26 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Product, Process, 
                                               text="Transportation", command=self.open_popup_transport_process)
         transportation_object_button.pack(side=LEFT,padx=padx, pady=pady)
 
+        Energy_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
+                                    fg=button_font_color, height=button_height, width=button_width,font=button_font, 
+                                    text="Energy", command=self.open_popup_energy)
+        Energy_object_button.pack(side=button_side, padx=padx, pady=pady)
+
+        Emission_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
+                                    fg=button_font_color, height=button_height, width=button_width,font=button_font, 
+                                    text="Emission", command=self.open_popup_emission)
+        Emission_object_button.pack(side=button_side, padx=padx, pady=pady)
+
+        waste_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
+                                    fg=button_font_color, height=button_height, width=button_width,font=button_font, 
+                                    text="Waste", command=self.open_popup_waste)
+        waste_object_button.pack(side=button_side, padx=padx, pady=pady)
+
         parameter_object_button = Button(palette_frame, bg=button_color, 
                                          fg=button_font_color, height=button_height, width=button_width,font=button_font,  
                                          text="Parameter", command=self.open_popup_parameter)
         parameter_object_button.pack(side=LEFT, padx=padx, pady=pady)
+
 
         return palette_frame
 

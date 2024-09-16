@@ -9,19 +9,20 @@ class Popup(Toplevel):
         self.title(title)
         self.geometry(shape)
 
-    def _popup_input_field(self, text, validate_num=False, default_val=''):
+    def _popup_input_field(self, text, validate_num=False, default_val='', master=None):
 
-        input_frame = Frame(self)
-        input_frame.pack(pady=5, padx=10, anchor="w")
+        if master is None:
+            master = Frame(self)
+            master.pack(pady=5, padx=10, anchor="w")
         
-        label = Label(input_frame, text=text)
+        label = Label(master, text=text)
         label.pack(side=LEFT, padx=(0, 10))
         
         if validate_num:
             vcmd = (self.register(Popup._validate_input_num), '%P')
-            data = Entry(input_frame, validate='key', validatecommand=vcmd)
+            data = Entry(master, validate='key', validatecommand=vcmd)
         else:
-            data = Entry(input_frame)
+            data = Entry(master)
         data.insert(0, default_val)
         data.pack(side=LEFT)
 
@@ -42,18 +43,19 @@ class Popup(Toplevel):
 
         return dropdown
     
-    def _popup_label(self, text, justify='center', with_seperator=False, font=("Arial", 14)):
+    def _popup_label(self, text, justify='center', with_seperator=False, font=("Arial", 14), master=None):
 
-        input_frame = Frame(self)
-        input_frame.pack(pady=5, padx=10, anchor="w")
+        if master is None:
+            master = Frame(self)
+            master.pack(pady=5, padx=10, anchor="w")
         
-        label = Label(input_frame, text=text, font=font, justify=justify)
+        label = Label(master, text=text, font=font, justify=justify)
         label.pack(side=LEFT, padx=(0, 10))
 
         if with_seperator:
-            input_frame.pack(fill='x', padx=5, pady=10)
+            master.pack(fill='x', padx=5, pady=10)
 
-            separator = Separator(input_frame, orient='horizontal')
+            separator = Separator(master, orient='horizontal')
             separator.pack(fill='x', expand=True, side='left', padx=5)
 
         return label
