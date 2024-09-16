@@ -48,7 +48,7 @@ class Connectors:
             
             if not self.shift_pressed:
                 smooth = True if self.connector_type == 'spline' else False
-                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2, smooth=smooth, tag="connector")
+                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
 
     def on_draw_connector(self, event):
         if not self.shift_pressed:
@@ -135,7 +135,7 @@ class Connectors:
             for tag in ["start_item", "end_item"]:
                 connector[tag] = item_id_map[connector[tag]]
             smooth = True if self.connector_type == 'spline' else False
-            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth, tag="connector")
+            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
             self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
 
     def redraw_connections(self):
