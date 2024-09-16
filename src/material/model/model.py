@@ -1,5 +1,5 @@
 from material.model.process import Process, transportationProcess
-from material.model.product import Product
+from material.model.product import Product, Emission, Fuel, Waste
 
 class Model:
 
@@ -94,6 +94,84 @@ class Model:
         self.impacts[stage].append(product.get_impacts())
 
         return product
+    
+    def create_energy(self, name, stage):
+        """ Create Energy object.
+            Then, append the product object and the corresponding impact objects to its properties.
+            Impact objects are kept in a dictionary based on the life cycle stage.
+
+        Parameters:
+        ----------
+        name : str.
+            Name of the product.
+        stage : str.
+            Life cycle stage: 'A1', 'A2', 'A3'.
+
+        Returns:
+        -------
+        Product Obj.
+            Energy product object created.
+        """
+
+        n = len(self.products)
+        energy = Fuel(n, name, self, stage)
+
+        self.products.append(energy)
+        self.impacts[stage].append(energy.get_impacts())
+
+        return energy
+    
+    def create_emission(self, name, stage):
+        """ Create Emission object.
+            Then, append the product object and the corresponding impact objects to its properties.
+            Impact objects are kept in a dictionary based on the life cycle stage.
+
+        Parameters:
+        ----------
+        name : str.
+            Name of the emission product.
+        stage : str.
+            Life cycle stage: 'A1', 'A2', 'A3'.
+
+        Returns:
+        -------
+        Product Obj.
+            Emission object created.
+        """
+
+        n = len(self.products)
+        emission = Emission(n, name, self, stage)
+
+        self.products.append(emission)
+        self.impacts[stage].append(emission.get_impacts())
+
+        return emission
+
+    def create_waste(self, name, stage):
+        """ Create Waste object.
+            Then, append the product object and the corresponding impact objects to its properties.
+            Impact objects are kept in a dictionary based on the life cycle stage.
+
+        Parameters:
+        ----------
+        name : str.
+            Name of the waste product.
+        stage : str.
+            Life cycle stage: 'A1', 'A2', 'A3'.
+
+        Returns:
+        -------
+        Product Obj.
+            Waste object created.
+        """
+
+        n = len(self.products)
+        waste = Waste(n, name, self, stage)
+
+        self.products.append(waste)
+        self.impacts[stage].append(waste.get_impacts())
+
+        return waste
     
     def get_processes(self):
 

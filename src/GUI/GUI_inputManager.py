@@ -28,7 +28,35 @@ class GUIInputManager(InputManager):
         product.set_density(density)
 
         return product
+    
+    @staticmethod
+    def create_energy(model, name, unit, qty, stage, density):
+
+        energy = model.create_energy(name, stage)
+        energy.set_unit(unit)
+        energy.update_qty(qty)
+        energy.set_density(density)
+
+        return energy
   
+    @staticmethod
+    def create_emission(model, name, unit, qty, stage):
+
+        emission = model.create_emission(name, stage)
+        emission.set_unit(unit)
+        emission.update_qty(qty)
+
+        return emission
+
+    @staticmethod
+    def create_waste(model, name, unit, qty, stage):
+
+        waste = model.create_waste(name, stage)
+        waste.set_unit(unit)
+        waste.update_qty(qty)
+
+        return waste
+    
     @staticmethod
     def create_process(model, name, unit, qty, stage):
 
