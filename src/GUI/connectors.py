@@ -13,11 +13,7 @@ class Connectors:
         self.canvas.bind("<B1-Motion>", self.on_draw_connector)
         self.canvas.bind("<ButtonRelease-1>", self.on_finish_connector)
 
-        for rect in self.canvas.find_withtag("process"):
-            self.canvas.tag_unbind(rect, "<ButtonPress-1>")
-            self.canvas.tag_unbind(rect, "<B1-Motion>")
-
-        for rect in self.canvas.find_withtag("product"):
+        for rect in self.canvas.find_withtag("process||product||parameter"):
             self.canvas.tag_unbind(rect, "<ButtonPress-1>")
             self.canvas.tag_unbind(rect, "<B1-Motion>")
 
@@ -29,11 +25,7 @@ class Connectors:
         self.canvas.unbind("<B1-Motion>")
         self.canvas.unbind("<ButtonRelease-1>")
 
-        for rect in self.canvas.find_withtag("process"):
-            self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
-            self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
-        
-        for rect in self.canvas.find_withtag("product"):
+        for rect in self.canvas.find_withtag("process||product||parameter"):
             self.canvas.tag_bind(rect, "<ButtonPress-1>", self.on_start_drag)
             self.canvas.tag_bind(rect, "<B1-Motion>", self.on_drag)
 
@@ -44,7 +36,7 @@ class Connectors:
         start_item = None
         
         for item in overlapping_items:
-            if "process" in self.canvas.gettags(item) or "product" in self.canvas.gettags(item):
+            if "item" in self.canvas.gettags(item):
                 start_item = item
                 break
         
@@ -56,7 +48,7 @@ class Connectors:
             
             if not self.shift_pressed:
                 smooth = True if self.connector_type == 'spline' else False
-                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill="black", width=2, smooth=smooth, tag="connector")
+                self.connector_data["line"] = self.canvas.create_line(event.x, event.y, event.x, event.y, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
 
     def on_draw_connector(self, event):
         if not self.shift_pressed:
@@ -70,7 +62,7 @@ class Connectors:
         end_item = None
         
         for item in overlapping_items:
-            if "process" in self.canvas.gettags(item) or "product" in self.canvas.gettags(item):
+            if "item" in self.canvas.gettags(item):
                 end_item = item
                 break
             
@@ -87,11 +79,18 @@ class Connectors:
                             "start_item": start_item,
                             "end_item": end_item})
 
-                        connects_to_transport = "transportation" in self.canvas.gettags(item)
+                        connects_to_transport = "transportation" in self.canvas.gettags(end_item)
+                        from_parameter = "parameter" in self.canvas.gettags(start_item)
+
                         if connects_to_transport:
                             GUIInputManager.set_transported_product(self, self.item_map[end_item], self.item_map[start_item])
                             self.set_plot_data()
                             self.update_plot() 
+
+                        if from_parameter:
+                            relationship = "{" + str(start_item) + "}"
+                            self.process_relationship(item, self.slider_map[end_item], relationship)
+
                     else:
                         self.canvas.delete(self.connector_data["line"])
         else:
@@ -113,6 +112,9 @@ class Connectors:
                     if GUIInputManager.is_transport(process):
                         GUIInputManager.remove_transported_product(self, process, product)
 
+                if "parameter" in self.canvas.gettags(connector["start_item"]):
+                    self.clear_relationship(self.item_map[end_item])
+
                 break
 
     def update_connectors(self, item):
@@ -133,7 +135,7 @@ class Connectors:
             for tag in ["start_item", "end_item"]:
                 connector[tag] = item_id_map[connector[tag]]
             smooth = True if self.connector_type == 'spline' else False
-            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth, tag="connector")
+            connector["line"] = self.canvas.create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
             self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
 
     def redraw_connections(self):
@@ -186,9 +188,13 @@ class Connectors:
             This are logic rules imposed.
         """
 
-        is_from_product = "product" in self.canvas.gettags(self.connector_data["start_item"])
-        is_to_process = "process" in self.canvas.gettags(item)
-        is_to_transport = "transportation" in self.canvas.gettags(item)
+        _to = item
+        _from = self.connector_data["start_item"]
+
+        is_from_product = "product" in self.canvas.gettags(_from)
+        is_to_process = "process" in self.canvas.gettags(_to)
+        is_to_transport = "transportation" in self.canvas.gettags(_to)
+        is_to_parameter = "parameter" in self.canvas.gettags(_to)
 
         create = True
         if is_from_product:
@@ -198,6 +204,9 @@ class Connectors:
         if is_to_transport:
             if not is_from_product:
                 create = False
+
+        if is_to_parameter:
+            create = False
 
         return create
     

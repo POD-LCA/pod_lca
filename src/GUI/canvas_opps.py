@@ -121,3 +121,60 @@ class CanvasOperations:
 
         for i in range(start_y, height, scaled_grid_size):
             self.canvas.create_line(0, i, width, i, fill="gray", dash=(2, 2), tags="grid")
+
+    # =================================
+    # On Canvas : Drag
+    # =================================
+
+    def on_start_drag(self, event):
+        if not self.shift_pressed:
+            self.drag_data["item"] = self.canvas.find_closest(event.x, event.y)[0]
+            self.drag_data["x"] = event.x
+            self.drag_data["y"] = event.y
+
+            closest_item = self.canvas.find_closest(event.x, event.y)[0]
+            
+            tags = self.canvas.gettags(closest_item)
+            for tag in tags:
+                if tag.startswith("group_"):
+                    self.current_item = tag
+                    bbox = self.canvas.bbox(self.current_item)
+                    
+                    self.offset_x = event.x - bbox[0]
+                    self.offset_y = event.y - bbox[1]
+                    break
+
+
+    def on_drag(self, event):
+        if not self.shift_pressed:
+            dx = event.x - self.drag_data["x"]
+            dy = event.y - self.drag_data["y"]
+
+            tags = self.canvas.gettags(self.drag_data["item"])
+            for tag in tags:
+                if tag.startswith("group_"):
+                    group_tag = tag
+                    break
+            
+            self.canvas.move(group_tag, dx, dy)
+            
+            self.drag_data["x"] = event.x
+            self.drag_data["y"] = event.y
+
+            self.update_connectors(self.drag_data["item"])
+
+    def move_slider(self, event, slider, slider_data):
+        if not self.ctrl_pressed:
+            x1, y1, x2, y2 = self.canvas.bbox(self.drag_data["item"])
+            slider.place(in_=self.canvas, x=x1, y=y2)
+
+            slider_data['x'] = x1
+            slider_data['y'] = y2
+    
+    def on_stop_drag(self, event):
+        if not self.shift_pressed and not self.ctrl_pressed:
+            self.update_connectors(self.drag_data["item"])
+
+    def on_closing(self):
+        self.quit()
+        self.destroy()
