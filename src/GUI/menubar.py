@@ -1,4 +1,4 @@
-from material.databaseManager.databaseManager import DatabaseManager
+from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 
@@ -52,7 +52,7 @@ class Menubar:
                                                     filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*")))
 
         if file_path:
-            self.save_state(file_path)
+            self.save_file(file_path)
             self.save_path = file_path
 
     def _openFile(self):
@@ -65,7 +65,7 @@ class Menubar:
 
         if file_path:
             self.clear_state()
-            self.load_state(file_path)
+            self.load_file(file_path)
 
     def _savePrompt(self, menubar, cmd):
 
@@ -110,13 +110,16 @@ class Menubar:
 
     def _update_setting(self, menubar):
 
-        popup = Popup(menubar, "Canvas Settings", "450x575")
+        popup = Popup(menubar, "Canvas Settings", "450x700")
 
         popup._popup_label("Colors ", justify='left', with_seperator=True, font=("Arial", 12, "bold"))
         color_canvas = popup._popup_input_field("canvas color", default_val=self.color_canvas)
         color_product =  popup._popup_input_field("product color", default_val=self.color_product)
         color_process =  popup._popup_input_field("process color", default_val=self.color_process)
         color_transport = popup._popup_input_field("transportation process color", default_val=self.color_transport)
+        color_energy = popup._popup_input_field("Energy product color", default_val=self.color_energy)
+        color_emission = popup._popup_input_field("Emission product color", default_val=self.color_emission)
+        color_waste = popup._popup_input_field("Waste product color", default_val=self.color_waste)
         
         popup._popup_label("Grid ", justify='left', with_seperator=True, font=("Arial", 12, "bold"))
         canvas_grid = popup._popup_radio_buttons({'On': True, 'Off':False}, self.canvas_grid, 
@@ -125,36 +128,31 @@ class Menubar:
         grid_spacing = popup._popup_input_field("grid spacing", default_val=self.canvas_grid_size, validate_num=True)
 
         popup._popup_label("Connectors ", justify='left', with_seperator=True, font=("Arial", 12, "bold"))
+        color_connectors = popup._popup_input_field("connector color", default_val=self.connector_color)
         connector_type = popup._popup_radio_buttons({'straight':'straight',
                                                             'elbow': 'elbow',
                                                             'spline':'spline' }, self.connector_type,
                                                             cmd= lambda: Popup.update_entry_state(connector_type.get() != "straight", connector_offset))
         connector_offset = popup._popup_input_field("connector offset", default_val=self.connector_offset, validate_num=True)
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        cmd = lambda: self._apply_settings( color_canvas.get(), 
-                                            tag_colors = {"product":color_product.get(), 
-                                                          "process":color_process.get(), 
-                                                          "transportation":color_transport.get()}, 
+        cmd = lambda: self._apply_settings(color_canvas.get(), color_connectors.get(),
+                                            tag_colors = {"product": color_product.get(), 
+                                                          "process": color_process.get(), 
+                                                          "transportation": color_transport.get(),
+                                                          "energy": color_energy.get(),
+                                                          "emission": color_emission.get(),
+                                                          "waste": color_waste.get()}                                                    , 
                                             canvas_grid=canvas_grid.get(),
                                             connector_type=connector_type.get(),
                                             grid_spacing=grid_spacing.get(),
                                             connector_offset=connector_offset.get())
 
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancelApply(cmd)
 
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
-        close_button.pack(side=LEFT, padx=10)
-
-        import_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
-        import_button.pack(side=LEFT, padx=10)
-
-    def _apply_settings(self, color_canvas, tag_colors, canvas_grid, connector_type, grid_spacing, connector_offset):
+    def _apply_settings(self, color_canvas, color_connectors, tag_colors, canvas_grid, connector_type, grid_spacing, connector_offset):
 
         self.color_canvas = color_canvas
+        self.color_connectors = color_connectors
         self.canvas.config(bg=color_canvas)
         
         self.canvas_grid_size = float(grid_spacing)
@@ -171,6 +169,9 @@ class Menubar:
         self.color_product = tag_colors["product"]
         self.color_process = tag_colors["process"]
         self.color_transport = tag_colors["transportation"]
+        self.color_energy = tag_colors["energy"]
+        self.color_emission = tag_colors["emission"]
+        self.color_waste = tag_colors["waste"]
 
         for tag in ["process", "product"]:
             items_with_tag = self.canvas.find_withtag(tag)
@@ -201,19 +202,8 @@ class Menubar:
         browse_button  = Button(popup, text ="Select File", command=lambda: menubar._file_open_dialog(menubar, file_path, popup))
         browse_button.place(x=250,y=0)
 
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
         cmd = lambda: GUIInputManager.import_data_from_CSV(file_path.get(), self.project)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
-        close_button.pack(side=LEFT, padx=10)
-
-        import_button = Button(button_frame, text="Import", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
-        import_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancelApply(cmd)
 
 
     def _file_open_dialog(self, menubar, file_path, popup):
@@ -248,4 +238,10 @@ class Menubar:
 
     def _quick_start(self):
 
-        pass
+        pdf_path = HOME + r"\Documentation\User_Guide_v0.2.pdf"
+        if os.name == 'nt':  # For Windows
+            os.startfile(pdf_path)
+        elif os.name == 'posix':  # For macOS or Linux
+            os.system(f'open "{pdf_path}"')
+        else:
+            print("Unsupported OS")

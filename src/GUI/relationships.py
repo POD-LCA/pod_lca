@@ -1,10 +1,8 @@
 from GUI.popup import Popup
 from GUI.GUI_inputManager import GUIInputManager
-from GUI.item import Item
 
 import re
-from tkinter import Menu, Frame, Button
-from tkinter import RIGHT, LEFT, Y, BOTH, TOP, DISABLED, ACTIVE
+from tkinter import DISABLED, ACTIVE
 
 class Relationships:
 
@@ -20,18 +18,7 @@ class Relationships:
         relationship = popup._popup_input_field(txt_str, default_val=default_str)
         
         cmd =lambda : self.process_relationship(item, slider, relationship.get())          
-        
-        button_frame = Frame(popup)
-        button_frame.pack(pady=20)
-
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
-        cancel_button.pack(side=LEFT, padx=10)
-
-        apply_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
-        apply_button.pack(side=LEFT, padx=10)
+        popup.button_pack_OKCancelApply(cmd)
 
     def process_relationship(self, item, slider, relationship):
 
@@ -55,9 +42,9 @@ class Relationships:
                     if not item in self.dependents[int(master)]:
                         self.dependents[int(master)].append(item)
 
-    def update_dependent_qtys(self, item, qty):
+    def update_dependent_qtys(self, item, qty, is_param=False):
 
-        item_id = GUIInputManager.get_id(item)
+        item_id = item.get_id() if is_param else GUIInputManager.get_id(item)
 
         if item_id in self.dependents:
             for dependent in self.dependents[item_id]:
@@ -65,11 +52,11 @@ class Relationships:
                 rel_ss = re.sub(r'\s+', '', rel)
                 masters = re.findall(r'\{ *(-?\d+(?:\.\d*)?) *\}', rel_ss)
                 for master in masters:
-                    master_item = Item.item_from_id(self, int(master))
+                    master_item = self.item_map[item_id]
                     if GUIInputManager.is_transport(master_item):
                         qty = GUIInputManager.get_travel_distance(master_item)
                     else:
-                        qty = GUIInputManager.get_qty(master_item)
+                        qty = item.get_qty() if is_param else GUIInputManager.get_qty(master_item)
  
                     tag_str = '{' + str(master) + '}'
                     rel_ss = rel_ss.replace(tag_str, str(qty))
@@ -80,7 +67,7 @@ class Relationships:
                 except Exception as e:
                     f"Error evaluating expression: {e}"
 
-                dependent_item = Item.item_from_id(self, dependent)
+                dependent_item = self.item_map[dependent]
                 GUIInputManager.update_qty(self, dependent_item, calc_qty)
                 slider = self.slider_map[dependent]
                 slider.config(state=ACTIVE) 
@@ -110,3 +97,21 @@ class Relationships:
 
         if hasattr(self.canvas, 'current_highlight'):
             self.canvas.itemconfig(self.canvas.current_highlight, outline=self.outline_color, width=self.outline_width)
+
+    def restore_relationships(self, item_id_history, old_dependents, old_relationships):
+
+        new_dependents = {}
+        for entry in old_dependents:
+            new_dependents[item_id_history[entry]] = [item_id_history[id] for id in old_dependents[entry]]
+        
+        new_relationships = {}
+        for entry in old_relationships:
+            rel = old_relationships[entry]
+            for id in old_dependents:
+                old_str = '{' + str(id) + '}'
+                new_str = '{' + str(item_id_history[id]) + '}'
+                rel = rel.replace(old_str, new_str)
+            new_relationships[item_id_history[entry]] = rel
+        
+        return new_dependents, new_relationships
+
