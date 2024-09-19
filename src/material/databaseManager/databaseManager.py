@@ -1,11 +1,11 @@
-import pandas
+from pandas import DataFrame, read_csv
 
 class DatabaseManager:
 
     def __init__(self, project):
         self.project = project
-        self.data = None
         self.impact_categories = {'GWP':0.0, 'acid_pot':0.0, 'eutro_pot':0.0, 'ozone_dep':0.0, 'smog':0.0}
+        self.data = DataFrame(columns=['Flow','Unit'] + list(self.impact_categories.keys()))
 
     def __reduce__(self):
         
@@ -43,7 +43,7 @@ class DatabaseManager:
 
     def import_data_from_CSV(self, file_path, order=None):
 
-        impacts = pandas.read_csv(filepath_or_buffer=file_path)
+        impacts = read_csv(filepath_or_buffer=file_path)
 
         impact_headers_list = list(self.get_impact_categories().keys())
 
@@ -53,3 +53,11 @@ class DatabaseManager:
 
         impacts.columns = impact_headers_ordered
         self.set_data(impacts)
+
+    def set_custom_entry(self, flow, unit, impacts):
+
+        tmp_data = impacts
+        tmp_data['Flow'] = flow
+        tmp_data['Unit'] = unit
+
+        self.data.loc[len(self.data)] = tmp_data

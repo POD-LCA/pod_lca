@@ -77,6 +77,10 @@ class Product(Master):
     def get_weight_unit(self):
 
         return self.weight_unit
+    
+    def get_density(self):
+
+        return self.density
 
 class Fuel(Product):
 

@@ -253,6 +253,15 @@ class GUIInputManager(InputManager):
         visualizer.set_plot_data()
         visualizer.update_plot()
 
+    @staticmethod
+    def get_density(item):
+
+        return item.get_density()
+
+    @staticmethod
+    def get_weight_unit(item):
+
+        return item.get_weight_unit()
 
     # =================================
     # Database
@@ -277,4 +286,8 @@ class GUIInputManager(InputManager):
     def get_all_units_list(project):
         
         return project.get_calculator().get_units_list()
+    
+    def set_custom_entry(project, flow, unit, impacts):
+
+        project.get_database().set_custom_entry(flow, unit, impacts)
     
