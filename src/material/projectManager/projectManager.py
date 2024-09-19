@@ -9,6 +9,7 @@ class Project:
     def __init__(self, name=None):
         self.name = name
         self.model = Model(self)
+        self.models = {}
         self.database = DatabaseManager(self)
         self.calculator = Calculator(self)
     
@@ -31,6 +32,15 @@ class Project:
 
         return self.calculator
     
+    def get_impact_categories(self):
+
+        return self.impact_categoreis
+    
+    def create_model(self, name):
+
+        model = Model(name)
+        self.models[name] = model
+    
     def clear_project(self, model=True, database=True):
 
         if model:
@@ -38,7 +48,6 @@ class Project:
 
         if database:
             self.database = DatabaseManager(self)
-
 
     def save(self, file_path):
 

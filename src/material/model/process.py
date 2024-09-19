@@ -65,7 +65,7 @@ class transportationProcess(Process):
         products = self.get_transported_products()
         for product in products:
             weight_added = product.get_weight()
-            weight_conversion = self.get_calculator().conversion_factor(product.get_unit(), self.get_transported_weight_unit())
+            weight_conversion = self.get_calculator().conversion_factor(product.get_weight_unit(), self.get_transported_weight_unit())
             weight += (weight_added * weight_conversion)
         
         self.transported_weight = weight
@@ -87,7 +87,7 @@ class transportationProcess(Process):
     def set_transported_products(self, products):
 
         if len(self.get_transported_products()) == 0:
-            weight_unit = products[0].get_unit() if isinstance(products, list) else products.get_unit()
+            weight_unit = products[0].get_weight_unit() if isinstance(products, list) else products.get_weight_unit()
             self.set_transported_weight_unit(weight_unit)
             self.set_unit()
     
