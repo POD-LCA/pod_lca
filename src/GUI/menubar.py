@@ -72,7 +72,7 @@ class Menubar:
     def _savePrompt(self, menubar, cmd):
 
         popup = Popup(menubar, "Save Prompt", "300x125")
-        Popup._popup_label(popup,"Do you want to save the current project? ", justify='left', font=("Arial", 10))
+        Popup._popup_label(popup,"Do you want to save the current project? ", justify='left')
 
         button_frame = Frame(popup)
         button_frame.pack(pady=20)
