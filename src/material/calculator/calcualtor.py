@@ -49,3 +49,10 @@ class Calculator():
 
         return units
     
+    def is_mass_unit(self, unit):
+
+        if self.conversion_factor(unit, 'kg') == None:
+            return False
+        else:
+            return True
+        

@@ -12,7 +12,7 @@ class transportationProcess(Process):
         self.transported_distance = 0.0
         self.transported_weight = 0.0
         self.transported_distance_unit = None
-        self.transported_weight_unit = None
+        self.transported_weight_unit = 'kg'  # default unit
         self.transported_products = []
 
     def __reduce__(self):
@@ -75,10 +75,12 @@ class transportationProcess(Process):
     def set_transported_distance_unit(self, unit):
         
         self.transported_distance_unit = unit
+        self.set_unit()
     
     def set_transported_weight_unit(self, unit):
 
         self.transported_weight_unit = unit
+        self.set_unit()
 
     def set_unit(self):
 
@@ -89,7 +91,6 @@ class transportationProcess(Process):
         if len(self.get_transported_products()) == 0:
             weight_unit = products[0].get_weight_unit() if isinstance(products, list) else products.get_weight_unit()
             self.set_transported_weight_unit(weight_unit)
-            self.set_unit()
     
         if isinstance(products, list):
             self.get_transported_products().extend(products)
