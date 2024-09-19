@@ -40,9 +40,12 @@ class Calculator():
     def conversion_factor(self, from_unit, to_unit):
 
         return self.convert_units(from_unit, to_unit, amount=1.0)
-
-
     
+    def get_units_list(self):
 
-    
+        units = []
+        for items in self.conversions:
+            units.extend(list(items.keys()))
+
+        return units
     

@@ -2,7 +2,7 @@ from GUI.GUI_inputManager import GUIInputManager
 from GUI.menubar import Menubar
 from GUI.plots import Plots
 from GUI.process import Process
-from GUI.product import Product
+from GUI.model import Model
 from GUI.energy import EnergyProduct
 from GUI.emission import EmissionProduct
 from GUI.waste import WasteProduct
@@ -15,11 +15,11 @@ from GUI.save_load import SaveLoadMethods
 
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font
 from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
-from tkinter.ttk import Combobox, Style
+from tkinter.ttk import Combobox, Style, Notebook
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transportation, EnergyProduct, EmissionProduct,
+class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Transportation, EnergyProduct, EmissionProduct,
                         WasteProduct, Parameter, Connectors, Relationships, SaveLoadMethods):
     def __init__(self):
         super().__init__()
@@ -57,6 +57,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transport
         self.canvas_grid_size = 20
       
         # book-keeping
+        self.models = {}
         self.drag_data = {"item": None, "x": 0, "y": 0}
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
         self.connectors = []
@@ -69,17 +70,16 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transport
         self.dependents = {}
 
         # back-end
-        self.project = GUIInputManager.create_project()
-
-        # impacts
-        self.database_file_path = ''
         self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone_dep':'kg CFC-11 eq', 'smog':'kg O3 eq'}
-
+        self.project = GUIInputManager.create_project()
+        GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))
+        self.database_file_path = ''      
+        
         # GUI
         # self.create_window()
         self.content_frame = self.create_frame()
         self.palette_frame = self.create_palette(self.content_frame)
-        self.canvas = self.create_canvas(self.content_frame)
+        self.canvas, self.notebook = self.create_canvas(self.content_frame)
         self.plot_frame, self.canvas_plot = self.create_plotter(self.content_frame)
         self.menubar = self.create_menubar()
 
@@ -122,8 +122,9 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transport
         palette_color = '#313131'
         button_height = 3
         button_width = 12
-        button_color = '#8f2ab0'
-        button_font_color='white'
+        button_color = '#ff2aff'
+        model_button_color = '#8f2ab0'
+        button_font_color='black'
         button_font = ('Helvetica', 12,'bold')
         button_side = LEFT
         padx = 15
@@ -131,7 +132,12 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transport
 
         palette_frame = Frame(frame, bg=palette_color, width=200, height=600)
         palette_frame.pack(side=TOP, anchor=NW, padx=0, pady=(0,10), fill=BOTH)
-    
+
+        flow_object_button = Button(palette_frame, bg=model_button_color, highlightbackground=model_button_color,
+                                    fg='white', height=button_height, width=button_width,font=button_font, 
+                                    text="Model", command=self.add_model)
+        flow_object_button.pack(side=button_side, padx=padx, pady=pady)
+
         flow_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
                                     fg=button_font_color, height=button_height, width=button_width,font=button_font, 
                                     text="Product", command=self.open_popup_product)
@@ -172,19 +178,28 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Process, Transport
 
     def create_canvas(self, frame):
 
-        canvas_width = 800
-        canvas_height = 800
+        self.canvas_width = 800
+        self.canvas_height = 800
         border_color = "#284387"
         border_thickness = 0
 
         canvas_frame = Frame(frame, highlightbackground=border_color, highlightthickness=border_thickness)
         canvas_frame.pack(side=LEFT, padx=(10,5), pady=5, fill=BOTH)
 
-        canvas = Canvas(canvas_frame, bg=self.color_canvas, width=canvas_width, height=canvas_height)
-        canvas.pack(side=LEFT, padx=0, pady=0, fill=BOTH)
-        canvas.bind("<Configure>", self.on_canvas_configure)
+        notebook = Notebook(canvas_frame)
 
-        return canvas
+        model_1 = Frame(notebook)
+
+        notebook.add(model_1, text="Model_1")
+        notebook.pack(expand=True, fill='both')
+
+        canvas_model_1 = Canvas(model_1, bg=self.color_canvas, width=self.canvas_width, height=self.canvas_height)
+        canvas_model_1.pack(side=LEFT, padx=0, pady=0, fill=BOTH)
+        canvas_model_1.bind("<Configure>", self.on_canvas_configure)
+
+        self.models["Model_1"] = canvas_model_1
+
+        return canvas_model_1, notebook
     
     def create_plotter(self, frame):
 

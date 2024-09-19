@@ -1,6 +1,6 @@
 from material.projectManager.inputManager import InputManager
 from material.projectManager.projectManager import Project
-from material.model.product import Product
+from material.model.product import Product, Fuel, Waste
 from material.model.process import Process, transportationProcess
 
 class GUIInputManager(InputManager):
@@ -20,22 +20,20 @@ class GUIInputManager(InputManager):
     # =================================
 
     @staticmethod
-    def create_product(model, name, unit, qty, stage, density):
+    def create_product(model, name, unit, qty, stage):
 
         product = model.create_product(name, stage)
         product.set_unit(unit)
         product.update_qty(qty)
-        product.set_density(density)
 
         return product
     
     @staticmethod
-    def create_energy(model, name, unit, qty, stage, density):
+    def create_energy(model, name, unit, qty, stage):
 
         energy = model.create_energy(name, stage)
         energy.set_unit(unit)
         energy.update_qty(qty)
-        energy.set_density(density)
 
         return energy
   
@@ -124,19 +122,24 @@ class GUIInputManager(InputManager):
         return obj.get_unit()
     
     @staticmethod
-    def is_product(item):
+    def is_product(obj):
 
-        return isinstance(item, Product)
+        return isinstance(obj, Product)
     
     @staticmethod
-    def is_process(item):
+    def is_process(obj):
 
-        return isinstance(item, Process)
+        return isinstance(obj, Process)
     
     @staticmethod
-    def is_transport(item):
+    def is_transport(obj):
 
-        return isinstance(item, transportationProcess)
+        return isinstance(obj, transportationProcess)
+    
+    @staticmethod
+    def is_fuel(obj):
+
+        return isinstance(obj, Fuel)
     
     @staticmethod
     def set_id(item, new_id):
@@ -240,18 +243,38 @@ class GUIInputManager(InputManager):
     def get_travel_unit(obj):
 
         return obj.get_transported_distance_unit()
+    
+    @staticmethod
+    def set_density(visualizer, obj, density, weight_unit):
+
+        obj.set_density(density)
+        obj.set_weight_unit(weight_unit)
+
+        visualizer.set_plot_data()
+        visualizer.update_plot()
+
 
     # =================================
     # Database
     # =================================
 
     @staticmethod
-    def import_data_from_CSV(file_path, project):
+    def import_data_from_CSV(file_path, project, order=None):
 
-        project.get_database().import_data_from_CSV(file_path)
+        project.get_database().import_data_from_CSV(file_path, order)
 
     @staticmethod
     def get_database_data(project):
 
         return project.get_database().get_data()
+    
+    @staticmethod
+    def set_impact_categories(project, impact_cats):
+
+        project.get_database().set_impact_categories(impact_cats)
+
+    @staticmethod
+    def get_all_units_list(project):
+        
+        return project.get_calculator().get_units_list()
     

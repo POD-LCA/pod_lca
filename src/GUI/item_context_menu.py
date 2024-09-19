@@ -1,10 +1,10 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
+
+
 from tkinter import Menu
 
 import gc
-
-from tkinter import Menu
 
 class ItemContextMenu:
 
@@ -27,6 +27,8 @@ class ItemContextMenu:
                 master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
                 master.context_menu.add_command(label="Change units", command=lambda: cls.change_unit(master,item))
                 master.context_menu.add_command(label="Change life cycle stage", command=lambda: cls.update_life_cycle_stage(master,item))
+                if GUIInputManager.is_fuel(master.item_map[item]):
+                    master.context_menu.add_command(label="Set density", command=lambda: cls.set_product_density(master, item))            
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
                 master.context_menu.add_separator()
@@ -46,14 +48,14 @@ class ItemContextMenu:
         popup = Popup(master, "Set Impacts", "300x200")
 
         if not GUIInputManager.get_database_data(master.project) is None:
-            impact = popup._popup_input_combo("Impact : ", GUIInputManager.get_database_data(master.project)['Flow'].tolist())
+            impact = Popup._popup_input_combo(popup, "Impact : ", GUIInputManager.get_database_data(master.project)['Flow'].tolist())
             
-            popup.button_pack_OKCancel(cmd)
+            Popup.button_pack_OKCancel(popup, popup, cmd)
         else:
-            label = popup._popup_label("Impact database not loaded.\nGo to Database menu and import database.", justify='left')
+            label = Popup._popup_label(popup, "Impact database not loaded.\nGo to Database menu and import database.", justify='left')
             label.bind('<Configure>', lambda e: label.config(wraplength=label.winfo_width()))
 
-            popup.button_pack_Close()
+            Popup.button_pack_Close(popup, popup)
 
 
     @classmethod
@@ -70,9 +72,9 @@ class ItemContextMenu:
             data_list = "unasigned", 0.0, 0.0, 0.0, 0.0, 0.0
 
         text_str = "{0} \n GWP : {1:.2f} kg CO2 eq \n Acidification potential : {2:.2f} kg SO2 eq \n Eutrophication potential : {3:.2f} kg N eq \n Ozone depletion potential : {4:.2f} kg CFC-11 eq\n Smog potential : {5:.2f} kg O3 eq".format(*data_list)        
-        popup._popup_label(text_str, justify='left')
+        Popup._popup_label(popup, text_str, justify='left')
 
-        popup.button_pack_Close()
+        Popup.button_pack_Close(popup, popup)
 
     @classmethod
     def update_life_cycle_stage(cls, master, item_id):
@@ -80,12 +82,12 @@ class ItemContextMenu:
         item = master.item_map[item_id]
 
         popup = Popup(master, "Update life cycle stage", "300x200")
-        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])
+        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])
 
         _cmd = lambda: GUIInputManager.update_life_cycle_stage(master, item, life_cycle_stage.get())
         cmd = lambda: cls._update_label(master,item_id, _cmd)
 
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
     def edit_name(cls, master, item_id):
@@ -93,12 +95,12 @@ class ItemContextMenu:
         item = master.item_map[item_id]
 
         popup = Popup(master, "Edit name", "300x200")
-        name = popup._popup_input_field("Name: ", default_val=GUIInputManager.get_name(item)) 
+        name = Popup._popup_input_field(popup, "Name: ", default_val=GUIInputManager.get_name(item)) 
 
         _cmd = lambda: GUIInputManager.edit_name(master, item, name.get()) 
         cmd = lambda: cls._update_label(master, item_id, _cmd)
 
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
     def _update_label(cls, master, item_id, cmd):
@@ -116,13 +118,26 @@ class ItemContextMenu:
         popup = Popup(master, "Change units", "300x200")
         item = master.item_map[item_id]
 
-        unit_list = ["m3", "kg", "lb", "MJ", "km", "mi"]
+        unit_list = GUIInputManager.get_all_units_list(master.project)
         default_entry = unit_list.index(GUIInputManager.get_unit(item))
-        unit = popup._popup_input_combo("units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
+        unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
 
         cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
 
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
+
+    @classmethod
+    def set_product_density(cls, master, item_id):
+
+        popup = Popup(master, "Set density", "300x250")
+
+        item = master.item_map[item_id]
+
+        density =  Popup._popup_input_field(popup, "Weight per unit product: ", default_val=1.0)     
+        weight_unit =  Popup._popup_input_combo(popup, "Weight unit: ", ["kg", "lb", "g", "t"]) 
+
+        cmd = lambda :GUIInputManager.set_density(master, item, density.get(), weight_unit.get()) 
+        Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):
@@ -149,13 +164,13 @@ class ItemContextMenu:
 
         slider = master.slider_map[item]
         
-        qty_min = popup._popup_input_field("qty slider min: ", validate_num=True, default_val=slider.cget("from"))
-        qty_max = popup._popup_input_field("qty slider max: ", validate_num=True, default_val=slider.cget("to"))
-        qty_reolution = popup._popup_input_field("qty slider resolution: ", validate_num=True, default_val=slider.cget("resolution"))
+        qty_min = Popup._popup_input_field(popup, "qty slider min: ", validate_num=True, default_val=slider.cget("from"))
+        qty_max = Popup._popup_input_field(popup, "qty slider max: ", validate_num=True, default_val=slider.cget("to"))
+        qty_reolution = Popup._popup_input_field(popup, "qty slider resolution: ", validate_num=True, default_val=slider.cget("resolution"))
 
         cmd = lambda: slider.update_slider(qty_min.get(), qty_max.get(), qty_reolution.get())
 
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
     
 
     @classmethod
@@ -175,3 +190,5 @@ class ItemContextMenu:
                 master.connectors.remove(connector)
 
         gc.collect()
+
+
