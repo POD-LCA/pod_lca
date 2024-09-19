@@ -1,7 +1,6 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 
-
 from tkinter import Menu
 
 import gc
@@ -27,7 +26,7 @@ class ItemContextMenu:
                 master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
                 master.context_menu.add_command(label="Change units", command=lambda: cls.change_unit(master,item))
                 master.context_menu.add_command(label="Change life cycle stage", command=lambda: cls.update_life_cycle_stage(master,item))
-                if GUIInputManager.is_fuel(master.item_map[item]):
+                if GUIInputManager.is_product(master.item_map[item]):
                     master.context_menu.add_command(label="Set density", command=lambda: cls.set_product_density(master, item))            
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
@@ -47,13 +46,17 @@ class ItemContextMenu:
 
         popup = Popup(master, "Set Impacts", "300x200")
 
-        if not GUIInputManager.get_database_data(master.project) is None:
+        if not GUIInputManager.get_database_data(master.project).empty:
             impact = Popup._popup_input_combo(popup, "Impact : ", GUIInputManager.get_database_data(master.project)['Flow'].tolist())
             
+            Popup.button_custom(popup, "Add custom impact", cmd= lambda: master.add_custom_item(master))
+
             Popup.button_pack_OKCancel(popup, popup, cmd)
         else:
             label = Popup._popup_label(popup, "Impact database not loaded.\nGo to Database menu and import database.", justify='left')
             label.bind('<Configure>', lambda e: label.config(wraplength=label.winfo_width()))
+
+            Popup.button_custom(popup, "Add custom impact", cmd= lambda: master.add_custom_item(master))
 
             Popup.button_pack_Close(popup, popup)
 
@@ -133,8 +136,10 @@ class ItemContextMenu:
 
         item = master.item_map[item_id]
 
-        density =  Popup._popup_input_field(popup, "Weight per unit product: ", default_val=1.0)     
-        weight_unit =  Popup._popup_input_combo(popup, "Weight unit: ", ["kg", "lb", "g", "t"]) 
+        weight_units = ["kg", "lb", "g", "t"]
+        default_unit =  weight_units.index(GUIInputManager.get_weight_unit(item))
+        density =  Popup._popup_input_field(popup, "Weight per unit product: ", default_val=GUIInputManager.get_density(item))     
+        weight_unit =  Popup._popup_input_combo(popup, "Weight unit: ", weight_units, default_entry=default_unit) 
 
         cmd = lambda :GUIInputManager.set_density(master, item, density.get(), weight_unit.get()) 
         Popup.button_pack_OKCancel(popup, popup, cmd)

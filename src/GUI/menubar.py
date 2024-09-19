@@ -219,6 +219,8 @@ class Menubar:
         menu_database_import = Menu(menu_database, tearoff=False)
         menu_database.add_cascade(menu=menu_database_import, label='Import')
         menu_database_import.add_command(label='From CSV', command=lambda :self.import_database(self))
+        menu_database.add_separator()
+        menu_database.add_command(label='Add custom entry', command=lambda :self.add_custom_item(self))
 
     def import_database(self, menubar):
 
@@ -252,6 +254,14 @@ class Menubar:
             combobox.current(i)
             combos.append(combobox)
 
+        unit_label_frame = Frame(popup)
+        unit_label_frame.pack(pady=10)
+
+        # impact_units = ['', ''] + list(self.impact_categories.values())
+        # for i in range(n):
+        #     label = Label(unit_label_frame, text=impact_units[i], relief="solid", width=width)
+        #     label.pack(side=LEFT, padx=11)
+
         cmd = lambda: self._import_data(file_path.get(), combos)
         Popup.button_pack_OKCancelApply(popup, popup, cmd)
 
@@ -268,6 +278,28 @@ class Menubar:
         
         GUIInputManager.import_data_from_CSV(file_path, self.project, order)
 
+    def add_custom_item(self, menubar):
+
+        popup = Popup(menubar, "Add custom entry to database", "300x300")
+
+        flow =  Popup._popup_input_field(popup, "Flow name: ", default_val="new Impact Item") 
+        unit =  Popup._popup_input_combo(popup, "Unit flow: ", GUIInputManager.get_all_units_list(self.project), default_entry=0)
+
+        impacts = []
+        for impact in self.impact_categories:
+            label_str = impact + ' (in ' + self.impact_categories[impact] + ')'
+            impact_entry =  Popup._popup_input_field(popup, label_str, validate_num=True, default_val=0.0)
+            impacts.append(impact_entry)
+
+        cmd = lambda: self._add_database_entry(flow.get(), unit.get(), impacts)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
+
+    def _add_database_entry(self, flow, unit, impacts):
+
+        impact_vals = [impact.get() for impact in impacts]
+        impact_dict = {key: value for key, value in zip(self.impact_categories.keys(), impact_vals)}
+
+        GUIInputManager.set_custom_entry(self.project, flow, unit, impact_dict)
 
     def _file_open_dialog(self, menubar, file_path, popup):
 
