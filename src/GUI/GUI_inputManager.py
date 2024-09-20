@@ -268,9 +268,9 @@ class GUIInputManager(InputManager):
     # =================================
 
     @staticmethod
-    def import_data_from_CSV(file_path, project, order=None):
+    def import_data_from_CSV(file_path, project, headers=None, multipliers=None):
 
-        project.get_database().import_data_from_CSV(file_path, order)
+        project.get_database().import_data_from_CSV(file_path, headers, multipliers)
 
     @staticmethod
     def get_database_data(project):

@@ -1,11 +1,12 @@
-from pandas import DataFrame, read_csv
+from pandas import DataFrame, read_csv, concat
 
 class DatabaseManager:
 
     def __init__(self, project):
         self.project = project
         self.impact_categories = {'GWP':0.0, 'acid_pot':0.0, 'eutro_pot':0.0, 'ozone_dep':0.0, 'smog':0.0}
-        self.data = DataFrame(columns=['Flow','Unit'] + list(self.impact_categories.keys()))
+        self.data_headers = ['Flow','Unit'] + list(self.impact_categories.keys())
+        self.data = DataFrame(columns=self.data_headers)
 
     def __reduce__(self):
         
@@ -41,18 +42,25 @@ class DatabaseManager:
     # DATA IMPORT METHODS
     # =================================
 
-    def import_data_from_CSV(self, file_path, order=None):
+    def import_data_from_CSV(self, file_path, headers=None, multipliers=None):
+        
+        if headers == None:
+            headers = self.data_headers
+        header_map = dict(zip(headers, self.data_headers))
 
-        impacts = read_csv(filepath_or_buffer=file_path)
+        new_data = read_csv(filepath_or_buffer=file_path)
+        new_data = new_data.rename(columns=header_map)
 
-        impact_headers_list = list(self.get_impact_categories().keys())
+        if not multipliers == None:
+            n = len(headers)
+            for i in range(n):
+                if i>1:
+                    new_data[header_map[headers[i]]] = new_data[header_map[headers[i]]] * multipliers[i-2]
 
-        headers_list = ['Flow', 'Units'] + impact_headers_list
-        new_order = list(range(len(headers_list))) if order is None else order
-        impact_headers_ordered = [headers_list[i] for i in new_order]
-
-        impacts.columns = impact_headers_ordered
-        self.set_data(impacts)
+        if self.get_data().empty:
+            self.set_data(new_data)
+        else:
+            self.set_data(concat([self.get_data(), new_data], ignore_index=True))
 
     def set_custom_entry(self, flow, unit, impacts):
 
