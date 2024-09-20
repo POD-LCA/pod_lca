@@ -18,19 +18,6 @@ class Calculator():
     def __setstate__(self, state):
         self.__dict__.update(state)
     
-    def get_data_by_LCstage(self, impact_category):
-
-        impacts_dict = self.project.get_model().get_impacts()
-
-        vals = {}
-        for stage in impacts_dict.keys():
-            impact_lst = impacts_dict[stage]
-            vals[stage] = 0.0
-            for impact in impact_lst:
-                vals[stage] += impact.get_impact(impact_category)
-
-        return vals
-    
     def convert_units(self, from_unit, to_unit, amount):
 
         for group in self.conversions:
@@ -44,6 +31,33 @@ class Calculator():
 
         return self.convert_units(from_unit, to_unit, amount=1.0)
 
+    def get_units_list(self):
+
+        units = []
+        for items in self.conversions:
+            units.extend(list(items.keys()))
+
+        return units
+    
+    def is_mass_unit(self, unit):
+
+        if self.conversion_factor(unit, 'kg') == None:
+            return False
+        else:
+            return True
+        
+    def get_data_by_LCstage(self, impact_category):
+
+        impacts_dict = self.project.get_model().get_impacts()
+
+        vals = {}
+        for stage in impacts_dict.keys():
+            impact_lst = impacts_dict[stage]
+            vals[stage] = 0.0
+            for impact in impact_lst:
+                vals[stage] += impact.get_impact(impact_category)
+
+        return vals  
 
     def Barchart (self, impact_category):
 
@@ -64,8 +78,7 @@ class Calculator():
         ax.legend(title='Life cycle stage color')
 
         plt.show()
-    
-
+        
     def Multi_bar_chart (self,impact_category):
 
         labels = ['A1', 'A2', 'A3']

@@ -5,6 +5,7 @@ class Product(Master):
     def __init__(self, id, name, model, stage):
         super().__init__(id, name, model, stage)
         self.weight = 0.0
+        self.weight_unit = 'kg' # default value
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
         self.is_material = False
@@ -49,6 +50,17 @@ class Product(Master):
     
         self.density = density
     
+    def set_unit(self, unit):
+
+        self.unit = unit
+        if self.get_calculator().is_mass_unit(unit):
+            self.set_weight_unit(unit)
+            self.density = 1.0
+
+    def set_weight_unit(self, unit):
+
+        self.weight_unit = unit
+    
     def set_transporter(self, transporter):
         
         self.transporter = transporter
@@ -61,6 +73,14 @@ class Product(Master):
     def get_transporter(self):
 
         return self.transporter
+    
+    def get_weight_unit(self):
+
+        return self.weight_unit
+    
+    def get_density(self):
+
+        return self.density
 
 class Fuel(Product):
 

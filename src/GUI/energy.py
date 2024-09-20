@@ -14,22 +14,21 @@ class EnergyProduct(Product):
 
         popup = Popup(self, "Create energy product", "300x250")
         
-        name =  popup._popup_input_field("Energy product name: ", default_val="new Energy Product")     
-        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])   
-        qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["kJ", "MJ", "kWh", "MWh"])  
-        density = popup._popup_input_field("mass per unit product: ", validate_num=True, default_val=1.0)
+        name =  Popup._popup_input_field(popup, "Energy product name: ", default_val="new Energy Product")     
+        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])   
+        qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
+        units = Popup._popup_input_combo(popup, "units: ", ["kJ", "MJ", "kWh", "MWh"])
 
-        cmd = lambda: self.create_energy_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get(), density.get())
-        popup.button_pack_OKCancel(cmd)
+        cmd = lambda: self.create_energy_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get())
+        Popup.button_pack_OKCancel(popup, popup, cmd)
         
-    def create_energy_product(self, popup, name, qty, unit, stage, density):
+    def create_energy_product(self, popup, name, qty, unit, stage):
 
         start = [50, 50]
         height = 100
         width = 100
 
-        product = GUIInputManager.create_energy(self.project.model, name, unit, float(qty), stage, density)
+        product = GUIInputManager.create_energy(self.project.model, name, unit, float(qty), stage)
         slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0
@@ -44,4 +43,6 @@ class EnergyProduct(Product):
         self.item_map[item_id] = product
 
         popup.destroy()
+
+
 

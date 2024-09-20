@@ -8,10 +8,11 @@ class Master:
         self.name = name
         self.life_cycle_stage = stage
         self.year = 1900
-        self.impacts = Impacts(self)
+        self.impacts = Impacts(self) if model is not None else None
         self.database_item = None
         self.qty = 0.0
         self.unit = None
+
 
     def __reduce__(self):
         
@@ -82,11 +83,9 @@ class Master:
             if conversion_factor is None:
                 raise ImportError
             
-            self.impacts.updateImpactQty(GWP=unit_impacts["Global warming potential (kg CO2 eq)"] *conversion_factor * self.qty,
-                                         acid_pot=unit_impacts["Acidification potential (kg SO2 eq)"] *conversion_factor * self.qty,
-                                         eutro_pot=unit_impacts["Eutrophication potential (kg N eq)"] *conversion_factor * self.qty,
-                                         ozone_dep=unit_impacts["Ozone depletion potential (kg CFC-11 eq)"] *conversion_factor * self.qty,
-                                         smog=unit_impacts["Smog potential (kg O3 eq)"] *conversion_factor * self.qty)
+            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
+
+            self.impacts.updateImpactQty(impacts)
 
     def set_database_row(self, database_item:str):
         """ Sets the database (impacts) entry corresponding to the item.

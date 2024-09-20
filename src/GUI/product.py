@@ -14,22 +14,21 @@ class Product(Item):
 
         popup = Popup(self, "Create product", "300x250")
         
-        name =  popup._popup_input_field("Product name: ", default_val="new Product")     
-        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"])   
-        qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["kg", "lb", "g", "m3"])  
-        density = popup._popup_input_field("mass per unit product: ", validate_num=True, default_val=1.0)
+        name =  Popup._popup_input_field(popup, "Product name: ", default_val="new Product")     
+        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])   
+        qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
+        units = Popup._popup_input_combo(popup, "units: ", ["kg", "lb", "g", "m3"])  
 
-        cmd = lambda: self.create_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get(), density.get())
-        popup.button_pack_OKCancel(cmd)
+        cmd = lambda: self.create_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get())
+        Popup.button_pack_OKCancel(popup, popup, cmd)
         
-    def create_product(self, popup, name, qty, unit, stage, density):
+    def create_product(self, popup, name, qty, unit, stage):
 
         start = [50, 50]
         height = 100
         width = 100
 
-        product = GUIInputManager.create_product(self.project.model, name, unit, float(qty), stage, density)
+        product = GUIInputManager.create_product(self.project.model, name, unit, float(qty), stage)
         slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0

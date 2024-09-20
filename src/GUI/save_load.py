@@ -52,6 +52,7 @@ class SaveLoadMethods:
         state = {"sliders": {key:{"x": self.sliders[key]["x"], 
                                   "y": self.sliders[key]["y"], 
                                   "length": self.sliders[key]["length"]} for key in self.sliders},
+                "project": self.project,
                 "processess": [], 
                 "products": [], 
                 "transportation": [],
@@ -59,7 +60,6 @@ class SaveLoadMethods:
                 "connectors": self.connectors,
                 "relationships": self.relationships,
                 "dependents": self.dependents,
-                "project": self.project,
                 "item_map": self.item_map
                 }
         
