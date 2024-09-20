@@ -3,8 +3,9 @@ from material.model.product import Product, Emission, Fuel, Waste
 
 class Model:
 
-    def __init__(self, project):
+    def __init__(self, project, name='default'):
         self.project = project
+        self.name = name
         self.processes = [] # maybe dicts
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}

@@ -64,12 +64,12 @@ class Parameter(Item):
 
         popup = Popup(self, "Parameter", "300x200")
         
-        name =  popup._popup_input_field("Parameter name: ", default_val="new Parameter")   
-        qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["m3", "kg", "unit"])  
+        name =  Popup._popup_input_field(popup, "Parameter name: ", default_val="new Parameter")   
+        qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
+        units = Popup._popup_input_combo(popup, "units: ", ["m3", "kg", "unit"])  
 
         cmd = lambda: self.create_parameter(popup, name.get(), qty.get(), units.get())
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
         
     def create_parameter(self, popup, name, qty, unit):
 
@@ -121,11 +121,11 @@ class Parameter(Item):
         param = master.item_map[item_id]
 
         popup = Popup(master, "Edit name", "300x200")
-        name = popup._popup_input_field("Item name: ", default_val=param.get_name()) 
+        name = Popup._popup_input_field(popup, "Item name: ", default_val=param.get_name()) 
 
         _cmd = lambda: param.edit_name(name.get()) 
         cmd = lambda: cls._update_label(master, item_id, _cmd)
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
     def _update_label(cls, master, item_id, cmd):
@@ -145,10 +145,10 @@ class Parameter(Item):
 
         unit_list = ["m3", "kg", "lb", "MJ", "km", "mi"]
         default_entry = unit_list.index(item.get_unit())
-        unit = popup._popup_input_combo("units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
+        unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
 
         cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):

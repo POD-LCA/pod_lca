@@ -1,4 +1,4 @@
-from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton
+from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton, font
 from tkinter import LEFT, NORMAL, DISABLED
 from tkinter.ttk import Combobox, Separator
 
@@ -9,28 +9,29 @@ class Popup(Toplevel):
         self.title(title)
         self.geometry(shape)
 
-    def _popup_input_field(self, text, validate_num=False, default_val='', master=None):
+    @staticmethod
+    def _popup_input_field(master, text, validate_num=False, default_val='', width= 15):
 
-        if master is None:
-            master = Frame(self)
-            master.pack(pady=5, padx=10, anchor="w")
+        master = Frame(master)
+        master.pack(pady=5, padx=10, anchor="w")
         
         label = Label(master, text=text)
         label.pack(side=LEFT, padx=(0, 10))
         
         if validate_num:
-            vcmd = (self.register(Popup._validate_input_num), '%P')
-            data = Entry(master, validate='key', validatecommand=vcmd)
+            vcmd = (master.register(Popup._validate_input_num), '%P')
+            data = Entry(master, validate='key', validatecommand=vcmd, width=width)
         else:
-            data = Entry(master)
+            data = Entry(master, width=width)
         data.insert(0, default_val)
         data.pack(side=LEFT)
 
         return data
     
-    def _popup_input_combo(self, text, drop_down_list, default_entry=0, default_state='readonly'):
+    @staticmethod
+    def _popup_input_combo(master, text, drop_down_list, default_entry=0, default_state='readonly'):
 
-        input_frame = Frame(self)
+        input_frame = Frame(master)
         input_frame.pack(pady=5, padx=10, anchor="w")
         
         label = Label(input_frame, text=text)
@@ -43,30 +44,31 @@ class Popup(Toplevel):
 
         return dropdown
     
-    def _popup_label(self, text, justify='center', with_seperator=False, font=("Arial", 14), master=None):
+    @staticmethod
+    def _popup_label(master, text, justify='center', with_seperator=False):
 
-        if master is None:
-            master = Frame(self)
-            master.pack(pady=5, padx=10, anchor="w")
-        
-        label = Label(master, text=text, font=font, justify=justify)
+        local_master = Frame(master)
+        local_master.pack(pady=5, padx=10, anchor="w")
+
+        label = Label(local_master, text=text, justify=justify)
         label.pack(side=LEFT, padx=(0, 10))
 
         if with_seperator:
-            master.pack(fill='x', padx=5, pady=10)
+            local_master.pack(fill='x', padx=5, pady=10)
 
             separator = Separator(master, orient='horizontal')
             separator.pack(fill='x', expand=True, side='left', padx=5)
 
         return label
     
-    def _popup_radio_buttons(self, options:dict, default, cmd=None):
+    @staticmethod
+    def _popup_radio_buttons(master, options:dict, default, cmd=None):
 
         selected_option = StringVar(value=default)
 
         for option in options:
-            radio = Radiobutton(self, text=option, variable=selected_option, value=options[option], command=cmd)
-            radio.pack(anchor='w', padx=10, pady=5)
+            radio = Radiobutton(master, text=option, variable=selected_option, value=options[option], command=cmd)
+            radio.pack(anchor='w', padx=50, pady=5)
 
         return selected_option
 
@@ -96,38 +98,50 @@ class Popup(Toplevel):
     # =================================
     # Button Packs
     # =================================
+    @staticmethod
+    def button_custom(master, text, cmd):
 
-    def button_pack_OKCancelApply(self, cmd):
-
-        button_frame = Frame(self)
+        button_frame = Frame(master)
         button_frame.pack(pady=20)
 
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(self, cmd, is_apply=False))
-        ok_button.pack(side=LEFT, padx=10)
-
-        close_button = Button(button_frame, text="Close", command=self.destroy)
+        close_button = Button(button_frame, text=text, command=cmd)
         close_button.pack(side=LEFT, padx=10)
 
-        import_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(self, cmd, is_apply=True))
-        import_button.pack(side=LEFT, padx=10)
-    
-    def button_pack_OKCancel(self, cmd):
 
-        button_frame = Frame(self)
+    @staticmethod
+    def button_pack_OKCancelApply(master, popup, cmd):
+
+        button_frame = Frame(master)
         button_frame.pack(pady=20)
 
-        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(self, cmd, is_apply=False))
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
         ok_button.pack(side=LEFT, padx=10)
 
-        cancel_button = Button(button_frame, text="Cancel", command=self.destroy)
-        cancel_button.pack(side=LEFT, padx=10)
+        close_button = Button(button_frame, text="Close", command=popup.destroy)
+        close_button.pack(side=LEFT, padx=10)
 
-    def button_pack_Close(self):
+        import_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
+        import_button.pack(side=LEFT, padx=10)
+    
+    @staticmethod
+    def button_pack_OKCancel(master, popup, cmd):
 
-        button_frame = Frame(self)
+        button_frame = Frame(master)
         button_frame.pack(pady=20)
 
-        close_button = Button(button_frame, text="Close", command=self.destroy)
+        ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
+        ok_button.pack(side=LEFT, padx=10)
+
+        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        cancel_button.pack(side=LEFT, padx=10)
+
+    @staticmethod
+    def button_pack_Close(master, popup):
+
+        button_frame = Frame(master)
+        button_frame.pack(pady=20)
+
+        close_button = Button(button_frame, text="Close", command=popup.destroy)
         close_button.pack(side=LEFT, padx=10)
 
     @staticmethod

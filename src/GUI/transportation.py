@@ -15,13 +15,13 @@ class Transportation(Item):
 
         popup = Popup(self, "Create transportation process", "300x200")
         
-        name =  popup._popup_input_field("Transportation by: ", default_val="vehicle")    
-        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"], default_entry=1, default_state=DISABLED)
-        travel_dist = popup._popup_input_field("travel distance: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["km", "mi"])  
+        name =  Popup._popup_input_field(popup, "Transportation by: ", default_val="vehicle")    
+        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"], default_entry=1, default_state=DISABLED)
+        travel_dist = Popup._popup_input_field(popup, "travel distance: ", validate_num=True, default_val=0.0)
+        units = Popup._popup_input_combo(popup, "units: ", ["km", "mi"])  
 
         cmd = lambda: self.create_transport_process(popup, name.get(), travel_dist.get(), units.get(), life_cycle_stage.get())
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
         
     def create_transport_process(self, popup, name, qty, units, stage):
         
@@ -61,13 +61,13 @@ class Transportation(Item):
         popup = Popup(master, "Change units", "300x200")
         item = master.item_map[item_id]
 
-        unit_list = ["m3", "kg", "lb", "MJ", "km", "mi"]
+        unit_list = GUIInputManager.get_all_units_list(master.project)
         default_entry = unit_list.index(GUIInputManager.get_travel_unit(item))
-        unit = popup._popup_input_combo("units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
+        unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
 
         cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
 
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):

@@ -14,13 +14,13 @@ class Process(Item):
 
         popup = Popup(self, "Create process", "300x200")
         
-        name =  popup._popup_input_field("Process name: ", default_val="new Process")    
-        life_cycle_stage = popup._popup_input_combo("Life cycle stage: ", ["A1", "A2", "A3"], default_entry=2)   
-        qty = popup._popup_input_field("qty: ", validate_num=True, default_val=0.0)
-        units = popup._popup_input_combo("units: ", ["m3", "kg"])  
+        name =  Popup._popup_input_field(popup, "Process name: ", default_val="new Process")    
+        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"], default_entry=2)   
+        qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
+        units = Popup._popup_input_combo(popup, "units: ", ["m3", "kg"])  
 
         cmd = lambda: self.create_process(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get())
-        popup.button_pack_OKCancel(cmd)
+        Popup.button_pack_OKCancel(popup, popup, cmd)
         
         
     def create_process(self, popup, name, qty, unit, stage):
