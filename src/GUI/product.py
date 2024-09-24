@@ -27,27 +27,28 @@ class Product(Item):
         start = [50, 50]
         height = 100
         width = 100
+        model_id = self.get_current_model()
 
-        product = GUIInputManager.create_product(self.project.model, name, unit, float(qty), stage)
+        product = GUIInputManager.create_product(self.project, name, unit, float(qty), stage)
         slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Product.create_canvas_item(self, name, stage, start, height, width, self.color_product, tags=["product"])
-        slider, slider_data = Product.create_slider(self, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Product.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_product, tags=["product"])
+        slider, slider_data = Product.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         Product.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(product, item_id)
-        self.item_map[item_id] = product
+        self.item_map[model_id][item_id] = product
 
         popup.destroy()
 
-    def restore_product(self, product, cords):
+    def restore_product(self, model, product, cords):
 
         slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x) 
 
-        return Product.restore_item(self, product, cords, self.color_product, ["product"], slider_cmd)
+        return Product.restore_item(self, model, product, cords, self.color_product, ["product"], slider_cmd)
 
 

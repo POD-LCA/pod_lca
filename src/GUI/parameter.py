@@ -76,6 +76,7 @@ class Parameter(Item):
         start = [50, 50]
         height = 50
         width = 100
+        model_id = self.get_current_model()
 
         param = ParamObj(name, qty, unit)
         slider_cmd = lambda x: param.update_qty(self, x)
@@ -84,11 +85,11 @@ class Parameter(Item):
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Parameter.create_canvas_item(self, name, '', start, height, width, self.color_parameter, tags=["parameter"])
-        slider, slider_data = Parameter.create_slider(self, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', start, height, width, self.color_parameter, tags=["parameter"])
+        slider, slider_data = Parameter.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
-        self.item_map[item_id] = param
+        self.item_map[model_id][item_id] = param
         param.set_id(item_id)
 
         popup.destroy()
@@ -99,8 +100,8 @@ class Parameter(Item):
         if master.shift_pressed:
             master.highlight_dependents(event)
         else:
-            item = master.canvas.find_closest(event.x, event.y)[0]
-            if "parameter" in master.canvas.gettags(item):   
+            item = master.current_canvas.find_closest(event.x, event.y)[0]
+            if "parameter" in master.current_canvas.gettags(item):   
                 master.context_menu = Menu(master, tearoff=0)
                 master.context_menu.add_command(label="Edit name", command=lambda: Parameter.edit_name(master,item))
                 master.context_menu.add_command(label="Change units", command=lambda: Parameter.change_unit(master,item))
@@ -118,7 +119,8 @@ class Parameter(Item):
     @classmethod
     def edit_name(cls, master, item_id):
 
-        param = master.item_map[item_id]
+        model_id = master.get_current_model()
+        param = master.item_map[model_id][item_id]
 
         popup = Popup(master, "Edit name", "300x200")
         name = Popup._popup_input_field(popup, "Item name: ", default_val=param.get_name()) 
@@ -130,12 +132,13 @@ class Parameter(Item):
     @classmethod
     def _update_label(cls, master, item_id, cmd):
 
-        item = master.item_map[item_id]
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
         cmd()
 
         text_str = GUIInputManager.get_name(item)
         text_item = master.label_map[item_id]
-        master.canvas.itemconfig(text_item, text=text_str)
+        master.current_canvas.itemconfig(text_item, text=text_str)
 
     @classmethod
     def change_unit(cls, master, item_id):
@@ -153,42 +156,42 @@ class Parameter(Item):
     @classmethod
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):
 
-        param = master.item_map[item_id]
+        model_id = master.get_current_model()
+        param = master.item_map[model_id][item_id]
         param.set_unit(new_unit)
 
         conversion_factor = GUIInputManager.unit_conversion(master.project, old_unit, new_unit)
         if conversion_factor is not None:
-            master.slider_map[item_id]
-            old_val = master.sliders[item_id]["widget"].get()
+            master.slider_map[model_id][item_id]
+            old_val = master.sliders[model_id][item_id]["widget"].get()
             new_val = old_val * conversion_factor
 
             param.update_qty(master, new_val)
 
             master.sliders[item_id]["widget"].update_value(new_val)
 
-        master.slider_map[item_id].config(label= "Qty (in {})".format(new_unit))
+        master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(new_unit))
 
 
     @classmethod
     def delete_item(cls, master, item):
 
-        del master.item_map[item]
+        model_id = master.get_current_model()
+        del master.item_map[model_id][item]
 
-        master.sliders[item]["widget"].destroy()
-        del master.sliders[item]
+        master.sliders[model_id][item]["widget"].destroy()
+        del master.sliders[model_id][item]
         group_tag = f"group_{item}"
-        master.canvas.delete(group_tag)
+        master.current_canvas.delete(group_tag)
 
-        for connector in master.connectors[:]:
+        for connector in master.connectors[model_id][:]:
             if (connector["start_item"] == item) or (connector["end_item"] == item):
-                master.canvas.delete(connector["line"])
-                master.connectors.remove(connector)
+                master.current_canvas.delete(connector["line"])
+                master.connectors[model_id].remove(connector)
 
         gc.collect()
 
-    def restore_parameter(self, param, cords):
-        
-        pass
+    def restore_parameter(self, model, param, cords):
 
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
         start = [x1, y1]
@@ -201,11 +204,11 @@ class Parameter(Item):
 
         slider_cmd = lambda x: param.update_qty(self, x)
 
-        item_id, text_item, text_id = Item.create_canvas_item(self, name, '', start, height, width, self.color_parameter, tags=["parameter"])
-        slider, slider_data = Item.create_slider(self, start, height, width, qty, units, item_id, slider_cmd)
+        item_id, text_item, text_id = Item.create_canvas_item(self, model, name, '', start, height, width, self.color_parameter, tags=["parameter"])
+        slider, slider_data = Item.create_slider(self, model, start, height, width, qty, units, item_id, slider_cmd)
         Item.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
-        self.item_map[item_id] = param
+        self.item_map[model][item_id] = param
         param.set_id(item_id)
 
         return item_id

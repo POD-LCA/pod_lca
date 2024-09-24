@@ -13,7 +13,7 @@ from GUI.relationships import Relationships
 from GUI.canvas_opps import CanvasOperations
 from GUI.save_load import SaveLoadMethods
 
-from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font
+from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar
 from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
 from tkinter.ttk import Combobox, Style, Notebook
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -24,7 +24,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
     def __init__(self):
         super().__init__()
         Style().theme_use('vista')
-        self.title("Process Visualizer")
+        self.title("POD|LCA Material Explorer")
         self.geometry("1500x800")
         self.save_path = None
 
@@ -45,11 +45,15 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         self.connector_type = 'elbow'
         self.connector_offset = 50
 
+        self.plotter_bg_color = "#313131"
+
         # Canvas actions
-        self.scale = 1.0
-        self.zoom_factor = 1.1
-        self.pan_start = None
+        self.scale = {'Model_0':1.0}
+        self.zoom_factor = {'Model_0':1.1}
+        
         self.default_slider_width = 10
+
+        self.pan_start = None
         self.offset_x = 0
         self.offset_y = 0
 
@@ -60,17 +64,19 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         self.models = {}
         self.drag_data = {"item": None, "x": 0, "y": 0}
         self.connector_data = {"line": None, "start_x": 0, "start_y": 0, "start_item": None, "end_item": None}
-        self.connectors = []
-        self.sliders = {}
-        self.slider_map = {}
+        self.connectors = {'Model_0':[]}
+        self.sliders = {'Model_0':{}}
+        self.slider_map = {'Model_0':{}}
         self.label_map = {}
+        self.plot_models = {}
+        self.plot_checkboxes = {}
 
-        self.item_map = {}
-        self.relationships = {}
-        self.dependents = {}
+        self.item_map = {'Model_0':{}}
+        self.relationships = {'Model_0':{}}
+        self.dependents = {'Model_0':{}}
 
         # back-end
-        self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone_dep':'kg CFC-11 eq', 'smog':'kg O3 eq'}
+        self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone':'kg CFC-11 eq', 'smog':'kg O3 eq'}
         self.project = GUIInputManager.create_project()
         GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))
         self.database_file_path = ''      
@@ -79,7 +85,7 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         # self.create_window()
         self.content_frame = self.create_frame()
         self.palette_frame = self.create_palette(self.content_frame)
-        self.canvas, self.notebook = self.create_canvas(self.content_frame)
+        self.current_canvas, self.notebook = self.create_canvas(self.content_frame)
         self.plot_frame, self.canvas_plot = self.create_plotter(self.content_frame)
         self.menubar = self.create_menubar()
 
@@ -188,33 +194,35 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
 
         notebook = Notebook(canvas_frame)
 
-        model_1 = Frame(notebook)
+        model_0 = Frame(notebook)
 
-        notebook.add(model_1, text="Model_1")
+        notebook.add(model_0, text="Model_0")
         notebook.pack(expand=True, fill='both')
 
-        canvas_model_1 = Canvas(model_1, bg=self.color_canvas, width=self.canvas_width, height=self.canvas_height)
-        canvas_model_1.pack(side=LEFT, padx=0, pady=0, fill=BOTH)
-        canvas_model_1.bind("<Configure>", self.on_canvas_configure)
+        canvas_model_0 = Canvas(model_0, bg=self.color_canvas, width=self.canvas_width, height=self.canvas_height)
+        canvas_model_0.pack(side=LEFT, padx=0, pady=0, fill=BOTH)
 
-        self.models["Model_1"] = canvas_model_1
+        canvas_model_0.bind("<Configure>", self.on_canvas_configure)
+        self.create_canvas_bindings(canvas_model_0)
 
-        return canvas_model_1, notebook
+        self.models["Model_0"] = canvas_model_0
+
+        notebook.bind("<<NotebookTabChanged>>", self.reset_model)
+
+        return canvas_model_0, notebook
     
     def create_plotter(self, frame):
 
         border_color = "#284387"
-        background_color = "#313131"
         border_thickness = 0
     
-        plot_frame = Frame(frame, bg=background_color, width=300, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
+        plot_frame = Frame(frame, bg=self.plotter_bg_color, width=300, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
         plot_frame.pack(side=RIGHT, fill=BOTH, padx=(5,10), pady=5)
 
         input_frame = Frame(plot_frame)
         input_frame.pack(side=TOP, pady=10, padx=10)
         
-        label = Label(input_frame, bg=background_color, fg='white', 
-                      text="Environemnt Impact", font = ('Helvetica', 12,'bold'))
+        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environemnt Impact", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
         
         dropdown = Combobox(input_frame, values=list(self.impact_categories.keys()))
@@ -222,9 +230,21 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         dropdown.current(0)
         dropdown.bind("<<ComboboxSelected>>", lambda x:self._update_plot_from_combo(x))
 
-        self.plot_data = {}
+        checkbox_frame = Frame(plot_frame, bg=self.plotter_bg_color)
+        checkbox_frame.pack(fill='both', expand=True, anchor='w')
+
+        var = BooleanVar(value=True)
+        self.plot_models["Model_0"] = var
+        checkbox = Checkbutton(checkbox_frame, text="Model_0" , variable=var, command=self.update_plot,
+                               bg=self.plotter_bg_color, fg='white', selectcolor="gray")
+        checkbox.pack(side=LEFT)  
+        self.plot_checkboxes["Model_0"]  = checkbox
+
+        self.checkbox_frame = checkbox_frame
+
+        self.plot_data = {"Model_0":{}}
         for impact in self.impact_categories.keys():
-            self.plot_data[impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
+            self.plot_data["Model_0"][impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
         self.ax = None
         self.plot_impact_cat = dropdown.get()
         fig = self.create_plot()
@@ -261,11 +281,14 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         self.bind_all("<KeyPress-Shift_L>", self.on_shift_press)
         self.bind_all("<KeyRelease-Shift_L>", self.on_shift_release)
 
-        self.canvas.bind("<ButtonPress-3>", self.start_pan)  # Right mouse button for panning
-        self.canvas.bind("<B3-Motion>", self.do_pan)
-        self.canvas.bind("<MouseWheel>", self.zoom)  # Mouse wheel for zoom
         self.bind_all("<Control-plus>", self.zoom_in)  # Ctrl + for zooming in
         self.bind_all("<Control-minus>", self.zoom_out)  # Ctrl - for zooming out
+
+    def create_canvas_bindings(self, canvas):
+
+        canvas.bind("<ButtonPress-3>", self.start_pan)  # Right mouse button for panning
+        canvas.bind("<B3-Motion>", self.do_pan)
+        canvas.bind("<MouseWheel>", self.zoom)  # Mouse wheel for zoom
 
     def set_protocols(self):
         self.protocol("WM_DELETE_WINDOW", self.on_closing)

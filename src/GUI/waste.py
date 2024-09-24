@@ -27,20 +27,21 @@ class WasteProduct(Product):
         start = [50, 50]
         height = 100
         width = 100
+        model_id = self.get_current_model()
 
-        product = GUIInputManager.create_waste(self.project.model, name, unit, float(qty), stage)
+        product = GUIInputManager.create_waste(self.project, name, unit, float(qty), stage)
         slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = WasteProduct.create_canvas_item(self, name, stage, start, height, width, self.color_waste, tags=["product", "waste"])
+        item_id, text_item, text_id = WasteProduct.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_waste, tags=["product", "waste"])
         slider, slider_data = WasteProduct.create_slider(self, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         WasteProduct.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(product, item_id)
-        self.item_map[item_id] = product
+        self.item_map[model_id][item_id] = product
 
         popup.destroy()
 

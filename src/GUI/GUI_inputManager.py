@@ -15,50 +15,60 @@ class GUIInputManager(InputManager):
 
         project.clear_project(model, database)
 
+    @staticmethod
+    def create_model(project, name):
+
+        project.create_model(name)
+
+    @staticmethod
+    def set_current_model(project, name):
+
+        project.set_current_model(name)
+
     # =================================
     # Products and Processes
     # =================================
 
     @staticmethod
-    def create_product(model, name, unit, qty, stage):
+    def create_product(project, name, unit, qty, stage):
 
-        product = model.create_product(name, stage)
+        product = project.get_current_model().create_product(name, stage)
         product.set_unit(unit)
         product.update_qty(qty)
 
         return product
     
     @staticmethod
-    def create_energy(model, name, unit, qty, stage):
+    def create_energy(project, name, unit, qty, stage):
 
-        energy = model.create_energy(name, stage)
+        energy = project.get_current_model().create_energy(name, stage)
         energy.set_unit(unit)
         energy.update_qty(qty)
 
         return energy
   
     @staticmethod
-    def create_emission(model, name, unit, qty, stage):
+    def create_emission(project, name, unit, qty, stage):
 
-        emission = model.create_emission(name, stage)
+        emission = project.get_current_model().create_emission(name, stage)
         emission.set_unit(unit)
         emission.update_qty(qty)
 
         return emission
 
     @staticmethod
-    def create_waste(model, name, unit, qty, stage):
+    def create_waste(project, name, unit, qty, stage):
 
-        waste = model.create_waste(name, stage)
+        waste = project.get_current_model().create_waste(name, stage)
         waste.set_unit(unit)
         waste.update_qty(qty)
 
         return waste
     
     @staticmethod
-    def create_process(model, name, unit, qty, stage):
+    def create_process(project, name, unit, qty, stage):
 
-        process =  model.create_process(name, stage)
+        process =  project.get_current_model().create_process(name, stage)
         process.set_unit(unit)
         process.update_qty(qty)
 
@@ -188,7 +198,7 @@ class GUIInputManager(InputManager):
     @staticmethod
     def delete(visualizer, obj):
 
-        model = visualizer.project.get_model().delete_obj(obj)
+        model = visualizer.project.get_current_model().delete_obj(obj)
         visualizer.set_plot_data()
         visualizer.update_plot()
 
@@ -197,9 +207,9 @@ class GUIInputManager(InputManager):
     # =================================
 
     @staticmethod
-    def create_transport_process(model, name, project, unit, qty, stage):
+    def create_transport_process(name, project, unit, qty, stage):
 
-        transport_process =  model.create_transportation_process(name, stage)
+        transport_process =  project.get_current_model().create_transportation_process(name, stage)
         transport_process.set_transported_distance_unit(unit)
         transport_process.set_transported_distance(qty)
 

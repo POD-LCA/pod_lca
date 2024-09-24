@@ -8,21 +8,30 @@ class Project:
 
     def __init__(self, name=None):
         self.name = name
-        self.model = Model(self)
-        self.models = {}
+        self.models = {'Model_0': Model(self, 'Model_0')}
+        self.current_model = self.models['Model_0']
         self.database = DatabaseManager(self)
         self.calculator = Calculator(self)
     
     def __reduce__(self):
         
-        return (self.__class__, (self.name,), {"model":self.model, "database": self.database})
+        return (self.__class__, (self.name,), {"model":self.current_model, "database": self.database,
+                                               "models":self.models})
     
     def __setstate__(self, state):
         self.__dict__.update(state)
-    
-    def get_model(self):
 
-        return self.model
+    def set_current_model(self, name):
+
+        self.current_model = self.models[name]
+    
+    def get_current_model(self):
+
+        return self.current_model
+    
+    def get_model(self, model_name):
+
+        return self.models[model_name]
     
     def get_database(self):
 
@@ -38,13 +47,14 @@ class Project:
     
     def create_model(self, name):
 
-        model = Model(name)
+        model = Model(self, name)
         self.models[name] = model
     
     def clear_project(self, model=True, database=True):
 
         if model:
-            self.model = Model(self)
+            self.models = {'Model_0': Model(self, 'Model_0')}
+            self.current_model = self.models['Model_0']
 
         if database:
             self.database = DatabaseManager(self)
