@@ -88,33 +88,62 @@ class Calculator():
 
         data=[]
         for i in impact_category:
-            # Create a dynamic variable name for data_dict
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)
-            
-            # Create a dynamic variable name for plt_data
-            globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
 
+            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)
+            globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
             data.append(globals()['plt_data_' + i])
 
         impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
 
-        # Width of the bars
         width = 0.6  
-
-        # Create the plot
         fig, ax = plt.subplots()
-        bottom = np.zeros(len(impact_category))  # Initialize the bottom of the stacked bars
+        bottom = np.zeros(len(impact_category)) 
 
-        # Stacked bar plot
         for stage, impacts in impact_by_stage.items():
             p = ax.bar(impact_category, impacts, width, label=stage, bottom=bottom)
-            bottom += impacts  # Update the bottom for stacking
+            bottom += impacts  
             ax.bar_label(p, label_type='center')
 
-        # Set plot title and legend
         ax.set_title(title)
         ax.legend()
-
-        # Show the plot
         plt.show()
     
+    def barchart_by_parts (self,impact_category):
+
+        data_name=[]
+        data_qty=[]
+        data_len=[]
+
+        project = self.project.get_model().get_project()
+        model = project.get_model()
+
+        for i in model.get_impacts():
+            data_len.append(len(model.get_impacts()[i]))
+            for j in model.get_impacts()[i]:
+                data_qty.append(j.get_impact(impact_category))
+                data_name.append(j.get_parent().__reduce__()[1][1])
+
+        impacts = {}
+        start_index = 0
+
+        for i, length in enumerate(data_len):
+            end_index = start_index + length
+
+            for j in range(start_index, end_index):
+                impacts[data_name[j]] = np.array([0] * i + [data_qty[j]] + [0] * (len(data_len) - i - 1))
+            start_index = end_index
+
+        stages = ('A1', 'A2', 'A3')
+        width = 0.6  # the width of the bars: can also be len(x) sequence
+
+        fig, ax = plt.subplots()
+        bottom = np.zeros(3)
+
+        for stage, impact in impacts.items():
+            p = ax.bar(stages, impact, width, label=stage, bottom=bottom)
+            bottom += impact
+            ax.bar_label(p, label_type='center')
+
+        ax.set_title('Life cycle stages')
+        ax.legend()
+        plt.show()
