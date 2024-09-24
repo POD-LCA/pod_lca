@@ -18,16 +18,19 @@ class Item(ItemContextMenu):
 
         item_id = master.current_canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=master.outline_color, width=master.outline_width,
                                                  tags=tuple(tags))
+        disp_num = len(master.item_disp_num[model]) + 1
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
         text_str = name + '\n' + stage
         text_item = master.current_canvas.create_text(text_x, text_y, text=text_str)
 
         master.label_map[item_id] = text_item
+        master.item_disp_num[model][item_id] = disp_num
+        master.disp_num_item[model][disp_num] = item_id
 
         id_pack = 5
         id_x, id_y = x1 + id_pack , y1 + id_pack
-        text_id = master.current_canvas.create_text(id_x, id_y, text=str(item_id))
+        text_id = master.current_canvas.create_text(id_x, id_y, text=str(disp_num))
 
         return item_id, text_item, text_id
     

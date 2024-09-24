@@ -91,7 +91,7 @@ class Connectors:
                             self.update_plot() 
 
                         if from_parameter:
-                            relationship = "{" + str(start_item) + "}"
+                            relationship = "{" + str(self.item_disp_num[model_id][start_item]) + "}"
                             self.process_relationship(item, self.slider_map[model_id][end_item], relationship)
 
                     else:

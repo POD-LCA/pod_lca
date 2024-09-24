@@ -143,8 +143,9 @@ class Parameter(Item):
     @classmethod
     def change_unit(cls, master, item_id):
 
+        model_id = master.get_current_model()
         popup = Popup(master, "Change units", "300x200")
-        item = master.item_map[item_id]
+        item = master.item_map[model_id][item_id]
 
         unit_list = ["m3", "kg", "lb", "MJ", "km", "mi"]
         default_entry = unit_list.index(item.get_unit())
