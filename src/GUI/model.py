@@ -5,7 +5,7 @@ from tkinter import LEFT, BOTH
 
 class Model:
 
-    def add_model(self):
+    def add_model(self, add_to_project=True):
 
         model_no =  len(self.models)
         notebook = self.notebook
@@ -31,6 +31,8 @@ class Model:
         self.relationships[model_name] = {}
         self.dependents[model_name] = {}
         self.connectors[model_name] = []
+        self.item_disp_num[model_name] = {}
+        self.disp_num_item[model_name] = {}
 
         var = BooleanVar(value=True)
         self.plot_models[model_name] = var
@@ -39,6 +41,7 @@ class Model:
         checkbox.pack(side=LEFT)
         self.plot_checkboxes[model_name] = checkbox
 
-        GUIInputManager.create_model(self.project, model_name)
+        if add_to_project:
+            GUIInputManager.create_model(self.project, model_name)
 
         self.update_plot()

@@ -14,7 +14,7 @@ class Relationships:
         label = Popup._popup_label(popup, "Set relationship to other items on the canvas: \n e.g., {3} * 4.6 to set the qty to be always be 4.6 times that of item 3.", justify='left')
         label.bind('<Configure>', lambda e: label.config(wraplength=label.winfo_width()))   
         
-        txt_str = '{' + str(item) + '} = '
+        txt_str = '{' + str(self.item_disp_num[model_id][item]) + '} = '
         default_str = self.relationships[model_id][item] if item in self.relationships[model_id] else ''
         relationship = Popup._popup_input_field(popup, txt_str, default_val=default_str)
         
@@ -22,6 +22,9 @@ class Relationships:
         Popup.button_pack_OKCancelApply(popup, popup, cmd)
 
     def process_relationship(self, item, slider, relationship):
+        """ Converts the relationship to an expression and assess.
+            The relationship expressions are maintained in display numbers.
+        """
 
         slider.config(state=DISABLED)
         model_name = self.get_current_model()
@@ -30,19 +33,21 @@ class Relationships:
 
         cyclicDependence = False
         if item in self.dependents[model_name]:
-            for master in masters:
-                if master in self.dependents[model_name][item]:
+            for master_disp in masters:
+                master_item = self.disp_num_item[model_name][int(master_disp)]
+                if master_item in self.dependents[model_name][item]:
                     cyclicDependence = True
                     break
         
         if not cyclicDependence:
             self.relationships[model_name][item] = relationship
-            for master in masters:
-                if int(master) not in self.dependents[model_name]:
-                    self.dependents[model_name][int(master)] = [item]
+            for master_disp in masters:
+                master_item = self.disp_num_item[model_name][int(master_disp)]
+                if int(master_item) not in self.dependents[model_name]:
+                    self.dependents[model_name][int(master_item)] = [item]
                 else:
-                    if not item in self.dependents[model_name][int(master)]:
-                        self.dependents[model_name][int(master)].append(item)
+                    if not item in self.dependents[model_name][int(master_item)]:
+                        self.dependents[model_name][int(master_item)].append(item)
 
     def update_dependent_qtys(self, item, qty, is_param=False):
 

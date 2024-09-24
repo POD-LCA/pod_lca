@@ -70,6 +70,8 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         self.label_map = {}
         self.plot_models = {}
         self.plot_checkboxes = {}
+        self.item_disp_num = {'Model_0':{}}
+        self.disp_num_item = {'Model_0':{}}
 
         self.item_map = {'Model_0':{}}
         self.relationships = {'Model_0':{}}

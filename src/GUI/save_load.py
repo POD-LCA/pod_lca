@@ -96,19 +96,12 @@ class SaveLoadMethods:
 
         self.project = state["project"]
         
-        var = BooleanVar(value=True)
-        self.plot_models["Model_0"] = var
-        checkbox = Checkbutton(self.checkbox_frame, text="Model_0", variable=var, command=self.update_plot,
-                                bg=self.plotter_bg_color, fg='white', selectcolor="gray")
-        checkbox.pack(side=LEFT)
-        self.plot_checkboxes["Model_0"] = checkbox
-        
         self.item_map = {'Model_0':{}}
         self.relationships = {'Model_0':{}}
         self.dependents = {'Model_0':{}}
 
         for i in range(state["no_models"] - 1):
-            self.add_model()
+            self.add_model(add_to_project=False)
 
         item_map = state["item_map"]
         for model in self.models:
@@ -161,8 +154,14 @@ class SaveLoadMethods:
                 slider_data["widget"].destroy()
 
         for checkbox in self.plot_checkboxes:
-            if checkbox is not "Model_0":
-                self.plot_checkboxes[checkbox].destroy()
+            self.plot_checkboxes[checkbox].destroy()
+
+        var = BooleanVar(value=True)
+        self.plot_models["Model_0"] = var
+        checkbox = Checkbutton(self.checkbox_frame, text="Model_0", variable=var, command=self.update_plot,
+                                bg=self.plotter_bg_color, fg='white', selectcolor="gray")
+        checkbox.pack(side=LEFT)
+        self.plot_checkboxes["Model_0"] = checkbox
 
         self.clear_plot_data()
 
