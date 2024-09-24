@@ -320,7 +320,7 @@ class Menubar:
 
     def _add_database_entry(self, flow, unit, impacts):
 
-        impact_vals = [impact.get() for impact in impacts]
+        impact_vals = [float(impact.get()) for impact in impacts]
         impact_dict = {key: value for key, value in zip(self.impact_categories.keys(), impact_vals)}
 
         GUIInputManager.set_custom_entry(self.project, flow, unit, impact_dict)

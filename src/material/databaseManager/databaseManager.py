@@ -5,8 +5,7 @@ class DatabaseManager:
     def __init__(self, project):
         self.project = project
         self.impact_categories = {'GWP':0.0, 'acid_pot':0.0, 'eutro_pot':0.0, 'ozone_dep':0.0, 'smog':0.0}
-        self.data_headers = ['Flow','Unit'] + list(self.impact_categories.keys())
-        self.data = DataFrame(columns=self.data_headers)
+        self.data = DataFrame(columns=['Flow','Unit'] + list(self.impact_categories.keys()))
 
     def __reduce__(self):
         
@@ -22,7 +21,13 @@ class DatabaseManager:
 
     def set_impact_categories(self, impact_cats):
 
+        old_headers =  ['Flow','Unit'] + list(self.impact_categories.keys())
         self.impact_categories = dict.fromkeys(impact_cats, 0.0)
+
+        new_headers = ['Flow','Unit'] + list(self.impact_categories.keys())
+        header_map = dict(zip(old_headers, new_headers))
+        self.data = self.data.rename(columns=header_map)
+
 
     def get_data(self):
 
@@ -37,6 +42,7 @@ class DatabaseManager:
         if self.data is not None:
             row_id = self.data.index[self.data['Flow'] == row][0]
             return self.data.iloc[row_id]
+
     
     # =================================
     # DATA IMPORT METHODS
@@ -44,9 +50,10 @@ class DatabaseManager:
 
     def import_data_from_CSV(self, file_path, headers=None, multipliers=None):
         
+        default_headers = ['Flow','Unit'] + list(self.impact_categories.keys())
         if headers == None:
-            headers = self.data_headers
-        header_map = dict(zip(headers, self.data_headers))
+            headers = default_headers
+        header_map = dict(zip(headers, default_headers))
 
         new_data = read_csv(filepath_or_buffer=file_path)
         new_data = new_data.rename(columns=header_map)

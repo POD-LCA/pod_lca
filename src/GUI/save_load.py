@@ -5,6 +5,7 @@ import pickle
 import hmac
 import hashlib
 import base64
+from tkinter import BooleanVar, Checkbutton, LEFT
 
 class SaveLoadMethods:
 
@@ -34,6 +35,7 @@ class SaveLoadMethods:
         key = self.load_key(HOME + '\Examples\key.txt')
         expected_signature = hmac.new(key, pickled_data, hashlib.sha256).digest()
         if hmac.compare_digest(signature, expected_signature):
+            self.clear_state()
             state = pickle.loads(pickled_data)
             self.load_state(state)
         else:
@@ -49,100 +51,145 @@ class SaveLoadMethods:
 
     def save_state(self):
 
-        state = {"sliders": {key:{"x": self.sliders[key]["x"], 
-                                  "y": self.sliders[key]["y"], 
-                                  "length": self.sliders[key]["length"]} for key in self.sliders},
+        state = {"sliders": {model: {key:{"x": self.sliders[model][key]["x"], 
+                                        "y": self.sliders[model][key]["y"], 
+                                        "length": self.sliders[model][key]["length"]} for key in self.sliders[model]} for model in self.sliders},
                 "project": self.project,
-                "processess": [], 
-                "products": [], 
-                "transportation": [],
-                "parameter": [],
+                "scale": self.scale,
+                "zoom_factor": self.zoom_factor,
+                "processess": {}, 
+                "products": {}, 
+                "transportation": {},
+                "parameter": {},
                 "connectors": self.connectors,
                 "relationships": self.relationships,
                 "dependents": self.dependents,
-                "item_map": self.item_map
+                "item_map": self.item_map,
+                "no_models": len(self.models)
                 }
         
-        for item_id in self.canvas.find_withtag("process"):
-            coords = self.canvas.coords(item_id)
-            fill_color = self.canvas.itemcget(item_id, "fill")
-            
-            state["processess"].append({"item_id":item_id, "coords": coords, "fill": fill_color})
+        for model in self.models:
+            state["processess"][model] = []
+            for item_id in self.models[model].find_withtag("process"):
+                coords = self.models[model].coords(item_id)
+                fill_color = self.models[model].itemcget(item_id, "fill")
+                
+                state["processess"][model].append({"item_id":item_id, "coords": coords, "fill": fill_color})
 
-        for item_id in self.canvas.find_withtag("product"):
-            coords = self.canvas.coords(item_id)
-            fill_color = self.canvas.itemcget(item_id, "fill")
-            
-            state["products"].append({"item_id": item_id, "coords": coords, "fill": fill_color})
+            state["products"][model] = []
+            for item_id in self.models[model].find_withtag("product"):
+                coords = self.models[model].coords(item_id)
+                fill_color = self.models[model].itemcget(item_id, "fill")
+                
+                state["products"][model].append({"item_id": item_id, "coords": coords, "fill": fill_color})
 
-        for item_id in self.canvas.find_withtag("parameter"):
-            coords = self.canvas.coords(item_id)
-            fill_color = self.canvas.itemcget(item_id, "fill")
-            
-            state["parameter"].append({"item_id": item_id, "coords": coords, "fill": fill_color})
+            state["parameter"][model] = []
+            for item_id in self.models[model].find_withtag("parameter"):
+                coords = self.models[model].coords(item_id)
+                fill_color = self.models[model].itemcget(item_id, "fill")
+                
+                state["parameter"][model].append({"item_id": item_id, "coords": coords, "fill": fill_color})
 
         return state
 
     def load_state(self, state):
 
-        self.connectors = state["connectors"]
         self.project = state["project"]
-        self.item_map = state["item_map"]
+        
+        var = BooleanVar(value=True)
+        self.plot_models["Model_0"] = var
+        checkbox = Checkbutton(self.checkbox_frame, text="Model_0", variable=var, command=self.update_plot,
+                                bg=self.plotter_bg_color, fg='white', selectcolor="gray")
+        checkbox.pack(side=LEFT)
+        self.plot_checkboxes["Model_0"] = checkbox
+        
+        self.item_map = {'Model_0':{}}
+        self.relationships = {'Model_0':{}}
+        self.dependents = {'Model_0':{}}
 
-        # products need to be restored first due to possible dependency of transportation processes
-        # on products
-        item_id_history = {}
-        for rect_data in state["products"]:
-            item_id = rect_data["item_id"]
-            product = self.item_map[item_id]
-            new_item_id = self.restore_product(product, rect_data["coords"])
-            item_id_history[item_id] = new_item_id
+        for i in range(state["no_models"] - 1):
+            self.add_model()
 
-        for rect_data in state["processess"]:
-            item_id = rect_data["item_id"]
-            process = self.item_map[item_id]
-            if GUIInputManager.is_transport(process):
-                new_item_id = self.restore_transportation_process(process, rect_data["coords"])
-            else:
-                new_item_id = self.restore_process(process, rect_data["coords"])
-            item_id_history[item_id] = new_item_id
+        item_map = state["item_map"]
+        for model in self.models:
+            self.current_canvas = self.models[model]
+            # products need to be restored first due to possible dependency of transportation processes
+            # on products
+            item_id_history = {}
+            for rect_data in state["products"][model]:
+                item_id = rect_data["item_id"]
+                product = item_map[model][item_id]
+                new_item_id = self.restore_product(model, product, rect_data["coords"])
+                item_id_history[item_id] = new_item_id
 
-        for rect_data in state["parameter"]:
-            item_id = rect_data["item_id"]
-            param = self.item_map[item_id]
-            new_item_id = self.restore_parameter(param, rect_data["coords"])
-            item_id_history[item_id] = new_item_id
+            for rect_data in state["processess"][model]:
+                item_id = rect_data["item_id"]
+                process = item_map[model][item_id]
+                if GUIInputManager.is_transport(process):
+                    new_item_id = self.restore_transportation_process(model, process, rect_data["coords"])
+                else:
+                    new_item_id = self.restore_process(model, process, rect_data["coords"])
+                item_id_history[item_id] = new_item_id
 
-        self.restore_connections(item_id_history)
-        self.dependents, self.relationships = self.restore_relationships(item_id_history, state["dependents"], 
-                                                                        state["relationships"])    
+            for rect_data in state["parameter"][model]:
+                item_id = rect_data["item_id"]
+                param = item_map[model][item_id]
+                new_item_id = self.restore_parameter(model, param, rect_data["coords"])
+                item_id_history[item_id] = new_item_id
+
+            self.restore_connections(state["connectors"][model], item_id_history, model)
+            self.dependents[model], self.relationships[model] = self.restore_relationships(item_id_history, 
+                                                                                           state["dependents"][model], 
+                                                                                           state["relationships"][model]) 
+
+        self.connectors = state["connectors"]
+        
+   
 
     def clear_state(self):
 
-        self.canvas.delete("all")
+        for i in range(self.notebook.index("end") - 1, 0, -1):
+            self.notebook.forget(i)
+        self.current_canvas = self.models["Model_0"]
+        self.current_canvas.delete("all")
         if self.canvas_grid:
             self.draw_grid()
 
-        for item in self.sliders:
-            slider_data = self.sliders[item]
-            slider_data["widget"].destroy()
+        for model in self.sliders:
+            for item in self.sliders[model]:
+                slider_data = self.sliders[model][item]
+                slider_data["widget"].destroy()
 
-        self.connectors.clear()
-        self.sliders.clear()
-        self.item_map.clear()
+        for checkbox in self.plot_checkboxes:
+            if checkbox is not "Model_0":
+                self.plot_checkboxes[checkbox].destroy()
+
         self.clear_plot_data()
 
-        self.scale = 1.0
-        self.zoom_factor = 1.1
+        self.scale = {'Model_0':1.0}
+        self.zoom_factor = {'Model_0':1.1}
         self.pan_start = None
         self.default_slider_width = 10
         self.offset_x = 0
         self.offset_y = 0
 
-        self.draw_grid()
+        self.models = {"Model_0": self.models["Model_0"]}
+        self.connectors = {'Model_0':[]}
+        self.sliders = {'Model_0':{}}
+        self.slider_map = {'Model_0':{}}
+        self.label_map = {}
+        self.plot_models = {"Model_0": self.plot_models["Model_0"]}
+        self.plot_checkboxes = {"Model_0": self.plot_checkboxes["Model_0"]}
+
+        self.item_map = {'Model_0':{}}
+        self.relationships = {'Model_0':{}}
+        self.dependents = {'Model_0':{}}
 
         GUIInputManager.clear_project(self.project, database=False)
 
         self.update_plot()
 
         return self
+
+
+    

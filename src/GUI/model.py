@@ -1,11 +1,13 @@
-from tkinter import Frame, Canvas
+from GUI.GUI_inputManager import GUIInputManager
+
+from tkinter import Frame, Canvas, Checkbutton, BooleanVar
 from tkinter import LEFT, BOTH
 
 class Model:
 
     def add_model(self):
 
-        model_no =  len(self.models) + 1
+        model_no =  len(self.models)
         notebook = self.notebook
 
         model_new = Frame(notebook)
@@ -16,6 +18,27 @@ class Model:
 
         canvas_model = Canvas(model_new, bg=self.color_canvas, width=self.canvas_width, height=self.canvas_height)
         canvas_model.pack(side=LEFT, padx=0, pady=0, fill=BOTH)
+
         canvas_model.bind("<Configure>", self.on_canvas_configure)
+        self.create_canvas_bindings(canvas_model)
 
         self.models[model_name] = canvas_model
+        self.scale[model_name] = 1.0
+        self.zoom_factor[model_name] = 1.1
+        self.sliders[model_name] = {}
+        self.slider_map[model_name] = {}
+        self.item_map[model_name] = {}
+        self.relationships[model_name] = {}
+        self.dependents[model_name] = {}
+        self.connectors[model_name] = []
+
+        var = BooleanVar(value=True)
+        self.plot_models[model_name] = var
+        checkbox = Checkbutton(self.checkbox_frame, text=model_name, variable=var, command=self.update_plot,
+                                bg=self.plotter_bg_color, fg='white', selectcolor="gray")
+        checkbox.pack(side=LEFT)
+        self.plot_checkboxes[model_name] = checkbox
+
+        GUIInputManager.create_model(self.project, model_name)
+
+        self.update_plot()

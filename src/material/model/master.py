@@ -42,13 +42,13 @@ class Master:
         self.set_life_cycle_stage(stage)
         
         impact_obj = self.get_impacts()
-        parent_impacts_list = self.get_project().get_model().impacts[previous_stage]
+        parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage]
         for impact in parent_impacts_list:
             if impact == impact_obj:
                 parent_impacts_list.remove(impact_obj)
                 break
 
-        self.get_project().get_model().impacts[stage].append(impact_obj)
+        self.get_project().get_current_model().impacts[stage].append(impact_obj)
 
     def update_qty(self, qty:float):
         """ Update the qty of the item.
@@ -78,7 +78,7 @@ class Master:
 
         if self.database_item:
             unit_impacts = self.get_project().database.get_impact_data(self.database_item)
-            conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Units"])
+            conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Unit"])
 
             if conversion_factor is None:
                 raise ImportError

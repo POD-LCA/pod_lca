@@ -46,9 +46,9 @@ class Calculator():
         else:
             return True
         
-    def get_data_by_LCstage(self, impact_category):
+    def get_data_by_LCstage(self, impact_category, model_name='Model_0'):
 
-        impacts_dict = self.project.get_model().get_impacts()
+        impacts_dict = self.project.get_model(model_name).get_impacts()
 
         vals = {}
         for stage in impacts_dict.keys():
@@ -59,9 +59,9 @@ class Calculator():
 
         return vals  
 
-    def Barchart (self, impact_category):
+    def Barchart (self, impact_category, model_name='Model_0'):
 
-        project = self.project.get_model().get_project()
+        project = self.project.get_model(model_name).get_project()
         calcualtor = project.get_calculator()
         data_dict = calcualtor.get_data_by_LCstage(impact_category)
         plt_data = [data_dict["A1"], data_dict["A2"], data_dict["A3"]]

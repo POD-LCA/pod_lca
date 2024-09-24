@@ -17,8 +17,9 @@ class ItemContextMenu:
         if master.shift_pressed:
             master.highlight_dependents(event)
         else:
-            item = master.canvas.find_closest(event.x, event.y)[0]
-            if "item" in master.canvas.gettags(item):   
+            item = master.current_canvas.find_closest(event.x, event.y)[0]
+            if "item" in master.current_canvas.gettags(item):  
+                model_id = master.get_current_model() 
                 master.context_menu = Menu(master, tearoff=0)
                 master.context_menu.add_command(label="Set impacts", command=lambda: cls.set_impacts(master, item))
                 master.context_menu.add_command(label="View unit impacts", command=lambda: cls.view_impacts(master,item))
@@ -26,7 +27,7 @@ class ItemContextMenu:
                 master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
                 master.context_menu.add_command(label="Change units", command=lambda: cls.change_unit(master,item))
                 master.context_menu.add_command(label="Change life cycle stage", command=lambda: cls.update_life_cycle_stage(master,item))
-                if GUIInputManager.is_product(master.item_map[item]):
+                if GUIInputManager.is_product(master.item_map[model_id][item]):
                     master.context_menu.add_command(label="Set density", command=lambda: cls.set_product_density(master, item))            
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
@@ -42,7 +43,8 @@ class ItemContextMenu:
     @classmethod
     def set_impacts(cls, master, item):
 
-        cmd = lambda: GUIInputManager.set_impact_data(master, master.item_map[item], impact.get())
+        model_id = master.get_current_model()
+        cmd = lambda: GUIInputManager.set_impact_data(master, master.item_map[model_id][item], impact.get())
 
         popup = Popup(master, "Set Impacts", "300x200")
 
@@ -66,13 +68,16 @@ class ItemContextMenu:
 
         popup = Popup(master, "View Impacts", "300x200")
 
-        row = GUIInputManager.get_database_row(master.item_map[item])
+        model_id = master.get_current_model()
+        row = GUIInputManager.get_database_row(master.item_map[model_id][item])
 
         if row is not None:
             impact_data = GUIInputManager.get_impact_data(master.project, row)
-            data_list = row, impact_data["Global warming potential (kg CO2 eq)"], impact_data["Acidification potential (kg SO2 eq)"], impact_data["Eutrophication potential (kg N eq)"], impact_data["Ozone depletion potential (kg CFC-11 eq)"], impact_data["Smog potential (kg O3 eq)"]
+            data_list = [row]
+            for impact in master.impact_categories:
+                data_list.append(impact_data[impact]) 
         else:
-            data_list = "unasigned", 0.0, 0.0, 0.0, 0.0, 0.0
+            data_list = ["unasigned", 0.0, 0.0, 0.0, 0.0, 0.0]
 
         text_str = "{0} \n GWP : {1:.2f} kg CO2 eq \n Acidification potential : {2:.2f} kg SO2 eq \n Eutrophication potential : {3:.2f} kg N eq \n Ozone depletion potential : {4:.2f} kg CFC-11 eq\n Smog potential : {5:.2f} kg O3 eq".format(*data_list)        
         Popup._popup_label(popup, text_str, justify='left')
@@ -82,7 +87,8 @@ class ItemContextMenu:
     @classmethod
     def update_life_cycle_stage(cls, master, item_id):
         
-        item = master.item_map[item_id]
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
 
         popup = Popup(master, "Update life cycle stage", "300x200")
         life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])
@@ -95,7 +101,8 @@ class ItemContextMenu:
     @classmethod
     def edit_name(cls, master, item_id):
 
-        item = master.item_map[item_id]
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
 
         popup = Popup(master, "Edit name", "300x200")
         name = Popup._popup_input_field(popup, "Name: ", default_val=GUIInputManager.get_name(item)) 
@@ -108,18 +115,21 @@ class ItemContextMenu:
     @classmethod
     def _update_label(cls, master, item_id, cmd):
 
-        item = master.item_map[item_id]
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
         cmd()
 
         text_str = GUIInputManager.get_name(item) + '\n' + GUIInputManager.get_stage(item)
         text_item = master.label_map[item_id]
-        master.canvas.itemconfig(text_item, text=text_str)
+        master.current_canvas.itemconfig(text_item, text=text_str)
 
     @classmethod
     def change_unit(cls, master, item_id):
 
         popup = Popup(master, "Change units", "300x200")
-        item = master.item_map[item_id]
+
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
 
         unit_list = GUIInputManager.get_all_units_list(master.project)
         default_entry = unit_list.index(GUIInputManager.get_unit(item))
@@ -133,12 +143,13 @@ class ItemContextMenu:
     def set_product_density(cls, master, item_id):
 
         popup = Popup(master, "Set density", "300x250")
-
-        item = master.item_map[item_id]
+        
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
 
         weight_units = ["kg", "lb", "g", "t"]
         default_unit =  weight_units.index(GUIInputManager.get_weight_unit(item))
-        density =  Popup._popup_input_field(popup, "Weight per unit product: ", default_val=GUIInputManager.get_density(item))     
+        density =  Popup._popup_input_field(popup, "Weight per unit product: ", validate_num=True, default_val=GUIInputManager.get_density(item))     
         weight_unit =  Popup._popup_input_combo(popup, "Weight unit: ", weight_units, default_entry=default_unit) 
 
         cmd = lambda :GUIInputManager.set_density(master, item, density.get(), weight_unit.get()) 
@@ -147,27 +158,30 @@ class ItemContextMenu:
     @classmethod
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):
 
-        item = master.item_map[item_id]
+        model_id = master.get_current_model()
+
+        item = master.item_map[model_id][item_id]
         GUIInputManager.set_unit(item, new_unit)
 
         conversion_factor = GUIInputManager.unit_conversion(master.project, old_unit, new_unit)
         if conversion_factor is not None:
-            master.slider_map[item_id]
-            old_val = master.sliders[item_id]["widget"].get()
+            master.slider_map[model_id][item_id]
+            old_val = master.sliders[model_id][item_id]["widget"].get()
             new_val = old_val * conversion_factor
 
             GUIInputManager.update_qty(master, item, new_val)
 
-            master.sliders[item_id]["widget"].update_value(new_val)
+            master.sliders[model_id][item_id]["widget"].update_value(new_val)
 
-        master.slider_map[item_id].config(label= "Qty (in {})".format(new_unit))
+        master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(new_unit))
 
     @classmethod
     def set_slider_properties(cls, master, item):
                 
         popup = Popup(master, "Set slider properties", "300x200")
 
-        slider = master.slider_map[item]
+        model_id = master.get_current_model()
+        slider = master.slider_map[model_id][item]
         
         qty_min = Popup._popup_input_field(popup, "qty slider min: ", validate_num=True, default_val=slider.cget("from"))
         qty_max = Popup._popup_input_field(popup, "qty slider max: ", validate_num=True, default_val=slider.cget("to"))
@@ -181,18 +195,34 @@ class ItemContextMenu:
     @classmethod
     def delete_item(cls, master, item):
 
-        GUIInputManager.delete(master, master.item_map[item])
-        del master.item_map[item]
+        model_id = master.get_current_model()
 
-        master.sliders[item]["widget"].destroy()
-        del master.sliders[item]
+        GUIInputManager.delete(master, master.item_map[model_id][item])
+        del master.item_map[model_id][item]
+
+        master.sliders[model_id][item]["widget"].destroy()
+        del master.sliders[model_id][item]
         group_tag = f"group_{item}"
-        master.canvas.delete(group_tag)
+        master.current_canvas.delete(group_tag)
 
-        for connector in master.connectors[:]:
+        for connector in master.connectors[model_id][:]:
             if (connector["start_item"] == item) or (connector["end_item"] == item):
-                master.canvas.delete(connector["line"])
-                master.connectors.remove(connector)
+                master.current_canvas.delete(connector["line"])
+                master.connectors[model_id].remove(connector)
+
+        # cehck relationships and dependents
+        if item in master.relationships[model_id]:
+            del master.relationships[model_id][item]
+
+        del_keys = []
+        for dep in master.dependents[model_id]:
+            if item in master.dependents[model_id][dep]:
+                master.dependents[model_id][dep].remove(item)
+                if len(master.dependents[model_id][dep]) == 0:
+                    del_keys.append(dep)
+
+        for key in del_keys:
+            del master.dependents[model_id][key]
 
         gc.collect()
 
