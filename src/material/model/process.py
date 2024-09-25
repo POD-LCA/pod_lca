@@ -84,7 +84,8 @@ class transportationProcess(Process):
 
     def set_unit(self):
 
-        self.unit = self.get_transported_weight_unit() + self.get_transported_distance_unit()
+        if self.get_transported_distance_unit() is not None:
+            self.unit = self.get_transported_weight_unit() + self.get_transported_distance_unit()
     
     def set_transported_products(self, products):
 
