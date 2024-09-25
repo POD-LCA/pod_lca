@@ -17,6 +17,10 @@ class Calculator():
     
     def __setstate__(self, state):
         self.__dict__.update(state)
+
+    def get_project(self):
+
+        return self.project
     
     def convert_units(self, from_unit, to_unit, amount):
 
@@ -57,21 +61,35 @@ class Calculator():
             for impact in impact_lst:
                 vals[stage] += impact.get_impact(impact_category)
 
-        return vals  
+        return vals 
+    
 
-    def Barchart (self, impact_category, model_name='Model_0'):
+    def get_barchart_data(self, impact_category, model_name='Model_0'):
 
-        project = self.project.get_model(model_name).get_project()
+        project = self.get_project()
         calcualtor = project.get_calculator()
-        data_dict = calcualtor.get_data_by_LCstage(impact_category)
-        plt_data = [data_dict["A1"], data_dict["A2"], data_dict["A3"]]
-        data_dict= data_dict.keys()
+        data_dict = calcualtor.get_data_by_LCstage(impact_category, model_name)
+        
+        bar_x = data_dict.keys()
+        bar_height = [data_dict["A1"], data_dict["A2"], data_dict["A3"]]
+
+        return  bar_x, bar_height
+    
+    def Barchart(self, impact_category, model_name='Model_0'):
+
+        # project = self.get_project()
+        # calcualtor = project.get_calculator()
+        # data_dict = calcualtor.get_data_by_LCstage(impact_category, model_name)
+        # plt_data = [data_dict["A1"], data_dict["A2"], data_dict["A3"]]
+        # data_dict= data_dict.keys()
+
+        bar_x, bar_height = self.get_barchart_data(self, impact_category, model_name='Model_0')
 
         fig, ax = plt.subplots()
         bar_labels = ['A1', 'A2', 'A3']
         bar_colors = ['tab:red', 'tab:blue', 'tab:orange']
 
-        ax.bar(data_dict, plt_data, label=bar_labels, color=bar_colors)
+        ax.bar(bar_x, bar_height, label=bar_labels, color=bar_colors)
 
         ax.set_ylabel(f'{impact_category} Impact')
         ax.set_title('Life cycle stages')
@@ -83,7 +101,7 @@ class Calculator():
 
         labels = ['A1', 'A2', 'A3']
         title='Environmental Impacts by Stage'
-        project = self.project.get_model().get_project()
+        project = self.get_project()
         calcualtor = project.get_calculator()
 
         data=[]
