@@ -247,11 +247,12 @@ class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Tr
         self.plot_data = {"Model_0":{}}
         for impact in self.impact_categories.keys():
             self.plot_data["Model_0"][impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
-        self.ax = None
-        self.plot_impact_cat = dropdown.get()
-        fig = self.create_plot()
-
-        canvas_plot = FigureCanvasTkAgg(fig, master=plot_frame)
+        
+        # TODO: Add type of plot
+        # TODO: standard names for the plot types?
+        self.plot = self.create_plot(dropdown.get())
+        
+        canvas_plot = FigureCanvasTkAgg(self.plot.fig, master=plot_frame)
         canvas_plot.draw()
         canvas_plot.get_tk_widget().pack(side=RIGHT, padx=10, pady=10)
 

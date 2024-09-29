@@ -1,7 +1,7 @@
-from material.model.model import Model
+
 from material.calculator.calcualtor import Calculator
 from material.databaseManager.databaseManager import DatabaseManager
-from material.visualizer.plotter import Plotter
+from material.model.model import Model
 
 import pickle
 
@@ -15,8 +15,6 @@ __version__ = "0.1.0"
 class Project:
     """
     Project class which maintains the process models, impact database, and calculator.
-
-    ...
 
     Attributes
     ----------
@@ -36,9 +34,8 @@ class Project:
         self.name = name
         self.models = {'Model_0': Model(self, 'Model_0')}
         self.current_model = self.models['Model_0']
-        self.database = DatabaseManager(self)
+        self.database = DatabaseManager()
         self.calculator = Calculator(self)
-        self.visulizer = Plotter(self)
 
     def __reduce__(self):
         
@@ -51,7 +48,7 @@ class Project:
     def set_current_model(self, model_name):
         """ Set model as current model.
         
-        Parameters:
+        Parameters
         ----------
         model_name : str
             Name of the model to be set as the current model.
@@ -60,36 +57,60 @@ class Project:
         self.current_model = self.models[model_name]
     
     def get_current_model(self):
+        """ Get the current model.
+        
+        Retruns
+        -------
+        Model Obj.
+            Current working model.
+        """
 
         return self.current_model
     
     def get_model(self, model_name):
         """ Retrieve model.
         
-        Parameters:
+        Parameters
         ----------
         model_name : str
             Name of the model to be retrieved.
+
+        Raises
+        ------
+            KeyError : A model by such name does not exist in the current project.
         """
 
-        return self.models[model_name]
+        if model_name in self.models:
+            return self.models[model_name]
+        else:
+            raise KeyError(f"'{model_name}' does not exist in the current project.")
     
     def get_database(self):
+        """ Get the impacts database of the project.
+        
+        Retruns
+        -------
+        DatabaseManager Obj.
+            Impact database of the project.
+        """
 
         return self.database
     
     def get_calculator(self):
+        """ Get the calculator of the project.
+        
+        Retruns
+        -------
+        Calculator Obj.
+            Calculator of the project.
+        """
 
         return self.calculator
-    
-    def get_impact_categories(self):
-
-        return self.impact_categoreis
     
     def create_model(self, model_name):
         """ Create a model in the current project.
 
-        Parameters:
+        Parameters
         ----------
         model_name : str
             Name of the model to be created.        
@@ -102,7 +123,7 @@ class Project:
         """ Remove all existing models adn the impact database of the project.
             An empty model (Model_0) is created and set as the current model.
 
-        Parameters:
+        Parameters
         ----------
         model : bool
             True if all the models are to be cleared.    
@@ -120,12 +141,12 @@ class Project:
     def save(self, file_path):
         """ Save as a *.pkl file.
 
-        Parameters:
+        Parameters
         ----------
         file_path : str
             Location (including the name) where the data be saved.
         """
-
+        
         with open(file_path, "wb") as file:
             pickle.dump(self, file)
 
@@ -133,16 +154,28 @@ class Project:
     def load(file_path):
         """ Load a project from a pickled file.
 
-        Parameters:
+        Parameters
         ----------
         file_path : str
             Location (including the name) where the data be loaded from.
+
+        Raises
+        ------
+            FileNotFoundError : File not found.
+            PermissionError : Permission denied.
         """
 
-        with open(file_path, 'rb') as file:
-            project = pickle.load(file)
+        try:
+            with open(file_path, 'rb') as file:
+                project = pickle.load(file)
+            return project
+        except FileNotFoundError:
+            print("File not found.")
+        except PermissionError:
+            print("Permission denied.")
+        except Exception as e:
+            print("An error occurred:", e)
 
-        return project
 
 if __name__ == '__main__':
     pass

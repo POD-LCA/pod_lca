@@ -163,8 +163,6 @@ class SaveLoadMethods:
         checkbox.pack(side=LEFT)
         self.plot_checkboxes["Model_0"] = checkbox
 
-        self.clear_plot_data()
-
         self.scale = {'Model_0':1.0}
         self.zoom_factor = {'Model_0':1.1}
         self.pan_start = None

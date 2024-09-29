@@ -1,9 +1,8 @@
-from material.projectManager.inputManager import InputManager
 from material.projectManager.projectManager import Project
 from material.model.product import Product, Fuel, Waste
 from material.model.process import Process, transportationProcess
 
-class GUIInputManager(InputManager):
+class GUIInputManager():
 
     @staticmethod
     def create_project(name=None):
@@ -84,15 +83,12 @@ class GUIInputManager(InputManager):
                 item.get_transporter().set_travel_weight()
 
         visualizer.update_dependent_qtys(item, qty)
-
-        visualizer.set_plot_data()
         visualizer.update_plot()
 
     @staticmethod
     def update_life_cycle_stage(visualizer, item, stage):
 
         item.update_life_cycle_stage(stage)
-        visualizer.set_plot_data()
         visualizer.update_plot()
 
     def edit_name(visulizer, item, name):
@@ -107,8 +103,7 @@ class GUIInputManager(InputManager):
     @staticmethod
     def set_impact_data(visualizer, item, database_row):
 
-        item.set_database_row(database_row)
-        visualizer.set_plot_data()
+        item.set_impact_database_entry(database_row)
         visualizer.update_plot()
 
     @staticmethod
@@ -199,7 +194,6 @@ class GUIInputManager(InputManager):
     def delete(visualizer, obj):
 
         model = visualizer.project.get_current_model().delete_obj(obj)
-        visualizer.set_plot_data()
         visualizer.update_plot()
 
     # =================================
@@ -219,21 +213,17 @@ class GUIInputManager(InputManager):
     def update_transport_dist(visualizer, item, qty):
 
         item.set_transported_distance(qty)
-        visualizer.set_plot_data()
         visualizer.update_plot()  
 
     @staticmethod
     def set_transported_product(visualizer, item, product):
 
         product.set_transporter(item)
-        item.set_transported_products(product)
 
     @staticmethod
     def remove_transported_product(visualizer, item, product):
 
-        product.set_transporter(None)
-        item.remove_transported_product(product) # TODO: Check if this is done properly and the corresponding materials removed
-        visualizer.set_plot_data()
+        item.remove_transported_product(product)
         visualizer.update_plot()  
 
 
@@ -241,7 +231,6 @@ class GUIInputManager(InputManager):
     def set_travel_weight(visualizer, item):  
 
         item.set_travel_weight()
-        visualizer.set_plot_data()
         visualizer.update_plot()
 
     @staticmethod
@@ -260,7 +249,6 @@ class GUIInputManager(InputManager):
         obj.set_density(density)
         obj.set_weight_unit(weight_unit)
 
-        visualizer.set_plot_data()
         visualizer.update_plot()
 
     @staticmethod

@@ -26,7 +26,7 @@ def generate_docs(package_dir, package_name="", ignore=[]):
         if package_path:
             subprocess.run(["python", "-m", "pydoc", "-w", package_path], shell=True, cwd=working_directory)
             shutil.move(f"{working_directory}\\{package_path}.html", 
-                        f"{package_dir}\\Documentation\\{package_path}.html")
+                        f"{package_dir}\\Documentation\\Pydoc\\{package_path}.html")
 
         for file in files:
             if file in ignore:
@@ -36,7 +36,7 @@ def generate_docs(package_dir, package_name="", ignore=[]):
                 full_module_name = f"{package_path}.{module_name}" if package_path else module_name
                 subprocess.run(["python", "-m", "pydoc", "-w", full_module_name], shell=True, cwd=working_directory)
                 shutil.move(f"{working_directory}\\{package_path}.{module_name}.html", 
-                            f"{package_dir}\\Documentation\\\\{package_path}.{module_name}.html")
+                            f"{package_dir}\\Documentation\\Pydoc\\{package_path}.{module_name}.html")
 
 if __name__ == '__main__':
     from material import HOME

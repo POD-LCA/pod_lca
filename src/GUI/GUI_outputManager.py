@@ -1,6 +1,6 @@
-from material.projectManager.outputManager import OutputManager
 
-class GUIOutputManager(OutputManager):
+
+class GUIOutputManager():
 
     @staticmethod
     def get_output_data(project, impact_categories, model):

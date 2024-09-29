@@ -1,21 +1,48 @@
+
 from material.model.process import Process, transportationProcess
-from material.model.product import Product, Emission, Fuel, Waste
+from material.model.product import Emission, Fuel, Product, Waste
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "Univrsity of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
 
 class Model:
+    """
+    Model object is the canvas to which the processes and prodcuts are added. 
+    The corresponding calculations are based on models.
+
+    Attributes
+    ----------
+    project : Project Obj.
+        Project on which the calculator operates.
+    name : str
+        Name of the model.
+    processes : list of Process Obj.
+        Processes in the model.
+    products : list of Product Obj.
+        Products in the model.
+    impacts : dict
+        Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+
+    """
 
     def __init__(self, project, name='default'):
         self.project = project
         self.name = name
-        self.processes = [] # maybe dicts
+        self.processes = []
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}
         
     def __reduce__(self):
-        
+    
         return (self.__class__, (None,), {"project": self.project, "processes":self.processes, 
                                          "products": self.products, "impacts": self.impacts})
     
     def __setstate__(self, state):
+
         self.__dict__.update(state)
     
     def create_process(self, name, stage):
@@ -23,17 +50,18 @@ class Model:
             Then, append the process object and the corresponding impact objects to its properties.
             Impact objects are kept in a dictionary based on the life cycle stage.
 
-        Parameters:
-        ----------
-        name : str.
-            Name of the process.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+            Parameters
+            ----------
+            name : str.
+                Name of the process.
+            stage : str.
+                Life cycle stage.
 
-        Returns:
-        -------
-        Process Obj.
-            Process object created.
+            Returns
+            -------
+            Process Obj.
+                Process object created.
+
         """
 
         n = len(self.processes)
@@ -49,17 +77,18 @@ class Model:
             Then, append the process object and the corresponding impact objects to its properties.
             Impact objects are kept in a dictionary based on the life cycle stage.
 
-        Parameters:
-        ----------
-        name : str.
-            Name of the process.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+            Parameters
+            ----------
+            name : str.
+                Name of the process.
+            stage : str.
+                Life cycle stage.
 
-        Returns:
-        -------
-        Process Obj.
-            Process object created.
+            Returns
+            -------
+            Process Obj.
+                Process object created.
+
         """
 
         n = len(self.processes)
@@ -75,17 +104,18 @@ class Model:
             Then, append the product object and the corresponding impact objects to its properties.
             Impact objects are kept in a dictionary based on the life cycle stage.
 
-        Parameters:
-        ----------
-        name : str.
-            Name of the product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+            Parameters
+            ----------
+            name : str.
+                Name of the product.
+            stage : str.
+                Life cycle stage.
 
-        Returns:
-        -------
-        Product Obj.
-            Product object created.
+            Returns
+            -------
+            Product Obj.
+                Product object created.
+
         """
 
         n = len(self.products)
@@ -101,17 +131,18 @@ class Model:
             Then, append the product object and the corresponding impact objects to its properties.
             Impact objects are kept in a dictionary based on the life cycle stage.
 
-        Parameters:
-        ----------
-        name : str.
-            Name of the product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+            Parameters
+            ----------
+            name : str.
+                Name of the product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
 
-        Returns:
-        -------
-        Product Obj.
-            Energy product object created.
+            Returns
+            -------
+            Product Obj.
+                Energy product object created.
+
         """
 
         n = len(self.products)
@@ -127,17 +158,18 @@ class Model:
             Then, append the product object and the corresponding impact objects to its properties.
             Impact objects are kept in a dictionary based on the life cycle stage.
 
-        Parameters:
-        ----------
-        name : str.
-            Name of the emission product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+            Parameters
+            ----------
+            name : str.
+                Name of the emission product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
 
-        Returns:
-        -------
-        Product Obj.
-            Emission object created.
+            Returns
+            -------
+            Product Obj.
+                Emission object created.
+
         """
 
         n = len(self.products)
@@ -153,17 +185,18 @@ class Model:
             Then, append the product object and the corresponding impact objects to its properties.
             Impact objects are kept in a dictionary based on the life cycle stage.
 
-        Parameters:
-        ----------
-        name : str.
-            Name of the waste product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+            Parameters
+            ----------
+            name : str.
+                Name of the waste product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
 
-        Returns:
-        -------
-        Product Obj.
-            Waste object created.
+            Returns
+            -------
+            Product Obj.
+                Waste object created.
+
         """
 
         n = len(self.products)
@@ -175,23 +208,59 @@ class Model:
         return waste
     
     def get_processes(self):
+        """ Retrieve all the processes in the model.
+
+            Returns
+            -------
+            list of Process Obj.
+                All processes in the model.
+
+        """
 
         return self.processes
     
     def get_products(self):
+        """ Retrieve all the products in the model.
+
+            Returns
+            -------
+            list of Product Obj.
+                All products in the model.
+        """
 
         return self.products
     
     def get_impacts(self):
-        
+        """ Retrieve all the impacts in the model categorized by life cycle stage.
+
+            Returns
+            -------
+            dict.
+                Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+        """
+
         return self.impacts
     
     def get_project(self):
+        """ Retrieve the project to which the model belong.
+
+            Returns
+            -------
+            Project Obj.
+                Project to which the model belong.
+
+        """
 
         return self.project
     
     def delete_obj(self, obj):
-        """ Removes products or processes, along with the impact objects.
+        """ Removes products or processes, along with the impact objects, from the model.
+
+            Parameters
+            ----------
+            obj : Master Obj.
+                Product or process to be removed from the model.
+
         """
 
         impact = obj.get_impacts()
@@ -211,3 +280,6 @@ class Model:
             if impact in impacts[stage]:
                 self.get_impacts()[stage].remove(impact)
                 break
+
+if __name__ == '__main__':
+    pass

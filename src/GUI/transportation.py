@@ -60,8 +60,10 @@ class Transportation(Item):
     @classmethod
     def change_unit(cls, master, item_id):
 
+        model_id = master.get_current_model()
+
         popup = Popup(master, "Change units", "300x200")
-        item = master.item_map[item_id]
+        item = master.item_map[model_id][item_id]
 
         unit_list = GUIInputManager.get_all_units_list(master.project)
         default_entry = unit_list.index(GUIInputManager.get_travel_unit(item))
