@@ -224,59 +224,83 @@ class Menubar:
 
     def import_database(self, menubar):
 
-        popup = Popup(menubar, "Import database from CSV", "800x250")
-        file_path =  Popup._popup_input_field(popup, "File name: ", width=100) 
+        popup = Popup(menubar, "Import database from CSV", "925x315")
+        file_path =  Popup._popup_input_field(popup, "File name: ", width=130)
+        file_flags = {} 
     
         browse_button  = Button(popup, text ="Select File", command=lambda: menubar._file_open_dialog(menubar, file_path, popup))
         browse_button.pack(padx=250, pady=0)
 
-        label = Label(popup, text="Input file column headings:")
+        label = Label(popup, text="Input file data structure:")
         label.pack(anchor=W, pady=10, padx=10)
         
-        label_frame = Frame(popup)
-        label_frame.pack(pady=10)
-
         width = 12
+
+        col_entry_frame = Frame(popup)
+        col_entry_frame.pack(pady=10)
+
+        label = Label(col_entry_frame, text="Headers:", width=width)
+        label.pack(side=LEFT, padx=11)
+
         n = len(self.impact_categories) + 2
-        alphabet = string.ascii_uppercase[:n]
-        for i, letter in enumerate(alphabet):
-            label = Label(label_frame, text=letter, borderwidth=1, relief="solid", width=width)
-            label.pack(side=LEFT, padx=11)
-
-        combo_frame = Frame(popup)
-        combo_frame.pack(pady=0)
-
-        impacts = ['Flow', 'Unit'] + list(self.impact_categories.keys())
-        combos = []
+        headers = ['Flow', 'Unit'] + list(self.impact_categories.keys())
+        header_list = []
         for i in range(n):
-            combobox = Combobox(combo_frame, values=impacts, width=width)
-            combobox.pack(side=LEFT, padx=5)
-            combobox.current(i)
-            combos.append(combobox)
+            data = Entry(col_entry_frame, relief="solid", width=width + 2, justify='center')
+            data.insert(0, headers[i])
+            data.pack(side=LEFT, padx=11)
+            header_list.append(data)
+
+        impact_label_frame = Frame(popup)
+        impact_label_frame.pack(pady=0)
+
+        label = Label(impact_label_frame, text="Category:", width=width)
+        label.pack(side=LEFT, padx=11)
+
+        for i in range(n):
+            impact_label = Label(impact_label_frame, text=headers[i], relief="solid", borderwidth=1, width=width)
+            impact_label.pack(side=LEFT, padx=11)
 
         unit_label_frame = Frame(popup)
         unit_label_frame.pack(pady=10)
 
-        # impact_units = ['', ''] + list(self.impact_categories.values())
-        # for i in range(n):
-        #     label = Label(unit_label_frame, text=impact_units[i], relief="solid", width=width)
-        #     label.pack(side=LEFT, padx=11)
+        label = Label(unit_label_frame, text="Unit:", width=width)
+        label.pack(side=LEFT, padx=11)
 
-        cmd = lambda: self._import_data(file_path.get(), combos)
+        impact_units = ['', ''] + list(self.impact_categories.values())
+        for i in range(n):
+            label = Label(unit_label_frame, text=impact_units[i], relief="solid", borderwidth=1,width=width)
+            label.pack(side=LEFT, padx=11)
+
+        col_multipier_frame = Frame(popup)
+        col_multipier_frame.pack(pady=5)
+
+        label = Label(col_multipier_frame, text="Multiplier:", width=width)
+        label.pack(side=LEFT, padx=11)
+
+        vcmd = (col_multipier_frame.register(Popup._validate_input_num), '%P')
+        multiplier_list = []
+        for i in range(n):
+            if i < 2:
+                label = Label(col_multipier_frame, text='', relief="solid", borderwidth=1,width=width)
+                label.pack(side=LEFT, padx=11)
+            else:
+                data = Entry(col_multipier_frame, validate='key', validatecommand=vcmd, relief="solid", width=width + 2, justify='center')
+                data.insert(0, 1.0)
+                data.pack(side=LEFT, padx=11)
+                multiplier_list.append(data)
+
+        cmd = lambda: self._import_data(file_path.get(), header_list, multiplier_list, file_flags)
         Popup.button_pack_OKCancelApply(popup, popup, cmd)
 
-    def _import_data(self, file_path, combos):
+    def _import_data(self, file_path, header_list, multiplier_list, file_flags):
 
-        selected_cols = [combobox.get() for combobox in combos]
-        impacts_cols = ['Flow', 'Unit'] + list(self.impact_categories.keys())
-        
-        if len(set(selected_cols)) < len(impacts_cols):
-            raise NotImplementedError
-        
-        index_mapping = {item: index for index, item in enumerate(impacts_cols)}
-        order = [index_mapping[item] for item in selected_cols]
-        
-        GUIInputManager.import_data_from_CSV(file_path, self.project, order)
+        if file_path not in file_flags:
+            headers = [entry.get() for entry in header_list]
+            multipliers = [float(entry.get()) for entry in multiplier_list]
+            
+            GUIInputManager.import_data_from_CSV(file_path, self.project, headers, multipliers)
+            file_flags[file_path] = True
 
     def add_custom_item(self, menubar):
 
@@ -296,7 +320,7 @@ class Menubar:
 
     def _add_database_entry(self, flow, unit, impacts):
 
-        impact_vals = [impact.get() for impact in impacts]
+        impact_vals = [float(impact.get()) for impact in impacts]
         impact_dict = {key: value for key, value in zip(self.impact_categories.keys(), impact_vals)}
 
         GUIInputManager.set_custom_entry(self.project, flow, unit, impact_dict)

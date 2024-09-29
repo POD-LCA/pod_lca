@@ -29,27 +29,29 @@ class Transportation(Item):
         height = 100
         width = 100
 
-        process = GUIInputManager.create_transport_process(self.project.model, name, self.project, units, float(qty), stage)
+        model_id = self.get_current_model()
+
+        process = GUIInputManager.create_transport_process(name, self.project, units, float(qty), stage)
         slider_cmd = lambda x: GUIInputManager.update_transport_dist(self, process, x)
 
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
         
-        item_id, text_item, text_id = Transportation.create_canvas_item(self, name, stage, start, height, width, self.color_transport, tags=["process", "transportation"])
-        slider, slider_data = Transportation.create_slider(self, start, height, width, qty, units, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Transportation.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_transport, tags=["process", "transportation"])
+        slider, slider_data = Transportation.create_slider(self, model_id, start, height, width, qty, units, item_id, slider_cmd, slider_min, slider_max, resolution)
         Transportation.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(process, item_id)
-        self.item_map[item_id] = process
+        self.item_map[model_id][item_id] = process
 
         popup.destroy()
 
-    def restore_transportation_process(self, process, cords):
+    def restore_transportation_process(self, model, process, cords):
 
         slider_cmd = lambda x: GUIInputManager.update_transport_dist(self, process, x)
         
-        return Transportation.restore_item(self, process, cords, self.color_transport, ["process","transportation"], slider_cmd)
+        return Transportation.restore_item(self, model, process, cords, self.color_transport, ["process","transportation"], slider_cmd)
 
     # =================================
     # Context Menu (Overides)
@@ -58,8 +60,10 @@ class Transportation(Item):
     @classmethod
     def change_unit(cls, master, item_id):
 
+        model_id = master.get_current_model()
+
         popup = Popup(master, "Change units", "300x200")
-        item = master.item_map[item_id]
+        item = master.item_map[model_id][item_id]
 
         unit_list = GUIInputManager.get_all_units_list(master.project)
         default_entry = unit_list.index(GUIInputManager.get_travel_unit(item))

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module material.model.process</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="material.html" class="white">material</a>.<a href="material.model.html" class="white">model</a>.process</strong> (version 0.1.0)</td>
+<td class="extra"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Ckiun%5Cpod_lca%5Csrc%5Cmaterial%5Cmodel%5Cprocess.py">c:\users\kiun\pod_lca\src\material\model\process.py</a></td></tr></table>
+    <p></p>
+<p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="material.model.master.html#Master">material.model.master.Master</a>(<a href="builtins.html#object">builtins.object</a>)
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="material.model.process.html#Process">Process</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="material.model.process.html#transportationProcess">transportationProcess</a>
+</dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="Process">class <strong>Process</strong></a>(<a href="material.model.master.html#Master">material.model.master.Master</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#Process">Process</a>(id,&nbsp;name,&nbsp;model,&nbsp;stage)<br>
+&nbsp;<br>
+<a href="#Process">Process</a>&nbsp;object,&nbsp;inheriting&nbsp;from&nbsp;the&nbsp;<a href="material.model.master.html#Master">Master</a>&nbsp;object,&nbsp;represent&nbsp;a&nbsp;process.<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="material.model.process.html#Process">Process</a></dd>
+<dd><a href="material.model.master.html#Master">material.model.master.Master</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Process-__init__"><strong>__init__</strong></a>(self, id, name, model, stage)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="material.model.master.html#Master">material.model.master.Master</a>:<br>
+<dl><dt><a name="Process-__reduce__"><strong>__reduce__</strong></a>(self)</dt><dd><span class="code">Helper&nbsp;for&nbsp;pickle.</span></dd></dl>
+
+<dl><dt><a name="Process-__setstate__"><strong>__setstate__</strong></a>(self, state)</dt></dl>
+
+<dl><dt><a name="Process-get_calculator"><strong>get_calculator</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;corresponding&nbsp;calculator.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Calculator&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Corresponding&nbsp;calculator.</span></dd></dl>
+
+<dl><dt><a name="Process-get_database_row"><strong>get_database_row</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;impact&nbsp;database&nbsp;row&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Flow&nbsp;name&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;database&nbsp;entry&nbsp;which&nbsp;gives&nbsp;the&nbsp;unit&nbsp;impact&nbsp;of&nbsp;the&nbsp;product.</span></dd></dl>
+
+<dl><dt><a name="Process-get_id"><strong>get_id</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;identification&nbsp;number&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Identification&nbsp;number&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-get_impacts"><strong>get_impacts</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;impacts&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Impacts&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Impacts&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-get_life_cycle_stage"><strong>get_life_cycle_stage</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Corresponding&nbsp;life&nbsp;cycle&nbsp;stage.</span></dd></dl>
+
+<dl><dt><a name="Process-get_model"><strong>get_model</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;model&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Model&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-get_name"><strong>get_name</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-get_project"><strong>get_project</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;corresponding&nbsp;project.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Project&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Corresponding&nbsp;project.</span></dd></dl>
+
+<dl><dt><a name="Process-get_qty"><strong>get_qty</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;quantity&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Quantity&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-get_unit"><strong>get_unit</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-overide_id"><strong>overide_id</strong></a>(self, new_id: int)</dt><dd><span class="code">Replace&nbsp;the&nbsp;product/process&nbsp;id&nbsp;by&nbsp;new&nbsp;number.<br>
+&nbsp;<br>
+Parameter<br>
+--------<br>
+new_id&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;New&nbsp;identification&nbsp;number.</span></dd></dl>
+
+<dl><dt><a name="Process-set_impact_database_entry"><strong>set_impact_database_entry</strong></a>(self, database_item: str)</dt><dd><span class="code">Sets&nbsp;the&nbsp;database&nbsp;(impacts)&nbsp;entry&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;item.<br>
+This&nbsp;method&nbsp;will&nbsp;also&nbsp;update&nbsp;the&nbsp;corresponding&nbsp;impact&nbsp;quanitities.<br>
+&nbsp;<br>
+Parameters:<br>
+----------<br>
+database_item&nbsp;:&nbsp;str.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;database&nbsp;item&nbsp;which&nbsp;gives&nbsp;the&nbsp;item&nbsp;impacts.</span></dd></dl>
+
+<dl><dt><a name="Process-set_impacts_qtys"><strong>set_impacts_qtys</strong></a>(self)</dt><dd><span class="code">Sets&nbsp;impacts&nbsp;quantities,&nbsp;based&nbsp;on&nbsp;database&nbsp;item&nbsp;asigned&nbsp;to&nbsp;the&nbsp;product/process&nbsp;<br>
+and&nbsp;the&nbsp;product/process&nbsp;quantity.<br>
+If&nbsp;no&nbsp;database&nbsp;entry&nbsp;is&nbsp;asigned,&nbsp;impacts&nbsp;are&nbsp;not&nbsp;updated.<br>
+&nbsp;<br>
+Raises<br>
+------<br>
+ImportError&nbsp;:&nbsp;Incompatible&nbsp;units&nbsp;of&nbsp;<a href="material.model.master.html#Master">Master</a>&nbsp;object&nbsp;and&nbsp;database&nbsp;entry.</span></dd></dl>
+
+<dl><dt><a name="Process-set_life_cycle_stage"><strong>set_life_cycle_stage</strong></a>(self, stage)</dt><dd><span class="code">Set&nbsp;life&nbsp;cycle&nbsp;stage&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Notes<br>
+-----<br>
+This&nbsp;method&nbsp;will&nbsp;just&nbsp;change&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage,&nbsp;without&nbsp;any&nbsp;knock-on&nbsp;effects.<br>
+To&nbsp;have&nbsp;the&nbsp;relevant&nbsp;knock&nbsp;on&nbsp;effects,&nbsp;use&nbsp;'update_life_cycle_stage'&nbsp;method</span></dd></dl>
+
+<dl><dt><a name="Process-set_name"><strong>set_name</strong></a>(self, name)</dt><dd><span class="code">Set&nbsp;name&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="Process-set_unit"><strong>set_unit</strong></a>(self, unit)</dt><dd><span class="code">Set&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;for&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+unit&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement.</span></dd></dl>
+
+<dl><dt><a name="Process-update_life_cycle_stage"><strong>update_life_cycle_stage</strong></a>(self, stage: str)</dt><dd><span class="code">Update&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage&nbsp;of&nbsp;the&nbsp;item.<br>
+This&nbsp;will&nbsp;also&nbsp;move&nbsp;the&nbsp;corresponding&nbsp;Impacts&nbsp;object&nbsp;to&nbsp;the&nbsp;relvant&nbsp;dictionary&nbsp;in&nbsp;the&nbsp;Model&nbsp;object.<br>
+&nbsp;<br>
+Parameters:<br>
+----------<br>
+stage&nbsp;:&nbsp;str.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Life&nbsp;cycle&nbsp;stage.</span></dd></dl>
+
+<dl><dt><a name="Process-update_qty"><strong>update_qty</strong></a>(self, qty: float)</dt><dd><span class="code">Update&nbsp;the&nbsp;qty&nbsp;of&nbsp;the&nbsp;item.<br>
+This&nbsp;will&nbsp;also&nbsp;re-calculate&nbsp;the&nbsp;corresponding&nbsp;impact&nbsp;quantities.<br>
+&nbsp;<br>
+Parameters:<br>
+----------<br>
+qty&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Production&nbsp;quantity.</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="material.model.master.html#Master">material.model.master.Master</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table> <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="transportationProcess">class <strong>transportationProcess</strong></a>(<a href="material.model.process.html#Process">Process</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#transportationProcess">transportationProcess</a>(id,&nbsp;name,&nbsp;model,&nbsp;stage)<br>
+&nbsp;<br>
+Transportation&nbsp;<a href="#Process">Process</a>&nbsp;object,&nbsp;inheriting&nbsp;from&nbsp;the&nbsp;<a href="#Process">Process</a>&nbsp;object,&nbsp;represent&nbsp;a&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Attributes<br>
+----------<br>
+transported_distance&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Distance&nbsp;traveled&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+transported_weight&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Mass&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+transported_distance_unit&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;distance&nbsp;travelled.<br>
+transported_weight_unit&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;transported&nbsp;mass.<br>
+transported_products&nbsp;:&nbsp;list&nbsp;of&nbsp;Product&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Products&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="material.model.process.html#transportationProcess">transportationProcess</a></dd>
+<dd><a href="material.model.process.html#Process">Process</a></dd>
+<dd><a href="material.model.master.html#Master">material.model.master.Master</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="transportationProcess-__init__"><strong>__init__</strong></a>(self, id, name, model, stage)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-__reduce__"><strong>__reduce__</strong></a>(self)</dt><dd><span class="code">Helper&nbsp;for&nbsp;pickle.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_transported_distance"><strong>get_transported_distance</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;distance&nbsp;travelled&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Distance&nbsp;traveled&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_transported_distance_unit"><strong>get_transported_distance_unit</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;travel&nbsp;distance&nbsp;of&nbsp;the&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;distance&nbsp;travelled.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_transported_products"><strong>get_transported_products</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;all&nbsp;products&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+list&nbsp;of&nbsp;Product&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;transported&nbsp;products.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_transported_weight"><strong>get_transported_weight</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;mass&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Weight&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_transported_weight_unit"><strong>get_transported_weight_unit</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;transported&nbsp;mass&nbsp;of&nbsp;the&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;transported&nbsp;mass.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-remove_transported_product"><strong>remove_transported_product</strong></a>(self, item)</dt><dd><span class="code">Remove&nbsp;a&nbsp;product&nbsp;from&nbsp;the&nbsp;transportation&nbsp;process.<br>
+This&nbsp;will&nbsp;remove&nbsp;the&nbsp;transporter&nbsp;from&nbsp;the&nbsp;product&nbsp;as&nbsp;well.<br>
+Transported&nbsp;mass&nbsp;of&nbsp;the&nbsp;transportation&nbsp;process&nbsp;is&nbsp;also&nbsp;updated.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+item&nbsp;:&nbsp;Product&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Product&nbsp;to&nbsp;be&nbsp;removed&nbsp;from&nbsp;the&nbsp;transportation&nbsp;process.<br>
+&nbsp;<br>
+Raises<br>
+------<br>
+Key&nbsp;Error&nbsp;:&nbsp;Product&nbsp;is&nbsp;not&nbsp;part&nbsp;of&nbsp;the&nbsp;transportation&nbsp;process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_transported_distance"><strong>set_transported_distance</strong></a>(self, qty)</dt><dd><span class="code">Update&nbsp;the&nbsp;distance&nbsp;travelled&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+This&nbsp;will&nbsp;update&nbsp;the&nbsp;process&nbsp;quantity&nbsp;of&nbsp;transportation&nbsp;(in&nbsp;mass&nbsp;x&nbsp;distance).<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+qty&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Distance&nbsp;traveled&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_transported_distance_unit"><strong>set_transported_distance_unit</strong></a>(self, unit)</dt><dd><span class="code">Set&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;for&nbsp;travel&nbsp;distance&nbsp;of&nbsp;the&nbsp;transportation&nbsp;process.<br>
+This&nbsp;will&nbsp;also&nbsp;update&nbsp;the&nbsp;process&nbsp;quantity&nbsp;of&nbsp;transportation&nbsp;(in&nbsp;mass&nbsp;x&nbsp;distance).<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+unit&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_transported_product"><strong>set_transported_product</strong></a>(self, product)</dt><dd><span class="code">Set&nbsp;prodcuts&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+If&nbsp;there&nbsp;are&nbsp;no&nbsp;products&nbsp;currently&nbsp;tranported&nbsp;in&nbsp;this&nbsp;process,&nbsp;the&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;mass<br>
+of&nbsp;the&nbsp;transportation&nbsp;process&nbsp;will&nbsp;be&nbsp;set&nbsp;to&nbsp;that&nbsp;of&nbsp;the&nbsp;product&nbsp;added.<br>
+If&nbsp;not&nbsp;already&nbsp;added,&nbsp;will&nbsp;set&nbsp;the&nbsp;transportation&nbsp;process&nbsp;to&nbsp;the&nbsp;product&nbsp;as&nbsp;its&nbsp;transporter.<br>
+&nbsp;<br>
+Note<br>
+----<br>
+This&nbsp;method&nbsp;is&nbsp;equivalent&nbsp;to&nbsp;calling&nbsp;'set_transporter'&nbsp;from&nbsp;the&nbsp;Product&nbsp;Object.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+product&nbsp;:&nbsp;Product&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Product&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_transported_products"><strong>set_transported_products</strong></a>(self, products)</dt><dd><span class="code">Set&nbsp;prodcuts&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+Will&nbsp;add&nbsp;each&nbsp;product&nbsp;in&nbsp;turn&nbsp;calling&nbsp;'set_transported_product'.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+products&nbsp;:&nbsp;list&nbsp;of&nbsp;Product&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Products&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_transported_weight_unit"><strong>set_transported_weight_unit</strong></a>(self, unit)</dt><dd><span class="code">Set&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;for&nbsp;mass&nbsp;transported.<br>
+This&nbsp;will&nbsp;also&nbsp;update&nbsp;the&nbsp;process&nbsp;quantity&nbsp;of&nbsp;transportation&nbsp;(in&nbsp;mass&nbsp;x&nbsp;distance).<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+unit&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_travel_weight"><strong>set_travel_weight</strong></a>(self)</dt><dd><span class="code">Update&nbsp;the&nbsp;mass&nbsp;transported&nbsp;in&nbsp;the&nbsp;transportation&nbsp;process.<br>
+This&nbsp;wil&nbsp;obtain&nbsp;the&nbsp;mass&nbsp;from&nbsp;corresponding&nbsp;products&nbsp;transported.<br>
+The&nbsp;units&nbsp;of&nbsp;mass&nbsp;need&nbsp;not&nbsp;be&nbsp;consistent&nbsp;as&nbsp;the&nbsp;method&nbsp;converts&nbsp;units.<br>
+This&nbsp;will&nbsp;also&nbsp;update&nbsp;the&nbsp;process&nbsp;quantity&nbsp;of&nbsp;transportation&nbsp;(in&nbsp;mass&nbsp;x&nbsp;distance).</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_unit"><strong>set_unit</strong></a>(self)</dt><dd><span class="code">Set&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;for&nbsp;the&nbsp;transportation&nbsp;process.<br>
+The&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;has&nbsp;dimensions&nbsp;of&nbsp;mass&nbsp;x&nbsp;distance.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="material.model.master.html#Master">material.model.master.Master</a>:<br>
+<dl><dt><a name="transportationProcess-__setstate__"><strong>__setstate__</strong></a>(self, state)</dt></dl>
+
+<dl><dt><a name="transportationProcess-get_calculator"><strong>get_calculator</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;corresponding&nbsp;calculator.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Calculator&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Corresponding&nbsp;calculator.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_database_row"><strong>get_database_row</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;impact&nbsp;database&nbsp;row&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Flow&nbsp;name&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;database&nbsp;entry&nbsp;which&nbsp;gives&nbsp;the&nbsp;unit&nbsp;impact&nbsp;of&nbsp;the&nbsp;product.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_id"><strong>get_id</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;identification&nbsp;number&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Identification&nbsp;number&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_impacts"><strong>get_impacts</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;impacts&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Impacts&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Impacts&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_life_cycle_stage"><strong>get_life_cycle_stage</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Corresponding&nbsp;life&nbsp;cycle&nbsp;stage.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_model"><strong>get_model</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;model&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Model&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Model&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_name"><strong>get_name</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_project"><strong>get_project</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;corresponding&nbsp;project.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Project&nbsp;Obj.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Corresponding&nbsp;project.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_qty"><strong>get_qty</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;quantity&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Quantity&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-get_unit"><strong>get_unit</strong></a>(self)</dt><dd><span class="code">Retrieve&nbsp;the&nbsp;unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Unit&nbsp;of&nbsp;measurement&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-overide_id"><strong>overide_id</strong></a>(self, new_id: int)</dt><dd><span class="code">Replace&nbsp;the&nbsp;product/process&nbsp;id&nbsp;by&nbsp;new&nbsp;number.<br>
+&nbsp;<br>
+Parameter<br>
+--------<br>
+new_id&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;New&nbsp;identification&nbsp;number.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_impact_database_entry"><strong>set_impact_database_entry</strong></a>(self, database_item: str)</dt><dd><span class="code">Sets&nbsp;the&nbsp;database&nbsp;(impacts)&nbsp;entry&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;item.<br>
+This&nbsp;method&nbsp;will&nbsp;also&nbsp;update&nbsp;the&nbsp;corresponding&nbsp;impact&nbsp;quanitities.<br>
+&nbsp;<br>
+Parameters:<br>
+----------<br>
+database_item&nbsp;:&nbsp;str.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;database&nbsp;item&nbsp;which&nbsp;gives&nbsp;the&nbsp;item&nbsp;impacts.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_impacts_qtys"><strong>set_impacts_qtys</strong></a>(self)</dt><dd><span class="code">Sets&nbsp;impacts&nbsp;quantities,&nbsp;based&nbsp;on&nbsp;database&nbsp;item&nbsp;asigned&nbsp;to&nbsp;the&nbsp;product/process&nbsp;<br>
+and&nbsp;the&nbsp;product/process&nbsp;quantity.<br>
+If&nbsp;no&nbsp;database&nbsp;entry&nbsp;is&nbsp;asigned,&nbsp;impacts&nbsp;are&nbsp;not&nbsp;updated.<br>
+&nbsp;<br>
+Raises<br>
+------<br>
+ImportError&nbsp;:&nbsp;Incompatible&nbsp;units&nbsp;of&nbsp;<a href="material.model.master.html#Master">Master</a>&nbsp;object&nbsp;and&nbsp;database&nbsp;entry.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_life_cycle_stage"><strong>set_life_cycle_stage</strong></a>(self, stage)</dt><dd><span class="code">Set&nbsp;life&nbsp;cycle&nbsp;stage&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Notes<br>
+-----<br>
+This&nbsp;method&nbsp;will&nbsp;just&nbsp;change&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage,&nbsp;without&nbsp;any&nbsp;knock-on&nbsp;effects.<br>
+To&nbsp;have&nbsp;the&nbsp;relevant&nbsp;knock&nbsp;on&nbsp;effects,&nbsp;use&nbsp;'update_life_cycle_stage'&nbsp;method</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-set_name"><strong>set_name</strong></a>(self, name)</dt><dd><span class="code">Set&nbsp;name&nbsp;of&nbsp;the&nbsp;product/process.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+name&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;of&nbsp;the&nbsp;product/process.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-update_life_cycle_stage"><strong>update_life_cycle_stage</strong></a>(self, stage: str)</dt><dd><span class="code">Update&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage&nbsp;of&nbsp;the&nbsp;item.<br>
+This&nbsp;will&nbsp;also&nbsp;move&nbsp;the&nbsp;corresponding&nbsp;Impacts&nbsp;object&nbsp;to&nbsp;the&nbsp;relvant&nbsp;dictionary&nbsp;in&nbsp;the&nbsp;Model&nbsp;object.<br>
+&nbsp;<br>
+Parameters:<br>
+----------<br>
+stage&nbsp;:&nbsp;str.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Life&nbsp;cycle&nbsp;stage.</span></dd></dl>
+
+<dl><dt><a name="transportationProcess-update_qty"><strong>update_qty</strong></a>(self, qty: float)</dt><dd><span class="code">Update&nbsp;the&nbsp;qty&nbsp;of&nbsp;the&nbsp;item.<br>
+This&nbsp;will&nbsp;also&nbsp;re-calculate&nbsp;the&nbsp;corresponding&nbsp;impact&nbsp;quantities.<br>
+&nbsp;<br>
+Parameters:<br>
+----------<br>
+qty&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Production&nbsp;quantity.</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="material.model.master.html#Master">material.model.master.Master</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>__copyright__</strong> = 'Univrsity of Washington'<br>
+<strong>__email__</strong> = 'kiun@uw.edu'<br>
+<strong>__license__</strong> = 'MIT License'</td></tr></table><p>
+<table class="section">
+<tr class="decor author-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Author</strong></td></tr>
+    
+<tr><td class="decor author-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">['POD/LCA&nbsp;Team']</td></tr></table>
+</body></html>
