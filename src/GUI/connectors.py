@@ -87,7 +87,6 @@ class Connectors:
 
                         if connects_to_transport:
                             GUIInputManager.set_transported_product(self, self.item_map[model_id][end_item], self.item_map[model_id][start_item])
-                            self.set_plot_data()
                             self.update_plot() 
 
                         if from_parameter:
