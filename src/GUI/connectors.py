@@ -153,7 +153,7 @@ class Connectors:
 
         for connector in self.connectors[model_id]:
             smooth = True if self.connector_type == 'spline' else False
-            connector["line"] = self.current_canvas.create_line(0, 0, 0, 0, fill="black", width=2, smooth=smooth, tag="connector")
+            connector["line"] = self.current_canvas.create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
             self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
 
 

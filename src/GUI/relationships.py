@@ -42,12 +42,16 @@ class Relationships:
         if not cyclicDependence:
             self.relationships[model_name][item] = relationship
             for master_disp in masters:
-                master_item = self.disp_num_item[model_name][int(master_disp)]
-                if int(master_item) not in self.dependents[model_name]:
-                    self.dependents[model_name][int(master_item)] = [item]
+                master_item_id = self.disp_num_item[model_name][int(master_disp)]
+                if int(master_item_id) not in self.dependents[model_name]:
+                    self.dependents[model_name][int(master_item_id)] = [item]
                 else:
-                    if not item in self.dependents[model_name][int(master_item)]:
-                        self.dependents[model_name][int(master_item)].append(item)
+                    if not item in self.dependents[model_name][int(master_item_id)]:
+                        self.dependents[model_name][int(master_item_id)].append(item)
+
+                master_item = self.item_map[model_name][master_item_id]
+                self.update_dependent_qtys(master_item, GUIInputManager.get_qty(master_item), is_param=False)
+
 
     def update_dependent_qtys(self, item, qty, is_param=False):
 
