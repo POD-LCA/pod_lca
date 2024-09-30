@@ -37,7 +37,7 @@ class WasteProduct(Product):
         resolution = (slider_max - slider_min) / 100
 
         item_id, text_item, text_id = WasteProduct.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_waste, tags=["product", "waste"])
-        slider, slider_data = WasteProduct.create_slider(self, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        slider, slider_data = WasteProduct.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         WasteProduct.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(product, item_id)
