@@ -57,8 +57,8 @@ class Master:
     def overide_id(self, new_id:int):
         """ Replace the product/process id by new number.
         
-            Parameter
-            --------
+            Parameters
+            ----------
             new_id : float
                 New identification number.
         """
@@ -69,7 +69,7 @@ class Master:
         """ Update the life cycle stage of the item.
             This will also move the corresponding Impacts object to the relvant dictionary in the Model object.
             
-            Parameters:
+            Parameters
             ----------
             stage : str.
                 Life cycle stage.
@@ -91,7 +91,7 @@ class Master:
         """ Update the qty of the item.
             This will also re-calculate the corresponding impact quantities.
             
-            Parameters:
+            Parameters
             ----------
             qty : float
                 Production quantity.
@@ -132,7 +132,7 @@ class Master:
         """ Sets the database (impacts) entry corresponding to the item.
             This method will also update the corresponding impact quanitities.
         
-            Parameters:
+            Parameters
             ----------
             database_item : str.
                 The name of the database item which gives the item impacts.

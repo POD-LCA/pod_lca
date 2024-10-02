@@ -7,6 +7,9 @@ from material.visualizer.bar_chart import BarChart
 project = Project()
 project.get_database().import_data_from_CSV(HOME + '\databaseManager\impact_data_new.csv')
 
+project.get_database().set_custom_entry("Electricity_New", "kWh", 
+                                        {"GWP":0.503, "acid_pot":0.0036, "eutro_pot":5.83e-05, "ozone":7.6e-11, "smog":3.37e-2})
+
 sprinkles = project.current_model.create_product("Sprinkles", "A1")
 sprinkles.update_qty(2.0)
 sprinkles.set_unit('kg')
@@ -56,7 +59,7 @@ propane_by_truck.set_impact_database_entry("Transportation by truck")
 electricity = project.current_model.create_energy("Electricity for Mixing", "A3")
 electricity.update_qty(3.0)
 electricity.set_unit('kWh')
-electricity.set_impact_database_entry("Electricity")
+electricity.set_impact_database_entry("Electricity_New")
 
 propane_transported = project.current_model.create_energy("Propane for Mixing", "A3")
 propane_transported.update_qty(1.0)

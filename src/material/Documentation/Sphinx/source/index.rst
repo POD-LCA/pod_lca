@@ -7,16 +7,18 @@ Welcome to POD|LCA Materials Tool's documentation!
 ==================================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
 
    project
-   model
    database
+   model
+   products
+   processess
+   impacts
    calculator
-   .. visualizer
-   .. example
-   
+   visualizer
+   example
+
 
 Indices and tables
 ==================
