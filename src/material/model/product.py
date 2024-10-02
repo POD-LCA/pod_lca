@@ -49,7 +49,7 @@ class Product(Master):
         """ Update the qty of the product.
             This will also re-calculate the corresponding impact quantities.
             
-            Parameters:
+            Parameters
             ----------
             qty : float
                 Product quantity.

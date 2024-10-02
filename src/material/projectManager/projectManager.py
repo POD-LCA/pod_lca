@@ -1,5 +1,5 @@
 
-from material.calculator.calcualtor import Calculator
+from material.calculator.calculator import Calculator
 from material.databaseManager.databaseManager import DatabaseManager
 from material.model.model import Model
 

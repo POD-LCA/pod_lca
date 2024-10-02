@@ -161,3 +161,7 @@ class DatabaseManager:
         tmp_data['Unit'] = unit
 
         self.data.loc[len(self.data)] = tmp_data
+
+
+if __name__ == '__main__':
+    pass
