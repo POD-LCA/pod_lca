@@ -30,7 +30,7 @@ class DatabaseManager:
 
     def __reduce__(self):
         
-        return (self.__class__, (None,), {"project": self.project, "data": self.data, 
+        return (self.__class__, (None,), {"data": self.data, 
                                          "impact_categories": self.impact_categories})
     
     def __setstate__(self, state):
