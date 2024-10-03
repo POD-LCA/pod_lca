@@ -2,7 +2,7 @@ from GUI.GUI_inputManager import GUIInputManager
 
 from tkinter import LAST
 
-class Connectors:
+class ConnectorsMixin:
 
     # =================================
     # Connectors
