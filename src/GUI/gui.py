@@ -1,16 +1,16 @@
 from GUI.GUI_inputManager import GUIInputManager
-from GUI.menubar import Menubar
-from GUI.plots import Plots
+from GUI.menubar import MenubarMixin
+from GUI.plots import PlotsMixin
 from GUI.process import Process
-from GUI.model import Model
+from GUI.model import ModelMixin
 from GUI.energy import EnergyProduct
 from GUI.emission import EmissionProduct
 from GUI.waste import WasteProduct
-from GUI.connectors import Connectors
-from GUI.transportation import Transportation
 from GUI.parameter import Parameter
-from GUI.relationships import Relationships
-from GUI.canvas_opps import CanvasOperations
+from GUI.connectors import ConnectorsMixin
+from GUI.transportation import Transportation
+from GUI.relationships import RelationshipsMixin
+from GUI.canvas_opps import CanvasOperationsMixin
 from GUI.save_load import SaveLoadMethods
 
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar
@@ -19,8 +19,8 @@ from tkinter.ttk import Combobox, Style, Notebook
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
-class ProcessVisualizer(Tk, CanvasOperations, Menubar, Plots, Model, Process, Transportation, EnergyProduct, EmissionProduct,
-                        WasteProduct, Parameter, Connectors, Relationships, SaveLoadMethods):
+class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Process, Transportation, EnergyProduct, EmissionProduct,
+                        WasteProduct, Parameter, ConnectorsMixin, RelationshipsMixin, SaveLoadMethods):
     def __init__(self):
         super().__init__()
         Style().theme_use('vista')

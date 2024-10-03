@@ -3,7 +3,7 @@ from GUI.GUI_inputManager import GUIInputManager
 from tkinter import Frame, Canvas, Checkbutton, BooleanVar
 from tkinter import LEFT, BOTH
 
-class Model:
+class ModelMixin:
 
     def add_model(self, add_to_project=True):
 

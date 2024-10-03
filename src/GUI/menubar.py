@@ -4,11 +4,10 @@ from GUI.popup import Popup
 
 import os
 import sys
-import string
 from tkinter import Button, Menu, filedialog, END, LEFT, W, Frame, Label, Entry
 from tkinter.ttk import Notebook, Combobox
 
-class Menubar:
+class MenubarMixin:
     
     # =================================
     # FILE MENU
@@ -43,7 +42,7 @@ class Menubar:
         if self.save_path is None:
             self._saveFile()
         else:
-            self.save_state(self.save_path)
+            self.save_file(self.save_path)
 
     def _saveFile(self):
 
@@ -80,7 +79,7 @@ class Menubar:
         ok_button = Button(button_frame, text="Yes", command=lambda: self._save_and_then(cmd))
         ok_button.pack(side=LEFT, padx=10)
 
-        import_button = Button(button_frame, text="No", command=lambda: Menubar._notsave_and_then(cmd, popup))
+        import_button = Button(button_frame, text="No", command=lambda: MenubarMixin._notsave_and_then(cmd, popup))
         import_button.pack(side=LEFT, padx=10)
 
         close_button = Button(button_frame, text="Cancel", command=popup.destroy)
@@ -89,7 +88,7 @@ class Menubar:
 
     def _save_and_then(self, cmd):
 
-        Menubar._quicksaveFile(self)
+        MenubarMixin._quicksaveFile(self)
         cmd()
 
     @staticmethod

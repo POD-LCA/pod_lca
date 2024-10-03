@@ -4,7 +4,7 @@ from GUI.GUI_inputManager import GUIInputManager
 import re
 from tkinter import DISABLED, ACTIVE
 
-class Relationships:
+class RelationshipsMixin:
 
     def set_relationship(self, item, slider):
 

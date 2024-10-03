@@ -133,12 +133,13 @@ class SaveLoadMethods:
             self.restore_connections(state["connectors"][model], item_id_history, model)
             self.dependents[model], self.relationships[model] = self.restore_relationships(item_id_history, 
                                                                                            state["dependents"][model], 
-                                                                                           state["relationships"][model]) 
-
+                                                                                           state["relationships"][model])
+            
         self.connectors = state["connectors"]
+
+        self.plot.calculator.project = self.project
         
    
-
     def clear_state(self):
 
         for i in range(self.notebook.index("end") - 1, 0, -1):
