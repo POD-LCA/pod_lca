@@ -33,10 +33,6 @@ class EcoinventDatabase(LCIDatabase):
     # Printers
     # =================================
 
-    def print_process(self):
-
-        pass
-
     def print_flow(self):
 
         pass
@@ -180,7 +176,6 @@ class EcoinventDatabase(LCIDatabase):
                 exchange = Exchange()
                 
                 exchange.name = item["flow"]["name"]
-                exchange.qty = item["amount"]
                 exchange.unit = item["flow"]["refUnit"]
                 exchange.flow_id = item["flow"]["@id"]
 
@@ -190,15 +185,24 @@ class EcoinventDatabase(LCIDatabase):
 
                 if item["isInput"]:
                     if exchange.is_product_flow:
-                        exchange.unit_process_id = item["defaultProvider"]["@id"]
+                        unit_process_id = item["defaultProvider"]["@id"]
                         location = item["defaultProvider"]["location"] if isinstance(item["defaultProvider"]["location"], str) else item["defaultProvider"]["location"]["name"]
-                        exchange.location = location
+                    else:
+                        unit_process_id = None
+                        location = None
+                    qty = -1 * item["amount"]
                 else:
                     if exchange.is_product_flow:
-                        exchange.unit_process_id = unit_process.unit_process_id
-                    location = unit_process.location
-                    exchange.qty *= -1
+                        unit_process_id = unit_process.unit_process_id
+                        location = unit_process.location
+                    else:
+                        unit_process_id = None
+                        location = None                        
+                    qty = item["amount"]
 
+                exchange.unit_process_id = unit_process_id
+                exchange.qty = qty
+                exchange.location = location
                 exchange_key = item["internalId"]
                 unit_process.exchanges[exchange_key] = exchange
 
