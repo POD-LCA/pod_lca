@@ -43,7 +43,7 @@ class Menubar:
         if self.save_path is None:
             self._saveFile()
         else:
-            self.save_state(self.save_path)
+            self.save_file(self.save_path)
 
     def _saveFile(self):
 

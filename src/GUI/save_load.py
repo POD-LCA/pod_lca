@@ -137,7 +137,8 @@ class SaveLoadMethods:
 
         self.connectors = state["connectors"]
         
-   
+        self.plot.calculator.project = self.project
+
 
     def clear_state(self):
 

@@ -39,7 +39,7 @@ class Project:
 
     def __reduce__(self):
         
-        return (self.__class__, (self.name,), {"model":self.current_model, "database": self.database,
+        return (self.__class__, (self.name,), {"current_model":self.current_model, "database": self.database,
                                                "models":self.models})
     
     def __setstate__(self, state):
