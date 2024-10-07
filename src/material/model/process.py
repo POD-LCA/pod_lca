@@ -45,7 +45,7 @@ class transportationProcess(Process):
 
     def __reduce__(self):
         
-        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, "year":self.year, 
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model,  
                                                                                      "impacts": self.impacts, 
                                                                                      "database_item": self.database_item, 
                                                                                      "qty": self.qty, "unit":self.unit,
