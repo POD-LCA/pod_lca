@@ -135,7 +135,7 @@ class Product(Master):
 
         self.transporter = transporter
         if self not in transporter.get_transported_products():
-            transporter.set_transported_products(self)  
+            transporter.set_transported_product(self)  
            
     def get_weight(self):
         """ Retrieve the mass of the product.

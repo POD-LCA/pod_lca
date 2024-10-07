@@ -15,7 +15,7 @@ class EnergyProduct(Product):
         popup = Popup(self, "Create energy product", "300x250")
         
         name =  Popup._popup_input_field(popup, "Energy product name: ", default_val="new Energy Product")     
-        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])   
+        life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"], default_entry=2)   
         qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
         units = Popup._popup_input_combo(popup, "units: ", ["kJ", "MJ", "kWh", "MWh"])
 
