@@ -1,6 +1,6 @@
 from GUI.GUI_inputManager import GUIInputManager
 
-class CanvasOperations:
+class CanvasOperationsMixin:
 
     def get_current_model(self):
 

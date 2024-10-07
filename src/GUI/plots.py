@@ -1,6 +1,6 @@
 from material.visualizer.bar_chart import BarChart
 
-class Plots:
+class PlotsMixin:
 
     def create_plot(self, impact_cat, plot_type='Bar_chart'):
         
