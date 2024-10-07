@@ -30,7 +30,7 @@ class DatabaseManager:
 
     def __reduce__(self):
         
-        return (self.__class__, (), {"data": self.data, 
+        return (self.__class__, (), {"project": self.project, "data": self.data, 
                                          "impact_categories": self.impact_categories})
     
     def __setstate__(self, state):
@@ -161,3 +161,7 @@ class DatabaseManager:
         tmp_data['Unit'] = unit
 
         self.data.loc[len(self.data)] = tmp_data
+
+
+if __name__ == '__main__':
+    pass

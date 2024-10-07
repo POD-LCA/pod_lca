@@ -5,7 +5,7 @@ from tkinter import Menu
 
 import gc
 
-class ItemContextMenu:
+class ItemContextMenuMixin:
 
     # =================================
     # Item Context Menu

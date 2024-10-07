@@ -1,5 +1,5 @@
 
-from material.calculator.calcualtor import Calculator
+from material.calculator.calculator import Calculator
 from material.databaseManager.databaseManager import DatabaseManager
 from material.model.model import Model
 
@@ -45,7 +45,7 @@ class Project:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
-    def set_current_model(self, model_name):
+    def set_current_model(self, model_name:(str)):
         """ Set model as current model.
         
         Parameters
@@ -67,7 +67,7 @@ class Project:
 
         return self.current_model
     
-    def get_model(self, model_name):
+    def get_model(self, model_name:(str)):
         """ Retrieve model.
         
         Parameters
@@ -107,7 +107,7 @@ class Project:
 
         return self.calculator
     
-    def create_model(self, model_name):
+    def create_model(self, model_name:(str)):
         """ Create a model in the current project.
 
         Parameters
@@ -118,6 +118,8 @@ class Project:
 
         model = Model(self, model_name)
         self.models[model_name] = model
+
+        return model
     
     def clear_project(self, model=True, database=True):
         """ Remove all existing models adn the impact database of the project.
@@ -138,7 +140,7 @@ class Project:
         if database:
             self.database = DatabaseManager(self)
 
-    def save(self, file_path):
+    def save(self, file_path:(str)):
         """ Save as a *.pkl file.
 
         Parameters
@@ -151,7 +153,7 @@ class Project:
             pickle.dump(self, file)
 
     @staticmethod
-    def load(file_path):
+    def load(file_path:(str)):
         """ Load a project from a pickled file.
 
         Parameters

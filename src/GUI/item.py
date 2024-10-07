@@ -1,10 +1,10 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.slider import Slider
-from GUI.item_context_menu import ItemContextMenu
+from GUI.item_context_menu import ItemContextMenuMixin
 
 from tkinter import DISABLED
 
-class Item(ItemContextMenu):
+class Item(ItemContextMenuMixin):
 
     # =================================
     # Canvas Item Methods
