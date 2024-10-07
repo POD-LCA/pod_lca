@@ -239,7 +239,7 @@ class Calculator():
 
         project = self.get_project()
         calcualtor = project.get_calculator()
-        data_dict = calcualtor.get_data_by_LCstage(impact_category, model_name)
+        data_dict = calcualtor.get_data_by_LCstage(impact_category, model_name)[0]
         plt_data = [data_dict["A1"], data_dict["A2"], data_dict["A3"]]
         data_dict= data_dict.keys()
 
@@ -265,7 +265,7 @@ class Calculator():
         data=[]
         for i in impact_category:
 
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)
+            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)[0]
             globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
             data.append(globals()['plt_data_' + i])
 
@@ -284,14 +284,14 @@ class Calculator():
         ax.legend()
         plt.show()
     
-    def barchart_by_parts (self,impact_category):
+    def barchart_by_parts (self,impact_category, model_name='Model_0'):
 
         data_name=[]
         data_qty=[]
         data_len=[]
 
-        project = self.project.get_model().get_project()
-        model = project.get_model()
+        project = self.project.get_model(model_name).get_project()
+        model = project.get_model(model_name)
 
         for i in model.get_impacts():
             data_len.append(len(model.get_impacts()[i]))

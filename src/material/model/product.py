@@ -39,7 +39,7 @@ class Product(Master):
         self.is_energy = False
 
     def __reduce__(self):
-        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "year":self.year, "impacts": self.impacts,
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "impacts": self.impacts,
                                                                                     "database_item": self.database_item, 
                                                                                     "qty": self.qty, "weight": self.weight, "transporter": self.transporter,
                                                                                     "density": self.density, "unit":self.unit, 
