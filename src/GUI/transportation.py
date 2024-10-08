@@ -13,17 +13,18 @@ class Transportation(Item):
 
     def open_popup_transport_process(self):
 
-        popup = Popup(self, "Create transportation process", "300x200")
+        popup = Popup(self, "Create transportation process", "300x225")
         
         name =  Popup._popup_input_field(popup, "Transportation by: ", default_val="vehicle")    
+        lca_data = Popup._popup_input_combo(popup, "LCA data: ", [None] + GUIInputManager.get_database_data(self.project)['Flow'].tolist())
         life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"], default_entry=1, default_state=DISABLED)
         travel_dist = Popup._popup_input_field(popup, "travel distance: ", validate_num=True, default_val=0.0)
         units = Popup._popup_input_combo(popup, "units: ", ["km", "mi"])  
 
-        cmd = lambda: self.create_transport_process(popup, name.get(), travel_dist.get(), units.get(), life_cycle_stage.get())
+        cmd = lambda: self.create_transport_process(popup, name.get(), travel_dist.get(), units.get(), life_cycle_stage.get(), lca_data.get())
         Popup.button_pack_OKCancel(popup, popup, cmd)
         
-    def create_transport_process(self, popup, name, qty, units, stage):
+    def create_transport_process(self, popup, name, qty, units, stage, lca_data):
         
         start = [50, 50]
         height = 100
@@ -31,7 +32,7 @@ class Transportation(Item):
 
         model_id = self.get_current_model()
 
-        process = GUIInputManager.create_transport_process(name, self.project, units, float(qty), stage)
+        process = GUIInputManager.create_transport_process(name, self.project, units, float(qty), stage, lca_data)
         slider_cmd = lambda x: GUIInputManager.update_transport_dist(self, process, x)
 
         slider_min = 0.0

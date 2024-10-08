@@ -21,7 +21,7 @@ class ItemContextMenuMixin:
             if "item" in master.current_canvas.gettags(item):  
                 model_id = master.get_current_model() 
                 master.context_menu = Menu(master, tearoff=0)
-                master.context_menu.add_command(label="Set impacts", command=lambda: cls.set_impacts(master, item))
+                master.context_menu.add_command(label="Edit LCA data", command=lambda: cls.set_impacts(master, item))
                 master.context_menu.add_command(label="View unit impacts", command=lambda: cls.view_impacts(master,item))
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
