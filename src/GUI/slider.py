@@ -17,6 +17,13 @@ class Slider(Scale):
             new_max = power(10,ceil(log10(value)))
             self.config(to=new_max)
 
+        res = self.cget("resolution")
+        decimal_point_at = str(value)[::-1].find('.')
+        if decimal_point_at > 1:
+            if res > 1 / power(10, decimal_point_at):
+                new_res = 1 / power(10, decimal_point_at)
+                self.config(resolution=new_res)
+
         self.set(value)
 
     def get_value(self):
