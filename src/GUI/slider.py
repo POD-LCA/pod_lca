@@ -1,3 +1,6 @@
+
+from numpy import power, ceil, log10
+
 from tkinter import Scale
 from tkinter import HORIZONTAL
 
@@ -8,6 +11,12 @@ class Slider(Scale):
         self.rect = None
 
     def update_value(self, value):
+
+        max = self.cget("to")
+        if float(value) > max:
+            new_max = power(10,ceil(log10(value)))
+            self.config(to=new_max)
+
         self.set(value)
 
     def get_value(self):
