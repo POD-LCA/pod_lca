@@ -44,7 +44,7 @@ class DatabaseManager:
         data : pandas DataFrame Obj.
             Impact data, with following headings.
                 'Flow' (str) : name of impact
-                'Unit' (str) : impacts per this unit of measure
+                'Declared Unit' (str) : impacts per this unit of measure
                 impact catergory (float) : quantity of impact
         """
 
