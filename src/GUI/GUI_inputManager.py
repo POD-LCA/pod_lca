@@ -237,7 +237,12 @@ class GUIInputManager():
     def get_travel_distance(item):
 
         return item.get_transported_distance()
-    
+
+    @staticmethod
+    def set_travel_unit(obj, new_unit):
+
+        obj.set_transported_distance_unit(new_unit)
+
     @staticmethod
     def get_travel_unit(obj):
 

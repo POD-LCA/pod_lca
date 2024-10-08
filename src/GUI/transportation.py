@@ -69,24 +69,26 @@ class Transportation(Item):
         default_entry = unit_list.index(GUIInputManager.get_travel_unit(item))
         unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
 
-        cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
+        cmd = lambda: cls._update_slider_label(master, model_id, item_id, unit.get(), unit_list[default_entry])
 
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
-    def _update_slider_label(cls, master, item_id, new_unit, old_unit):
+    def _update_slider_label(cls, master, model_id, item_id, new_unit, old_unit):
 
-        item = master.item_map[item_id]
-        GUIInputManager.set_unit(item, new_unit)
+        item = master.item_map[model_id][item_id]
+        GUIInputManager.set_travel_unit(item, new_unit)
 
         conversion_factor = GUIInputManager.unit_conversion(master.project, old_unit, new_unit)
         if conversion_factor is not None:
-            master.slider_map[item_id]
-            old_val = master.sliders[item_id]["widget"].get()
+            master.slider_map[model_id][item_id]
+            old_val = master.sliders[model_id][item_id]["widget"].get()
             new_val = old_val * conversion_factor
 
             GUIInputManager.update_transport_dist(master, item, new_val)
 
-            master.sliders[item_id]["widget"].update_value(new_val)
+            master.sliders[model_id][item_id]["widget"].update_value(new_val)
 
-        master.slider_map[item_id].config(label= "Qty (in {})".format(new_unit))
+            master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(new_unit))
+        else:
+            raise TypeError
