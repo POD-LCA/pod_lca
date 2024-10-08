@@ -80,7 +80,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.dependents = {'Model_0':{}}
 
         # back-end
-        self.impact_categories = {'GWP':'kg CO2 eq', 'AP':'kg SO2 eq', 'EP':'kg N eq', 'ODP':'kg CFC-11 eq', 'SFP':'kg O3 eq'}
+        self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone':'kg CFC-11 eq', 'smog':'kg O3 eq'}
         self.project = GUIInputManager.create_project()
         GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))     
         
