@@ -136,10 +136,10 @@ class SaveLoadMethods:
                                                                                            state["relationships"][model])
             
         self.connectors = state["connectors"]
-
-        self.plot.calculator.project = self.project
         
-   
+        self.plot.calculator.project = self.project
+
+
     def clear_state(self):
 
         for i in range(self.notebook.index("end") - 1, 0, -1):
