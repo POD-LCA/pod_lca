@@ -30,8 +30,8 @@ class DatabaseManager:
 
     def __reduce__(self):
         
-        return (self.__class__, (), {"project": self.project, "data": self.data, 
-                                         "impact_categories": self.impact_categories})
+        return (self.__class__, (), {"data": self.data, 
+                                     "impact_categories": self.impact_categories})
     
     def __setstate__(self, state):
         self.__dict__.update(state)
@@ -44,7 +44,7 @@ class DatabaseManager:
         data : pandas DataFrame Obj.
             Impact data, with following headings.
                 'Flow' (str) : name of impact
-                'Unit' (str) : impacts per this unit of measure
+                'Declared Unit' (str) : impacts per this unit of measure
                 impact catergory (float) : quantity of impact
         """
 

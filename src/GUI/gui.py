@@ -1,3 +1,4 @@
+from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.menubar import MenubarMixin
 from GUI.plots import PlotsMixin
@@ -26,6 +27,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         Style().theme_use('vista')
         self.title("POD|LCA Material Explorer")
         self.geometry("1500x800")
+        self.database_file_path = HOME + '\Impact Database\impact_data.csv'
         self.save_path = None
 
         # canvas properties
@@ -80,8 +82,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         # back-end
         self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone':'kg CFC-11 eq', 'smog':'kg O3 eq'}
         self.project = GUIInputManager.create_project()
-        GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))
-        self.database_file_path = ''      
+        GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))     
         
         # GUI
         # self.create_window()
@@ -93,6 +94,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
         self.create_bindings()
         self.set_protocols()
+        GUIInputManager.import_data_from_CSV(self.database_file_path, self.project)
         
     # =================================
     # GUI COMPONENTS
@@ -224,7 +226,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         input_frame = Frame(plot_frame)
         input_frame.pack(side=TOP, pady=10, padx=10)
         
-        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environemnt Impact", font = ('Helvetica', 12,'bold'))
+        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environmental impact category", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
         
         dropdown = Combobox(input_frame, values=list(self.impact_categories.keys()))
