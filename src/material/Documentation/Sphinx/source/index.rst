@@ -18,6 +18,7 @@ Welcome to POD|LCA Materials Tool's documentation!
    calculator
    visualizer
    example
+   developer
 
 
 Indices and tables
