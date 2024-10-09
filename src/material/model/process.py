@@ -33,6 +33,8 @@ class transportationProcess(Process):
         Unit of measurement of the transported mass.
     transported_products : list of Product Obj.
         Products transported in the transportation process.
+    inputs : list of Master Obj.
+        Input products and processes.
     """
 
     def __init__(self, id, name, model, stage):
@@ -42,10 +44,11 @@ class transportationProcess(Process):
         self.transported_distance_unit = None
         self.transported_weight_unit = 'kg'  # default unit
         self.transported_products = []
+        self.inputs = []
 
     def __reduce__(self):
         
-        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, "year":self.year, 
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, 
                                                                                      "impacts": self.impacts, 
                                                                                      "database_item": self.database_item, 
                                                                                      "qty": self.qty, "unit":self.unit,
@@ -53,7 +56,8 @@ class transportationProcess(Process):
                                                                                      "transported_weight": self.transported_weight,
                                                                                      "transported_products": self.transported_products,
                                                                                      "transported_distance_unit": self.transported_distance_unit,
-                                                                                     "transported_weight_unit": self.transported_weight_unit})
+                                                                                     "transported_weight_unit": self.transported_weight_unit,
+                                                                                     "inputs": self.inputs})
     
     def get_transported_distance(self):
         """ Retrieve the distance travelled in the transportation process.
