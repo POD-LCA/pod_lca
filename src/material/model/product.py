@@ -35,8 +35,7 @@ class Product(Master):
         self.weight_unit = 'kg'
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
-        self.is_material = False
-        self.is_energy = False
+        self.is_material = True
 
     def __reduce__(self):
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "impacts": self.impacts,
