@@ -12,11 +12,25 @@ class Process(Master):
     """
     Process object, inheriting from the Master object, represent a process.
 
+    Attributes
+    ----------
+    inputs : list of Master Obj.
+        Input products and processes.
     """
 
     def __init__(self, id, name, model, stage):
         super().__init__(id, name, model, stage)
+        self.inputs = []
     
+    def __reduce__(self):
+        
+        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, 
+                                                                                     "impacts": self.impacts, 
+                                                                                     "database_item": self.database_item, 
+                                                                                     "qty": self.qty, "unit":self.unit,
+                                                                                     "inputs": self.inputs})
+
+
 class transportationProcess(Process):
     """
     Transportation Process object, inheriting from the Process object, represent a transportation process.
@@ -33,8 +47,7 @@ class transportationProcess(Process):
         Unit of measurement of the transported mass.
     transported_products : list of Product Obj.
         Products transported in the transportation process.
-    inputs : list of Master Obj.
-        Input products and processes.
+
     """
 
     def __init__(self, id, name, model, stage):
@@ -44,7 +57,6 @@ class transportationProcess(Process):
         self.transported_distance_unit = None
         self.transported_weight_unit = 'kg'  # default unit
         self.transported_products = []
-        self.inputs = []
 
     def __reduce__(self):
         
