@@ -42,8 +42,10 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.outline_color = 'black'
         self.connector_color = '#FFFFFF'
         self.outline_width = 2
-        self.highlight_color = 'red'
+        self.highlight_color = 'blue'
         self.highlight_width = 5
+        self.hotspot_color = 'orange'
+        self.hotspot_width = 5
         self.connector_type = 'elbow'
         self.connector_offset = 50
 
@@ -268,6 +270,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.create_file_menu(menubar)
         self.create_edit_menu(menubar)
         self.create_database_menu(menubar)
+        self.create_analysis_menu(menubar)
         self.create_help_menu(menubar)
 
         return menubar

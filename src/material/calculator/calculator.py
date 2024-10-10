@@ -353,35 +353,40 @@ class Calculator():
         for key, list in impacts.items():
             impacts_lst.extend(list)
 
-        val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
-        total_impact = sum(val_lst)
-        no_contributors = len(val_lst)
+        if len(impacts_lst) > 0:
+            val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
+            total_impact = sum(val_lst)
+            no_contributors = len(val_lst)
 
-        hot_spots =[]
-        
-        biggest_contribution = max(val_lst)
-        max_index = val_lst.index(biggest_contribution)
-        hot_spots.append(impacts_lst[max_index].get_parent())
-        contributions_in_hotspots = biggest_contribution
-
-        all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
-        
-        while not all_found:
-            val_lst[max_index] = 0.0
-
+            hot_spots =[]
+            
             biggest_contribution = max(val_lst)
+            if biggest_contribution == 0.0:
+                return None
             max_index = val_lst.index(biggest_contribution)
             hot_spots.append(impacts_lst[max_index].get_parent())
-            contributions_in_hotspots += biggest_contribution
+            contributions_in_hotspots = biggest_contribution
 
-            all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
+            all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots >= 0.8 * total_impact else False
+            
+            while not all_found:
+                val_lst[max_index] = 0.0
 
-        if printout:
-            print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
-            for obj in hot_spots:
-                print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
+                biggest_contribution = max(val_lst)
+                if biggest_contribution == 0.0:
+                    break
+                max_index = val_lst.index(biggest_contribution)
+                hot_spots.append(impacts_lst[max_index].get_parent())
+                contributions_in_hotspots += biggest_contribution
 
-        return hot_spots
+                all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
+
+            if printout:
+                print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
+                for obj in hot_spots:
+                    print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
+
+            return hot_spots
     
 
 if __name__ == '__main__':
