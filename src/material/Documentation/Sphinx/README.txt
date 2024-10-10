@@ -1,4 +1,4 @@
-Navigate to the current folder (..\material\Documentation\Sphinx).
+Navigate to the current folder (cd src\material\Documentation\Sphinx).
 
 Run following in terminal.
 $ make html
