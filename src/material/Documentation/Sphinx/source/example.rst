@@ -80,7 +80,7 @@ Rest of the fuel, prodcuts, transportation processes, emissions, and waste in th
     electricity = project.current_model.create_energy("Electricity for Mixing", "A3")
     electricity.update_qty(3.0)
     electricity.set_unit('kWh')
-    electricity.set_impact_database_entry("Electricity_New")
+    electricity.set_impact_database_entry("Electricity")
 
     propane_transported = project.current_model.create_energy("Propane for Mixing", "A3")
     propane_transported.update_qty(1.0)
