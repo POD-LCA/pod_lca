@@ -54,6 +54,9 @@ class Master:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
+    def __str__(self):
+        return f"Object(name={self.name}, LC stage={self.life_cycle_stage})"
+
     def overide_id(self, new_id:int):
         """ Replace the product/process id by new number.
         

@@ -1,13 +1,28 @@
-from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton, font
+from tkinter import Frame, Button, Label, Entry, Toplevel, StringVar, Radiobutton, Menu
 from tkinter import LEFT, NORMAL, DISABLED
 from tkinter.ttk import Combobox, Separator
 
 class Popup(Toplevel):
 
-    def __init__(self, visualiser, title, shape) :
-        super().__init__(visualiser)
+    def __init__(self, master, title, shape) :
+        super().__init__(master)
+        
+        if type(master) == Menu:
+            self.visualiser = master.master
+        else:
+            self.visualiser = master
+
+        main_x = self.visualiser.winfo_x()
+        main_y = self.visualiser.winfo_y()
+
         self.title(title)
-        self.geometry(shape)
+        self.geometry(shape + f"+{main_x + 50}+{main_y + 50}")
+ 
+        self.visualiser.attributes("-disabled", True)
+        self.grab_set()
+
+        self.protocol("WM_DELETE_WINDOW", self.on_popup_close)
+
 
     @staticmethod
     def _popup_input_field(master, text, validate_num=False, default_val='', width= 15):
@@ -132,7 +147,7 @@ class Popup(Toplevel):
         ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
         ok_button.pack(side=LEFT, padx=10)
 
-        cancel_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        cancel_button = Button(button_frame, text="Cancel", command=popup.on_popup_close)
         cancel_button.pack(side=LEFT, padx=10)
 
     @staticmethod
@@ -141,7 +156,7 @@ class Popup(Toplevel):
         button_frame = Frame(master)
         button_frame.pack(pady=20)
 
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
+        close_button = Button(button_frame, text="Close", command=popup.on_popup_close)
         close_button.pack(side=LEFT, padx=10)
 
     @staticmethod
@@ -150,4 +165,12 @@ class Popup(Toplevel):
         cmd()
         
         if not is_apply:
-            popup.destroy()
+            popup.on_popup_close()
+
+    def on_popup_close(self):
+        self.visualiser.attributes("-disabled", False)
+        self.grab_release()
+        self.destroy()
+
+        self.visualiser.lift()
+        self.visualiser.focus_force()

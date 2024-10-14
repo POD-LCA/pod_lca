@@ -17,6 +17,7 @@ Welcome to POD|LCA Materials Tool's documentation!
    impacts
    calculator
    visualizer
+   analysis
    example
    developer
 
