@@ -42,7 +42,7 @@ class Product(Master):
                                                                                     "database_item": self.database_item, 
                                                                                     "qty": self.qty, "weight": self.weight, "transporter": self.transporter,
                                                                                     "density": self.density, "unit":self.unit, 
-                                                                                    "is_material":self.is_material, "is_energy":self.is_energy})
+                                                                                    "is_material":self.is_material})
 
     def update_qty(self, qty):
         """ Update the qty of the product.
