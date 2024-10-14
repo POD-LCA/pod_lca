@@ -26,7 +26,8 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         super().__init__()
         Style().theme_use('vista')
         self.title("POD|LCA Material Explorer")
-        self.geometry("1500x800")
+        # self.geometry("1500x800")
+        self.state("zoomed")
         self.database_file_path = HOME + '\Impact Database\impact_data.csv'
         self.save_path = None
 
@@ -42,8 +43,10 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.outline_color = 'black'
         self.connector_color = '#FFFFFF'
         self.outline_width = 2
-        self.highlight_color = 'red'
+        self.highlight_color = 'blue'
         self.highlight_width = 5
+        self.hotspot_color = 'red'
+        self.hotspot_width = 5
         self.connector_type = 'elbow'
         self.connector_offset = 50
 
@@ -188,12 +191,13 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
     def create_canvas(self, frame):
 
-        self.canvas_width = 800
+        self.canvas_width = 1200
         self.canvas_height = 800
         border_color = "#284387"
         border_thickness = 0
 
         canvas_frame = Frame(frame, highlightbackground=border_color, highlightthickness=border_thickness)
+        canvas_frame.place(relwidth=0.5, relheight=0.5, relx=0.5, rely=0)
         canvas_frame.pack(side=LEFT, padx=(10,5), pady=5, fill=BOTH)
 
         notebook = Notebook(canvas_frame)
@@ -220,7 +224,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         border_color = "#284387"
         border_thickness = 0
     
-        plot_frame = Frame(frame, bg=self.plotter_bg_color, width=300, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
+        plot_frame = Frame(frame, bg=self.plotter_bg_color, width=350, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
         plot_frame.pack(side=RIGHT, fill=BOTH, padx=(5,10), pady=5)
 
         input_frame = Frame(plot_frame)
@@ -268,6 +272,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.create_file_menu(menubar)
         self.create_edit_menu(menubar)
         self.create_database_menu(menubar)
+        self.create_analysis_menu(menubar)
         self.create_help_menu(menubar)
 
         return menubar
