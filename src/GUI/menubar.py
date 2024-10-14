@@ -2,6 +2,7 @@ from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.GUI_outputManager import GUIOutputManager
 from GUI.popup import Popup
+from GUI.cell_table import CellTable
 
 import os
 import sys
@@ -355,6 +356,24 @@ class MenubarMixin:
 
         menu_analysis.add_separator()
         menu_analysis.add_command(label='Monte Carlo Simulation', command='')
+
+    # =================================
+    # VIEW MENU
+    # =================================
+
+    def create_view_menu(self, menubar):
+        
+        menu_view = Menu(menubar, tearoff=False)
+        menubar.add_cascade(menu=menu_view, label='View')
+
+        menu_view.add_command(label='Cell view', command= lambda: self.open_cell_view(menubar))
+
+    def open_cell_view(self, menubar):
+
+        popup = Popup(menubar, "Bill of materials", "400x400")
+
+        CellTable(popup)
+
 
     # =================================
     # HELP MENU
