@@ -1,10 +1,11 @@
 from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
+from GUI.GUI_outputManager import GUIOutputManager
 from GUI.popup import Popup
 
 import os
 import sys
-from tkinter import Button, Menu, filedialog, END, LEFT, W, Frame, Label, Entry
+from tkinter import Button, Menu, filedialog, END, LEFT, W, Frame, Label, Entry, BooleanVar
 from tkinter.ttk import Notebook, Combobox
 
 class MenubarMixin:
@@ -82,7 +83,7 @@ class MenubarMixin:
         import_button = Button(button_frame, text="No", command=lambda: MenubarMixin._notsave_and_then(cmd, popup))
         import_button.pack(side=LEFT, padx=10)
 
-        close_button = Button(button_frame, text="Cancel", command=popup.destroy)
+        close_button = Button(button_frame, text="Cancel", command=popup.on_popup_close)
         close_button.pack(side=LEFT, padx=10)
 
 
@@ -94,7 +95,7 @@ class MenubarMixin:
     @staticmethod
     def _notsave_and_then(cmd, popup):
 
-        popup.destroy()
+        popup.on_popup_close()
         cmd()
 
 
@@ -336,6 +337,24 @@ class MenubarMixin:
 
         popup.lift()
         popup.focus_force()
+
+    # =================================
+    # ANALYSIS MENU
+    # =================================
+
+    def create_analysis_menu(self, menubar):
+
+        menu_analysis= Menu(self, tearoff=False)
+        menubar.add_cascade(menu=menu_analysis, label='Analysis')
+
+        menu_hotspot = Menu(menu_analysis, tearoff=False)
+        self.hotspot_on_off = BooleanVar(value=False)
+        menu_hotspot.add_radiobutton(label="On", variable=self.hotspot_on_off, value=True, command=lambda: GUIOutputManager.show_hotspots(self))
+        menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False)
+        menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
+
+        menu_analysis.add_separator()
+        menu_analysis.add_command(label='Monte Carlo Simulation', command='')
 
     # =================================
     # HELP MENU

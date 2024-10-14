@@ -194,11 +194,12 @@ class CanvasOperationsMixin:
 
     def move_slider(self, event, slider, slider_data):
         if not self.ctrl_pressed:
-            x1, y1, x2, y2 = self.current_canvas.bbox(self.drag_data["item"])
-            slider.place(in_=self.current_canvas, x=x1, y=y2)
+            if self.drag_data["item"] is not None:
+                x1, y1, x2, y2 = self.current_canvas.bbox(self.drag_data["item"])
+                slider.place(in_=self.current_canvas, x=x1, y=y2)
 
-            slider_data['x'] = x1
-            slider_data['y'] = y2
+                slider_data['x'] = x1
+                slider_data['y'] = y2
     
     def on_stop_drag(self, event):
         if not self.shift_pressed and not self.ctrl_pressed:
