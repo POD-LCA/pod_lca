@@ -19,6 +19,7 @@ Welcome to POD|LCA Materials Tool's documentation!
    visualizer
    analysis
    example
+   developer
 
 
 Indices and tables

@@ -14,6 +14,7 @@ class ProcessessMatrix():
         self.mat_data = {}
         self.basis = InventoryVector()
         self.process_ids = {}
+        self.cols = {}
         self.no_rows = 0
         self.no_cols = 0
 
@@ -73,6 +74,7 @@ class ProcessessMatrix():
             new_process[inventory_item.get_row_num()] = exchange_qtys[i]
         mat_data[col] = new_process
         self.process_ids[unit_process_id] = col
+        self.cols[col] = unit_process_id
 
         self.no_rows = inventory.get_inventory_size()
         self.no_cols = col + 1
@@ -148,12 +150,16 @@ class InventoryVector():
         new = True
         if flow_id in flow_ids.keys():
             rows = flow_ids[flow_id]
-            for row in rows:
-                existing_product = inventory[row]
-                unit_process = existing_product.get_unit_process_id()
-                if properties['unit_process_id'] == unit_process:
-                    new = False
-                    break
+            if properties['is_product_flow']:
+                for row in rows:
+                    existing_product = inventory[row]
+                    unit_process = existing_product.get_unit_process_id()
+                    if properties['unit_process_id'] == unit_process:
+                        new = False
+                        break
+            else:
+                row = rows[0]
+                new = False
 
         if new:
             row = n
@@ -184,7 +190,29 @@ class InventoryItem():
         self.unit_process_id = None
         self.location = None
         self.is_elementary_flow = False
+        self.is_waste_flow = False
 
+    def __str__(self):
+
+        # s = """
+
+        #     ----------------------
+        #     Inventory item
+        #     ----------------------
+        #     Name:""" +    self.get_name() + """ \n""" +  """ location:""" 
+        # +    self.get_location() + """ \n""" +  """ qty: {:.2f}""".format(self.get_qty()) 
+        # + self.get_unit() + """ \n """
+
+        # if self.is_elementary_flow:
+        #     s += "Is an elementary flow."
+        # elif self.is_waste_flow:
+        #     s += "Is a waste flow."
+        # else:
+        #     s += ("process id : " + self.get_unit_process_id())
+
+        # return s
+        pass
+    
     def get_name(self):
 
         return self.name
@@ -238,3 +266,6 @@ class InventoryItem():
 
         if 'is_elementary_flow' in properties:
             self.is_elementary_flow = properties['is_elementary_flow'] 
+
+        if 'is_waste_flow' in properties:
+            self.is_elementary_flow = properties['is_waste_flow'] 

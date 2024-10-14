@@ -45,9 +45,17 @@ class UnitProcess():
         self.name = name
         self.exchanges = {}
         self.location = None
-        self.qty = None
+        self.qty = 0.0
         self.unit = None
         # TODO: Check other properties needed to be stored
+
+    def __str__(self):
+        # print("=====================")
+        # print("Process name : ", self.get_name())
+        # print("location : ", self.get_location())
+        # print("qty : {:.2f}".format(self.qty), self.unit)
+        # print("=====================")
+        pass
 
     def get_name(self):
 

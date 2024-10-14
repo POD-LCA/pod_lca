@@ -2,7 +2,7 @@ from lca_mat.processess import ProcessessMatrix
 from lca_mat.linear_algebra import LinearAlgebra
 
 from numpy import zeros, ones, matmul
-from scipy.linalg import inv
+from scipy.linalg import inv, det
 from scipy.sparse import csr_matrix
 
 import os
@@ -112,6 +112,20 @@ class Problem(object):
     # Printer Methods
     # =================================
 
+    def print_process(self, col_no=None, process_id=None):
+        
+        if col_no:
+            process_id = self.get_process_matrix().cols[col_no]        
+
+        if process_id:
+            print(self.get_database().get_unit_processess()[process_id])
+
+    def print_inventory_item(self, row):
+
+        inventory_item = self.get_process_matrix().get_basis().get_inventory_dict()[row]
+        print(inventory_item)
+
+
     def print_unit_processes(self, n=50):
 
         terminal_size = shutil.get_terminal_size()
@@ -138,9 +152,7 @@ class Problem(object):
         else:
             print("Create process matrix to load unit processess.")
 
-    def print_inventory(self, n=100):
-
-        # TODO: update with an option to only print non-zero quantity inventory items
+    def print_inventory(self, n=100, print_nnz=False, tol=0.01):
 
         terminal_size = shutil.get_terminal_size()
         lines_per_page = terminal_size.lines - 2 
@@ -149,7 +161,10 @@ class Problem(object):
         P = self.get_process_matrix()
         if P is not None:
             inventory = P.get_basis().get_inventory_dict()
-            print("row. no | exchange name | location | unit process id")
+            if print_nnz:
+                print("row. no | exchange name | location | unit process id | qty ")
+            else:
+                print("row. no | exchange name | location | unit process id")
             ctr = 0
             for id in inventory.keys():
                 prt_str = str(inventory[id].get_row_num()) + " | " +  inventory[id].get_name()[:n]
@@ -157,15 +172,24 @@ class Problem(object):
                     prt_str += "..."
                 prt_str += (" | " + inventory[id].get_location()) if inventory[id].get_location() is not None else " | --- "
                 prt_str += (" | " + inventory[id].get_unit_process_id()) if inventory[id].get_unit_process_id() is not None else " | --- "
-                print(prt_str)
+                
+                if print_nnz:
+                    qty = inventory[id].get_qty()
+                    unit = inventory[id].get_unit()
+                    if abs(qty) > tol:
+                        prt_str += (" | " + "{:.2f}".format(qty) + " " + unit)
+                        print(prt_str)
+                        ctr += 1
+                else:
+                    print(prt_str)
+                    ctr += 1
 
                 if ctr > lines_per_page:
                     input("\nPress Enter to continue...")
                     os.system('cls' if os.name == 'nt' else 'clear')
                     print("row. no | exchange name | location | unit process id")
                     ctr = 0
-                else:
-                    ctr += 1
+                    
         else:
             print("Create process matrix to load unit processess.")
 
@@ -243,12 +267,14 @@ class Problem(object):
             print("Product matrix is not square. Pseudo-inverse is considered.")
             pass
         
-        mask = ones(P.shape[0], dtype=bool)
-        mask[product_rows] = False
-        B = P[mask, :][:, cols]
+        # mask = ones(P.shape[0], dtype=bool)
+        # mask[product_rows] = False
+        # B = P[mask, :][:, cols]
 
-        g =  matmul(B, s)
-        d[mask] = g
+        # g =  matmul(B, s)
+        # d[mask] = g
+
+        d = matmul(P[:, cols], s)
 
         inventory = self.get_process_matrix().get_basis()
         inventory_dict = inventory.get_inventory_dict()
@@ -256,6 +282,8 @@ class Problem(object):
             inventory_dict[i].set_qty(d[i])
 
         self._set_impacts()
+
+        # TODO: Update process qtys
 
     
     # =================================
@@ -360,11 +388,12 @@ class Problem(object):
                 rows = inventory_flows[flow]
                 unit_impact = flows[flow]
                 for row in rows:
-                    qty = abs(inventory_dict[row].get_qty())
-                    # TODO: check unit consistency
-                    # flow_unit = inventory_dict[row].get_unit()
-                    # impact_per_unit_ = impacts[impact]   (??)
-                    impacts[impact].add_qty(unit_impact * qty)
+                    if inventory_dict[row].is_elementary_flow:
+                        qty = inventory_dict[row].get_qty()
+                        # TODO: check unit consistency
+                        # flow_unit = inventory_dict[row].get_unit()
+                        # impact_per_unit_ = impacts[impact]   (??)
+                        impacts[impact].add_qty(unit_impact * qty)
 
 
 if __name__ == '__main__':
@@ -391,12 +420,6 @@ if __name__ == '__main__':
     # p3 = 'sand quarry operation, extraction from river bed | sand | EN15804, U - Rest-of-World'
     # p4 = 'gravel production, crushed | gravel, crushed | EN15804, U - Rest-of-World'
 
-    # print("water")
-    # process_lst = test_problem.get_database().find_process_by_name("market for tap water | tap water | EN15804, U")
-    # for process in process_lst:
-    #     print(process.get_process_id())
-    #     print(process.location)
-
     # process ids
     # p1 = 'b6d92fa7-13c9-448b-9231-4736c9c4005a'
     # p2 = '3919839c-646f-422b-9cef-95879b14c52c'
@@ -409,20 +432,28 @@ if __name__ == '__main__':
     # p3 = 'f51d7ccf-0bee-430d-98a3-8334adbe39fc'
     # p4 = '37eceabd-b33f-4757-a4b9-5c51dee1710d'
 
-    # col = test_problem.get_process_matrix().get_process_ids()['b6d92fa7-13c9-448b-9231-4736c9c4005a']
-    # output_row = [key for key, value in test_problem.get_process_matrix().get_mat_data()[col].items() if value < 0]
-
     # product row
-    # p1 = 13319
-    # p2 = 
-    # p3 = 
-    # p4 = 
+    # p1 = 13339
+    # p2 = 411
+    # p3 = 364
+    # p4 = 3477
 
     # test_problem.print_unit_processes()
     # test_problem.print_inventory()
 
-    test_problem.set_demand(13319, val=367.41)
+    # test_problem.print_process(col_no=10)
+    test_problem.print_inventory_item(row=13339)
+
+    test_problem.set_demand(13339, val=367.41)
+    test_problem.set_demand(411, val=972.05)
+    test_problem.set_demand(364, val=754.32)
+    test_problem.set_demand(3477, val=18.14)
 
     test_problem.solve()
 
     test_problem.print_impacts()
+
+    test_problem.print_inventory(print_nnz=True)
+
+    # can 's' have negative values? negative amount of a process
+    # can impact be negative

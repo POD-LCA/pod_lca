@@ -35,15 +35,14 @@ class Product(Master):
         self.weight_unit = 'kg'
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
-        self.is_material = False
-        self.is_energy = False
+        self.is_material = True
 
     def __reduce__(self):
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "impacts": self.impacts,
                                                                                     "database_item": self.database_item, 
                                                                                     "qty": self.qty, "weight": self.weight, "transporter": self.transporter,
                                                                                     "density": self.density, "unit":self.unit, 
-                                                                                    "is_material":self.is_material, "is_energy":self.is_energy})
+                                                                                    "is_material":self.is_material})
 
     def update_qty(self, qty):
         """ Update the qty of the product.
