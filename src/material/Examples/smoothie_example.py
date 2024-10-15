@@ -1,6 +1,8 @@
 from material import HOME
 from material.projectManager.projectManager import Project
 from material.visualizer.bar_chart import BarChart
+from material.visualizer.bar_chart2 import BarChart2
+from material.visualizer.bar_chart3 import BarChart3
 
 # Smoothie example
 
@@ -114,4 +116,14 @@ waste.set_impact_database_entry("Waste to landfill")
 graph = BarChart(project)
 graph.set_impact_category("GWP")
 graph.set_active_models(['Model_0'])
-graph.show()
+#graph.show()
+
+graph2 = BarChart2(project)
+graph2.set_impact_category("GWP")
+graph2.set_active_models(['Model_0'])
+#graph2.show()
+
+graph3 = BarChart3(project)
+graph3.set_impact_category(["GWP","ODP"])
+graph3.set_active_models(['Model_0'])
+graph3.show()
