@@ -1,6 +1,7 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.GUI_outputManager import GUIOutputManager
 
+import re
 from tkinter import END, E, W, CENTER, RIGHT, BOTH, TOP, LEFT, Entry, Label
 from tkinter.ttk import Treeview, Scrollbar, Combobox, Frame
 
@@ -10,17 +11,19 @@ class CellTable(Treeview):
     def __init__(self, root, GUI, model):
         super().__init__(master=root, columns=list(range(7)), show='headings')
         self.GUI = GUI
+        self.model = model
         self.pack(fill="both", expand=True)
 
         scrollbar = Scrollbar(self, orient="vertical", command=self.yview)
         self.configure(yscroll=scrollbar.set)
         scrollbar.pack(side="right", fill="y")
 
-        headings = ["id", "Name", "type", "LC stage", "qty", "unit", "GWP"]
-        widths = [50, 200, 100, 50, 50, 50, 50]
+        self.headings = ["id", "Name", "type", "LC stage", "qty", "unit", "GWP"]
+        widths = [50, 200, 125, 50, 50, 50, 50]
         align = [CENTER, W, CENTER, CENTER, E, W, CENTER]
-        self.create_headings(headings, widths, align)
-        self.import_data(model)
+        self.locked_columns = [1,3,7]
+        self.create_headings(self.headings, widths, align)
+        self.import_data()
 
     def create_headings(self, headings, widths, align):
 
@@ -29,30 +32,47 @@ class CellTable(Treeview):
 
         for col, (width, anchor) in enumerate(zip(widths, align)):
             self.column(col, width=width, anchor=anchor)
-        
     
-    def import_data(self, model="Model_0", hotspots=True):
+    def import_data(self, hotspots=True):
 
         if hotspots:
-            hotspots = GUIOutputManager.get_hotspots(self.GUI.project, model)
+            hotspots = GUIOutputManager.get_hotspots(self.GUI.project, self.model)
             self.tag_configure("hotpsot", background=self.GUI.hotspot_color)
 
-        for product in self.GUI.project.models[model].products + self.GUI.project.models[model].processes: # TODO: call through input manager
+        for product in self.GUI.project.models[self.model].products + self.GUI.project.models[self.model].processes: # TODO: call through input manager
             if hotspots:
                 tag = "hotpsot" if product in hotspots else ""
             else:
                 tag = ""
 
-            self.insert("", END, values=(str(GUIInputManager.get_id(product)), 
-                                            str(GUIInputManager.get_name(product)),
-                                            str(type(product)),
-                                            str(GUIInputManager.get_stage(product)),
-                                            str(GUIInputManager.get_qty(product)),
-                                            str(GUIInputManager.get_unit(product)),
-                                            str(round(GUIInputManager.get_impacts(product).GWP, 1))), 
-                                            tags=(tag,))
+            self.insert("", END, iid=GUIInputManager.get_id(product), values=(self.get_obj_values(product)), tags=(tag,))
 
         self.bind("<Double-1>", lambda event: self.edit_cell(event))
+
+    def get_obj_values(self, obj):
+
+        values = []
+        for heading in self.headings:
+            if heading == "id":
+                values.append(str(GUIInputManager.get_id(obj)))
+            elif heading in ["Name", "name"]:
+                values.append(str(GUIInputManager.get_name(obj)))
+            elif heading in ["stage", "LC stage"]:
+                values.append(str(GUIInputManager.get_stage(obj)))         
+            elif heading in ["type"]:
+                temp = str(type(obj)).split(".")[-1]
+                type_name = re.sub(r'[^A-Za-z0-9 ]+', '', temp)
+                values.append(type_name)
+            elif heading == "qty":
+                values.append(str(round(GUIInputManager.get_qty(obj), 2)))
+            elif heading == "unit":
+                values.append(str(GUIInputManager.get_unit(obj)))
+            elif heading == "GWP":
+                values.append(str(round(GUIInputManager.get_impacts(obj).GWP, 1)))
+            else:
+                raise NotImplementedError
+            
+        return values
 
     def edit_cell(self, event):
         """ Edit value in cell. 
@@ -65,13 +85,13 @@ class CellTable(Treeview):
         x, y, width, height = self.bbox(selected_item, column)
         cell_value = self.item(selected_item, 'values')[col_num - 1]
         
-        #TODO only if the cell is allowed to be edited
-        entry = Entry(self.master)
-        entry.place(x=x + self.winfo_x(), y=y + self.winfo_y(), width=width, height=height)
-        entry.insert(0, cell_value)
-        entry.focus()
+        if col_num not in self.locked_columns:
+            entry = Entry(self.master)
+            entry.place(x=x + self.winfo_x(), y=y + self.winfo_y(), width=width, height=height)
+            entry.insert(0, cell_value)
+            entry.focus()
 
-        entry.bind("<Return>", lambda event: self.on_enter(event, entry, selected_item, col_num))
+            entry.bind("<Return>", lambda event: self.on_enter(event, entry, selected_item, col_num))
 
     def on_enter(self, event, entry, selected_item, col_num):
 
@@ -80,8 +100,16 @@ class CellTable(Treeview):
         current_values[col_num - 1] = new_value
         self.item(selected_item, values=current_values)
         entry.destroy()
+
+        if self.headings[col_num - 1]  in  ["Name", "name"]:
+            pass #TODO: Change name
+        elif self.headings[col_num - 1]  in  ["stage", "LC stage"]:
+            pass #TODO: Change stage (update plot??)
+        elif self.headings[col_num - 1] == "qty":
+            GUIInputManager.update_qty(self.GUI, self.GUI.item_map[self.model][int(selected_item)], new_value)
+        elif self.headings[col_num - 1]  in  ["unit"]:
+            pass #TODO: Change stage (values in qty box should auto update)
         
-        # TODO: Call a function to handle the updated value
     
     def sort_column(self, col, reverse):
         """Sort the items in the selected column."""
