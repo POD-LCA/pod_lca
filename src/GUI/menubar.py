@@ -370,9 +370,9 @@ class MenubarMixin:
 
     def open_cell_view(self, menubar):
 
-        popup = Popup(menubar, "Bill of materials", "400x400")
+        popup = Popup(menubar, "Bill of materials", "600x600")
 
-        CellTable(popup)
+        CellTable(popup, self.project)
 
 
     # =================================
