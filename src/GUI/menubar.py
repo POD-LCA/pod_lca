@@ -381,16 +381,16 @@ class MenubarMixin:
         dropdown = Combobox(input_frame, values=list(GUIInputManager.get_all_model_names(self.project)))
         dropdown.pack(side=RIGHT, fill=BOTH)
         dropdown.current(0)
-        dropdown.bind("<<ComboboxSelected>>", lambda x:self.create_cell_table(cell_table, x.widget.get()))
+        dropdown.bind("<<ComboboxSelected>>", lambda x:self.update_cell_table(cell_table, x.widget.get()))
 
         cell_table = CellTable(popup, self, self.get_current_model())
 
-    def create_cell_table(self, cell_table, model):
+    def update_cell_table(self, cell_table, model):
 
-        for item in cell_table.get_children():
-            cell_table.delete(item)
+        cell_table.delete(*cell_table.get_children())
 
-        cell_table.import_data(model, hotspots=True)
+        cell_table.model = model
+        cell_table.import_data()
 
 
     # =================================
