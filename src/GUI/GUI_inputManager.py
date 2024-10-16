@@ -1,6 +1,7 @@
 from material.projectManager.projectManager import Project
 from material.model.product import Product, Fuel, Waste
 from material.model.process import Process, transportationProcess
+from GUI.GUI_outputManager import GUIOutputManager
 
 class GUIInputManager():
 
@@ -29,47 +30,57 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_product(project, name, unit, qty, stage):
+    def create_product(project, name, unit, qty, stage, lca_data):
 
         product = project.get_current_model().create_product(name, stage)
         product.set_unit(unit)
         product.update_qty(qty)
+        if not (lca_data == 'None'):
+            product.set_impact_database_entry(lca_data)
 
         return product
     
     @staticmethod
-    def create_energy(project, name, unit, qty, stage):
+    def create_energy(project, name, unit, qty, stage, lca_data):
 
         energy = project.get_current_model().create_energy(name, stage)
         energy.set_unit(unit)
         energy.update_qty(qty)
+        if not (lca_data == 'None'):
+            energy.set_impact_database_entry(lca_data)  
 
         return energy
   
     @staticmethod
-    def create_emission(project, name, unit, qty, stage):
+    def create_emission(project, name, unit, qty, stage, lca_data):
 
         emission = project.get_current_model().create_emission(name, stage)
         emission.set_unit(unit)
         emission.update_qty(qty)
+        if not (lca_data == 'None'):
+            emission.set_impact_database_entry(lca_data)   
 
         return emission
 
     @staticmethod
-    def create_waste(project, name, unit, qty, stage):
+    def create_waste(project, name, unit, qty, stage, lca_data):
 
         waste = project.get_current_model().create_waste(name, stage)
         waste.set_unit(unit)
         waste.update_qty(qty)
+        if not (lca_data == 'None'):
+            waste.set_impact_database_entry(lca_data)
 
         return waste
     
     @staticmethod
-    def create_process(project, name, unit, qty, stage):
+    def create_process(project, name, unit, qty, stage, lca_data):
 
         process =  project.get_current_model().create_process(name, stage)
         process.set_unit(unit)
         process.update_qty(qty)
+        if not (lca_data == 'None'):
+            process.set_impact_database_entry(lca_data)
 
         return process
     
@@ -84,6 +95,8 @@ class GUIInputManager():
 
         visualizer.update_dependent_qtys(item, qty)
         visualizer.update_plot()
+        if visualizer.hotspot_on_off.get():
+            GUIOutputManager.show_hotspots(visualizer)
 
     @staticmethod
     def update_life_cycle_stage(visualizer, item, stage):
@@ -201,11 +214,13 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_transport_process(name, project, unit, qty, stage):
+    def create_transport_process(name, project, unit, qty, stage, lca_data):
 
         transport_process =  project.get_current_model().create_transportation_process(name, stage)
         transport_process.set_transported_distance_unit(unit)
         transport_process.set_transported_distance(qty)
+        if not (lca_data == 'None'):
+            transport_process.set_impact_database_entry(lca_data)
 
         return transport_process
 
@@ -214,6 +229,8 @@ class GUIInputManager():
 
         item.set_transported_distance(qty)
         visualizer.update_plot()  
+        if visualizer.hotspot_on_off.get():
+            GUIOutputManager.show_hotspots(visualizer)
 
     @staticmethod
     def set_transported_product(visualizer, item, product):
@@ -237,7 +254,12 @@ class GUIInputManager():
     def get_travel_distance(item):
 
         return item.get_transported_distance()
-    
+
+    @staticmethod
+    def set_travel_unit(obj, new_unit):
+
+        obj.set_transported_distance_unit(new_unit)
+
     @staticmethod
     def get_travel_unit(obj):
 

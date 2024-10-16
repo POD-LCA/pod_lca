@@ -62,7 +62,7 @@ class Parameter(Item):
 
     def open_popup_parameter(self):
 
-        popup = Popup(self, "Parameter", "300x200")
+        popup = Popup(self, "Parameter", "300x175")
         
         name =  Popup._popup_input_field(popup, "Parameter name: ", default_val="new Parameter")   
         qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
