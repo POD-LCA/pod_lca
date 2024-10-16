@@ -223,7 +223,6 @@ class Calculator():
 
     def get_barchart_data(self, impact_category, model_lst=['Model_0']):
         """ Returns heights and x-labels for a barchart.
-         
         """
 
         project = self.get_project()
