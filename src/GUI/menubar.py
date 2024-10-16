@@ -6,7 +6,7 @@ from GUI.cell_table import CellTable
 
 import os
 import sys
-from tkinter import Button, Menu, filedialog, END, LEFT, W, Frame, Label, Entry, BooleanVar
+from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar
 from tkinter.ttk import Notebook, Combobox
 
 class MenubarMixin:
@@ -372,7 +372,25 @@ class MenubarMixin:
 
         popup = Popup(menubar, "Bill of materials", "600x600")
 
-        CellTable(popup, self.project)
+        input_frame = Frame(popup)
+        input_frame.pack(side=TOP, pady=10, padx=10)
+        
+        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Model", font = ('Helvetica', 12,'bold'))
+        label.pack(side=LEFT, padx=(0, 10))
+        
+        dropdown = Combobox(input_frame, values=list(GUIInputManager.get_all_model_names(self.project)))
+        dropdown.pack(side=RIGHT, fill=BOTH)
+        dropdown.current(0)
+        dropdown.bind("<<ComboboxSelected>>", lambda x:self.create_cell_table(cell_table, x.widget.get()))
+
+        cell_table = CellTable(popup, self, self.get_current_model())
+
+    def create_cell_table(self, cell_table, model):
+
+        for item in cell_table.get_children():
+            cell_table.delete(item)
+
+        cell_table.import_data(model, hotspots=True)
 
 
     # =================================

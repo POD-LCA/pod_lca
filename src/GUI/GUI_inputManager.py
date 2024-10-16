@@ -25,6 +25,11 @@ class GUIInputManager():
 
         project.set_current_model(name)
 
+    @staticmethod
+    def get_all_model_names(project):
+
+        return project.models.keys()            
+
     # =================================
     # Products and Processes
     # =================================
