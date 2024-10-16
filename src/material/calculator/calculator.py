@@ -28,7 +28,7 @@ class Calculator():
                             {'g': 1000.0, 'kg': 1.0, 't': 0.001, 'lb': 2.20462},
                             {'l': 1.0, 'm3': 0.01, 'gal':0.264172},
                             {'J': 1000.0, 'kJ': 1.0, 'MJ': 0.001, 'kWh': 2.77778e-4, 'MWh': 2.77778e-7},
-                            {'kgkm': 1.0, 'tkm': 0.001, 'lbmi':1.369887}]
+                            {'kgkm': 1.0, 'tkm': 0.001, 'lbmi':1.369887, 'kgmi': 0.621371}]
  
     def __reduce__(self):
         
@@ -223,7 +223,6 @@ class Calculator():
 
     def get_barchart_data(self, impact_category, model_lst=['Model_0']):
         """ Returns heights and x-labels for a barchart.
-         
         """
 
         project = self.get_project()
@@ -233,65 +232,16 @@ class Calculator():
             data_dict[model_name], stages = calcualtor.get_data_by_LCstage(impact_category, model_name)
         
         return  stages, data_dict
-
-
-    def Barchart(self, impact_category, model_name='Model_0'):
-
-        project = self.get_project()
-        calcualtor = project.get_calculator()
-        data_dict = calcualtor.get_data_by_LCstage(impact_category, model_name)[0]
-        plt_data = [data_dict["A1"], data_dict["A2"], data_dict["A3"]]
-        data_dict= data_dict.keys()
-
-        fig, ax = plt.subplots()
-        bar_labels = ['A1', 'A2', 'A3']
-        bar_colors = ['tab:red', 'tab:blue', 'tab:orange']
-
-        ax.bar(data_dict, plt_data, label=bar_labels, color=bar_colors)
-
-        ax.set_ylabel(f'{impact_category} Impact')
-        ax.set_title('Life cycle stages')
-        ax.legend(title='Life cycle stage color')
-
-        plt.show()
         
-    def Multi_bar_chart (self,impact_category):
 
-        labels = ['A1', 'A2', 'A3']
-        title='Environmental Impacts by Stage'
-        project = self.get_project()
-        calcualtor = project.get_calculator()
-
-        data=[]
-        for i in impact_category:
-
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)[0]
-            globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
-            data.append(globals()['plt_data_' + i])
-
-        impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
-
-        width = 0.6  
-        fig, ax = plt.subplots()
-        bottom = np.zeros(len(impact_category)) 
-
-        for stage, impacts in impact_by_stage.items():
-            p = ax.bar(impact_category, impacts, width, label=stage, bottom=bottom)
-            bottom += impacts  
-            ax.bar_label(p, label_type='center')
-
-        ax.set_title(title)
-        ax.legend()
-        plt.show()
-    
-    def barchart_by_parts (self,impact_category, model_name='Model_0'):
+    def get_barchart2_data (self,impact_category, model_lst= ['Model_0']):
 
         data_name=[]
         data_qty=[]
         data_len=[]
 
-        project = self.project.get_model(model_name).get_project()
-        model = project.get_model(model_name)
+        project = self.project.get_model(model_lst[0]).get_project()
+        model = project.get_model(model_lst[0])
 
         for i in model.get_impacts():
             data_len.append(len(model.get_impacts()[i]))
@@ -309,20 +259,27 @@ class Calculator():
                 impacts[data_name[j]] = np.array([0] * i + [data_qty[j]] + [0] * (len(data_len) - i - 1))
             start_index = end_index
 
-        stages = ('A1', 'A2', 'A3')
-        width = 0.6  # the width of the bars: can also be len(x) sequence
+        return data_name, data_qty, data_len, impacts
 
-        fig, ax = plt.subplots()
-        bottom = np.zeros(3)
 
-        for stage, impact in impacts.items():
-            p = ax.bar(stages, impact, width, label=stage, bottom=bottom)
-            bottom += impact
-            ax.bar_label(p, label_type='center')
+    def get_barchart3_data (self, impact_category, model_lst= ['Model_0']):
 
-        ax.set_title('Life cycle stages')
-        ax.legend()
-        plt.show()
+        labels = ['A1', 'A2', 'A3']
+        title='Environmental Impacts by Stage'
+        project = self.project.get_model(model_lst[0]).get_project()
+        calcualtor = project.get_calculator()
+
+        data=[]
+        for i in impact_category:
+
+            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)[0]
+            globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
+            data.append(globals()['plt_data_' + i])
+
+
+        impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
+        
+        return impact_by_stage
 
     # =================================
     # ANALYSIS METHODS
@@ -387,7 +344,7 @@ class Calculator():
                     print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
 
             return hot_spots
-    
+
 
 if __name__ == '__main__':
     pass
