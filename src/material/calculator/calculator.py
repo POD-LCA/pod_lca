@@ -277,10 +277,74 @@ class Calculator():
             globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
             data.append(globals()['plt_data_' + i])
 
+
         impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
         
         return impact_by_stage
-    
+
+    # =================================
+    # ANALYSIS METHODS
+    # =================================
+
+    def hot_spot_analysis(self, model='Model_0', impact_category="GWP", printout=False):
+        """ Determines the hotspot of the model.
+            The hotspots are the largest group out of (a) top 20% contributors to the impact or (b) the smallest group of contributors to the 80% (or more) of GWP.
+
+            Parameters
+            ----------
+            model : str
+                Name of the model considered.
+            impact_category : str
+                Impact category considered.
+            printout : bool
+                Printout the results if true.
+            
+            Retrurn
+            -------
+            List of Master Obj.
+                Hotspot objects.
+        """
+
+        impacts = self.get_project().get_model(model).get_impacts()
+
+        impacts_lst = []
+        for key, list in impacts.items():
+            impacts_lst.extend(list)
+
+        if len(impacts_lst) > 0:
+            val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
+            total_impact = sum(val_lst)
+            no_contributors = len(val_lst)
+
+            hot_spots =[]
+            
+            biggest_contribution = max(val_lst)
+            if biggest_contribution == 0.0:
+                return None
+            max_index = val_lst.index(biggest_contribution)
+            hot_spots.append(impacts_lst[max_index].get_parent())
+            contributions_in_hotspots = biggest_contribution
+
+            all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots >= 0.8 * total_impact else False
+            
+            while not all_found:
+                val_lst[max_index] = 0.0
+
+                biggest_contribution = max(val_lst)
+                if biggest_contribution == 0.0:
+                    break
+                max_index = val_lst.index(biggest_contribution)
+                hot_spots.append(impacts_lst[max_index].get_parent())
+                contributions_in_hotspots += biggest_contribution
+
+                all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
+
+            if printout:
+                print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
+                for obj in hot_spots:
+                    print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
+
+            return hot_spots
 
 
 if __name__ == '__main__':

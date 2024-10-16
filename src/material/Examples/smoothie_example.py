@@ -113,6 +113,8 @@ waste.update_qty(1.0)
 waste.set_unit('kg')
 waste.set_impact_database_entry("Waste to landfill")
 
+hot_spots = project.get_calculator().hot_spot_analysis(printout=True)
+
 graph = BarChart(project)
 graph.set_impact_category("GWP")
 graph.set_active_models(['Model_0'])

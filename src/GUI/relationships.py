@@ -104,15 +104,17 @@ class RelationshipsMixin:
         model_id = self.get_current_model()
 
         item = self.current_canvas.find_closest(event.x, event.y)[0]
+        self.current_canvas.current_highlight = []
         if item in self.dependents[model_id]:
             for dependent in self.dependents[model_id][item]:
                 self.current_canvas.itemconfig(dependent, outline=self.highlight_color, width=self.highlight_width)
-                self.current_canvas.current_highlight = dependent
+                self.current_canvas.current_highlight.append(dependent)
 
     def remove_highight(self, event):
 
         if hasattr(self.current_canvas, 'current_highlight'):
-            self.current_canvas.itemconfig(self.current_canvas.current_highlight, outline=self.outline_color, width=self.outline_width)
+            for item_id in self.current_canvas.current_highlight:
+                self.current_canvas.itemconfig(item_id, outline=self.outline_color, width=self.outline_width)
 
     def restore_relationships(self, item_id_history, old_dependents, old_relationships):
 
