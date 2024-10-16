@@ -54,6 +54,9 @@ class Master:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
+    def __str__(self):
+        return f"Object(name={self.name}, LC stage={self.life_cycle_stage})"
+
     def overide_id(self, new_id:int):
         """ Replace the product/process id by new number.
         
@@ -122,7 +125,7 @@ class Master:
             conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Unit"])
 
             if conversion_factor is None:
-                raise ImportError(f"{self.get_name()}-(of units {self.get_unit()}) and its impact ({self.database_item}) have incompatible units.")
+                raise ImportError(f"{self.get_name()}-(of units {self.get_unit()}) and its LCA data ({self.database_item}) have incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
 

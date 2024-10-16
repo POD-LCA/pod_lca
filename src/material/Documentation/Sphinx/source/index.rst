@@ -6,6 +6,14 @@
 Welcome to POD|LCA Materials Tool's documentation!
 ==================================================
 
+The POD|LCA Materials Tool is developed by ....
+
+This python module is written in Python 3.11.9. The other dependendent packages can be installed by running the following command:
+
+.. code-block:: console
+
+   pip install -r requirements.txt
+
 .. toctree::
    :maxdepth: 3
 
@@ -17,7 +25,9 @@ Welcome to POD|LCA Materials Tool's documentation!
    impacts
    calculator
    visualizer
+   analysis
    example
+   developer
 
 
 Indices and tables

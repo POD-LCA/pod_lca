@@ -12,25 +12,26 @@ class Process(Item):
 
     def open_popup_process(self):
 
-        popup = Popup(self, "Create process", "300x200")
+        popup = Popup(self, "Create process", "300x225")
         
-        name =  Popup._popup_input_field(popup, "Process name: ", default_val="new Process")    
+        name =  Popup._popup_input_field(popup, "Process name: ", default_val="new Process")
+        lca_data = Popup._popup_input_combo(popup, "LCA data: ", [None] + GUIInputManager.get_database_data(self.project)['Flow'].tolist())    
         life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"], default_entry=2)   
         qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
         units = Popup._popup_input_combo(popup, "units: ", ["m3", "kg"])  
 
-        cmd = lambda: self.create_process(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get())
+        cmd = lambda: self.create_process(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get(), lca_data.get())
         Popup.button_pack_OKCancel(popup, popup, cmd)
         
         
-    def create_process(self, popup, name, qty, unit, stage):
+    def create_process(self, popup, name, qty, unit, stage, lca_data):
 
         start = [50, 50]
         height = 100
         width = 100
         model_id = self.get_current_model()
 
-        process = GUIInputManager.create_process(self.project, name, unit, float(qty), stage)
+        process = GUIInputManager.create_process(self.project, name, unit, float(qty), stage, lca_data)
         slider_cmd = lambda x: GUIInputManager.update_qty(self, process, x)
 
         slider_min = 0.0

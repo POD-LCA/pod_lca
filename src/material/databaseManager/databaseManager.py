@@ -25,7 +25,7 @@ class DatabaseManager:
     """
 
     def __init__(self):
-        self.impact_categories = {'GWP':0.0, 'acid_pot':0.0, 'eutro_pot':0.0, 'ozone_dep':0.0, 'smog':0.0}
+        self.impact_categories = {'GWP':0.0, 'AP':0.0, 'EP':0.0, 'ODP':0.0, 'SFP':0.0}
         self.data = DataFrame(columns=['Flow','Unit'] + list(self.impact_categories.keys()))
 
     def __reduce__(self):
@@ -44,7 +44,7 @@ class DatabaseManager:
         data : pandas DataFrame Obj.
             Impact data, with following headings.
                 'Flow' (str) : name of impact
-                'Unit' (str) : impacts per this unit of measure
+                'Declared Unit' (str) : impacts per this unit of measure
                 impact catergory (float) : quantity of impact
         """
 

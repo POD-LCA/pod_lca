@@ -1,3 +1,4 @@
+from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.menubar import MenubarMixin
 from GUI.plots import PlotsMixin
@@ -25,7 +26,9 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         super().__init__()
         Style().theme_use('vista')
         self.title("POD|LCA Material Explorer")
-        self.geometry("1500x800")
+        # self.geometry("1500x800")
+        self.state("zoomed")
+        self.database_file_path = HOME + '\Impact Database\impact_data.csv'
         self.save_path = None
 
         # canvas properties
@@ -40,8 +43,10 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.outline_color = 'black'
         self.connector_color = '#FFFFFF'
         self.outline_width = 2
-        self.highlight_color = 'red'
+        self.highlight_color = 'blue'
         self.highlight_width = 5
+        self.hotspot_color = 'red'
+        self.hotspot_width = 5
         self.connector_type = 'elbow'
         self.connector_offset = 50
 
@@ -80,8 +85,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         # back-end
         self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone':'kg CFC-11 eq', 'smog':'kg O3 eq'}
         self.project = GUIInputManager.create_project()
-        GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))
-        self.database_file_path = ''      
+        GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))     
         
         # GUI
         # self.create_window()
@@ -93,6 +97,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
         self.create_bindings()
         self.set_protocols()
+        GUIInputManager.import_data_from_CSV(self.database_file_path, self.project)
         
     # =================================
     # GUI COMPONENTS
@@ -186,12 +191,13 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
     def create_canvas(self, frame):
 
-        self.canvas_width = 800
+        self.canvas_width = 1200
         self.canvas_height = 800
         border_color = "#284387"
         border_thickness = 0
 
         canvas_frame = Frame(frame, highlightbackground=border_color, highlightthickness=border_thickness)
+        canvas_frame.place(relwidth=0.5, relheight=0.5, relx=0.5, rely=0)
         canvas_frame.pack(side=LEFT, padx=(10,5), pady=5, fill=BOTH)
 
         notebook = Notebook(canvas_frame)
@@ -218,13 +224,13 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         border_color = "#284387"
         border_thickness = 0
     
-        plot_frame = Frame(frame, bg=self.plotter_bg_color, width=300, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
+        plot_frame = Frame(frame, bg=self.plotter_bg_color, width=350, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
         plot_frame.pack(side=RIGHT, fill=BOTH, padx=(5,10), pady=5)
 
         input_frame = Frame(plot_frame)
         input_frame.pack(side=TOP, pady=10, padx=10)
         
-        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environemnt Impact", font = ('Helvetica', 12,'bold'))
+        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environmental impact category", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
         
         dropdown = Combobox(input_frame, values=list(self.impact_categories.keys()))
@@ -266,6 +272,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.create_file_menu(menubar)
         self.create_edit_menu(menubar)
         self.create_database_menu(menubar)
+        self.create_analysis_menu(menubar)
         self.create_help_menu(menubar)
 
         return menubar
