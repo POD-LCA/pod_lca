@@ -1,14 +1,32 @@
 
+from material import HOME
+
+import csv 
+
+
 class Unit:
 
-    def __init__(self, name):
+    def __init__(self, name, standard_notation, type, is_metric):
         self.name = name
-        self.standard_notation = None
+        self.standard_notation = standard_notation
         self.base_unit = None
         self.prefix = None
-        self.type = None
+        self.type = type
         self.is_compund_unit = False
+        self.is_metric = is_metric
         self.components = {}
+
+    def get_name(self):
+
+        return self.name
+    
+    def get_standard_notation(self):
+
+        return self.standard_notation
+    
+    def get_type(self):
+
+        return self.type
 
     def convert(self, from_unit, to_unit):
 
@@ -31,6 +49,14 @@ class Unit:
 
         pass
 
+class UnitCalculator:
+
+    def __init__(self):
+        self.base_units_path = HOME + r'\calculator\base_units.csv'
+        self.metric_prefixes_path = HOME + r'\calculator\metric_prefixes.csv'
+        self.units = {}
+
+
     @staticmethod
     def is_type(unit, type):
 
@@ -38,11 +64,67 @@ class Unit:
             return True
         else:
             return False 
-        
-    def generate_all(self):
+   
+    def create_base_units_from_database(self):
 
-        pass
+        with open(self.base_units_path, 'r') as file:
+            csv_reader = csv.reader(file)
+            header = next(csv_reader) # TODO: check rows are correct order
+            for row in csv_reader:
+                is_metric = True if row[3] == 'TRUE' else False
+                new_unit = Unit(row[0], row[1], row[2], is_metric)
+                new_unit.is_compund_unit = row[4]
+                if new_unit.is_compund_unit:
+                    new_unit.components = row[5].split(',')
+
+                self.units[new_unit.name] = new_unit
+
+
+    def create_compound_units(self):
+
+        # create metric prefixes
+        new_units = {}
+        skip = ['cubic meter', 'square meter']
+        with open(self.metric_prefixes_path, 'r') as file:
+            csv_reader = csv.reader(file)
+            header = next(csv_reader) # TODO: check rows are correct order
+            for row in csv_reader:
+                if row[3] == "Yes": # prefix is common
+                    for unit in self.units:
+                        base_unit = self.units[unit]
+                        if base_unit.is_metric and base_unit.get_name() not in skip:
+                            name = row[0] + base_unit.get_name()
+                            standard_notation = row[1] + base_unit.get_standard_notation()
+                            new_unit = Unit(name, standard_notation, base_unit.type, True)
+                            self.base_unit = base_unit
+                            self.prefix = row[0]
+
+                            new_units[new_unit.name] = new_unit
+
+        self.units.update(new_units)
+
+
+        # create areas (replace square meter)
+        # creart volumes
+        # create transportation conjugates (distance time mass)
+        # create energy conjugates
+        
 
     def print_all(self):
 
+        for unit in self.units:
+            print(self.units[unit].name + "(" + self.units[unit].standard_notation + ")")
+
+    @staticmethod
+    def create_conversion_matrices():
+
         pass
+
+
+if __name__ == "__main__":
+    unit_calculator =  UnitCalculator()
+    unit_calculator.create_base_units_from_database()
+
+    unit_calculator.create_compound_units()
+
+    unit_calculator.print_all()
