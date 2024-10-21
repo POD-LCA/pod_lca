@@ -67,7 +67,7 @@ class UnitCalculator:
    
     def create_base_units_from_database(self):
 
-        with open(self.base_units_path, 'r') as file:
+        with open(self.base_units_path, 'r', encoding='utf-8-sig') as file:
             csv_reader = csv.reader(file)
             header = next(csv_reader) # TODO: check rows are correct order
             for row in csv_reader:
@@ -79,15 +79,24 @@ class UnitCalculator:
 
                 self.units[new_unit.name] = new_unit
 
-
     def create_compound_units(self):
 
-        # create metric prefixes
+        self.units.update(self.create_metrix_prefixed_units())
+        # create areas (replace square meter)
+        # creart volumes
+        # create transportation conjugates (distance time mass)
+        # create energy conjugates
+    
+    def create_metrix_prefixed_units(self):
+
         new_units = {}
-        skip = ['cubic meter', 'square meter']
-        with open(self.metric_prefixes_path, 'r') as file:
+        skip = ['cubic meter', 'square meter'] # skip these base units
+
+        with open(self.metric_prefixes_path, 'r', encoding='utf-8-sig') as file:
             csv_reader = csv.reader(file)
             header = next(csv_reader) # TODO: check rows are correct order
+            if not (header[0] == "name" and header[1] == "symbol" and header[3] == "Common"):
+                raise ImportError(f"Headers of import file not compatible.")
             for row in csv_reader:
                 if row[3] == "Yes": # prefix is common
                     for unit in self.units:
@@ -100,16 +109,9 @@ class UnitCalculator:
                             self.prefix = row[0]
 
                             new_units[new_unit.name] = new_unit
-
-        self.units.update(new_units)
-
-
-        # create areas (replace square meter)
-        # creart volumes
-        # create transportation conjugates (distance time mass)
-        # create energy conjugates
         
-
+        return new_units
+    
     def print_all(self):
 
         for unit in self.units:
