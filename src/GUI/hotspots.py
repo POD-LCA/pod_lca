@@ -43,8 +43,8 @@ class HotspotMixins:
 
         coords = self.current_canvas.coords(item_id)
         radius = self.impact_bubble_radius * self.scale[model_id] * (1 + impact_GWP / max_GWP) * k
-        x0, y0 = coords[2] - radius, coords[1] + radius  # Top-left corner
-        x1, y1 = coords[2] + radius, coords[1] - radius  # Bottom-right corner
+        x0, y0 = coords[2] - radius, coords[1] + radius
+        x1, y1 = coords[2] + radius, coords[1] - radius
 
         oval = self.current_canvas.create_oval(x0, y0, x1, y1, outline="black", fill="red", width=2, tag='impact_bubble')
         label = self.current_canvas.create_text(coords[2], coords[1], text=str(impact_GWP), anchor='center', tag='impact_bubble')
