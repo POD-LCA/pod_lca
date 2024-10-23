@@ -88,7 +88,7 @@ class GUIInputManager():
     def update_qty(visualizer, item, qty):
 
         item.update_qty(qty)
-
+        
         if isinstance(item, Product):
             if item.get_transporter() is not None:
                 item.get_transporter().set_travel_weight()

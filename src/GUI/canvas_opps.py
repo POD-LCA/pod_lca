@@ -55,9 +55,11 @@ class CanvasOperationsMixin:
 
                 current_x = slider_data['x'] + dx
                 current_y = slider_data['y'] + dy  
-                    
-                slider.place(x=current_x, y=current_y)
-                    
+
+                if slider._always_on:    
+                    slider.place(x=current_x, y=current_y)
+                slider.temp_x, slider.temp_y = current_x, current_y
+
                 slider_data['x'] = current_x
                 slider_data['y'] = current_y
 
@@ -123,7 +125,10 @@ class CanvasOperationsMixin:
             slider.config(length=int(new_length))
 
             coords = self.current_canvas.coords(slider.rect)
-            slider.place(in_=self.current_canvas, x=coords[0], y=coords[3])
+            if slider._always_on:
+                slider.place(in_=self.current_canvas, x=coords[0], y=coords[3])
+            slider.temp_x, slider.temp_y = coords[0], coords[3]
+
             slider_data['x'] = coords[0]
             slider_data['y'] = coords[3]
 
@@ -195,8 +200,9 @@ class CanvasOperationsMixin:
     def move_slider(self, event, slider, slider_data):
         if not self.ctrl_pressed:
             if self.drag_data["item"] is not None:
+                slider.hide_slider(event)
                 x1, y1, x2, y2 = self.current_canvas.bbox(self.drag_data["item"])
-                slider.place(in_=self.current_canvas, x=x1, y=y2)
+                slider.temp_x, slider.temp_y = x1, y2
 
                 slider_data['x'] = x1
                 slider_data['y'] = y2

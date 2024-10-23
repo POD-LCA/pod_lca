@@ -1,7 +1,7 @@
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.popup import Popup
 
-from tkinter import Menu
+from tkinter import Menu, BooleanVar
 
 import gc
 
@@ -25,12 +25,21 @@ class ItemContextMenuMixin:
                 master.context_menu.add_command(label="View unit impacts", command=lambda: cls.view_impacts(master,item))
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Edit name", command=lambda: cls.edit_name(master,item))
+                master.context_menu.add_command(label="Change quantity", command=lambda: cls.change_qty(master,item))
                 master.context_menu.add_command(label="Change units", command=lambda: cls.change_unit(master,item))
                 master.context_menu.add_command(label="Change life cycle stage", command=lambda: cls.update_life_cycle_stage(master,item))
                 if GUIInputManager.is_product(master.item_map[model_id][item]):
                     master.context_menu.add_command(label="Set density", command=lambda: cls.set_product_density(master, item))            
                 master.context_menu.add_separator()
-                master.context_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
+
+                slider_menu = Menu(master.context_menu, tearoff=False)
+                slider_on = BooleanVar(value=slider._always_on)
+                slider_menu.add_radiobutton(label="On", variable=slider_on, value=True, command= lambda: cls.set_slider_state(master, item, status='on'))
+                slider_menu.add_radiobutton(label="Off", variable=slider_on, value=False, command= lambda: cls.set_slider_state(master, item, status='off'))
+                slider_menu.add_separator()
+                slider_menu.add_command(label="Set slider properties", command=lambda: cls.set_slider_properties(master,item))
+                master.context_menu.add_cascade(menu=slider_menu, label='Quantity slider')
+
                 master.context_menu.add_separator()
                 relationships_menu = Menu(master, tearoff=False)
                 master.context_menu.add_cascade(menu=relationships_menu, label="Relationships")
@@ -112,14 +121,34 @@ class ItemContextMenuMixin:
 
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
+
     @classmethod
-    def _update_label(cls, master, item_id, cmd):
+    def change_qty(cls, master, item_id):
 
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
+
+        popup = Popup(master, "Change quantity", "300x200")
+        qty = Popup._popup_input_field(popup, f"Qty (in {GUIInputManager.get_unit(item)}): ", validate_num=True, default_val=GUIInputManager.get_qty(item)) 
+
+        _cmd = lambda: GUIInputManager.update_qty(master, item, qty.get()) 
+        cmd = lambda: cls._update_label(master, item_id, _cmd, update_slider=True)
+
+        Popup.button_pack_OKCancel(popup, popup, cmd)
+    
+    @classmethod
+    def _update_label(cls, master, item_id, cmd, update_slider=False):
+
+        model_id = master.get_current_model()
+        item = master.item_map[model_id][item_id]
+        slider = master.slider_map[model_id][item_id]
         cmd()
 
         text_str = GUIInputManager.get_name(item) + '\n' + GUIInputManager.get_stage(item)
+        if not slider._always_on:
+            text_str += '\n' + str(GUIInputManager.get_qty(item)) + ' ' + GUIInputManager.get_unit(item)
+        if update_slider:
+            slider.update_value(GUIInputManager.get_qty(item))
         text_item = master.label_map[item_id]
         master.current_canvas.itemconfig(text_item, text=text_str)
 
@@ -190,6 +219,22 @@ class ItemContextMenuMixin:
         cmd = lambda: slider.update_slider(qty_min.get(), qty_max.get(), qty_reolution.get())
 
         Popup.button_pack_OKCancel(popup, popup, cmd)
+
+    @classmethod
+    def set_slider_state(cls, master, item, status='off'):
+
+        model_id = master.get_current_model()
+        slider = master.slider_map[model_id][item]
+
+        if status == 'off':
+            slider._always_on = False
+            slider.hide_slider(None)
+        elif status == 'on':
+            slider._never_show = False
+            slider._always_on = True
+            slider.show_slider(None) 
+        else:
+            raise ValueError("Slider status should be either 'on' or 'off'.")              
     
 
     @classmethod
