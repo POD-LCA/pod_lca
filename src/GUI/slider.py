@@ -13,7 +13,7 @@ class Slider(Scale):
         self.temp_x = None
         self.temp_y = None
         self._always_on = False
-        self._never_show = False
+        self._never_show = True
 
     def update_value(self, value):
 

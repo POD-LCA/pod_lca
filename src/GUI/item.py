@@ -91,12 +91,12 @@ class Item(ItemContextMenuMixin):
         width = abs(x2-x1)
 
         name = GUIInputManager.get_name(item)
-        units = GUIInputManager.get_unit(item)
+        unit = GUIInputManager.get_unit(item)
         stage = GUIInputManager.get_stage(item)
         qty = GUIInputManager.get_travel_distance(item) if GUIInputManager.is_transport(item) else GUIInputManager.get_qty(item)
         
-        item_id, text_item, text_id = cls.create_canvas_item(master, model, name, stage, start, height, width, color, tags)
-        slider, slider_data = cls.create_slider(master, model, start, height, width, qty, units, item_id, slider_cmd)
+        item_id, text_item, text_id = cls.create_canvas_item(master, model, name, stage, qty, unit, start, height, width, color, tags)
+        slider, slider_data = cls.create_slider(master, model, start, height, width, qty, unit, item_id, slider_cmd)
         cls.item_bind(master, item_id, text_item, text_id, slider, slider_data)
         
         dependents_all = [item for sublist in master.dependents[model].values() for item in sublist]

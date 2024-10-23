@@ -349,8 +349,8 @@ class MenubarMixin:
 
         menu_hotspot = Menu(menu_analysis, tearoff=False)
         self.hotspot_on_off = BooleanVar(value=False)
-        menu_hotspot.add_radiobutton(label="On", variable=self.hotspot_on_off, value=True, command=lambda: GUIOutputManager.show_hotspots(self))
-        menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False)
+        menu_hotspot.add_radiobutton(label="On", variable=self.hotspot_on_off, value=True, command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False, command=lambda: self.clear_hotspots())
         menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
 
         menu_analysis.add_separator()
