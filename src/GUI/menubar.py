@@ -348,7 +348,7 @@ class MenubarMixin:
         menubar.add_cascade(menu=menu_analysis, label='Analysis')
 
         menu_hotspot = Menu(menu_analysis, tearoff=False)
-        self.hotspot_on_off = BooleanVar(value=False)
+        self.hotspot_on_off = BooleanVar(value=True)
         menu_hotspot.add_radiobutton(label="On", variable=self.hotspot_on_off, value=True, command=lambda: self.show_hotspots())
         menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False, command=lambda: self.clear_hotspots())
         menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
