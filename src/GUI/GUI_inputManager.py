@@ -96,7 +96,7 @@ class GUIInputManager():
         visualizer.update_dependent_qtys(item, qty)
         visualizer.update_plot()
         if visualizer.hotspot_on_off.get():
-            GUIOutputManager.show_hotspots(visualizer)
+            visualizer.show_hotspots()
 
     @staticmethod
     def update_life_cycle_stage(visualizer, item, stage):
@@ -230,7 +230,7 @@ class GUIInputManager():
         item.set_transported_distance(qty)
         visualizer.update_plot()  
         if visualizer.hotspot_on_off.get():
-            GUIOutputManager.show_hotspots(visualizer)
+            visualizer.show_hotspots()
 
     @staticmethod
     def set_transported_product(visualizer, item, product):
