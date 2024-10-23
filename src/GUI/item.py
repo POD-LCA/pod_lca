@@ -11,7 +11,7 @@ class Item(ItemContextMenuMixin):
     # =================================
 
     @classmethod
-    def create_canvas_item(cls, master, model, name, stage, start, height, width, color, tags):
+    def create_canvas_item(cls, master, model, name, stage, qty, unit, start, height, width, color, tags):
 
         tags.append("item")
         x1, y1, x2, y2 = start[0], start[1], start[0] + width*master.scale[model], start[1] + height*master.scale[model]
@@ -21,7 +21,7 @@ class Item(ItemContextMenuMixin):
         disp_num = len(master.item_disp_num[model]) + 1
 
         text_x, text_y = (x1 + x2) // 2, (y1 + y2) // 2
-        text_str = name + '\n' + stage
+        text_str = name + '\n' + stage + '\n' + str(qty) + ' ' + unit
         text_item = master.current_canvas.create_text(text_x, text_y, text=text_str)
 
         master.label_map[item_id] = text_item
@@ -43,13 +43,25 @@ class Item(ItemContextMenuMixin):
         slider = Slider(master.current_canvas, "Qty (in {})".format(units), min=slider_min, max=slider_max, resolution=resolution, width=master.default_slider_width*master.scale[model], length= width*master.scale[model], command=cmd)
         slider_data = {"widget": slider, "x": x, "y": y, "length": slider.cget("length")}
         master.sliders[model][item_id] = slider_data
-        slider.place(in_=master.current_canvas, x=x, y=y)
+        slider.temp_in_, slider.temp_x, slider.temp_y = master.current_canvas, x, y
         slider.update_value(qty)
         slider.rect = item_id
 
         master.slider_map[model][item_id] = slider
 
+        slider.bind("<Enter>", slider.show_slider)
+        slider.bind("<Leave>", slider.hide_slider)
+
         return slider, slider_data
+    
+    @classmethod
+    def update_qty(cls, master, item_id, qty):
+
+        model_id = master.get_current_model()
+        product = master.item_map[model_id][item_id]
+
+        cmd = lambda: GUIInputManager.update_qty(master, product, qty)
+        cls._update_label(master, item_id, cmd, update_slider=False)
     
     @classmethod
     def item_bind(cls, master, item_id, text_item, text_id, slider, slider_data):
@@ -66,6 +78,9 @@ class Item(ItemContextMenuMixin):
         master.current_canvas.tag_bind(item_id, "<ButtonRelease-3>", master.remove_highight)
 
         master.current_canvas.tag_bind(group_tag, "<B1-Motion>", lambda event: master.move_slider(event, slider, slider_data))
+
+        master.current_canvas.tag_bind(group_tag, "<Enter>", slider.show_slider)
+        master.current_canvas.tag_bind(group_tag, "<Leave>", slider.hide_slider)
 
     @classmethod
     def restore_item(cls, master, model, item, cords, color, tags, slider_cmd):

@@ -31,13 +31,13 @@ class EnergyProduct(Product):
         model_id = self.get_current_model()
 
         product = GUIInputManager.create_energy(self.project, name, unit, float(qty), stage, lca_data)
-        slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = EnergyProduct.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_energy, tags=["product", "energy"])
+        item_id, text_item, text_id = EnergyProduct.create_canvas_item(self, model_id, name, stage, qty, unit, start, height, width, self.color_energy, tags=["product", "energy"])
+        slider_cmd = lambda x: EnergyProduct.update_qty(self, item_id, x)
         slider, slider_data = EnergyProduct.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         EnergyProduct.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
