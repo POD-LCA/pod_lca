@@ -139,6 +139,11 @@ class SaveLoadMethods:
         
         self.plot.calculator.project = self.project
 
+        if self.hotspot_on_off.get():
+            self.show_hotspots()
+
+        self.update_plot()
+
 
     def clear_state(self):
 

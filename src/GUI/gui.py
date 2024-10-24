@@ -13,6 +13,7 @@ from GUI.transportation import Transportation
 from GUI.relationships import RelationshipsMixin
 from GUI.canvas_opps import CanvasOperationsMixin
 from GUI.save_load import SaveLoadMethods
+from GUI.hotspots import HotspotMixins
 
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar
 from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
@@ -21,7 +22,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Process, Transportation, EnergyProduct, EmissionProduct,
-                        WasteProduct, Parameter, ConnectorsMixin, RelationshipsMixin, SaveLoadMethods):
+                        WasteProduct, Parameter, ConnectorsMixin, RelationshipsMixin, SaveLoadMethods, HotspotMixins):
     def __init__(self):
         super().__init__()
         Style().theme_use('vista')
@@ -47,6 +48,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.highlight_width = 5
         self.hotspot_color = 'red'
         self.hotspot_width = 5
+        self.impact_bubble_radius = 10
         self.connector_type = 'elbow'
         self.connector_offset = 50
 

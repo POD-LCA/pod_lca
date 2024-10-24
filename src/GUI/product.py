@@ -31,13 +31,13 @@ class Product(Item):
         model_id = self.get_current_model()
 
         product = GUIInputManager.create_product(self.project, name, unit, float(qty), stage, lca_data)
-        slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Product.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_product, tags=["product"])
+        item_id, text_item, text_id = Product.create_canvas_item(self, model_id, name, stage, qty, unit, start, height, width, self.color_product, tags=["product"])
+        slider_cmd = lambda x: Product.update_qty(self, item_id, x)
         slider, slider_data = Product.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         Product.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
@@ -51,5 +51,3 @@ class Product(Item):
         slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x) 
 
         return Product.restore_item(self, model, product, cords, self.color_product, ["product"], slider_cmd)
-
-
