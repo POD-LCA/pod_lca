@@ -45,6 +45,10 @@ class Process(Item):
         GUIInputManager.set_id(process, item_id)
         self.item_map[model_id][item_id] = process
 
+        self.update_plot()
+        if self.hotspot_on_off.get():
+            self.show_hotspots()
+            
         popup.destroy()
 
     def restore_process(self, model, process, cords):
