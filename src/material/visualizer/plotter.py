@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -75,9 +76,15 @@ class Plotter:
 
     def set_grid(self):
         """ Set grids of the plot.
+            Default setting updates the y-axis height based on the maximum bar height.
         """
 
-        pass
+        max_val = max([rect.get_height() for rect in self.ax.patches])
+        if max_val > 0.0:
+            self.ax.set_ylim([0, max(np.power(10,np.ceil(np.log10(max_val))),10)])
+        else:
+            self.ax.set_ylim([0, 10])
+        plt.grid(True)
 
     def draw(self):
         """ Updates an existing plot.

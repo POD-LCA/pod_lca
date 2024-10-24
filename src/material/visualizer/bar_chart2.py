@@ -24,37 +24,36 @@ class BarChart2(Plotter):
         """ Calls calculator to generate the data and then sets them in the plot.
         """
 
-        data_name, data_qty, data_len, impacts = self.calculator.get_barchart2_data(self.impact_category, self.active_models)
-
         stages = ('A1', 'A2', 'A3')
-        width = 0.6  
-        bottom = np.zeros(3)
+        stages_nos = np.arange(len(stages))
 
-        for stage, impact in impacts.items():
-            p = self.ax.bar(stages, impact, width, label=stage, bottom=bottom)
-            bottom += impact
-            self.ax.bar_label(p, label_type='center')
-
-        self.ax.set_title('Life cycle stages')
-        self.ax.legend()   
+        width = 0.4  
+        model_no = 0
+        for model in self.active_models:
+            _, _, _, impacts = self.calculator.get_barchart2_data(self.impact_category, model)
+            bottom = np.zeros(3) 
+            for stage, impact in impacts.items():
+                p = self.ax.bar(stages_nos + (model_no * width), impact, width, label=stage, bottom=bottom)
+                bottom += impact
+                self.ax.bar_label(p, label_type='center')
+            model_no += 1
+        
+        self.ax.set_xticks(range(len(stages)), stages)  
 
     def set_labels(self): 
         """ Set plot title and axis label.
         """
         self.ax.set_xlabel("Life Cycle Stage")
         self.ax.set_ylabel(f'{self.impact_category} Impact')
-        
-    def set_grid(self):
-        """ Set grids of the plot.
-            Updates the y-axis height based on the maximum bar height.
-        """
-        pass
+        self.ax.set_title('Life cycle stages')
+
         
     def set_legend(self):
         """ Set legend of the plot.
         """
 
-        pass
+        self.ax.legend(title='Life cycle stage color', loc='upper left', ncols=3)
+
 
 
 if __name__ == '__main__':
