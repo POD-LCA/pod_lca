@@ -1,5 +1,6 @@
 from GUI.popup import Popup
 from GUI.GUI_inputManager import GUIInputManager
+from GUI.item import Item
 
 import re
 from tkinter import DISABLED, ACTIVE
@@ -80,7 +81,8 @@ class RelationshipsMixin:
                     f"Error evaluating expression: {e}"
 
                 dependent_item = self.item_map[model_id][dependent]
-                GUIInputManager.update_qty(self, dependent_item, calc_qty)
+                cmd = lambda: GUIInputManager.update_qty(self, dependent_item, calc_qty)
+                Item._update_label(self, dependent, cmd, update_slider=False)
                 slider = self.slider_map[model_id][dependent]
                 slider.config(state=ACTIVE) 
                 slider.set(calc_qty)
