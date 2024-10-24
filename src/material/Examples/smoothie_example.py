@@ -12,6 +12,7 @@ project.get_database().import_data_from_CSV(HOME + '\databaseManager\impact_data
 project.get_database().set_custom_entry("Electricity_New", "kWh", 
                                         {"GWP":0.503, "acid_pot":0.0036, "eutro_pot":5.83e-05, "ozone":7.6e-11, "smog":3.37e-2})
 
+
 sprinkles = project.current_model.create_product("Sprinkles", "A1")
 sprinkles.update_qty(2.0)
 sprinkles.set_unit('kg')
@@ -113,6 +114,15 @@ waste.update_qty(1.0)
 waste.set_unit('kg')
 waste.set_impact_database_entry("Waste to landfill")
 
+model2 = project.create_model('Model_02')
+project.set_current_model('Model_02')
+
+waste = model2.create_waste("Waste to landfill", "A3")
+waste.update_qty(1.0)
+waste.set_unit('kg')
+waste.set_impact_database_entry("Waste to landfill")
+
+
 hot_spots = project.get_calculator().hot_spot_analysis(printout=True)
 
 graph = BarChart(project)
@@ -122,10 +132,10 @@ graph.set_active_models(['Model_0'])
 
 graph2 = BarChart2(project)
 graph2.set_impact_category("GWP")
-graph2.set_active_models(['Model_0'])
-#graph2.show()
+graph2.set_active_models(['Model_0', 'Model_02'])
+graph2.show()
 
 graph3 = BarChart3(project)
 graph3.set_impact_category(["GWP","ODP"])
 graph3.set_active_models(['Model_0'])
-graph3.show()
+#graph3.show()
