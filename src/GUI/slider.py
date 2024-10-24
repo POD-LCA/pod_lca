@@ -9,6 +9,11 @@ class Slider(Scale):
     def __init__(self, root, txt, min, max, resolution, width, length, command):
         super().__init__(master=root, label=txt, from_=min, to=max, resolution=resolution,length=length, orient=HORIZONTAL, command=command)
         self.rect = None
+        self.temp_in_ = None
+        self.temp_x = None
+        self.temp_y = None
+        self._always_on = False
+        self._never_show = True
 
     def update_value(self, value):
 
@@ -32,4 +37,12 @@ class Slider(Scale):
     def update_slider(self, min, max, res):
 
         self.config(from_=min, to=max, resolution=res)
+
+    def show_slider(self, event):
+        if not self._never_show:
+            self.place(in_=self.temp_in_, x=self.temp_x, y=self.temp_y)
+
+    def hide_slider(self, event):
+        if not self._always_on:
+            self.place_forget()
 

@@ -31,13 +31,13 @@ class EmissionProduct(Product):
         model_id = self.get_current_model()
 
         product = GUIInputManager.create_emission(self.project, name, unit, float(qty), stage, lca_data)
-        slider_cmd = lambda x: GUIInputManager.update_qty(self, product, x)
 
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = EmissionProduct.create_canvas_item(self, model_id, name, stage, start, height, width, self.color_emission, tags=["product", "emission"])
+        item_id, text_item, text_id = EmissionProduct.create_canvas_item(self, model_id, name, stage, qty, unit, start, height, width, self.color_emission, tags=["product", "emission"])
+        slider_cmd = lambda x: EmissionProduct.update_qty(self, item_id, x)
         slider, slider_data = EmissionProduct.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         EmissionProduct.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
