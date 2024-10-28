@@ -44,4 +44,8 @@ class EnergyProduct(Product):
         GUIInputManager.set_id(product, item_id)
         self.item_map[model_id][item_id] = product
 
+        self.update_plot()
+        if self.hotspot_on_off.get():
+            self.show_hotspots()
+            
         popup.destroy()

@@ -235,10 +235,21 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environmental impact category", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
         
-        dropdown = Combobox(input_frame, values=list(self.impact_categories.keys()))
-        dropdown.pack(side=RIGHT, fill=BOTH)
-        dropdown.current(0)
-        dropdown.bind("<<ComboboxSelected>>", lambda x:self._update_plot_from_combo(x))
+        dropdown_impact = Combobox(input_frame, values=list(self.impact_categories.keys()))
+        dropdown_impact.pack(side=RIGHT, fill=BOTH)
+        dropdown_impact.current(0)
+        dropdown_impact.bind("<<ComboboxSelected>>", lambda x:self._update_plot_from_combo(x))
+
+        input_frame_2 = Frame(plot_frame)
+        input_frame_2.pack(side=TOP, pady=20, padx=10)
+        
+        label = Label(input_frame_2, bg=self.plotter_bg_color, fg='white', text="Plot type", font = ('Helvetica', 12,'bold'))
+        label.pack(side=LEFT, padx=(0, 10))
+
+        dropdown_plot = Combobox(input_frame_2, values=['Bar chart 1', 'Bar chart 2', 'Bar chart 3'])
+        dropdown_plot.pack(side=RIGHT, fill=BOTH)
+        dropdown_plot.current(0)
+        dropdown_plot.bind("<<ComboboxSelected>>", lambda x:self.replace_figure(plot_frame, dropdown_impact.get(), x.widget.get()))
 
         checkbox_frame = Frame(plot_frame, bg=self.plotter_bg_color)
         checkbox_frame.pack(fill='both', expand=True, anchor='w')
@@ -256,13 +267,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         for impact in self.impact_categories.keys():
             self.plot_data["Model_0"][impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
         
-        # TODO: Add type of plot
-        # TODO: standard names for the plot types?
-        self.plot = self.create_plot(dropdown.get())
-        
-        canvas_plot = FigureCanvasTkAgg(self.plot.fig, master=plot_frame)
-        canvas_plot.draw()
-        canvas_plot.get_tk_widget().pack(side=RIGHT, padx=10, pady=10)
+        canvas_plot = self.create_figure(plot_frame, dropdown_impact.get(), dropdown_plot.get())
 
         return plot_frame, canvas_plot
     

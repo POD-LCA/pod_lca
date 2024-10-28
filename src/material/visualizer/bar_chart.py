@@ -48,17 +48,6 @@ class BarChart(Plotter):
         self.ax.set_ylabel(f'{self.impact_category} Impact')
         self.ax.set_title('Life Cycle Stages')
         
-    def set_grid(self):
-        """ Set grids of the plot.
-            Updates the y-axis height based on the maximum bar height.
-        """
-
-        max_val = max([rect.get_height() for rect in self.ax.patches])
-        if max_val > 0.0:
-            self.ax.set_ylim([0, max(np.power(10,np.ceil(np.log10(max_val))),10)])
-        else:
-            self.ax.set_ylim([0, 10])
-        plt.grid(True)
         
     def set_legend(self):
         """ Set legend of the plot.
