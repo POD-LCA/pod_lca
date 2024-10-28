@@ -234,14 +234,14 @@ class Calculator():
         return  stages, data_dict
         
 
-    def get_barchart2_data (self,impact_category, model_lst= ['Model_0']):
+    def get_barchart2_data (self,impact_category, model='Model_0'):
 
         data_name=[]
         data_qty=[]
         data_len=[]
 
-        project = self.project.get_model(model_lst[0]).get_project()
-        model = project.get_model(model_lst[0])
+        project = self.project.get_model(model).get_project()
+        model = project.get_model(model)
 
         for i in model.get_impacts():
             data_len.append(len(model.get_impacts()[i]))
