@@ -12,16 +12,6 @@ __version__ = "0.1.0"
 
 class BarChart3(Plotter):
     """
-    A bar chart to visualize the impact (of a given impact category) for mutiple models with data categorized
-    by the life cycle stage.
-
-    """   
-    
-    def __init__(self, project):
-        super().__init__(project)
-
-class BarChart3(Plotter):
-    """
     A bar chart to visualize the impact of a given impact category for multiple models,
     with data categorized by life cycle stage.
     """
@@ -34,59 +24,63 @@ class BarChart3(Plotter):
         Calls the calculator to generate data and sets it for plotting.
         Each model's impact by life cycle stage is displayed as grouped bars.
         """
-        num_models = len(self.active_models)  # Number of models
-        width = 0.8 / num_models  # Adjust width to avoid overlapping bars
-        print ("acccctiv", self.active_models)
-        # Iterate over models and log their data for inspection
+        num_models = len(self.active_models) 
+        width = 0.8 / num_models
+
         for i, model in enumerate(self.active_models):
             print(f"Processing Model {i}: {model}")
 
-            # Get impact data categorized by life cycle stage
             impact_by_stage = self.calculator.get_barchart3_data(self.impact_category, model)
-            print(f"Impact Data for Model {i}: {impact_by_stage}")
-
-            # Initialize the bottom positions for stacking bars
             bottom = np.zeros(len(self.impact_category))
 
-            # Calculate the x-position offset for each model
             x_positions = np.arange(len(self.impact_category)) + i * width
 
-            # Plot each stage's impact data as a stacked bar
             for stage, impacts in impact_by_stage.items():
-                print(f"Stage: {stage}, Impacts: {impacts}")  # Debug output
+                rounded_impacts = self.round_to_significant(impacts)
 
                 p = self.ax.bar(
-                    x_positions, impacts, width, label=f"{model} - {stage}", bottom=bottom
+                    x_positions, rounded_impacts, width, 
+                    label=f"{model} - {stage}", bottom=bottom
                 )
-                bottom += impacts  # Update bottom for the next stacked bar
-                self.ax.bar_label(p, label_type='center')  # Center labels
 
-        # Align x-ticks to the center of grouped bars
+                bottom += rounded_impacts 
+
+                self.ax.bar_label(p, labels=self.format_labels(rounded_impacts), label_type='center')
+
         self.ax.set_xticks(np.arange(len(self.impact_category)) + width * (num_models - 1) / 2)
-        self.ax.set_xticklabels(self.impact_category)
-
-        # Add legend after plotting all models
+        self.set_x_labels()
         self.ax.legend()
-
-        # Adjust layout to prevent overlap
         self.ax.figure.tight_layout()
 
-    def set_labels(self): 
-        """ Set plot title and axis label.
-        """
-                
+    def set_x_labels(self):
+
+        """ Set x-tick labels with impact categories and their units. """
+
+        if isinstance(self.impact_category, list):
+
+            labels = [
+                f"{category} ({self.IMPACT_UNITS.get(category, '')})"
+                for category in self.impact_category
+            ]
+        else:
+
+            unit = self.IMPACT_UNITS.get(self.impact_category, '')
+            labels = [f"{self.impact_category} ({unit})"]
+
+        self.ax.set_xticklabels(labels)
+
+    def set_labels(self):
+        """ Set plot title and axis labels. """
+        self.ax.set_ylabel("Impact Value")
         self.ax.set_title('Environmental Impacts by Stage')
-        
+
     def set_grid(self):
-        """ Set grids of the plot.
-            Updates the y-axis height based on the maximum bar height.
-        """
-        pass
-        
+        """ Set grid lines for the plot. """
+        pass  # Implement as needed
+
     def set_legend(self):
-        """ Set legend of the plot.
-        """
-        pass
+        """ Set the legend of the plot. """
+        pass  # Implement as needed
 
 
 if __name__ == '__main__':

@@ -24,6 +24,15 @@ class Plotter:
         Set of axes of the figure being plotted.
     """
 
+    # Shared dictionary to map impact categories to their units
+    IMPACT_UNITS = {
+        'GWP': 'kg CO₂-eq',    # Global Warming Potential
+        'AP': 'kg SO₂-eq',     # Acidification Potential
+        'EP': 'kg PO₄-eq',     # Eutrophication Potential
+        'ODP': 'kg CFC-11-eq', # Ozone Depletion Potential
+        'SFP': 'kg O₃-eq'      # Smog Formation Potential
+    }
+
     def __init__(self, project):
         self.calculator = project.get_calculator()
         plt.close('all')
@@ -55,6 +64,34 @@ class Plotter:
         """
 
         self.active_models = active_models
+        
+    def round_to_significant(self, values, sig_figs=3, apply_rounding=True):
+
+        """ Optionally round a list of numbers to the given number of significant figures. """
+        
+        rounded_values = []
+        
+        for value in np.atleast_1d(values): 
+            if np.isnan(value) or np.isinf(value):
+                # If NaN or infinity, keep the original value
+                rounded_values.append(value)
+            elif value == 0:
+                # Preserve zero without rounding
+                rounded_values.append(0)
+            elif apply_rounding:
+                # Apply rounding to the specified number of significant figures
+                rounded_value = round(float(value), sig_figs - int(np.floor(np.log10(abs(value)))))
+                rounded_values.append(rounded_value)
+            else:
+                # Keep the original value without rounding
+                rounded_values.append(value)
+
+        return rounded_values
+
+    def format_labels(self, values):
+        """ Format labels for bar charts with 3 significant figures. """
+        return [f"{v:.3g}" for v in values]
+    
 
     def set_data(self):
         """ Calls calculator to generate the data and then sets them in the plot.
