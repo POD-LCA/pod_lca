@@ -262,17 +262,17 @@ class Calculator():
         return data_name, data_qty, data_len, impacts
 
 
-    def get_barchart3_data (self, impact_category, model_lst= ['Model_0']):
+    def get_barchart3_data (self, impact_category, model= 'Model_0'):
 
         labels = ['A1', 'A2', 'A3']
         title='Environmental Impacts by Stage'
-        project = self.project.get_model(model_lst[0]).get_project()
+        project = self.project.get_model(model).get_project()
         calcualtor = project.get_calculator()
 
         data=[]
         for i in impact_category:
 
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)[0]
+            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i, model)[0]
             globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
             data.append(globals()['plt_data_' + i])
 
