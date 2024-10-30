@@ -62,7 +62,7 @@ class Transportation(Item):
         process = master.item_map[model_id][item_id]
 
         cmd = lambda: GUIInputManager.update_transport_dist(master, process, qty)
-        cls._update_label(master, item_id, cmd, update_slider=False)
+        cls._on_update(master, item_id, cmd, update_slider=False)
 
     # =================================
     # Context Menu (Overides)
@@ -105,12 +105,11 @@ class Transportation(Item):
             raise TypeError
         
     @classmethod
-    def _update_label(cls, master, item_id, cmd, update_slider=False):
+    def _update_label(cls, master, item_id, update_slider=False):
 
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
         slider = master.slider_map[model_id][item_id]
-        cmd()
 
         text_str = GUIInputManager.get_name(item) + '\n' + GUIInputManager.get_stage(item)
         if not slider._always_on:

@@ -127,7 +127,7 @@ class Parameter(Item):
         name = Popup._popup_input_field(popup, "Item name: ", default_val=param.get_name()) 
 
         _cmd = lambda: param.edit_name(name.get()) 
-        cmd = lambda: cls._update_label(master, item_id, _cmd)
+        cmd = lambda: cls._on_update(master, item_id, _cmd)
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
@@ -135,7 +135,6 @@ class Parameter(Item):
 
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
-        cmd()
 
         text_str = GUIInputManager.get_name(item)
         text_item = master.label_map[item_id]

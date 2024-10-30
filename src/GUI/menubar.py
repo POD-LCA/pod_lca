@@ -6,7 +6,7 @@ from GUI.cell_table import CellTable
 
 import os
 import sys
-from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar
+from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar, StringVar
 from tkinter.ttk import Notebook, Combobox
 
 class MenubarMixin:
@@ -352,8 +352,14 @@ class MenubarMixin:
         self.hotspot_on_off = BooleanVar(value=True)
         menu_hotspot.add_radiobutton(label="On", variable=self.hotspot_on_off, value=True, command=lambda: self.show_hotspots())
         menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False, command=lambda: self.clear_hotspots())
+        menu_hotspot.add_separator()
+        self.hotspot_impact_cat = StringVar(value='GWP')
+        menu_hotspot.add_radiobutton(label="GWP", variable=self.hotspot_impact_cat, value='GWP', command=lambda: self.show_hotspots('GWP'))
+        menu_hotspot.add_radiobutton(label="AP", variable=self.hotspot_impact_cat, value='AP', command=lambda: self.show_hotspots('acid_pot'))
+        menu_hotspot.add_radiobutton(label="EP", variable=self.hotspot_impact_cat, value='EP', command=lambda: self.show_hotspots('eutro_pot'))
+        menu_hotspot.add_radiobutton(label="ODP", variable=self.hotspot_impact_cat, value='ODP', command=lambda: self.show_hotspots('ozone'))
+        menu_hotspot.add_radiobutton(label="SFP", variable=self.hotspot_impact_cat, value='SFP', command=lambda: self.show_hotspots('smog'))
         menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
-
         menu_analysis.add_separator()
         menu_analysis.add_command(label='Monte Carlo Simulation', command='')
 
@@ -370,7 +376,7 @@ class MenubarMixin:
 
     def open_cell_view(self, menubar):
 
-        popup = Popup(menubar, "Bill of materials", "600x600")
+        popup = Popup(menubar, "Bill of materials", "1400x600")
 
         input_frame = Frame(popup)
         input_frame.pack(side=TOP, pady=10, padx=10)

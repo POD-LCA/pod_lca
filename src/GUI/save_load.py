@@ -106,6 +106,7 @@ class SaveLoadMethods:
         item_map = state["item_map"]
         for model in self.models:
             self.current_canvas = self.models[model]
+            GUIInputManager.set_current_model(self.project, model)
             # products need to be restored first due to possible dependency of transportation processes
             # on products
             item_id_history = {}

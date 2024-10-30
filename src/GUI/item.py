@@ -61,7 +61,7 @@ class Item(ItemContextMenuMixin):
         product = master.item_map[model_id][item_id]
 
         cmd = lambda: GUIInputManager.update_qty(master, product, qty)
-        cls._update_label(master, item_id, cmd, update_slider=False)
+        cls._on_update(master, item_id, cmd, update_slider=False)
     
     @classmethod
     def item_bind(cls, master, item_id, text_item, text_id, slider, slider_data):
