@@ -103,7 +103,7 @@ class ItemContextMenuMixin:
         life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])
 
         _cmd = lambda: GUIInputManager.update_life_cycle_stage(master, item, life_cycle_stage.get())
-        cmd = lambda: cls._update_label(master,item_id, _cmd)
+        cmd = lambda: cls._on_update(master,item_id, _cmd)
 
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
@@ -117,7 +117,7 @@ class ItemContextMenuMixin:
         name = Popup._popup_input_field(popup, "Name: ", default_val=GUIInputManager.get_name(item)) 
 
         _cmd = lambda: GUIInputManager.edit_name(master, item, name.get()) 
-        cmd = lambda: cls._update_label(master, item_id, _cmd)
+        cmd = lambda: cls._on_update(master, item_id, _cmd)
 
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
@@ -132,17 +132,23 @@ class ItemContextMenuMixin:
         qty = Popup._popup_input_field(popup, f"Qty (in {GUIInputManager.get_unit(item)}): ", validate_num=True, default_val=GUIInputManager.get_qty(item)) 
 
         _cmd = lambda: GUIInputManager.update_qty(master, item, qty.get()) 
-        cmd = lambda: cls._update_label(master, item_id, _cmd, update_slider=True)
+        cmd = lambda: cls._on_update(master, item_id, _cmd, update_slider=True)
 
         Popup.button_pack_OKCancel(popup, popup, cmd)
-    
+
     @classmethod
-    def _update_label(cls, master, item_id, cmd, update_slider=False):
+    def _on_update(cls, master, item_id, cmd, update_slider=False):
+
+        cmd()
+        ItemContextMenuMixin._update_label(master, item_id, update_slider)
+
+    
+    @staticmethod
+    def _update_label(master, item_id, update_slider=False):
 
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
         slider = master.slider_map[model_id][item_id]
-        cmd()
 
         text_str = GUIInputManager.get_name(item) + '\n' + GUIInputManager.get_stage(item)
         if not slider._always_on:
@@ -188,21 +194,12 @@ class ItemContextMenuMixin:
     def _update_slider_label(cls, master, item_id, new_unit, old_unit):
 
         model_id = master.get_current_model()
-
         item = master.item_map[model_id][item_id]
-        GUIInputManager.set_unit(item, new_unit)
+        
+        GUIInputManager.change_unit(master, item, new_unit)
 
-        conversion_factor = GUIInputManager.unit_conversion(master.project, old_unit, new_unit)
-        if conversion_factor is not None:
-            master.slider_map[model_id][item_id]
-            old_val = master.sliders[model_id][item_id]["widget"].get()
-            new_val = old_val * conversion_factor
-
-            GUIInputManager.update_qty(master, item, new_val)
-
-            master.sliders[model_id][item_id]["widget"].update_value(new_val)
-
-        master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(new_unit))
+        master.sliders[model_id][item_id]["widget"].update_value(GUIInputManager.get_qty(item))
+        master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(GUIInputManager.get_unit(item)))
 
     @classmethod
     def set_slider_properties(cls, master, item):

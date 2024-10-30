@@ -82,7 +82,7 @@ class RelationshipsMixin:
 
                 dependent_item = self.item_map[model_id][dependent]
                 cmd = lambda: GUIInputManager.update_qty(self, dependent_item, calc_qty)
-                Item._update_label(self, dependent, cmd, update_slider=False)
+                Item._on_update(self, dependent, cmd, update_slider=False)
                 slider = self.slider_map[model_id][dependent]
                 slider.config(state=ACTIVE) 
                 slider.set(calc_qty)

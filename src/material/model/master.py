@@ -104,11 +104,25 @@ class Master:
             try:
                 qty = float(qty)
             except:
-                raise TypeError
+                raise TypeError("Qunatity should be a number.")
     
         self.qty = qty
         
         self.set_impacts_qtys()
+
+    def change_units(self, unit):
+
+        value_in = self.get_qty()
+        unit_in = self.get_unit()
+
+        conversion_factor = self.get_calculator().conversion_factor(unit_in, unit)
+
+        if conversion_factor is not None:
+            self.unit = unit
+            self.update_qty(value_in * conversion_factor)
+        else:
+            raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
+
 
     def set_impacts_qtys(self):
         """ Sets impacts quantities, based on database item asigned to the product/process 
@@ -125,7 +139,7 @@ class Master:
             conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Unit"])
 
             if conversion_factor is None:
-                raise ImportError(f"{self.get_name()}-(of units {self.get_unit()}) and its LCA data ({self.database_item}) have incompatible units.")
+                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.database_item} of units {unit_impacts['Unit']}) are of incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
 
@@ -141,8 +155,13 @@ class Master:
                 The name of the database item which gives the item impacts.
         """
 
-        self.database_item = database_item
-        self.set_impacts_qtys()
+        original_database_item = self.get_database_row()
+        try:
+            self.database_item = database_item
+            self.set_impacts_qtys()
+        except ImportError as e:
+            self.database_item = original_database_item
+            raise e
 
     def set_unit(self, unit):
         """ Set unit of measurement for the product/process.
