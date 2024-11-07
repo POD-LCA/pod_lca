@@ -30,6 +30,8 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         # self.geometry("1500x800")
         self.state("zoomed")
         self.database_file_path = HOME + '\Impact Database\impact_data.csv'
+        data_headers = ['Flow', 'Units', 'Global warming potential (kg CO2 eq)', 'Acidification potential (kg SO2 eq)', 'Eutrophication potential (kg N eq)', 
+                        'Ozone depletion potential (kg CFC-11 eq)', 'Smog potential (kg O3 eq)']
         self.save_path = None
 
         # canvas properties
@@ -85,7 +87,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.dependents = {'Model_0':{}}
 
         # back-end
-        self.impact_categories = {'GWP':'kg CO2 eq', 'acid_pot':'kg SO2 eq', 'eutro_pot':'kg N eq', 'ozone':'kg CFC-11 eq', 'smog':'kg O3 eq'}
+        self.impact_categories = {'GWP':'kg CO2 eq', 'AP':'kg SO2 eq', 'EP':'kg N eq', 'ODP':'kg CFC-11 eq', 'SFP':'kg O3 eq'}
         self.project = GUIInputManager.create_project()
         GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))     
         
@@ -99,7 +101,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
         self.create_bindings()
         self.set_protocols()
-        GUIInputManager.import_data_from_CSV(self.database_file_path, self.project)
+        GUIInputManager.import_data_from_CSV(self.database_file_path, self.project, data_headers)
         
     # =================================
     # GUI COMPONENTS
@@ -280,6 +282,7 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         self.create_edit_menu(menubar)
         self.create_database_menu(menubar)
         self.create_analysis_menu(menubar)
+        self.create_view_menu(menubar)
         self.create_help_menu(menubar)
 
         return menubar

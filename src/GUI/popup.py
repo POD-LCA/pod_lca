@@ -52,7 +52,8 @@ class Popup(Toplevel):
         label = Label(input_frame, text=text)
         label.pack(side=LEFT, padx=(0, 10))
         
-        dropdown_values = drop_down_list
+        dropdown_values = drop_down_list 
+        
         dropdown = Combobox(input_frame, values=dropdown_values, state=default_state)
         dropdown.pack(side=LEFT)
         dropdown.current(default_entry)
