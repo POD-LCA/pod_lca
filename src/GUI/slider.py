@@ -38,6 +38,8 @@ class Slider(Scale):
 
         self.config(from_=min, to=max, resolution=res)
 
+        return self
+
     def show_slider(self, event):
         if not self._never_show:
             self.place(in_=self.temp_in_, x=self.temp_x, y=self.temp_y)

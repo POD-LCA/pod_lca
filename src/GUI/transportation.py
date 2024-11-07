@@ -32,25 +32,30 @@ class Transportation(Item):
         model_id = self.get_current_model()
 
         process = GUIInputManager.create_transport_process(name, self.project, unit, float(qty), stage, lca_data)
-        
-        slider_min = 0.0
-        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
-        resolution = (slider_max - slider_min) / 100
-        
-        item_id, text_item, text_id = Transportation.create_canvas_item(self, model_id, name, stage, qty, unit, self.color_transport, tags=["process", "transportation"])
-        slider_cmd = lambda x: Transportation.update_qty(self, item_id, x)
-        slider, slider_data = Transportation.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
-        Transportation.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
-        GUIInputManager.set_id(process, item_id)
-        self.item_map[model_id][item_id] = process
-
-        self.update_plot()
-        if self.hotspot_on_off.get():
-            self.show_hotspots()
+        if not process is None:
+            slider_min = 0.0
+            slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+            resolution = (slider_max - slider_min) / 100
             
-        popup.destroy()
+            item_id, text_item, text_id = Transportation.create_canvas_item(self, model_id, name, stage, qty, unit, self.color_transport, tags=["process", "transportation"])
+            slider_cmd = lambda x: Transportation.update_qty(self, item_id, x)
+            slider, slider_data = Transportation.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+            Transportation.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
+            GUIInputManager.set_id(process, item_id)
+            self.item_map[model_id][item_id] = process
+
+            self.update_plot()
+            if self.hotspot_on_off.get():
+                self.show_hotspots()
+                
+            popup.destroy()
+            return process
+        
+        else:
+            return None
+    
     def restore_transportation_process(self, model, process, cords):
 
         slider_cmd = lambda x: GUIInputManager.update_transport_dist(self, process, x)
