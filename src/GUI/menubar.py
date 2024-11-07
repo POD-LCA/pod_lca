@@ -354,11 +354,11 @@ class MenubarMixin:
         menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False, command=lambda: self.clear_hotspots())
         menu_hotspot.add_separator()
         self.hotspot_impact_cat = StringVar(value='GWP')
-        menu_hotspot.add_radiobutton(label="GWP", variable=self.hotspot_impact_cat, value='GWP', command=lambda: self.show_hotspots('GWP'))
-        menu_hotspot.add_radiobutton(label="AP", variable=self.hotspot_impact_cat, value='AP', command=lambda: self.show_hotspots('acid_pot'))
-        menu_hotspot.add_radiobutton(label="EP", variable=self.hotspot_impact_cat, value='EP', command=lambda: self.show_hotspots('eutro_pot'))
-        menu_hotspot.add_radiobutton(label="ODP", variable=self.hotspot_impact_cat, value='ODP', command=lambda: self.show_hotspots('ozone'))
-        menu_hotspot.add_radiobutton(label="SFP", variable=self.hotspot_impact_cat, value='SFP', command=lambda: self.show_hotspots('smog'))
+        menu_hotspot.add_radiobutton(label="GWP", variable=self.hotspot_impact_cat, value='GWP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="AP", variable=self.hotspot_impact_cat, value='AP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="EP", variable=self.hotspot_impact_cat, value='EP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="ODP", variable=self.hotspot_impact_cat, value='ODP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="SFP", variable=self.hotspot_impact_cat, value='SFP', command=lambda: self.show_hotspots())
         menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
         menu_analysis.add_separator()
         menu_analysis.add_command(label='Monte Carlo Simulation', command='')
@@ -395,6 +395,7 @@ class MenubarMixin:
 
         cell_table.delete(*cell_table.get_children())
 
+        GUIInputManager.set_current_model(self.project, model)
         cell_table.model = model
         cell_table.import_data()
 

@@ -50,15 +50,21 @@ class ItemContextMenuMixin:
                 master.context_menu.post(event.x_root, event.y_root)  
 
     @classmethod
-    def set_impacts(cls, master, item):
+    def set_impacts(cls, master, item_id):
 
         model_id = master.get_current_model()
-        cmd = lambda: GUIInputManager.set_impact_data(master, master.item_map[model_id][item], impact.get())
+        item = master.item_map[model_id][item_id]
+        cmd = lambda: GUIInputManager.set_impact_data(master, item, impact.get())
 
         popup = Popup(master, "Set Impacts", "300x200")
 
         if not GUIInputManager.get_database_data(master.project).empty:
-            impact = Popup._popup_input_combo(popup, "Impact : ", GUIInputManager.get_database_data(master.project)['Flow'].tolist())
+
+            # TODO: get current impact and set as default
+            current_impact = GUIInputManager.get_database_row(item)
+            impacts_list = [None] + GUIInputManager.get_database_data(master.project)['Flow'].tolist()
+            default_entry = impacts_list.index(current_impact)
+            impact = Popup._popup_input_combo(popup, "Impact : ", impacts_list, default_entry=default_entry)
             
             Popup.button_custom(popup, "Add custom impact", cmd= lambda: master.add_custom_item(master))
 

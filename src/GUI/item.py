@@ -11,9 +11,14 @@ class Item(ItemContextMenuMixin):
     # =================================
 
     @classmethod
-    def create_canvas_item(cls, master, model, name, stage, qty, unit, start, height, width, color, tags):
+    def create_canvas_item(cls, master, model, name, stage, qty, unit, color, tags, start=None, height=None, width=None):
 
         tags.append("item")
+        no_items = len(master.current_canvas.find_withtag("item"))
+        height = 100 if height is None else height 
+        width = 100 if width is None else width 
+        start = [50 + no_items * width, 50 + no_items * height] if start is None else start
+        
         x1, y1, x2, y2 = start[0], start[1], start[0] + width*master.scale[model], start[1] + height*master.scale[model]
 
         item_id = master.current_canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline=master.outline_color, width=master.outline_width,
@@ -35,9 +40,13 @@ class Item(ItemContextMenuMixin):
         return item_id, text_item, text_id
     
     @classmethod 
-    def create_slider(cls, master, model, start, height, width, qty, units, item_id, cmd,
-                      slider_min=0, slider_max=100, resolution=0.1):
+    def create_slider(cls, master, model, qty, units, item_id, cmd,
+                      slider_min=0, slider_max=100, resolution=0.1, start=None, height=None, width=None):
 
+        no_items = len(master.current_canvas.find_withtag("item"))
+        height = 100 if height is None else height 
+        width = 100 if width is None else width 
+        start = [50 + no_items * width, 50 + no_items * height] if start is None else start
         x, y = start[0], start[1] + height*master.scale[model]
 
         slider = Slider(master.current_canvas, "Qty (in {})".format(units), min=slider_min, max=slider_max, resolution=resolution, width=master.default_slider_width*master.scale[model], length= width*master.scale[model], command=cmd)
@@ -95,8 +104,8 @@ class Item(ItemContextMenuMixin):
         stage = GUIInputManager.get_stage(item)
         qty = GUIInputManager.get_travel_distance(item) if GUIInputManager.is_transport(item) else GUIInputManager.get_qty(item)
         
-        item_id, text_item, text_id = cls.create_canvas_item(master, model, name, stage, qty, unit, start, height, width, color, tags)
-        slider, slider_data = cls.create_slider(master, model, start, height, width, qty, unit, item_id, slider_cmd)
+        item_id, text_item, text_id = cls.create_canvas_item(master, model, name, stage, qty, unit, color, tags, start=start, height=height, width=width)
+        slider, slider_data = cls.create_slider(master, model, qty, unit, item_id, slider_cmd, start=start, height=height, width=width)
         cls.item_bind(master, item_id, text_item, text_id, slider, slider_data)
         
         dependents_all = [item for sublist in master.dependents[model].values() for item in sublist]

@@ -47,15 +47,17 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_product(project, name, unit, qty, stage, lca_data):
+    def create_product(project, name, unit, qty, stage, lca_data, ):
 
         product = project.get_current_model().create_product(name, stage)
         product.set_unit(unit) 
         product.update_qty(qty)
-
-        if not (lca_data == 'None'):
-            product.set_impact_database_entry(lca_data)
-
+        try:
+            if not (lca_data == 'None'):
+                product.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
+            
         return product
     
     @staticmethod
@@ -64,8 +66,11 @@ class GUIInputManager():
         energy = project.get_current_model().create_energy(name, stage)
         energy.set_unit(unit)
         energy.update_qty(qty)
-        if not (lca_data == 'None'):
-            energy.set_impact_database_entry(lca_data)  
+        try:
+            if not (lca_data == 'None'):
+                energy.set_impact_database_entry(lca_data)  
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return energy
   
@@ -75,8 +80,11 @@ class GUIInputManager():
         emission = project.get_current_model().create_emission(name, stage)
         emission.set_unit(unit)
         emission.update_qty(qty)
-        if not (lca_data == 'None'):
-            emission.set_impact_database_entry(lca_data)   
+        try:
+            if not (lca_data == 'None'):
+                emission.set_impact_database_entry(lca_data)   
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return emission
 
@@ -86,8 +94,11 @@ class GUIInputManager():
         waste = project.get_current_model().create_waste(name, stage)
         waste.set_unit(unit)
         waste.update_qty(qty)
-        if not (lca_data == 'None'):
-            waste.set_impact_database_entry(lca_data)
+        try:
+            if not (lca_data == 'None'):
+                waste.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return waste
     
@@ -97,8 +108,11 @@ class GUIInputManager():
         process =  project.get_current_model().create_process(name, stage)
         process.set_unit(unit)
         process.update_qty(qty)
-        if not (lca_data == 'None'):
-            process.set_impact_database_entry(lca_data)
+        try:
+            if not (lca_data == 'None'):
+                process.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return process
     
@@ -108,11 +122,11 @@ class GUIInputManager():
         try: 
             item.update_qty(qty)
         except ImportError as e:
-            GUIInputManager.show_error_popup(visualizer, "ImportError", str(e))
+            GUIInputManager.show_error_popup("ImportError", str(e))
             if not close_error:
                 raise
         except TypeError as e:
-            GUIInputManager.show_error_popup(visualizer, "TypeError", str(e))
+            GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
                 raise
         
@@ -145,10 +159,11 @@ class GUIInputManager():
     def set_impact_data(visualizer, item, database_row, close_error=True):
 
         try: 
-            item.set_impact_database_entry(database_row)
-            visualizer.update_plot()
+            if not (database_row == 'None'):
+                item.set_impact_database_entry(database_row)
+                visualizer.update_plot()
         except ImportError as e:
-            GUIInputManager.show_error_popup(visualizer, "ImportError", str(e))
+            GUIInputManager.show_error_popup("ImportError", str(e))
             if not close_error:
                 raise e
 
@@ -179,7 +194,7 @@ class GUIInputManager():
         try:
             obj.change_units(unit)
         except ValueError as e:
-            GUIInputManager.show_error_popup(visualizer, "TypeError", str(e))
+            GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
                 raise
             
@@ -371,5 +386,5 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def show_error_popup(visualizer, error_type, message):
+    def show_error_popup(error_type, message):
         messagebox.showerror(error_type, message)
