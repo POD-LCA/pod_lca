@@ -253,10 +253,17 @@ class GUIInputManager():
         item.overide_id(new_id)
 
     @staticmethod
-    def unit_conversion(project, old_unit, new_unit):
+    def unit_conversion(project, old_unit, new_unit, close_error=True):
         
-        return project.get_calculator().conversion_factor(from_unit=old_unit, to_unit=new_unit)
+        factor = project.get_calculator().conversion_factor(from_unit=old_unit, to_unit=new_unit)
+        if factor is None:
+            e = f"Units {old_unit} and {new_unit} are incompatible." 
+            GUIInputManager.show_error_popup("TypeError", str(e))
+            if not close_error:
+                raise TypeError(e)
+            return None
     
+        return factor
     # =================================
     # Processes/Products
     # =================================
@@ -323,12 +330,20 @@ class GUIInputManager():
         return transport_process
 
     @staticmethod
-    def update_transport_dist(visualizer, item, qty):
+    def update_transport_dist(visualizer, item, qty, close_error=True):
 
-        item.set_transported_distance(qty)
+        try:
+             item.set_transported_distance(qty)                
+        except TypeError as e:
+            GUIInputManager.show_error_popup("TypeError", str(e))
+            if not close_error:
+                raise
+            return None
+
         visualizer.update_plot()  
         if visualizer.hotspot_on_off.get():
             visualizer.show_hotspots()
+        return item
 
     @staticmethod
     def set_transported_product(visualizer, item, product):

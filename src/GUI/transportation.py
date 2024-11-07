@@ -103,13 +103,15 @@ class Transportation(Item):
             old_val = master.sliders[model_id][item_id]["widget"].get()
             new_val = old_val * conversion_factor
 
-            GUIInputManager.update_transport_dist(master, item, new_val)
+            test = GUIInputManager.update_transport_dist(master, item, new_val)
 
             master.sliders[model_id][item_id]["widget"].update_value(new_val)
 
             master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(new_unit))
+
+            return test
         else:
-            raise TypeError
+            return None
         
     @classmethod
     def _update_label(cls, master, item_id, update_slider=False):
