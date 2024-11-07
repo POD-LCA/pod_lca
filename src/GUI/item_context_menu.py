@@ -60,7 +60,7 @@ class ItemContextMenuMixin:
 
         if not GUIInputManager.get_database_data(master.project).empty:
 
-            # TODO: get current impact and set as default
+
             current_impact = GUIInputManager.get_database_row(item)
             impacts_list = [None] + GUIInputManager.get_database_data(master.project)['Flow'].tolist()
             default_entry = impacts_list.index(current_impact)
@@ -145,8 +145,10 @@ class ItemContextMenuMixin:
     @classmethod
     def _on_update(cls, master, item_id, cmd, update_slider=False):
 
-        cmd()
+        test = cmd()
         ItemContextMenuMixin._update_label(master, item_id, update_slider)
+
+        return test
 
     
     @staticmethod
@@ -202,10 +204,12 @@ class ItemContextMenuMixin:
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
         
-        GUIInputManager.change_unit(master, item, new_unit)
+        test = GUIInputManager.change_unit(master, item, new_unit)
 
         master.sliders[model_id][item_id]["widget"].update_value(GUIInputManager.get_qty(item))
         master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(GUIInputManager.get_unit(item)))
+
+        return test
 
     @classmethod
     def set_slider_properties(cls, master, item):

@@ -56,7 +56,9 @@ class GUIInputManager():
             if not (lca_data == 'None'):
                 product.set_impact_database_entry(lca_data)
         except ImportError as e:
+            project.get_current_model().delete_obj(product)
             GUIInputManager.show_error_popup("ImportError", str(e))
+            return None
             
         return product
     
@@ -70,8 +72,10 @@ class GUIInputManager():
             if not (lca_data == 'None'):
                 energy.set_impact_database_entry(lca_data)  
         except ImportError as e:
+            project.get_current_model().delete_obj(energy)
             GUIInputManager.show_error_popup("ImportError", str(e))
-
+            return None
+        
         return energy
   
     @staticmethod
@@ -84,8 +88,10 @@ class GUIInputManager():
             if not (lca_data == 'None'):
                 emission.set_impact_database_entry(lca_data)   
         except ImportError as e:
+            project.get_current_model().delete_obj(emission)
             GUIInputManager.show_error_popup("ImportError", str(e))
-
+            return None
+            
         return emission
 
     @staticmethod
@@ -98,8 +104,10 @@ class GUIInputManager():
             if not (lca_data == 'None'):
                 waste.set_impact_database_entry(lca_data)
         except ImportError as e:
+            project.get_current_model().delete_obj(waste)
             GUIInputManager.show_error_popup("ImportError", str(e))
-
+            return None
+        
         return waste
     
     @staticmethod
@@ -112,8 +120,10 @@ class GUIInputManager():
             if not (lca_data == 'None'):
                 process.set_impact_database_entry(lca_data)
         except ImportError as e:
+            project.get_current_model().delete_obj(process)
             GUIInputManager.show_error_popup("ImportError", str(e))
-
+            return None
+        
         return process
     
     @staticmethod
@@ -125,10 +135,12 @@ class GUIInputManager():
             GUIInputManager.show_error_popup("ImportError", str(e))
             if not close_error:
                 raise
+            return None
         except TypeError as e:
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
                 raise
+            return None
         
         if isinstance(item, Product):
             if item.get_transporter() is not None:
@@ -139,16 +151,22 @@ class GUIInputManager():
         if visualizer.hotspot_on_off.get():
             visualizer.show_hotspots()
 
+        return item
+
     @staticmethod
     def update_life_cycle_stage(visualizer, item, stage):
 
         item.update_life_cycle_stage(stage)
         visualizer.update_plot()
 
+        return item
+
     @staticmethod
     def edit_name(visulizer, item, name):
 
         item.set_name(name)
+
+        return item
 
     @staticmethod
     def get_impact_data(project, row):
@@ -166,6 +184,9 @@ class GUIInputManager():
             GUIInputManager.show_error_popup("ImportError", str(e))
             if not close_error:
                 raise e
+            return None
+            
+        return item
 
     @staticmethod
     def get_database_row(item):
@@ -197,7 +218,9 @@ class GUIInputManager():
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
                 raise
-            
+            return None
+        
+        return obj
 
     @staticmethod
     def get_unit(obj):
@@ -289,9 +312,14 @@ class GUIInputManager():
         transport_process =  project.get_current_model().create_transportation_process(name, stage)
         transport_process.set_transported_distance_unit(unit)
         transport_process.set_transported_distance(qty)
-        if not (lca_data == 'None'):
-            transport_process.set_impact_database_entry(lca_data)
-
+        try:
+            if not (lca_data == 'None'):
+                transport_process.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            project.get_current_model().delete_obj(transport_process)
+            GUIInputManager.show_error_popup("ImportError", str(e))
+            return None
+        
         return transport_process
 
     @staticmethod
@@ -342,6 +370,8 @@ class GUIInputManager():
         obj.set_weight_unit(weight_unit)
 
         visualizer.update_plot()
+
+        return obj
 
     @staticmethod
     def get_density(item):
