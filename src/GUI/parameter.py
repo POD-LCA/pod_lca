@@ -73,9 +73,6 @@ class Parameter(Item):
         
     def create_parameter(self, popup, name, qty, unit):
 
-        start = [50, 50]
-        height = 50
-        width = 100
         model_id = self.get_current_model()
 
         param = ParamObj(name, qty, unit)
@@ -85,8 +82,8 @@ class Parameter(Item):
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', '', '', start, height, width, self.color_parameter, tags=["parameter"])
-        slider, slider_data = Parameter.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', '', '', self.color_parameter, tags=["parameter"])
+        slider, slider_data = Parameter.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         slider._always_on = True
         Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 

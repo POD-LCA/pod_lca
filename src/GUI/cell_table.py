@@ -3,14 +3,19 @@ from GUI.GUI_outputManager import GUIOutputManager
 from GUI.item_context_menu import ItemContextMenuMixin
 
 import re
-from tkinter import END, E, W, CENTER, RIGHT, BOTH, TOP, LEFT, Entry, Label, StringVar
-from tkinter.ttk import Treeview, Scrollbar, Combobox, Frame
+from tkinter import END, E, W, CENTER, RIGHT, BOTH, TOP, LEFT, Entry, Label, StringVar, Button, Menu
+from tkinter.ttk import Treeview, Scrollbar, Combobox, Frame, Style
 
 
 class CellTable(Treeview):
 
     def __init__(self, root, GUI, model):
-        super().__init__(master=root, columns=list(range(12)), show='headings')
+        self.row_height = 25
+        style = Style(root)
+        style.configure("Treeview", rowheight=self.row_height)
+        style.layout("Treeview", [("Treeview.treearea", {"sticky": "nswe"})])
+    
+        super().__init__(master=root, columns=list(range(12)), style="Treeview", show='headings')
         self.GUI = GUI
         self.model = model
         self.row_ids = {}
@@ -29,6 +34,9 @@ class CellTable(Treeview):
         self.create_headings(self.headings, widths, align)
         self.import_data()
 
+        self.plus_button = Button(root, text="+", width=2, height=1, command=lambda: self.add_new_row())
+        self.reposition_plus_button()
+
     def create_headings(self, headings, widths, align):
 
         for col, heading in enumerate(headings):
@@ -41,11 +49,11 @@ class CellTable(Treeview):
 
         if hotspots:
             hotspots = GUIOutputManager.get_hotspots(self.GUI.project, self.model)
-            self.tag_configure("hotpsot", background=self.GUI.hotspot_color)
+            self.tag_configure("hotspot", background=self.GUI.hotspot_color)
 
         for product in GUIInputManager.get_all_products(self.GUI, self.model) + GUIInputManager.get_all_processes(self.GUI, self.model): 
             if hotspots:
-                tag = "hotpsot" if product in hotspots else ""
+                tag = "hotspot" if product in hotspots else ""
             else:
                 tag = ""
 
@@ -84,19 +92,19 @@ class CellTable(Treeview):
                 val_str = str(CellTable.format_number(val, decimal_places))
                 values.append(val_str)
             elif heading == "AP":
-                val = GUIInputManager.get_impact_val(obj, 'acid_pot')
+                val = GUIInputManager.get_impact_val(obj, 'AP')
                 val_str = str(CellTable.format_number(val, decimal_places))
                 values.append(val_str)
             elif heading == "EP":
-                val = GUIInputManager.get_impact_val(obj, 'eutro_pot')
+                val = GUIInputManager.get_impact_val(obj, 'EP')
                 val_str = str(CellTable.format_number(val, decimal_places))
                 values.append(val_str)
             elif heading == "ODP":
-                val = GUIInputManager.get_impact_val(obj, 'ozone')
+                val = GUIInputManager.get_impact_val(obj, 'ODP')
                 val_str = str(CellTable.format_number(val, decimal_places))
                 values.append(val_str)
             elif heading == "SFP":
-                val = GUIInputManager.get_impact_val(obj, 'smog')
+                val = GUIInputManager.get_impact_val(obj, 'SFP')
                 val_str = str(CellTable.format_number(val, decimal_places))
                 values.append(val_str)
             else:
@@ -232,12 +240,122 @@ class CellTable(Treeview):
         if GUIInputManager.get_transporter(product) is not None:
             transporter = GUIInputManager.get_transporter(product)
             self.update_entry(str(GUIInputManager.get_id(transporter)))
+        self.update_hotspots()
 
-        # TODO: run hostspot analysis... and check those rows are red
+    def update_hotspots(self):
+
+        self.clear_tag("hotspot")
+        hot_spots = GUIOutputManager.get_hotspots(self.GUI.project, self.GUI.get_current_model(), impact_category=self.GUI.hotspot_impact_cat.get())
+        for hot_spot in hot_spots:
+            row_id = str(GUIInputManager.get_id(hot_spot))
+            tags = list(self.item(row_id, "tags"))
+            tags.append("hotspot")
+            self.item(row_id, tags=tags)
+    
+    def clear_all_tags(self):
+        for item_id in self.get_children():
+            self.item(item_id, tags="")
+
+    def clear_tag(self, tag_to_remove):
+
+        for item_id in self.get_children():
+            tags = list(self.item(item_id, "tags")) 
+            if tag_to_remove in tags:
+                tags.remove(tag_to_remove)  
+                self.item(item_id, tags=tags)    
 
     def cancel_edit(self, event, item):
 
         item.place_forget()
+
+    def add_new_row(self):
+
+        popup_menu = Menu(self, tearoff=0)
+        popup_menu.add_command(label="Product", command=lambda: self.add_new_product(product=True))
+        popup_menu.add_command(label="Process", command=lambda: self.add_new_process())
+        popup_menu.add_command(label="Transportation", command=lambda: self.add_new_process(transportation=True))
+        popup_menu.add_command(label="Energy", command=lambda: self.add_new_product(Energy=True))
+        popup_menu.add_command(label="Emission", command=lambda: self.add_new_product(Emission=True))
+        popup_menu.add_command(label="Waste", command=lambda: self.add_new_product(Waste=True))
+
+        button_x = self.plus_button.winfo_rootx()
+        button_y = self.plus_button.winfo_rooty() + self.plus_button.winfo_height()
+        
+        popup_menu.tk_popup(button_x, button_y)
+
+    def add_new_product(self, product=False, Energy=False, Emission=False, Waste=False):
+
+        if product:
+            self.GUI.open_popup_product()
+        elif Energy:
+            self.GUI.open_popup_energy()
+        elif Emission:
+            self.GUI.open_popup_emission()
+        elif Waste:
+            self.GUI.open_popup_waste()
+        else:
+            raise NotImplementedError
+        
+        products = GUIInputManager.get_all_products(self.GUI, self.model)
+        
+        if products:
+            product = products[-1]
+            obj_id = GUIInputManager.get_id(product)
+            disp_id = self.GUI.item_disp_num[self.model][obj_id]
+            if not self.item_exists(disp_id):
+                new_row_data = self.get_obj_values(product)
+                row_id = self.insert("", END, iid=obj_id, values=new_row_data)
+                self.row_ids[row_id] = product
+                self.reposition_plus_button()
+
+                self.update_hotspots()
+                if self.GUI.hotspot_on_off.get():
+                    self.GUI.show_hotspots()
+        
+        self.focus_force()
+
+    def add_new_process(self, transportation=False):
+
+        if transportation:
+            self.GUI.open_popup_transport_process()
+        else:
+            self.GUI.open_popup_process()
+
+        processes = GUIInputManager.get_all_processes(self.GUI, self.model)
+        if processes:
+            process = processes[-1]
+            obj_id = GUIInputManager.get_id(process)
+            disp_id = self.GUI.item_disp_num[self.model][obj_id]
+            if not self.item_exists(disp_id):
+                new_row_data = self.get_obj_values(process)
+                row_id = self.insert("", END, iid=obj_id, values=new_row_data)
+                self.row_ids[row_id] = process
+                self.reposition_plus_button()
+
+                self.update_hotspots()
+                if self.GUI.hotspot_on_off.get():
+                    self.GUI.show_hotspots()
+
+        self.focus_force()
+
+    def item_exists(self, item_id):
+        for item in self.get_children():
+            row_value = self.item(item, "values")[0]
+            if row_value == str(item_id):
+                return True  
+        return False
+       
+    def reposition_plus_button(self):
+        
+        buffer_y = 75
+        buffer_x = 33
+        children = self.get_children()
+
+        if children: 
+            y_position = len(children) * self.row_height + buffer_y
+            self.plus_button.place(x=buffer_x, y=y_position)
+        else:
+            self.plus_button.place(x=buffer_x, y=buffer_y)
 
     # def filter_column(self, column_index, filter_value):
 
@@ -246,4 +364,11 @@ class CellTable(Treeview):
     #     for row_id, product in self.row_ids.items():
     #         if str(product[column_index]).startswith(filter_value):
     #             self.insert("", END, iid=GUIInputManager.get_id(product), values=(self.get_obj_values(product)), tags=(tag,))
-        
+
+    # def on_filter_change(event):
+    #     filter_value = filter_var.get()
+    #     filter_column(0, filter_value) 
+
+    # def reset_filter():
+    #     filter_var.set("")
+    #     filter_column(0, "")      
