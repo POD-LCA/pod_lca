@@ -133,7 +133,7 @@ class Popup(Toplevel):
         ok_button = Button(button_frame, text="OK", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=False))
         ok_button.pack(side=LEFT, padx=10)
 
-        close_button = Button(button_frame, text="Close", command=popup.destroy)
+        close_button = Button(button_frame, text="Close", command=popup.on_popup_close)
         close_button.pack(side=LEFT, padx=10)
 
         import_button = Button(button_frame, text="Apply", command=lambda: Popup._ok_apply_button(popup, cmd, is_apply=True))
@@ -162,11 +162,16 @@ class Popup(Toplevel):
 
     @staticmethod
     def _ok_apply_button(popup, cmd, is_apply=False):
+        """ Run command and close popup.
+            Popup closed only if apply button is pushed and the command returns something other than None.
+            Return of None from command is taken as an indication of an error being called and handled.
+        """
 
-        cmd()
+        test = cmd()
         
-        if not is_apply:
-            popup.on_popup_close()
+        if not test is None:
+            if not is_apply:
+                popup.on_popup_close()
 
     def on_popup_close(self):
         self.visualiser.attributes("-disabled", False)

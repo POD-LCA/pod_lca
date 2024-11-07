@@ -92,6 +92,8 @@ class Parameter(Item):
 
         popup.destroy()
 
+        return param
+
     @classmethod
     def show_context_menu(cls, master, event, slider):
 

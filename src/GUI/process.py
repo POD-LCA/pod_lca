@@ -32,24 +32,29 @@ class Process(Item):
 
         process = GUIInputManager.create_process(self.project, name, unit, float(qty), stage, lca_data)
 
-        slider_min = 0.0
-        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
-        resolution = (slider_max - slider_min) / 100
+        if not process is None:
+            slider_min = 0.0
+            slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+            resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Process.create_canvas_item(self, model_id, name, stage, qty, unit, self.color_process, tags=["process"])
-        slider_cmd = lambda x: Process.update_qty(self, item_id, x)
-        slider, slider_data = Process.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
-        Process.item_bind(self, item_id, text_item, text_id, slider, slider_data)
+            item_id, text_item, text_id = Process.create_canvas_item(self, model_id, name, stage, qty, unit, self.color_process, tags=["process"])
+            slider_cmd = lambda x: Process.update_qty(self, item_id, x)
+            slider, slider_data = Process.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+            Process.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
-        GUIInputManager.set_id(process, item_id)
-        self.item_map[model_id][item_id] = process
+            GUIInputManager.set_id(process, item_id)
+            self.item_map[model_id][item_id] = process
 
-        self.update_plot()
-        if self.hotspot_on_off.get():
-            self.show_hotspots()
-            
-        popup.destroy()
-
+            self.update_plot()
+            if self.hotspot_on_off.get():
+                self.show_hotspots()
+                
+            popup.destroy()
+            return process
+        
+        else:
+            return None
+        
     def restore_process(self, model, process, cords):
         
         slider_cmd = lambda x: GUIInputManager.update_qty(self, process, x) 

@@ -22,22 +22,18 @@ class HotspotMixins:
     def show_hotspots(self):
 
         self.clear_hotspots()
-        
-        # TODO: Changed with new impact category abbreviations (replace impact_cat with self.hotspot_impact_cat.get())
-        impact_convert = {'GWP': 'GWP', 'EP': 'eutro_pot', 'SFP': 'smog', 'AP': 'acid_pot', 'ODP':'ozone'}
-        impact_cat = impact_convert[self.hotspot_impact_cat.get()]
-
-        hot_spots = GUIOutputManager.get_hotspots(self.project, self.get_current_model(), impact_category=impact_cat)
+    
+        hot_spots = GUIOutputManager.get_hotspots(self.project, self.get_current_model(), impact_category=self.hotspot_impact_cat.get())
         if hot_spots is not None:
             max_impact = 0.0
             for hotspot in hot_spots:
-                max_impact = max(GUIInputManager.get_impact_val(hotspot, impact_cat), max_impact) 
+                max_impact = max(GUIInputManager.get_impact_val(hotspot, self.hotspot_impact_cat.get()), max_impact) 
 
             for spot in hot_spots:
                 item_id = spot.get_id()
                 self.current_canvas.itemconfig(item_id, outline=self.hotspot_color, width=self.hotspot_width)
                 self.slider_map[self.get_current_model()][item_id]._never_show = False
-                self.show_impact_bubble(item_id, impact_cat, max_impact)
+                self.show_impact_bubble(item_id, self.hotspot_impact_cat.get(), max_impact)
                 self.current_canvas.current_hotspot.append(item_id)
 
 

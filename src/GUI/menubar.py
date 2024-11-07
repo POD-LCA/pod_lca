@@ -192,6 +192,8 @@ class MenubarMixin:
             for item_id in items_with_tag:
                 self.canvas.itemconfig(item_id, fill=tag_colors[tag])
 
+        return self
+
     def _apply_settings_grid(self, canvas_grid, grid_spacing):
 
         self.canvas_grid_size = float(grid_spacing)
@@ -200,6 +202,8 @@ class MenubarMixin:
             self.draw_grid()
         else:
             self.canvas.delete("grid")
+        
+        return self
 
     def _apply_settings_connectors(self, color_connectors, connector_type, connector_offset):
 
@@ -207,6 +211,8 @@ class MenubarMixin:
         self.connector_type = connector_type
         self.connector_offset = float(connector_offset)
         self.redraw_connections()
+
+        return self
     
     # =================================
     # DATABSE MENU
@@ -303,6 +309,10 @@ class MenubarMixin:
             GUIInputManager.import_data_from_CSV(file_path, self.project, headers, multipliers)
             file_flags[file_path] = True
 
+            return self
+        else:
+            return None
+
     def add_custom_item(self, menubar):
 
         popup = Popup(menubar, "Add custom entry to database", "300x300")
@@ -325,6 +335,8 @@ class MenubarMixin:
         impact_dict = {key: value for key, value in zip(self.impact_categories.keys(), impact_vals)}
 
         GUIInputManager.set_custom_entry(self.project, flow, unit, impact_dict)
+
+        return self
 
     def _file_open_dialog(self, menubar, file_path, popup):
 
