@@ -1,4 +1,4 @@
-Flow,Unit,GWP,acid_pot,eutro_pot,ozone,smog
+Flow,Unit,GWP,AP,EP,ODP,SFP
 Portland Cement,kg,0.919,0.00174,0.00102,2.05E-08,0.0328
 Fly Ash,kg,0,0,0,0,0
 Slag cement,kg,0.105,0.00105,0.00027,1.01E-09,0.0062

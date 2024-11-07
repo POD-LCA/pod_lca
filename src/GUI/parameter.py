@@ -73,9 +73,6 @@ class Parameter(Item):
         
     def create_parameter(self, popup, name, qty, unit):
 
-        start = [50, 50]
-        height = 50
-        width = 100
         model_id = self.get_current_model()
 
         param = ParamObj(name, qty, unit)
@@ -85,8 +82,8 @@ class Parameter(Item):
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', '', '', start, height, width, self.color_parameter, tags=["parameter"])
-        slider, slider_data = Parameter.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', '', '', self.color_parameter, tags=["parameter"])
+        slider, slider_data = Parameter.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         slider._always_on = True
         Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
@@ -127,7 +124,7 @@ class Parameter(Item):
         name = Popup._popup_input_field(popup, "Item name: ", default_val=param.get_name()) 
 
         _cmd = lambda: param.edit_name(name.get()) 
-        cmd = lambda: cls._update_label(master, item_id, _cmd)
+        cmd = lambda: cls._on_update(master, item_id, _cmd)
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
     @classmethod
@@ -135,7 +132,6 @@ class Parameter(Item):
 
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
-        cmd()
 
         text_str = GUIInputManager.get_name(item)
         text_item = master.label_map[item_id]

@@ -3,6 +3,9 @@ from material.model.product import Product, Fuel, Waste
 from material.model.process import Process, transportationProcess
 from GUI.GUI_outputManager import GUIOutputManager
 
+from tkinter import messagebox
+
+
 class GUIInputManager():
 
     @staticmethod
@@ -25,19 +28,36 @@ class GUIInputManager():
 
         project.set_current_model(name)
 
+    @staticmethod
+    def get_all_model_names(project):
+
+        return project.models.keys() 
+
+    @staticmethod
+    def get_all_products(visualizer, model):
+
+        return visualizer.project.models[model].products          
+
+    @staticmethod
+    def get_all_processes(visualizer, model):
+
+        return visualizer.project.models[model].processes  
     # =================================
     # Products and Processes
     # =================================
 
     @staticmethod
-    def create_product(project, name, unit, qty, stage, lca_data):
+    def create_product(project, name, unit, qty, stage, lca_data, ):
 
         product = project.get_current_model().create_product(name, stage)
-        product.set_unit(unit)
+        product.set_unit(unit) 
         product.update_qty(qty)
-        if not (lca_data == 'None'):
-            product.set_impact_database_entry(lca_data)
-
+        try:
+            if not (lca_data == 'None'):
+                product.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
+            
         return product
     
     @staticmethod
@@ -46,8 +66,11 @@ class GUIInputManager():
         energy = project.get_current_model().create_energy(name, stage)
         energy.set_unit(unit)
         energy.update_qty(qty)
-        if not (lca_data == 'None'):
-            energy.set_impact_database_entry(lca_data)  
+        try:
+            if not (lca_data == 'None'):
+                energy.set_impact_database_entry(lca_data)  
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return energy
   
@@ -57,8 +80,11 @@ class GUIInputManager():
         emission = project.get_current_model().create_emission(name, stage)
         emission.set_unit(unit)
         emission.update_qty(qty)
-        if not (lca_data == 'None'):
-            emission.set_impact_database_entry(lca_data)   
+        try:
+            if not (lca_data == 'None'):
+                emission.set_impact_database_entry(lca_data)   
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return emission
 
@@ -68,8 +94,11 @@ class GUIInputManager():
         waste = project.get_current_model().create_waste(name, stage)
         waste.set_unit(unit)
         waste.update_qty(qty)
-        if not (lca_data == 'None'):
-            waste.set_impact_database_entry(lca_data)
+        try:
+            if not (lca_data == 'None'):
+                waste.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return waste
     
@@ -79,15 +108,27 @@ class GUIInputManager():
         process =  project.get_current_model().create_process(name, stage)
         process.set_unit(unit)
         process.update_qty(qty)
-        if not (lca_data == 'None'):
-            process.set_impact_database_entry(lca_data)
+        try:
+            if not (lca_data == 'None'):
+                process.set_impact_database_entry(lca_data)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
 
         return process
     
     @staticmethod
-    def update_qty(visualizer, item, qty):
+    def update_qty(visualizer, item, qty, close_error=True):
 
-        item.update_qty(qty)
+        try: 
+            item.update_qty(qty)
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
+            if not close_error:
+                raise
+        except TypeError as e:
+            GUIInputManager.show_error_popup("TypeError", str(e))
+            if not close_error:
+                raise
         
         if isinstance(item, Product):
             if item.get_transporter() is not None:
@@ -104,6 +145,7 @@ class GUIInputManager():
         item.update_life_cycle_stage(stage)
         visualizer.update_plot()
 
+    @staticmethod
     def edit_name(visulizer, item, name):
 
         item.set_name(name)
@@ -114,10 +156,16 @@ class GUIInputManager():
         return project.get_database().get_impact_data(row)
     
     @staticmethod
-    def set_impact_data(visualizer, item, database_row):
+    def set_impact_data(visualizer, item, database_row, close_error=True):
 
-        item.set_impact_database_entry(database_row)
-        visualizer.update_plot()
+        try: 
+            if not (database_row == 'None'):
+                item.set_impact_database_entry(database_row)
+                visualizer.update_plot()
+        except ImportError as e:
+            GUIInputManager.show_error_popup("ImportError", str(e))
+            if not close_error:
+                raise e
 
     @staticmethod
     def get_database_row(item):
@@ -130,9 +178,26 @@ class GUIInputManager():
         return item.get_qty()
     
     @staticmethod
+    def get_transporter(item):
+        
+        if isinstance(item, Product):
+            return item.get_transporter()
+    
+    @staticmethod
     def set_unit(obj, unit):
 
         obj.set_unit(unit)
+
+    @staticmethod
+    def change_unit(visualizer, obj, unit, close_error=True):
+
+        try:
+            obj.change_units(unit)
+        except ValueError as e:
+            GUIInputManager.show_error_popup("TypeError", str(e))
+            if not close_error:
+                raise
+            
 
     @staticmethod
     def get_unit(obj):
@@ -202,6 +267,11 @@ class GUIInputManager():
     def get_impacts(obj):
 
         return obj.get_impacts()
+    
+    @staticmethod
+    def get_impact_val(obj, impact_cat):
+
+        return obj.get_impacts().get_impact(impact_cat)
     
     @staticmethod
     def delete(visualizer, obj):
@@ -311,3 +381,10 @@ class GUIInputManager():
 
         project.get_database().set_custom_entry(flow, unit, impacts)
     
+    # =================================
+    # Error handling
+    # =================================
+
+    @staticmethod
+    def show_error_popup(error_type, message):
+        messagebox.showerror(error_type, message)

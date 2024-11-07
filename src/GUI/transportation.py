@@ -24,24 +24,22 @@ class Transportation(Item):
         cmd = lambda: self.create_transport_process(popup, name.get(), travel_dist.get(), units.get(), life_cycle_stage.get(), lca_data.get())
         Popup.button_pack_OKCancel(popup, popup, cmd)
         
+        self.wait_window(popup)
+        self.update_plot()
+        
     def create_transport_process(self, popup, name, qty, unit, stage, lca_data):
         
-        start = [50, 50]
-        height = 100
-        width = 100
-
         model_id = self.get_current_model()
 
         process = GUIInputManager.create_transport_process(name, self.project, unit, float(qty), stage, lca_data)
         
-
         slider_min = 0.0
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
         
-        item_id, text_item, text_id = Transportation.create_canvas_item(self, model_id, name, stage, qty, unit, start, height, width, self.color_transport, tags=["process", "transportation"])
+        item_id, text_item, text_id = Transportation.create_canvas_item(self, model_id, name, stage, qty, unit, self.color_transport, tags=["process", "transportation"])
         slider_cmd = lambda x: Transportation.update_qty(self, item_id, x)
-        slider, slider_data = Transportation.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        slider, slider_data = Transportation.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         Transportation.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(process, item_id)
@@ -66,7 +64,7 @@ class Transportation(Item):
         process = master.item_map[model_id][item_id]
 
         cmd = lambda: GUIInputManager.update_transport_dist(master, process, qty)
-        cls._update_label(master, item_id, cmd, update_slider=False)
+        cls._on_update(master, item_id, cmd, update_slider=False)
 
     # =================================
     # Context Menu (Overides)
@@ -109,12 +107,11 @@ class Transportation(Item):
             raise TypeError
         
     @classmethod
-    def _update_label(cls, master, item_id, cmd, update_slider=False):
+    def _update_label(cls, master, item_id, update_slider=False):
 
         model_id = master.get_current_model()
         item = master.item_map[model_id][item_id]
         slider = master.slider_map[model_id][item_id]
-        cmd()
 
         text_str = GUIInputManager.get_name(item) + '\n' + GUIInputManager.get_stage(item)
         if not slider._always_on:

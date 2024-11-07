@@ -59,7 +59,7 @@ class Product(Master):
             try:
                 qty = float(qty)
             except:
-                raise TypeError
+                raise TypeError("Quantity should be a numeric entry.")
             
         self.qty = qty
         self.weight = self.qty * self.density

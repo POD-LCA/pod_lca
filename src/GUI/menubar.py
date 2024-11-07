@@ -2,10 +2,11 @@ from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
 from GUI.GUI_outputManager import GUIOutputManager
 from GUI.popup import Popup
+from GUI.cell_table import CellTable
 
 import os
 import sys
-from tkinter import Button, Menu, filedialog, END, LEFT, W, Frame, Label, Entry, BooleanVar
+from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar, StringVar
 from tkinter.ttk import Notebook, Combobox
 
 class MenubarMixin:
@@ -351,10 +352,53 @@ class MenubarMixin:
         self.hotspot_on_off = BooleanVar(value=True)
         menu_hotspot.add_radiobutton(label="On", variable=self.hotspot_on_off, value=True, command=lambda: self.show_hotspots())
         menu_hotspot.add_radiobutton(label="Off", variable=self.hotspot_on_off, value=False, command=lambda: self.clear_hotspots())
+        menu_hotspot.add_separator()
+        self.hotspot_impact_cat = StringVar(value='GWP')
+        menu_hotspot.add_radiobutton(label="GWP", variable=self.hotspot_impact_cat, value='GWP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="AP", variable=self.hotspot_impact_cat, value='AP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="EP", variable=self.hotspot_impact_cat, value='EP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="ODP", variable=self.hotspot_impact_cat, value='ODP', command=lambda: self.show_hotspots())
+        menu_hotspot.add_radiobutton(label="SFP", variable=self.hotspot_impact_cat, value='SFP', command=lambda: self.show_hotspots())
         menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
-
         menu_analysis.add_separator()
         menu_analysis.add_command(label='Monte Carlo Simulation', command='')
+
+    # =================================
+    # VIEW MENU
+    # =================================
+
+    def create_view_menu(self, menubar):
+        
+        menu_view = Menu(menubar, tearoff=False)
+        menubar.add_cascade(menu=menu_view, label='View')
+
+        menu_view.add_command(label='Cell view', command= lambda: self.open_cell_view(menubar))
+
+    def open_cell_view(self, menubar):
+
+        popup = Popup(menubar, "Bill of materials", "1400x600")
+
+        input_frame = Frame(popup)
+        input_frame.pack(side=TOP, pady=10, padx=10)
+        
+        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Model", font = ('Helvetica', 12,'bold'))
+        label.pack(side=LEFT, padx=(0, 10))
+        
+        dropdown = Combobox(input_frame, values=list(GUIInputManager.get_all_model_names(self.project)))
+        dropdown.pack(side=RIGHT, fill=BOTH)
+        dropdown.current(0)
+        dropdown.bind("<<ComboboxSelected>>", lambda x:self.update_cell_table(cell_table, x.widget.get()))
+
+        cell_table = CellTable(popup, self, self.get_current_model())
+
+    def update_cell_table(self, cell_table, model):
+
+        cell_table.delete(*cell_table.get_children())
+
+        GUIInputManager.set_current_model(self.project, model)
+        cell_table.model = model
+        cell_table.import_data()
+
 
     # =================================
     # HELP MENU

@@ -22,12 +22,13 @@ class Product(Item):
 
         cmd = lambda: self.create_product(popup, name.get(), qty.get(), units.get(), life_cycle_stage.get(), lca_data.get())
         Popup.button_pack_OKCancel(popup, popup, cmd)
-        
+
+        self.wait_window(popup)
+        self.update_plot()
+
     def create_product(self, popup, name, qty, unit, stage, lca_data):
 
-        start = [50, 50]
-        height = 100
-        width = 100
+
         model_id = self.get_current_model()
 
         product = GUIInputManager.create_product(self.project, name, unit, float(qty), stage, lca_data)
@@ -36,9 +37,9 @@ class Product(Item):
         slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Product.create_canvas_item(self, model_id, name, stage, qty, unit, start, height, width, self.color_product, tags=["product"])
+        item_id, text_item, text_id = Product.create_canvas_item(self, model_id, name, stage, qty, unit, self.color_product, tags=["product"])
         slider_cmd = lambda x: Product.update_qty(self, item_id, x)
-        slider, slider_data = Product.create_slider(self, model_id, start, height, width, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        slider, slider_data = Product.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
         Product.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         GUIInputManager.set_id(product, item_id)
@@ -49,6 +50,8 @@ class Product(Item):
             self.show_hotspots()
 
         popup.destroy()
+
+        return product
 
     def restore_product(self, model, product, cords):
 
