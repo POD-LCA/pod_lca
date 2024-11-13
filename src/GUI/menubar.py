@@ -6,6 +6,7 @@ from GUI.cell_table import CellTable
 
 import os
 import sys
+import csv
 from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar, StringVar
 from tkinter.ttk import Notebook, Combobox
 
@@ -22,6 +23,10 @@ class MenubarMixin:
 
         menu_file.add_command(label='New', command=lambda :self._newFile(menubar))
         menu_file.add_command(label='Open', command=self._openFile)
+        menu_file.add_separator()
+        menu_file_import = Menu(menu_file, tearoff=False)
+        menu_file.add_cascade(menu=menu_file_import, label='Import')
+        menu_file_import.add_command(label='From CSV', command=lambda :self._import_model_from(menubar))
         menu_file.add_separator()
         menu_file.add_command(label='Save', command=self._quicksaveFile)
         menu_file.add_command(label='Save As', command=self._saveFile)
@@ -99,6 +104,74 @@ class MenubarMixin:
         popup.on_popup_close()
         cmd()
 
+    def _import_model_from(self, menubar):
+
+        home_dir = os.path.expanduser("~")
+        file_path = filedialog.askopenfilename(initialdir=home_dir, 
+                                                title="Open file", 
+                                                defaultextension=".csv",
+                                                filetypes=(("CSV files", "*.csv"), ("All files", "*.*")))
+
+        model = self.add_model(add_to_project=True)
+        self.set_current_model(GUIInputManager.get_name(model))
+        
+        if file_path:
+
+
+            tmp_transportation_map = {}
+            with open(file_path, mode='r', encoding='utf-8-sig') as file:
+                data = csv.reader(file)
+                headers = next(data)
+                header_map = {header:index for index, header in enumerate(headers)} 
+                for row in data:
+                    name = row[header_map['Name']]
+                    life_cycle_stage = row[header_map['LC stage']]
+                    database_item = row[header_map['Impact data']]
+                    qty, unit = row[header_map['qty']], row[header_map['unit']]
+                    
+                    item_type = row[header_map['type']]
+                    if item_type == 'Product':
+                        item = self.create_product(None, name, qty, unit, life_cycle_stage, database_item)
+                    elif item_type == 'Process':
+                        item = self.create_process(None, name, qty, unit, life_cycle_stage, database_item)
+                    elif item_type == 'Transportation':
+                        item = self.create_transport_process(None, name, qty, unit, life_cycle_stage, database_item)
+                    elif item_type == 'Energy':
+                        item = self.create_energy_product(None, name, qty, unit, life_cycle_stage, database_item)
+                    elif item_type == 'Emission':
+                        item = self.create_emission_product(None, name, qty, unit, life_cycle_stage, database_item)
+                    elif item_type == 'Waste':
+                        item = self.create_waste_product(None, name, qty, unit, life_cycle_stage, database_item)                   
+                    else:
+                        raise TypeError(f"Item type of {item_type} is undefined.")
+
+            #         if item_type == 'Transportation':
+            #             transported_item = row[header_map['transported item']]
+            #             transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items
+            #             if not (transported_product is None):
+            #                 item.set_transported_products(transported_product)
+            #             else:
+            #                 if not (transported_item == ''):
+            #                     tmp_transportation_map[transported_item] = {}
+            #                     tmp_transportation_map[transported_item]['transporter'] = item
+            #         else:
+            #             density = row[header_map['density']]
+            #             weight_unit = row[header_map['weight unit']]
+            #             if not (density == ''):
+            #                 item.set_density(density)        
+            #             if not (weight_unit == ''):
+            #                 item.set_weight_unit(weight_unit)  
+
+            #             if name in tmp_transportation_map:
+            #                 tmp_transportation_map[name]['product'] = item
+
+            #         if not (database_item == ''):
+            #             item.set_impact_database_entry(database_item)
+            
+            # if tmp_transportation_map:
+            #     for entry in tmp_transportation_map:
+            #         tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
+                
 
     # =================================
     # EDIT MENU

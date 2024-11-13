@@ -21,12 +21,22 @@ class GUIInputManager():
     @staticmethod
     def create_model(project, name):
 
-        project.create_model(name)
+        return project.create_model(name)
+    
+    @staticmethod
+    def set_model(project, model, model_name):
+        
+        project.models[model_name] = model
 
     @staticmethod
     def set_current_model(project, name):
 
         project.set_current_model(name)
+
+    @staticmethod
+    def import_model_from_csv(project, file_path, name):
+
+        return project.create_model_from_csv(file_path, name)
 
     @staticmethod
     def get_all_model_names(project):

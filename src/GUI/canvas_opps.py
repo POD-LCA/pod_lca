@@ -9,6 +9,15 @@ class CanvasOperationsMixin:
         
         return id_tag
     
+    def set_current_model(self, name):
+
+        tab_id = int(name.replace("Model_", ''))
+
+        self.notebook.select(tab_id)
+        GUIInputManager.set_current_model(self.project, name)
+
+        return name
+    
     def get_current_canvas(self):
 
         model_id = self.get_current_model()
@@ -23,6 +32,14 @@ class CanvasOperationsMixin:
 
         self.on_canvas_configure(event)
 
+
+    def delete_canvas(self, name):
+
+        tab_id = int(name.replace("Model_", ''))
+
+        self.notebook.forget(tab_id)
+
+        return name
 
     # =================================
     # On Canvas: Zoom and pan
