@@ -46,6 +46,8 @@ class UncertainityUtils:
         
         """
 
+        min_data_points = 4 # fitting done only if the data set has atleast this many data points
+
         if is_cts:
             dists_lst = UncertainityUtils.get_all_cts_distributions()
         else:
@@ -53,7 +55,7 @@ class UncertainityUtils:
 
         best_k_param = 10000
         best_fit = None
-        if len(data)> 3:
+        if len(data) >= min_data_points:
             for dist_name in dists_lst:
                 try:
                     k_test = stats.kstest(data, dist_name, method=fit_method)
