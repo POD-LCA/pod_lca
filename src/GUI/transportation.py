@@ -50,7 +50,9 @@ class Transportation(Item):
             if self.hotspot_on_off.get():
                 self.show_hotspots()
                 
-            popup.destroy()
+            if not popup is None:
+                popup.destroy()
+                
             return process
         
         else:

@@ -207,6 +207,18 @@ class Model:
 
         return waste
     
+    def get_name(self):
+        """ Retrieve the name of the model.
+
+            Returns
+            -------
+            str
+                Name of the model.
+
+        """
+
+        return self.name        
+    
     def get_processes(self):
         """ Retrieve all the processes in the model.
 

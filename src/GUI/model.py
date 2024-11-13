@@ -42,6 +42,8 @@ class ModelMixin:
         self.plot_checkboxes[model_name] = checkbox
 
         if add_to_project:
-            GUIInputManager.create_model(self.project, model_name)
+            model = GUIInputManager.create_model(self.project, model_name)
 
         self.update_plot()
+
+        return model
