@@ -123,12 +123,12 @@ waste.set_unit('kg')
 waste.set_impact_database_entry("Waste to landfill")
 
 
-hot_spots = project.get_calculator().hot_spot_analysis(printout=False)
+hot_spots = project.get_calculator().hot_spot_analysis(printout=True)
 
 graph = BarChart(project)
 graph.set_impact_category("GWP")
 graph.set_active_models(['Model_0', 'Model_02'])
-graph.show()
+#graph.show()
 
 graph2 = BarChart2(project)
 graph2.set_impact_category("GWP")
@@ -139,6 +139,3 @@ graph3 = BarChart3(project)
 graph3.set_impact_category(["GWP","ODP"])
 graph3.set_active_models(['Model_0', 'Model_02'])
 #graph3.show()
-
-calculator = project.get_calculator()
-print(calculator.get_barchart3_data(["GWP","ODP"], 'Model_02'))

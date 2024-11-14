@@ -281,6 +281,29 @@ class Calculator():
         
         return impact_by_stage
 
+
+
+    def get_spider_chart_data (self, impact_category, model_lst=['Model_0'], stage = 'A1'):
+        """ Returns heights and x-labels for a barchart.
+        """
+
+        project = self.get_project()
+        calculator = self.project.get_calculator()
+        data={}
+
+        for impact in impact_category:
+            impact_data = {}
+
+            for model_name in model_lst:
+                model_data, stages = calculator.get_data_by_LCstage(impact, model_name)
+                impact_data[model_name] = model_data  
+
+            stage_values = {model: values[stage] for model, values in impact_data.items()}
+            data[impact] = stage_values
+
+        return data
+        
+
     # =================================
     # ANALYSIS METHODS
     # =================================
