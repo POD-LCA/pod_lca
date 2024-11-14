@@ -195,6 +195,7 @@ if __name__ == '__main__':
     dataset = DataSet('test', data)
     dataset.plot_data()
     # best_fit = dist.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=True)
+    # TODO: Call Q-Q plots
     best_fit = 'norm'
     distribution = dataset.fit_distribution(best_fit)
     dataset.plot_fit()

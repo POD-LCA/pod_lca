@@ -60,10 +60,4 @@ class UncertainityUtils:
 
 
 if __name__ == '__main__':
-    
-    data = np.random.normal(0, 1, 100)  # Set your data set here
-
-    dist_name = UncertainityUtils.find_best_fit(data, is_cts=True, fit_method='MLE', validate=True, printout=True)
-
-    UncertainityUtils.plot_QQ(data, dist_name)
-    UncertainityUtils.plot_fit(data, dist_name)
+    pass
