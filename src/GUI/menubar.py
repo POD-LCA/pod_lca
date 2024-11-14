@@ -112,11 +112,11 @@ class MenubarMixin:
                                                 defaultextension=".csv",
                                                 filetypes=(("CSV files", "*.csv"), ("All files", "*.*")))
 
-        model = self.add_model(add_to_project=True)
-        self.set_current_model(GUIInputManager.get_name(model))
-        
         if file_path:
 
+            # TODO: if only one model on canvas and model_0 has nothing on it add the model there
+            model = self.add_model(add_to_project=True)
+            self.set_current_model(GUIInputManager.get_name(model))
 
             tmp_transportation_map = {}
             with open(file_path, mode='r', encoding='utf-8-sig') as file:
@@ -145,6 +145,7 @@ class MenubarMixin:
                     else:
                         raise TypeError(f"Item type of {item_type} is undefined.")
 
+            # TODO: Uncomment below section and add connectors
             #         if item_type == 'Transportation':
             #             transported_item = row[header_map['transported item']]
             #             transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items

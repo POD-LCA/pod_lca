@@ -44,6 +44,7 @@ class ModelMixin:
         if add_to_project:
             model = GUIInputManager.create_model(self.project, model_name)
 
+        self.update()
         self.update_plot()
 
         return model

@@ -14,6 +14,8 @@ class CanvasOperationsMixin:
         tab_id = int(name.replace("Model_", ''))
 
         self.notebook.select(tab_id)
+        self.update()
+        
         GUIInputManager.set_current_model(self.project, name)
 
         return name
