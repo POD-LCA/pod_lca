@@ -28,7 +28,6 @@ class BarChart3(Plotter):
         width = 0.8 / num_models
 
         for i, model in enumerate(self.active_models):
-            print(f"Processing Model {i}: {model}")
 
             impact_by_stage = self.calculator.get_barchart3_data(self.impact_category, model)
             bottom = np.zeros(len(self.impact_category))

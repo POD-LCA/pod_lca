@@ -40,6 +40,7 @@ class Plotter:
 
         self.impact_category = None
         self.active_models = None
+        self.lca_stage = None
 
         self.bar_colors = ['tab:red', 'tab:blue', 'tab:orange']
 
@@ -64,6 +65,18 @@ class Plotter:
         """
 
         self.active_models = active_models
+
+
+    def set_lca_stage(self, lca_stage):
+        """ Set lca stage for plotting.
+
+            Parameters
+            ----------
+            lsa_stage : list of str
+                lca stage to be plotted.
+        """
+
+        self.lca_stage = lca_stage
         
     def round_to_significant(self, values, sig_figs=3, apply_rounding=True):
 
