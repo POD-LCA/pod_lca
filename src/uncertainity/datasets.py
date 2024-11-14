@@ -13,7 +13,8 @@ __version__ = "0.1.0"
 
 class DataSet:
     """
-    Data-set object with the corresponding distribution fitted from Scipy.stats package.
+    Dataset object with the corresponding distribution fitted from Scipy.stats package.
+    A Dataset is a collection (list) of data points.
 
     Attributes
     ----------
@@ -61,8 +62,7 @@ class DataSet:
         best_fit = None
         for dist_name in dists_lst:
             try:
-                dist = getattr(stats, dist_name)
-                params = dist.fit(self.data, method=fit_method)
+                _, params = self.fit_distribution(best_fit, fit_method)
                 k_test = stats.kstest(self.data, dist_name, args=params)
                 print(f"{dist_name} distribution fits with a KS statistic of {k_test.statistic}. Best fit {best_fit} with KS statistic of {best_k_param}.")
             except:
@@ -91,13 +91,37 @@ class DataSet:
         else:
             return best_fit
         
-    def fit_distribution(self, best_fit, fit_method='MLE'):
-        """ Fit a distribution to the data set.
+    def fit_distribution(self, dist_fit, fit_method='MLE'):
+        """ Fit a distribution to the data.
+
+            Parameters
+            ----------
+            dist_fit : str
+                Name of the distribution fitted to the data set, following Scipy.stats module.
+            fit_methods : str
+                'MLE', 'MSE'
+            
+            Returns
+            -------
+            scipy.stats._continuous_distns Obj.
+                The fitted distribtuion to the data set.
+            tuple
+                Parameters of the fitted distribution.
+        
+        """
+
+        dist = getattr(stats, dist_fit)
+        params  = dist.fit(self.data, method=fit_method)
+
+        return dist, params
+            
+    def set_distribution(self, best_fit, fit_method='MLE'):
+        """ Set a Distribution Obj to the DataSet Obj.
 
             Parameters
             ----------
             best_fit : str
-                Name of the distribution fitted to the data set, following Scipy.stats module.
+                Name of the distribution set to the data set, following Scipy.stats module.
             fit_methods : str
                 'MLE', 'MSE'
             
@@ -108,9 +132,7 @@ class DataSet:
         
         """
 
-        dist = getattr(stats, best_fit)
-        params  = dist.fit(self.data, method=fit_method)
-
+        dist, params = self.fit_distribution(best_fit, fit_method)
         self.dist_fitted = Distribution(best_fit, params, dist)
 
         return self.dist_fitted
@@ -197,7 +219,7 @@ if __name__ == '__main__':
     # best_fit = dist.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=True)
     # TODO: Call Q-Q plots
     best_fit = 'norm'
-    distribution = dataset.fit_distribution(best_fit)
+    distribution = dataset.set_distribution(best_fit)
     dataset.plot_fit()
 
     x = distribution.pick_data_point()
