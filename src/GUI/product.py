@@ -53,7 +53,7 @@ class Product(Item):
             if not popup is None:
                 popup.destroy()
 
-            return product
+            return item_id
         
         else:
             return None

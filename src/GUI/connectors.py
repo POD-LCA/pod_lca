@@ -173,7 +173,6 @@ class ConnectorsMixin:
         start_y = (start_coords[1] + start_coords[3]) / 2
         end_y = (end_coords[1] + end_coords[3]) / 2
 
-
         if self.connector_type == 'straight':
             self.current_canvas.coords(line, start_x, start_y, end_x, end_y)
             self.current_canvas.itemconfig(line, arrow=LAST)

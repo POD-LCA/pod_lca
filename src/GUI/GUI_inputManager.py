@@ -37,6 +37,11 @@ class GUIInputManager():
     def import_model_from_csv(project, file_path, name):
 
         return project.create_model_from_csv(file_path, name)
+    
+    @staticmethod
+    def get_model(project, model_id):
+
+        return project.get_model(model_id)
 
     @staticmethod
     def get_all_model_names(project):
@@ -356,9 +361,9 @@ class GUIInputManager():
         return item
 
     @staticmethod
-    def set_transported_product(visualizer, item, product):
+    def set_transported_product(visualizer, transporter, product):
 
-        product.set_transporter(item)
+        product.set_transporter(transporter)
 
     @staticmethod
     def remove_transported_product(visualizer, item, product):

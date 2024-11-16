@@ -52,7 +52,7 @@ class Process(Item):
             if not popup is None:    
                 popup.destroy()
                 
-            return process
+            return item_id
         
         else:
             return None

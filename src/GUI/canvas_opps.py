@@ -42,6 +42,10 @@ class CanvasOperationsMixin:
         self.notebook.forget(tab_id)
 
         return name
+    
+    def get_number_of_canvases(self):
+
+        return len(self.notebook.winfo_children())
 
     # =================================
     # On Canvas: Zoom and pan
@@ -233,3 +237,24 @@ class CanvasOperationsMixin:
     def on_closing(self):
         self.quit()
         self.destroy()
+
+
+    # =================================
+    # Utilitiy Methods
+    # =================================
+
+    def get_all_canvas_items(self, _except_tags=['grid'], canvas=None):
+        """ Return ids of all the items on the canvas, except those with a given tag.
+            Elements with 'grid' tag excepted by default.
+            If canvas is not specified, use the current canvas.
+        """
+
+        canvas = self.get_current_canvas()
+
+        all_items = set(canvas.find_all())
+
+        exclude_items = set()
+        for tag in _except_tags:
+            exclude_items.update(canvas.find_withtag(tag))
+
+        return list(all_items - exclude_items)
