@@ -8,7 +8,7 @@ CO2,CO2,Emission,A3,0.5,kg,,,
 sand,Sand,Product,A1,1,kg,,,
 propane,Propane,Energy,A1,1,MJ,,0.02,kg
 sprinkles by truck,Transportation by truck,Transportation,A2,40,km,,,
-pickles by truck,Transportation by truck,Transportation,A2,17,km,,,
+pickles by truck,Transportation by truck,Transportation,A2,17,km,pickles,,
 propane by truck,Transportation by truck,Transportation,A2,20,km,,,
 product 1,,Product,A3,3,kg,,,
 product 2,,Product,A3,4,kg,,,

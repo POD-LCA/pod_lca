@@ -114,11 +114,14 @@ class MenubarMixin:
 
         if file_path:
 
-            # TODO: if only one model on canvas and model_0 has nothing on it add the model there
-            model = self.add_model(add_to_project=True)
-            self.set_current_model(GUIInputManager.get_name(model))
-
+            if self.get_number_of_canvases() == 1 and len(self.get_all_canvas_items()) == 0:
+                model_id = self.get_current_model()
+            else:
+                model_id = self.add_model(add_to_project=True)
+                self.set_current_model(GUIInputManager.get_name(model_id))
+                
             tmp_transportation_map = {}
+            tmp_product_item_map = {}
             with open(file_path, mode='r', encoding='utf-8-sig') as file:
                 data = csv.reader(file)
                 headers = next(data)
@@ -131,48 +134,48 @@ class MenubarMixin:
                     
                     item_type = row[header_map['type']]
                     if item_type == 'Product':
-                        item = self.create_product(None, name, qty, unit, life_cycle_stage, database_item)
+                        item_id = self.create_product(None, name, qty, unit, life_cycle_stage, database_item)
                     elif item_type == 'Process':
-                        item = self.create_process(None, name, qty, unit, life_cycle_stage, database_item)
+                        item_id = self.create_process(None, name, qty, unit, life_cycle_stage, database_item)
                     elif item_type == 'Transportation':
-                        item = self.create_transport_process(None, name, qty, unit, life_cycle_stage, database_item)
+                        item_id = self.create_transport_process(None, name, qty, unit, life_cycle_stage, database_item)
                     elif item_type == 'Energy':
-                        item = self.create_energy_product(None, name, qty, unit, life_cycle_stage, database_item)
+                        item_id = self.create_energy_product(None, name, qty, unit, life_cycle_stage, database_item)
                     elif item_type == 'Emission':
-                        item = self.create_emission_product(None, name, qty, unit, life_cycle_stage, database_item)
+                        item_id = self.create_emission_product(None, name, qty, unit, life_cycle_stage, database_item)
                     elif item_type == 'Waste':
-                        item = self.create_waste_product(None, name, qty, unit, life_cycle_stage, database_item)                   
+                        item_id = self.create_waste_product(None, name, qty, unit, life_cycle_stage, database_item)                   
                     else:
                         raise TypeError(f"Item type of {item_type} is undefined.")
+                    tmp_product_item_map[name] = item_id
 
-            # TODO: Uncomment below section and add connectors
-            #         if item_type == 'Transportation':
-            #             transported_item = row[header_map['transported item']]
-            #             transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items
-            #             if not (transported_product is None):
-            #                 item.set_transported_products(transported_product)
-            #             else:
-            #                 if not (transported_item == ''):
-            #                     tmp_transportation_map[transported_item] = {}
-            #                     tmp_transportation_map[transported_item]['transporter'] = item
-            #         else:
-            #             density = row[header_map['density']]
-            #             weight_unit = row[header_map['weight unit']]
-            #             if not (density == ''):
-            #                 item.set_density(density)        
-            #             if not (weight_unit == ''):
-            #                 item.set_weight_unit(weight_unit)  
-
-            #             if name in tmp_transportation_map:
-            #                 tmp_transportation_map[name]['product'] = item
-
-            #         if not (database_item == ''):
-            #             item.set_impact_database_entry(database_item)
+                    item = self.item_map[model_id][item_id]
+                    if item_type == 'Transportation':
+                        transported_item = row[header_map['transported item']]
+                        if not (transported_item == ''):
+                            tmp_transportation_map[transported_item] = name
+                    else:
+                        density = row[header_map['density']]
+                        weight_unit = row[header_map['weight unit']]
+                        if not (density == ''):
+                            item.set_density(density)        
+                        if not (weight_unit == ''):
+                            item.set_weight_unit(weight_unit)
             
-            # if tmp_transportation_map:
-            #     for entry in tmp_transportation_map:
-            #         tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
-                
+            if tmp_transportation_map:
+                for entry in tmp_transportation_map:
+                    product_item_id = tmp_product_item_map[entry]
+                    transporter_item_id = tmp_product_item_map[tmp_transportation_map[entry]]
+                    GUIInputManager.set_transported_product(self, 
+                                                            transporter=self.item_map[model_id][transporter_item_id], 
+                                                            product=self.item_map[model_id][product_item_id])
+                    
+                    smooth = True if self.connector_type == 'spline' else False
+                    line = self.current_canvas.create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector") 
+                    self.draw_connection(product_item_id, transporter_item_id, line)  
+                    self.connectors[model_id].append({"line": line,
+                                                      "start_item": product_item_id,
+                                                      "end_item": transporter_item_id})
 
     # =================================
     # EDIT MENU
