@@ -141,7 +141,6 @@ class Plotter:
         """
         
         self.ax.clear()
-
         self.set_data()
         self.set_labels()
         self.set_grid()
@@ -152,12 +151,10 @@ class Plotter:
         """
 
         self.ax.clear()
-
         self.set_data()
         self.set_labels()
         self.set_grid()
         self.set_legend()
-
         plt.grid(True)
         plt.show()
 

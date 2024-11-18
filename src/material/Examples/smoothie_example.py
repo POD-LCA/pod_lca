@@ -128,7 +128,7 @@ hot_spots = project.get_calculator().hot_spot_analysis(printout=True)
 graph = BarChart(project)
 graph.set_impact_category("GWP")
 graph.set_active_models(['Model_0', 'Model_02'])
-#graph.show()
+graph.show()
 
 graph2 = BarChart2(project)
 graph2.set_impact_category("GWP")
