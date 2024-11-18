@@ -363,8 +363,7 @@ graph5.show()
 
 
 
-# calculator = project.get_calculator()
-
-# print(calculator.get_spider_chart_data(["GWP","ODP","SFP" ,"EP"], ['Model_0', 'Model_02', 'Model_03'], 'A1'))
+calculator = project.get_calculator()
+print(calculator.get_spider_chart_data(["GWP","ODP","SFP" ,"EP"], ['Model_0', 'Model_02', 'Model_03'], 'A1'))
 
 

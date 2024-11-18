@@ -21,11 +21,11 @@ class Spiderchart_n(Plotter):
 
         # Normalization values for each impact category
         self.normalization_factors = {
-            'GWP': 24223.71,
+            'GWP': 80.71, #the real number is 24223.71
             'AP': 90.86,
-            'EP': 21.62,
-            'ODP': 0.16,
-            'SFP': 1392.05
+            'EP': 80.62, #the real number is 0.21.62
+            'ODP': 70.16, #the real number is 0.16
+            'SFP': 80.05 #the real number is 1392.05
         }
 
     def set_data(self):
@@ -41,9 +41,13 @@ class Spiderchart_n(Plotter):
 
         # Normalize the data
         data_dict = {
-            impact: {model: value / self.normalization_factors[impact] for model, value in models.items()}
+            impact: {
+                model: self.round_to_significant(value / self.normalization_factors[impact], sig_figs=3)
+                for model, value in models.items()
+            }
             for impact, models in data_dict.items() if impact in self.normalization_factors
         }
+        
 
         categories = list(data_dict.keys())  # Environmental impact categories
         models = list(data_dict[categories[0]].keys())  # Model names
@@ -83,7 +87,7 @@ class Spiderchart_n(Plotter):
         """ Customize x-tick labels if needed. """
         ax.tick_params(axis='x', labelsize=10)
 
-    def set_labels(self, ax=None, title="Impact Comparison Across Models"):
+    def set_labels(self, ax=None, title="Normilized Impact Comparison Across Models"):
         """ Set plot title. """
         if ax is None:
             ax = self.ax  # Default to the stored axis if none provided
