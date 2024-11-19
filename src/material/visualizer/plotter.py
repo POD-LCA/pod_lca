@@ -1,39 +1,40 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-__author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
-__license__ = "MIT License"
-__email__ = "mhtaba@uw.edu; kiun@uw.edu"
-__version__ = "0.1.0"
-
-
 class Plotter:
     """
     Plotter provides a prototype to generate various data visualizations.
 
     Attributes
     ----------
-    calculator : Calculator Obj.
-        Calculator from which the plotter obtains data to be visualised.
+    calculator : Calculator object
+        Calculator from which the plotter obtains data to be visualized.
     active_models : list of str
-        Names of the model considered for data visualuization.
-    fig : Figure Obj. from Matplotlib
+        Names of the models considered for data visualization.
+    fig : matplotlib.figure.Figure
         Figure being plotted.
-    ax : Axes Obj. from Matplotlib
-        Set of axes of the figure being plotted.
+    ax : matplotlib.axes.Axes
+        Axes of the figure being plotted.
+    plot_colors : list of str
+        Colors for the plots, customizable for all derived classes.
     """
 
-    # Shared dictionary to map impact categories to their units
     IMPACT_UNITS = {
-        'GWP': 'kg CO₂-eq',    # Global Warming Potential
-        'AP': 'kg SO₂-eq',     # Acidification Potential
-        'EP': 'kg PO₄-eq',     # Eutrophication Potential
-        'ODP': 'kg CFC-11-eq', # Ozone Depletion Potential
-        'SFP': 'kg O₃-eq'      # Smog Formation Potential
+        'GWP': 'kg CO₂-eq',
+        'AP': 'kg SO₂-eq',
+        'EP': 'kg PO₄-eq',
+        'ODP': 'kg CFC-11-eq',
+        'SFP': 'kg O₃-eq'
     }
 
-    def __init__(self, project):
+    PALETTES = {
+        "default": ['tab:red', 'tab:blue', 'tab:orange'],
+        "cool": ['#377eb8', '#4daf4a', '#984ea3'],
+        "warm": ['#e41a1c', '#ff7f00', '#f781bf'],
+        "grayscale": ['#444444', '#888888', '#bbbbbb']
+    }
+
+    def __init__(self, project, palette="default"):
         self.calculator = project.get_calculator()
         plt.close('all')
         self.fig, self.ax = plt.subplots(layout='constrained')
@@ -42,122 +43,76 @@ class Plotter:
         self.active_models = None
         self.lca_stage = None
 
-        self.bar_colors = ['tab:red', 'tab:blue', 'tab:orange']
+        # Set plot colors using the selected palette
+        self.plot_colors = self.PALETTES.get(palette, self.PALETTES["default"])
+
+    def set_color_palette(self, palette):
+        """Set color palette for the plot.
+
+        Parameters
+        ----------
+        palette : str or list
+            Predefined palette name or a custom list of colors.
+        """
+        if isinstance(palette, str):
+            self.plot_colors = self.PALETTES.get(palette, self.PALETTES["default"])
+        elif isinstance(palette, list) and all(isinstance(color, str) for color in palette):
+            self.plot_colors = palette
+        else:
+            raise ValueError("Invalid palette. Provide a predefined name or a list of color strings.")
 
     def set_impact_category(self, impact_cat):
-        """ Set impact category.
-
-            Parameters
-            ----------
-            impact_cat : str
-                Impact catogery to be plotted
-        """
-
+        """Set impact category."""
         self.impact_category = impact_cat
 
     def set_active_models(self, active_models):
-        """ Set models considered for plotting.
-
-            Parameters
-            ----------
-            active_models : list of str
-                Models considered for plotting.
-        """
-
+        """Set models considered for plotting."""
         self.active_models = active_models
 
-
     def set_lca_stage(self, lca_stage):
-        """ Set lca stage for plotting.
-
-            Parameters
-            ----------
-            lsa_stage : list of str
-                lca stage to be plotted.
-        """
-
+        """Set LCA stage for plotting."""
         self.lca_stage = lca_stage
-        
-    def round_to_significant(self, values, sig_figs=3, apply_rounding=True):
 
-        """ Optionally round a list of numbers to the given number of significant figures. """
-        
-        rounded_values = []
-        
-        for value in np.atleast_1d(values): 
-            if np.isnan(value) or np.isinf(value):
-                # If NaN or infinity, keep the original value
-                rounded_values.append(value)
-            elif value == 0:
-                # Preserve zero without rounding
-                rounded_values.append(0)
-            elif apply_rounding:
-                # Apply rounding to the specified number of significant figures
-                rounded_value = round(float(value), sig_figs - int(np.floor(np.log10(abs(value)))))
-                rounded_values.append(rounded_value)
-            else:
-                # Keep the original value without rounding
-                rounded_values.append(value)
+    @staticmethod
+    def round_to_significant(values, sig_figs=3):
+        """Round a list of numbers to the given number of significant figures."""
+        return [
+            0 if val == 0 else round(val, sig_figs - int(np.floor(np.log10(abs(val))))) if np.isfinite(val) else val
+            for val in np.atleast_1d(values)
+        ]
 
-        return rounded_values
-
-    def format_labels(self, values):
-        """ Format labels for bar charts with 3 significant figures. """
+    @staticmethod
+    def format_labels(values):
+        """Format labels for bar charts."""
         return [f"{v:.3g}" for v in values]
-    
 
     def set_data(self):
-        """ Calls calculator to generate the data and then sets them in the plot.
-        """
-
+        """Generate the data to be visualized."""
         pass
 
     def set_labels(self):
-        """ Set plot title and axis label.
-        """
-
+        """Set plot title and axis labels."""
         pass
 
     def set_legend(self):
-        """ Set legend of the plot.
-        """
-
-        pass
+        """Set the legend of the plot."""
+        self.ax.legend()
 
     def set_grid(self):
-        """ Set grids of the plot.
-            Default setting updates the y-axis height based on the maximum bar height.
-        """
-
-        max_val = max([rect.get_height() for rect in self.ax.patches])
-        if max_val > 0.0:
-            self.ax.set_ylim([0, max(np.power(10,np.ceil(np.log10(max_val))),10)])
-        else:
-            self.ax.set_ylim([0, 10])
-        plt.grid(True)
+        """Set grid lines and adjust y-axis height."""
+        max_val = max((rect.get_height() for rect in self.ax.patches), default=10)
+        self.ax.set_ylim([0, max(10, np.power(10, np.ceil(np.log10(max_val))))])
+        self.ax.grid(True)
 
     def draw(self):
-        """ Updates an existing plot.
-        """
-        
+        """Update and redraw the plot."""
         self.ax.clear()
         self.set_data()
         self.set_labels()
         self.set_grid()
         self.set_legend()
-    
+
     def show(self):
-        """ Draws a plot and display the figure.
-        """
-
-        self.ax.clear()
-        self.set_data()
-        self.set_labels()
-        self.set_grid()
-        self.set_legend()
-        plt.grid(True)
+        """Display the plot."""
+        self.draw()
         plt.show()
-
-if __name__ == '__main__':
-   pass
-  
