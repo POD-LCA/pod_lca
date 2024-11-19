@@ -11,37 +11,52 @@ __version__ = "0.1.0"
 
 
 class BarChart2(Plotter):
-    """Stacked bar chart to visualize impacts for multiple models by life cycle stage."""
+    """
+    A bar chart to visualize the impact (of a given impact category) for multiple models 
+    with data categorized by the life cycle stage.
+    """
+
+    def __init__(self, project):
+        super().__init__(project)
 
     def set_data(self):
-        """Generate stacked bar chart data and plot it."""
-        stages = ['A1', 'A2', 'A3']
-        stage_indices = np.arange(len(stages))
-        width = 0.4
 
-        for model_idx, model in enumerate(self.active_models):
-            bottom = np.zeros(len(stages))
+        """ Calls calculator to generate the data and then sets them in the plot. """
+
+        stages = ('A1', 'A2', 'A3') 
+        stages_nos = np.arange(len(stages))
+        width = 0.4
+        model_no = 0
+
+        for model in self.active_models:
             _, _, _, impacts = self.calculator.get_barchart2_data(self.impact_category, model)
+            bottom = np.zeros(3)
 
             for stage, impact in impacts.items():
-                heights = self.round_to_significant(impact)
-                color = self.plot_colors[model_idx % len(self.plot_colors)]
 
-                rect = self.ax.bar(
-                    stage_indices + model_idx * width, heights, width, label=stage, bottom=bottom, color=color
+                rounded_impact = self.round_to_significant(impact)
+                p = self.ax.bar(
+                    stages_nos + (model_no * width), rounded_impact, width, 
+                    label=stage, bottom=bottom
                 )
-                bottom += heights
-                self.ax.bar_label(rect, labels=self.format_labels(heights), label_type="center")
+                bottom += rounded_impact 
 
-        self.ax.set_xticks(stage_indices, stages)
+                self.ax.bar_label(p, labels=self.format_labels(rounded_impact), label_type='center')
+
+            model_no += 1
+
+        self.ax.set_xticks(range(len(stages)), stages)
 
     def set_labels(self):
-        """Set axis labels and title."""
-        unit = self.IMPACT_UNITS.get(self.impact_category, '')
+        """ Set plot title and axis labels including the unit for the impact category. """
+
         self.ax.set_xlabel("Life Cycle Stage")
+
+        unit = self.IMPACT_UNITS.get(self.impact_category, '')
         self.ax.set_ylabel(f'{self.impact_category} Impact ({unit})')
-        self.ax.set_title("Life Cycle Stages")
+        self.ax.set_title('Life Cycle Stages')
 
     def set_legend(self):
-        """Set legend for the stacked bar chart."""
-        self.ax.legend(title="Stages", loc="upper left", ncols=3)
+        """ Set the legend of the plot. """
+        self.ax.legend(title='Life cycle stage color', loc='upper left', ncols=3)
+

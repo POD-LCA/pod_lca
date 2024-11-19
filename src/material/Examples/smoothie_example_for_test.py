@@ -333,7 +333,7 @@ waste.set_impact_database_entry("Waste to landfill")
 
 hot_spots = project.get_calculator().hot_spot_analysis(printout=False)
 
-graph = BarChart(project)
+graph = BarChart(project, palette="grayscale")
 graph.set_impact_category("GWP")
 graph.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
 #graph.show()
@@ -359,11 +359,11 @@ graph5 = Spiderchart_n(project)
 graph5.set_impact_category(["GWP","ODP","SFP" ,"EP"])
 graph5.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
 graph5.set_lca_stage('A1')
-graph5.show()
+#graph5.show()
 
 
 
-calculator = project.get_calculator()
-print(calculator.get_spider_chart_data(["GWP","ODP","SFP" ,"EP"], ['Model_0', 'Model_02', 'Model_03'], 'A1'))
+# calculator = project.get_calculator()
+# print(calculator.get_spider_chart_data(["GWP","ODP","SFP" ,"EP"], ['Model_0', 'Model_02', 'Model_03'], 'A1'))
 
 

@@ -47,7 +47,6 @@ class Spiderchart_n(Plotter):
             }
             for impact, models in data_dict.items() if impact in self.normalization_factors
         }
-        
 
         categories = list(data_dict.keys())  # Environmental impact categories
         models = list(data_dict[categories[0]].keys())  # Model names
@@ -76,12 +75,11 @@ class Spiderchart_n(Plotter):
 
         # Customize the radar plot appearance
         self.set_x_labels(ax)
-        self.set_labels(ax, "Impact Comparison Across Models")
+        self.set_labels(ax, "Normilized Impact Comparison Across Models")
         self.set_grid(ax)
         self.set_legend(ax)
 
-        # Display the plot
-        #plt.show()
+        
 
     def set_x_labels(self, ax):
         """ Customize x-tick labels if needed. """
