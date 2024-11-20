@@ -315,6 +315,26 @@ class Master:
         """
 
         return self.get_model().get_project().get_calculator()
+    
+    @classmethod
+    def copy(cls, obj):
+        """ Make a copy of an object.
+
+            Returns
+            -------
+            Master Obj.
+                Copy of the object.
+        """
+
+        new_impact = obj.get_impacts().copy()
+
+        new_obj = cls(None, None, None, None)
+        new_obj.__dict__.update(obj.__dict__)
+
+        new_impact.parent = new_obj
+        new_obj.impacts = new_impact
+
+        return new_obj
 
 if __name__ == '__main__':
     pass

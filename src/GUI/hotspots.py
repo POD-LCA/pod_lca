@@ -36,6 +36,17 @@ class HotspotMixins:
                 self.show_impact_bubble(item_id, self.hotspot_impact_cat.get(), max_impact)
                 self.current_canvas.current_hotspot.append(item_id)
 
+    def set_hotspots(self, model):
+
+        canvas = self.models[model]
+        canvas.current_hotspot = [] 
+
+        hot_spots = GUIOutputManager.get_hotspots(self.project, model, impact_category=self.hotspot_impact_cat.get())
+        if hot_spots is not None:
+            for spot in hot_spots:
+                item_id = spot.get_id()
+                canvas.current_hotspot.append(item_id)        
+
 
     def show_impact_bubble(self, item_id, impact_category, max_impact, k=0.5):
 

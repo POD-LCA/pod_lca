@@ -6,7 +6,6 @@ from GUI.cell_table import CellTable
 
 import os
 import sys
-import csv
 from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar, StringVar
 from tkinter.ttk import Notebook, Combobox
 
@@ -23,10 +22,6 @@ class MenubarMixin:
 
         menu_file.add_command(label='New', command=lambda :self._newFile(menubar))
         menu_file.add_command(label='Open', command=self._openFile)
-        menu_file.add_separator()
-        menu_file_import = Menu(menu_file, tearoff=False)
-        menu_file.add_cascade(menu=menu_file_import, label='Import')
-        menu_file_import.add_command(label='From CSV', command=lambda :self._import_model_from(menubar))
         menu_file.add_separator()
         menu_file.add_command(label='Save', command=self._quicksaveFile)
         menu_file.add_command(label='Save As', command=self._saveFile)
@@ -103,79 +98,6 @@ class MenubarMixin:
 
         popup.on_popup_close()
         cmd()
-
-    def _import_model_from(self, menubar):
-
-        home_dir = os.path.expanduser("~")
-        file_path = filedialog.askopenfilename(initialdir=home_dir, 
-                                                title="Open file", 
-                                                defaultextension=".csv",
-                                                filetypes=(("CSV files", "*.csv"), ("All files", "*.*")))
-
-        if file_path:
-
-            if self.get_number_of_canvases() == 1 and len(self.get_all_canvas_items()) == 0:
-                model_id = self.get_current_model()
-            else:
-                model_id = self.add_model(add_to_project=True)
-                self.set_current_model(GUIInputManager.get_name(model_id))
-                
-            tmp_transportation_map = {}
-            tmp_product_item_map = {}
-            with open(file_path, mode='r', encoding='utf-8-sig') as file:
-                data = csv.reader(file)
-                headers = next(data)
-                header_map = {header:index for index, header in enumerate(headers)} 
-                for row in data:
-                    name = row[header_map['Name']]
-                    life_cycle_stage = row[header_map['LC stage']]
-                    database_item = row[header_map['Impact data']]
-                    qty, unit = row[header_map['qty']], row[header_map['unit']]
-                    
-                    item_type = row[header_map['type']]
-                    if item_type == 'Product':
-                        item_id = self.create_product(None, name, qty, unit, life_cycle_stage, database_item)
-                    elif item_type == 'Process':
-                        item_id = self.create_process(None, name, qty, unit, life_cycle_stage, database_item)
-                    elif item_type == 'Transportation':
-                        item_id = self.create_transport_process(None, name, qty, unit, life_cycle_stage, database_item)
-                    elif item_type == 'Energy':
-                        item_id = self.create_energy_product(None, name, qty, unit, life_cycle_stage, database_item)
-                    elif item_type == 'Emission':
-                        item_id = self.create_emission_product(None, name, qty, unit, life_cycle_stage, database_item)
-                    elif item_type == 'Waste':
-                        item_id = self.create_waste_product(None, name, qty, unit, life_cycle_stage, database_item)                   
-                    else:
-                        raise TypeError(f"Item type of {item_type} is undefined.")
-                    tmp_product_item_map[name] = item_id
-
-                    item = self.item_map[model_id][item_id]
-                    if item_type == 'Transportation':
-                        transported_item = row[header_map['transported item']]
-                        if not (transported_item == ''):
-                            tmp_transportation_map[transported_item] = name
-                    else:
-                        density = row[header_map['density']]
-                        weight_unit = row[header_map['weight unit']]
-                        if not (density == ''):
-                            item.set_density(density)        
-                        if not (weight_unit == ''):
-                            item.set_weight_unit(weight_unit)
-            
-            if tmp_transportation_map:
-                for entry in tmp_transportation_map:
-                    product_item_id = tmp_product_item_map[entry]
-                    transporter_item_id = tmp_product_item_map[tmp_transportation_map[entry]]
-                    GUIInputManager.set_transported_product(self, 
-                                                            transporter=self.item_map[model_id][transporter_item_id], 
-                                                            product=self.item_map[model_id][product_item_id])
-                    
-                    smooth = True if self.connector_type == 'spline' else False
-                    line = self.current_canvas.create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector") 
-                    self.draw_connection(product_item_id, transporter_item_id, line)  
-                    self.connectors[model_id].append({"line": line,
-                                                      "start_item": product_item_id,
-                                                      "end_item": transporter_item_id})
 
     # =================================
     # EDIT MENU

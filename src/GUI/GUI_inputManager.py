@@ -142,6 +142,26 @@ class GUIInputManager():
         return process
     
     @staticmethod
+    def add_product(project, model, obj):
+        
+        project.models[model].products.append(obj)
+
+        LC_stage = obj.get_life_cycle_stage()
+        project.models[model].impacts[LC_stage].append(obj.get_impacts())
+
+        return obj
+
+    @staticmethod
+    def add_process(project, model, obj):
+        
+        project.models[model].processes.append(obj)
+
+        LC_stage = obj.get_life_cycle_stage()
+        project.models[model].impacts[LC_stage].append(obj.get_impacts())
+
+        return obj
+    
+    @staticmethod
     def update_qty(visualizer, item, qty, close_error=True):
 
         try: 
@@ -323,6 +343,13 @@ class GUIInputManager():
 
         model = visualizer.project.get_current_model().delete_obj(obj)
         visualizer.update_plot()
+
+    @staticmethod
+    def copy(obj):
+
+        cls = type(obj)
+
+        return cls.copy(obj)
 
     # =================================
     # Processes: Transportation

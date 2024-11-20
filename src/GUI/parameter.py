@@ -84,7 +84,7 @@ class Parameter(Item):
 
         item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', '', '', self.color_parameter, tags=["parameter"])
         slider, slider_data = Parameter.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
-        slider._always_on = True
+        slider.set_always_visible()
         Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         self.item_map[model_id][item_id] = param
@@ -199,14 +199,19 @@ class Parameter(Item):
         width = abs(x2-x1)
 
         name = param.get_name()
-        units = param.get_unit()
+        unit = param.get_unit()
         qty = param.get_qty()
+
+        slider_min = 0.0
+        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+        resolution = (slider_max - slider_min) / 100
 
         slider_cmd = lambda x: param.update_qty(self, x)
 
-        item_id, text_item, text_id = Item.create_canvas_item(self, model, name, '', start, height, width, self.color_parameter, tags=["parameter"])
-        slider, slider_data = Item.create_slider(self, model, start, height, width, qty, units, item_id, slider_cmd)
-        Item.item_bind(self, item_id, text_item, text_id, slider, slider_data)
+        item_id, text_item, text_id = Item.create_canvas_item(self, model, name, '', qty, unit, self.color_parameter, tags=["parameter"], start=start, height=height, width=width)
+        slider, slider_data = Parameter.create_slider(self, model, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        slider.set_always_visible()
+        Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
         self.item_map[model][item_id] = param
         param.set_id(item_id)
