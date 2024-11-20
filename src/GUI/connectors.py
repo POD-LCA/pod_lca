@@ -139,13 +139,18 @@ class ConnectorsMixin:
         """ Restoring connections after loading saved canvas.
         """
 
+        connections_lst = []
         for connector in connections:
+            tmp_connector = {}
             for tag in ["start_item", "end_item"]:
-                connector[tag] = item_id_map[connector[tag]]
+                tmp_connector[tag] = item_id_map[connector[tag]]
             smooth = True if self.connector_type == 'spline' else False
-            connector["line"] = self.models[model_id].create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
-            self.draw_connection(connector["start_item"], connector["end_item"], connector["line"])
+            tmp_connector["line"] = self.models[model_id].create_line(0, 0, 0, 0, fill=self.connector_color, width=2, smooth=smooth, tag="connector")
+            self.draw_connection(tmp_connector["start_item"], tmp_connector["end_item"], tmp_connector["line"])
+            connections_lst.append(tmp_connector)
 
+        return connections_lst
+    
     def redraw_connections(self):
 
         self.current_canvas.delete("connector")

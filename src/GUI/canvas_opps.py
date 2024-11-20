@@ -1,4 +1,5 @@
 from GUI.GUI_inputManager import GUIInputManager
+from tkinter import Canvas
 
 class CanvasOperationsMixin:
 
@@ -8,6 +9,16 @@ class CanvasOperationsMixin:
         id_tag = "Model_" + str(current_tab_index)
         
         return id_tag
+
+    def get_canvas_from_tab(self, index):
+        
+        tab_id = self.notebook.tabs()[index]
+        tab_widget = self.notebook.nametowidget(tab_id)
+        
+        for child in tab_widget.winfo_children():
+            if isinstance(child, Canvas):
+                return child
+        return None  
     
     def set_current_model(self, name):
 
@@ -15,6 +26,8 @@ class CanvasOperationsMixin:
 
         self.notebook.select(tab_id)
         self.update()
+
+        self.current_canvas = self.models[name]
         
         GUIInputManager.set_current_model(self.project, name)
 
@@ -249,7 +262,8 @@ class CanvasOperationsMixin:
             If canvas is not specified, use the current canvas.
         """
 
-        canvas = self.get_current_canvas()
+        if canvas == None:
+            canvas = self.get_current_canvas()
 
         all_items = set(canvas.find_all())
 

@@ -70,6 +70,20 @@ class Impacts:
         """
 
         return self.parent
+    
+    def copy(self):
+        """ Make a copy of the impact object.
+
+            Returns
+            -------
+            Impacts Obj.
+                Copy of the object.
+        """
+
+        new_obj = Impacts(None)
+        new_obj.__dict__.update(self.__dict__)
+
+        return new_obj
 
 if __name__ == '__main__':
     pass
