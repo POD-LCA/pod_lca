@@ -45,6 +45,7 @@ class ModelMixin:
         self.models[model_name] = canvas_model
         self.scale[model_name] = 1.0
         self.zoom_factor[model_name] = 1.1
+        self.reference_point[model_name] = [0,0]
         self.sliders[model_name] = {}
         self.slider_map[model_name] = {}
         self.item_map[model_name] = {}

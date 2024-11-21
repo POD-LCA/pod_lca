@@ -103,6 +103,8 @@ class CanvasOperationsMixin:
                 self.draw_grid()
 
             self.pan_start = (event.x, event.y)
+            
+            self.reference_point[model_id] = [self.reference_point[model_id][0] + dx, self.reference_point[model_id][1] + dy]
 
     def zoom(self, event):
         x = self.current_canvas.canvasx(event.x)
@@ -122,6 +124,10 @@ class CanvasOperationsMixin:
             self.draw_grid()
         self.current_canvas.configure(scrollregion=self.current_canvas.bbox("all"))
 
+        new_x = self.reference_point[model_id][0] * self.zoom_factor[model_id]
+        new_y = self.reference_point[model_id][1] * self.zoom_factor[model_id]
+        self.current_canvas.coords(self.reference_point[model_id], new_x, new_y)
+
     def zoom_in(self, event):
         model_id = self.get_current_model()
         x = self.winfo_pointerx() - self.current_canvas.winfo_rootx()
@@ -135,6 +141,9 @@ class CanvasOperationsMixin:
         if self.canvas_grid:
             self.draw_grid()
         self.current_canvas.configure(scrollregion=self.current_canvas.bbox("all"))
+        new_x = self.reference_point[model_id][0] * self.zoom_factor[model_id]
+        new_y = self.reference_point[model_id][1] * self.zoom_factor[model_id]
+        self.current_canvas.coords(self.reference_point[model_id], new_x, new_y)
 
     def zoom_out(self, event):
         model_id = self.get_current_model()
@@ -149,6 +158,9 @@ class CanvasOperationsMixin:
         if self.canvas_grid:
             self.draw_grid()
         self.current_canvas.configure(scrollregion=self.current_canvas.bbox("all"))
+        new_x = self.reference_point[model_id][0] * self.zoom_factor[model_id]
+        new_y = self.reference_point[model_id][1] * self.zoom_factor[model_id]
+        self.current_canvas.coords(self.reference_point[model_id], new_x, new_y)
 
     def scale_widgets(self, factor):
         model_id = self.get_current_model()
