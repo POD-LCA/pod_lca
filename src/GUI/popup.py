@@ -44,7 +44,7 @@ class Popup(Toplevel):
         return data
     
     @staticmethod
-    def _popup_input_combo(master, text, drop_down_list, default_entry=0, default_state='readonly'):
+    def _popup_input_combo(master, text, drop_down_list, default_entry=0, default_state='readonly', allow_search=False):
 
         input_frame = Frame(master)
         input_frame.pack(pady=5, padx=10, anchor="w")
@@ -52,14 +52,17 @@ class Popup(Toplevel):
         label = Label(input_frame, text=text)
         label.pack(side=LEFT, padx=(0, 10))
         
-        dropdown_values = drop_down_list 
+        dropdown_values = drop_down_list
         
-        dropdown = Combobox(input_frame, values=dropdown_values, state=default_state)
-        dropdown.pack(side=LEFT)
-        dropdown.current(default_entry)
+        if allow_search:
+            pass
+        else:
+            dropdown = Combobox(input_frame, values=dropdown_values, state=default_state)
+            dropdown.pack(side=LEFT)
+            dropdown.current(default_entry)
 
         return dropdown
-    
+
     @staticmethod
     def _popup_label(master, text, justify='center', with_seperator=False):
 

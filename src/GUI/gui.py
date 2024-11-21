@@ -68,6 +68,8 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
         self.canvas_grid = True
         self.canvas_grid_size = 20
+
+        self.reference_point = {'Model_0':[0,0]}
       
         # book-keeping
         self.models = {}

@@ -14,7 +14,7 @@ class Item(ItemContextMenuMixin):
     def create_canvas_item(cls, master, model, name, stage, qty, unit, color, tags, start=None, height=None, width=None):
 
         tags.append("item")
-        start, height, width = Item._get_placement(master, tags, start, height, width)
+        start, height, width = Item._get_placement(master, model, tags, start, height, width)
         
         x1, y1, x2, y2 = start[0], start[1], start[0] + width*master.scale[model], start[1] + height*master.scale[model]
 
@@ -37,7 +37,7 @@ class Item(ItemContextMenuMixin):
         return item_id, text_item, text_id
     
     @staticmethod
-    def _get_placement(master, tags, start, height, width):
+    def _get_placement(master, model, tags, start, height, width):
 
         height = 100 if height is None else height 
         width = 100 if width is None else width 
@@ -72,7 +72,7 @@ class Item(ItemContextMenuMixin):
         else:
             raise NotImplementedError
         
-        start = [s_x, s_y] if start is None else start
+        start = [master.reference_point[model][0] + s_x, master.reference_point[model][1] + s_y] if start is None else start
 
         return start, height, width
     
