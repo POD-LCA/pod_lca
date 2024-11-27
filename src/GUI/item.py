@@ -14,10 +14,7 @@ class Item(ItemContextMenuMixin):
     def create_canvas_item(cls, master, model, name, stage, qty, unit, color, tags, start=None, height=None, width=None):
 
         tags.append("item")
-        no_items = len(master.current_canvas.find_withtag("item"))
-        height = 100 if height is None else height 
-        width = 100 if width is None else width 
-        start = [50 + no_items * width, 50 + no_items * height] if start is None else start
+        start, height, width = Item._get_placement(master, model, tags, start, height, width)
         
         x1, y1, x2, y2 = start[0], start[1], start[0] + width*master.scale[model], start[1] + height*master.scale[model]
 
@@ -38,6 +35,47 @@ class Item(ItemContextMenuMixin):
         text_id = master.current_canvas.create_text(id_x, id_y, text=str(disp_num))
 
         return item_id, text_item, text_id
+    
+    @staticmethod
+    def _get_placement(master, model, tags, start, height, width):
+
+        height = 100 if height is None else height 
+        width = 100 if width is None else width 
+        
+        no_params = len(master.current_canvas.find_withtag("parameter"))
+        no_product = len(master.current_canvas.find_withtag("product"))
+        no_transportation = len(master.current_canvas.find_withtag("transportation"))
+        no_process = len(master.current_canvas.find_withtag("process"))
+        no_energy = len(master.current_canvas.find_withtag("energy"))
+        no_waste = len(master.current_canvas.find_withtag("waste"))
+        no_emission = len(master.current_canvas.find_withtag("emission"))
+
+        k = 50
+        if "parameter" in tags:
+            s_x = 0
+            s_y = k + no_params * (height + k)
+        elif "transportation" in tags:
+            s_x = 4 * width
+            s_y = k + no_transportation * (height + k)
+        elif "process" in tags:
+            s_x = 6 * width
+            s_y =  k + (no_process - no_transportation) * (height + k)
+        elif "energy" in tags:
+            s_x = 5 * width + k
+            s_y = 50 + (1.5 + no_energy) * (height + k)
+        elif "waste" in tags or "emission" in tags:
+            s_x = 8 * width + k
+            s_y = 50 + (no_waste + no_emission) * (height + k)
+        elif "product" in tags:
+            s_x = 2 * width
+            s_y = k + (no_product - no_energy - no_waste - no_emission) * (height + k)
+        else:
+            raise NotImplementedError
+        
+        start = [master.reference_point[model][0] + s_x * master.scale[model], 
+                 master.reference_point[model][1] + s_y * master.scale[model]] if start is None else start
+
+        return start, height, width
     
     @classmethod 
     def create_slider(cls, master, model, qty, units, item_id, cmd,

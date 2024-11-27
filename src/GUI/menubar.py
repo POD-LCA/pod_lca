@@ -99,7 +99,6 @@ class MenubarMixin:
         popup.on_popup_close()
         cmd()
 
-
     # =================================
     # EDIT MENU
     # =================================

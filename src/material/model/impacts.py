@@ -70,7 +70,7 @@ class Impacts:
         """
 
         return self.parent
-    
+        
     def get_weighted_impact(self, method='TRACI_EPA'):
         """ Get a weighted value for impacts.
             Ref: [1] The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
@@ -106,6 +106,20 @@ class Impacts:
         
         return weighted_impact
 
+
+    def copy(self):
+        """ Make a copy of the impact object.
+
+            Returns
+            -------
+            Impacts Obj.
+                Copy of the object.
+        """
+
+        new_obj = Impacts(None)
+        new_obj.__dict__.update(self.__dict__)
+
+        return new_obj
 
 if __name__ == '__main__':
     pass

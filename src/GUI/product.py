@@ -15,7 +15,7 @@ class Product(Item):
         popup = Popup(self, "Create product", "300x225")
         
         name =  Popup._popup_input_field(popup, "Product name: ", default_val="new Product")     
-        lca_data = Popup._popup_input_combo(popup, "LCA data: ", [None] + GUIInputManager.get_database_data(self.project)['Flow'].tolist())
+        lca_data = Popup._popup_input_combo(popup, "LCA data: ", [None] + GUIInputManager.get_database_data(self.project)['Flow'].tolist(), allow_search=False)
         life_cycle_stage = Popup._popup_input_combo(popup, "Life cycle stage: ", ["A1", "A2", "A3"])   
         qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
         units = Popup._popup_input_combo(popup, "units: ", ["kg", "lb", "g", "m3"])  
@@ -50,9 +50,10 @@ class Product(Item):
             if self.hotspot_on_off.get():
                 self.show_hotspots()
 
-            popup.destroy()
+            if not popup is None:
+                popup.destroy()
 
-            return product
+            return item_id
         
         else:
             return None

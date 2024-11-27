@@ -49,9 +49,10 @@ class WasteProduct(Product):
             if self.hotspot_on_off.get():
                 self.show_hotspots()
                 
-            popup.destroy()
-            
-            return product
+            if not popup is None:
+                popup.destroy()
+                            
+            return item_id
         
         else:
             return None

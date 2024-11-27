@@ -68,6 +68,8 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
 
         self.canvas_grid = True
         self.canvas_grid_size = 20
+
+        self.reference_point = {'Model_0':[0,0]}
       
         # book-keeping
         self.models = {}
@@ -150,15 +152,15 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         palette_frame = Frame(frame, bg=palette_color, width=200, height=600)
         palette_frame.pack(side=TOP, anchor=NW, padx=0, pady=(0,10), fill=BOTH)
 
-        flow_object_button = Button(palette_frame, bg=model_button_color, highlightbackground=model_button_color,
+        self.model_object_button = Button(palette_frame, bg=model_button_color, highlightbackground=model_button_color,
                                     fg='white', height=button_height, width=button_width,font=button_font, 
-                                    text="Model", command=self.add_model)
-        flow_object_button.pack(side=button_side, padx=padx, pady=pady)
+                                    text="Model", command=lambda: self.add_model_context_menu(palette_frame))
+        self.model_object_button.pack(side=button_side, padx=padx, pady=pady)
 
-        flow_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
+        product_object_button = Button(palette_frame, bg=button_color, highlightbackground=button_color,
                                     fg=button_font_color, height=button_height, width=button_width,font=button_font, 
                                     text="Product", command=self.open_popup_product)
-        flow_object_button.pack(side=button_side, padx=padx, pady=pady)
+        product_object_button.pack(side=button_side, padx=padx, pady=pady)
 
         process_object_button = Button(palette_frame, bg=button_color, 
                                        fg=button_font_color, height=button_height, width=button_width,font=button_font,  

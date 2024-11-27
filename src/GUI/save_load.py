@@ -1,5 +1,6 @@
 from GUI import HOME
 from GUI.GUI_inputManager import GUIInputManager
+from GUI.GUI_outputManager import GUIOutputManager
 
 import pickle
 import hmac
@@ -69,26 +70,32 @@ class SaveLoadMethods:
                 }
         
         for model in self.models:
-            state["processess"][model] = []
-            for item_id in self.models[model].find_withtag("process"):
-                coords = self.models[model].coords(item_id)
-                fill_color = self.models[model].itemcget(item_id, "fill")
-                
-                state["processess"][model].append({"item_id":item_id, "coords": coords, "fill": fill_color})
+            self.save_model_state(state, model)
 
-            state["products"][model] = []
-            for item_id in self.models[model].find_withtag("product"):
-                coords = self.models[model].coords(item_id)
-                fill_color = self.models[model].itemcget(item_id, "fill")
-                
-                state["products"][model].append({"item_id": item_id, "coords": coords, "fill": fill_color})
+        return state
+    
+    def save_model_state(self, state, model):
 
-            state["parameter"][model] = []
-            for item_id in self.models[model].find_withtag("parameter"):
-                coords = self.models[model].coords(item_id)
-                fill_color = self.models[model].itemcget(item_id, "fill")
-                
-                state["parameter"][model].append({"item_id": item_id, "coords": coords, "fill": fill_color})
+        state["processess"][model] = []
+        for item_id in self.models[model].find_withtag("process"):
+            coords = self.models[model].coords(item_id)
+            fill_color = self.models[model].itemcget(item_id, "fill")
+            
+            state["processess"][model].append({"item_id":item_id, "coords": coords, "fill": fill_color})
+
+        state["products"][model] = []
+        for item_id in self.models[model].find_withtag("product"):
+            coords = self.models[model].coords(item_id)
+            fill_color = self.models[model].itemcget(item_id, "fill")
+            
+            state["products"][model].append({"item_id": item_id, "coords": coords, "fill": fill_color})
+
+        state["parameter"][model] = []
+        for item_id in self.models[model].find_withtag("parameter"):
+            coords = self.models[model].coords(item_id)
+            fill_color = self.models[model].itemcget(item_id, "fill")
+            
+            state["parameter"][model].append({"item_id": item_id, "coords": coords, "fill": fill_color})
 
         return state
 
@@ -103,47 +110,52 @@ class SaveLoadMethods:
         for i in range(state["no_models"] - 1):
             self.add_model(add_to_project=False)
 
-        item_map = state["item_map"]
         for model in self.models:
-            self.current_canvas = self.models[model]
-            GUIInputManager.set_current_model(self.project, model)
-            # products need to be restored first due to possible dependency of transportation processes
-            # on products
-            item_id_history = {}
-            for rect_data in state["products"][model]:
-                item_id = rect_data["item_id"]
-                product = item_map[model][item_id]
-                new_item_id = self.restore_product(model, product, rect_data["coords"])
-                item_id_history[item_id] = new_item_id
+            self.load_model_state(state, model)
+            self.set_hotspots(model)
 
-            for rect_data in state["processess"][model]:
-                item_id = rect_data["item_id"]
-                process = item_map[model][item_id]
-                if GUIInputManager.is_transport(process):
-                    new_item_id = self.restore_transportation_process(model, process, rect_data["coords"])
-                else:
-                    new_item_id = self.restore_process(model, process, rect_data["coords"])
-                item_id_history[item_id] = new_item_id
-
-            for rect_data in state["parameter"][model]:
-                item_id = rect_data["item_id"]
-                param = item_map[model][item_id]
-                new_item_id = self.restore_parameter(model, param, rect_data["coords"])
-                item_id_history[item_id] = new_item_id
-
-            self.restore_connections(state["connectors"][model], item_id_history, model)
-            self.dependents[model], self.relationships[model] = self.restore_relationships(item_id_history, 
-                                                                                           state["dependents"][model], 
-                                                                                           state["relationships"][model])
-            
+            self.set_current_model(model)
+            if self.hotspot_on_off.get():
+                self.show_hotspots()
         self.connectors = state["connectors"]
         
         self.plot.calculator.project = self.project
 
-        if self.hotspot_on_off.get():
-            self.show_hotspots()
-
         self.update_plot()
+
+    def load_model_state(self, state, model):
+
+        self.current_canvas = self.models[model]
+        GUIInputManager.set_current_model(self.project, model)
+        # products need to be restored first due to possible dependency of transportation processes
+        # on products
+        item_map = state["item_map"]
+        item_id_history = {}
+        for rect_data in state["products"][model]:
+            item_id = rect_data["item_id"]
+            product = item_map[model][item_id]
+            new_item_id = self.restore_product(model, product, rect_data["coords"])
+            item_id_history[item_id] = new_item_id
+
+        for rect_data in state["processess"][model]:
+            item_id = rect_data["item_id"]
+            process = item_map[model][item_id]
+            if GUIInputManager.is_transport(process):
+                new_item_id = self.restore_transportation_process(model, process, rect_data["coords"])
+            else:
+                new_item_id = self.restore_process(model, process, rect_data["coords"])
+            item_id_history[item_id] = new_item_id
+
+        for rect_data in state["parameter"][model]:
+            item_id = rect_data["item_id"]
+            param = item_map[model][item_id]
+            new_item_id = self.restore_parameter(model, param, rect_data["coords"])
+            item_id_history[item_id] = new_item_id
+
+        state["connectors"][model] = self.restore_connections(state["connectors"][model], item_id_history, model)
+        self.dependents[model], self.relationships[model] = self.restore_relationships(item_id_history, 
+                                                                                        state["dependents"][model], 
+                                                                                        state["relationships"][model])
 
 
     def clear_state(self):
@@ -159,6 +171,8 @@ class SaveLoadMethods:
             for item in self.sliders[model]:
                 slider_data = self.sliders[model][item]
                 slider_data["widget"].destroy()
+
+        self.current_canvas.current_hotspot = []
 
         for checkbox in self.plot_checkboxes:
             self.plot_checkboxes[checkbox].destroy()

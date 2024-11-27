@@ -1,4 +1,5 @@
 from GUI.GUI_inputManager import GUIInputManager
+from tkinter import Canvas
 
 class CanvasOperationsMixin:
 
@@ -8,6 +9,29 @@ class CanvasOperationsMixin:
         id_tag = "Model_" + str(current_tab_index)
         
         return id_tag
+
+    def get_canvas_from_tab(self, index):
+        
+        tab_id = self.notebook.tabs()[index]
+        tab_widget = self.notebook.nametowidget(tab_id)
+        
+        for child in tab_widget.winfo_children():
+            if isinstance(child, Canvas):
+                return child
+        return None  
+    
+    def set_current_model(self, name):
+
+        tab_id = int(name.replace("Model_", ''))
+
+        self.notebook.select(tab_id)
+        self.update()
+
+        self.current_canvas = self.models[name]
+        
+        GUIInputManager.set_current_model(self.project, name)
+
+        return name
     
     def get_current_canvas(self):
 
@@ -23,6 +47,18 @@ class CanvasOperationsMixin:
 
         self.on_canvas_configure(event)
 
+
+    def delete_canvas(self, name):
+
+        tab_id = int(name.replace("Model_", ''))
+
+        self.notebook.forget(tab_id)
+
+        return name
+    
+    def get_number_of_canvases(self):
+
+        return len(self.notebook.winfo_children())
 
     # =================================
     # On Canvas: Zoom and pan
@@ -67,6 +103,8 @@ class CanvasOperationsMixin:
                 self.draw_grid()
 
             self.pan_start = (event.x, event.y)
+            
+            self.reference_point[model_id] = [self.reference_point[model_id][0] + dx, self.reference_point[model_id][1] + dy]
 
     def zoom(self, event):
         x = self.current_canvas.canvasx(event.x)
@@ -77,10 +115,14 @@ class CanvasOperationsMixin:
             self.current_canvas.scale("all", x, y, self.zoom_factor[model_id], self.zoom_factor[model_id])
             self.scale_widgets(self.zoom_factor[model_id])
             self.scale[model_id] *= self.zoom_factor[model_id]
+            self.reference_point[model_id] = [x + (self.reference_point[model_id][0] - x) * self.zoom_factor[model_id],
+                                              y + (self.reference_point[model_id][1] - y) * self.zoom_factor[model_id]]
         elif event.delta < 0:
             self.current_canvas.scale("all", x, y, 1 / self.zoom_factor[model_id], 1 / self.zoom_factor[model_id])
             self.scale_widgets(1 / self.zoom_factor[model_id])
             self.scale[model_id] /= self.zoom_factor[model_id]
+            self.reference_point[model_id] = [x + (self.reference_point[model_id][0] - x) / self.zoom_factor[model_id],
+                                              y + (self.reference_point[model_id][1] - y) / self.zoom_factor[model_id]]
 
         if self.canvas_grid:
             self.draw_grid()
@@ -99,6 +141,8 @@ class CanvasOperationsMixin:
         if self.canvas_grid:
             self.draw_grid()
         self.current_canvas.configure(scrollregion=self.current_canvas.bbox("all"))
+        self.reference_point[model_id] = [x + (self.reference_point[model_id][0] - x) * self.zoom_factor[model_id],
+                                          y + (self.reference_point[model_id][1] - y) * self.zoom_factor[model_id]]
 
     def zoom_out(self, event):
         model_id = self.get_current_model()
@@ -113,6 +157,8 @@ class CanvasOperationsMixin:
         if self.canvas_grid:
             self.draw_grid()
         self.current_canvas.configure(scrollregion=self.current_canvas.bbox("all"))
+        self.reference_point[model_id] = [x + (self.reference_point[model_id][0] - x) / self.zoom_factor[model_id],
+                                          y + (self.reference_point[model_id][1] - y) / self.zoom_factor[model_id]]
 
     def scale_widgets(self, factor):
         model_id = self.get_current_model()
@@ -214,3 +260,25 @@ class CanvasOperationsMixin:
     def on_closing(self):
         self.quit()
         self.destroy()
+
+
+    # =================================
+    # Utilitiy Methods
+    # =================================
+
+    def get_all_canvas_items(self, _except_tags=['grid'], canvas=None):
+        """ Return ids of all the items on the canvas, except those with a given tag.
+            Elements with 'grid' tag excepted by default.
+            If canvas is not specified, use the current canvas.
+        """
+
+        if canvas == None:
+            canvas = self.get_current_canvas()
+
+        all_items = set(canvas.find_all())
+
+        exclude_items = set()
+        for tag in _except_tags:
+            exclude_items.update(canvas.find_withtag(tag))
+
+        return list(all_items - exclude_items)
