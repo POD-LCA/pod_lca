@@ -48,9 +48,11 @@ class Process(Item):
             self.update_plot()
             if self.hotspot_on_off.get():
                 self.show_hotspots()
+
+            if not popup is None:    
+                popup.destroy()
                 
-            popup.destroy()
-            return process
+            return item_id
         
         else:
             return None

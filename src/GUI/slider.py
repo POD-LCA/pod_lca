@@ -39,6 +39,12 @@ class Slider(Scale):
         self.config(from_=min, to=max, resolution=res)
 
         return self
+    
+    def set_always_visible(self):
+
+        self._always_on = True
+        self._never_show = False
+        self.show_slider(None)         
 
     def show_slider(self, event):
         if not self._never_show:

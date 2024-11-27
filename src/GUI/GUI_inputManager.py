@@ -21,12 +21,27 @@ class GUIInputManager():
     @staticmethod
     def create_model(project, name):
 
-        project.create_model(name)
+        return project.create_model(name)
+    
+    @staticmethod
+    def set_model(project, model, model_name):
+        
+        project.models[model_name] = model
 
     @staticmethod
     def set_current_model(project, name):
 
         project.set_current_model(name)
+
+    @staticmethod
+    def import_model_from_csv(project, file_path, name):
+
+        return project.create_model_from_csv(file_path, name)
+    
+    @staticmethod
+    def get_model(project, model_id):
+
+        return project.get_model(model_id)
 
     @staticmethod
     def get_all_model_names(project):
@@ -125,6 +140,26 @@ class GUIInputManager():
             return None
         
         return process
+    
+    @staticmethod
+    def add_product(project, model, obj):
+        
+        project.models[model].products.append(obj)
+
+        LC_stage = obj.get_life_cycle_stage()
+        project.models[model].impacts[LC_stage].append(obj.get_impacts())
+
+        return obj
+
+    @staticmethod
+    def add_process(project, model, obj):
+        
+        project.models[model].processes.append(obj)
+
+        LC_stage = obj.get_life_cycle_stage()
+        project.models[model].impacts[LC_stage].append(obj.get_impacts())
+
+        return obj
     
     @staticmethod
     def update_qty(visualizer, item, qty, close_error=True):
@@ -309,6 +344,13 @@ class GUIInputManager():
         model = visualizer.project.get_current_model().delete_obj(obj)
         visualizer.update_plot()
 
+    @staticmethod
+    def copy(obj):
+
+        cls = type(obj)
+
+        return cls.copy(obj)
+
     # =================================
     # Processes: Transportation
     # =================================
@@ -346,9 +388,9 @@ class GUIInputManager():
         return item
 
     @staticmethod
-    def set_transported_product(visualizer, item, product):
+    def set_transported_product(visualizer, transporter, product):
 
-        product.set_transporter(item)
+        product.set_transporter(transporter)
 
     @staticmethod
     def remove_transported_product(visualizer, item, product):

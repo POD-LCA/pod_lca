@@ -3,6 +3,7 @@ from material.calculator.calculator import Calculator
 from material.databaseManager.databaseManager import DatabaseManager
 from material.model.model import Model
 
+import csv
 import pickle
 
 __author__ = ["POD/LCA Team"]
@@ -138,6 +139,83 @@ class Project:
         model = Model(self, model_name)
         self.models[model_name] = model
 
+        return model
+    
+    def create_model_from_csv(self, file_path, model_name:(str)):
+        """ Create a model from data in a csv file.
+            The csv file with headers: "Name", "Impact data", "type", "LC stage", "qty", "unit", "transported item", "density", "weight unit" (in any order).
+            Transported item is the name of the product transported.
+            Quantity in the transportation process should be the distance.
+
+        Parameters
+        ----------
+        file_path : str
+            Location of the csv file.
+        model_name : str
+            Name of the model to be created.       
+        """        
+
+        model = self.create_model(model_name)
+
+        tmp_transportation_map = {}
+        with open(file_path, mode='r', encoding='utf-8-sig') as file:
+            data = csv.reader(file)
+            headers = next(data)
+            header_map = {header:index for index, header in enumerate(headers)} 
+            for row in data:
+                name = row[header_map['Name']]
+                life_cycle_stage = row[header_map['LC stage']]
+                database_item = row[header_map['Impact data']]
+                qty, unit = row[header_map['qty']], row[header_map['unit']]
+                
+                item_type = row[header_map['type']]
+                if item_type == 'Product':
+                    item = model.create_product(name, life_cycle_stage)
+                elif item_type == 'Process':
+                    item = model.create_process(name, life_cycle_stage)
+                elif item_type == 'Transportation':
+                    item = model.create_transportation_process(name, life_cycle_stage)
+                elif item_type == 'Energy':
+                    item = model.create_energy(name, life_cycle_stage)
+                elif item_type == 'Emission':
+                    item = model.create_emission(name, life_cycle_stage)
+                elif item_type == 'Waste':
+                    item = model.create_waste(name, life_cycle_stage)                    
+                else:
+                    raise TypeError(f"Item type of {item_type} is undefined.")
+
+                if item_type == 'Transportation':
+                    item.set_transported_distance_unit(unit)
+                    item.set_transported_distance(qty)
+
+                    transported_item = row[header_map['transported item']]
+                    transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items
+                    if not (transported_product is None):
+                        item.set_transported_products(transported_product)
+                    else:
+                        if not (transported_item == ''):
+                            tmp_transportation_map[transported_item] = {}
+                            tmp_transportation_map[transported_item]['transporter'] = item
+                else:
+                    item.set_unit(unit)
+                    item.update_qty(qty)
+                    density = row[header_map['density']]
+                    weight_unit = row[header_map['weight unit']]
+                    if not (density == ''):
+                        item.set_density(density)        
+                    if not (weight_unit == ''):
+                        item.set_weight_unit(weight_unit)  
+
+                    if name in tmp_transportation_map:
+                        tmp_transportation_map[name]['product'] = item
+
+                if not (database_item == ''):
+                    item.set_impact_database_entry(database_item)
+        
+        if tmp_transportation_map:
+            for entry in tmp_transportation_map:
+                tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
+                
         return model
     
     def clear_project(self, model=True, database=True):

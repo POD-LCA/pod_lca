@@ -207,6 +207,18 @@ class Model:
 
         return waste
     
+    def get_name(self):
+        """ Retrieve the name of the model.
+
+            Returns
+            -------
+            str
+                Name of the model.
+
+        """
+
+        return self.name        
+    
     def get_processes(self):
         """ Retrieve all the processes in the model.
 
@@ -229,6 +241,29 @@ class Model:
         """
 
         return self.products
+
+    def find_item(self, name):
+        """ Find an item (produc/process) in the model, given a name string.
+            If multiple objects of the same name exist, returns all.
+        
+            Parameters
+            ----------
+            name : str.
+                Product/Process name searched for.
+
+            Returns
+            -------
+            Master Obj.
+                Product / Process object
+
+        """
+
+        items = [item for item in self.get_products() + self.get_processes() if item.get_name() == name]
+
+        if len(items) == 0:
+            return None
+        else:
+            return items 
     
     def get_impacts(self):
         """ Retrieve all the impacts in the model categorized by life cycle stage.
