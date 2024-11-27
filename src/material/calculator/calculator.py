@@ -64,6 +64,37 @@ class Calculator():
 
         return units
     
+    def get_total_impact(self, model_name, impact_cat):
+        """ Calculate the total impact of the products and processes in the model.
+        
+            Parameters
+            ----------
+            model_name : str
+                Name of the model
+            impact_cat : str
+                Impact category considered, including 'weighted'.
+
+            Returns
+            -------
+            float
+                Total impact value.
+        """
+
+        impacts_dict = self.project.get_model(model_name).get_impacts()
+        impacts_lst = []
+        for key, list in impacts_dict.items():
+            impacts_lst.extend(list)
+
+        if impact_cat not in self.get_project().get_database().get_impact_categories() + ['weighted']:
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            if impact_cat is 'weighted':
+                val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
+            else:
+                val_lst = [impact.get_impact(impact_cat) for impact in impacts_lst]
+
+            return sum(val_lst)
+    
     # =================================
     # UNIT CONVERSION/CHECK METHODS
     # =================================
@@ -262,17 +293,17 @@ class Calculator():
         return data_name, data_qty, data_len, impacts
 
 
-    def get_barchart3_data (self, impact_category, model_lst= ['Model_0']):
+    def get_barchart3_data (self, impact_category, model= 'Model_0'):
 
         labels = ['A1', 'A2', 'A3']
         title='Environmental Impacts by Stage'
-        project = self.project.get_model(model_lst[0]).get_project()
+        project = self.project.get_model(model).get_project()
         calcualtor = project.get_calculator()
 
         data=[]
         for i in impact_category:
 
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)[0]
+            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i, model)[0]
             globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
             data.append(globals()['plt_data_' + i])
 
@@ -281,69 +312,27 @@ class Calculator():
         
         return impact_by_stage
 
-    # =================================
-    # ANALYSIS METHODS
-    # =================================
 
-    def hot_spot_analysis(self, model='Model_0', impact_category="GWP", printout=False):
-        """ Determines the hotspot of the model.
-            The hotspots are the largest group out of (a) top 20% contributors to the impact or (b) the smallest group of contributors to the 80% (or more) of GWP.
 
-            Parameters
-            ----------
-            model : str
-                Name of the model considered.
-            impact_category : str
-                Impact category considered.
-            printout : bool
-                Printout the results if true.
-            
-            Retrurn
-            -------
-            List of Master Obj.
-                Hotspot objects.
+    def get_spider_chart_data (self, impact_category, model_lst=['Model_0'], stage = 'A1'):
+        """ Returns heights and x-labels for a barchart.
         """
 
-        impacts = self.get_project().get_model(model).get_impacts()
+        project = self.get_project()
+        calculator = self.project.get_calculator()
+        data={}
 
-        impacts_lst = []
-        for key, list in impacts.items():
-            impacts_lst.extend(list)
+        for impact in impact_category:
+            impact_data = {}
 
-        if len(impacts_lst) > 0:
-            val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
-            total_impact = sum(val_lst)
-            no_contributors = len(val_lst)
+            for model_name in model_lst:
+                model_data, stages = calculator.get_data_by_LCstage(impact, model_name)
+                impact_data[model_name] = model_data  
 
-            hot_spots =[]
-            
-            biggest_contribution = max(val_lst)
-            if biggest_contribution == 0.0:
-                return None
-            max_index = val_lst.index(biggest_contribution)
-            hot_spots.append(impacts_lst[max_index].get_parent())
-            contributions_in_hotspots = biggest_contribution
+            stage_values = {model: values[stage] for model, values in impact_data.items()}
+            data[impact] = stage_values
 
-            all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots >= 0.8 * total_impact else False
-            
-            while not all_found:
-                val_lst[max_index] = 0.0
-
-                biggest_contribution = max(val_lst)
-                if biggest_contribution == 0.0:
-                    break
-                max_index = val_lst.index(biggest_contribution)
-                hot_spots.append(impacts_lst[max_index].get_parent())
-                contributions_in_hotspots += biggest_contribution
-
-                all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
-
-            if printout:
-                print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
-                for obj in hot_spots:
-                    print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
-
-            return hot_spots
+        return data
 
 
 if __name__ == '__main__':

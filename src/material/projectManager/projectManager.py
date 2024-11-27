@@ -37,6 +37,8 @@ class Project:
         self.current_model = self.models['Model_0']
         self.database = DatabaseManager()
         self.calculator = Calculator(self)
+        self.HotSpotAnalysis = None
+        self.DataQualityAnalysis = None
 
     def __reduce__(self):
         
@@ -76,6 +78,11 @@ class Project:
         model_name : str
             Name of the model to be retrieved.
 
+        Retruns
+        -------
+        Model Obj.
+            Current working model.
+
         Raises
         ------
             KeyError : A model by such name does not exist in the current project.
@@ -86,6 +93,18 @@ class Project:
         else:
             raise KeyError(f"'{model_name}' does not exist in the current project.")
     
+    def get_model_names(self):
+        """ Get all names of all the models in the project.
+
+        Retruns
+        -------
+        list of str.
+            List of model names.
+
+        """
+
+        return list(self.models.keys())
+ 
     def get_database(self):
         """ Get the impacts database of the project.
         

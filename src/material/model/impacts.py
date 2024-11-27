@@ -70,7 +70,43 @@ class Impacts:
         """
 
         return self.parent
-    
+        
+    def get_weighted_impact(self, method='TRACI_EPA'):
+        """ Get a weighted value for impacts.
+            Ref: [1] The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
+                     DOI: http://hdl.handle.net/1773/41885
+        
+            Parameters
+            ----------
+            method : str
+                Which weightages to be used:
+                    'TRACI_EPA' - from Ref [1]
+                    'TRACI_NIST' - from Ref [1]
+                
+            Returns
+            -------
+            float
+                The weighted impact.
+        """
+
+        if method == 'TRACI_EPA':
+            weights = {'GWP':16, 'AP':5, 'EP':5, 'ODP':5, 'SFP':6}
+        elif method == 'TRACI_NIST':
+            weights = {'GWP':16, 'AP':5, 'EP':5, 'ODP':5, 'SFP':6}
+        else:
+            raise NotImplementedError
+        
+        weighted_impact = 0.0
+        for (impact_cat, weight) in weights.items():
+            impact = getattr(self, impact_cat, None)
+            if impact is not None:
+                weighted_impact += impact * weight
+            else:
+                return None
+        
+        return weighted_impact
+
+
     def copy(self):
         """ Make a copy of the impact object.
 
