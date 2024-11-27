@@ -1,4 +1,4 @@
-
+from uncertainity.hotspots import HotSpotAnalysis
 
 class GUIOutputManager():
 
@@ -14,5 +14,7 @@ class GUIOutputManager():
     @staticmethod
     def get_hotspots(project, model, impact_category="GWP"):
 
-        return  project.get_calculator().hot_spot_analysis(model, impact_category, printout=False)
+        hotspot_analysis = HotSpotAnalysis(project)
+
+        return  hotspot_analysis.run(model, impact_category, printout=False)
 
