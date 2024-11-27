@@ -293,17 +293,17 @@ class Calculator():
         return data_name, data_qty, data_len, impacts
 
 
-    def get_barchart3_data (self, impact_category, model_lst= ['Model_0']):
+    def get_barchart3_data (self, impact_category, model= 'Model_0'):
 
         labels = ['A1', 'A2', 'A3']
         title='Environmental Impacts by Stage'
-        project = self.project.get_model(model_lst[0]).get_project()
+        project = self.project.get_model(model).get_project()
         calcualtor = project.get_calculator()
 
         data=[]
         for i in impact_category:
 
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i)[0]
+            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i, model)[0]
             globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
             data.append(globals()['plt_data_' + i])
 
@@ -311,6 +311,29 @@ class Calculator():
         impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
         
         return impact_by_stage
+
+
+
+    def get_spider_chart_data (self, impact_category, model_lst=['Model_0'], stage = 'A1'):
+        """ Returns heights and x-labels for a barchart.
+        """
+
+        project = self.get_project()
+        calculator = self.project.get_calculator()
+        data={}
+
+        for impact in impact_category:
+            impact_data = {}
+
+            for model_name in model_lst:
+                model_data, stages = calculator.get_data_by_LCstage(impact, model_name)
+                impact_data[model_name] = model_data  
+
+            stage_values = {model: values[stage] for model, values in impact_data.items()}
+            data[impact] = stage_values
+
+        return data
+
 
 if __name__ == '__main__':
     pass
