@@ -64,6 +64,37 @@ class Calculator():
 
         return units
     
+    def get_total_impact(self, model_name, impact_cat):
+        """ Calculate the total impact of the products and processes in the model.
+        
+            Parameters
+            ----------
+            model_name : str
+                Name of the model
+            impact_cat : str
+                Impact category considered, including 'weighted'.
+
+            Returns
+            -------
+            float
+                Total impact value.
+        """
+
+        impacts_dict = self.project.get_model(model_name).get_impacts()
+        impacts_lst = []
+        for key, list in impacts_dict.items():
+            impacts_lst.extend(list)
+
+        if impact_cat not in self.get_project().get_database().get_impact_categories() + ['weighted']:
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            if impact_cat is 'weighted':
+                val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
+            else:
+                val_lst = [impact.get_impact(impact_cat) for impact in impacts_lst]
+
+            return sum(val_lst)
+    
     # =================================
     # UNIT CONVERSION/CHECK METHODS
     # =================================
@@ -302,71 +333,6 @@ class Calculator():
             data[impact] = stage_values
 
         return data
-        
-
-    # =================================
-    # ANALYSIS METHODS
-    # =================================
-
-    def hot_spot_analysis(self, model='Model_0', impact_category="GWP", printout=False):
-        """ Determines the hotspot of the model.
-            The hotspots are the largest group out of (a) top 20% contributors to the impact or (b) the smallest group of contributors to the 80% (or more) of GWP.
-
-            Parameters
-            ----------
-            model : str
-                Name of the model considered.
-            impact_category : str
-                Impact category considered.
-            printout : bool
-                Printout the results if true.
-            
-            Retrurn
-            -------
-            List of Master Obj.
-                Hotspot objects.
-        """
-
-        impacts = self.get_project().get_model(model).get_impacts()
-
-        impacts_lst = []
-        for key, list in impacts.items():
-            impacts_lst.extend(list)
-
-        if len(impacts_lst) > 0:
-            val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
-            total_impact = sum(val_lst)
-            no_contributors = len(val_lst)
-
-            hot_spots =[]
-            
-            biggest_contribution = max(val_lst)
-            if biggest_contribution == 0.0:
-                return None
-            max_index = val_lst.index(biggest_contribution)
-            hot_spots.append(impacts_lst[max_index].get_parent())
-            contributions_in_hotspots = biggest_contribution
-
-            all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots >= 0.8 * total_impact else False
-            
-            while not all_found:
-                val_lst[max_index] = 0.0
-
-                biggest_contribution = max(val_lst)
-                if biggest_contribution == 0.0:
-                    break
-                max_index = val_lst.index(biggest_contribution)
-                hot_spots.append(impacts_lst[max_index].get_parent())
-                contributions_in_hotspots += biggest_contribution
-
-                all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
-
-            if printout:
-                print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
-                for obj in hot_spots:
-                    print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
-
-            return hot_spots
 
 
 if __name__ == '__main__':

@@ -5,6 +5,7 @@ from material.visualizer.bar_chart2 import BarChart2
 from material.visualizer.bar_chart3 import BarChart3
 from material.visualizer.Spider_chart import Spiderchart
 from material.visualizer.Spider_chart_normilized import Spiderchart_n
+from uncertainity.hotspots import HotSpotAnalysis
 
 
 # Smoothie example
@@ -331,7 +332,8 @@ waste.set_unit('kg')
 waste.set_impact_database_entry("Waste to landfill")
 
 
-hot_spots = project.get_calculator().hot_spot_analysis(printout=False)
+hotspot_analysis = HotSpotAnalysis(project)
+hot_spots_GWP = hotspot_analysis.run(model_name='Model_0', impact_category= "GWP", printout=True)
 
 graph = BarChart(project, palette="grayscale")
 graph.set_impact_category("GWP")
@@ -359,7 +361,7 @@ graph5 = Spiderchart_n(project)
 graph5.set_impact_category(["GWP","ODP","SFP" ,"EP"])
 graph5.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
 graph5.set_lca_stage('A1')
-#graph5.show()
+graph5.show()
 
 
 
