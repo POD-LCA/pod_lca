@@ -162,7 +162,7 @@ class DataQualityAnalysis:
         DQS_tmp = 0.0
         impact_sum = 0.0
         for obj in self.pedigreeScores[model_name]:
-            impact = obj.get_impacts().GWP # TODO: change to sum of all
+            impact = obj.get_impacts().get_weighted_impact()
             if impact is not None:
                 DQS_tmp += self.pedigreeScores[model_name][obj].calculate_DQS() * impact
                 impact_sum += impact
@@ -171,12 +171,11 @@ class DataQualityAnalysis:
 
         DQS = DQS_tmp / impact_sum
         n = len(self.indicators)
-        normalized_DQA = 100 * (n * self.max_score - DQS)/(n * (self.max_score - self.min_score))
+        normalized_DQS = 100 * (n * self.max_score - DQS)/(n * (self.max_score - self.min_score))
 
         if printout:
             print("*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50)
             print(f"Data Quality Score: {DQS:.2f}")
-            print(f"Normalised Data Quality Score (0-100 scale): {normalized_DQA:.0f}")
+            print(f"Normalised Data Quality Score (0-100 scale): {normalized_DQS:.0f}")
 
-        return DQS, normalized_DQA
-
+        return normalized_DQS

@@ -64,7 +64,7 @@ class Product(Master):
         self.qty = qty
         self.weight = self.qty * self.density
 
-        self.set_impacts_qtys()
+        self.update_impacts()
 
     def set_density(self, density):
         """ Set density of the product.

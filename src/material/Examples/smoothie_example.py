@@ -5,6 +5,7 @@ from material.visualizer.bar_chart2 import BarChart2
 from material.visualizer.bar_chart3 import BarChart3
 from uncertainity.hotspots import HotSpotAnalysis
 from uncertainity.data_quality_assessment import DataQualityAnalysis
+from uncertainity.sensitivity_analysis import compute_sensitivity
 
 # Smoothie example
 
@@ -120,6 +121,7 @@ waste.set_impact_database_entry("Waste to landfill")
 hotspot_analysis = HotSpotAnalysis(project)
 hot_spots_GWP = hotspot_analysis.run(model_name='Model_0', impact_category= "GWP", printout=True)
 hot_spots_ODP = hotspot_analysis.run(model_name='Model_0', impact_category= "ODP", printout=True)
+hot_spots_wghtd = hotspot_analysis.run(model_name='Model_0', impact_category= "weighted", printout=True)
 
 data_quality_assessment = DataQualityAnalysis(project)
 data_quality_assessment.setPedigreeScores(model_name='Model_0')
@@ -128,6 +130,16 @@ data_quality_assessment.update_pedigree_scores('Model_0', hot_spots_GWP[1], {'co
                                                                   'temporal correlation': 1, 
                                                                   'geographical correlation': 3})
 DQS = data_quality_assessment.calculate_DQS('Model_0')
+
+
+result_range = compute_sensitivity(hot_spots_GWP[0], 
+                                   'qty', 
+                                   impact_cat='weighted', 
+                                   range=(8, 15))
+result_range = compute_sensitivity(product2_by_truck, 
+                                   'database_item', 
+                                   impact_cat='weighted', 
+                                   options=['Transportation by truck', 'Transportation by barge', 'Transportation by train'])
 
 graph = BarChart(project)
 graph.set_impact_category("GWP")
