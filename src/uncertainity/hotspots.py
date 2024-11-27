@@ -50,7 +50,10 @@ class HotSpotAnalysis:
             impacts_lst.extend(list)
 
         if len(impacts_lst) > 0:
-            val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
+            if impact_category == 'weighted':
+                val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
+            else:
+                val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
             total_impact = sum(val_lst)
             no_contributors = len(val_lst)
 
@@ -80,9 +83,13 @@ class HotSpotAnalysis:
             if printout:
                 print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
                 for obj in hot_spots:
-                    print(obj, "Impact ({}):".format(impact_category), obj.get_impacts().get_impact(impact_category))
+                    
+                    if impact_category == 'weighted':
+                        impact_val = obj.get_impacts().get_weighted_impact()
+                    else:
+                        impact_val = obj.get_impacts().get_impact(impact_category)
+                    print(obj, "Impact ({}):".format(impact_category), impact_val)
             
-
             hot_spots_dict = self.hotspots[model_name]
             if hot_spots_dict == None:
                 hot_spots_dict = {impact_category: hot_spots}
@@ -107,6 +114,13 @@ class HotSpotAnalysis:
 
     def get_hotspots(self, model_name='Model_0', impact_category='GWP'):
         """ Get hotspots of the model.
+
+            Parameters
+            ----------
+            model_name : str
+                Name of the model.
+            impact_category : str
+                Impact category.
 
             Returns
             ----------

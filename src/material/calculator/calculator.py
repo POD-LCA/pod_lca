@@ -64,6 +64,37 @@ class Calculator():
 
         return units
     
+    def get_total_impact(self, model_name, impact_cat):
+        """ Calculate the total impact of the products and processes in the model.
+        
+            Parameters
+            ----------
+            model_name : str
+                Name of the model
+            impact_cat : str
+                Impact category considered, including 'weighted'.
+
+            Returns
+            -------
+            float
+                Total impact value.
+        """
+
+        impacts_dict = self.project.get_model(model_name).get_impacts()
+        impacts_lst = []
+        for key, list in impacts_dict.items():
+            impacts_lst.extend(list)
+
+        if impact_cat not in self.get_project().get_database().get_impact_categories() + ['weighted']:
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            if impact_cat is 'weighted':
+                val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
+            else:
+                val_lst = [impact.get_impact(impact_cat) for impact in impacts_lst]
+
+            return sum(val_lst)
+    
     # =================================
     # UNIT CONVERSION/CHECK METHODS
     # =================================

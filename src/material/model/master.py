@@ -108,7 +108,7 @@ class Master:
     
         self.qty = qty
         
-        self.set_impacts_qtys()
+        self.update_impacts()
 
     def change_units(self, unit):
 
@@ -124,7 +124,7 @@ class Master:
             raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 
 
-    def set_impacts_qtys(self):
+    def update_impacts(self):
         """ Sets impacts quantities, based on database item asigned to the product/process 
             and the product/process quantity.
             If no database entry is asigned, impacts are not updated.
@@ -158,7 +158,7 @@ class Master:
         original_database_item = self.get_database_row()
         try:
             self.database_item = database_item
-            self.set_impacts_qtys()
+            self.update_impacts()
         except ImportError as e:
             self.database_item = original_database_item
             raise e
