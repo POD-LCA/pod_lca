@@ -72,7 +72,8 @@ class Item(ItemContextMenuMixin):
         else:
             raise NotImplementedError
         
-        start = [master.reference_point[model][0] + s_x, master.reference_point[model][1] + s_y] if start is None else start
+        start = [master.reference_point[model][0] + s_x * master.scale[model], 
+                 master.reference_point[model][1] + s_y * master.scale[model]] if start is None else start
 
         return start, height, width
     
