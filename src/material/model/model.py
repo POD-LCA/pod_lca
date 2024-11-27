@@ -253,6 +253,17 @@ class Model:
 
         return self.project
     
+    def get_name(self):
+        """ Retrieve the model name.
+
+            Returns
+            -------
+            str.
+                Name of the model.
+
+        """
+        return self.name
+    
     def delete_obj(self, obj):
         """ Removes products or processes, along with the impact objects, from the model.
 
