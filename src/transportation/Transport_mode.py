@@ -1,7 +1,7 @@
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
-__email__ = "mhtaba@uw.edu, kiun@uw.edu"
+__email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
