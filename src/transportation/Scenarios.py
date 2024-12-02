@@ -1,59 +1,32 @@
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
-__email__ = "mhtaba@uw.edu, kiun@uw.edu"
+__email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
 
-import Impacts
-
-class Defaultscenario:
-
-
-    def __init__(self, name, data_folder):
-
+class DefaultScenario:
+    
+    def __init__(self, name):
         self.name = name
-        self.alt_names = []
-        self.data_folder = data_folder
-        self.material_map = {}
+        self.scenario_impact = {}
 
+    def compute_impact(self):
+        raise NotImplementedError("compute_impact must be implemented in subclasses")
 
-    def get_distance(self, material):
-
-        pass
-
-    def get_mode(self, material):
-
-    pass
-
-
-    def get_distance(self, material):
-
-    pass
-
-
-
-
-class National(Defaultscenario):
-
-
+class Local(DefaultScenario):
     def __init__(self):
+        super().__init__("Local")
 
-        self.name = "National"
-
-
-class Reginal(Defaultscenario):
-
-
+class Regional(DefaultScenario):
     def __init__(self):
+        super().__init__("Regional")
 
-        self.name = "Regional"
-
-
-class Global(Defaultscenario):
-
-
+class RegionalC(DefaultScenario):
     def __init__(self):
+        super().__init__("Regional_c")
 
-        self.name = "Global"
+class National(DefaultScenario):
+    def __init__(self):
+        super().__init__("National")
