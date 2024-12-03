@@ -10,7 +10,11 @@ class Plotter:
     calculator : Calculator object
         Calculator from which the plotter obtains data to be visualized.
     active_models : list of str
-        Names of the models considered for data visualization.
+        Name(s) of the models considered for data visualization.
+    impact_category : list or str
+        Name(s) of the impact categories considered for data visualization.
+    lca_stage : list or str
+        LCA stage(s) considered for data visualization.
     fig : matplotlib.figure.Figure
         Figure being plotted.
     ax : matplotlib.axes.Axes
@@ -62,15 +66,37 @@ class Plotter:
             raise ValueError("Invalid palette. Provide a predefined name or a list of color strings.")
 
     def set_impact_category(self, impact_cat):
-        """Set impact category."""
+        """Set impact category.
+
+        Parameters
+        ----------
+        impact_cat : str or list
+            Name(s) of the impact categories.
+        """
+
         self.impact_category = impact_cat
 
+
     def set_active_models(self, active_models):
-        """Set models considered for plotting."""
+        """Set models considered for plotting.
+
+        Parameters
+        ----------
+        active_models : str or list
+            Name(s) of models.        
+        
+        """
         self.active_models = active_models
 
     def set_lca_stage(self, lca_stage):
-        """Set LCA stage for plotting."""
+        """Set LCA stage for plotting.
+        
+        Parameters
+        ----------
+        lca_stage : str or list
+            LCA stages.             
+        
+        """
         self.lca_stage = lca_stage
 
     @staticmethod
@@ -82,9 +108,16 @@ class Plotter:
         ]
 
     @staticmethod
-    def format_labels(values):
+    def format_labels(values, decimal_places=3):
         """Format labels for bar charts."""
-        return [f"{v:.3g}" for v in values]
+        labels = []
+        for v in values:
+            if v == 0.0:
+                labels.append('')
+            else:
+                labels.append(f"{v:.{decimal_places}g}")
+
+        return labels
 
     def set_data(self):
         """Generate the data to be visualized."""
@@ -101,7 +134,10 @@ class Plotter:
     def set_grid(self):
         """Set grid lines and adjust y-axis height."""
         max_val = max((rect.get_height() for rect in self.ax.patches), default=10)
-        self.ax.set_ylim([0, max(10, np.power(10, np.ceil(np.log10(max_val))))])
+        if max_val > 0.0:
+            self.ax.set_ylim([0, max(10, np.power(10, np.ceil(np.log10(max_val))))])
+        else:
+            self.ax.set_ylim([0, 10])
         self.ax.grid(True)
 
     def draw(self):

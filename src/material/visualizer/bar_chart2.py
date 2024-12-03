@@ -11,21 +11,24 @@ __version__ = "0.1.0"
 
 
 class BarChart2(Plotter):
-    """
-    A bar chart to visualize the impact (of a given impact category) for multiple models 
-    with data categorized by the life cycle stage.
+    """ Bar chart to visualize impacts (of a given impact category) for multiple models by life cycle stage---i.e., a bar for life cycle stage of a given model, 
+       and bars grouped by life cycle stage. In each bar, the contribution from different items are identified. #TODO: identify only hotspots and rest categorized as 'others'.
     """
 
     def __init__(self, project):
         super().__init__(project)
 
     def set_data(self):
-
         """ Calls calculator to generate the data and then sets them in the plot. """
 
+        if isinstance(self.impact_category, list):
+            self.impact_category = self.impact_category[0]
+            print("A list of impact categories given. Graph plotted for the first category in the list.")
+
+        gap = 0.2 # gap between two groups of bars  
         stages = ('A1', 'A2', 'A3') 
         stages_nos = np.arange(len(stages))
-        width = 0.4
+        width = (1.0 - gap) / len(self.active_models)
         model_no = 0
 
         for model in self.active_models:
@@ -36,7 +39,7 @@ class BarChart2(Plotter):
 
                 rounded_impact = self.round_to_significant(impact)
                 p = self.ax.bar(
-                    stages_nos + (model_no * width), rounded_impact, width, 
+                    stages_nos - (1.0 - gap - width)/2 + (model_no * width), rounded_impact, width, 
                     label=stage, bottom=bottom
                 )
                 bottom += rounded_impact 

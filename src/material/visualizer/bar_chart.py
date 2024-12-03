@@ -12,20 +12,28 @@ __version__ = "0.1.0"
 
 
 class BarChart(Plotter):
-    """Bar chart to visualize impacts for multiple models by life cycle stage."""
+    """Bar chart to visualize impacts (of a given impact category) for multiple models by life cycle stage---i.e., a bar for life cycle stage of a given model, 
+       and bars grouped by life cycle stage.
+    
+    """
 
     def set_data(self):
         """Generate bar chart data and plot it."""
-        stages, bar_data = self.calculator.get_barchart_data(self.impact_category, self.active_models)
-        width = 0.4
 
+        if isinstance(self.impact_category, list):
+            self.impact_category = self.impact_category[0]
+            print("A list of impact categories given. Graph plotted for the first category in the list.")
+
+        gap = 0.2 # gap between two groups of bars
+        stages, bar_data = self.calculator.get_barchart_data(self.impact_category, self.active_models)
+        width = (1.0 - gap) / len(self.active_models)
         for model_idx, (model, stage_data) in enumerate(bar_data.items()):
             for stage_idx, (stage, value) in enumerate(stage_data.items()):
                 height = self.round_to_significant([value])[0]
                 color = self.plot_colors[model_idx % len(self.plot_colors)]
 
                 rect = self.ax.bar(
-                    stage_idx + model_idx * width, height, width, label=f'{stage} ({model})', color=color
+                    stage_idx - (1.0 - gap - width)/2 + (model_idx * width), height, width, label=f'{stage} ({model})', color=color
                 )
                 self.ax.bar_label(rect, labels=self.format_labels([height]), padding=3)
 

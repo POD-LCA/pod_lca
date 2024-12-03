@@ -100,7 +100,7 @@ class TestBuilder(unittest.TestCase):
         project.get_database().import_data_from_CSV(HOME + '\databaseManager\impact_data_new.csv')
 
         project.get_database().set_custom_entry("Electricity_New", "kWh", 
-                                                {"GWP":0.503, "acid_pot":0.0036, "eutro_pot":5.83e-05, "ozone":7.6e-11, "smog":3.37e-2})
+                                                {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         Electricity_New_impacts = project.get_database().get_impact_data("Electricity_New")
 
@@ -117,7 +117,7 @@ class TestBuilder(unittest.TestCase):
         project.get_database().import_data_from_CSV(HOME + '\databaseManager\impact_data_new.csv')
 
         project.get_database().set_custom_entry("Electricity_New", "kWh", 
-                                                {"GWP":0.503, "acid_pot":0.0036, "eutro_pot":5.83e-05, "ozone":7.6e-11, "smog":3.37e-2})
+                                                {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         sprinkles = project.current_model.create_product("Sprinkles", "A1")
         sprinkles.update_qty(2.0)
@@ -210,7 +210,7 @@ class TestBuilder(unittest.TestCase):
         project.get_database().import_data_from_CSV(HOME + '\databaseManager\impact_data_new.csv')
 
         project.get_database().set_custom_entry("Electricity_New", "kWh", 
-                                                {"GWP":0.503, "acid_pot":0.0036, "eutro_pot":5.83e-05, "ozone":7.6e-11, "smog":3.37e-2})
+                                                {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         electricity_2 = project.current_model.create_energy("Electricity for Chemical Reaction", "A3")
         electricity_2.update_qty(10.0)
