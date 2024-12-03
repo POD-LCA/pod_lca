@@ -15,7 +15,7 @@ from GUI.canvas_opps import CanvasOperationsMixin
 from GUI.save_load import SaveLoadMethods
 from GUI.hotspots import HotspotMixins
 
-from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar
+from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar, IntVar
 from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
 from tkinter.ttk import Combobox, Style, Notebook
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -233,45 +233,57 @@ class ProcessVisualizer(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, Mod
         plot_frame = Frame(frame, bg=self.plotter_bg_color, width=350, height=300, highlightbackground=border_color, highlightthickness=border_thickness)
         plot_frame.pack(side=RIGHT, fill=BOTH, padx=(5,10), pady=5)
 
-        input_frame = Frame(plot_frame)
-        input_frame.pack(side=TOP, pady=10, padx=10)
+        # plot type
+        input_frame_plot_type = Frame(plot_frame)
+        input_frame_plot_type.pack(side=TOP, pady=20, padx=10)
+        self.input_frame_plot_type = input_frame_plot_type
         
-        label = Label(input_frame, bg=self.plotter_bg_color, fg='white', text="Environmental impact category", font = ('Helvetica', 12,'bold'))
-        label.pack(side=LEFT, padx=(0, 10))
-        
-        dropdown_impact = Combobox(input_frame, values=list(self.impact_categories.keys()))
-        dropdown_impact.pack(side=RIGHT, fill=BOTH)
-        dropdown_impact.current(0)
-        dropdown_impact.bind("<<ComboboxSelected>>", lambda x:self._update_plot_from_combo(x))
-
-        input_frame_2 = Frame(plot_frame)
-        input_frame_2.pack(side=TOP, pady=20, padx=10)
-        
-        label = Label(input_frame_2, bg=self.plotter_bg_color, fg='white', text="Plot type", font = ('Helvetica', 12,'bold'))
+        label = Label(input_frame_plot_type, bg=self.plotter_bg_color, fg='white', text="Plot type", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
 
-        dropdown_plot = Combobox(input_frame_2, values=['Bar chart 1', 'Bar chart 2', 'Bar chart 3'])
+        dropdown_plot = Combobox(input_frame_plot_type, values=['Bar chart 1', 'Bar chart 2', 'Bar chart 3', 'Radar plot', 'Radar plot (normalized)'])
         dropdown_plot.pack(side=RIGHT, fill=BOTH)
         dropdown_plot.current(0)
-        dropdown_plot.bind("<<ComboboxSelected>>", lambda x:self.replace_figure(plot_frame, dropdown_impact.get(), x.widget.get()))
+        self.allow_plot_multiple_impact_categories = False
+        dropdown_plot.bind("<<ComboboxSelected>>", lambda x:self.replace_figure(plot_frame, x.widget.get()))
 
-        checkbox_frame = Frame(plot_frame, bg=self.plotter_bg_color)
-        checkbox_frame.pack(fill='both', expand=True, anchor='w')
+        # impact category pick
+        input_frame_impact_cat = Frame(plot_frame)
+        input_frame_impact_cat.pack(side=TOP, pady=10, padx=10)
+        self.input_frame_impact_cat = input_frame_impact_cat
+        
+        label = Label(input_frame_impact_cat, bg=self.plotter_bg_color, fg='white', text="Environmental impact category", font = ('Helvetica', 12,'bold'))
+        label.pack(side=LEFT, padx=(0, 10))
+
+        options = list(self.impact_categories.keys())
+        self.impact_var_list = [BooleanVar(value=False) for _ in options] 
+        self.impact_var_list[0].set(True)
+        self.impact_single_var = IntVar(value=0)
+        
+        for var in self.impact_var_list:
+            var.trace_add("write", lambda *args: self.update_plot())
+        self.impact_single_var.trace_add("write", lambda *args: self.update_plot())
+        
+        self.create_checkbuttons()
+
+        # model pick                    
+        input_frame_model_pick = Frame(plot_frame, bg=self.plotter_bg_color)
+        input_frame_model_pick.pack(fill='both', expand=True, anchor='w')
+        self.input_frame_model_pick = input_frame_model_pick
 
         var = BooleanVar(value=True)
         self.plot_models["Model_0"] = var
-        checkbox = Checkbutton(checkbox_frame, text="Model_0" , variable=var, command=self.update_plot,
+        checkbox = Checkbutton(input_frame_model_pick, text="Model_0" , variable=var, command=self.update_plot,
                                bg=self.plotter_bg_color, fg='white', selectcolor="gray")
         checkbox.pack(side=LEFT)  
         self.plot_checkboxes["Model_0"]  = checkbox
-
-        self.checkbox_frame = checkbox_frame
 
         self.plot_data = {"Model_0":{}}
         for impact in self.impact_categories.keys():
             self.plot_data["Model_0"][impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
         
-        canvas_plot = self.create_figure(plot_frame, dropdown_impact.get(), dropdown_plot.get())
+        # plot
+        canvas_plot = self.create_figure(plot_frame, self.get_impact_selection(), dropdown_plot.get())
 
         return plot_frame, canvas_plot
     

@@ -160,7 +160,12 @@ class DatabaseManager:
         tmp_data['Flow'] = flow
         tmp_data['Unit'] = unit
 
-        self.data.loc[len(self.data)] = tmp_data
+        if list(self.impact_categories.keys()) + ['Flow', 'Unit'] == list(tmp_data.keys()) :
+            self.data.loc[len(self.data)] = tmp_data
+        else:
+            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {self.impact_categories.keys()}")
+
+        return self.data
 
 
 if __name__ == '__main__':
