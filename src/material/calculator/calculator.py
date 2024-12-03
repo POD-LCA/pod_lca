@@ -1,4 +1,6 @@
 
+from uncertainity.hotspots import HotSpotAnalysis
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -96,7 +98,7 @@ class Calculator():
             return sum(val_lst)
     
     # =================================
-    # UNIT CONVERSION/CHECK METHODS
+    # UNIT CONVERSION
     # =================================
     
     def convert_units(self, from_unit, to_unit, qty):
@@ -148,7 +150,11 @@ class Calculator():
         """
 
         return self.convert_units(from_unit, to_unit, qty=1.0)
-    
+
+    # =================================
+    # CHECK METHODS
+    # =================================
+  
     def is_mass_unit(self, unit):
         """ Checks if a given unit is unit of measurement of mass.
 
@@ -253,87 +259,167 @@ class Calculator():
     
 
     def get_barchart_data(self, impact_category, model_lst=['Model_0']):
-        """ Returns heights and x-labels for a barchart.
+        """ Returns data for a barchart.
+            
+            Parameters
+            ----------
+            impact_category : str
+                Name of the Impact category.
+            model_lst : List of str.
+                Names of the models.
+
+            Returns
+            -------
+            dict_keys
+                x-labels.
+            dict
+                Heights of bars: { model_name (str): { stage (str): height (float)}}.
         """
 
-        project = self.get_project()
-        calcualtor = project.get_calculator()
         data_dict ={}
         for model_name in model_lst:
-            data_dict[model_name], stages = calcualtor.get_data_by_LCstage(impact_category, model_name)
+            data_dict[model_name], stages = self.get_data_by_LCstage(impact_category, model_name)
         
         return  stages, data_dict
         
 
-    def get_barchart2_data (self,impact_category, model='Model_0'):
+    def get_barchart2_data (self, impact_category, model_name='Model_0'):
+        """ Returns data for a barchart.
+            
+            Parameters
+            ----------
+            impact_category : str
+                Name of the Impact category.
+            model : str.
+                Names of the model.
+
+            Returns
+            -------
+            list
+                List of names of items.
+            list
+                List of qtys.
+            list
+                List of ints (no of items).
+            dict
+                #TODO: update.
+
+        """
+        hotspot_analysis = HotSpotAnalysis(self.get_project())
+        hot_spots = hotspot_analysis.run(model_name=model_name, impact_category= impact_category, printout=False)
+        hot_spots_impacts = Calculator.get_attribute_as_list(hot_spots, 'impacts')
 
         data_name=[]
         data_qty=[]
         data_len=[]
 
-        project = self.project.get_model(model).get_project()
-        model = project.get_model(model)
-
-        for i in model.get_impacts():
-            data_len.append(len(model.get_impacts()[i]))
-            for j in model.get_impacts()[i]:
-                data_qty.append(j.get_impact(impact_category))
-                data_name.append(j.get_parent().__reduce__()[1][1])
+        model = self.get_project().get_model(model_name)
+        for lc_stage in model.get_impacts():
+            item_count = 0
+            impacts_lst = model.get_impacts()[lc_stage]
+            impacts_lst_sorted = Calculator.sort_by_attribute(impacts_lst, impact_category, descending=True)
+            for impact in impacts_lst_sorted:
+                other_qty = 0.0
+                if impact in hot_spots_impacts:
+                    data_qty.append(impact.get_impact(impact_category))
+                    data_name.append(impact.get_parent().get_name() + f'({model_name})')
+                    item_count += 1
+                else:
+                    other_qty += impact.get_impact(impact_category)
+            if other_qty > 0.0:
+                data_qty.append(other_qty)
+                data_name.append('Other' + f'({model_name})')
+                item_count += 1
+            data_len.append(item_count)
 
         impacts = {}
+        other_dict = {'Other'  + f'({model_name})': np.array([0.] * len(data_len))}
         start_index = 0
-
-        for i, length in enumerate(data_len):
+        for lc_stage, length in enumerate(data_len):
             end_index = start_index + length
-
-            for j in range(start_index, end_index):
-                impacts[data_name[j]] = np.array([0] * i + [data_qty[j]] + [0] * (len(data_len) - i - 1))
+            for impact in range(start_index, end_index):
+                if data_name[impact] == 'Other' + f'({model_name})':
+                    other_dict['Other' + f'({model_name})'] += np.array([0] * lc_stage + [data_qty[impact]] + [0] * (len(data_len) - lc_stage - 1))
+                else:
+                    impacts[data_name[impact]] = np.array([0] * lc_stage + [data_qty[impact]] + [0] * (len(data_len) - lc_stage - 1))
             start_index = end_index
+        
+        impacts.update(other_dict)
 
         return data_name, data_qty, data_len, impacts
 
+    def get_barchart3_data(self, impact_category, model= 'Model_0'):
+        """ Returns data for a barchart.
+            
+            Parameters
+            ----------
+            impact_category : str
+                Name of the Impact category.
+            model : str.
+                Names of the model.
 
-    def get_barchart3_data (self, impact_category, model= 'Model_0'):
+            Returns
+            -------
+            dict
+                #TODO: update.
+        """
 
         labels = ['A1', 'A2', 'A3']
-        title='Environmental Impacts by Stage'
-        project = self.project.get_model(model).get_project()
-        calcualtor = project.get_calculator()
-
         data=[]
-        for i in impact_category:
-
-            globals()['data_dict_' + i] = calcualtor.get_data_by_LCstage(i, model)[0]
-            globals()['plt_data_' + i] = [globals()['data_dict_' + i]["A1"], globals()['data_dict_' + i]["A2"], globals()['data_dict_' + i]["A3"]]
-            data.append(globals()['plt_data_' + i])
-
+        for category in impact_category:
+            tmp_dict, _ = self.get_data_by_LCstage(category, model)
+            plt_data = [tmp_dict["A1"], tmp_dict["A2"], tmp_dict["A3"]]
+            data.append(plt_data)
 
         impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
         
         return impact_by_stage
 
+    def get_spider_chart_data (self, impact_category, model_lst=['Model_0'], stage='all'):
+        """ Returns data for a barchart.
+            
+            Parameters
+            ----------
+            impact_category : List
+                List of impact categories.
+            model_lst : List of str.
+                Names of the models.
+            stage : str
+                Life Cycle Stage considered.
 
-
-    def get_spider_chart_data (self, impact_category, model_lst=['Model_0'], stage = 'A1'):
-        """ Returns heights and x-labels for a barchart.
+            Returns
+            -------
+            dict
+                #TODO: update.
         """
 
-        project = self.get_project()
-        calculator = self.project.get_calculator()
         data={}
-
         for impact in impact_category:
             impact_data = {}
 
             for model_name in model_lst:
-                model_data, stages = calculator.get_data_by_LCstage(impact, model_name)
+                model_data, _ = self.get_data_by_LCstage(impact, model_name)
                 impact_data[model_name] = model_data  
 
-            stage_values = {model: values[stage] for model, values in impact_data.items()}
+            if stage == 'all':
+                stage_values = {model: sum(impact_data[model].values()) for model in impact_data}
+            else:
+                stage_values = {model: values[stage] for model, values in impact_data.items()}
             data[impact] = stage_values
 
         return data
 
+    # =================================
+    # Utils
+    # =================================
+    @staticmethod
+    def get_attribute_as_list(objects, attr_name):
+        return [getattr(obj, attr_name) for obj in objects]
+    
+    @staticmethod
+    def sort_by_attribute(objects, attr_name, descending=True):
+        return sorted(objects, key=lambda obj: getattr(obj, attr_name), reverse=descending)
+    
 
 if __name__ == '__main__':
     pass

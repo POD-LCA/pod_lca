@@ -14,7 +14,7 @@ project = Project()
 project.get_database().import_data_from_CSV(HOME + '\databaseManager\impact_data_new.csv')
 
 project.get_database().set_custom_entry("Electricity_New", "kWh", 
-                                        {"GWP":0.503, "acid_pot":0.0036, "eutro_pot":5.83e-05, "ozone":7.6e-11, "smog":3.37e-2})
+                                        {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
 
 sprinkles = project.current_model.create_product("Sprinkles", "A1")
@@ -336,36 +336,27 @@ hotspot_analysis = HotSpotAnalysis(project)
 hot_spots_GWP = hotspot_analysis.run(model_name='Model_0', impact_category= "GWP", printout=True)
 
 graph = BarChart(project, palette="grayscale")
-graph.set_impact_category("GWP")
-graph.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
-#graph.show()
+graph.set_impact_category(["GWP"])
+graph.set_active_models(['Model_0', 'Model_02', 'Model_03'])
+# graph.show()
 
 graph2 = BarChart2(project)
-graph2.set_impact_category("GWP")
-graph2.set_active_models(['Model_0', 'Model_02'])
-#graph2.show()
+graph2.set_impact_category(["GWP"])
+graph2.set_active_models(['Model_0', 'Model_02', 'Model_03'])
+graph2.show()
 
 graph3 = BarChart3(project)
 graph3.set_impact_category(["GWP","ODP"])
-graph3.set_active_models(['Model_0', 'Model_02'])
-#graph3.show()
+graph3.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
+# graph3.show()
 
 graph4 = Spiderchart(project)
-graph4.set_impact_category(["GWP","ODP","SFP" ,"EP"])
+graph4.set_impact_category(["GWP"])
 graph4.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
-graph4.set_lca_stage('A1')
-#graph4.show()
-
+# graph4.set_lca_stage('all')
+# graph4.show()
 
 graph5 = Spiderchart_n(project)
-graph5.set_impact_category(["GWP","ODP","SFP" ,"EP"])
 graph5.set_active_models(['Model_0', 'Model_02', 'Model_03' ])
-graph5.set_lca_stage('A1')
-graph5.show()
-
-
-
-# calculator = project.get_calculator()
-# print(calculator.get_spider_chart_data(["GWP","ODP","SFP" ,"EP"], ['Model_0', 'Model_02', 'Model_03'], 'A1'))
-
-
+graph5.set_lca_stage('all')
+# graph5.show()
