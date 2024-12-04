@@ -1,6 +1,6 @@
 import pytest
 import compas
-import pod_lca
+import legacy.pod_lca_tomas
 import math
 import numpy
 
@@ -23,7 +23,7 @@ def add_compas(doctest_namespace):
 
 @pytest.fixture(autouse=True)
 def add_pod_lca(doctest_namespace):
-    doctest_namespace["pod_lca"] = pod_lca
+    doctest_namespace["pod_lca"] = legacy.pod_lca_tomas
 
 
 @pytest.fixture(autouse=True)

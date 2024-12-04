@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module material.visualizer.bar_chart</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="material.html" class="white">material</a>.<a href="material.visualizer.html" class="white">visualizer</a>.bar_chart</strong> (version 0.1.0)</td>
+<td class="extra"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Ckiun%5Cpod_lca%5Csrc%5Cmaterial%5Cvisualizer%5Cbar_chart.py">c:\users\kiun\pod_lca\src\material\visualizer\bar_chart.py</a></td></tr></table>
+    <p></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="numpy.html">numpy</a><br>
+</td><td class="multicolumn"><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="material.visualizer.plotter.html#Plotter">material.visualizer.plotter.Plotter</a>(<a href="builtins.html#object">builtins.object</a>)
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="material.visualizer.bar_chart.html#BarChart">BarChart</a>
+</dt></dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="BarChart">class <strong>BarChart</strong></a>(<a href="material.visualizer.plotter.html#Plotter">material.visualizer.plotter.Plotter</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#BarChart">BarChart</a>(project)<br>
+&nbsp;<br>
+A&nbsp;bar&nbsp;chart&nbsp;to&nbsp;visualize&nbsp;the&nbsp;impact&nbsp;(of&nbsp;a&nbsp;given&nbsp;impact&nbsp;category)&nbsp;for&nbsp;mutiple&nbsp;models&nbsp;with&nbsp;data&nbsp;categorized<br>
+by&nbsp;the&nbsp;life&nbsp;cycle&nbsp;stage.<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn"><dl><dt>Method resolution order:</dt>
+<dd><a href="material.visualizer.bar_chart.html#BarChart">BarChart</a></dd>
+<dd><a href="material.visualizer.plotter.html#Plotter">material.visualizer.plotter.Plotter</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BarChart-__init__"><strong>__init__</strong></a>(self, project)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+
+<dl><dt><a name="BarChart-set_data"><strong>set_data</strong></a>(self)</dt><dd><span class="code">Calls&nbsp;calculator&nbsp;to&nbsp;generate&nbsp;the&nbsp;data&nbsp;and&nbsp;then&nbsp;sets&nbsp;them&nbsp;in&nbsp;the&nbsp;plot.</span></dd></dl>
+
+<dl><dt><a name="BarChart-set_grid"><strong>set_grid</strong></a>(self)</dt><dd><span class="code">Set&nbsp;grids&nbsp;of&nbsp;the&nbsp;plot.<br>
+Updates&nbsp;the&nbsp;y-axis&nbsp;height&nbsp;based&nbsp;on&nbsp;the&nbsp;maximum&nbsp;bar&nbsp;height.</span></dd></dl>
+
+<dl><dt><a name="BarChart-set_labels"><strong>set_labels</strong></a>(self)</dt><dd><span class="code">Set&nbsp;plot&nbsp;title&nbsp;and&nbsp;axis&nbsp;label.</span></dd></dl>
+
+<dl><dt><a name="BarChart-set_legend"><strong>set_legend</strong></a>(self)</dt><dd><span class="code">Set&nbsp;legend&nbsp;of&nbsp;the&nbsp;plot.</span></dd></dl>
+
+<hr>
+Methods inherited from <a href="material.visualizer.plotter.html#Plotter">material.visualizer.plotter.Plotter</a>:<br>
+<dl><dt><a name="BarChart-draw"><strong>draw</strong></a>(self)</dt><dd><span class="code">Updates&nbsp;an&nbsp;existing&nbsp;plot.</span></dd></dl>
+
+<dl><dt><a name="BarChart-set_active_models"><strong>set_active_models</strong></a>(self, active_models)</dt><dd><span class="code">Set&nbsp;models&nbsp;considered&nbsp;for&nbsp;plotting.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+active_models&nbsp;:&nbsp;list&nbsp;of&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Models&nbsp;considered&nbsp;for&nbsp;plotting.</span></dd></dl>
+
+<dl><dt><a name="BarChart-set_impact_category"><strong>set_impact_category</strong></a>(self, impact_cat)</dt><dd><span class="code">Set&nbsp;impact&nbsp;category.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+impact_cat&nbsp;:&nbsp;str<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Impact&nbsp;catogery&nbsp;to&nbsp;be&nbsp;plotted</span></dd></dl>
+
+<dl><dt><a name="BarChart-show"><strong>show</strong></a>(self)</dt><dd><span class="code">Draws&nbsp;a&nbsp;plot&nbsp;and&nbsp;display&nbsp;the&nbsp;figure.</span></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="material.visualizer.plotter.html#Plotter">material.visualizer.plotter.Plotter</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor data-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Data</strong></td></tr>
+    
+<tr><td class="decor data-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><strong>__copyright__</strong> = 'Univrsity of Washington'<br>
+<strong>__email__</strong> = 'mhtaba@uw.edu; kiun@uw.edu'<br>
+<strong>__license__</strong> = 'MIT License'</td></tr></table><p>
+<table class="section">
+<tr class="decor author-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Author</strong></td></tr>
+    
+<tr><td class="decor author-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn">['POD/LCA&nbsp;Team']</td></tr></table>
+</body></html>

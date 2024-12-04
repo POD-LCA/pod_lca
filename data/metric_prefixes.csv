@@ -1,0 +1,21 @@
+﻿name,symbol,power of 10,Common
+yotta,Y,24,No
+zetta,Z,21,No
+exa,E,18,No
+peta,P,15,No
+tera,T,12,No
+giga,G,9,No
+mega,M,6,Yes
+kilo,k,3,Yes
+hecto,h,2,No
+deka,da,1,No
+deci,d,-1,No
+centi,c,-2,Yes
+mili,m,-3,Yes
+micro,mu,-6,No
+nano,n,-9,No
+pico,p,-12,No
+femto,f,-15,No
+atto,a,-18,No
+zeptp,z,-21,No
+yocto,y,-24,No

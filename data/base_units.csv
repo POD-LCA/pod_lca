@@ -1,0 +1,24 @@
+﻿name,standard_notation,type,is_metric,is_compound_unit,components
+cubic meter,m^3,volume,TRUE,TRUE,"meter, meter, meter"
+liter,L,volume,TRUE,FALSE,
+US gallon,US gal,volume,FALSE,FALSE,
+cubic feet,ft^3,volume,FALSE,TRUE,"feet, feet, feet"
+gram,g,weight,TRUE,FALSE,
+metric ton,t,weight,FALSE,FALSE,
+short ton,tn,weight,FALSE,FALSE,
+pound,lb,weight,FALSE,FALSE,
+ounce,oz,weight,FALSE,FALSE,
+meter,m,Length,TRUE,FALSE,
+feet,ft,Length,FALSE,FALSE,
+inch,in,Length,FALSE,FALSE,
+yard,yd,Length,FALSE,FALSE,
+mile,mi,Length,FALSE,FALSE,
+nautical mile,nmi,Length,FALSE,FALSE,
+square meter,m^2,Area,TRUE,TRUE,"meter, meter, meter"
+square feet,ft^2,Area,FALSE,TRUE,"feet, feet, feet"
+acre,acre,Area,FALSE,FALSE,
+hectare,ha,Area,FALSE,FALSE,
+Joule,J,Energy,TRUE,FALSE,"Watt, hour"
+Watt-Hour,Wh,Energy,TRUE,TRUE,
+Therm,thm,Energy,FALSE,FALSE,
+British Thermal Units,BTU,Insulation,FALSE,FALSE,
