@@ -1,0 +1,5 @@
+﻿mode,Units,GWP,AP,EP,ODP,SFP
+Truck,tkm,9,3,8,9,8
+Rail,tkm,3,4,4,4,7
+Barge,tkm,10,1,4,10,1
+Air,tkm,4,10,6,5,7
