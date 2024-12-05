@@ -7,10 +7,10 @@
 
 # calculator
 
-from lca_modules.material.projectManager.projectManager import Project
-from lca_modules.material.calculator.calculator import Calculator
-from lca_modules.material.databaseManager.databaseManager import DatabaseManager
-from lca_modules.material.model.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
+from lca_modules.material.projectManager import Project
+from lca_modules.material.calculator import Calculator
+from lca_modules.material.databaseManager import DatabaseManager
+from lca_modules.material.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
 
 from pandas import DataFrame, Series
 import unittest
