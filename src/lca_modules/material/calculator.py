@@ -1,5 +1,4 @@
 
-from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 from utilities.objects.array_methods import get_attribute_as_list, sort_by_attribute
 
 import numpy as np
@@ -305,10 +304,6 @@ class Calculator():
                 #TODO: update.
 
         """
-        hotspot_analysis = HotSpotAnalysis(self.get_project())
-        hot_spots = hotspot_analysis.run(model_name=model_name, impact_category= impact_category, printout=False)
-        hot_spots_impacts = get_attribute_as_list(hot_spots, 'impacts')
-
         data_name=[]
         data_qty=[]
         data_len=[]
@@ -316,11 +311,11 @@ class Calculator():
         model = self.get_project().get_model(model_name)
         for lc_stage in model.get_impacts():
             item_count = 0
+            other_qty = 0.0
             impacts_lst = model.get_impacts()[lc_stage]
             impacts_lst_sorted = sort_by_attribute(impacts_lst, impact_category, descending=True)
             for impact in impacts_lst_sorted:
-                other_qty = 0.0
-                if impact in hot_spots_impacts:
+                if impact.get_parent().is_hotspot:
                     data_qty.append(impact.get_impact(impact_category))
                     data_name.append(impact.get_parent().get_name() + f'({model_name})')
                     item_count += 1

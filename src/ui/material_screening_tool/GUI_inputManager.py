@@ -1,7 +1,7 @@
 from lca_modules.material.projectManager import Project
 from lca_modules.material.product import Product, Fuel, Waste
 from lca_modules.material.process import Process, transportationProcess
-from ui.material_screening_tool.GUI_outputManager import GUIOutputManager
+from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 
 from tkinter import messagebox
 
@@ -339,6 +339,11 @@ class GUIInputManager():
         return obj.get_impacts().get_impact(impact_cat)
     
     @staticmethod
+    def get_weighted_impact(obj):
+
+        return obj.get_impacts().get_weighted_impact()
+    
+    @staticmethod
     def delete(visualizer, obj):
 
         model = visualizer.project.get_current_model().delete_obj(obj)
@@ -475,3 +480,54 @@ class GUIInputManager():
     @staticmethod
     def show_error_popup(error_type, message):
         messagebox.showerror(error_type, message)
+
+    # =================================
+    # Analysis
+    # =================================
+
+    @staticmethod
+    def create_DQA(project):
+
+        DQA = DataQualityAnalysis(project)
+        for model_name in project.get_model_names():
+            DQA.setPedigreeScores(model_name)
+
+        return
+    
+    @staticmethod
+    def DQA_inidcators(project):
+
+        return project.DataQualityAnalysis.get_indicators()
+    
+    @staticmethod
+    def get_pedigree_score_objs(project, model_name):
+
+        return project.DataQualityAnalysis.pedigreeScores[model_name]
+    
+    @staticmethod
+    def get_pedigree_score(pedigree_obj, indicator):
+
+        return getattr(pedigree_obj, indicator)
+
+    @staticmethod
+    def set_pedigree_score(pedigree_obj, indicator, value):
+
+        setattr(pedigree_obj, indicator, value)
+      
+    @staticmethod
+    def get_DQS(pedigree_obj):
+
+        return pedigree_obj.calculate_DQS()
+    
+    @staticmethod
+    def get_DQS_range(project):
+
+        min = project.DataQualityAnalysis.min_score
+        max = project.DataQualityAnalysis.max_score
+
+        return range(min, max + 1, 1)
+    
+    @staticmethod
+    def calculate_model_DQS(project, model_name):
+
+        return project.DataQualityAnalysis.calculate_DQS(model_name, printout=False)

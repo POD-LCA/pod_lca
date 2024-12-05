@@ -1,4 +1,4 @@
-from lca_modules.material.projectManager.projectManager import Project
+from lca_modules.material.projectManager import Project
 from lca_modules.material.visualizer.bar_chart import BarChart
 from lca_modules.material.visualizer.bar_chart2 import BarChart2
 from lca_modules.material.visualizer.bar_chart3 import BarChart3
@@ -329,9 +329,10 @@ waste.update_qty(3.0)
 waste.set_unit('kg')
 waste.set_impact_database_entry("Waste to landfill")
 
-
 hotspot_analysis = HotSpotAnalysis(project)
 hot_spots_GWP = hotspot_analysis.run(model_name='Model_0', impact_category= "GWP", printout=True)
+hot_spots_GWP = hotspot_analysis.run(model_name='Model_02', impact_category= "GWP", printout=True)
+hot_spots_GWP = hotspot_analysis.run(model_name='Model_03', impact_category= "GWP", printout=True)
 
 graph = BarChart(project, palette="grayscale")
 graph.set_impact_category(["GWP"])

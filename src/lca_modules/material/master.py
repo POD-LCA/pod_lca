@@ -30,7 +30,8 @@ class Master:
         Quantity of the product/process.
     unit : str
         Unit of measurement corresponding to the quantity of the product/process.
-    
+    is_hotspot : bool
+        True, if the object is a hotspot in the model.
     """
 
     def __init__(self, id, name, model, stage):
@@ -42,7 +43,7 @@ class Master:
         self.database_item = None
         self.qty = 0.0
         self.unit = None
-
+        self.is_hotspot = False
 
     def __reduce__(self):
         
