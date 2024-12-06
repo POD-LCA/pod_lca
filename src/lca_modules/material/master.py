@@ -32,6 +32,10 @@ class Master:
         Unit of measurement corresponding to the quantity of the product/process.
     is_hotspot : bool
         True, if the object is a hotspot in the model.
+    datasets : dict.
+        Datasets corresponding to attributes: {attr (str): Dataset Obj}.
+    distributions : dict.
+        Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.
     """
 
     def __init__(self, id, name, model, stage):
@@ -44,6 +48,8 @@ class Master:
         self.qty = 0.0
         self.unit = None
         self.is_hotspot = False
+        self.datasets = {}
+        self.distributions = {}
 
     def __reduce__(self):
         
@@ -316,7 +322,66 @@ class Master:
         """
 
         return self.get_model().get_project().get_calculator()
+
+    def get_datasets(self):
+        """ Get dataset objects of the Master Obj.
+
+            Returns
+            -------
+            dict.
+                Datasets corresponding to attributes: {attr (str): Dataset Obj}        
+        """
+
+        return self.datasets
+        
+    def get_distributions(self):
+        """ Get distribution objects of the Master Obj.
+
+            Returns
+            -------
+            dict.
+                Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.
+        """
+
+        return self.distributions
+
     
+    def set_dataset(self, dataset, attr):
+        """ Set a dataset object to the Master Obj.
+
+            Parameters
+            ----------
+            dataset : Dataset Obj.
+                Dataset object to be set
+            attr : str.
+                Attribute to which the dataset correspond.
+        """
+
+        if hasattr(self, attr):
+            self.datasets[attr] = dataset
+            dataset.set_parent(self)
+            dataset.set_attr(attr)
+        else:
+            print(f"Object {type(self)} does not have an attribute {attr}")
+
+    def set_distribution(self, distribution, attr):
+        """ Set a set_distribution object to the Master Obj.
+
+            Parameters
+            ----------
+            distribution : Distribution Obj.
+                Distribution object to be set
+            attr : str.
+                Attribute to which the distribution correspond.
+        """
+
+        if hasattr(self, attr):
+            self.distributions[attr] = distribution
+            distribution.set_parent(self)
+            distribution.set_attr_name(attr)
+        else:
+            print(f"Object {type(self)} does not have an attribute {attr}")
+
     @classmethod
     def copy(cls, obj):
         """ Make a copy of an object.

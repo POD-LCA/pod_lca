@@ -5,6 +5,10 @@ from lca_modules.material.visualizer.bar_chart3 import BarChart3
 from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 from lca_modules.uncertainity.sensitivity_analysis import compute_sensitivity
+from lca_modules.uncertainity.datasets import DataSet, Distribution
+from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulation
+
+from numpy import random
 
 # Smoothie example
 
@@ -139,6 +143,17 @@ result_range = compute_sensitivity(product2_by_truck,
                                    'database_item', 
                                    impact_cat='weighted', 
                                    options=['Transportation by truck', 'Transportation by barge', 'Transportation by train'])
+
+data = random.normal(4, 1, 5)  
+dataset_pickles_qty = DataSet('pickles', data)
+pickles.set_dataset(dataset_pickles_qty, 'qty')
+# best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=True)
+# distribution = dataset.set_distribution(best_fit)
+# # TODO: Call Q-Q plots
+# dataset.plot_fit()
+
+MCS = MonteCarloSimulation(project)
+MCS.run('Model_0')
 
 graph = BarChart(project)
 graph.set_impact_category("GWP")

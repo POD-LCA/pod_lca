@@ -1,5 +1,6 @@
 from lca_modules.uncertainity.utils import UncertainityUtils
 
+import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 
@@ -24,13 +25,47 @@ class DataSet:
         The data set.
     dist_fitted : Distribution Obj.
         Distribution fitted to the data set.
+    parent : Object.
+        Object to which the dataset is attached.
+    attr : str
+        Attribute to which dataset is attached.
     """
     def __init__(self, name, data):
         self.name = name
         self.data = data
         self.dist_fitted = None
+        self.parent = None
+        self.attr = None
 
-    def find_best_fit(self, is_cts=True, fit_method='MLE', validate=True, printout=True):
+    def set_parent(self, obj):
+        """ Set parent of the dataset.
+
+            Parameters
+            ----------
+            obj : Master Obj.
+                Object to which the dataset correspond.
+        """ 
+
+        self.parent = obj   
+
+    def set_attr(self, attr):
+        """ Set parent of the dataset.
+
+            Parameters
+            ----------
+            attr : str.
+                Attribute to which the dataset correspond.
+        """ 
+
+        self.attr = attr
+
+    def get_dist_fitted(self):
+        """ Get the distribution fitted to the dataset.
+        """
+
+        return self.dist_fitted      
+
+    def find_best_fit(self, is_cts=True, fit_method='MLE', validate=True, short_list=None, printout=True):
         """ Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
 
             Parameters
@@ -43,6 +78,8 @@ class DataSet:
                 'MLE', 'MSE'
             validate : bool
                 If True, the selected fit will be checked against the critical KS parameter value.
+            short_list : list of str.
+                A short list of distributions to considered for best-fit.
             printout : bool
                 If True, print out outcomes.
 
@@ -53,20 +90,21 @@ class DataSet:
         
         """
 
-        if is_cts:
-            dists_lst = UncertainityUtils.get_all_cts_distributions()
+        if short_list is None:
+            if is_cts:
+                dists_lst = UncertainityUtils.get_all_cts_distributions() 
+            else:
+                dists_lst = UncertainityUtils.get_all_disc_distributions()
         else:
-            dists_lst = UncertainityUtils.get_all_disc_distributions()
+            dists_lst = short_list
 
         best_k_param = 10000
         best_fit = None
         for dist_name in dists_lst:
             try:
-                _, params = self.fit_distribution(best_fit, fit_method)
+                _, params = self.fit_distribution(dist_name, fit_method)
                 k_test = stats.kstest(self.data, dist_name, args=params)
-                print(f"{dist_name} distribution fits with a KS statistic of {k_test.statistic}. Best fit {best_fit} with KS statistic of {best_k_param}.")
             except:
-                print(f"KS test failed for {dist_name} distribution.")
                 continue
 
             if k_test.statistic < best_k_param:
@@ -83,10 +121,12 @@ class DataSet:
             alpha = 0.05
             critical_ks_param = UncertainityUtils.get_critical_ks_param(alpha, len(self.data))
             if best_k_param < critical_ks_param:
-                print(f"KS statistic fall below KS test critical values at a significance level: alpha = {alpha} => KS_crit. = {critical_ks_param}.")
+                if printout:
+                    print(f"KS statistic fall below KS test critical values at a significance level: alpha = {alpha} => KS_crit. = {critical_ks_param}.")
                 return best_fit
             else:
-                print(f"KS statistic is not statistically significant.")
+                if printout:
+                    print(f"KS statistic is not statistically significant.")
                 return None
         else:
             return best_fit
@@ -141,7 +181,7 @@ class DataSet:
         """ Plot the data histogram with the  proposed distribution fit overlayed.
         """
 
-        plt.hist(data, bins=30, density=True, alpha=0.6, color='g', label='Data') #TODO: update parameters
+        plt.hist(self.data, bins=30, density=True, alpha=0.6, color='g', label='Data') #TODO: update parameters
 
         plt.legend()
         plt.show()
@@ -175,11 +215,61 @@ class Distribution:
         Parameters defining the distribution fitted.
     dist : scipy.stats._continuous_distns Obj.
         Fitted distribution object from Scipy.
+    parent : Object.
+        Object to which the dataset is attached.
+    attr : str
+        Attribute to which dataset is attached.
     """
     def __init__(self, dist_name, params, dist):
         self.dist_name = dist_name
         self.params = params
         self.dist = dist
+        self.parent = None
+        self.attr = None
+
+    def set_parent(self, obj):
+        """ Set parent of the distribution.
+
+            Parameters
+            ----------
+            obj : Master Obj.
+                Object to which the distribution correspond.
+        """ 
+
+        self.parent = obj   
+
+    def set_attr_name(self, attr):
+        """ Set parent of the distribution.
+
+            Parameters
+            ----------
+            attr : str.
+                Attribute to which the distribution correspond.
+        """ 
+
+        self.attr = attr   
+
+    def get_parent(self):
+        """ Return the parent object.
+
+            Returns
+            -------
+            Master Obj.
+                Parent object of the distribution.
+        """ 
+
+        return self.parent
+
+    def get_attr_name(self):
+        """ Get the name of the corresponding attribute.
+
+            Returns
+            -------
+            str.
+                Namw of the attribute.
+        """ 
+
+        return self.attr  
 
     def pick_data_point(self):
         """ Pick a random variate from the distibution.
@@ -208,19 +298,8 @@ class Distribution:
 
         return self.dist.pdf(x, *self.params)
     
+    # TODO create discrete distributions
+    
 
 if __name__ == '__main__':
-    import numpy as np
-
-    data = np.random.normal(12, 24, 100)  # Set your data set here
-
-    dataset = DataSet('test', data)
-    dataset.plot_data()
-    # best_fit = dist.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=True)
-    # TODO: Call Q-Q plots
-    best_fit = 'norm'
-    distribution = dataset.set_distribution(best_fit)
-    dataset.plot_fit()
-
-    x = distribution.pick_data_point()
-    p = distribution.prob_of(x)
+    pass
