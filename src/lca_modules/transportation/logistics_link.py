@@ -1,9 +1,14 @@
+import os
+import pandas as pd
+from lca_modules.transportation.scenarios import Scenario
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
 
 
 class Link:
@@ -20,23 +25,33 @@ class Link:
         self.eff = eff
         self.shipping_org = None
 
+
     def compute_impact(self):
-        if self.shipping_org:
-            return self.compute_with_location()
-        else:
+
+        if isinstance(self.travel_dist, float): 
+
             dataset = self.project.get_subdataset("Emission")
 
             if self.mode not in dataset['mode'].tolist():
                 
                 raise ValueError(f"Mode {self.mode} not found in dataset.")
                 
-            impact = dataset.loc[dataset['mode'] == self.mode].iloc[[0], 2:] * self.qty * self.return_trip_factor
+            impact = dataset.loc[dataset['mode'] == self.mode].iloc[[0], 2:] * self.qty * self.travel_dist * self.return_trip_factor
             impact = impact.iloc[0].to_dict()
              
-            return impact  # Assuming impact data starts from 3rd column
+            return impact
+
+        else:
+            
+            impact = Scenario(self.travel_dist).scenario_impact() 
+
+            for value in impact.values():
+                value * self.qty * self.return_trip_factor
+
+            return impact
+
 
     def compute_with_location(self):
         # Dummy implementation for demonstration
         # Actual logic for compute_with_location needs to be added
         return {"GWP": 100, "AP": 50}
-

@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from lca_modules.transportation.logistics_link import Link
+from lca_modules.transportation.scenarios import Scenario
 
 
 __author__ = ["POD/LCA Team"]
@@ -8,6 +9,7 @@ __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
 
 
 class ProjectLogisticManager:
@@ -33,7 +35,7 @@ class ProjectLogisticManager:
                     print(f"Error reading {file_path}: {e}")
             elif file.endswith((".xlsx", ".xls")):
                 try:
-                    df = pd.read_excel(file_path)
+                    df = pd.ExcelFile(file_path)
                     dataset_name = os.path.splitext(file)[0]
                     self.subdataset[dataset_name] = df
                 except Exception as e:
@@ -51,6 +53,22 @@ class ProjectLogisticManager:
         self.links.append(link)
         self.impact = self.merge_impacts(self.impact, link.compute_impact())
 
+
+    def create_link_by_sc (self, scenario):
+
+
+        if scenario == "Local":
+            link = Local()
+        elif scenario == "Reginal":
+            link = Regional(self)
+        elif scenario == "Regional_c":
+            link = RegionalC(self)
+        else:
+            link = National (self)
+
+        self.links.append (link)
+        self.impact = self.merge_impacts(self.impact, link.compute_impact())
+
     @staticmethod
     def merge_impacts(impact1, impact2):
 
@@ -65,8 +83,6 @@ class ProjectLogisticManager:
     def get_links (self):
 
         return self.links
-
-
 
 
 
