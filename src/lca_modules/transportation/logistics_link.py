@@ -36,19 +36,28 @@ class Link:
                 
                 raise ValueError(f"Mode {self.mode} not found in dataset.")
                 
-            impact = dataset.loc[dataset['mode'] == self.mode].iloc[[0], 2:] * self.qty * self.travel_dist * self.return_trip_factor
+            impact = dataset.loc[dataset['mode'] == self.mode].iloc[[0], 4:] * self.qty * self.travel_dist * self.return_trip_factor
             impact = impact.iloc[0].to_dict()
              
             return impact
 
         else:
             
-            impact = Scenario(self.travel_dist).scenario_impact() 
+            impact = Scenario(self.travel_dist, self.qty, self.material, self.mode).scenario_impact() 
 
             for value in impact.values():
                 value * self.qty * self.return_trip_factor
 
             return impact
+
+
+    def get_qty (self):
+
+        return self.qty
+
+    def get get_material (self):
+
+        return self.material
 
 
     def compute_with_location(self):

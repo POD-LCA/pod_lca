@@ -52,22 +52,7 @@ class ProjectLogisticManager:
         link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode, eff)
         self.links.append(link)
         self.impact = self.merge_impacts(self.impact, link.compute_impact())
-
-
-    def create_link_by_sc (self, scenario):
-
-
-        if scenario == "Local":
-            link = Local()
-        elif scenario == "Reginal":
-            link = Regional(self)
-        elif scenario == "Regional_c":
-            link = RegionalC(self)
-        else:
-            link = National (self)
-
-        self.links.append (link)
-        self.impact = self.merge_impacts(self.impact, link.compute_impact())
+        
 
     @staticmethod
     def merge_impacts(impact1, impact2):
