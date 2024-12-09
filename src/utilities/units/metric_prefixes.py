@@ -1,12 +1,12 @@
 from utilities.units.units import MetricPrefix
 
 YOTTA = MetricPrefix('yotta', 'Y', 24)
-# zetta,Z,21,No
-# exa,E,18,No
-# peta,P,15,No
-# tera,T,12,No
-# giga,G,9,No
-# mega,M,6,Yes
+ZETTA = MetricPrefix('zetta', 'Z', 21)
+EXA = MetricPrefix('exa', 'E', 18)
+PETA = MetricPrefix('peta', 'P', 15)
+TERA = MetricPrefix('tera', 'T', 12)
+GIGA = MetricPrefix('giga', 'G', 9)
+MEGA = MetricPrefix('mega', 'M', 6)
 KILO = MetricPrefix('kilo', 'k', 3)
 HECTO = MetricPrefix('hecto', 'h', 2)
 DECA= MetricPrefix('deka', 'da', 1)
@@ -21,4 +21,5 @@ ATTO = MetricPrefix('atto', 'a', -18)
 ZEPTO = MetricPrefix('zepto', 'z', -21)
 YOCTO = MetricPrefix('yocto', 'y', -24)
 
-#TODO: create all prefixes
+# TODO: double check and delete the csv file
+# TODO: add reference and note that this is definitive list

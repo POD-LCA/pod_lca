@@ -68,6 +68,7 @@ class Unit:
         else:
             raise TypeError
         
+    # TODO: Method to create units from base units
 
 class MetricPrefix:
 
