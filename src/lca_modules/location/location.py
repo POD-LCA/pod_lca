@@ -11,25 +11,38 @@ __version__ = "0.1.0"
 
 
 class Location:
-    
-    def __init__(self, location):
+    """
+    Location object updates the location into subcategores.
 
-        self.location = location
-        self.geolocator_ph = Photon(user_agent="geoapiExercises")
-        self.geolocator_no = Nominatim (user_agent="pod_lca")
+    Attributes
+    ----------
+    location : str.
+        Any kind of address, city name, state name or a full address.
+    """
+    def __init__(self, location):
+        
         self.state = None
         self.city = None
         self.zipcode = None
         self.coords = None
         self.country = None
-
-        self.get_location_info()
+        self.get_location_info(location)
     
-    def get_location_info(self):
+    def get_location_info(self, location):
+        """
+        process the location and update the location sub categories.
 
-        location_data_ph = self.geolocator_ph.geocode(self.location)
-        location_data_no = self.geolocator_no.geocode(self.location)
+        Attributes
+        ----------
+        location : str.
+            Any kind of address, city name, state name or a full address.
+        """
 
+        geolocator_ph = Photon(user_agent="pod_lca1")
+        geolocator_no = Nominatim (user_agent="pod_lca2")
+
+        location_data_ph = geolocator_ph.geocode(location)
+        location_data_no = geolocator_no.geocode(location)
 
         if location_data_no.raw['addresstype'] == "city":
             self.city = location_data_no.raw['name']
@@ -49,27 +62,59 @@ class Location:
         self.coords = location_data_no.latitude, location_data_no.longitude
 
     
-    def loc_to_state(self):
+    def get_state(self):
+
+        """ Retrieve the state of the location.
+
+            Returns
+            -------
+            str
+                Name of the state.
+        """
         return self.state
     
-    def loc_to_city(self):
+    def get_city(self):
+
+        """ Retrieve the city of the location.
+
+            Returns
+            -------
+            str
+                Name of the city.
+        """
         return self.city
     
-    def loc_to_zip(self):
+    def get_zip(self):
+
+        """ Retrieve the zipcode of the location.
+
+            Returns
+            -------
+            str
+                Name of the zipcode.
+        """
         return self.zipcode
     
-    def loc_to_cordinates(self):
+    def get_cordinates(self):
+
+        """ Retrieve the coordinates of the location.
+
+            Returns
+            -------
+            tuple
+                 (latitude, longitude).
+        """
         return self.coords
 
-    def loc_to_egrid(self):
+    def get_egrid(self):
         return self.coords  #TODO we have to find a dataset for this
 
 if __name__ == '__main__':
 
-    location_input = "seattle"
+    location_input = "7530 37th NE seattle"
     location_obj = Location(location_input)
     
-    print(f"State: {location_obj.loc_to_state()}")
-    print(f"City: {location_obj.loc_to_city()}")
-    print(f"Zipcode: {location_obj.loc_to_zip()}")
-    print(f"Coordinates: {location_obj.loc_to_cordinates()}")
+    print(f"State: {location_obj.get_state()}")
+    print(f"City: {location_obj.get_city()}")
+    print(f"Zipcode: {location_obj.get_zip()}")
+    print(f"Coordinates: {location_obj.get_cordinates()}")
