@@ -1,3 +1,4 @@
+from utilities.units import UNIT_CONVERSIONS
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -46,40 +47,88 @@ class Unit:
     def get_standard_notation(self):
 
         return self.standard_notation
+
+    def get_base(self):
+
+        return self.base_unit
+
+    def get_prefix(self):
+
+        return self.prefix
     
     def get_type(self):
 
         return self.type
 
-    def convert(self, to_unit):
+    def get_components(self):
 
-        if Unit.is_type(to_unit, self.type):
+        return self.components
+
+    def get_convertion_factor(self, to_unit):
+        """ Returns conversion factor."""
+
+        if self.get_type() == to_unit.get_type():
             if self.is_compound_unit:
                 pass
-                # for each component do conversion, and combine back
+                # TODO: for each component do conversion, and combine back
             else:
-                if self.base_unit == self.base_unit:
-                    pass
-                    # do prefix convert
+                if self.get_base() == to_unit.get_base():
+
+                    return self.prefix.convert(to_unit.get_prefix())
+                
+                elif self.get_base() is None or to_unit.get_base() is None:
+                    if self.get_base() is None:
+                        factor_in = UNIT_CONVERSIONS[self.get_type()][self.get_name()]
+                    else:
+                        factor_in = UNIT_CONVERSIONS[self.get_type()][self.get_base().get_name()] / 10**(self.get_prefix().get_power())
+
+
+                    if to_unit.get_base() is None:
+                        factor_out = UNIT_CONVERSIONS[self.get_type()][to_unit.get_name()]  
+                    else:
+                        factor_out = UNIT_CONVERSIONS[self.get_type()][to_unit.get_base().get_name()] / 10**(to_unit.get_prefix().get_power())
+
+                    return factor_out / factor_in
+
                 else:
                     pass
-                    # get conversion factor to convert
-                
+                    # TODO: example for this
+                    # TODO: implement
+                    #   convert prefixes
+                    #   convert base units        
         else:
-            raise TypeError
+            raise TypeError(f"{self.get_name()} of dimensions {self.get_type()} and {to_unit.get_name()} of dimensions {to_unit.get_type()} are incompatible.")
+        
         
     # TODO: Method to create units from base units
+    # TODO: update docstrings
 
 class MetricPrefix:
 
     def __init__(self, name, symbol, power):
-            self.name = name
-            self.symbol = symbol
-            self.power = power    
+        self.name = name
+        self.symbol = symbol
+        self.power = power
+
+    def get_name(self):
+
+        return self.name
+    
+    def get_symbol(self):
+
+        return self.symbol
+
+    def get_power(self):
+
+        return self.power
         
-    def prefix_convert(self, to_prefix):
+    def convert(self, to_prefix):
 
-        pass
+        return 10**(to_prefix.get_power() / self.get_power())
 
 
+if __name__ == '__main__':
+    from utilities.units.standard_units import METER, MILE, KILOMETER, GRAM, KILOGRAM, SQUARE_FEET
 
+    conversion_factor = METER.get_convertion_factor(to_unit=KILOMETER)
+    print(conversion_factor)
