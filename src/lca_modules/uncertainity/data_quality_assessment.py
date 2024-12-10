@@ -101,12 +101,12 @@ class DataQualityAnalysis:
     def setTemporalCorrelationScores(self):
         """ Update all Temporal Correlation scores.
         """
-        pass #TODO: Get the logic for this / code it up
+        pass 
 
     def setGeographicalCorrelationScores(self):
         """ Update all Temporal Correlation scores.
         """
-        pass #TODO: Get the logic for this / code it up
+        pass
 
     def update_pedigree_scores(self, model_name, obj, *args):
         """ Update the pedigree score of an object.
@@ -156,8 +156,6 @@ class DataQualityAnalysis:
             Printout : bool
                 Print the output, if True.
         """
-
-        #TODO: only for hotspots option
 
         DQS_tmp = 0.0
         impact_sum = 0.0

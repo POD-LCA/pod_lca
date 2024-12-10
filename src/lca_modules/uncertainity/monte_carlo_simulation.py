@@ -54,9 +54,9 @@ class MonteCarloSimulation:
                 setattr(obj, distribution.get_attr_name(), var_value)
                 obj.update_impacts()
 
-                total_impact = self.project.get_calculator().get_total_impact(model_name, self.impact_cat)
-                prob_data.append(prob)
-                impact_data.append(total_impact)
+            total_impact = self.project.get_calculator().get_total_impact(model_name, self.impact_cat)
+            prob_data.append(prob)
+            impact_data.append(total_impact)
             iter +=1
 
 

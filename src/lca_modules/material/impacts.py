@@ -88,6 +88,7 @@ class Impacts:
             float
                 The weighted impact.
         """
+        # FIXME: The method needs to be updated
 
         if method == 'TRACI_EPA':
             weights = {'GWP':16, 'AP':5, 'EP':5, 'ODP':5, 'SFP':6}
