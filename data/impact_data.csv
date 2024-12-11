@@ -1,12 +1,31 @@
 Flow,Unit,GWP,AP,EP,ODP,SFP
-Electricity,kWh,9,3,8,9,8
-Sand,kg,3,4,4,4,7
-Sprinkles,kg,10,1,4,10,1
-Propane,MJ,4,10,6,5,7
-Pickles,kg,6,7,6,6,2
-Transportation by truck,tkm,1,7,8,8,5
-Transportation by barge,tkm,0.5,8,6,10,1
-Waste to landfill,kg,1,3,9,5,2
-CO2,kg,8,2,5,10,8
-CH4,kg,7,2,7,2,10
-NH3,kg,7,7,2,4,4
+Portland Cement,kg,0.919,0.00174,0.00102,2.05E-08,0.0328
+Fly Ash,kg,0,0,0,0,0
+Slag cement,kg,0.105,0.00105,0.00027,1.01E-09,0.0062
+Mixing water,kg,0.001,0.000006,0.000004,2.95E-10,0.0001
+Process water,kg,0.001,0.000006,0.000004,2.95E-10,0.0001
+Crushed coarse aggregate,kg,0.01,0.000054,0.000028,1.05E-10,0.0009
+Natural coarse aggregate,kg,0.012,0.000073,0.000021,1.93E-10,0.0017
+Crushed fine aggregate,kg,0.01,0.000054,0.000028,1.05E-10,0.0009
+Natural fine aggregate,kg,0.012,0.000073,0.000021,1.93E-10,0.0017
+Air entraining admixture,kg,0.537,0.00193,0.00335,0.00000004,0.0212
+Plasticizer and Superplasticizer,kg,2.75,0.011,0.0134,0.000000133,0.114
+Set accelerator,kg,3.24,0.0133,0.00934,0.000000725,0.154
+Electricity_US,MJ,0.105,0.00026,0.000722222,5.72E-10,0.003777778
+Natural gas,m3,1.659792067,0.002295457,0.000141259,3.88E-11,0.07062945
+Diesel,m3,3431.596577,38.83331,4.173920394,8.98E-06,1363.128433
+Liquefied Propane Gas (LPG),m3,2207.686882,2.575678724,1.25481784,5.63E-06,94.04529496
+Hazardous solid waste,kg,2.503,0.00318,0.00598,0.000000164,0.0532
+Non-hazardous solid waste,kg,0.009,0.000058,0.000011,2.48E-10,0.0016
+Truck,kgkm,0.000118,0.000000889,0.000000118,3.20E-13,0.0000309
+Rail,kgkm,0.000019,0.000000062,0.000000015,5.82E-14,0.0000023
+Ocean,kgkm,0.000008,0.000000145,0.000000014,4.73E-14,0.000003
+Barge,kgkm,0.000019,0.000000092,0.000000022,8.61E-14,0.000003
+Lumber_[CORRIM_LCA],kg,0.108,0,0,0,0
+Methylene diphenyl diisocyanate resin_[FHWA_MTU],kg,6.067,0,0,0,0
+Propylene glycol_[ecoinvent],kg,4.345,0,0,0,0
+Electricity_NWPP(eGrid)_[USLCI],kWh,0.503,0,0,0,0
+Natural gas_insustrial_equipment_[USLCI],m3,2.348,0,0,0,0
+Transportation_combination_truck_short-haul_diesel_NW_[USLCI],tkm,0.119,0,0,0,0
+Transportation_combination_truck_diesel_US_[USLCI],tkm,0.094,0,0,0,0
+Transportation_freight_train_diesel_US_[ecoinvent],tkm,0.061,0,0,0,0
