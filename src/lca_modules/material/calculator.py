@@ -25,14 +25,8 @@ class Calculator():
 
     def __init__(self, project):
         self.project = project
-        self.conversions = [{'m': 1000.0, 'km': 1.0, 'mi': 0.621371},
-                            {'g': 1000.0, 'kg': 1.0, 't': 0.001, 'lb': 2.20462},
-                            {'l': 1.0, 'm3': 0.01, 'gal':0.264172},
-                            {'J': 1000.0, 'kJ': 1.0, 'MJ': 0.001, 'kWh': 2.77778e-4, 'MWh': 2.77778e-7},
-                            {'kgkm': 1.0, 'tkm': 0.001, 'lbmi':1.369887, 'kgmi': 0.621371}]
  
     def __reduce__(self):
-        
         return (self.__class__, (None,), {"project": self.project})
     
     def __setstate__(self, state):
@@ -95,127 +89,6 @@ class Calculator():
                 val_lst = [impact.get_impact(impact_cat) for impact in impacts_lst]
 
             return sum(val_lst)
-    
-    # =================================
-    # UNIT CONVERSION
-    # =================================
-    
-    def convert_units(self, from_unit, to_unit, qty):
-        """ Converts a quantity from one unit to another, if they both the units measure the same property
-            (e.g., volume, mass, distance).
-            None will be returned if (a) either of the units are not in the units data of the calculator, or 
-            (b) the units are incompatible (i.e., measures different properties). Note that the method does not
-            distinguish between (a) and (b) above.
-
-            Parameters
-            ----------
-            from_unit : str
-                Original unit of measurement.
-            to_unit : str
-                New unit of measurement.
-            qty : float
-                Original quantity.
-
-            Returns
-            -------
-            float
-                Quantity in the new unit of measurement.
-                (None, if units are incompatible)
-        """
-
-        for group in self.conversions:
-            if from_unit in group:
-                if to_unit in group:
-                    return qty * group[to_unit] / group[from_unit]
-            
-        return None
-            
-    def conversion_factor(self, from_unit, to_unit):
-        """ Calculate conversion factor from first unit to the second unit
-            (i.e., what quantity of second unit is equal to a unit of the first).
-            
-            Parameters
-            ----------
-            from_unit : str
-                Original unit of measurement.
-            to_unit : str
-                New unit of measurement.
-
-            Returns
-            -------
-            float
-                Conversion factor.
-                (None, if units are incompatible)
-        """
-
-        return self.convert_units(from_unit, to_unit, qty=1.0)
-
-    # =================================
-    # CHECK METHODS
-    # =================================
-  
-    def is_mass_unit(self, unit):
-        """ Checks if a given unit is unit of measurement of mass.
-
-            Parameters
-            ----------
-            unit : str
-                Unit of measurement considered
-            
-            Retruns
-            -------
-            bool
-                True, if the input unit measures mass.
-                False, otherwise.
-        
-        """
-
-        if self.conversion_factor(unit, 'kg') == None:
-            return False
-        else:
-            return True
-    
-    def is_length_unit(self, unit):
-        """ Checks if a given unit is unit of measurement of length/distance.
-
-            Parameters
-            ----------
-            unit : str
-                Unit of measurement considered
-            
-            Retruns
-            -------
-            bool
-                True, if the input unit measures mass.
-                False, otherwise.
-        
-        """
-
-        if self.conversion_factor(unit, 'm') == None:
-            return False
-        else:
-            return True
-
-    def is_energy_unit(self, unit):
-        """ Checks if a given unit is unit of measurement of energy.
-
-            Parameters
-            ----------
-            unit : str
-                Unit of measurement considered
-            
-            Retruns
-            -------
-            bool
-                True, if the input unit measures mass.
-                False, otherwise.
-        
-        """
-
-        if self.conversion_factor(unit, 'kJ') == None:
-            return False
-        else:
-            return True
         
     # =================================
     # PLOT DATA METHODS

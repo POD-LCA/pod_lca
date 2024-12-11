@@ -1,2 +1,3 @@
 
 UNIT_CONVERSIONS = {}
+ALL_PREFIXES = []

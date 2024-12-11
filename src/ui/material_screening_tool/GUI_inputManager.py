@@ -62,7 +62,7 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_product(project, name, unit, qty, stage, lca_data, ):
+    def create_product(project, name, unit, qty, stage, lca_data):
 
         product = project.get_current_model().create_product(name, stage)
         product.set_unit(unit) 
