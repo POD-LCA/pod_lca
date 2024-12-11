@@ -5,8 +5,7 @@
 
 import os
 import sys
-from material import HOME
-sys.path.insert(0, os.path.abspath(HOME))
+sys.path.insert(0, os.path.abspath('../../src/lca_modules'))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -30,4 +29,4 @@ language = 'Python'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'alabaster'
-html_static_path = ['_static']
+html_static_path = ['../_static']

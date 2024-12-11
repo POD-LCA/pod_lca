@@ -4,7 +4,7 @@ Example
 
 The following process is to be modelled and impacts visualised.
 
-.. image:: /Images/Smoothie_example.png
+.. image:: ../_images/Smoothie_example.png
   :width: 1000
   :alt: A flow chart indicating the process of making a smoothie. On the left, under A1, are 1kg of sand, 2kg of sprinkles, 1MJ of propane, and 4kg of pickles. Each of those are transported by trucks 40km, 30km, 20km, and 17km, respectively. They are then subjected to three processes taking up energy (13kWh electricit and 1MJ of propane) and produce a smoothie. 0.5kg of CO2, 0.6kg of CH4, and 0.7 kg of NH3 is emitted along with 1kg of waste to landfill.
 
@@ -143,6 +143,6 @@ Finally, the global warming impact (GWP) of the process is plotted, categorized 
 
 ... giving the plot below.
 
-.. image:: /Images/Bar_chart_Smoothie_example.png
+.. image:: ../_images/Bar_chart_Smoothie_example.png
   :width: 600
   :alt: A bar chart with x-axis named 'Life cyle stages' and y-axis named 'GWP impact'. Three bars in red: A1 with a value of 51; A2 with a value of 0.253; and A3 with a value of 109.609

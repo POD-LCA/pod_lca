@@ -2,7 +2,7 @@
 Model
 **********
 
-**Model** is where all the :class:`Products <model.product.Product>` and :class:`Processes <model.process.Process>` created. A :class:`Project <projectManager.projectManager.Project>` can have multiple projects enabling to use the same database for multiple scenarios and compare them. 
+**Model** is where all the :class:`Products <material.product.Product>` and :class:`Processes <material.process.Process>` created. A :class:`Project <material.projectManager.Project>` can have multiple projects enabling to use the same database for multiple scenarios and compare them. 
 
 The current working model can be retrieved as following:
 
@@ -19,7 +19,7 @@ An new model can be created as following:
 
     model_1 = project.create_model("new Scenario")
 
-:class:`Products <model.product.Product>` and :class:`Processes <model.process.Process>` can then be added to the current model. All products and processess must be asigned a life cycle stage.
+:class:`Products <material.product.Product>` and :class:`Processes <material.process.Process>` can then be added to the current model. All products and processess must be asigned a life cycle stage.
 
 .. code-block:: python
 
@@ -30,7 +30,7 @@ An new model can be created as following:
     CO_2 = model_0.create_emission("CO2", "A3")
     waste = model_0.create_waste("to_landfill", "A3")
 
-**Model** will keep a full record of all :class:`Impacts <model.impacts.Impacts>` categorized by the life cycle stage. The following line of code will return a :class:`dict` where keys are the life cycle stages. 
+**Model** will keep a full record of all :class:`Impacts <material.impacts.Impacts>` categorized by the life cycle stage. The following line of code will return a :class:`dict` where keys are the life cycle stages. 
 
 .. code-block:: python
 
@@ -39,5 +39,5 @@ An new model can be created as following:
 
 --------
 
-.. autoclass:: model.model.Model
+.. autoclass:: material.model.Model
     :members:

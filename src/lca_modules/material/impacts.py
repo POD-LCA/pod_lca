@@ -76,17 +76,17 @@ class Impacts:
             Ref: [1] The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
                      DOI: http://hdl.handle.net/1773/41885
         
-            Parameters
-            ----------
-            method : str
-                Which weightages to be used:
-                    'TRACI_EPA' - from Ref [1]
-                    'TRACI_NIST' - from Ref [1]
-                
-            Returns
-            -------
-            float
-                The weighted impact.
+        Parameters
+        ----------
+        method : str
+            Which weightages to be used:
+                'TRACI_EPA' - from Ref [1]
+                'TRACI_NIST' - from Ref [1]
+            
+        Returns
+        -------
+        float
+            The weighted impact.
         """
 
         if method == 'TRACI_EPA':

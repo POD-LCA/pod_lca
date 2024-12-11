@@ -20,5 +20,5 @@ All the impacts created in a :class:`model <model.model.Model>` are kept in :cla
 
 Impact records impacts by impact categories (e.g., global warming potential, eutrophication potential). The names of categories can be set in the :class:`Database <databaseManager.databaseManager.DatabaseManager>` when the :class:`Project <projectManager.projectManager.Project>` is initialized (and before impact data imported). By default the following impact categories are set: GWP, acid_pot, eutro_pot, ozone_dep, smog.
 
-.. autoclass:: model.impacts.Impacts
+.. autoclass:: material.impacts.Impacts
     :members:

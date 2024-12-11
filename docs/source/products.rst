@@ -2,7 +2,7 @@
 Products
 **********
 
-**Product** is something used or created in the process. :class:`Fuel <model.product.Fuel>`, :class:`Emission <model.product.Emission>`, :class:`Waste <model.product.Waste>` are sub-types of products. They inherit attributes and methods from Product class.
+**Product** is something used or created in the process. :class:`Fuel <material.product.Fuel>`, :class:`Emission <material.product.Emission>`, :class:`Waste <material.product.Waste>` are sub-types of products. They inherit attributes and methods from Product class.
 
 In the follwing code segment, a quatity and the corresponding units are set to a product. 
 
@@ -30,7 +30,7 @@ Density can also be set for products. Density here is defined as weight per unit
     propane.set_weight_unit('kg')
     propane.set_impact_database_entry("Propane")
 
-.. currentmodule:: model.product
+.. currentmodule:: material.product
 
 .. autoclass:: Product
    :show-inheritance:
