@@ -4,7 +4,7 @@
 Visualizer
 **********
 
-**Visualizer** is where plots are created. :class:`Plotter <material.visualizer.plotter.Plotter>` provide the basic structur of a plot and various other visualizations are created inheriting from it (e.g., :class:`Bar chart <visualizer.bar_chart.BarChart>`).
+**Visualizer** is where plots are created. :class:`Plotter <material.visualizer.plotter.Plotter>` provide the basic structur of a plot and various other visualizations are created inheriting from it (e.g., :class:`Bar chart <material.visualizer.bar_chart.BarChart>`).
 
 The code segment below will create a bar chart, categorized by the life cycle stage, and indicating the gloabel warming impact (*GWP*) from *model_0*. of the project.
 
@@ -19,9 +19,6 @@ The code segment below will create a bar chart, categorized by the life cycle st
 
 .. currentmodule:: material.visualizer
 
-.. autoclass:: visualizer.plotter.Plotter
-   :members:
-
-.. autoclass:: visualizer.bar_chart.BarChart
+.. autoclass:: bar_chart.BarChart
    :show-inheritance:
     
