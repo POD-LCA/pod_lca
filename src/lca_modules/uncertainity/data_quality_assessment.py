@@ -133,7 +133,10 @@ class DataQualityAnalysis:
         if len(args) == 1 and isinstance(args[0], dict):
             for indicator, score in args[0].items():
                 if score >= self.min_score and score <= self.max_score:
-                    setattr(pedigree_score, indicator, score)
+                    if hasattr(pedigree_score, indicator):
+                        setattr(pedigree_score, indicator, score)
+                    else:
+                        raise KeyError(f"{indicator} is not an valid indicator. Valid indicators are: {self.indicators}")
                 else:
                     raise ValueError(f"Pedigree score should be between {self.min_score} and {self.max_score}.")
         elif len(args) == 2:
@@ -146,13 +149,15 @@ class DataQualityAnalysis:
 
         return pedigree_score
 
-    def calculate_DQS(self, model_name, printout=True):
+    def calculate_DQS(self, model_name, impact_cat='weighted', printout=True):
         """ Calculate the Data Quality Score.
 
             Parameters
             ----------
             model_name : str
-                Name of the model for which the Data Quality Score is calculated
+                Name of the model for which the Data Quality Score is calculated.
+            impact_cat : str
+                Impact category considered for weighing individual pedigree scores.
             Printout : bool
                 Print the output, if True.
         """
@@ -160,7 +165,7 @@ class DataQualityAnalysis:
         DQS_tmp = 0.0
         impact_sum = 0.0
         for obj in self.pedigreeScores[model_name]:
-            impact = obj.get_impacts().get_weighted_impact()
+            impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_impact(impact_cat) 
             if impact is not None:
                 DQS_tmp += self.pedigreeScores[model_name][obj].calculate_DQS() * impact
                 impact_sum += impact

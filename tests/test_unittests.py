@@ -7,10 +7,10 @@
 
 # calculator
 
-from lca_modules.material.projectManager.projectManager import Project
-from lca_modules.material.calculator.calculator import Calculator
-from lca_modules.material.databaseManager.databaseManager import DatabaseManager
-from lca_modules.material.model.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
+from lca_modules.material.projectManager import Project
+from lca_modules.material.calculator import Calculator
+from lca_modules.material.databaseManager import DatabaseManager
+from lca_modules.material.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
 
 from pandas import DataFrame, Series
 import unittest
@@ -80,7 +80,7 @@ class TestBuilder(unittest.TestCase):
         """
         print('testing importing data from database.')
 
-        database_path = r'data/impact_data.csv'
+        database_path = r'data/impact_data_smoothie.csv'
 
         project = Project()
         project.get_database().import_data_from_CSV(database_path)
@@ -95,7 +95,7 @@ class TestBuilder(unittest.TestCase):
         print('testing creating a custom impact.')
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         project.get_database().set_custom_entry("Electricity_New", "kWh", 
                                                 {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
@@ -112,13 +112,13 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         project.get_database().set_custom_entry("Electricity_New", "kWh", 
                                                 {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         sprinkles = project.current_model.create_product("Sprinkles", "A1")
-        sprinkles.update_qty(2.0)
+        sprinkles.set_qty(2.0)
         sprinkles.set_unit('kg')
         sprinkles.set_impact_database_entry("Sprinkles")
 
@@ -136,7 +136,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         # product_1 = project.current_model.create_product("Product of mixing", "A3")
         # product_1.update_qty(3.0)
@@ -157,10 +157,10 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         sprinkles = project.current_model.create_product("Sprinkles", "A1")
-        sprinkles.update_qty(2.0)
+        sprinkles.set_qty(2.0)
         sprinkles.set_unit('kg')
         sprinkles.set_impact_database_entry("Sprinkles")
 
@@ -184,10 +184,10 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         CO2 = project.current_model.create_emission("CO2", "A3")
-        CO2.update_qty(0.5)
+        CO2.set_qty(0.5)
         CO2.set_unit('kg')
         CO2.set_impact_database_entry("CO2")
 
@@ -205,13 +205,13 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         project.get_database().set_custom_entry("Electricity_New", "kWh", 
                                                 {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         electricity_2 = project.current_model.create_energy("Electricity for Chemical Reaction", "A3")
-        electricity_2.update_qty(10.0)
+        electricity_2.set_qty(10.0)
         electricity_2.set_unit('kWh')
         electricity_2.set_impact_database_entry("Electricity_New")
 
@@ -229,10 +229,10 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
         waste = project.current_model.create_waste("Waste to landfill", "A3")
-        waste.update_qty(1.0)
+        waste.set_qty(1.0)
         waste.set_unit('kg')
         waste.set_impact_database_entry("Waste to landfill")
 

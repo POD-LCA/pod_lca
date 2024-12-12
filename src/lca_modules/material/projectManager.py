@@ -198,7 +198,7 @@ class Project:
                             tmp_transportation_map[transported_item]['transporter'] = item
                 else:
                     item.set_unit(unit)
-                    item.update_qty(qty)
+                    item.set_qty(qty)
                     density = row[header_map['density']]
                     weight_unit = row[header_map['weight unit']]
                     if not (density == ''):

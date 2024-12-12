@@ -317,7 +317,7 @@ class Model:
                 if type(process) is transportationProcess:
                     if obj in process.get_transported_products():
                         process.get_transported_products().remove(obj)
-                        process.set_travel_weight()
+                        process.set_transported_weight()
         elif type(obj) == Process:
             self.get_processes().remove(obj)
 

@@ -39,12 +39,12 @@ class Product(Master):
 
     def __reduce__(self):
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "impacts": self.impacts,
-                                                                                    "database_item": self.database_item, 
+                                                                                    "database_item": self.impact_database_entry, 
                                                                                     "qty": self.qty, "weight": self.weight, "transporter": self.transporter,
                                                                                     "density": self.density, "unit":self.unit, 
                                                                                     "is_material":self.is_material})
 
-    def update_qty(self, qty):
+    def set_qty(self, qty):
         """ Update the qty of the product.
             This will also re-calculate the corresponding impact quantities.
             
@@ -100,7 +100,20 @@ class Product(Master):
         
         """
 
-        self.unit = unit
+        if self.get_unit() is not None:
+            value_in = self.get_qty()
+            unit_in = self.get_unit()
+
+            conversion_factor = self.get_project().get_calculator().conversion_factor(unit_in, unit)
+
+            if conversion_factor is not None:
+                self.unit = unit
+                self.set_qty(value_in * conversion_factor)
+            else:
+                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
+        else:
+            self.unit = unit
+
         if self.get_calculator().is_mass_unit(unit):
             self.set_weight_unit(unit)
             self.density = 1.0

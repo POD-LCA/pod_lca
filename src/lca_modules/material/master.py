@@ -24,7 +24,7 @@ class Master:
         Life cycle stage corresponding to the product/process.
     impacts : Impacts Obj.
         Impacts object corresponding to the product/process.
-    database_item : str
+    impact_database_entry : str
         Flow name corresponding to the database entry which gives the unit impact of the product.
     qty : float
         Quantity of the product/process.
@@ -44,7 +44,7 @@ class Master:
         self.name = name
         self.life_cycle_stage = stage
         self.impacts = Impacts(self) if model is not None else None
-        self.database_item = None
+        self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
         self.is_hotspot = False
@@ -55,7 +55,7 @@ class Master:
         
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, 
                                                                                      "impacts": self.impacts, 
-                                                                                     "database_item": self.database_item, 
+                                                                                     "database_item": self.impact_database_entry, 
                                                                                      "qty": self.qty, "unit":self.unit})
     
     def __setstate__(self, state):
@@ -64,7 +64,7 @@ class Master:
     def __str__(self):
         return f"Object(name={self.name}, LC stage={self.life_cycle_stage})"
 
-    def overide_id(self, new_id:int):
+    def set_id(self, new_id:int):
         """ Replace the product/process id by new number.
         
             Parameters
@@ -75,7 +75,18 @@ class Master:
 
         self.id = new_id
 
-    def update_life_cycle_stage(self, stage:str):
+    def set_name(self, name):
+        """ Set name of the product/process.
+        
+            Parameters
+            ----------
+            name : str
+                Name of the product/process.
+        """
+
+        self.name = name
+
+    def set_life_cycle_stage(self, stage:str):
         """ Update the life cycle stage of the item.
             This will also move the corresponding Impacts object to the relvant dictionary in the Model object.
             
@@ -85,19 +96,22 @@ class Master:
                 Life cycle stage.
         """
 
-        previous_stage = self.get_life_cycle_stage()
-        self.set_life_cycle_stage(stage)
-        
-        impact_obj = self.get_impacts()
-        parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage]
-        for impact in parent_impacts_list:
-            if impact == impact_obj:
-                parent_impacts_list.remove(impact_obj)
-                break
+        if self.get_life_cycle_stage() is not None:
+            previous_stage = self.get_life_cycle_stage()
+            self.life_cycle_stage = stage
+            
+            impact_obj = self.get_impacts()
+            parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage]
+            for impact in parent_impacts_list:
+                if impact == impact_obj:
+                    parent_impacts_list.remove(impact_obj)
+                    break
 
-        self.get_project().get_current_model().impacts[stage].append(impact_obj)
+            self.get_project().get_current_model().impacts[stage].append(impact_obj)
+        else:
+            self.life_cycle_stage = stage
 
-    def update_qty(self, qty:float):
+    def set_qty(self, qty:float):
         """ Update the qty of the item.
             This will also re-calculate the corresponding impact quantities.
             
@@ -117,18 +131,21 @@ class Master:
         
         self.update_impacts()
 
-    def change_units(self, unit):
+    def set_unit(self, unit):
 
-        value_in = self.get_qty()
-        unit_in = self.get_unit()
+        if self.get_unit() is not None:
+            value_in = self.get_qty()
+            unit_in = self.get_unit()
 
-        conversion_factor = self.get_calculator().conversion_factor(unit_in, unit)
+            conversion_factor = self.get_project().get_calculator().conversion_factor(unit_in, unit)
 
-        if conversion_factor is not None:
-            self.unit = unit
-            self.update_qty(value_in * conversion_factor)
+            if conversion_factor is not None:
+                self.unit = unit
+                self.update_qty(value_in * conversion_factor)
+            else:
+                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
         else:
-            raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
+            self.unit = unit
 
 
     def update_impacts(self):
@@ -141,12 +158,12 @@ class Master:
             ImportError : Incompatible units of Master object and database entry.
         """
 
-        if self.database_item:
-            unit_impacts = self.get_project().database.get_impact_data(self.database_item)
+        if self.impact_database_entry:
+            unit_impacts = self.get_project().database.get_impact_data(self.impact_database_entry)
             conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Unit"])
 
             if conversion_factor is None:
-                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.database_item} of units {unit_impacts['Unit']}) are of incompatible units.")
+                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
 
@@ -162,46 +179,13 @@ class Master:
                 The name of the database item which gives the item impacts.
         """
 
-        original_database_item = self.get_database_row()
+        original_database_item = self.get_impact_database_entry()
         try:
-            self.database_item = database_item
+            self.impact_database_entry = database_item
             self.update_impacts()
         except ImportError as e:
-            self.database_item = original_database_item
+            self.impact_database_entry = original_database_item
             raise e
-
-    def set_unit(self, unit):
-        """ Set unit of measurement for the product/process.
-        
-            Parameters
-            ----------
-            unit : str
-                Unit of measurement.
-        """
-
-        self.unit = unit
-
-    def set_name(self, name):
-        """ Set name of the product/process.
-        
-            Parameters
-            ----------
-            name : str
-                Name of the product/process.
-        """
-
-        self.name = name
-
-    def set_life_cycle_stage(self, stage):
-        """ Set life cycle stage of the product/process.
-
-            Notes
-            -----
-            This method will just change the life cycle stage, without any knock-on effects.
-            To have the relevant knock on effects, use 'update_life_cycle_stage' method
-        """
-
-        self.life_cycle_stage = stage
 
     def get_name(self):
         """ Retrieve the name of the product/process.
@@ -299,7 +283,7 @@ class Master:
 
         return self.get_model().get_project()  
     
-    def get_database_row(self):
+    def get_impact_database_entry(self):
         """ Retrieve the impact database row corresponding to the product/process.
 
             Returns
@@ -309,7 +293,7 @@ class Master:
 
         """
 
-        return self.database_item
+        return self.impact_database_entry
 
     def get_calculator(self):
         """ Retrieve the corresponding calculator.

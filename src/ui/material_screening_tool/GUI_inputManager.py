@@ -66,7 +66,7 @@ class GUIInputManager():
 
         product = project.get_current_model().create_product(name, stage)
         product.set_unit(unit) 
-        product.update_qty(qty)
+        product.set_qty(qty)
         try:
             if not (lca_data == 'None'):
                 product.set_impact_database_entry(lca_data)
@@ -82,7 +82,7 @@ class GUIInputManager():
 
         energy = project.get_current_model().create_energy(name, stage)
         energy.set_unit(unit)
-        energy.update_qty(qty)
+        energy.set_qty(qty)
         try:
             if not (lca_data == 'None'):
                 energy.set_impact_database_entry(lca_data)  
@@ -98,7 +98,7 @@ class GUIInputManager():
 
         emission = project.get_current_model().create_emission(name, stage)
         emission.set_unit(unit)
-        emission.update_qty(qty)
+        emission.set_qty(qty)
         try:
             if not (lca_data == 'None'):
                 emission.set_impact_database_entry(lca_data)   
@@ -114,7 +114,7 @@ class GUIInputManager():
 
         waste = project.get_current_model().create_waste(name, stage)
         waste.set_unit(unit)
-        waste.update_qty(qty)
+        waste.set_qty(qty)
         try:
             if not (lca_data == 'None'):
                 waste.set_impact_database_entry(lca_data)
@@ -130,7 +130,7 @@ class GUIInputManager():
 
         process =  project.get_current_model().create_process(name, stage)
         process.set_unit(unit)
-        process.update_qty(qty)
+        process.set_qty(qty)
         try:
             if not (lca_data == 'None'):
                 process.set_impact_database_entry(lca_data)
@@ -165,7 +165,7 @@ class GUIInputManager():
     def update_qty(visualizer, item, qty, close_error=True):
 
         try: 
-            item.update_qty(qty)
+            item.set_qty(qty)
         except ImportError as e:
             GUIInputManager.show_error_popup("ImportError", str(e))
             if not close_error:
@@ -179,7 +179,7 @@ class GUIInputManager():
         
         if isinstance(item, Product):
             if item.get_transporter() is not None:
-                item.get_transporter().set_travel_weight()
+                item.get_transporter().set_transported_weight()
 
         visualizer.update_dependent_qtys(item, qty)
         visualizer.update_plot()
@@ -191,7 +191,7 @@ class GUIInputManager():
     @staticmethod
     def update_life_cycle_stage(visualizer, item, stage):
 
-        item.update_life_cycle_stage(stage)
+        item.set_life_cycle_stage(stage)
         visualizer.update_plot()
 
         return item
@@ -226,7 +226,7 @@ class GUIInputManager():
     @staticmethod
     def get_database_row(item):
 
-        return item.get_database_row()
+        return item.get_impact_database_entry()
     
     @staticmethod
     def get_qty(item):
@@ -248,7 +248,7 @@ class GUIInputManager():
     def change_unit(visualizer, obj, unit, close_error=True):
 
         try:
-            obj.change_units(unit)
+            obj.set_unit(unit)
         except ValueError as e:
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
@@ -285,7 +285,7 @@ class GUIInputManager():
     @staticmethod
     def set_id(item, new_id):
 
-        item.overide_id(new_id)
+        item.set_id(new_id)
 
     @staticmethod
     def unit_conversion(project, old_unit, new_unit, close_error=True):
@@ -407,7 +407,7 @@ class GUIInputManager():
     @staticmethod
     def set_travel_weight(visualizer, item):  
 
-        item.set_travel_weight()
+        item.set_transported_weight()
         visualizer.update_plot()
 
     @staticmethod

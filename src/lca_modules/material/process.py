@@ -26,7 +26,7 @@ class Process(Master):
         
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, 
                                                                                      "impacts": self.impacts, 
-                                                                                     "database_item": self.database_item, 
+                                                                                     "database_item": self.impact_database_entry, 
                                                                                      "qty": self.qty, "unit":self.unit,
                                                                                      "inputs": self.inputs})
 
@@ -62,7 +62,7 @@ class transportationProcess(Process):
         
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage,), {"model": self.model, 
                                                                                      "impacts": self.impacts, 
-                                                                                     "database_item": self.database_item, 
+                                                                                     "database_item": self.impact_database_entry, 
                                                                                      "qty": self.qty, "unit":self.unit,
                                                                                      "transported_distance": self.transported_distance,
                                                                                      "transported_weight": self.transported_weight,
@@ -92,6 +92,7 @@ class transportationProcess(Process):
                 Weight transported in the transportation process.
 
         """
+
 
         return self.transported_weight
     
@@ -150,9 +151,9 @@ class transportationProcess(Process):
 
         self.transported_distance = qty
 
-        self.update_qty(self.transported_distance * self.get_transported_weight())
+        self.set_qty(self.get_transported_distance() * self.get_transported_weight())
 
-    def set_travel_weight(self):
+    def set_transported_weight(self):
         """ Update the mass transported in the transportation process.
             This wil obtain the mass from corresponding products transported.
             The units of mass need not be consistent as the method converts units.
@@ -168,7 +169,7 @@ class transportationProcess(Process):
         
         self.transported_weight = weight
 
-        self.update_qty(self.transported_distance * self.transported_weight)
+        self.set_qty(self.get_transported_distance() * self.get_transported_weight())
 
     def set_transported_distance_unit(self, unit):
         """ Set unit of measurement for travel distance of the transportation process.
@@ -246,7 +247,7 @@ class transportationProcess(Process):
             if not self == product.get_transporter():
                 product.set_transporter(self)
 
-        self.set_travel_weight()
+        self.set_transported_weight()
 
     def remove_transported_product(self, item):
         """ Remove a product from the transportation process.
@@ -271,7 +272,8 @@ class transportationProcess(Process):
         except:
             raise KeyError(f"'{item.get_name()}' is not part of the transporation process ({self.get_name()}).")
 
-        self.set_travel_weight()
+        self.set_transported_weight()
+
 
 if __name__ == '__main__':
     pass

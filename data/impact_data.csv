@@ -2,15 +2,12 @@ Flow,Unit,GWP,AP,EP,ODP,SFP
 Portland Cement,kg,0.919,0.00174,0.00102,2.05E-08,0.0328
 Fly Ash,kg,0,0,0,0,0
 Slag cement,kg,0.105,0.00105,0.00027,1.01E-09,0.0062
-Mixing water,kg,0.001,0.000006,0.000004,2.95E-10,0.0001
-Process water,kg,0.001,0.000006,0.000004,2.95E-10,0.0001
-Crushed coarse aggregate,kg,0.01,0.000054,0.000028,1.05E-10,0.0009
-Natural coarse aggregate,kg,0.012,0.000073,0.000021,1.93E-10,0.0017
-Crushed fine aggregate,kg,0.01,0.000054,0.000028,1.05E-10,0.0009
-Natural fine aggregate,kg,0.012,0.000073,0.000021,1.93E-10,0.0017
-Air entraining admixture,kg,0.537,0.00193,0.00335,0.00000004,0.0212
-Plasticizer and Superplasticizer,kg,2.75,0.011,0.0134,0.000000133,0.114
-Set accelerator,kg,3.24,0.0133,0.00934,0.000000725,0.154
+Tap water_ROW_[ecoinvent],kg,0.001,0.000006,0.000004,2.95E-10,0.0001
+Gravel_crushed_ROW_[ecoinvent],kg,0.01,0.000054,0.000028,1.05E-10,0.0009
+Gravel_round_ROW_[ecoinvent],kg,0.012,0.000073,0.000021,1.93E-10,0.0017
+Air entrainers_[EFCA],kg,0.537,0.00193,0.00335,0.00000004,0.0212
+Plasticizer and Superplasticizers_[EFCA],kg,2.75,0.011,0.0134,0.000000133,0.114
+Set accelerators_[EFCA],kg,3.24,0.0133,0.00934,0.000000725,0.154
 Electricity_US,MJ,0.105,0.00026,0.000722222,5.72E-10,0.003777778
 Natural gas,m3,1.659792067,0.002295457,0.000141259,3.88E-11,0.07062945
 Diesel,m3,3431.596577,38.83331,4.173920394,8.98E-06,1363.128433
@@ -25,6 +22,8 @@ Lumber_[CORRIM_LCA],kg,0.108,0,0,0,0
 Methylene diphenyl diisocyanate resin_[FHWA_MTU],kg,6.067,0,0,0,0
 Propylene glycol_[ecoinvent],kg,4.345,0,0,0,0
 Electricity_NWPP(eGrid)_[USLCI],kWh,0.503,0,0,0,0
+Electricity_UnknownHigh_[USLCI],kWh,0.700,0,0,0,0
+Electricity_UnknownLow_[USLCI],kWh,0.307,0,0,0,0
 Natural gas_insustrial_equipment_[USLCI],m3,2.348,0,0,0,0
 Transportation_combination_truck_short-haul_diesel_NW_[USLCI],tkm,0.119,0,0,0,0
 Transportation_combination_truck_diesel_US_[USLCI],tkm,0.094,0,0,0,0
