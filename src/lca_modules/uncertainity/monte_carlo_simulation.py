@@ -28,9 +28,9 @@ class MonteCarloSimulation:
 
     def __init__(self, project):
         self.project = project
-        self.iterations = 10000
+        self.iterations = 1000
         self.var_params = []
-        self.impact_cat = 'weighted'
+        self.impact_cat = 'GWP'
 
         self.dists_short_list = ['norm', 'expon', 'uniform', 'beta', 'gamma', 'chi2', 't', 'f', 'lognorm', 'weibull_min']
 
@@ -51,8 +51,10 @@ class MonteCarloSimulation:
                 prob *= distribution.prob_of(var_value)
                 
                 obj = distribution.get_parent()
-                setattr(obj, distribution.get_attr_name(), var_value)
-                obj.update_impacts()
+
+                method_name = 'set_'+ distribution.get_attr_name()
+                method = getattr(obj, method_name)
+                method(var_value)
 
             total_impact = self.project.get_calculator().get_total_impact(model_name, self.impact_cat)
             prob_data.append(prob)

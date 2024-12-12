@@ -37,8 +37,6 @@ class Project:
         self.current_model = self.models['Model_0']
         self.database = DatabaseManager()
         self.calculator = Calculator(self)
-        self.HotSpotAnalysis = None
-        self.DataQualityAnalysis = None
 
     def __reduce__(self):
         

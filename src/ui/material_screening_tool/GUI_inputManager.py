@@ -488,22 +488,23 @@ class GUIInputManager():
     @staticmethod
     def create_DQA(project):
 
-        DQA = DataQualityAnalysis(project)
         for model_name in project.get_model_names():
-            DQA.setPedigreeScores(model_name)
+            model = project.get_model(model_name)
+            DQA = DataQualityAnalysis(model)
+            DQA.setPedigreeScores()
 
         return
     
     @staticmethod
-    def DQA_inidcators(project):
+    def DQA_inidcators(model):
 
-        return project.DataQualityAnalysis.get_indicators()
+        return model.data_quality.get_indicators()
     
     @staticmethod
     def get_pedigree_score_objs(project, model_name):
 
-        return project.DataQualityAnalysis.pedigreeScores[model_name]
-    
+        model = project.get_model(model_name)
+        return model.data_quality.pedigree_scores
     @staticmethod
     def get_pedigree_score(pedigree_obj, indicator):
 
@@ -522,12 +523,16 @@ class GUIInputManager():
     @staticmethod
     def get_DQS_range(project):
 
-        min = project.DataQualityAnalysis.min_score
-        max = project.DataQualityAnalysis.max_score
+        model = project.get_current_model()
+
+        min = model.data_quality.min_score
+        max = model.data_quality.max_score
 
         return range(min, max + 1, 1)
     
     @staticmethod
     def calculate_model_DQS(project, model_name):
 
-        return project.DataQualityAnalysis.calculate_DQS(model_name, printout=False)
+        model = project.get_model(model_name)
+
+        return model.data_quality.calculate_DQS(printout=False)

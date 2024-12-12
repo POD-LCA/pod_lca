@@ -280,7 +280,7 @@ class Distribution:
                 A random variate from the distribution.
         """
 
-        return self.dist.rvs(*self.params, size = 1)[0]
+        return self.dist.rvs(size=1)[0]
 
     def prob_of(self, x):
         """ Get the probability density at the given random variate.
@@ -296,7 +296,7 @@ class Distribution:
                 Probability density.
         """
 
-        return self.dist.pdf(x, *self.params)
+        return self.dist.pdf(x)
     
     # TODO create discrete distributions
     

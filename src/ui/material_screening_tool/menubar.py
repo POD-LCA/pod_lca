@@ -423,8 +423,10 @@ class MenubarMixin:
             widget.destroy()
         
         GUIInputManager.create_DQA(self.project)
-        indicators = GUIInputManager.DQA_inidcators(self.project)
-        GUIOutputManager.get_hotspots(self.project, model_name, impact_category='weighted') # update hotspots to 'weighted'
+
+        model = GUIInputManager.get_model(self.project, model_name) 
+        indicators = GUIInputManager.DQA_inidcators(model)
+        GUIOutputManager.get_hotspots(model, impact_category='GWP')
 
         # build score panel
         width = 15
@@ -432,7 +434,7 @@ class MenubarMixin:
         col_entry_frame.pack(pady=10)
 
         n = len(self.impact_categories) + 3
-        headers = ['Flow', 'Impact (weighted)'] + indicators + ['DQS']
+        headers = ['Flow', 'Impact (GWP)'] + indicators + ['DQS']
         for i in range(n):
             data = Entry(col_entry_frame, relief="solid", width=width + 2, justify='center')
             data.insert(0, headers[i])

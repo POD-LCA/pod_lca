@@ -12,9 +12,9 @@ class GUIOutputManager():
         return data
 
     @staticmethod
-    def get_hotspots(project, model, impact_category="GWP"):
+    def get_hotspots(model, impact_category="GWP"):
 
-        hotspot_analysis = HotSpotAnalysis(project)
+        hotspot_analysis = HotSpotAnalysis(model)
 
-        return  hotspot_analysis.run(model, impact_category, printout=False)
+        return  hotspot_analysis.run(impact_category, printout=False)
 

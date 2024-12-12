@@ -35,6 +35,8 @@ class Model:
         self.processes = []
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}
+        self.hotspots = None
+        self.data_quality = None
         
     def __reduce__(self):
     
@@ -241,7 +243,18 @@ class Model:
         """
 
         return self.products
+    
+    def get_all_items(self):
+        """ Retrieve all the products and processes in the model.
 
+            Returns
+            -------
+            list of Master Obj.
+                All products and processes in the model.
+        """
+
+        return self.products + self.processes
+    
     def find_item(self, name):
         """ Find an item (produc/process) in the model, given a name string.
             If multiple objects of the same name exist, returns all.

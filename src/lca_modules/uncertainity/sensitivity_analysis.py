@@ -78,7 +78,6 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
 
     else:
         raise KeyError(f"Either the range or option data not provided or key used is invalid.")
-        #TODO: is there a defaulting option / if so, update compute_sensitivity_of_params too.
 
     if printout:
             print("*"*50 + "\nSENSITIVITY ANALYSIS\n" + "*"*50)
@@ -195,3 +194,5 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
                     print(f"       : ({group['min_option']}, {group['max_option']})")
 
     return [results['min'], results['max']]
+
+#TODO: look to simplify or identify reusable parts

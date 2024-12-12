@@ -47,25 +47,25 @@ class DataQualityAnalysis:
 
     Attributes
     ----------
-    project : Project Obj.
-        Project on which the calculator operates.
+    model : Model Obj.
+        Model on which the hotspot analysis is performed.
     indicators : list of str.
         List of data quality indicators.
     max_score : int
         Maximum possible score for an indicator.
     min_score : int
         Minimum possible score for an indicator.
-    pedigreeScores : dict of dict of list
-        {model_name (str): {master_product (Master Obj): pedigree_score (PedigreeScore Obj)} .
+    pedigreeScores : dict of list
+        {master_product (Master Obj): pedigree_score (PedigreeScore Obj)} .
     """
-    def __init__(self, project):
-        self.project =  project
+    def __init__(self, model):
+        self.model =  model
         self.indicators = ['reliability', 'completeness', 'temporal correlation', 'geographical correlation', 'technological representativeness']
         self.max_score = 5
         self.min_score = 1
-        self.pedigreeScores = dict.fromkeys(project.get_model_names(), [])
+        self.pedigree_scores = {}
 
-        project.DataQualityAnalysis = self
+        model.data_quality = self
 
     def get_indicators(self):
         """ Get a list of data quality indicators.
@@ -78,20 +78,13 @@ class DataQualityAnalysis:
 
         return self.indicators
     
-    def setPedigreeScores(self, model_name):
+    def setPedigreeScores(self):
         """ Set pedigree scores for all products/processes in a model.
-        
-            Partameters
-            -----------
-            model_name : str
-                Name of the model.
         """
 
-        model = self.project.get_model(model_name)
-        self.pedigreeScores[model_name] = {}
-        for obj in model.get_processes() + model.get_products():
+        for obj in self.model.get_all_items():
             pedigree_score = PedigreeScore(obj, self.get_indicators())
-            self.pedigreeScores[model_name][obj] = pedigree_score
+            self.pedigree_scores[obj] = pedigree_score
         
         self.setTemporalCorrelationScores()
         self.setGeographicalCorrelationScores()
@@ -108,13 +101,11 @@ class DataQualityAnalysis:
         """
         pass
 
-    def update_pedigree_scores(self, model_name, obj, *args):
+    def update_pedigree_scores(self, obj, *args):
         """ Update the pedigree score of an object.
 
             Parameters
             ----------
-            model_name : str
-                Name of the model.
             obj : Master obj
                 Master object for which the pedigree score is being updated.
             *args : tuple or dict
@@ -128,7 +119,7 @@ class DataQualityAnalysis:
 
         """
 
-        pedigree_score = self.pedigreeScores[model_name][obj]
+        pedigree_score = self.pedigree_scores[obj]
 
         if len(args) == 1 and isinstance(args[0], dict):
             for indicator, score in args[0].items():
@@ -149,7 +140,7 @@ class DataQualityAnalysis:
 
         return pedigree_score
 
-    def calculate_DQS(self, model_name, impact_cat='weighted', printout=True):
+    def calculate_DQS(self, impact_cat='GWP', printout=True):
         """ Calculate the Data Quality Score.
 
             Parameters
@@ -164,10 +155,10 @@ class DataQualityAnalysis:
 
         DQS_tmp = 0.0
         impact_sum = 0.0
-        for obj in self.pedigreeScores[model_name]:
+        for obj in self.pedigree_scores:
             impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_impact(impact_cat) 
             if impact is not None:
-                DQS_tmp += self.pedigreeScores[model_name][obj].calculate_DQS() * impact
+                DQS_tmp += self.pedigree_scores[obj].calculate_DQS() * impact
                 impact_sum += impact
             else:
                 print(f"{obj.get_name()} has no impacts.")

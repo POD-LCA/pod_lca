@@ -2,6 +2,13 @@ from lca_modules.material.projectManager import Project
 from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 from lca_modules.uncertainity import sensitivity_analysis
+from lca_modules.uncertainity.datasets import Distribution
+from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulation
+
+from math import exp
+from scipy import stats
+from numpy import linspace
+from matplotlib import pyplot
 
 # CLT example #TODO add reference
 
@@ -67,29 +74,28 @@ PUR2_by_truck.set_impact_database_entry("Transportation_freight_train_diesel_US_
 
 
 # Hotspot analysis
-hotspot_analysis = HotSpotAnalysis(project)
-hot_spots_GWP = hotspot_analysis.run(model_name='Model_0', impact_category= "GWP", printout=True)
-#TODO: convert these to model as opposed to model_name
+hotspot_analysis = HotSpotAnalysis(CLT_model)
+hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP", printout=True)
 
 # Data Quality Assessment
-data_quality_assessment = DataQualityAnalysis(project)
-data_quality_assessment.setPedigreeScores(model_name='Model_0')
-data_quality_assessment.update_pedigree_scores('Model_0', electricity, {'reliability': 1,
-                                                                        'completeness': 1,
-                                                                        'temporal correlation': 4, 
-                                                                        'geographical correlation': 1,
-                                                                        'technological representativeness': 3})
-data_quality_assessment.update_pedigree_scores('Model_0', lumber, {'reliability': 1,
-                                                                    'completeness': 2,
-                                                                    'temporal correlation': 2, 
-                                                                    'geographical correlation': 2,
-                                                                    'technological representativeness': 4})
-data_quality_assessment.update_pedigree_scores('Model_0', lumber_by_truck, {'reliability': 1,
-                                                                            'completeness': 3,
-                                                                            'temporal correlation': 4, 
-                                                                            'geographical correlation': 3,
-                                                                            'technological representativeness': 3})
-DQS = data_quality_assessment.calculate_DQS('Model_0', 'GWP')
+data_quality_assessment = DataQualityAnalysis(CLT_model)
+data_quality_assessment.setPedigreeScores()
+data_quality_assessment.update_pedigree_scores(electricity, {'reliability': 1,
+                                                             'completeness': 1,
+                                                             'temporal correlation': 4,
+                                                             'geographical correlation': 1,
+                                                             'technological representativeness': 3})
+data_quality_assessment.update_pedigree_scores(lumber, {'reliability': 1,
+                                                        'completeness': 2,
+                                                        'temporal correlation': 2,
+                                                        'geographical correlation': 2,
+                                                        'technological representativeness': 4})
+data_quality_assessment.update_pedigree_scores(lumber_by_truck, {'reliability': 1,
+                                                                 'completeness': 3,
+                                                                 'temporal correlation': 4,
+                                                                 'geographical correlation': 3,
+                                                                 'technological representativeness': 3})
+DQS = data_quality_assessment.calculate_DQS('GWP')
 
 # Sensitivity Analysis
 result_range = sensitivity_analysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
@@ -105,14 +111,20 @@ result_range = sensitivity_analysis.compute_sensitivity_of_params(CLT_model,
                                                                    {'obj': PUR2_by_truck,  'param': 'transported_distance', 'range': (48600, 97200)}],
                                                                    impact_cat='GWP')
 
+mean, sdev = 562.750, 0.729
+dist = stats.lognorm(s=sdev, loc=0, scale=mean)
+params = (sdev, exp(mean), 0)
+distribution = Distribution('lognorm', params, dist)
+lumber.set_distribution(distribution, 'qty')
 
-# data = random.normal(4, 1, 5)  
-# dataset_pickles_qty = DataSet('pickles', data)
-# pickles.set_dataset(dataset_pickles_qty, 'qty')
-# # best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=True)
-# # distribution = dataset.set_distribution(best_fit)
-# # # TODO: Call Q-Q plots
-# # dataset.plot_fit()
+# x = linspace(-500, 1000, 100)
+# p = dist.pdf(x)
+# pyplot.plot(x, p, 'k', linewidth=2, label='Fitted Normal')
+# pyplot.xlabel('Value')
+# pyplot.ylabel('Probability Density')
+# pyplot.title('Distribution Plot')
+# pyplot.grid(True)
+# pyplot.show()
 
-# MCS = MonteCarloSimulation(project)
-# MCS.run('Model_0')
+MCS = MonteCarloSimulation(project)
+MCS.run('Model_0')
