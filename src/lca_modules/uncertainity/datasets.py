@@ -59,6 +59,10 @@ class DataSet:
 
         self.attr = attr
 
+    def get_data(self):
+
+        return self.data
+
     def get_dist_fitted(self):
         """ Get the distribution fitted to the dataset.
         """
@@ -150,8 +154,9 @@ class DataSet:
         
         """
 
-        dist = getattr(stats, dist_fit)
-        params  = dist.fit(self.data, method=fit_method)
+        dist_tmp = getattr(stats, dist_fit)
+        params  = dist_tmp.fit(self.data, method=fit_method)
+        dist = dist_tmp(*params)
 
         return dist, params
             
@@ -213,7 +218,7 @@ class Distribution:
         Name of the distribution fitted to the data set, following Scipy.stats module.
     params : tuple
         Parameters defining the distribution fitted.
-    dist : scipy.stats._continuous_distns Obj.
+    dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
         Fitted distribution object from Scipy.
     parent : Object.
         Object to which the dataset is attached.
@@ -270,6 +275,10 @@ class Distribution:
         """ 
 
         return self.attr  
+    
+    def get_dist_name(self):
+
+        return self.dist_name
 
     def pick_data_point(self):
         """ Pick a random variate from the distibution.
@@ -282,6 +291,22 @@ class Distribution:
 
         return self.dist.rvs(size=1)[0]
 
+    def pick_data_points(self, n):
+        """ Pick a random variate from the distibution.
+
+            Parameters
+            ----------
+            n : int
+                Number of points to pick
+
+            Returns
+            -------
+            float
+                A random variate from the distribution.
+        """
+
+        return self.dist.rvs(size=n)
+    
     def prob_of(self, x):
         """ Get the probability density at the given random variate.
 
@@ -297,6 +322,7 @@ class Distribution:
         """
 
         return self.dist.pdf(x)
+        # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
     
     # TODO create discrete distributions
     

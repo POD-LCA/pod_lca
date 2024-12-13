@@ -3,12 +3,13 @@ from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 from lca_modules.uncertainity import sensitivity_analysis
 from lca_modules.uncertainity.datasets import Distribution
-from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulation
+from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulator
 
 from math import exp
 from scipy import stats
-from numpy import linspace
+from numpy import linspace, mean, std, sqrt, log
 from matplotlib import pyplot
+import time
 
 # CLT example #TODO add reference
 
@@ -73,51 +74,54 @@ PUR2_by_truck.set_transported_distance_unit('km')
 PUR2_by_truck.set_impact_database_entry("Transportation_freight_train_diesel_US_[ecoinvent]")
 
 
-# Hotspot analysis
-hotspot_analysis = HotSpotAnalysis(CLT_model)
-hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP", printout=True)
+# # Hotspot analysis
+# hotspot_analysis = HotSpotAnalysis(CLT_model)
+# hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP", printout=True)
 
-# Data Quality Assessment
-data_quality_assessment = DataQualityAnalysis(CLT_model)
-data_quality_assessment.setPedigreeScores()
-data_quality_assessment.update_pedigree_scores(electricity, {'reliability': 1,
-                                                             'completeness': 1,
-                                                             'temporal correlation': 4,
-                                                             'geographical correlation': 1,
-                                                             'technological representativeness': 3})
-data_quality_assessment.update_pedigree_scores(lumber, {'reliability': 1,
-                                                        'completeness': 2,
-                                                        'temporal correlation': 2,
-                                                        'geographical correlation': 2,
-                                                        'technological representativeness': 4})
-data_quality_assessment.update_pedigree_scores(lumber_by_truck, {'reliability': 1,
-                                                                 'completeness': 3,
-                                                                 'temporal correlation': 4,
-                                                                 'geographical correlation': 3,
-                                                                 'technological representativeness': 3})
-DQS = data_quality_assessment.calculate_DQS('GWP')
 
-# Sensitivity Analysis
-result_range = sensitivity_analysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
-                                                                 impact_cat='GWP', 
-                                                                 options=['Electricity_NWPP(eGrid)_[USLCI]', 'Electricity_UnknownHigh_[USLCI]', 'Electricity_UnknownLow_[USLCI]'])
-result_range = sensitivity_analysis.compute_sensitivity_of_param(lumber,  'qty', 
-                                                                 impact_cat='GWP', 
-                                                                 range=(422.063, 844.125))
+# # Data Quality Assessment
+# data_quality_assessment = DataQualityAnalysis(CLT_model)
+# data_quality_assessment.setPedigreeScores()
+# data_quality_assessment.update_pedigree_scores(electricity, {'reliability': 1,
+#                                                              'completeness': 1,
+#                                                              'temporal correlation': 4,
+#                                                              'geographical correlation': 1,
+#                                                              'technological representativeness': 3})
+# data_quality_assessment.update_pedigree_scores(lumber, {'reliability': 1,
+#                                                         'completeness': 2,
+#                                                         'temporal correlation': 2,
+#                                                         'geographical correlation': 2,
+#                                                         'technological representativeness': 4})
+# data_quality_assessment.update_pedigree_scores(lumber_by_truck, {'reliability': 1,
+#                                                                  'completeness': 3,
+#                                                                  'temporal correlation': 4,
+#                                                                  'geographical correlation': 3,
+#                                                                  'technological representativeness': 3})
+# DQS = data_quality_assessment.calculate_DQS('GWP')
 
-result_range = sensitivity_analysis.compute_sensitivity_of_params(CLT_model, 
-                                                                  [{'obj': lumber_by_truck,  'param': 'transported_distance', 'range': (226.57, 453.13)},
-                                                                   {'obj': PUR1_by_truck,  'param': 'transported_distance', 'range': (1620, 3240)},
-                                                                   {'obj': PUR2_by_truck,  'param': 'transported_distance', 'range': (48600, 97200)}],
-                                                                   impact_cat='GWP')
+# # Sensitivity Analysis
+# result_range = sensitivity_analysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
+#                                                                  impact_cat='GWP', 
+#                                                                  options=['Electricity_NWPP(eGrid)_[USLCI]', 'Electricity_UnknownHigh_[USLCI]', 'Electricity_UnknownLow_[USLCI]'])
+# result_range = sensitivity_analysis.compute_sensitivity_of_param(lumber,  'qty', 
+#                                                                  impact_cat='GWP', 
+#                                                                  range=(422.063, 844.125))
+# result_range = sensitivity_analysis.compute_sensitivity_of_params(CLT_model, 
+#                                                                   [{'obj': lumber_by_truck,  'param': 'transported_distance', 'range': (226.57, 453.13)},
+#                                                                    {'obj': PUR1_by_truck,  'param': 'transported_distance', 'range': (1620, 3240)},
+#                                                                    {'obj': PUR2_by_truck,  'param': 'transported_distance', 'range': (48600, 97200)}],
+#                                                                    impact_cat='GWP')
 
-mean, sdev = 562.750, 0.729
-dist = stats.lognorm(s=sdev, loc=0, scale=mean)
-params = (sdev, exp(mean), 0)
+
+mean_val, sdev_val = 562.750, 0.729
+sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
+mu = log(mean_val) - 0.5 * sigma**2
+dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
+params = (sigma, 0, exp(mu))
 distribution = Distribution('lognorm', params, dist)
 lumber.set_distribution(distribution, 'qty')
 
-# x = linspace(-500, 1000, 100)
+# x = linspace(500, 600, 1)
 # p = dist.pdf(x)
 # pyplot.plot(x, p, 'k', linewidth=2, label='Fitted Normal')
 # pyplot.xlabel('Value')
@@ -126,5 +130,11 @@ lumber.set_distribution(distribution, 'qty')
 # pyplot.grid(True)
 # pyplot.show()
 
-MCS = MonteCarloSimulation(project)
-MCS.run('Model_0')
+MCS = MonteCarloSimulator.from_model(CLT_model)
+MCS.set_iterations(1000)
+MCS.run()
+MCS.plot_hist(bin_size=25)
+
+MCS.set_scenario({lumber: 'low'})
+MCS.run()
+MCS.plot_hist(bin_size=25)

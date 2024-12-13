@@ -57,18 +57,20 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
         for i in [0,1]:
             method(range_lst[i])
             impact_new = claculator.get_total_impact(model.get_name(), impact_cat)
-            percentage_change = 100 * (impact_new - base_impact) / base_impact
+            relative_percentage_change = 100 * (impact_new - base_impact) / base_impact # TODO: make a choice (also Lines 70 and 178)
+            symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-            result_range[i] = percentage_change
+            result_range[i] = symmetric_percentage_change
             
     elif 'options' in kwargs:
         results = []
         for option in kwargs['options']:
             method(option)
             impact_new = claculator.get_total_impact(model.get_name(), impact_cat)
-            percentage_change = 100 * (impact_new - base_impact) / base_impact
+            relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
+            symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-            results.append(percentage_change)
+            results.append(symmetric_percentage_change)
 
         result_range[0] = min(results)
         result_range[1] = max(results)
@@ -92,6 +94,7 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
             print(f"Sensitivity (%): ({formatted_result})")
             if 'options' in kwargs:
                 print(f"       : {corr_options}")
+            print("(Sensitivity as symmetric percentage change)")
 
     return result_range
 
@@ -172,9 +175,10 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
                 raise KeyError(f"Either the range or option data not provided or key used is invalid.")
             
         impact_new = claculator.get_total_impact(model.get_name(), impact_cat)
-        percentage_change = 100 * (impact_new - base_impact) / base_impact
+        relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
+        symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-        results[objective] = percentage_change
+        results[objective] = symmetric_percentage_change
 
     if printout:
             print("*"*50 + "\nSENSITIVITY ANALYSIS\n" + "*"*50)
@@ -192,6 +196,7 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
             for group in groups:
                 if 'options' in group:
                     print(f"       : ({group['min_option']}, {group['max_option']})")
+            print("(Sensitivity as symmetric percentage change)")
 
     return [results['min'], results['max']]
 
