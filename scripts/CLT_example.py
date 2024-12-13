@@ -116,9 +116,11 @@ PUR2_by_truck.set_impact_database_entry("Transportation_freight_train_diesel_US_
 mean_val, sdev_val = 562.750, 0.729
 sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
 mu = log(mean_val) - 0.5 * sigma**2
+
 dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
 params = (sigma, 0, exp(mu))
 distribution = Distribution('lognorm', params, dist)
+
 lumber.set_distribution(distribution, 'qty')
 
 # x = linspace(500, 600, 1)

@@ -362,7 +362,7 @@ class Master:
         if hasattr(self, attr):
             self.distributions[attr] = distribution
             distribution.set_parent(self)
-            distribution.set_attr_name(attr)
+            distribution.set_attr(attr)
         else:
             print(f"Object {type(self)} does not have an attribute {attr}")
 

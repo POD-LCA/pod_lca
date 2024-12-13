@@ -121,13 +121,13 @@ class MonteCarloSimulator:
         for distribution in var_params_tmp:
             obj = distribution.get_parent()
             if obj in scenarios:
-                method_name = 'set_'+ distribution.get_attr_name()
+                method_name = 'set_'+ distribution.get_attr()
                 method_obj = getattr(obj, method_name)
                 value = distribution.dist.ppf(self.scenario_defs[scenarios[obj]])
                 method_obj(value)
             else:
                 var_params.append(distribution)
-                method_name = 'set_'+ distribution.get_attr_name()
+                method_name = 'set_'+ distribution.get_attr()
                 methods_list[distribution] = getattr(obj, method_name)
 
         impact_data = []
@@ -152,7 +152,7 @@ class MonteCarloSimulator:
     
     def set_data(self, impact_data):
 
-        dataset = DataSet('MonteCarloSimualation', impact_data)
+        dataset = DataSet.from_data(impact_data, name='MonteCarloSimualation')
         if max(impact_data) - min(impact_data) == 0.0:
             self.result_dataset = dataset
             self.result_distribution = None

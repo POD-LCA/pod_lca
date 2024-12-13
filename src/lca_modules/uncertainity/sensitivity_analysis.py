@@ -41,8 +41,8 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
     project =  model.get_project()
     claculator = project.get_calculator()
 
-    base_val = getattr(obj, param)
     base_impact = claculator.get_total_impact(model.get_name(), impact_cat)
+    base_val = getattr(obj, param)
 
     method_name = 'set_'+ param
     method = getattr(obj, method_name)
@@ -201,3 +201,5 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
     return [results['min'], results['max']]
 
 #TODO: look to simplify or identify reusable parts
+if __name__ == '__main__':
+    pass
