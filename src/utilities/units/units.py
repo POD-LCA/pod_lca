@@ -1,6 +1,8 @@
 from utilities.units import UNIT_CONVERSIONS, ALL_PREFIXES
 from utilities.objects.array_methods import get_attribute_as_list
 
+from math import log10
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
@@ -56,7 +58,7 @@ class Unit:
             return newUnit
 
         elif isinstance(other, MetricPrefix):
-            raise SyntaxError(f"Metric prefixes not defined for post multiplication.")
+            raise TypeError(f"Metric prefixes not defined for post multiplication.")
 
     def __rmul__(self, other):
         """ Reflexive multiplication of units by metric prefixes."""
@@ -85,11 +87,41 @@ class Unit:
 
                 return newUnit
         else:
-            raise SyntaxError("Multiplication not defined.")
+            raise TypeError(f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}")
 
     def __truediv__(self, other):
 
-        pass #TODO : to be implemented
+        if isinstance(other, Unit):
+            name = self.get_name() + ' per ' + other.get_name()
+            standard_notation = self.get_standard_notation() + '/' + other.get_standard_notation()
+            qty_measured = self.get_qty_measured() + ' per ' + other.get_qty_measured()
+
+            newUnit = Unit.from_basics(name, standard_notation, qty_measured)
+            newUnit.convert_compound = True
+            newUnit.components = [self, 1/ other]
+
+            return newUnit
+
+        else:
+            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
+        
+    def __rtruediv__(self, other):
+
+        if isinstance(other, int):
+            name = 'per ' + self.get_name()
+            standard_notation = self.get_standard_notation() + '-1'
+            qty_measured =  'per ' + self.get_qty_measured()
+
+            newUnit = Unit.from_basics(name, standard_notation, qty_measured)
+            newUnit.base_unit = self.get_base()
+            newUnit.prefix = self.get_prefix()
+            newUnit.convert_compound = self.convert_compound
+            newUnit.components = self.get_components()
+
+            return newUnit
+        else:
+            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
+
 
     @classmethod
     def from_basics(cls, name, standard_notation, qty_measured):
@@ -214,12 +246,12 @@ class Unit:
 
         if self.get_qty_measured() == to_unit.get_qty_measured():
             if not self.convert_compound:
-                if self ==  to_unit:
+                if self == to_unit:
                     return 1.0
-                if self.get_base() == to_unit.get_base():
-                    return self.prefix.get_conversion_factor(to_unit.get_prefix())
                 elif self.get_base() is None or to_unit.get_base() is None:
                     return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
+                elif self.get_base() == to_unit.get_base():
+                    return self.prefix.get_conversion_factor(to_unit.get_prefix())
                 else:
                     raise NotImplementedError # This case should not exist  
             else:
@@ -253,18 +285,31 @@ class Unit:
                 Conversion factor to be applied on the value.        
 
         """
+        inverse_flag = False
+        unit_in_name = unit_in.get_name() if unit_in.get_base() is None else unit_in.get_base().get_name()
+        unit_out_name = unit_out.get_name() if unit_out.get_base() is None else unit_out.get_base().get_name()
+        
+        if qty_measured.startswith('per '):
+            inverse_flag = True
+            qty_measured = qty_measured.replace('per ', "")
+            unit_in_name = unit_in_name.replace('per ', "")
+            unit_out_name = unit_out_name.replace('per ', "")
 
         if unit_in.get_base() is None:
-            factor_in = UNIT_CONVERSIONS[qty_measured][unit_in.get_name()]
+            factor_in = UNIT_CONVERSIONS[qty_measured][unit_in_name]
         else:
-            factor_in = UNIT_CONVERSIONS[qty_measured][unit_in.get_base().get_name()] / 10**(unit_in.get_prefix().get_power())
+            factor_in = UNIT_CONVERSIONS[qty_measured][unit_in_name] / 10**(unit_in.get_prefix().get_power())
 
         if unit_out.get_base() is None:
-            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out.get_name()]  
+            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out_name]  
         else:
-            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out.get_base().get_name()] / 10**(unit_out.get_prefix().get_power())
+            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out_name] / 10**(unit_out.get_prefix().get_power())
 
-        return factor_out / factor_in
+        conversion_factor = factor_out / factor_in
+        if inverse_flag:
+            conversion_factor = 1 / conversion_factor
+
+        return conversion_factor
     
 
 class MetricPrefix:
@@ -311,7 +356,7 @@ class MetricPrefix:
         
         else:
 
-            raise ArithmeticError("Multiplication not defined.")
+            raise TypeError(f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}")
         
     def __truediv__(self, other):
         """ Division of metric prefixes with other metric prefixes or units."""
@@ -334,7 +379,27 @@ class MetricPrefix:
         
         else:
 
-            raise ArithmeticError("Multiplication not defined.")
+            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
+        
+    def __rtruediv__(self, other):
+        """ Reflective division of metric prefixes with numbers."""
+
+        if isinstance(other, int) or isinstance(other, float):
+            if other <= 0 or not log10(other).is_integer():
+                raise TypeError(f"Reflexive division of prefixes constrained to values that are integer powers of 10.")
+            
+            new_power = log10(other) - self.get_power()
+            all_powers = get_attribute_as_list(ALL_PREFIXES, 'power')
+
+            try:
+                index = all_powers.index(new_power)
+                newPrefix = ALL_PREFIXES[index]
+                return newPrefix
+            except ValueError:
+                print(f"Division of {self.get_name()} and {other.get_name()} does not return a standard metric prefix.") 
+
+        else:
+            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")           
 
     def get_name(self):
         """ Retrieve the name of the prefix.
@@ -392,16 +457,23 @@ class MetricPrefix:
 
 if __name__ == '__main__':
 
-    from utilities.units.common_units import GRAM, METER
+    from utilities.units.common_units import GRAM, METER, FEET, POUND
     from utilities.units.metric_prefixes import KILO, MEGA, DEKA
 
     kilogram = KILO * GRAM
     kilometer = KILO * METER
     megagram = MEGA * GRAM
-    new_unit_C = kilogram / kilometer
+    
+    new_prefix = 1 / KILO
 
+    new_unit_C = GRAM / METER
+    
+    new_unit_D = GRAM / FEET
+
+    new_unit_C.get_conversion_factor(new_unit_D) # FIXME
     print(new_unit_C)
-    # TODO: define a division model
-    # TODO: update unit conversion to the division model
+
     # TODO: run integration test with GUI
-    # TODO: add pickling functions
+    # TODO: update docstrings
+    # TODO: add pickling functions / test pickling
+    # TODO: set unit test list
