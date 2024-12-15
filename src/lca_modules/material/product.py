@@ -101,7 +101,7 @@ class Product(Master):
         """
 
         self.unit = unit
-        if self.get_calculator().is_mass_unit(unit):
+        if unit.get_qty_measured() == 'mass':
             self.set_weight_unit(unit)
             self.density = 1.0
 

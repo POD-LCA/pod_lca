@@ -28,9 +28,10 @@ class BarChart3(Plotter):
         else:
             raise ValueError("Impact category not recognized.")
 
+        gap = 0.2 # gap between two groups of bars  
         num_models = len(self.active_models) 
         num_impact_cats = len(impact_category)
-        width = 0.8 / num_models
+        width = (1.0 - gap) / num_models
 
         for i, model in enumerate(self.active_models):
 

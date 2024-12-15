@@ -1,3 +1,5 @@
+from utilities.objects import array_methods
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -90,6 +92,7 @@ class HotSpotAnalysis:
                         impact_val = obj.get_impacts().get_impact(impact_category)
                     print(obj, "Impact ({}):".format(impact_category), impact_val)
             
+            self.set_hotspots(hot_spots, model_name)
             hot_spots_dict = self.hotspots[model_name]
             if hot_spots_dict == None:
                 hot_spots_dict = {impact_category: hot_spots}
@@ -99,18 +102,24 @@ class HotSpotAnalysis:
 
             return hot_spots
     
-    def _set_hotspots(self, hotspots):
-        """ Set hotspots of the model.
-            This method is intended to be used by the Uncertainty Module, when the hotspot analysis is run
+    def set_hotspots(self, hotspots, model_name):
+        """ Set attribute in hotspots to identify as hotspots.
 
             Parameters
             ----------
             hotspots : list of Master Objs.
                 List of hotspot object of the model.
+            model_name : str.
+                Name of the model
 
         """
+        
+        model = self.project.get_model(model_name)
+        all_items = model.get_products() + model.get_processes()
 
-        self.hotspots = hotspots
+        array_methods.set_value(all_items, 'is_hotspot', False)
+        array_methods.set_value(hotspots, 'is_hotspot', True)
+
 
     def get_hotspots(self, model_name='Model_0', impact_category='GWP'):
         """ Get hotspots of the model.
