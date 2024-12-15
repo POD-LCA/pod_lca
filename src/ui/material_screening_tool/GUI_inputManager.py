@@ -1,12 +1,19 @@
 from lca_modules.material.projectManager import Project
 from lca_modules.material.product import Product, Fuel, Waste
 from lca_modules.material.process import Process, transportationProcess
-from ui.material_screening_tool.GUI_outputManager import GUIOutputManager
+from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
+
+from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
+from utilities.units.metric_prefixes import KILO, MEGA
 
 from tkinter import messagebox
 
 
 class GUIInputManager():
+
+    units_map = {'kg': KILO * GRAM, 'lb': POUND, 'g': GRAM, 'm3':CUBIC_METER,
+                 'kJ': KILO * JOULE, 'MJ': MEGA * JOULE, 'kWh': KILO * WATT_HOUR, 'MWh': MEGA * WATT_HOUR,
+                 'km': KILO * METER, 'mi': MILE, 'kgkm': (KILO * GRAM) * (KILO * METER), 'lbmi': POUND * MILE}
 
     @staticmethod
     def create_project(name=None):
@@ -62,7 +69,9 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_product(project, name, unit, qty, stage, lca_data, ):
+    def create_product(project, name, unit, qty, stage, lca_data):
+
+        unit = GUIInputManager.units_map[unit]
 
         product = project.get_current_model().create_product(name, stage)
         product.set_unit(unit) 
@@ -80,6 +89,8 @@ class GUIInputManager():
     @staticmethod
     def create_energy(project, name, unit, qty, stage, lca_data):
 
+        unit = GUIInputManager.units_map[unit]
+
         energy = project.get_current_model().create_energy(name, stage)
         energy.set_unit(unit)
         energy.update_qty(qty)
@@ -95,6 +106,8 @@ class GUIInputManager():
   
     @staticmethod
     def create_emission(project, name, unit, qty, stage, lca_data):
+
+        unit = GUIInputManager.units_map[unit]
 
         emission = project.get_current_model().create_emission(name, stage)
         emission.set_unit(unit)
@@ -112,6 +125,8 @@ class GUIInputManager():
     @staticmethod
     def create_waste(project, name, unit, qty, stage, lca_data):
 
+        unit = GUIInputManager.units_map[unit]
+
         waste = project.get_current_model().create_waste(name, stage)
         waste.set_unit(unit)
         waste.update_qty(qty)
@@ -127,6 +142,8 @@ class GUIInputManager():
     
     @staticmethod
     def create_process(project, name, unit, qty, stage, lca_data):
+
+        unit = GUIInputManager.units_map[unit]
 
         process =  project.get_current_model().create_process(name, stage)
         process.set_unit(unit)
@@ -242,10 +259,14 @@ class GUIInputManager():
     @staticmethod
     def set_unit(obj, unit):
 
+        unit = GUIInputManager.units_map[unit]
+
         obj.set_unit(unit)
 
     @staticmethod
     def change_unit(visualizer, obj, unit, close_error=True):
+
+        unit = GUIInputManager.units_map[unit]
 
         try:
             obj.change_units(unit)
@@ -260,7 +281,7 @@ class GUIInputManager():
     @staticmethod
     def get_unit(obj):
 
-        return obj.get_unit()
+        return obj.get_unit().get_standard_notation()
     
     @staticmethod
     def is_product(obj):
@@ -289,8 +310,11 @@ class GUIInputManager():
 
     @staticmethod
     def unit_conversion(project, old_unit, new_unit, close_error=True):
+
+        old_unit = GUIInputManager.units_map[old_unit]
+        new_unit = GUIInputManager.units_map[new_unit]
         
-        factor = project.get_calculator().conversion_factor(from_unit=old_unit, to_unit=new_unit)
+        factor = old_unit.get_conversion_factor(new_unit)
         if factor is None:
             e = f"Units {old_unit} and {new_unit} are incompatible." 
             GUIInputManager.show_error_popup("TypeError", str(e))
@@ -307,11 +331,6 @@ class GUIInputManager():
     def get_name(obj):
 
         return obj.get_name()
-
-    @staticmethod
-    def get_unit(obj):
-
-        return obj.get_unit()
 
     @staticmethod
     def get_stage(obj):
@@ -339,6 +358,11 @@ class GUIInputManager():
         return obj.get_impacts().get_impact(impact_cat)
     
     @staticmethod
+    def get_weighted_impact(obj):
+
+        return obj.get_impacts().get_weighted_impact()
+    
+    @staticmethod
     def delete(visualizer, obj):
 
         model = visualizer.project.get_current_model().delete_obj(obj)
@@ -357,6 +381,8 @@ class GUIInputManager():
 
     @staticmethod
     def create_transport_process(name, project, unit, qty, stage, lca_data):
+
+        unit = GUIInputManager.units_map[unit]
 
         transport_process =  project.get_current_model().create_transportation_process(name, stage)
         transport_process.set_transported_distance_unit(unit)
@@ -413,15 +439,19 @@ class GUIInputManager():
     @staticmethod
     def set_travel_unit(obj, new_unit):
 
+        new_unit = GUIInputManager.units_map[new_unit]
+
         obj.set_transported_distance_unit(new_unit)
 
     @staticmethod
     def get_travel_unit(obj):
 
-        return obj.get_transported_distance_unit()
+        return obj.get_transported_distance_unit().get_standard_notation()
     
     @staticmethod
     def set_density(visualizer, obj, density, weight_unit):
+
+        weight_unit = GUIInputManager.units_map[weight_unit]
 
         obj.set_density(density)
         obj.set_weight_unit(weight_unit)
@@ -438,8 +468,8 @@ class GUIInputManager():
     @staticmethod
     def get_weight_unit(item):
 
-        return item.get_weight_unit()
-
+        return item.get_weight_unit().get_standard_notation()
+    
     # =================================
     # Database
     # =================================
@@ -462,9 +492,12 @@ class GUIInputManager():
     @staticmethod
     def get_all_units_list(project):
         
-        return project.get_calculator().get_units_list()
+        return list(GUIInputManager.units_map.keys())
     
+    @staticmethod
     def set_custom_entry(project, flow, unit, impacts):
+        
+        unit = GUIInputManager.units_map[unit]
 
         project.get_database().set_custom_entry(flow, unit, impacts)
     
@@ -475,3 +508,54 @@ class GUIInputManager():
     @staticmethod
     def show_error_popup(error_type, message):
         messagebox.showerror(error_type, message)
+
+    # =================================
+    # Analysis
+    # =================================
+
+    @staticmethod
+    def create_DQA(project):
+
+        DQA = DataQualityAnalysis(project)
+        for model_name in project.get_model_names():
+            DQA.setPedigreeScores(model_name)
+
+        return
+    
+    @staticmethod
+    def DQA_inidcators(project):
+
+        return project.DataQualityAnalysis.get_indicators()
+    
+    @staticmethod
+    def get_pedigree_score_objs(project, model_name):
+
+        return project.DataQualityAnalysis.pedigreeScores[model_name]
+    
+    @staticmethod
+    def get_pedigree_score(pedigree_obj, indicator):
+
+        return getattr(pedigree_obj, indicator)
+
+    @staticmethod
+    def set_pedigree_score(pedigree_obj, indicator, value):
+
+        setattr(pedigree_obj, indicator, value)
+      
+    @staticmethod
+    def get_DQS(pedigree_obj):
+
+        return pedigree_obj.calculate_DQS()
+    
+    @staticmethod
+    def get_DQS_range(project):
+
+        min = project.DataQualityAnalysis.min_score
+        max = project.DataQualityAnalysis.max_score
+
+        return range(min, max + 1, 1)
+    
+    @staticmethod
+    def calculate_model_DQS(project, model_name):
+
+        return project.DataQualityAnalysis.calculate_DQS(model_name, printout=False)

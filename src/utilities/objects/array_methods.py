@@ -41,3 +41,19 @@ def sort_by_attribute(objects, attr_name, descending=True):
             List of the attribute entries
     """
     return sorted(objects, key=lambda obj: getattr(obj, attr_name), reverse=descending)
+
+def set_value(objects, attr_name, value):
+    """ Sort a list of objects by a specified attribute value.
+        
+        Parameters
+        ----------
+        objects : List of Obj.
+            List of objects.
+        attr_name : str.
+            Attribute to be retrieved in a list.
+        value : str/int/float/bool
+            Value to be given to the attribute.
+    """
+
+    for obj in objects:
+        setattr(obj, attr_name, value)

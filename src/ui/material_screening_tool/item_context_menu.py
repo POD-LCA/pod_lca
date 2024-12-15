@@ -176,7 +176,7 @@ class ItemContextMenuMixin:
 
         unit_list = GUIInputManager.get_all_units_list(master.project)
         default_entry = unit_list.index(GUIInputManager.get_unit(item))
-        unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
+        unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry)
 
         cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
 
