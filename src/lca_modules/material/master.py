@@ -28,7 +28,7 @@ class Master:
         Flow name corresponding to the database entry which gives the unit impact of the product.
     qty : float
         Quantity of the product/process.
-    unit : str
+    unit : Unit Obj
         Unit of measurement corresponding to the quantity of the product/process.
     is_hotspot : bool
         True, if the object is a hotspot in the model.
@@ -137,7 +137,7 @@ class Master:
             value_in = self.get_qty()
             unit_in = self.get_unit()
 
-            conversion_factor = self.get_project().get_calculator().conversion_factor(unit_in, unit)
+            conversion_factor = unit_in.get_conversion_factor(unit)
 
             if conversion_factor is not None:
                 self.unit = unit
@@ -158,9 +158,9 @@ class Master:
             ImportError : Incompatible units of Master object and database entry.
         """
 
-        if self.impact_database_entry:
-            unit_impacts = self.get_project().database.get_impact_data(self.impact_database_entry)
-            conversion_factor = self.get_calculator().conversion_factor(self.get_unit(), unit_impacts["Unit"])
+        if self.get_impact_database_entry():
+            unit_impacts = self.get_project().database.get_impact_data(self.get_impact_database_entry())
+            conversion_factor = self.get_unit().get_conversion_factor(unit_impacts["Unit"])
 
             if conversion_factor is None:
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")

@@ -1,4 +1,7 @@
 
+from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, TON_KILOMETER, CUBIC_METER
+from utilities.units.metric_prefixes import KILO, MEGA
+
 from pandas import DataFrame
 from pandas import concat, read_csv
 
@@ -27,6 +30,8 @@ class DatabaseManager:
     def __init__(self):
         self.impact_categories = {'GWP':0.0, 'AP':0.0, 'EP':0.0, 'ODP':0.0, 'SFP':0.0}
         self.data = DataFrame(columns=['Flow','Unit'] + list(self.impact_categories.keys()))
+        self.unit_map = {'kg': KILOGRAM, 'km': KILOMETER, 'tkm': TON_KILOMETER, 'MJ': MEGA * JOULE, 'kWh': KILO * WATT_HOUR,
+                         'm3': CUBIC_METER}
 
     def __reduce__(self):
         
@@ -136,6 +141,8 @@ class DatabaseManager:
             for i in range(n):
                 if i>1:
                     new_data[header_map[headers[i]]] = new_data[header_map[headers[i]]] * multipliers[i-2]
+
+        new_data['Unit'] = new_data['Unit'].map(self.unit_map)
 
         if self.get_data().empty:
             self.set_data(new_data)
