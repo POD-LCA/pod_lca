@@ -2,7 +2,6 @@
 
 # Master object operations
 # change name
-# change units
 # add impact
 
 # calculator
@@ -243,6 +242,68 @@ class TestBuilder(unittest.TestCase):
         load_project = Project.load(file_path)
 
         self.assertIsInstance(waste, Waste, " ")
+
+    def test_13a_units_and_conversions(self):
+        """ Test units and there conversions.
+        """
+        print('testing prefix mutliplication and conversion.')
+
+        from utilities.units.common_units import GRAM
+        from utilities.units.metric_prefixes import KILO, MEGA, DEKA
+
+        new_prefix_mult = KILO * MEGA
+        new_prefix_div  = KILO / DEKA
+
+        self.assertEqual(new_prefix_mult.get_power(), 9)
+        self.assertEqual(new_prefix_div.get_power(), 2)
+
+        kilogram = KILO * GRAM
+        megagram = MEGA * GRAM
+
+        self.assertEqual(kilogram.get_conversion_factor(GRAM), 1000)
+        self.assertEqual(kilogram.get_conversion_factor(megagram), 1000)
+
+    def test_13b_units_and_conversions(self):
+        """ Test units and there conversions.
+        """
+        print('testing unit mutliplication and conversion.')
+
+        from utilities.units.common_units import GRAM, METER, TON_KILOMETER, POUND, MILE, TON_MILE, CUBIC_METER, CUBIC_FEET
+        from utilities.units.metric_prefixes import KILO, MEGA, DEKA
+
+        kilogram = KILO * GRAM
+        pound_mile = POUND * MILE
+        wt_density_metric = kilogram / CUBIC_METER
+        wt_density_imperial = POUND / CUBIC_FEET
+
+        self.assertAlmostEqual(GRAM.get_conversion_factor(POUND), 0.00220462)
+        self.assertAlmostEqual(kilogram.get_conversion_factor(POUND), 2.2046226, places=3)
+        self.assertAlmostEqual(TON_KILOMETER.get_conversion_factor(TON_MILE), 0.621371, places=3)
+        self.assertAlmostEqual(TON_KILOMETER.get_conversion_factor(pound_mile), 1369.891, places=1)
+        self.assertAlmostEqual(wt_density_metric.get_conversion_factor(wt_density_imperial), 0.06242796, places=4)
+
+        
+    def test_13c_units_and_conversions(self):
+        """ Test units and there conversions.
+        """
+        print('save and load units.')
+
+        from utilities.units.common_units import GRAM
+        from utilities.units.metric_prefixes import KILO
+        import pickle
+
+        kilogram = KILO * GRAM
+
+        file_path = r'save_files\unit_test.pkl'
+        with open(file_path, "wb") as file:
+            pickle.dump(kilogram, file)
+        with open(file_path, 'rb') as file:
+            unit_loaded = pickle.load(file)
+
+        self.assertEqual(unit_loaded.get_name(), kilogram.get_name())
+        self.assertEqual(unit_loaded.get_standard_notation(), kilogram.get_standard_notation())
+        self.assertEqual(unit_loaded.get_qty_measured(), kilogram.get_qty_measured())
+        self.assertEqual(unit_loaded.get_prefix().get_power(), kilogram.get_prefix().get_power())
 
 
 if __name__ == '__main__':

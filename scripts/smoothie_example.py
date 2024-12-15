@@ -9,7 +9,6 @@ from lca_modules.uncertainity.datasets import DataSet, Distribution
 from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulation
 from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
-from utilities.units.units import Unit
 
 from numpy import random
 

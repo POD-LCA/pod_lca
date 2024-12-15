@@ -90,6 +90,7 @@ class Unit:
             raise TypeError(f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}")
 
     def __truediv__(self, other):
+        """ Devision of units by other units."""
 
         if isinstance(other, Unit):
             name = self.get_name() + ' per ' + other.get_name()
@@ -106,8 +107,9 @@ class Unit:
             raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
         
     def __rtruediv__(self, other):
+        """ Reflexive division of units by unit value (1)."""
 
-        if isinstance(other, int):
+        if other == 1:
             name = 'per ' + self.get_name()
             standard_notation = self.get_standard_notation() + '-1'
             qty_measured =  'per ' + self.get_qty_measured()
@@ -137,6 +139,7 @@ class Unit:
                 The quantity measured by the unit---e.g., 'length', 'mass', 'time'.
         
         """
+
         unit = cls()
         unit.set_name(name)
         unit.set_standard_notation(standard_notation)
@@ -145,20 +148,44 @@ class Unit:
         return unit
     
     def set_name(self, name):
+        """ Set the name of the unit of measurement.
         
+            Parameters
+            ----------
+            name : str
+                Name of the unit of measurement.
+        
+        """
+
         self.name = name
 
     def set_standard_notation(self, standard_notatoion):
+        """ Set the standard notation of the unit of measurement.
+        
+            Parameters
+            ----------
+            standard_notatoion : str
+                Standard notation of the unit of measurement.
+        
+        """
 
         self.standard_notation = standard_notatoion
 
     def set_qty_measured(self, qty_measured):
+        """ Set the quantity measured by the unit of measurement.
+        
+            Parameters
+            ----------
+            qty_measured : str
+                Quantity measured by the unit of measurement.
+        
+        """
 
         self.qty_measured = qty_measured
 
 
     def get_name(self):
-        """ Retrieve the name of the unit of measurement.
+        """ Get the name of the unit of measurement.
 
             Returns
             -------
@@ -268,7 +295,8 @@ class Unit:
         
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out, qty_measured):
-        """ Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and (b) they are not compound units.
+        """ Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and 
+            (b) they are not compound units.
 
             Parameters
             ----------
@@ -452,28 +480,8 @@ class MetricPrefix:
 
         """
 
-        return 10**(to_prefix.get_power() / self.get_power())
+        return 10**(to_prefix.get_power() - self.get_power())
 
 
 if __name__ == '__main__':
-
-    from utilities.units.common_units import GRAM, METER, FEET, POUND
-    from utilities.units.metric_prefixes import KILO, MEGA, DEKA
-
-    kilogram = KILO * GRAM
-    kilometer = KILO * METER
-    megagram = MEGA * GRAM
-    
-    new_prefix = 1 / KILO
-
-    new_unit_C = GRAM / METER
-    
-    new_unit_D = GRAM / FEET
-
-    new_unit_C.get_conversion_factor(new_unit_D) # FIXME
-    print(new_unit_C)
-
-    # TODO: run integration test with GUI
-    # TODO: update docstrings
-    # TODO: add pickling functions / test pickling
-    # TODO: set unit test list
+    pass
