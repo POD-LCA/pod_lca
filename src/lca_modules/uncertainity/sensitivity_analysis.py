@@ -200,6 +200,5 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
 
     return [results['min'], results['max']]
 
-#TODO: look to simplify or identify reusable parts
 if __name__ == '__main__':
     pass

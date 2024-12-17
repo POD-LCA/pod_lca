@@ -2,7 +2,7 @@ from lca_modules.material.projectManager import Project
 from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 from lca_modules.uncertainity import sensitivity_analysis
-from lca_modules.uncertainity.datasets import Distribution
+from lca_modules.uncertainity.datasets import DataDistribution
 from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulator
 from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO, MEGA
@@ -78,7 +78,7 @@ PUR2_by_truck.set_impact_database_entry("Transportation_freight_train_diesel_US_
 
 
 # Hotspot analysis
-hotspot_analysis = HotSpotAnalysis(CLT_model)
+hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP", printout=True)
 
 
@@ -121,10 +121,8 @@ sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
 mu = log(mean_val) - 0.5 * sigma**2
 
 dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
-params = (sigma, 0, exp(mu))
-distribution = Distribution('lognorm', params, dist)
-
-lumber.set_distribution(distribution, 'qty')
+data_set = DataDistribution.from_distributions(dist)
+lumber.set_data_distribution(data_set, 'qty')
 
 # x = linspace(500, 600, 1)
 # p = dist.pdf(x)

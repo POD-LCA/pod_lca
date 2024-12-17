@@ -5,7 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-
+#TODO: refactor with create methods in class and getters and setters
 class PedigreeScore:
     """
     PedigreeScore object contains background data for data quality scores.
@@ -23,6 +23,7 @@ class PedigreeScore:
         if parent is not None:
             for impact in indicators:
                 setattr(self, impact, 5)
+                
 
     def calculate_DQS(self):
         """ Calculate the Data Quality Score of the pedigree score object.

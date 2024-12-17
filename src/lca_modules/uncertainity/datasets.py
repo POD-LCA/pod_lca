@@ -12,7 +12,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 
-class DataSet: 
+class DataDistribution: 
     """
     Dataset object with the corresponding distribution fitted from Scipy.stats package.
     A Dataset is a collection (list) of data points.
@@ -23,8 +23,10 @@ class DataSet:
         Name of the data set.
     data : list of floats
         The data set.
-    dist_fitted : Distribution Obj.
-        Distribution fitted to the data set.
+    dist_name : str.
+        Distribution name as used in scipy.stats.
+    dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
+        Fitted distribution object from Scipy.
     parent : Object.
         Object to which the dataset is attached.
     attr : str
@@ -33,9 +35,11 @@ class DataSet:
     def __init__(self):
         self.name = None
         self.data = None
-        self.dist_fitted = None
-        self.parent = None
+        self.dist_name = None
+        self.dist = None
         self.attr = None
+        self.parent = None
+        
 
     @classmethod
     def from_data(cls, data, name='unspecified'):
@@ -59,7 +63,30 @@ class DataSet:
         dataset.set_name(name)
 
         return dataset
-    
+
+    @classmethod
+    def from_distributions(cls, dist, name='unspecified'):
+        """ Create a Dataset object from data input.
+        
+            Parameters
+            ----------
+            dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
+                Fitted distribution object from Scipy.  
+            name : str.
+                Name of the data set.
+                      
+            Returns
+            -------
+            DataSet Obj.
+                Dataset created.
+        """
+
+        dataset = cls()
+        dataset.set_distribution(dist)
+        dataset.set_name(name)
+
+        return dataset    
+
     def set_data(self, data):
         """ Set data to the DataSet Obj.
         
@@ -86,27 +113,20 @@ class DataSet:
 
         return self
 
-    def set_distribution(self, best_fit, fit_method='MLE'):
+    def set_distribution(self, dist):
         """ Set a Distribution Obj to the DataSet Obj.
 
             Parameters
             ----------
-            best_fit : str
-                Name of the distribution set to the data set, following Scipy.stats module.
-            fit_methods : str
-                'MLE', 'MSE'
-            
-            Returns
-            -------
-            Distribution Obj.
-                The fitted distribtuion to the data set.
+            dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
+                Fitted distribution object from Scipy.
         
         """
 
-        dist, params = self.fit_distribution(best_fit, fit_method)
-        self.dist_fitted = Distribution(best_fit, params, dist)
+        self.dist = dist
+        self.dist_name = dist.dist.name
 
-        return self.dist_fitted
+        return self
     
     def set_parent(self, obj):
         """ Set parent of the dataset.
@@ -160,7 +180,11 @@ class DataSet:
         """ Get the distribution fitted to the dataset.
         """
 
-        return self.dist_fitted      
+        return self.dist
+
+    def get_dist_name(self):
+
+        return self.dist_name   
 
     def get_attr(self):
         """ Get the attribute to which the dataset belong.
@@ -173,6 +197,17 @@ class DataSet:
 
         return self.attr
 
+    def get_parent(self):
+        """ Get parent of the dataset.
+
+            Parameters
+            ----------
+            Master Obj.
+                Object to which the dataset correspond.
+        """ 
+       
+        return self.parent
+    
     def find_best_fit(self, is_cts=True, fit_method='MLE', validate=True, short_list=None, printout=True):
         """ Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
 
@@ -288,123 +323,7 @@ class DataSet:
         plt.legend()
         plt.show()
 
-
-class Distribution:
-    """
-    Distribution object.
-    A wrapper for scipy.stats._continuous_distns Obj.
-
-    Attributes
-    ----------
-    dist_name : str.
-        Name of the distribution fitted to the data set, following Scipy.stats module.
-    params : tuple
-        Parameters defining the distribution fitted.
-    dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
-        Fitted distribution object from Scipy.
-    parent : Object.
-        Object to which the dataset is attached.
-    """
-    def __init__(self, dist_name, params, dist):
-        self.dist_name = dist_name
-        self.params = params
-        self.dist = dist
-        self.parent = None
-        self.attr = None
-
-    @classmethod
-    def from_distribution(cls, dist_name, params, dist):
-        """ Create a Dataset object from data input.
-        
-            Parameters
-            ----------
-            dist_name : str.
-                Name of the distribution fitted to the data set, following Scipy.stats module.
-            params : tuple
-                Parameters defining the distribution fitted.
-            dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
-                Fitted distribution object from Scipy.
-                      
-            Returns
-            -------
-            Distribution Obj.
-                Distribution created.
-        """
-
-        distribution = cls()
-        distribution.set_dist_name(dist_name)
-        distribution.set_params(params)
-        distribution.set_dist(dist)
-
-        return distribution
-
-    def set_dist_name(self, name):
-
-        self.dist_name = name
-
-        return self
-    
-    def set_params(self, params):
-
-        self.params = params
-
-        return self
-
-    def set_dist(self, dist):
-        
-        self.dist = dist
-
-        return self
-    
-    def set_parent(self, obj):
-        """ Set parent of the distribution.
-
-            Parameters
-            ----------
-            obj : Master Obj.
-                Object to which the distribution correspond.
-        """ 
-
-        self.parent = obj
-
-    def set_attr(self, attr):
-        """ Set the name of the corresponding attribute.
-
-            Returns
-            -------
-            attr : str.
-                Namw of the attribute.
-        """ 
-
-        self.attr = attr
-    
-    def get_parent(self):
-        """ Return the parent object.
-
-            Returns
-            -------
-            Master Obj.
-                Parent object of the distribution.
-        """ 
-
-        return self.parent
-
-    def get_attr(self):
-        """ Get the name of the corresponding attribute.
-
-            Returns
-            -------
-            str.
-                Namw of the attribute.
-        """ 
-
-        return self.attr
-    
-    def get_dist_name(self):
-
-        return self.dist_name
-
-    def pick_data_point(self):
+    def pick_data_point_from_distribution(self):
         """ Pick a random variate from the distibution.
 
             Returns
@@ -415,7 +334,7 @@ class Distribution:
 
         return self.dist.rvs(size=1)[0]
 
-    def pick_data_points(self, n):
+    def pick_data_points_from_distribution(self, n):
         """ Pick a random variate from the distibution.
 
             Parameters
@@ -449,7 +368,7 @@ class Distribution:
         # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
     
     # TODO create discrete distributions
-    # TODO rethink logic/workflow of having two seperate dataset and distribution object
+    # TODO set scenario options ('low', 'med', 'high' values)
     
 
 if __name__ == '__main__':
