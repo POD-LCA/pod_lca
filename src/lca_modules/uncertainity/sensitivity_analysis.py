@@ -48,6 +48,7 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
     method = getattr(obj, method_name)
 
     result_range = [0, 0]
+    impacts_range = [None, None]
     if 'range' in kwargs:
         range_lst = sorted((kwargs['range']))
 
@@ -60,20 +61,29 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
             relative_percentage_change = 100 * (impact_new - base_impact) / base_impact # TODO: make a choice (also Lines 70 and 178)
             symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-            result_range[i] = symmetric_percentage_change
+            result_range[i] = relative_percentage_change
+            impacts_range[i] = impact_new
+
+            method(base_val)
             
     elif 'options' in kwargs:
-        results = []
+        results, impacts = [], []
         for option in kwargs['options']:
             method(option)
             impact_new = claculator.get_total_impact(model.get_name(), impact_cat)
             relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
             symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-            results.append(symmetric_percentage_change)
+            results.append(relative_percentage_change)
+            impacts.append(impact_new)
+
+            method(base_val)
 
         result_range[0] = min(results)
         result_range[1] = max(results)
+
+        impacts_range[0] = min(impacts)
+        impacts_range[1] = max(impacts)        
 
         corr_options = [kwargs['options'][results.index(min(results))], 
                         kwargs['options'][results.index(max(results))]]
@@ -86,12 +96,14 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
             print(f"Product: {obj.get_name()}")
             print(f"Param: {param}")
             print(f"Base value: {base_val}")
+            print(f"Base impact: {base_impact}")
             if 'range' in kwargs:
                 print(f"Range: {range_lst}")
             elif 'options' in kwargs:
                 print(f"Options: {kwargs['options']}")
             formatted_result = ", ".join(f"{num:.1f}" for num in result_range)
             print(f"Sensitivity (%): ({formatted_result})")
+            print(f"Impacts Range: {impacts_range}")
             if 'options' in kwargs:
                 print(f"       : {corr_options}")
             print("(Sensitivity as symmetric percentage change)")
@@ -135,15 +147,24 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
 
     base_impact = claculator.get_total_impact(model.get_name(), impact_cat)
 
+    for group in groups:
+        obj = group['obj']
+        param = group['param']
+        base_val = getattr(obj, param)
+
+        method_name = 'set_'+ param
+        method = getattr(obj, method_name)
+
+        group['base_val'] = base_val
+        group['method'] = method
+
     results = {}
     for objective in ['min', 'max']:
         for group in groups:
             obj = group['obj']
             param = group['param']
-            base_val = getattr(obj, param)
-
-            method_name = 'set_'+ param
-            method = getattr(obj, method_name)
+            base_val = group['base_val']
+            method = group['method']
             
             if 'range' in group:
                 range_lst = sorted((group['range']))
@@ -178,7 +199,13 @@ def compute_sensitivity_of_params(model, groups, impact_cat='weighted', printout
         relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
         symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-        results[objective] = symmetric_percentage_change
+        results[objective] = relative_percentage_change
+
+        for group in groups:
+            base_val = group['base_val']
+            method = group['method']
+
+            method(base_val)
 
     if printout:
             print("*"*50 + "\nSENSITIVITY ANALYSIS\n" + "*"*50)

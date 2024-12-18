@@ -91,13 +91,13 @@ lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, '
 DQS, nDQS = data_quality_assessment.calculate_DQS('GWP')
 data_quality_assessment.print_results()
 
-# Sensitivity Analysis
+# # Sensitivity Analysis
 result_range = sensitivity_analysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
                                                                  impact_cat='GWP', 
                                                                  options=['Electricity_NWPP(eGrid)_[USLCI]', 'Electricity_UnknownHigh_[USLCI]', 'Electricity_UnknownLow_[USLCI]'])
 result_range = sensitivity_analysis.compute_sensitivity_of_param(lumber,  'qty', 
                                                                  impact_cat='GWP', 
-                                                                 range=(422.063, 844.125))
+                                                                 range=(506.48, 619.03))
 result_range = sensitivity_analysis.compute_sensitivity_of_params(CLT_model, 
                                                                   [{'obj': lumber_by_truck,  'param': 'transported_distance', 'range': (226.57, 453.13)},
                                                                    {'obj': PUR1_by_truck,  'param': 'transported_distance', 'range': (1620, 3240)},
@@ -123,8 +123,11 @@ lumber.set_data_distribution(data_set, 'qty')
 # pyplot.show()
 
 MCS = MonteCarloSimulator.from_model(CLT_model)
-MCS.set_iterations(1000)
+MCS.set_iterations(1000000)
+start = time.time()
 MCS.run()
+elapsed = time.time() - start
+print("elapsed time", elapsed)
 MCS.print_results()
 MCS.plot_hist(bin_size=25)
 

@@ -57,6 +57,10 @@ class Calculator():
                 Total impact value.
         """
 
+        items = self.project.get_model(model_name).get_all_items()
+        for item in items:
+            item.update_impacts()
+
         impacts_dict = self.project.get_model(model_name).get_impacts()
         impacts_lst = []
         for key, list in impacts_dict.items():
