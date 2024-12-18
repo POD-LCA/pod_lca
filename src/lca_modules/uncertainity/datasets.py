@@ -11,7 +11,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-
+# TODO create discrete distributions
 class DataDistribution: 
     """
     Dataset object with the corresponding distribution fitted from Scipy.stats package.
@@ -31,6 +31,9 @@ class DataDistribution:
         Object to which the dataset is attached.
     attr : str
         Attribute to which dataset is attached.
+    scenarios : dict
+        Definition of quartile points for scenarios.
+        For continous variables values are numbers between 0-1.
     """
     def __init__(self):
         self.name = None
@@ -39,6 +42,15 @@ class DataDistribution:
         self.dist = None
         self.attr = None
         self.parent = None
+        self.scenarios = {'low': 0.2, 'med': 0.5, 'high':0.8}
+
+    def __str__(self):
+
+        string = f"Dataset has {len(self.get_data())} entries in the range {min(self.get_data()):.2f} to {max(self.get_data()):.2f}"
+        if  self.get_distribution() is not None:             
+            string += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 
+
+        return string
         
 
     @classmethod
@@ -153,6 +165,20 @@ class DataDistribution:
         self.attr = attr
 
         return self
+    
+    def set_scenario(self, scenario_name, value):
+        """ Set the statistic for a given scenario.
+        
+            Parameters
+            ----------
+            scenario_name : str
+                Scenario name given as 'high', 'med', or 'low'.
+            value: float
+                Scenario value given as a value between 0 and 1.
+        
+        """
+
+        self.scenarios[scenario_name] = value
 
     def get_data(self):
         """ Get data list.
@@ -208,6 +234,18 @@ class DataDistribution:
        
         return self.parent
     
+    def get_scenario(self, scenario_name):
+        """ Get the statistic for a given scenario.
+        
+            Parameters
+            ----------
+            scenario_name : str
+                Scenario name given as 'high', 'med', or 'low'.
+        
+        """
+
+        return self.scenarios[scenario_name]
+
     def find_best_fit(self, is_cts=True, fit_method='MLE', validate=True, short_list=None, printout=True):
         """ Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
 
@@ -366,9 +404,6 @@ class DataDistribution:
 
         return self.dist.pdf(x)
         # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
-    
-    # TODO create discrete distributions
-    # TODO set scenario options ('low', 'med', 'high' values)
     
 
 if __name__ == '__main__':

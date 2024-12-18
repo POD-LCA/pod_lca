@@ -79,28 +79,17 @@ PUR2_by_truck.set_impact_database_entry("Transportation_freight_train_diesel_US_
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
-hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP", printout=True)
-
+hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
+hotspot_analysis.print_results()
 
 # Data Quality Assessment
-data_quality_assessment = DataQualityAnalysis(CLT_model)
-data_quality_assessment.setPedigreeScores()
-data_quality_assessment.update_pedigree_scores(electricity, {'reliability': 1,
-                                                             'completeness': 1,
-                                                             'temporal correlation': 4,
-                                                             'geographical correlation': 1,
-                                                             'technological representativeness': 3})
-data_quality_assessment.update_pedigree_scores(lumber, {'reliability': 1,
-                                                        'completeness': 2,
-                                                        'temporal correlation': 2,
-                                                        'geographical correlation': 2,
-                                                        'technological representativeness': 4})
-data_quality_assessment.update_pedigree_scores(lumber_by_truck, {'reliability': 1,
-                                                                 'completeness': 3,
-                                                                 'temporal correlation': 4,
-                                                                 'geographical correlation': 3,
-                                                                 'technological representativeness': 3})
-DQS = data_quality_assessment.calculate_DQS('GWP')
+data_quality_assessment = DataQualityAnalysis.from_model(CLT_model)
+print(electricity.get_pedigree_score())
+electricity.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 1,'temporal correlation': 4,'geographical correlation': 1,'technological representativeness': 3})
+lumber.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 2, 'temporal correlation': 2, 'geographical correlation': 2, 'technological representativeness': 4})
+lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, 'completeness': 3, 'temporal correlation': 4, 'geographical correlation': 3, 'technological representativeness': 3})
+DQS, nDQS = data_quality_assessment.calculate_DQS('GWP')
+data_quality_assessment.print_results()
 
 # Sensitivity Analysis
 result_range = sensitivity_analysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
@@ -136,6 +125,7 @@ lumber.set_data_distribution(data_set, 'qty')
 MCS = MonteCarloSimulator.from_model(CLT_model)
 MCS.set_iterations(1000)
 MCS.run()
+MCS.print_results()
 MCS.plot_hist(bin_size=25)
 
 MCS.set_scenario({lumber: 'low'})

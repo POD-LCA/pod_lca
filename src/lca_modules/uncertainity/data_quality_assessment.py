@@ -1,3 +1,5 @@
+from lca_modules.uncertainity import DATA_QUALITY_INDICATORS, MAX_DQS, MIN_DQS
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -5,7 +7,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-#TODO: refactor with create methods in class and getters and setters
+
 class PedigreeScore:
     """
     PedigreeScore object contains background data for data quality scores.
@@ -14,19 +16,60 @@ class PedigreeScore:
     ----------
     parent : Master Obj.
         Product/Process object for which the data quality is related.
+    DQS : float
+        Data quality score of the object.
     <indicators> : float
         Data Quality Indicators are dynamically set based on the Data Quality Analysis (DQA) used.
     """
 
-    def __init__(self, parent, indicators):
-        self.parent = parent
-        if parent is not None:
-            for impact in indicators:
-                setattr(self, impact, 5)
-                
+    def __init__(self):
+        self.parent = None
+        self.DQS = 0.0
 
-    def calculate_DQS(self):
-        """ Calculate the Data Quality Score of the pedigree score object.
+    def __str__(self):
+        string = ("*"*50 + "\nPEDIGREE SCORE\n" + "*"*50)
+        string += f"\nPedigree score for {self.get_parent().get_name()}"
+        for attr in vars(self):
+            if not attr in ['DQS', 'parent']:
+                string += f"\n{attr}: {getattr(self, attr)}"
+
+        return string
+    
+    @classmethod
+    def from_parent(cls, parent):
+        """ Create pedigree score object from parent. 
+        
+            Parameters
+            ----------
+            obj.
+                Parent object.
+        """
+        
+        pedigree_score = cls()
+        pedigree_score.set_parent(parent)
+        if parent is not None:
+            for indicator in DATA_QUALITY_INDICATORS:
+                setattr(pedigree_score, indicator, 5)
+
+        parent.set_pedigree_score(pedigree_score)
+
+        return pedigree_score
+    
+    def set_parent(self, obj):
+        """ Set parent of the pedigree score.
+
+            Parameters
+            ----------
+            obj : Master Obj.
+                Object to which the pedigree score correspond.
+        """ 
+
+        self.parent = obj
+        
+        return self
+
+    def set_DQS(self):
+        """ Calculate and set the Data Quality Score of the pedigree score object.
 
             Returns
             -------
@@ -40,7 +83,67 @@ class PedigreeScore:
             if attr not in ignore_list:
                 DQS += getattr(self, attr)
 
+        self.DQS = DQS
+
         return DQS
+    
+    def get_parent(self):
+        """ Get parent of the pedigree score.
+
+            Returns
+            ----------
+            Master Obj.
+                Object to which the pedigree score correspond.
+        """ 
+       
+        return self.parent
+
+    def get_DQS(self):
+        """ Get the Data Quality Score of the object.
+        
+            Returns
+            ----------
+            float
+                Data quality score of the object.
+        """
+
+        return self.DQS
+
+    def update_pedigree_scores(self, *args):
+        """ Update the pedigree score.
+
+            Parameters
+            ----------
+            *args : tuple or dict
+                An (indicator, score) pair or a dictionary of indicator-score pairs.
+
+            Raises
+            ------
+            ValueError
+                If the scores are not within the score ranges specified.
+                If the input are not in expected format.
+
+        """
+
+        if len(args) == 1 and isinstance(args[0], dict):
+            for indicator, score in args[0].items():
+                if score >= MIN_DQS and score <= MAX_DQS:
+                    if hasattr(self, indicator):
+                        setattr(self, indicator, score)
+                    else:
+                        raise KeyError(f"{indicator} is not an valid indicator. Valid indicators are: {DATA_QUALITY_INDICATORS}")
+                else:
+                    raise ValueError(f"Pedigree score should be between {MIN_DQS} and {MAX_DQS}.")
+        elif len(args) == 2:
+            if args[1] >= MIN_DQS and args[1] <= MAX_DQS:
+                setattr(self, args[0], args[1])
+            else:
+                raise ValueError(f"Pedigree score should be between {MIN_DQS} and {MAX_DQS}.")
+        else:
+            raise ValueError("Invalid input. Provide a (indicator, score) pair or a dictionary of indicator-score pairs.")
+
+        return self
+    
 
 class DataQualityAnalysis:
     """
@@ -50,42 +153,101 @@ class DataQualityAnalysis:
     ----------
     model : Model Obj.
         Model on which the hotspot analysis is performed.
-    indicators : list of str.
-        List of data quality indicators.
-    max_score : int
-        Maximum possible score for an indicator.
-    min_score : int
-        Minimum possible score for an indicator.
-    pedigreeScores : dict of list
-        {master_product (Master Obj): pedigree_score (PedigreeScore Obj)} .
+    DQS : float
+        Data Quality Score of the model.
+    normalised_DQS : float
+        Normalised Data Quality Score of the model
     """
-    def __init__(self, model):
-        self.model =  model
-        self.indicators = ['reliability', 'completeness', 'temporal correlation', 'geographical correlation', 'technological representativeness']
-        self.max_score = 5
-        self.min_score = 1
-        self.pedigree_scores = {}
+    def __init__(self):
+        self.model = None
+        self.DQS = None
+        self.normalised_DQS = None
+        
+    @classmethod
+    def from_model(cls, model):
 
-        model.data_quality = self
+        data_quality_analysis = cls()
+        data_quality_analysis.set_model(model)
+        
+        data_quality_analysis.setPedigreeScores()
 
-    def get_indicators(self):
-        """ Get a list of data quality indicators.
+        model.data_quality = data_quality_analysis
+
+        return data_quality_analysis
+    
+    def set_model(self, model):
+        """ Set a model to the Analyser.
+        
+            Attributes
+            ----------
+            model : Model Obj.
+                Model on which the Data Quality Analysis is performed.        
+        
+        """
+
+        self.model = model
+
+    def set_DQS(self, DQS):
+        """ Set Data Quality Score of the model.
+        
+            Parameters
+            ----------
+            DQS : float
+                Data Quality Score.
+        """
+
+        self.DQS = DQS
+
+    def set_normalised_DQS(self, nDQS):
+        """ Set normalised Data Quality Score of the model.
+        
+            Parameters
+            ----------
+            nDQS : float
+                Normalised Data Quality Score.
+        """
+
+        self.DQS = nDQS        
+
+    def get_model(self):
+        """ Get the model for which the analysis will be run.
+        
+            Returns
+            ----------
+            Model Obj.
+                Model on which the Data Quality Analysis is performed.        
+        
+        """
+        return self.model
+
+    def get_DQS(self):
+        """ Get Data Quality Score of the model.
         
             Returns
             -------
-            list of str.
-                List of data quality indicators.
+            float
+                Data Quality Score.
         """
 
-        return self.indicators
-    
+        return self.DQS
+
+    def get_normalised_DQS(self):
+        """ Get the normalised Data Quality Score of the model.
+        
+            Returns
+            -------
+            float
+                Normalised Data Quality Score.
+        """
+
+        return self.DQS
+
     def setPedigreeScores(self):
         """ Set pedigree scores for all products/processes in a model.
         """
 
         for obj in self.model.get_all_items():
-            pedigree_score = PedigreeScore(obj, self.get_indicators())
-            self.pedigree_scores[obj] = pedigree_score
+            PedigreeScore.from_parent(obj)
         
         self.setTemporalCorrelationScores()
         self.setGeographicalCorrelationScores()
@@ -102,75 +264,38 @@ class DataQualityAnalysis:
         """
         pass
 
-    def update_pedigree_scores(self, obj, *args):
-        """ Update the pedigree score of an object.
-
-            Parameters
-            ----------
-            obj : Master obj
-                Master object for which the pedigree score is being updated.
-            *args : tuple or dict
-                An (indicator, score) pair or a dictionary of indicator-score pairs.
-
-            Raises
-            ------
-            ValueError
-                If the scores are not within the score ranges specified.
-                If the input are not in expected format.
-
-        """
-
-        pedigree_score = self.pedigree_scores[obj]
-
-        if len(args) == 1 and isinstance(args[0], dict):
-            for indicator, score in args[0].items():
-                if score >= self.min_score and score <= self.max_score:
-                    if hasattr(pedigree_score, indicator):
-                        setattr(pedigree_score, indicator, score)
-                    else:
-                        raise KeyError(f"{indicator} is not an valid indicator. Valid indicators are: {self.indicators}")
-                else:
-                    raise ValueError(f"Pedigree score should be between {self.min_score} and {self.max_score}.")
-        elif len(args) == 2:
-            if args[1] >= self.min_score and args[1] <= self.max_score:
-                setattr(pedigree_score, args[0], args[1])
-            else:
-                raise ValueError(f"Pedigree score should be between {self.min_score} and {self.max_score}.")
-        else:
-            raise ValueError("Invalid input. Provide a (indicator, score) pair or a dictionary of indicator-score pairs.")
-
-        return pedigree_score
-
-    def calculate_DQS(self, impact_cat='GWP', printout=True):
+    def calculate_DQS(self, impact_cat='GWP'):
         """ Calculate the Data Quality Score.
 
             Parameters
             ----------
-            model_name : str
-                Name of the model for which the Data Quality Score is calculated.
             impact_cat : str
                 Impact category considered for weighing individual pedigree scores.
-            Printout : bool
-                Print the output, if True.
         """
 
         DQS_tmp = 0.0
         impact_sum = 0.0
-        for obj in self.pedigree_scores:
+        for obj in self.model.get_all_items():
             impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_impact(impact_cat) 
             if impact is not None:
-                DQS_tmp += self.pedigree_scores[obj].calculate_DQS() * impact
+                obj.get_pedigree_score().set_DQS()
+                DQS_tmp += obj.get_pedigree_score().get_DQS() * impact
                 impact_sum += impact
             else:
                 print(f"{obj.get_name()} has no impacts.")
 
         DQS = DQS_tmp / impact_sum
-        n = len(self.indicators)
-        normalized_DQS = 100 * (n * self.max_score - DQS)/(n * (self.max_score - self.min_score))
+        n = len(DATA_QUALITY_INDICATORS)
+        normalized_DQS = 100 * (n * MAX_DQS - DQS)/(n * (MAX_DQS- MIN_DQS))
 
-        if printout:
-            print("*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50)
-            print(f"Data Quality Score: {DQS:.2f}")
-            print(f"Normalised Data Quality Score (0-100 scale): {normalized_DQS:.0f}")
+        self.set_DQS(DQS)
+        self.set_normalised_DQS(normalized_DQS)
 
-        return normalized_DQS
+        return DQS, normalized_DQS
+    
+    def print_results(self):
+        """ Print results of the hotspot analysis."""
+
+        print("*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50)
+        print(f"Data Quality Score: {self.get_DQS():.2f}")
+        print(f"Normalised Data Quality Score (0-100 scale): {self.get_normalised_DQS():.0f}")

@@ -30,7 +30,7 @@ class MonteCarloSimulator:
     scenario : dict.
         Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
         Scenario values are 'low', 'med', and 'high'.
-    result : DataDistribution Obj.
+    result : result Obj.
         Data from the Monte Carlo Simulation
 
     """
@@ -39,9 +39,7 @@ class MonteCarloSimulator:
         self.iterations = None
         self.impact_cat = None
         self.var_params = []
-
-        self.scenario = []
-        self.scenario_defs = {'low': 0.2, 'med': 0.5, 'high':0.8}
+        self.scenario = {}
 
         self.result = None
         
@@ -110,7 +108,7 @@ class MonteCarloSimulator:
 
         objects = self.model.get_all_items()
         for object in objects:
-            self.var_params.extend(list(object.get_datasets().values()))
+            self.var_params.extend(list(object.get_data_distribution().values()))
 
         return self.var_params
     
@@ -137,7 +135,7 @@ class MonteCarloSimulator:
         
         """
 
-        result_obj = DataDistribution.from_data(results, name='MonteCarloSimualation')
+        result_obj = MonteCarlo_reults.from_data(results, name='MonteCarloSimualation')
         if not(max(results) - min(results) == 0.0):
             best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE', validate=True, short_list=self.dists_short_list, printout=False)
             if best_fit is None:
@@ -203,11 +201,11 @@ class MonteCarloSimulator:
         
             Returns
             ----------
-            DataDistribution Obj.
+            MonteCarlo_reults Obj.
                 Data from the Monte Carlo Simulation.
         
         """
-        return self.results
+        return self.result
     
     def run(self):
         """ Run a Monte Carlo Simulation.
@@ -225,14 +223,14 @@ class MonteCarloSimulator:
             if obj in scenarios:
                 method_name = 'set_'+ distribution.get_attr()
                 method_obj = getattr(obj, method_name)
-                value = distribution.get_distribution().ppf(self.scenario_defs[scenarios[obj]])
+                value = distribution.get_distribution().ppf(distribution.get_scenario(scenarios[obj]))
                 method_obj(value)
             else:
                 var_params.append(distribution)
                 method_name = 'set_'+ distribution.get_attr()
                 methods_list[distribution] = getattr(obj, method_name)
 
-        impact_data = []
+        result = []
         for iter_in_group in UncertainityUtils.get_groups(self.iterations, 1000):
             var_values = {}
             for distribution in var_params:
@@ -244,17 +242,17 @@ class MonteCarloSimulator:
                     methods_list[distribution](var_values[distribution][iter])
 
                 total_impact = project.get_calculator().get_total_impact(self.model.get_name(), self.impact_cat)
-                impact_data.append(total_impact)
+                result.append(total_impact)
                 iter +=1
 
-        self.set_result(impact_data)
+        self.set_result(result)
         self.print_results()
 
-        return impact_data
+        return result
     
-    # TODO: convert to string method
     def print_results(self):
-  
+        """ Print results of the hotspot analysis."""
+
         print("*"*50 + "\nMONTE CARLO SIMULATION\n" + "*"*50)
         print(f"number of iterations: {self.get_iterations()}")
 
@@ -262,11 +260,8 @@ class MonteCarloSimulator:
         if max(data) - min(data) == 0.0:
             print(f"Single point of data at {max(data)}")
         else:
-            distribution = self.result.get_distribution()
-            print(f"Data fitted to a {self.result.get_dist_name()} distribution")
-            print(f"mean : {distribution.mean()}")
-            print(f"std : {distribution.std()}")
-    
+            print(self.get_result())
+
     # TODO: move to plotter
     def plot_hist(self, bin_size):
         
@@ -335,13 +330,26 @@ class MonteCarloSimulator:
         objects = self.model.get_all_items()
 
         for object in objects:
-            for dataset in object.get_datasets().values():
+            for dataset in object.get_data_distribution().values():
                 if dataset.get_distribution() is None:
                     best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, short_list=self.dists_short_list, printout=False)
                     if best_fit is None:
                         best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=False)
                     distribution, _ = dataset.fit_distribution(best_fit, fit_method='MLE')
                     dataset.set_distribution(distribution)                 
+
+class MonteCarlo_reults(DataDistribution):
+
+    def __init__(self):
+        super().__init__()
+
+    def __str__(self):
+
+        str = f"Generated {len(self.get_data())} models giving impact values in the range {min(self.get_data()):.2f} to {max(self.get_data()):.2f}"
+        if  self.get_distribution() is not None:             
+            str += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 
+
+        return str
 
 
 if __name__ == '__main__':

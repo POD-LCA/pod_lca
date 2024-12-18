@@ -2,7 +2,7 @@ from lca_modules.material.projectManager import Project
 from lca_modules.material.product import Product, Fuel, Waste
 from lca_modules.material.process import Process, transportationProcess
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
-
+from lca_modules.uncertainity import DATA_QUALITY_INDICATORS, MAX_DQS, MIN_DQS
 from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
 
@@ -518,7 +518,7 @@ class GUIInputManager():
 
         for model_name in project.get_model_names():
             model = project.get_model(model_name)
-            DQA = DataQualityAnalysis(model)
+            DQA = DataQualityAnalysis.from_model(model)
             DQA.setPedigreeScores()
 
         return
@@ -526,13 +526,17 @@ class GUIInputManager():
     @staticmethod
     def DQA_inidcators(model):
 
-        return model.data_quality.get_indicators()
+        return DATA_QUALITY_INDICATORS
     
     @staticmethod
     def get_pedigree_score_objs(project, model_name):
 
         model = project.get_model(model_name)
-        return model.data_quality.pedigree_scores
+        pedigree_scores = {}
+        for object in model.get_all_items():
+            pedigree_scores[object] = object.get_pedigree_score()
+        return pedigree_scores
+    
     @staticmethod
     def get_pedigree_score(pedigree_obj, indicator):
 
@@ -546,21 +550,18 @@ class GUIInputManager():
     @staticmethod
     def get_DQS(pedigree_obj):
 
-        return pedigree_obj.calculate_DQS()
+        pedigree_obj.set_DQS()
+
+        return pedigree_obj.get_DQS()
     
     @staticmethod
     def get_DQS_range(project):
 
-        model = project.get_current_model()
-
-        min = model.data_quality.min_score
-        max = model.data_quality.max_score
-
-        return range(min, max + 1, 1)
+        return range(MIN_DQS, MAX_DQS + 1, 1)
     
     @staticmethod
     def calculate_model_DQS(project, model_name):
 
         model = project.get_model(model_name)
 
-        return model.data_quality.calculate_DQS(printout=False)
+        return model.data_quality.calculate_DQS()

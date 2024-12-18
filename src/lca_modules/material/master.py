@@ -34,6 +34,8 @@ class Master:
         True, if the object is a hotspot in the model.
     data_distribution : dict.
         Data distributions corresponding to attributes: {attr (str): Dataset Obj}.
+    pedigree_score : PedigreeScore Obj
+        Data quality indicator for the object
     """
 
     def __init__(self, id, name, model, stage):
@@ -47,6 +49,7 @@ class Master:
         self.unit = None
         self.is_hotspot = False
         self.data_distribution = {}
+        self.pedigree_score = None
 
     def __reduce__(self):
         
@@ -184,6 +187,35 @@ class Master:
             self.impact_database_entry = original_database_item
             raise e
 
+    def set_data_distribution(self, dataset, attr):
+        """ Set a dataset object to the Master Obj.
+
+            Parameters
+            ----------
+            dataset : DataDistibution Obj.
+                Dataset object to be set
+            attr : str.
+                Attribute to which the dataset correspond.
+        """
+
+        if hasattr(self, attr):
+            self.data_distribution[attr] = dataset
+            dataset.set_parent(self)
+            dataset.set_attr(attr)
+        else:
+            print(f"Object {type(self)} does not have an attribute {attr}")
+
+    def set_pedigree_score(self, pedigree_score):
+        """ Set a pedigree score (data quality score) to the Master Obj.
+
+            Parameters
+            ----------
+            pedigree_score : PedigreeScore Obj
+                Data quality indicator for the object
+        """
+
+        self.pedigree_score = pedigree_score
+
     def get_name(self):
         """ Retrieve the name of the product/process.
 
@@ -304,7 +336,7 @@ class Master:
 
         return self.get_model().get_project().get_calculator()
 
-    def get_datasets(self):
+    def get_data_distribution(self):
         """ Get dataset objects of the Master Obj.
 
             Returns
@@ -315,23 +347,17 @@ class Master:
 
         return self.data_distribution
     
-    def set_data_distribution(self, dataset, attr):
-        """ Set a dataset object to the Master Obj.
+    def get_pedigree_score(self):
+        """ Get pedigree score of the Master Obj.
 
-            Parameters
+            Returns
             ----------
-            dataset : DataDistibution Obj.
-                Dataset object to be set
-            attr : str.
-                Attribute to which the dataset correspond.
+            PedigreeScore Obj
+                Data quality indicator for the object
         """
 
-        if hasattr(self, attr):
-            self.data_distribution[attr] = dataset
-            dataset.set_parent(self)
-            dataset.set_attr(attr)
-        else:
-            print(f"Object {type(self)} does not have an attribute {attr}")
+        return self.pedigree_score
+
 
     @classmethod
     def copy(cls, obj):
