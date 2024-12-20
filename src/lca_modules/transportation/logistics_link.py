@@ -14,7 +14,39 @@ __version__ = "0.1.0"
 class Link:
     
     def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode, eff):
+        """
+        Link object create a link of transportation for each material.
 
+        Attributes
+        ----------
+        project : Project obj.
+            Refers to the main project.
+
+        material : str.
+            name of the material.
+
+        qty : str.
+            quantity of the of the material.
+
+        travel_dist : float.
+            transportation distance.
+
+        return_trip_factor : float.
+            transportation return trip factor.
+
+        dist_unit : str.
+            transportation distance unit.
+
+        mode : str.
+            transportation mode (ex: truck, rail).
+
+        eff : str.
+            transportation mode efficiency (ex: high, medium).
+
+        shipping_org : str.
+            origin of the transportation.
+
+        """
         self.project = project  # Pass a Project_logestic_manager instance
         self.material = material
         self.qty = qty
@@ -27,23 +59,30 @@ class Link:
 
 
     def compute_impact(self):
+        """ 
+        compute the impaact of the transportation link.
 
+            Returns
+            -------
+            dict
+                A dictionary of impacts for each category.
+        """
         if isinstance(self.travel_dist, float): 
 
             dataset = self.project.get_subdataset("Emission")
 
-            if self.mode not in dataset['mode'].tolist():
+            if self.mode not in dataset['mode_name'].tolist():
                 
                 raise ValueError(f"Mode {self.mode} not found in dataset.")
                 
-            impact = dataset.loc[dataset['mode'] == self.mode].iloc[[0], 4:] * self.qty * self.travel_dist * self.return_trip_factor
+            impact = dataset.loc[dataset['mode_name'] == self.mode].iloc[[0], 4:] * self.qty * self.travel_dist * self.return_trip_factor
             impact = impact.iloc[0].to_dict()
              
             return impact
 
         else:
             
-            impact = Scenario(self.travel_dist, self.qty, self.material, self.mode).scenario_impact() 
+            impact = Scenario(self.project, self.travel_dist, self.qty, self.material, self.mode).scenario_impact() 
 
             for value in impact.values():
                 value * self.qty * self.return_trip_factor
@@ -52,10 +91,25 @@ class Link:
 
 
     def get_qty (self):
+        """ 
+        Retrieve the quantity of the transportation link.
 
+            Returns
+            -------
+            float
+                quantity of the transportation link.
+        """
         return self.qty
 
-    def get get_material (self):
+    def get_material (self):
+        """ 
+        Retrieve the material name of the transportation link.
+
+            Returns
+            -------
+            str
+                material name of the transportation link.
+        """
 
         return self.material
 

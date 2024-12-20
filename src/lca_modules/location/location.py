@@ -107,11 +107,18 @@ class Location:
         return self.coords
 
     def get_egrid(self):
-        return self.coords  #TODO we have to find a dataset for this
+
+        #TODO we have to find a dataset for this
+        return self.coords
+
+
+        #TODO Transportation region 
+        #TODO End of life region
+
 
 if __name__ == '__main__':
 
-    location_input = "7530 37th NE seattle"
+    location_input = "Seattle"
     location_obj = Location(location_input)
     
     print(f"State: {location_obj.get_state()}")
