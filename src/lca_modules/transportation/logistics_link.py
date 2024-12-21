@@ -56,6 +56,7 @@ class Link:
         self.mode = mode
         self.eff = eff
         self.shipping_org = None
+        self.unit_conversion = 1.60934
 
 
     def compute_impact(self):
@@ -82,10 +83,10 @@ class Link:
 
         else:
             
-            impact = Scenario(self.project, self.travel_dist, self.qty, self.material, self.mode).scenario_impact() 
+            impact = Scenario(self.project, self.travel_dist, self.material, self.mode).scenario_impact() 
 
-            for value in impact.values():
-                value * self.qty * self.return_trip_factor
+            for key in impact:
+                impact[key] *= self.qty * self.return_trip_factor * self.unit_conversion
 
             return impact
 

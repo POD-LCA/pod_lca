@@ -61,7 +61,7 @@ class ProjectLogisticManager:
             impact1[key] += impact2.get(key, 0)
         return impact1
 
-    def get_imapct(self):
+    def get_impact(self):
 
         return self.impact
 
