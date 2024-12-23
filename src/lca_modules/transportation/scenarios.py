@@ -58,7 +58,7 @@ class Scenario:
         self.global_ = None
 
         self.pre_us_processing()
-        self.pre_global_processing()
+        #self.pre_global_processing()
 
     def pre_us_processing(self):
 
@@ -94,7 +94,7 @@ class Scenario:
         }
 
         def process_scenario(df, emission, mode=None):
-            df = pd.merge(emission, df, on="MODE")
+            df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
             if mode:
                 df = df[df["mode_name"] == mode]
             impact_cols = df.columns[4:9]
@@ -108,22 +108,51 @@ class Scenario:
 
     
 
-    def pre_global_processing (self):
+    # def pre_global_processing (self):
 
-        data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
-        emission = self.project.get_subdataset("Emission")
-        faf = pd.read_csv (r"temp\transportation_dataset\FAF561.csv")
-        PODlLCA_file_path = self.project.get_subdataset("PODlLDA_transport_dataset")
-        dist_fr = PODlLCA_file_path.parse(sheet_name="MOT")
-        sensitive_material = PODlLCA_file_path.parse(sheet_name="sensitive_material")
-        faf_dist_band = PODlLCA_file_path.parse(sheet_name="faf_dist_band")
-        cfaf = self.project.get_subdataset ("CFAF_C2011-2017_Code_E")
+    #     data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
+    #     emission = self.project.get_subdataset("Emission")
+    #     faf = pd.read_csv (r"temp\transportation_dataset\FAF561.csv")
+    #     PODlLCA_file_path = self.project.get_subdataset("PODlLDA_transport_dataset")
+    #     dist_fr = PODlLCA_file_path.parse(sheet_name="MOT")
+    #     sensitive_material = PODlLCA_file_path.parse(sheet_name="sensitive_material")
+    #     faf_dist_band = PODlLCA_file_path.parse(sheet_name="faf_dist_band")
+    #     cfaf = self.project.get_subdataset ("CFAF_C2011-2017_Code_E")
+
+    #     faf = faf[faf['tons_2017'] != 0]
+    #     faf.dropna(subset=['fr_orig'], inplace=True)
+    #     faf_filtered = faf[faf['trade_type'] == 2]
+
+    #     #Remove unrelated columns
+    #     columns_to_remove = ["fr_dest", "fr_outmode"]
+    #     columns_to_remove += faf.columns[18:]
+
+    #     faf_cleaned = faf.drop(columns=columns_to_remove)
+    #     faf_merged = faf_cleaned.merge(faf_dist_band, on='dist_band', how='left')
+    #     faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * 1.60934
+    #     faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * 1.60934
+    #     faf_merged = faf_merged.merge(mot[['dms_mode', 'gwp_mean']].rename(columns={'gwp_mean': 'dom_mot_emi'}), on='dms_mode', how='left')
+    #     faf_merged['min_dom_emi'] = faf_merged['min_dom_dist_km'] * faf_merged['dom_mot_emi']
+    #     faf_merged['max_dom_emi'] = faf_merged['max_dom_dist_km'] * faf_merged['dom_mot_emi']
+
+    #     faf_merged['ave_dom_emi'] = (faf_merged['min_dom_emi'] + faf_merged['max_dom_emi']) / 2
+    #     faf_merged.dropna(subset=['dom_mot_emi'], inplace=True)
+    #     faf_merged = faf_merged[faf_merged['max_dom_emi'].notna()]
+    #     faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km', 'max_dom_dist_km'], inplace=True)
+    #     faf = faf_merged
+    #     faf = faf.merge(mot[['fr_inmode', 'gwp_mean']].rename(columns={'gwp_mean': 'fr_mot_emi'}), on='fr_inmode', how='left')
+    #     faf['fr_orig'] = faf['fr_orig'].astype(int)
+    #     dist_fr['fr_orig'] = dist_fr['fr_orig'].astype(int)
+    #     faf = faf.merge(dist_fr[['fr_orig', 'fr_inmode', 'fr_dist']], on=['fr_orig', 'fr_inmode'], how='left')
+    #     faf = faf.dropna(subset=['fr_dist'])
+    #     faf['fr_in_emi']= faf['fr_dist'] * faf['fr_mot_emi']
+    #     faf['fr_emi']=faf['fr_in_emi'] +faf["ave_dom_emi"]
 
 
 
 
-        sctg = data_material[data_material["material"] == self.material].iloc[0,1]
-        sctg = int(str(sctg)[:2])
+    #     sctg = data_material[data_material["material"] == self.material].iloc[0,1]
+    #     sctg = int(str(sctg)[:2])
 
 
 
@@ -174,6 +203,6 @@ if __name__ == '__main__':
     project = ProjectLogisticManager(name="Building A", location="Seattle", data_folder=data_folder)
     #project.create_link ( material="Carpet", qty=1, travel_dist="Global", return_trip_factor=1.5, dist_unit="km", mode= "Truck", eff=0.9)
     
-    scenario = Scenario(project, "Local", "Carpet", "Truck")
+    scenario = Scenario(project, "Local", "Carpet", None)
     print (scenario.get_regional_impact())
     #print (project.get_impact())

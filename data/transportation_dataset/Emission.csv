@@ -1,4 +1,4 @@
-﻿mode_name,MODE,eff,Units,GWP,AP,EP,ODP,SFP
+﻿mode_name,mode_cfs,eff,Units,GWP,AP,EP,ODP,SFP
 Truck,4,1,tkm,9,3,8,9,8
 Rail,3,2,tkm,3,4,4,4,7
 Barge,5,3,tkm,10,1,4,10,1
