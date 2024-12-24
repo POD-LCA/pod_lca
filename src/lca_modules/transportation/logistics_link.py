@@ -47,7 +47,7 @@ class Link:
             origin of the transportation.
 
         """
-        self.project = project  # Pass a Project_logestic_manager instance
+        self.project = project  
         self.material = material
         self.qty = qty
         self.travel_dist = travel_dist
@@ -69,7 +69,9 @@ class Link:
         """
         if isinstance(self.travel_dist, float): 
 
-            impact = self.mode.get_impact()
+            impact = self.mode.set_impact()
+            impact = self.mode.get_impacts()
+
             for key in impact:
                 impact[key] *= self.qty * self.travel_dist * self.return_trip_factor
             return impact

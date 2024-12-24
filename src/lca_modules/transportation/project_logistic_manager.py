@@ -47,9 +47,9 @@ class ProjectLogisticManager:
             self.sub_dataset()
         return self.subdataset.get(sub_dataset)
 
-    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode, eff):
+    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, efficiency):
         
-        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode, eff)
+        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, efficiency)
         self.links.append(link)
         self.impact = self.merge_impacts(self.impact, link.compute_impact())
         

@@ -1,6 +1,25 @@
 import pandas as pd
 
+
+
+
+
 def cleaning_faf (input_path_faf, output_path_faf):
+
+    PODlLCA_file_path = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\PODlLDA_transport_dataset.xlsx"
+
+    dist_fr = pd.read_excel(PODlLCA_file_path, sheet_name="dist_fr")
+    mot = pd.read_excel(PODlLCA_file_path, sheet_name="MOT")
+    sensitive_material = pd.read_excel(PODlLCA_file_path, sheet_name="sensitive_material")
+    faf_dist_band = pd.read_excel(PODlLCA_file_path, sheet_name="faf_dist_band")
+
+    dist_fr['fr_inmode'] = pd.to_numeric(dist_fr['fr_inmode'], errors='coerce')
+    dist_fr['fr_orig'] = pd.to_numeric(dist_fr['fr_orig'], errors='coerce')
+
+    # Now convert the columns to float explicitly
+    dist_fr['fr_inmode'] = dist_fr['fr_inmode'].astype(float)
+    dist_fr['fr_orig'] = dist_fr['fr_orig'].astype(float)
+
 
     faf = pd.read_csv(input_path_faf)
 
@@ -49,15 +68,13 @@ def cleaning_faf (input_path_faf, output_path_faf):
     faf = faf.merge(mot[['fr_inmode', 'gwp_mean']].rename(columns={'gwp_mean': 'fr_mot_emi'}), on='fr_inmode', how='left')
     faf = faf.dropna(subset=['fr_dist'])
     
+    faf['fr_in_emi']= faf['fr_dist'] * faf['fr_mot_emi']
+    faf['fr_emi']=faf['fr_in_emi'] +faf["ave_dom_emi"]
+
+    return faf
 
 
+input_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561.csv"
+output_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561_cleaned.csv"
 
-
-
-
-if __name__ == '__main__':
-
-    input_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561.csv"
-    output_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561_cleaned.csv"
-
-    cleaning_faf(input_path_faf, output_path_faf)
+cleaning_faf(input_path_faf, output_path_faf)

@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 
 class TransportMode:
-    def __init__(self, name, efficiency, project):
+    def __init__(self, mode_name, efficiency, project):
         """
         Initialize the TransportMode object.
 
@@ -16,13 +16,14 @@ class TransportMode:
         - efficiency: int, the efficiency level (e.g., 1, 2, 3).
         - project: an object representing the project.
         """
-        self.name = name
+        self.mode_name = mode_name
         self.efficiency = efficiency
         self.project = project
         self.impacts = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
         self.limitations = []
 
-    def get_impact(self):
+
+    def set_impact(self):
         """
         Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
@@ -30,7 +31,7 @@ class TransportMode:
         emission_data = self.project.get_subdataset("Emission")
 
         # Filter the dataset for the current mode and efficiency
-        filtered_data = emission_data[(emission_data["mode_name"] == self.name) &
+        filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
                                        (emission_data["eff"] == self.efficiency)]
 
         # If data is found, update the impacts
@@ -44,16 +45,20 @@ class TransportMode:
                 "SFP": row["SFP"]
             }
         else:
-            print(f"No matching data found for mode: {self.name} and efficiency: {self.efficiency}.")
+            print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
 
 
     def get_name (self):
 
-        return self.name
+        return self.mode_name
 
     def get_efficiency (self):
 
         return self.efficiency
+
+    def get_impacts (self):
+
+        return self.impacts
 
 if __name__ == '__main__':
 
@@ -63,5 +68,5 @@ if __name__ == '__main__':
     project = ProjectLogisticManager(name="Building A", location="Seattle", data_folder=data_folder)
 
     transport = TransportMode ("Truck", 1, project)
-    transport.get_impact()
-    pritn (transport.impacts)
+    transport.set_impact()
+    print (transport.get_impacts ())

@@ -11,46 +11,32 @@ __version__ = "0.1.0"
 
 class Scenario:
     
-    def __init__(self, project ,scenario, material, mode_name, efficiency):
+    def __init__(self, project ,scenario, material, mode):
 
         """
         Scenario object compute the impact of transportation based on different scenarios.
 
         Attributes
         ----------
+
+        project : obj.
+            Refers to the main project.
+
         scenario : str.
             name of the transportation scenario.
 
         material : str.
             name of the material.
 
-        qty : str.
-            quantity of the of the material.
-
-        travel_dist : float.
-            transportation distance.
-
-        return_trip_factor : float.
-            transportation return trip factor.
-
-        dist_unit : str.
-            transportation distance unit.
-
-        mode : str.
-            transportation mode (ex: truck, rail).
-
-        eff : str.
-            transportation mode efficiency (ex: high, medium).
-
-        shipping_org : str.
-            origin of the transportation.
+        mode : obj.
+            Refers to the TransportMode object.
 
         """
 
         self.scenario = scenario
         self.project = project
         self.material = material
-        self.mode = TransportMode (mode_name, efficiency, project)
+        self.mode = mode
         self.local = None
         self.regional = None
         self.regional_c = None
