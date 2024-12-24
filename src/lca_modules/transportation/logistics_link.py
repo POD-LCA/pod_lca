@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from lca_modules.transportation.scenarios import Scenario
-
+from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Link:
     
-    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode, eff):
+    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, efficiency):
         """
         Link object create a link of transportation for each material.
 
@@ -53,8 +53,7 @@ class Link:
         self.travel_dist = travel_dist
         self.return_trip_factor = return_trip_factor
         self.dist_unit = dist_unit
-        self.mode = mode
-        self.eff = eff
+        self.mode = TransportMode (mode_name, efficiency, project)
         self.shipping_org = None
         self.unit_conversion = 1.60934
 
@@ -70,15 +69,9 @@ class Link:
         """
         if isinstance(self.travel_dist, float): 
 
-            dataset = self.project.get_subdataset("Emission")
-
-            if self.mode not in dataset['mode_name'].tolist():
-                
-                raise ValueError(f"Mode {self.mode} not found in dataset.")
-                
-            impact = dataset.loc[dataset['mode_name'] == self.mode].iloc[[0], 4:] * self.qty * self.travel_dist * self.return_trip_factor
-            impact = impact.iloc[0].to_dict()
-             
+            impact = self.mode.get_impact()
+            for key in impact:
+                impact[key] *= self.qty * self.travel_dist * self.return_trip_factor
             return impact
 
         else:

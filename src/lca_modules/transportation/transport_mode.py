@@ -47,6 +47,14 @@ class TransportMode:
             print(f"No matching data found for mode: {self.name} and efficiency: {self.efficiency}.")
 
 
+    def get_name (self):
+
+        return self.name
+
+    def get_efficiency (self):
+
+        return self.efficiency
+
 if __name__ == '__main__':
 
     from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager

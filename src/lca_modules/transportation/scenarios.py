@@ -1,4 +1,5 @@
 import pandas as pd
+from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -10,7 +11,7 @@ __version__ = "0.1.0"
 
 class Scenario:
     
-    def __init__(self, project ,scenario, material, mode):
+    def __init__(self, project ,scenario, material, mode_name, efficiency):
 
         """
         Scenario object compute the impact of transportation based on different scenarios.
@@ -49,7 +50,7 @@ class Scenario:
         self.scenario = scenario
         self.project = project
         self.material = material
-        self.mode = mode
+        self.mode = TransportMode (mode_name, efficiency, project)
         self.local = None
         self.regional = None
         self.regional_c = None
@@ -96,14 +97,13 @@ class Scenario:
         def process_scenario(df, emission, mode=None):
             df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
             if mode:
-                df = df[df["mode_name"] == mode]
+                df = df[(df["mode_name"] == self.mode.get_name()) & (df["eff"] == self.mode.get_efficiency())]
             impact_cols = df.columns[4:9]
             df[impact_cols] = df[impact_cols].multiply(df["SHIPMT_DIST_ROUTED"], axis=0)
             return df[impact_cols].mean().to_dict()
 
-        # Process all scenarios dynamically
         for scenario_name, scenario_df in quartile_mapping.items():
-            impact = process_scenario(scenario_df, emission, mode=self.mode)
+            impact = process_scenario(scenario_df, emission, self.mode.get_name())
             setattr(self, scenario_name.lower(), impact)
 
     
@@ -201,8 +201,6 @@ if __name__ == '__main__':
 
     data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
     project = ProjectLogisticManager(name="Building A", location="Seattle", data_folder=data_folder)
-    #project.create_link ( material="Carpet", qty=1, travel_dist="Global", return_trip_factor=1.5, dist_unit="km", mode= "Truck", eff=0.9)
+    project.create_link ( material="Carpet", qty=1, travel_dist="Local", return_trip_factor=1.5, dist_unit="km", mode= "Truck", eff=1)
     
-    scenario = Scenario(project, "Local", "Carpet", None)
-    print (scenario.get_regional_impact())
-    #print (project.get_impact())
+    print (project.get_impact())
