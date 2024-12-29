@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from lca_modules.transportation.logistics_link import Link
-from lca_modules.transportation.scenarios import Scenario
+#from lca_modules.transportation.scenarios import Scenario
 
 
 __author__ = ["POD/LCA Team"]
@@ -68,6 +68,10 @@ class ProjectLogisticManager:
     def get_links (self):
 
         return self.links
+
+    def get_location (self):
+
+        return self.location
 
 
 

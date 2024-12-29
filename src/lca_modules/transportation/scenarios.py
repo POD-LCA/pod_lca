@@ -1,5 +1,6 @@
 import pandas as pd
 from lca_modules.transportation.transport_mode import TransportMode
+from geopy.distance import geodesic
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -11,7 +12,7 @@ __version__ = "0.1.0"
 
 class Scenario:
     
-    def __init__(self, project ,scenario, material, mode):
+    def __init__(self, project ,scenario, material, mode, mode_domestic, shipping_org):
 
         """
         Scenario object compute the impact of transportation based on different scenarios.
@@ -37,6 +38,8 @@ class Scenario:
         self.project = project
         self.material = material
         self.mode = mode
+        self.mode_domestic = mode_domestic
+        self.shipping_org = shipping_org
         self.local = None
         self.regional = None
         self.regional_c = None
@@ -47,17 +50,30 @@ class Scenario:
         self.pre_us_processing()
         #self.pre_global_processing()
 
+    def get_sctg(self, digit):
+        """
+        Get the SCTG code based on the material category.
+
+        Parameters:
+        - digit: int, the digit of the SCTG code to retrieve.
+
+        Returns:
+        - int, the SCTG code.
+        """
+        data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
+        sctg = data_material[data_material["material"] == self.material].iloc[0, 1]
+        sctg = int(str(sctg)[:digit])
+        return sctg
+    
+    
     def pre_us_processing(self):
 
-
-        data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
         cfs = self.project.get_subdataset("cfs_2017")
         emission = self.project.get_subdataset("Emission")
         cfs = cfs.drop(columns=["SHIPMT_ID", "QUARTER", "SHIPMT_VALUE", "TEMP_CNTL_YN", "EXPORT_CNTRY",
                                 "HAZMAT", "WGT_FACTOR", "ORIG_MA", "ORIG_CFS_AREA", "DEST_MA", "DEST_CFS_AREA"])
 
-        sctg = data_material[data_material["material"] == self.material].iloc[0, 1]
-        sctg = int(str(sctg)[:2])
+        sctg = self.get_sctg(2)
         df = cfs[cfs["SCTG"] == str(sctg)].copy()
         quartiles = df["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
 
@@ -80,66 +96,106 @@ class Scenario:
             "National": df[df['quartile'] == 'Q4']
         }
 
-        def process_scenario(df, emission, mode=None):
+        def process_scenario(df, emission, mode=None, location_org=None, location_dest=None):
+
             df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
-            if mode:
+            if location_org is not None:
+                df = df[df["ORIG_STATE"] == location_org]
+            if location_dest is not None:
+                df = df[df["DEST_STATE"] == location_dest]
+            if mode is not None:
                 df = df[(df["mode_name"] == self.mode.get_name()) & (df["eff"] == self.mode.get_efficiency())]
-            impact_cols = df.columns[4:9]
+            impact_cols = df.columns[5:10]
             df[impact_cols] = df[impact_cols].multiply(df["SHIPMT_DIST_ROUTED"], axis=0)
             return df[impact_cols].mean().to_dict()
 
         for scenario_name, scenario_df in quartile_mapping.items():
-            impact = process_scenario(scenario_df, emission, self.mode.get_name())
+            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.location_org, self.location_dest)
             setattr(self, scenario_name.lower(), impact)
 
     
 
-    # def pre_global_processing (self):
+    def pre_global_processing (self):
+        
+        #reading the data
+        emission = self.project.get_subdataset("Emission")
+        faf = self.project.get_subdataset("FAF561_cleaned")
+        cfaf = self.project.get_subdataset("cfaf_cleaned")
+        pod_lca_dataset = self.project.get_subdataset("PODlLDA_transport_dataset")
+        marine = self.project.get_subdataset("marine")
 
-    #     data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
-    #     emission = self.project.get_subdataset("Emission")
-    #     faf = pd.read_csv (r"temp\transportation_dataset\FAF561.csv")
-    #     PODlLCA_file_path = self.project.get_subdataset("PODlLDA_transport_dataset")
-    #     dist_fr = PODlLCA_file_path.parse(sheet_name="MOT")
-    #     sensitive_material = PODlLCA_file_path.parse(sheet_name="sensitive_material")
-    #     faf_dist_band = PODlLCA_file_path.parse(sheet_name="faf_dist_band")
-    #     cfaf = self.project.get_subdataset ("CFAF_C2011-2017_Code_E")
+        #filtering the data by sctg code
+        sctg = self.get_sctg(2)
+        faf = faf[faf["sctg2"] == str(sctg)].copy()
+        cfaf = cfaf[cfaf["SCTG_2digits"] == sctg].copy()
 
-    #     faf = faf[faf['tons_2017'] != 0]
-    #     faf.dropna(subset=['fr_orig'], inplace=True)
-    #     faf_filtered = faf[faf['trade_type'] == 2]
+        #filtering the data by location if is defined
+        if project.get_location() is not None:
 
-    #     #Remove unrelated columns
-    #     columns_to_remove = ["fr_dest", "fr_outmode"]
-    #     columns_to_remove += faf.columns[18:]
+            location = project.get_location()
+            faf = faf[faf["dms_orig"] == location]
 
-    #     faf_cleaned = faf.drop(columns=columns_to_remove)
-    #     faf_merged = faf_cleaned.merge(faf_dist_band, on='dist_band', how='left')
-    #     faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * 1.60934
-    #     faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * 1.60934
-    #     faf_merged = faf_merged.merge(mot[['dms_mode', 'gwp_mean']].rename(columns={'gwp_mean': 'dom_mot_emi'}), on='dms_mode', how='left')
-    #     faf_merged['min_dom_emi'] = faf_merged['min_dom_dist_km'] * faf_merged['dom_mot_emi']
-    #     faf_merged['max_dom_emi'] = faf_merged['max_dom_dist_km'] * faf_merged['dom_mot_emi']
+        #filtering the data by domestic mode if is defined
+        if self.mode.domestic is not None:
+            faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
 
-    #     faf_merged['ave_dom_emi'] = (faf_merged['min_dom_emi'] + faf_merged['max_dom_emi']) / 2
-    #     faf_merged.dropna(subset=['dom_mot_emi'], inplace=True)
-    #     faf_merged = faf_merged[faf_merged['max_dom_emi'].notna()]
-    #     faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km', 'max_dom_dist_km'], inplace=True)
-    #     faf = faf_merged
-    #     faf = faf.merge(mot[['fr_inmode', 'gwp_mean']].rename(columns={'gwp_mean': 'fr_mot_emi'}), on='fr_inmode', how='left')
-    #     faf['fr_orig'] = faf['fr_orig'].astype(int)
-    #     dist_fr['fr_orig'] = dist_fr['fr_orig'].astype(int)
-    #     faf = faf.merge(dist_fr[['fr_orig', 'fr_inmode', 'fr_dist']], on=['fr_orig', 'fr_inmode'], how='left')
-    #     faf = faf.dropna(subset=['fr_dist'])
-    #     faf['fr_in_emi']= faf['fr_dist'] * faf['fr_mot_emi']
-    #     faf['fr_emi']=faf['fr_in_emi'] +faf["ave_dom_emi"]
+        #Truck
+        if self.mode.get_name() == "Truck":
+
+            distance = faf["avr_dom_dist_km"].mean()
+
+            for key in self.mode.get_impacts():
+                domestic = self.mode.get_impacts()[key] *= distance
+            for key in self.mode.get_impacts():
+                foreign = self.mode.get_impacts()[key] *= 200
+            self.na = domestic + foreign
+
+        #Rail
+        if self.mode.get_name() == "Rail":
+            
+            distance = cfaf["Average_Distance_per_Shipment"].mean()
+            for key in self.mode.get_impacts():
+                self.na = self.mode.get_impacts()[key] *= distance
+
+        #Water
+        if self.mode.get_name() == "Water":
+
+            # can be filter by truck or avrage of all modes
+            distance = faf["avr_dom_dist_km"].mean()
+
+            for key in self.mode.get_impacts():
+
+                if self.mode_domestic is not None:
+                    domestic = self.mode_domestic.get_impacts()[key] *= distance
+                else:
+                    domestic = emission[(emission["mode_name"] == "Truck") & (emission["eff"] == 1)][key].mean() * distance
+            
+            for key in self.mode.get_impacts():
+                
+                if self.shipping_org is not None:
+                    marine_dis = marine[(marine["Region"]== self.shipping_org.get_continent())].mean()
+                else:
+                    marine_dis = marine[marine["Region"]].mean()
+
+                foreign = self.mode.get_impacts()[key] *= marine_dis
+
+            self.global_ = domestic + foreign
 
 
+        #Air
+        if self.mode.get_name() == "Air":
 
+            if self.project.get_location() is not None:
+                dest_location = self.project.get_location().get_cordinates()
+            else:
+                dest_location = (39.8283, -98.5795) #USA middle
 
-    #     sctg = data_material[data_material["material"] == self.material].iloc[0,1]
-    #     sctg = int(str(sctg)[:2])
+            if self.shipping_org is not None:
+                org_location = self.shipping_org.get_cordinates()
+            else:
+                org_location = (31.2304, 121.4737) #Shanghai
 
+            self.global_ = geodesic(org_location, dest_location).km
 
 
     def scenario_impact (self):

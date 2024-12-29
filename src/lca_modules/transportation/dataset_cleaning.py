@@ -2,8 +2,6 @@ import pandas as pd
 
 
 
-
-
 def cleaning_faf (input_path_faf, output_path_faf):
 
     PODlLCA_file_path = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\PODlLDA_transport_dataset.xlsx"
@@ -49,32 +47,81 @@ def cleaning_faf (input_path_faf, output_path_faf):
     faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * 1.60934
     faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * 1.60934
 
-    faf_merged = faf_merged.merge(mot[['dms_mode', 'gwp_mean']].rename(columns={'gwp_mean': 'dom_mot_emi'}), on='dms_mode', how='left')
-    faf_merged['min_dom_emi'] = faf_merged['min_dom_dist_km'] * faf_merged['dom_mot_emi']
-    faf_merged['max_dom_emi'] = faf_merged['max_dom_dist_km'] * faf_merged['dom_mot_emi']
+    faf_merged['avr_dom_dist_km'] = (faf_merged['min_dom_dist_km'] + faf_merged['max_dom_dist_km']) / 2
+    faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km','max_dom_dist_km' ], inplace=True)
 
-    # Calculate the average emission and assign to 'ave_dms_emi'
-    faf_merged['ave_dom_emi'] = (faf_merged['min_dom_emi'] + faf_merged['max_dom_emi']) / 2
-
-    # Drop rows where 'dms_mot_emi' is NaN, if required
-    faf_merged.dropna(subset=['dom_mot_emi'], inplace=True)
-    faf_merged = faf_merged[faf_merged['max_dom_emi'].notna()]
-
-    # Drop unrelated columns
-    faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km', 'max_dom_dist_km'], inplace=True)
-
-    # Assign faf_merged to faf
-    faf = faf_merged
-    faf = faf.merge(mot[['fr_inmode', 'gwp_mean']].rename(columns={'gwp_mean': 'fr_mot_emi'}), on='fr_inmode', how='left')
-    faf = faf.dropna(subset=['fr_dist'])
-    
-    faf['fr_in_emi']= faf['fr_dist'] * faf['fr_mot_emi']
-    faf['fr_emi']=faf['fr_in_emi'] +faf["ave_dom_emi"]
+    faf = faf_merged.to_csv(output_path_faf, index=False)
 
     return faf
 
 
+def cfaf(output_path_cfaf):
+
+    cfaf = pd.read_excel(r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset\CFAF\CFAF_C2011-2017_Code_E.xlsx")
+
+
+    cfaf_filtered = cfaf[(cfaf['Year'] == 2017) & 
+                         (cfaf['DestCtry'].isin(['UM'])) & 
+                         (cfaf['OrigCtry'] == 'CA')]
+
+    # Drop the specified columns
+    columns_to_drop = ['Weight', 'Revenue', 'TonneKm', 'Value', 'DestProv', 'DestCMA', 'OrigCMA', 'OrigProv']
+    cfaf_filtered = cfaf_filtered.drop(columns=columns_to_drop)
+
+    # Create a mapping dictionary from SCTGGroup to their corresponding numbers
+    sctg_mapping = {
+        'AGRI': [1, 2, 3, 4],
+        'FOOD': [5, 6, 7, 8, 9],
+        'MNRLS': [10, 11, 12, 13, 14],
+        'COAL': [15],
+        'FUELS': [16, 17, 18, 19],
+        'PLCHM': [20, 21, 22, 23, 24],
+        'FRPAP': [25, 26, 27, 28, 29],
+        'BMETL': [31, 32, 33],
+        'TRANS': [36, 37],
+        'OTHMF': [30, 34, 35, 38, 39, 40],
+        'WASTE': [41],
+        'MISC': [42]
+    }
+
+    # Create a list to store the new rows
+    new_rows = []
+
+    # Iterate over each row in the cfaf dataframe
+    for _, row in cfaf_filtered.iterrows():
+        sctg_group = row['SCTGGroup']
+        
+        # Check if the SCTGGroup exists in the mapping
+        if sctg_group in sctg_mapping:
+            # For each number in the corresponding list, create a new row
+            for sctg_num in sctg_mapping[sctg_group]:
+                new_row = row.copy()  # Copy the original row
+                new_row['SCTG_2digits'] = sctg_num  # Replace with one SCTG number
+                new_rows.append(new_row)  # Append the new row to the list
+        else:
+            # If no mapping exists, just keep the original row
+            new_row = row.copy()
+            new_row['SCTG_2digits'] = sctg_group  # Keep the original SCTG group
+            new_rows.append(new_row)
+
+    # Create a new dataframe from the list of new rows
+    cfaf = pd.DataFrame(new_rows)
+    cfaf['Distance_per_Shipment'] = cfaf['Distance'] / cfaf['Shipments']
+    cfaf = cfaf.dropna(subset=['Distance_per_Shipment'])
+    
+    # Group by 'SCTG_2digits' and calculate the average 'Distance_per_Shipment'
+    cfaf2017 = cfaf.groupby('SCTG_2digits', as_index=False)['Distance_per_Shipment'].mean()
+
+    # Rename the resulting column for clarity
+    cfaf2017.rename(columns={'Distance_per_Shipment': 'Average_Distance_per_Shipment'}, inplace=True)
+
+    cfaf2017.to_csv(output_path_cfaf, index=False)
+
+    return cfaf2017
+
 input_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561.csv"
 output_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561_cleaned.csv"
+output_path_cfaf= r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\cfaf_cleaned.csv"
 
-cleaning_faf(input_path_faf, output_path_faf)
+#cleaning_faf(input_path_faf, output_path_faf)
+cfaf(output_path_cfaf)

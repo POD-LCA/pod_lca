@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from lca_modules.transportation.scenarios import Scenario
+#from lca_modules.transportation.scenarios import Scenario
 from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
@@ -54,6 +54,7 @@ class Link:
         self.return_trip_factor = return_trip_factor
         self.dist_unit = dist_unit
         self.mode = TransportMode (mode_name, efficiency, project)
+        self.mode_domestic = TransportMode (mode_name, efficiency, project)
         self.shipping_org = None
         self.unit_conversion = 1.60934
 
@@ -78,7 +79,7 @@ class Link:
 
         else:
             
-            impact = Scenario(self.project, self.travel_dist, self.material, self.mode).scenario_impact() 
+            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic, self.shipping_org).scenario_impact() 
 
             for key in impact:
                 impact[key] *= self.qty * self.return_trip_factor * self.unit_conversion

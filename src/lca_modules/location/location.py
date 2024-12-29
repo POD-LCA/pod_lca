@@ -106,6 +106,17 @@ class Location:
         """
         return self.coords
 
+    def get_country(self):
+
+        """ Retrieve the country of the location.
+
+            Returns
+            -------
+            str
+                Name of the country.
+        """
+        return self.country
+
     def get_egrid(self):
 
         #TODO we have to find a dataset for this

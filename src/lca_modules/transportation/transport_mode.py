@@ -21,6 +21,7 @@ class TransportMode:
         self.project = project
         self.impacts = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
         self.limitations = []
+        self.faf_mode = None
 
 
     def set_impact(self):
@@ -60,6 +61,15 @@ class TransportMode:
 
         return self.impacts
 
+    def get_faf_mode (self):
+
+        faf_mapping = {"Truck": 1 , "Rail": 2, "Water": 3, "Air": 4}
+        if self.mode_name in faf_mapping:
+            self.faf_mode = faf_mapping[self.mode_name]
+
+        return self.faf_mode
+
+
 if __name__ == '__main__':
 
     from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
@@ -69,4 +79,8 @@ if __name__ == '__main__':
 
     transport = TransportMode ("Truck", 1, project)
     transport.set_impact()
-    print (transport.get_impacts ())
+    # print (transport.get_impacts ())
+    # print (transport.get_name())
+    # print (transport.get_faf_mode())
+
+    print (transport.get_impact_by_mode("Rail"))
