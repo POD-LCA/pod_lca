@@ -101,7 +101,7 @@ class Link:
     def get_material (self):
         """ 
         Retrieve the material name of the transportation link.
-
+        
             Returns
             -------
             str
