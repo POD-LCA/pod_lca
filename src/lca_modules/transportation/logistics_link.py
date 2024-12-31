@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-#from lca_modules.transportation.scenarios import Scenario
+from lca_modules.transportation.scenarios import Scenario
 from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
@@ -68,7 +68,7 @@ class Link:
             dict
                 A dictionary of impacts for each category.
         """
-        if isinstance(self.travel_dist, float): 
+        if isinstance(self.travel_dist, float) or isinstance(self.travel_dist, int): 
 
             impact = self.mode.set_impact()
             impact = self.mode.get_impacts()
@@ -101,7 +101,7 @@ class Link:
     def get_material (self):
         """ 
         Retrieve the material name of the transportation link.
-        
+
             Returns
             -------
             str

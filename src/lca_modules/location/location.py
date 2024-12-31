@@ -1,5 +1,6 @@
 from geopy.geocoders import Nominatim
 from geopy.geocoders import Photon
+import pandas as pd
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -26,6 +27,7 @@ class Location:
         self.zipcode = None
         self.coords = None
         self.country = None
+        self.cfs_area = None
         self.get_location_info(location)
     
     def get_location_info(self, location):
@@ -120,19 +122,25 @@ class Location:
     def get_egrid(self):
 
         #TODO we have to find a dataset for this
-        return self.coords
+        pass
 
 
-        #TODO Transportation region 
-        #TODO End of life region
+    def get_cfs_area(self):
+
+        df = pd.read_csv("data\\location_cfs.csv")
+        if self.state:
+            cfs_area = df[df['State'] == self.get_state() ].iloc[0, 1]
+
+        return cfs_area
 
 
 if __name__ == '__main__':
 
-    location_input = "Seattle"
+    location_input = "2155 Bay St, San Francisco, CA 94123"
     location_obj = Location(location_input)
     
     print(f"State: {location_obj.get_state()}")
     print(f"City: {location_obj.get_city()}")
     print(f"Zipcode: {location_obj.get_zip()}")
     print(f"Coordinates: {location_obj.get_cordinates()}")
+    print (f"CFS Area: {location_obj.get_cfs_area()}")

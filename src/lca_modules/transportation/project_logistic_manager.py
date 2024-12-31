@@ -1,7 +1,8 @@
 import os
 import pandas as pd
 from lca_modules.transportation.logistics_link import Link
-#from lca_modules.transportation.scenarios import Scenario
+from lca_modules.transportation.scenarios import Scenario
+from lca_modules.location.location import Location
 
 
 __author__ = ["POD/LCA Team"]
@@ -17,7 +18,7 @@ class ProjectLogisticManager:
     def __init__(self, name, location, data_folder):
 
         self.name = name
-        self.location = location
+        self.location = Location(location)
         self.data_folder = data_folder
         self.links = []
         self.impact = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}

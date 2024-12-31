@@ -39,7 +39,8 @@ class Scenario:
         self.material = material
         self.mode = mode
         self.mode_domestic = mode_domestic
-        self.shipping_org = shipping_org
+        self.shipping_org = None
+        self.shipping_dest = project.get_location()
         self.local = None
         self.regional = None
         self.regional_c = None
@@ -95,25 +96,26 @@ class Scenario:
             "Regional_c": df[df['quartile'] == 'Q3'],
             "National": df[df['quartile'] == 'Q4']
         }
-
-        def process_scenario(df, emission, mode=None, location_org=None, location_dest=None):
+        
+        def process_scenario(df, emission, mode, shipping_org, shipping_dest, eff):
 
             df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
-            if location_org is not None:
-                df = df[df["ORIG_STATE"] == location_org]
-            if location_dest is not None:
-                df = df[df["DEST_STATE"] == location_dest]
+            if shipping_org is not None:
+                df = df[df["ORIG_STATE"] == shipping_org]
+            if shipping_dest is not None:
+                df = df[df["DEST_STATE"] == shipping_dest]
             if mode is not None:
-                df = df[(df["mode_name"] == self.mode.get_name()) & (df["eff"] == self.mode.get_efficiency())]
+                df = df[(df["mode_name"] == mode) & (df["eff"] == eff)]
+
             impact_cols = df.columns[5:10]
             df[impact_cols] = df[impact_cols].multiply(df["SHIPMT_DIST_ROUTED"], axis=0)
+            
             return df[impact_cols].mean().to_dict()
 
         for scenario_name, scenario_df in quartile_mapping.items():
-            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.location_org, self.location_dest)
+            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.shipping_org, self.shipping_dest.get_cfs_area(), self.mode.get_efficiency())
             setattr(self, scenario_name.lower(), impact)
 
-    
 
     def pre_global_processing (self):
         
@@ -141,45 +143,64 @@ class Scenario:
 
         #Truck
         if self.mode.get_name() == "Truck":
-
             distance = faf["avr_dom_dist_km"].mean()
+            
+            domestic_total = 0
+            foreign_total = 0
+            
+            # Calculate domestic and foreign impacts
+            for key, value in self.mode.get_impacts().items():
+                domestic_total += value * distance
+                foreign_total += value * 200  # Assuming 200 is the constant foreign distance
+            
+            self.na = domestic_total + foreign_total
 
-            for key in self.mode.get_impacts():
-                domestic = self.mode.get_impacts()[key] *= distance
-            for key in self.mode.get_impacts():
-                foreign = self.mode.get_impacts()[key] *= 200
-            self.na = domestic + foreign
 
         #Rail
         if self.mode.get_name() == "Rail":
-            
             distance = cfaf["Average_Distance_per_Shipment"].mean()
-            for key in self.mode.get_impacts():
-                self.na = self.mode.get_impacts()[key] *= distance
+            
+            total_impact = 0
+            
+            # Calculate the total impacts
+            for key, value in self.mode.get_impacts().items():
+                total_impact += value * distance
+            
+            self.na = total_impact
 
         #Water
         if self.mode.get_name() == "Water":
-
-            # can be filter by truck or avrage of all modes
+            # Get average domestic distance
             distance = faf["avr_dom_dist_km"].mean()
-
-            for key in self.mode.get_impacts():
-
-                if self.mode_domestic is not None:
-                    domestic = self.mode_domestic.get_impacts()[key] *= distance
-                else:
-                    domestic = emission[(emission["mode_name"] == "Truck") & (emission["eff"] == 1)][key].mean() * distance
             
-            for key in self.mode.get_impacts():
-                
-                if self.shipping_org is not None:
-                    marine_dis = marine[(marine["Region"]== self.shipping_org.get_continent())].mean()
+            domestic_total = 0
+            foreign_total = 0
+            
+            # Calculate domestic impacts
+            for key, value in self.mode.get_impacts().items():
+                if self.mode_domestic is not None:
+                    domestic_impact = self.mode_domestic.get_impacts()[key] * distance
                 else:
-                    marine_dis = marine[marine["Region"]].mean()
-
-                foreign = self.mode.get_impacts()[key] *= marine_dis
-
-            self.global_ = domestic + foreign
+                    domestic_impact = emission[
+                        (emission["mode_name"] == "Truck") & (emission["eff"] == 1)
+                    ][key].mean() * distance
+                
+                domestic_total += domestic_impact
+            
+            # Calculate foreign impacts
+            for key, value in self.mode.get_impacts().items():
+                if self.shipping_org is not None:
+                    marine_dis = marine[marine["Region"] == self.shipping_org.get_continent()][
+                        "distance"
+                    ].mean()
+                else:
+                    marine_dis = marine["distance"].mean()
+                
+                foreign_impact = value * marine_dis
+                foreign_total += foreign_impact
+            
+            # Combine domestic and foreign impacts
+            self.global_ = domestic_total + foreign_total
 
 
         #Air
