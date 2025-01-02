@@ -1,52 +1,52 @@
-State,Code
-Alabama,1
-Alaska,2
-Arizona,4
-Arkansas,5
-California,6
-Colorado,8
-Connecticut,9
-Delaware,10
-District Of Columbia,11
-Florida,12
-Georgia,13
-Hawaii,15
-Idaho,16
-Illinois,17
-Indiana,18
-Iowa,19
-Kansas,20
-Kentucky,21
-Louisiana,22
-Maine,23
-Maryland,24
-Massachusetts,25
-Michigan,26
-Minnesota,27
-Mississippi,28
-Missouri,29
-Montana,30
-Nebraska,31
-Nevada,32
-New Hampshire,33
-New Jersey,34
-New Mexico,35
-New York,36
-North Carolina,37
-North Dakota,38
-Ohio,39
-Oklahoma,40
-Oregon,41
-Pennsylvania,42
-Rhode Island,44
-South Carolina,45
-South Dakota,46
-Tennessee,47
-Texas,48
-Utah,49
-Vermont,50
-Virginia,51
-Washington,53
-West Virginia,54
-Wisconsin,55
-Wyoming,56
+State,State_Initial,Code
+Alabama,AL,1
+Alaska,AK,2
+Arizona,AZ,4
+Arkansas,AR,5
+California,CA,6
+Colorado,CO,8
+Connecticut,CT,9
+Delaware,DE,10
+District Of Columbia,DC,11
+Florida,FL,12
+Georgia,GA,13
+Hawaii,HI,15
+Idaho,ID,16
+Illinois,IL,17
+Indiana,IN,18
+Iowa,IA,19
+Kansas,KS,20
+Kentucky,KY,21
+Louisiana,LA,22
+Maine,ME,23
+Maryland,MD,24
+Massachusetts,MA,25
+Michigan,MI,26
+Minnesota,MN,27
+Mississippi,MS,28
+Missouri,MO,29
+Montana,MT,30
+Nebraska,NE,31
+Nevada,NV,32
+New Hampshire,NH,33
+New Jersey,NJ,34
+New Mexico,NM,35
+New York,NY,36
+North Carolina,NC,37
+North Dakota,ND,38
+Ohio,OH,39
+Oklahoma,OK,40
+Oregon,OR,41
+Pennsylvania,PA,42
+Rhode Island,RI,44
+South Carolina,SC,45
+South Dakota,SD,46
+Tennessee,TN,47
+Texas,TX,48
+Utah,UT,49
+Vermont,VT,50
+Virginia,VA,51
+Washington,WA,53
+West Virginia,WV,54
+Wisconsin,WI,55
+Wyoming,WY,56

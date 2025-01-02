@@ -15,11 +15,12 @@ __version__ = "0.1.0"
 
 class ProjectLogisticManager:
 
-    def __init__(self, name, location, data_folder):
+    def __init__(self, name, shipping_dest, data_folder, shipping_org):
 
         self.name = name
-        self.location = Location(location)
+        self.shipping_dest = Location(shipping_dest)
         self.data_folder = data_folder
+        self.shipping_org = Location(shipping_org)
         self.links = []
         self.impact = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
         self.subdataset = {}
@@ -48,9 +49,9 @@ class ProjectLogisticManager:
             self.sub_dataset()
         return self.subdataset.get(sub_dataset)
 
-    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, efficiency):
+    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency):
         
-        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, efficiency)
+        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency)
         self.links.append(link)
         self.impact = self.merge_impacts(self.impact, link.compute_impact())
         
@@ -70,9 +71,13 @@ class ProjectLogisticManager:
 
         return self.links
 
-    def get_location (self):
+    def get_shipping_dest (self):
 
-        return self.location
+        return self.shipping_dest
+
+    def get_shipping_org (self):
+
+        return self.shipping_org
 
 
 

@@ -22,7 +22,7 @@ class TransportMode:
         self.impacts = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
         self.limitations = []
         self.faf_mode = None
-
+        self.set_impact()
 
     def set_impact(self):
         """
@@ -75,12 +75,12 @@ if __name__ == '__main__':
     from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
 
     data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
-    project = ProjectLogisticManager(name="Building A", location="Seattle", data_folder=data_folder)
+    project = ProjectLogisticManager(name="Building A", shipping_dest= None, data_folder=data_folder, shipping_org= None)
 
     transport = TransportMode ("Truck", 1, project)
-    transport.set_impact()
-    # print (transport.get_impacts ())
+    #transport.set_impact()
+    print (transport.get_impacts ())
     # print (transport.get_name())
     # print (transport.get_faf_mode())
 
-    print (transport.get_impact_by_mode("Rail"))
+    #print (transport.get_impact_by_mode("Rail"))

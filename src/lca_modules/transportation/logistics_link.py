@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Link:
     
-    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, efficiency):
+    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency):
         """
         Link object create a link of transportation for each material.
 
@@ -53,9 +53,8 @@ class Link:
         self.travel_dist = travel_dist
         self.return_trip_factor = return_trip_factor
         self.dist_unit = dist_unit
-        self.mode = TransportMode (mode_name, efficiency, project)
-        self.mode_domestic = TransportMode (mode_name, efficiency, project)
-        self.shipping_org = None
+        self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project)
+        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency, project)
         self.unit_conversion = 1.60934
 
 
@@ -79,7 +78,7 @@ class Link:
 
         else:
             
-            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic, self.shipping_org).scenario_impact() 
+            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).scenario_impact() 
 
             for key in impact:
                 impact[key] *= self.qty * self.return_trip_factor * self.unit_conversion

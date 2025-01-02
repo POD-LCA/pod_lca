@@ -12,7 +12,7 @@ __version__ = "0.1.0"
 
 class Scenario:
     
-    def __init__(self, project ,scenario, material, mode, mode_domestic, shipping_org):
+    def __init__(self, project ,scenario, material, mode, mode_domestic):
 
         """
         Scenario object compute the impact of transportation based on different scenarios.
@@ -39,8 +39,8 @@ class Scenario:
         self.material = material
         self.mode = mode
         self.mode_domestic = mode_domestic
-        self.shipping_org = None
-        self.shipping_dest = project.get_location()
+        self.shipping_dest = project.get_shipping_dest()
+        self.shipping_org = project.get_shipping_org()
         self.local = None
         self.regional = None
         self.regional_c = None
@@ -49,7 +49,7 @@ class Scenario:
         self.global_ = None
 
         self.pre_us_processing()
-        #self.pre_global_processing()
+        self.pre_global_processing()
 
     def get_sctg(self, digit):
         """
@@ -113,7 +113,7 @@ class Scenario:
             return df[impact_cols].mean().to_dict()
 
         for scenario_name, scenario_df in quartile_mapping.items():
-            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.shipping_org, self.shipping_dest.get_cfs_area(), self.mode.get_efficiency())
+            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.shipping_org.get_cfs_area(), self.shipping_dest.get_cfs_area(), self.mode.get_efficiency())
             setattr(self, scenario_name.lower(), impact)
 
 
@@ -125,36 +125,42 @@ class Scenario:
         cfaf = self.project.get_subdataset("cfaf_cleaned")
         pod_lca_dataset = self.project.get_subdataset("PODlLDA_transport_dataset")
         marine = self.project.get_subdataset("marine")
-
+        
         #filtering the data by sctg code
         sctg = self.get_sctg(2)
-        faf = faf[faf["sctg2"] == str(sctg)].copy()
+        
+        faf = faf[faf["sctg2"] == sctg].copy()
         cfaf = cfaf[cfaf["SCTG_2digits"] == sctg].copy()
-
+        
+        
         #filtering the data by location if is defined
-        if project.get_location() is not None:
-
-            location = project.get_location()
-            faf = faf[faf["dms_orig"] == location]
+        if self.shipping_dest is not None:
+            pass
+            # location = self.shipping_dest.get_faf_domestic_region()
+            # faf = faf[faf["dms_dest"] == location]
 
         #filtering the data by domestic mode if is defined
-        if self.mode.domestic is not None:
+        if self.mode_domestic is not None:
             faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
 
-        #Truck
+        # Truck
         if self.mode.get_name() == "Truck":
+            
+            # Filter faf based on the mode
+            faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
             distance = faf["avr_dom_dist_km"].mean()
             
-            domestic_total = 0
-            foreign_total = 0
+            # Initialize a dictionary to store the total impacts
+            total_impacts = {}
             
             # Calculate domestic and foreign impacts
             for key, value in self.mode.get_impacts().items():
-                domestic_total += value * distance
-                foreign_total += value * 200  # Assuming 200 is the constant foreign distance
+                domestic_total = value * distance
+                foreign_total = value * 200  # Assuming 200 is the constant foreign distance
+                total_impacts[key] = domestic_total + foreign_total
             
-            self.na = domestic_total + foreign_total
-
+            # Store the results
+            self.na = total_impacts
 
         #Rail
         if self.mode.get_name() == "Rail":
@@ -233,6 +239,9 @@ class Scenario:
         if self.scenario == "National":
             return self.national
 
+        if self.scenario == "NA":
+            return self.na
+
         if self.scenario == "Global":
             return self.global_
 
@@ -252,10 +261,13 @@ class Scenario:
 
         return self.national
 
+    def get_na_impact (self):
+
+        return self.na
+
     def get_global_impact (self):
 
         return self.global_
-
 
 
 if __name__ == '__main__':
