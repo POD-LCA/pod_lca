@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Link:
     
-    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency):
+    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms):
         """
         Link object create a link of transportation for each material.
 
@@ -37,14 +37,17 @@ class Link:
         dist_unit : str.
             transportation distance unit.
 
-        mode : str.
+        mode_name : str.
             transportation mode (ex: truck, rail).
 
-        eff : str.
-            transportation mode efficiency (ex: high, medium).
+        mode_dms_name : str.
+            transportation domestic mode (ex: truck, rail).
 
-        shipping_org : str.
-            origin of the transportation.
+        efficiency : int.
+            transportation mode efficiency (ex: (1)high, (2)medium, (3)low).
+
+        efficiency_dms : int.
+            Domestic transportation mode efficiency (ex: (1)high, (2)medium, (3)low).
 
         """
         self.project = project  
@@ -54,7 +57,7 @@ class Link:
         self.return_trip_factor = return_trip_factor
         self.dist_unit = dist_unit
         self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project)
-        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency, project)
+        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project)
         self.unit_conversion = 1.60934
 
 
@@ -108,9 +111,3 @@ class Link:
         """
 
         return self.material
-
-
-    def compute_with_location(self):
-        # Dummy implementation for demonstration
-        # Actual logic for compute_with_location needs to be added
-        return {"GWP": 100, "AP": 50}

@@ -202,7 +202,7 @@ if __name__ == '__main__':
     
     # print (location_obj.get_faf_foreign_region(location_input))
 
-    location_input = "7530 164th Ave NE, Redmond, WA 98052"
+    location_input = "Mexico"
     location_obj = Location(location_input)
 
     print(f"State: {location_obj.get_state()}")
@@ -211,3 +211,4 @@ if __name__ == '__main__':
     print(f"Coordinates: {location_obj.get_cordinates()}")
     print (f"Country: {location_obj.get_country()}")
     print (f"CFS Area: {location_obj.get_cfs_area()}")
+    print (f"location: {location_obj.get_location()}")

@@ -32,6 +32,9 @@ class Scenario:
         mode : obj.
             Refers to the TransportMode object.
 
+        mode : obj.
+            Refers to the TransportMode object.
+
         """
 
         self.scenario = scenario
@@ -68,7 +71,10 @@ class Scenario:
     
     
     def pre_us_processing(self):
+        """
+        process the data for the US scenarios.
 
+        """
         cfs = self.project.get_subdataset("cfs_2017")
         emission = self.project.get_subdataset("Emission")
         cfs = cfs.drop(columns=["SHIPMT_ID", "QUARTER", "SHIPMT_VALUE", "TEMP_CNTL_YN", "EXPORT_CNTRY",
@@ -101,9 +107,9 @@ class Scenario:
 
             df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
             if shipping_org is not None:
-                df = df[df["ORIG_STATE"] == shipping_org]
+                df = df[df["ORIG_STATE"] == shipping_org.get_cfs_area()]
             if shipping_dest is not None:
-                df = df[df["DEST_STATE"] == shipping_dest]
+                df = df[df["DEST_STATE"] == shipping_dest.get_cfs_area()]
             if mode is not None:
                 df = df[(df["mode_name"] == mode) & (df["eff"] == eff)]
 
@@ -113,19 +119,22 @@ class Scenario:
             return df[impact_cols].mean().to_dict()
 
         for scenario_name, scenario_df in quartile_mapping.items():
-            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.shipping_org.get_cfs_area(), self.shipping_dest.get_cfs_area(), self.mode.get_efficiency())
+            impact = process_scenario(scenario_df, emission, self.mode.get_name(), self.shipping_org, self.shipping_dest, self.mode.get_efficiency())
             setattr(self, scenario_name.lower(), impact)
 
 
     def pre_global_processing (self):
+        """
+        process the data for the North America and Global scenarios.
         
+        """
         #reading the data
         emission = self.project.get_subdataset("Emission")
         faf = self.project.get_subdataset("FAF561_cleaned")
         cfaf = self.project.get_subdataset("cfaf_cleaned")
         pod_lca_dataset = self.project.get_subdataset("PODlLDA_transport_dataset")
-        marine = self.project.get_subdataset("marine")
-        
+        marine = self.project.get_subdataset("Marine_cleaned")
+
         #filtering the data by sctg code
         sctg = self.get_sctg(2)
         
@@ -139,80 +148,65 @@ class Scenario:
             # location = self.shipping_dest.get_faf_domestic_region()
             # faf = faf[faf["dms_dest"] == location]
 
-        #filtering the data by domestic mode if is defined
         if self.mode_domestic is not None:
             faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
 
-        # Truck
+        # Truck------------------------------------
         if self.mode.get_name() == "Truck":
             
-            # Filter faf based on the mode
             faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
             distance = faf["avr_dom_dist_km"].mean()
             
-            # Initialize a dictionary to store the total impacts
             total_impacts = {}
             
-            # Calculate domestic and foreign impacts
             for key, value in self.mode.get_impacts().items():
                 domestic_total = value * distance
-                foreign_total = value * 200  # Assuming 200 is the constant foreign distance
+                foreign_total = value * 200  
                 total_impacts[key] = domestic_total + foreign_total
             
-            # Store the results
             self.na = total_impacts
 
-        #Rail
+        #Rail------------------------------------
         if self.mode.get_name() == "Rail":
             distance = cfaf["Average_Distance_per_Shipment"].mean()
             
-            total_impact = 0
+            total_impacts = {}
             
-            # Calculate the total impacts
             for key, value in self.mode.get_impacts().items():
-                total_impact += value * distance
+                total_impacts[key] = value * distance
             
-            self.na = total_impact
+            self.na = total_impacts
 
-        #Water
+        #Water------------------------------------
         if self.mode.get_name() == "Water":
-            # Get average domestic distance
+
             distance = faf["avr_dom_dist_km"].mean()
-            
-            domestic_total = 0
-            foreign_total = 0
-            
-            # Calculate domestic impacts
-            for key, value in self.mode.get_impacts().items():
-                if self.mode_domestic is not None:
-                    domestic_impact = self.mode_domestic.get_impacts()[key] * distance
-                else:
-                    domestic_impact = emission[
-                        (emission["mode_name"] == "Truck") & (emission["eff"] == 1)
-                    ][key].mean() * distance
+
+            domestic_total = {}
+            foreign_total = {}
+
+            if self.mode_domestic is not None:
+                for key, value in self.mode_domestic.get_impacts().items():
+                    domestic_total[key] = value * distance
+
+            else:
+                for key, value in TransportMode ("Truck", 1, self.project).get_impacts().items():
+                    domestic_total[key] = value * distance
                 
-                domestic_total += domestic_impact
-            
-            # Calculate foreign impacts
             for key, value in self.mode.get_impacts().items():
                 if self.shipping_org is not None:
-                    marine_dis = marine[marine["Region"] == self.shipping_org.get_continent()][
-                        "distance"
-                    ].mean()
+                    marine_dis = marine[marine["Region"] == self.shipping_org.get_location()]["Distance_km"].mean()
                 else:
-                    marine_dis = marine["distance"].mean()
+                    marine_dis = marine["Distance_km"].mean()
                 
-                foreign_impact = value * marine_dis
-                foreign_total += foreign_impact
+                foreign_total[key] = value * marine_dis
             
-            # Combine domestic and foreign impacts
-            self.global_ = domestic_total + foreign_total
+            self.global_ = {key: domestic_total[key] + foreign_total[key] for key in domestic_total}
 
-
-        #Air
+        #Air------------------------------------
         if self.mode.get_name() == "Air":
 
-            if self.project.get_location() is not None:
+            if self.shipping_dest is not None:
                 dest_location = self.project.get_location().get_cordinates()
             else:
                 dest_location = (39.8283, -98.5795) #USA middle
@@ -222,11 +216,21 @@ class Scenario:
             else:
                 org_location = (31.2304, 121.4737) #Shanghai
 
-            self.global_ = geodesic(org_location, dest_location).km
+            distance = geodesic(org_location, dest_location).km
+            total_impacts = {}
+
+            for key, value in self.mode.get_impacts().items():
+                total_impacts[key] = value * distance
+
+            self.global_ = total_impacts
 
 
     def scenario_impact (self):
 
+        """
+        return the impact of the transportation based on the scenario.
+        
+        """
         if self.scenario == "Local":
             return self.local
 
@@ -245,37 +249,56 @@ class Scenario:
         if self.scenario == "Global":
             return self.global_
 
+
     def get_local_impact (self):
 
+        """
+        return the impact of the transportation based on the local scenario.
+        
+        """
         return self.local
 
     def get_regional_impact (self):
-
+        
+        """
+        return the impact of the transportation based on the regional scenario.
+        
+        """
         return self.regional
 
     def get_regional_c_impact (self):
 
+        """
+        return the impact of the transportation based on the regional_c scenario.
+        
+        """
         return self.regional_c
 
     def get_national_impact (self):
 
+        """
+        return the impact of the transportation based on the national scenario.
+        
+        """
         return self.national
 
     def get_na_impact (self):
 
+        """
+        return the impact of the transportation based on the north america scenario.
+        
+        """
         return self.na
 
     def get_global_impact (self):
 
+        """
+        return the impact of the transportation based on the global scenario.
+        
+        """
         return self.global_
 
 
 if __name__ == '__main__':
 
-    from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
-
-    data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
-    project = ProjectLogisticManager(name="Building A", location="Seattle", data_folder=data_folder)
-    project.create_link ( material="Carpet", qty=1, travel_dist="Local", return_trip_factor=1.5, dist_unit="km", mode= "Truck", eff=1)
-    
-    print (project.get_impact())
+    pass

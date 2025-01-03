@@ -15,6 +15,11 @@ class TransportMode:
         - name: str, the name of the transportation mode (e.g., 'Truck', 'Rail').
         - efficiency: int, the efficiency level (e.g., 1, 2, 3).
         - project: an object representing the project.
+        - impacts: dict, a dictionary containing the environmental impacts of the transportation mode.
+        - limitations: list, a list of limitations for the transportation mode.
+        - faf_mode: int, the FAF mode code for the transportation mode.
+        - set_impact: method, a method to retrieve and update the environmental impacts for the given transportation mode and efficiency.
+
         """
         self.mode_name = mode_name
         self.efficiency = efficiency
@@ -50,18 +55,27 @@ class TransportMode:
 
 
     def get_name (self):
-
+        """
+        Retrieve the name of the transportation mode.
+        """
         return self.mode_name
 
     def get_efficiency (self):
-
+        """
+        Retrieve the efficiency of the transportation mode.
+        """
         return self.efficiency
 
     def get_impacts (self):
-
+        """
+        Retrieve the impacts of the transportation mode.
+        """
         return self.impacts
 
     def get_faf_mode (self):
+        """
+        Retrieve the FAF mode code of the transportation mode.
+        """
 
         faf_mapping = {"Truck": 1 , "Rail": 2, "Water": 3, "Air": 4}
         if self.mode_name in faf_mapping:
@@ -78,9 +92,4 @@ if __name__ == '__main__':
     project = ProjectLogisticManager(name="Building A", shipping_dest= None, data_folder=data_folder, shipping_org= None)
 
     transport = TransportMode ("Truck", 1, project)
-    #transport.set_impact()
     print (transport.get_impacts ())
-    # print (transport.get_name())
-    # print (transport.get_faf_mode())
-
-    #print (transport.get_impact_by_mode("Rail"))
