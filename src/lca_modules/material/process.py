@@ -1,5 +1,6 @@
 
 from lca_modules.material.master import Master
+from utilities.units.common_units import KILOGRAM
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -41,9 +42,9 @@ class transportationProcess(Process):
         Distance traveled in the transportation process.
     transported_weight : float
         Mass transported in the transportation process.
-    transported_distance_unit : str
+    transported_distance_unit : Unit Obj.
         Unit of measurement of the distance travelled.
-    transported_weight_unit : str
+    transported_weight_unit : Unit Obj.
         Unit of measurement of the transported mass.
     transported_products : list of Product Obj.
         Products transported in the transportation process.
@@ -55,7 +56,7 @@ class transportationProcess(Process):
         self.transported_distance = 0.0
         self.transported_weight = 0.0
         self.transported_distance_unit = None
-        self.transported_weight_unit = 'kg'  # default unit
+        self.transported_weight_unit = KILOGRAM  # default unit
         self.transported_products = []
 
     def __reduce__(self):
@@ -163,8 +164,8 @@ class transportationProcess(Process):
         products = self.get_transported_products()
         for product in products:
             weight_added = product.get_weight()
-            weight_conversion = self.get_calculator().conversion_factor(product.get_weight_unit(), self.get_transported_weight_unit())
-            weight += (weight_added * weight_conversion)
+            weight_conversion_factor = product.get_weight_unit().get_conversion_factor(self.get_transported_weight_unit())
+            weight += (weight_added * weight_conversion_factor)
         
         self.transported_weight = weight
 
@@ -204,7 +205,7 @@ class transportationProcess(Process):
         """
 
         if self.get_transported_distance_unit() is not None:
-            self.unit = self.get_transported_weight_unit() + self.get_transported_distance_unit()
+            self.unit = self.get_transported_weight_unit() * self.get_transported_distance_unit()
     
     def set_transported_products(self, products):
         """ Set prodcuts transported in the transportation process.

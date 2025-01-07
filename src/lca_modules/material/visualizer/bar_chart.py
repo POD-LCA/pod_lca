@@ -33,7 +33,6 @@ class BarChart(Plotter):
                     stage_idx - (1.0 - gap - width)/2 + (model_idx * width), height, width, label=f'{stage} ({model})', color=color
                 )
                 self.ax.bar_label(rect, labels=self.format_labels([height]), padding=3)
-
         self.ax.set_xticks(range(len(stages)), stages)
 
     def set_labels(self):
