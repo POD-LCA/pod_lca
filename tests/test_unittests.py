@@ -10,6 +10,7 @@ from lca_modules.material.projectManager import Project
 from lca_modules.material.calculator import Calculator
 from lca_modules.material.databaseManager import DatabaseManager
 from lca_modules.material.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
+
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR
 from utilities.units.metric_prefixes import KILO
 
