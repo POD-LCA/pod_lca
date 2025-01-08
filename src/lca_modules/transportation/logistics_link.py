@@ -1,3 +1,7 @@
+import os
+import pandas as pd
+from lca_modules.transportation.scenarios import Scenario
+from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -6,37 +10,104 @@ __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
+
 class Link:
     
-    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode, eff):
+    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms):
+        """
+        Link object create a link of transportation for each material.
 
-        self.project = project  # Pass a Project_logestic_manager instance
+        Attributes
+        ----------
+        project : Project obj.
+            Refers to the main project.
+
+        material : str.
+            name of the material.
+
+        qty : str.
+            quantity of the of the material.
+
+        travel_dist : float.
+            transportation distance.
+
+        return_trip_factor : float.
+            transportation return trip factor.
+
+        dist_unit : str.
+            transportation distance unit.
+
+        mode_name : str.
+            transportation mode (ex: truck, rail).
+
+        mode_dms_name : str.
+            transportation domestic mode (ex: truck, rail).
+
+        efficiency : int.
+            transportation mode efficiency (ex: (1)high, (2)medium, (3)low).
+
+        efficiency_dms : int.
+            Domestic transportation mode efficiency (ex: (1)high, (2)medium, (3)low).
+
+        """
+        self.project = project  
         self.material = material
         self.qty = qty
         self.travel_dist = travel_dist
         self.return_trip_factor = return_trip_factor
         self.dist_unit = dist_unit
-        self.mode = mode
-        self.eff = eff
-        self.shipping_org = None
+        self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project)
+        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project)
+        self.unit_conversion = 1.60934
+
 
     def compute_impact(self):
-        if self.shipping_org:
-            return self.compute_with_location()
+        """ 
+        compute the impaact of the transportation link.
+
+            Returns
+            -------
+            dict
+                A dictionary of impacts for each category.
+        """
+        if isinstance(self.travel_dist, float) or isinstance(self.travel_dist, int): 
+
+            impact = self.mode.set_impact()
+            impact = self.mode.get_impacts()
+
+            for key in impact:
+                impact[key] *= self.qty * self.travel_dist * self.return_trip_factor
+            return impact
+
         else:
-            dataset = self.project.get_subdataset("Emission")
+            
+            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).scenario_impact() 
 
-            if self.mode not in dataset['mode'].tolist():
-                
-                raise ValueError(f"Mode {self.mode} not found in dataset.")
-                
-            impact = dataset.loc[dataset['mode'] == self.mode].iloc[[0], 2:] * self.qty * self.return_trip_factor
-            impact = impact.iloc[0].to_dict()
-             
-            return impact  # Assuming impact data starts from 3rd column
+            for key in impact:
+                impact[key] *= self.qty * self.return_trip_factor * self.unit_conversion
 
-    def compute_with_location(self):
-        # Dummy implementation for demonstration
-        # Actual logic for compute_with_location needs to be added
-        return {"GWP": 100, "AP": 50}
+            return impact
 
+
+    def get_qty (self):
+        """ 
+        Retrieve the quantity of the transportation link.
+
+            Returns
+            -------
+            float
+                quantity of the transportation link.
+        """
+        return self.qty
+
+    def get_material (self):
+        """ 
+        Retrieve the material name of the transportation link.
+
+            Returns
+            -------
+            str
+                material name of the transportation link.
+        """
+
+        return self.material
