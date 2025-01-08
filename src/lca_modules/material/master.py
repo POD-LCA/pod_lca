@@ -1,5 +1,5 @@
 
-from lca_modules.material.impacts import Impacts
+from lca_modules.impacts.impacts import Impacts
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -43,7 +43,7 @@ class Master:
         self.model = model
         self.name = name
         self.life_cycle_stage = stage
-        self.impacts = Impacts(self) if model is not None else None
+        self.impacts = Impacts.from_parent(self) if model is not None else None
         self.database_item = None
         self.qty = 0.0
         self.unit = None
@@ -142,7 +142,7 @@ class Master:
         """
 
         if self.database_item:
-            unit_impacts = self.get_project().database.get_impact_data(self.database_item)
+            unit_impacts = self.get_project().database.get_data_entry(self.database_item)
             conversion_factor = self.get_unit().get_conversion_factor(unit_impacts["Unit"])
 
             if conversion_factor is None:
@@ -150,7 +150,7 @@ class Master:
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
 
-            self.impacts.updateImpactQty(impacts)
+            self.impacts.update_impact_qty(impacts)
 
     def set_impact_database_entry(self, database_item:str):
         """ Sets the database (impacts) entry corresponding to the item.

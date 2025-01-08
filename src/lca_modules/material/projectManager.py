@@ -1,6 +1,6 @@
 
 from lca_modules.material.calculator import Calculator
-from lca_modules.material.databaseManager import DatabaseManager
+from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.model import Model
 
 import csv
@@ -35,7 +35,7 @@ class Project:
         self.name = name
         self.models = {'Model_0': Model(self, 'Model_0')}
         self.current_model = self.models['Model_0']
-        self.database = DatabaseManager()
+        self.database = ImpactsDatabase()
         self.calculator = Calculator(self)
         self.HotSpotAnalysis = None
         self.DataQualityAnalysis = None
@@ -47,6 +47,8 @@ class Project:
     
     def __setstate__(self, state):
         self.__dict__.update(state)
+
+    # =
 
     def set_current_model(self, model_name:(str)):
         """ Set model as current model.
@@ -235,7 +237,7 @@ class Project:
             self.current_model = self.models['Model_0']
 
         if database:
-            self.database = DatabaseManager(self)
+            self.database = ImpactsDatabase(self)
 
     def save(self, file_path:(str)):
         """ Save as a *.pkl file.

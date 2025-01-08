@@ -32,7 +32,7 @@ class Product(Master):
     def __init__(self, id, name, model, stage):
         super().__init__(id, name, model, stage)
         self.weight = 0.0
-        self.weight_unit = 'kg'
+        self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
         self.is_material = True
@@ -41,7 +41,7 @@ class Product(Master):
         return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "impacts": self.impacts,
                                                                                     "database_item": self.database_item, 
                                                                                     "qty": self.qty, "weight": self.weight, "transporter": self.transporter,
-                                                                                    "density": self.density, "unit":self.unit, 
+                                                                                    "density": self.density, "unit":self.unit, "weight_unit": self.weight_unit,
                                                                                     "is_material":self.is_material})
 
     def update_qty(self, qty):

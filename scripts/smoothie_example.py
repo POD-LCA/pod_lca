@@ -15,10 +15,10 @@ from numpy import random
 # Smoothie example
 
 project = Project()
-project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+project.get_database().set_data(r'data/impact_data_new.csv')
 
 kilo_watt_hour = KILO * WATT_HOUR
-project.get_database().set_custom_entry("Electricity_New", kilo_watt_hour, 
+project.get_database().set_data_entry("Electricity_New", kilo_watt_hour, 
                                         {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
 model_0 = project.get_current_model()

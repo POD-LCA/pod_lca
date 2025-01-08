@@ -11,7 +11,7 @@ from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 project = Project()
 project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
 
-project.get_database().set_custom_entry("Electricity_New", "kWh", 
+project.get_database().set_data_entry("Electricity_New", "kWh", 
                                         {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
 

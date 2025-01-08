@@ -1,4 +1,4 @@
-
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from utilities.objects.array_methods import get_attribute_as_list, sort_by_attribute
 
 import numpy as np
@@ -77,10 +77,10 @@ class Calculator():
 
         impacts_dict = self.project.get_model(model_name).get_impacts()
         impacts_lst = []
-        for key, list in impacts_dict.items():
-            impacts_lst.extend(list)
+        for key, lst in impacts_dict.items():
+            impacts_lst.extend(lst)
 
-        if impact_cat not in self.get_project().get_database().get_impact_categories() + ['weighted']:
+        if impact_cat not in list(IMPACT_CATEGOREIS.keys()) + ['weighted']:
             raise AttributeError(f"{impact_cat} does not exist in the current project.")
         else:
             if impact_cat == 'weighted':
@@ -117,7 +117,7 @@ class Calculator():
 
         impacts_dict = self.project.get_model(model_name).get_impacts()
 
-        if impact_category not in self.get_project().get_database().get_impact_categories():
+        if impact_category not in IMPACT_CATEGOREIS.keys():
             raise AttributeError(f"{impact_category} does not exist in the current project.")
         else:
             vals = {}

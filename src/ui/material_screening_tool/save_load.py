@@ -179,7 +179,7 @@ class SaveLoadMethods:
 
         var = BooleanVar(value=True)
         self.plot_models["Model_0"] = var
-        checkbox = Checkbutton(self.checkbox_frame, text="Model_0", variable=var, command=self.update_plot,
+        checkbox = Checkbutton(self.input_frame_model_pick, text="Model_0", variable=var, command=self.update_plot,
                                 bg=self.plotter_bg_color, fg='white', selectcolor="gray")
         checkbox.pack(side=LEFT)
         self.plot_checkboxes["Model_0"] = checkbox

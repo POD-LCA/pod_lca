@@ -8,7 +8,7 @@
 
 from lca_modules.material.projectManager import Project
 from lca_modules.material.calculator import Calculator
-from lca_modules.material.databaseManager import DatabaseManager
+from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR
 from utilities.units.metric_prefixes import KILO
@@ -30,7 +30,7 @@ class TestBuilder(unittest.TestCase):
         current_model = project.get_current_model()
 
         self.assertIsInstance(project, Project, " ")
-        self.assertIsInstance(database, DatabaseManager, " ")
+        self.assertIsInstance(database, ImpactsDatabase, " ")
         self.assertIsInstance(calculator, Calculator, " ")
         self.assertIsInstance(current_model, Model, " ")
 
@@ -60,7 +60,7 @@ class TestBuilder(unittest.TestCase):
         load_project = Project.load(file_path)
 
         self.assertIsInstance(load_project, Project, " ")
-        self.assertIsInstance(project.get_database(), DatabaseManager, " ")
+        self.assertIsInstance(project.get_database(), ImpactsDatabase, " ")
         self.assertIsInstance(project.get_calculator(), Calculator, " ")
         self.assertIsInstance(project.get_current_model(), Model, " ")
 
@@ -72,9 +72,9 @@ class TestBuilder(unittest.TestCase):
         database_path = r'data/impact_data.csv'
 
         project = Project()
-        project.get_database().import_data_from_CSV(database_path)
+        project.get_database().set_data(database_path)
 
-        self.assertIsInstance(project.get_database().get_data(), DataFrame, " ")
+        self.assertIsInstance(project.get_database().get_data_all(), DataFrame, " ")
 
     def test_05_importing_from_database(self):
         """ Test importing data from database.
@@ -84,9 +84,9 @@ class TestBuilder(unittest.TestCase):
         database_path = r'data/impact_data.csv'
 
         project = Project()
-        project.get_database().import_data_from_CSV(database_path)
+        project.get_database().set_data(database_path)
 
-        sand_impacts = project.get_database().get_impact_data("Sand")
+        sand_impacts = project.get_database().get_data_entry("Sand")
 
         self.assertIsInstance(sand_impacts, Series, " ")
 
@@ -96,12 +96,12 @@ class TestBuilder(unittest.TestCase):
         print('testing creating a custom impact.')
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
-        project.get_database().set_custom_entry("Electricity_New", KILO * WATT_HOUR, 
+        project.get_database().set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                                 {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
-        Electricity_New_impacts = project.get_database().get_impact_data("Electricity_New")
+        Electricity_New_impacts = project.get_database().get_data_entry("Electricity_New")
 
         self.assertIsInstance(Electricity_New_impacts, Series, " ")
 
@@ -113,9 +113,9 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
-        project.get_database().set_custom_entry("Electricity_New", KILO * WATT_HOUR, 
+        project.get_database().set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                                 {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         sprinkles = project.current_model.create_product("Sprinkles", "A1")
@@ -137,7 +137,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
         # product_1 = project.current_model.create_product("Product of mixing", "A3")
         # product_1.update_qty(3.0)
@@ -158,7 +158,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
         sprinkles = project.current_model.create_product("Sprinkles", "A1")
         sprinkles.update_qty(2.0)
@@ -185,7 +185,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
         CO2 = project.current_model.create_emission("CO2", "A3")
         CO2.update_qty(0.5)
@@ -206,9 +206,9 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
-        project.get_database().set_custom_entry("Electricity_New", KILO * WATT_HOUR, 
+        project.get_database().set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                                 {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
         electricity_2 = project.current_model.create_energy("Electricity for Chemical Reaction", "A3")
@@ -230,7 +230,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        project.get_database().import_data_from_CSV(r'data/impact_data_new.csv')
+        project.get_database().set_data(r'data/impact_data_new.csv')
 
         waste = project.current_model.create_waste("Waste to landfill", "A3")
         waste.update_qty(1.0)

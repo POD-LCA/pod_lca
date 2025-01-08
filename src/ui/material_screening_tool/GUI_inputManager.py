@@ -1,6 +1,7 @@
 from lca_modules.material.projectManager import Project
 from lca_modules.material.product import Product, Fuel, Waste
 from lca_modules.material.process import Process, transportationProcess
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 
 from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
@@ -477,17 +478,17 @@ class GUIInputManager():
     @staticmethod
     def import_data_from_CSV(file_path, project, headers=None, multipliers=None):
 
-        project.get_database().import_data_from_CSV(file_path, headers, multipliers)
+        project.get_database().set_data(file_path, headers, multipliers)
 
     @staticmethod
     def get_database_data(project):
 
-        return project.get_database().get_data()
+        return project.get_database().get_data_all()
     
     @staticmethod
-    def set_impact_categories(project, impact_cats):
+    def get_impact_categories():
 
-        project.get_database().set_impact_categories(impact_cats)
+        return IMPACT_CATEGOREIS
 
     @staticmethod
     def get_all_units_list(project):
