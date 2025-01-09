@@ -1,4 +1,4 @@
-from lca_modules.material.projectManager import Project
+from lca_modules.material.project_manager import Project
 from lca_modules.material.product import Product, Fuel, Waste
 from lca_modules.material.process import Process, transportationProcess
 from lca_modules.impacts.impacts_database import ImpactsDatabase

@@ -1,4 +1,4 @@
-from lca_modules.material.projectManager import Project
+from lca_modules.material.project_manager import Project
 from lca_modules.material.visualizer.bar_chart import BarChart
 from lca_modules.material.visualizer.bar_chart2 import BarChart2
 from lca_modules.material.visualizer.bar_chart3 import BarChart3

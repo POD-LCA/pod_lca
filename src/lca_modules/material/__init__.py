@@ -6,7 +6,7 @@ __email__ = "kiun@uw.edu";"mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
-from .projectManager import *
+from .project_manager import *
 from .model import *
 from ..impacts.impacts_database import *
 from .calculator import *

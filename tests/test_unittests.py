@@ -6,7 +6,7 @@
 
 # calculator
 
-from lca_modules.material.projectManager import Project
+from lca_modules.material.project_manager import Project
 from lca_modules.material.calculator import Calculator
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
