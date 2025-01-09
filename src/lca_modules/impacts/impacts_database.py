@@ -18,6 +18,8 @@ class ImpactsDatabase:
 
     Attributes
     ----------
+    name : str
+        Name of the database.
     data : pandas DataFrame Obj.
         Impact data, with following headings.
             'Flow' (str) : name of impact
@@ -26,11 +28,49 @@ class ImpactsDatabase:
     """
 
     def __init__(self):
+        self.name = None
         self.data = DataFrame(columns=['Flow','Unit'] + list(IMPACT_CATEGOREIS.keys()))
+
+    # =================================
+    # Constructors
+    # =================================
+
+    @classmethod
+    def new(cls, name):
+        """ Create a new database.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the database.
+        
+        Returns
+        -------
+        ImpactsDatabase Obj.
+            Database created.
+        """
+
+        new_db = cls()
+        new_db.set_name(name)
+
+        return new_db
 
     # =================================
     # Getters and Setters
     # =================================
+
+    def set_name(self, name):
+        """ Set the name of the database.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the database.
+        """
+
+        self.name = name
+
+        return self
 
     def set_data(self, file_path, headers=None, multipliers=None):
         """ Set the database data.
@@ -88,6 +128,17 @@ class ImpactsDatabase:
             raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {IMPACT_CATEGOREIS.keys()}")
 
         return self.data
+    
+    def get_name(self):
+        """ Get the name of the database.
+        
+        Returns
+        -------
+        str
+            Name of the database.
+        """
+
+        return self.name
     
     def get_data_all(self):
         """ Retrieve impact data in the database.

@@ -9,8 +9,8 @@ class Plotter:
     ----------
     calculator : Calculator object
         Calculator from which the plotter obtains data to be visualized.
-    active_models : list of str
-        Name(s) of the models considered for data visualization.
+    active_models : Model Obj. or list of Model Obj.
+        Models considered for data visualization.
     impact_category : list or str
         Name(s) of the impact categories considered for data visualization.
     lca_stage : list or str
@@ -39,7 +39,6 @@ class Plotter:
     }
 
     def __init__(self, project, palette="default"):
-        self.calculator = project.get_calculator()
         plt.close('all')
         self.fig, self.ax = plt.subplots(layout='constrained')
 
@@ -82,8 +81,8 @@ class Plotter:
 
         Parameters
         ----------
-        active_models : str or list
-            Name(s) of models.        
+        active_models : Model Obj. or list of Model Obj.
+            Active models.        
         
         """
         self.active_models = active_models

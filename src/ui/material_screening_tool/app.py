@@ -89,7 +89,8 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         self.dependents = {'Model_0':{}}
 
         # back-end
-        self.project = GUIInputManager.create_project()    
+        self.project = GUIInputManager.create_project()
+        GUIInputManager.create_model(self.project, "Model_0") 
         
         # GUI
         # self.create_window()
@@ -101,7 +102,9 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
 
         self.create_bindings()
         self.set_protocols()
-        GUIInputManager.import_data_from_CSV(self.database_file_path, self.project, data_headers)
+
+
+        GUIInputManager.set_database(self.database_file_path, self.project, data_headers)
         
     # =================================
     # GUI COMPONENTS

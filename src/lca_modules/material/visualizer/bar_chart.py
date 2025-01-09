@@ -1,5 +1,6 @@
 
 from plotters.matplotlib_plotter import Plotter
+from lca_modules.material.calculator import Calculator
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -22,7 +23,7 @@ class BarChart(Plotter):
             print("A list of impact categories given. Graph plotted for the first category in the list.")
 
         gap = 0.2 # gap between two groups of bars
-        stages, bar_data = self.calculator.get_barchart_data(self.impact_category, self.active_models)
+        stages, bar_data = Calculator.get_barchart_data(self.impact_category, self.active_models)
         width = (1.0 - gap) / len(self.active_models)
         for model_idx, (model, stage_data) in enumerate(bar_data.items()):
             for stage_idx, (stage, value) in enumerate(stage_data.items()):

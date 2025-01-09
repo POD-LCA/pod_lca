@@ -13,8 +13,9 @@ class PlotsMixin:
     def create_figure(self, plot_frame, impact_cat, plot_type='Bar chart 1'):
         
         model_lst = []
-        for model in self.plot_models:
-            if self.plot_models[model].get():
+        for model_name in self.plot_models:
+            if self.plot_models[model_name].get():
+                model = GUIInputManager.get_model(self.project, model_name)
                 model_lst.append(model)
         
         if plot_type == 'Bar chart 1':
@@ -45,8 +46,9 @@ class PlotsMixin:
         self.canvas_plot = None
 
         model_lst = []
-        for model in self.plot_models:
-            if self.plot_models[model].get():
+        for model_name in self.plot_models:
+            if self.plot_models[model_name].get():
+                model = GUIInputManager.get_model(self.project, model_name)
                 model_lst.append(model)
         
         if plot_type == 'Bar chart 1':
@@ -87,8 +89,9 @@ class PlotsMixin:
         
         if not self.resetting_plot:
             model_lst = []
-            for model in self.plot_models:
-                if self.plot_models[model].get():
+            for model_name in self.plot_models:
+                if self.plot_models[model_name].get():
+                    model = GUIInputManager.get_model(self.project, model_name)
                     model_lst.append(model)
 
             self.plot.set_active_models(model_lst)

@@ -1,13 +1,11 @@
 
-from lca_modules.material.calculator import Calculator
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.model import Model
 
-import csv
 import pickle
 
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
@@ -23,57 +21,121 @@ class Project:
         Name of the project.
     models : dict
         All models created/compared in the current project.
-    current_model : Model Obj.
-        Active model which is being worked on.
     database : Database Obj.
         Maintains input impact data.
     calculator : Calculator Obj.
         Carries out varies calculations to generate output data.
     """
 
-    def __init__(self, name=None):
-        self.name = name
-        self.models = {'Model_0': Model(self, 'Model_0')}
-        self.current_model = self.models['Model_0']
-        self.database = ImpactsDatabase()
-        self.calculator = Calculator(self)
+    def __init__(self):
+        self.name = None
+        self.database = None
+        self.models = {}
         self.HotSpotAnalysis = None
         self.DataQualityAnalysis = None
 
-    def __reduce__(self):
-        
-        return (self.__class__, (self.name,), {"current_model":self.current_model, "database": self.database,
-                                               "models":self.models})
-    
-    def __setstate__(self, state):
-        self.__dict__.update(state)
+    # ================================
+    # Constructors
+    # ================================
 
-    # =
-
-    def set_current_model(self, model_name:(str)):
-        """ Set model as current model.
+    @classmethod
+    def new(cls, name=None):
+        """ Create a new project.
         
         Parameters
         ----------
-        model_name : str
-            Name of the model to be set as the current model.
+        name : str
+            Name of the project.
+        
+        Returns
+        -------
+        Project Obj.
+            Project created.
         """
 
-        self.current_model = self.models[model_name]
+        new_project = cls()
+
+        new_project.set_name(name)
+
+        return new_project
     
-    def get_current_model(self):
-        """ Get the current model.
+    # ================================
+    # Setters and Getters
+    # ================================
+
+    def set_name(self, name:(str)):
+        """ Set the name of the project.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the project.
+        """
+
+        self.name = name
+
+        return self
+    
+    def set_database(self, database:(ImpactsDatabase)):
+        """ Set the impacts database of the project.
+        
+        Parameters
+        ----------
+        database : Database Obj.
+            Impact database of the project.
+        """
+
+        self.database = database
+
+        return self
+    
+    def get_name(self):
+        """ Retrieve the name of the project.
+        
+        Returns
+        -------
+        str
+            Name of the project.
+        """
+
+        return self.name
+
+    def get_database(self):
+        """ Get the impacts database of the project.
         
         Retruns
         -------
-        Model Obj.
-            Current working model.
+        DatabaseManager Obj.
+            Impact database of the project.
         """
 
-        return self.current_model
+        return self.database
+    
+    # ================================
+    # Model Methods
+    # ================================
+    
+    def add_model(self, model_name:(str), file_path=None):
+        """ Create and add a model to the current project.
+
+        Parameters
+        ----------
+        model_name : str
+            Name of the model to be created.        
+        """
+        
+        if file_path is None:
+            model = Model.in_project(self, model_name)
+        else:
+            model = Model.from_CSV(file_path)
+            model.set_parent(self)
+
+        self.models[model_name] = model
+        
+        return model
     
     def get_model(self, model_name:(str)):
-        """ Retrieve model.
+        """ Retrieve a model.
         
         Parameters
         ----------
@@ -106,123 +168,13 @@ class Project:
         """
 
         return list(self.models.keys())
- 
-    def get_database(self):
-        """ Get the impacts database of the project.
-        
-        Retruns
-        -------
-        DatabaseManager Obj.
-            Impact database of the project.
-        """
-
-        return self.database
     
-    def get_calculator(self):
-        """ Get the calculator of the project.
-        
-        Retruns
-        -------
-        Calculator Obj.
-            Calculator of the project.
-        """
-
-        return self.calculator
-    
-    def create_model(self, model_name:(str)):
-        """ Create a model in the current project.
-
-        Parameters
-        ----------
-        model_name : str
-            Name of the model to be created.        
-        """
-
-        model = Model(self, model_name)
-        self.models[model_name] = model
-
-        return model
-    
-    def create_model_from_csv(self, file_path, model_name:(str)):
-        """ Create a model from data in a csv file.
-            The csv file with headers: "Name", "Impact data", "type", "LC stage", "qty", "unit", "transported item", "density", "weight unit" (in any order).
-            Transported item is the name of the product transported.
-            Quantity in the transportation process should be the distance.
-
-        Parameters
-        ----------
-        file_path : str
-            Location of the csv file.
-        model_name : str
-            Name of the model to be created.       
-        """        
-
-        model = self.create_model(model_name)
-
-        tmp_transportation_map = {}
-        with open(file_path, mode='r', encoding='utf-8-sig') as file:
-            data = csv.reader(file)
-            headers = next(data)
-            header_map = {header:index for index, header in enumerate(headers)} 
-            for row in data:
-                name = row[header_map['Name']]
-                life_cycle_stage = row[header_map['LC stage']]
-                database_item = row[header_map['Impact data']]
-                qty, unit = row[header_map['qty']], row[header_map['unit']]
-                
-                item_type = row[header_map['type']]
-                if item_type == 'Product':
-                    item = model.create_product(name, life_cycle_stage)
-                elif item_type == 'Process':
-                    item = model.create_process(name, life_cycle_stage)
-                elif item_type == 'Transportation':
-                    item = model.create_transportation_process(name, life_cycle_stage)
-                elif item_type == 'Energy':
-                    item = model.create_energy(name, life_cycle_stage)
-                elif item_type == 'Emission':
-                    item = model.create_emission(name, life_cycle_stage)
-                elif item_type == 'Waste':
-                    item = model.create_waste(name, life_cycle_stage)                    
-                else:
-                    raise TypeError(f"Item type of {item_type} is undefined.")
-
-                if item_type == 'Transportation':
-                    item.set_transported_distance_unit(unit)
-                    item.set_transported_distance(qty)
-
-                    transported_item = row[header_map['transported item']]
-                    transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items
-                    if not (transported_product is None):
-                        item.set_transported_products(transported_product)
-                    else:
-                        if not (transported_item == ''):
-                            tmp_transportation_map[transported_item] = {}
-                            tmp_transportation_map[transported_item]['transporter'] = item
-                else:
-                    item.set_unit(unit)
-                    item.update_qty(qty)
-                    density = row[header_map['density']]
-                    weight_unit = row[header_map['weight unit']]
-                    if not (density == ''):
-                        item.set_density(density)        
-                    if not (weight_unit == ''):
-                        item.set_weight_unit(weight_unit)  
-
-                    if name in tmp_transportation_map:
-                        tmp_transportation_map[name]['product'] = item
-
-                if not (database_item == ''):
-                    item.set_impact_database_entry(database_item)
-        
-        if tmp_transportation_map:
-            for entry in tmp_transportation_map:
-                tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
-                
-        return model
+    # ================================
+    # Project Methods
+    # ================================
     
     def clear_project(self, model=True, database=True):
-        """ Remove all existing models adn the impact database of the project.
-            An empty model (Model_0) is created and set as the current model.
+        """ Remove all existing models and the impact database of the project.
 
         Parameters
         ----------
@@ -233,11 +185,10 @@ class Project:
         """
 
         if model:
-            self.models = {'Model_0': Model(self, 'Model_0')}
-            self.current_model = self.models['Model_0']
+            self.models = {}
 
         if database:
-            self.database = ImpactsDatabase(self)
+            self.database = None
 
     def save(self, file_path:(str)):
         """ Save as a *.pkl file.

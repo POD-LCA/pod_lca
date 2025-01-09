@@ -97,7 +97,7 @@ class Master:
 
         self.get_project().get_current_model().impacts[stage].append(impact_obj)
 
-    def update_qty(self, qty:float):
+    def set_qty(self, qty:float):
         """ Update the qty of the item.
             This will also re-calculate the corresponding impact quantities.
             
@@ -126,7 +126,7 @@ class Master:
 
         if conversion_factor is not None:
             self.unit = unit
-            self.update_qty(value_in * conversion_factor)
+            self.set_qty(value_in * conversion_factor)
         else:
             raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 

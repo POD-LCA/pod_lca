@@ -151,7 +151,7 @@ class transportationProcess(Process):
 
         self.transported_distance = qty
 
-        self.update_qty(self.transported_distance * self.get_transported_weight())
+        self.set_qty(self.transported_distance * self.get_transported_weight())
 
     def set_travel_weight(self):
         """ Update the mass transported in the transportation process.
@@ -169,7 +169,7 @@ class transportationProcess(Process):
         
         self.transported_weight = weight
 
-        self.update_qty(self.transported_distance * self.transported_weight)
+        self.set_qty(self.transported_distance * self.transported_weight)
 
     def set_transported_distance_unit(self, unit):
         """ Set unit of measurement for travel distance of the transportation process.

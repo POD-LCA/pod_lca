@@ -44,7 +44,7 @@ class Product(Master):
                                                                                     "density": self.density, "unit":self.unit, "weight_unit": self.weight_unit,
                                                                                     "is_material":self.is_material})
 
-    def update_qty(self, qty):
+    def set_qty(self, qty):
         """ Update the qty of the product.
             This will also re-calculate the corresponding impact quantities.
             

@@ -2,8 +2,11 @@
 from lca_modules.material.process import Process, transportationProcess
 from lca_modules.material.product import Emission, Fuel, Product, Waste
 
+import csv
+import os
+
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
@@ -29,196 +32,178 @@ class Model:
 
     """
 
-    def __init__(self, project, name='default'):
-        self.project = project
-        self.name = name
+    def __init__(self):
+        self.project = None
+        self.name = None
         self.processes = []
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}
+
+    # ================================
+    # Constructors
+    # ================================
+
+    @classmethod
+    def in_project(cls, project, name=None):    
+        """ Create a model object from a parent object.
         
-    def __reduce__(self):
-    
-        return (self.__class__, (None,), {"project": self.project, "processes":self.processes, 
-                                         "products": self.products, "impacts": self.impacts})
-    
-    def __setstate__(self, state):
-
-        self.__dict__.update(state)
-    
-    def create_process(self, name, stage):
-        """ Create process object.
-            Then, append the process object and the corresponding impact objects to its properties.
-            Impact objects are kept in a dictionary based on the life cycle stage.
-
-            Parameters
-            ----------
-            name : str.
-                Name of the process.
-            stage : str.
-                Life cycle stage.
-
-            Returns
-            -------
-            Process Obj.
-                Process object created.
-
+        Parameters
+        ----------
+        project : Project Obj.
+            Project to which the model belong.
+        name : str.
+            Name of the model.
+        
+        Returns
+        -------
+        Model Obj.
+            Model object created.
         """
 
-        n = len(self.processes)
-        process = Process(n, name, self, stage)
+        model = cls()
+        
+        model.set_project(project)
+        if name is not None:
+            model.set_name(name)
+        else:
+            model.set_name(f"Model_{len(project.models)}")
 
-        self.processes.append(process)
-        self.impacts[stage].append(process.get_impacts())
-
-        return process
+        return model
     
-    def create_transportation_process(self, name:str, stage:str):
-        """ Create process object.
-            Then, append the process object and the corresponding impact objects to its properties.
-            Impact objects are kept in a dictionary based on the life cycle stage.
+    @classmethod
+    def from_CSV(cls, file_path, name=None):
+        """ Create a model from data in a csv file.
+            The csv file with headers: "Name", "Impact data", "type", "LC stage", "qty", "unit", "transported item", "density", "weight unit" (in any order).
+            Transported item is the name of the product transported.
+            Quantity in the transportation process should be the distance.
 
-            Parameters
-            ----------
-            name : str.
-                Name of the process.
-            stage : str.
-                Life cycle stage.
+        Parameters
+        ----------
+        file_path : str
+            Location of the csv file.
+        name : str
+            Name of the model to be created.       
+        """        
 
-            Returns
-            -------
-            Process Obj.
-                Process object created.
+        model = cls()
 
+        if name is not None:
+            model.set_name(name)
+        else:
+            model.set_name(os.path.splitext(os.path.basename(file_path))[0])
+
+        tmp_transportation_map = {}
+        with open(file_path, mode='r', encoding='utf-8-sig') as file:
+            data = csv.reader(file)
+            headers = next(data)
+            header_map = {header:index for index, header in enumerate(headers)} 
+            for row in data:
+                name = row[header_map['Name']]
+                life_cycle_stage = row[header_map['LC stage']]
+                database_item = row[header_map['Impact data']]
+                qty, unit = row[header_map['qty']], row[header_map['unit']]
+                
+                item_type = row[header_map['type']]
+                if item_type == 'Product':
+                    item = model.add_product(name, life_cycle_stage)
+                elif item_type == 'Process':
+                    item = model.add_process(name, life_cycle_stage)
+                elif item_type == 'Transportation':
+                    item = model.add_transportation_process(name, life_cycle_stage)
+                elif item_type == 'Energy':
+                    item = model.add_energy(name, life_cycle_stage)
+                elif item_type == 'Emission':
+                    item = model.add_emission(name, life_cycle_stage)
+                elif item_type == 'Waste':
+                    item = model.add_waste(name, life_cycle_stage)                    
+                else:
+                    raise TypeError(f"Item type of {item_type} is undefined.")
+
+                if item_type == 'Transportation':
+                    item.set_transported_distance_unit(unit)
+                    item.set_transported_distance(qty)
+
+                    transported_item = row[header_map['transported item']]
+                    transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items
+                    if not (transported_product is None):
+                        item.set_transported_products(transported_product)
+                    else:
+                        if not (transported_item == ''):
+                            tmp_transportation_map[transported_item] = {}
+                            tmp_transportation_map[transported_item]['transporter'] = item
+                else:
+                    item.set_unit(unit)
+                    item.set_qty(qty)
+                    density = row[header_map['density']]
+                    weight_unit = row[header_map['weight unit']]
+                    if not (density == ''):
+                        item.set_density(density)        
+                    if not (weight_unit == ''):
+                        item.set_weight_unit(weight_unit)  
+
+                    if name in tmp_transportation_map:
+                        tmp_transportation_map[name]['product'] = item
+
+                if not (database_item == ''):
+                    item.set_impact_database_entry(database_item)
+        
+        if tmp_transportation_map:
+            for entry in tmp_transportation_map:
+                tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
+                
+        return model    
+    # ================================
+    # Getters and Setters
+    # ================================
+
+    def set_project(self, project):
+        """ Set the project object.
+        
+        Parameters
+        ----------
+        project : Project Obj.
+            Project to which the model belong.
         """
 
-        n = len(self.processes)
-        process = transportationProcess(n, name, self, stage)
+        self.project = project
 
-        self.processes.append(process)
-        self.impacts[stage].append(process.get_impacts())
-
-        return process
+        return self
     
-    def create_product(self, name, stage):
-        """ Create product object.
-            Then, append the product object and the corresponding impact objects to its properties.
-            Impact objects are kept in a dictionary based on the life cycle stage.
-
-            Parameters
-            ----------
-            name : str.
-                Name of the product.
-            stage : str.
-                Life cycle stage.
-
-            Returns
-            -------
-            Product Obj.
-                Product object created.
-
+    def set_name(self, name):
+        """ Set the name of the model.
+        
+        Parameters
+        ----------
+        name : str.
+            Name of the model.
         """
 
-        n = len(self.products)
-        product = Product(n, name, self, stage)
+        self.name = name
 
-        self.products.append(product)
-        self.impacts[stage].append(product.get_impacts())
-
-        return product
+        return self
     
-    def create_energy(self, name, stage):
-        """ Create Energy object.
-            Then, append the product object and the corresponding impact objects to its properties.
-            Impact objects are kept in a dictionary based on the life cycle stage.
-
-            Parameters
-            ----------
-            name : str.
-                Name of the product.
-            stage : str.
-                Life cycle stage: 'A1', 'A2', 'A3'.
-
-            Returns
-            -------
-            Product Obj.
-                Energy product object created.
-
+    def get_project(self):
+        """ Retrieve the project object.
+        
+        Returns
+        -------
+        Project Obj.
+            Project to which the model belong.
         """
 
-        n = len(self.products)
-        energy = Fuel(n, name, self, stage)
-
-        self.products.append(energy)
-        self.impacts[stage].append(energy.get_impacts())
-
-        return energy
-    
-    def create_emission(self, name, stage):
-        """ Create Emission object.
-            Then, append the product object and the corresponding impact objects to its properties.
-            Impact objects are kept in a dictionary based on the life cycle stage.
-
-            Parameters
-            ----------
-            name : str.
-                Name of the emission product.
-            stage : str.
-                Life cycle stage: 'A1', 'A2', 'A3'.
-
-            Returns
-            -------
-            Product Obj.
-                Emission object created.
-
-        """
-
-        n = len(self.products)
-        emission = Emission(n, name, self, stage)
-
-        self.products.append(emission)
-        self.impacts[stage].append(emission.get_impacts())
-
-        return emission
-
-    def create_waste(self, name, stage):
-        """ Create Waste object.
-            Then, append the product object and the corresponding impact objects to its properties.
-            Impact objects are kept in a dictionary based on the life cycle stage.
-
-            Parameters
-            ----------
-            name : str.
-                Name of the waste product.
-            stage : str.
-                Life cycle stage: 'A1', 'A2', 'A3'.
-
-            Returns
-            -------
-            Product Obj.
-                Waste object created.
-
-        """
-
-        n = len(self.products)
-        waste = Waste(n, name, self, stage)
-
-        self.products.append(waste)
-        self.impacts[stage].append(waste.get_impacts())
-
-        return waste
+        return self.project
     
     def get_name(self):
         """ Retrieve the name of the model.
-
-            Returns
-            -------
-            str
-                Name of the model.
-
+        
+        Returns
+        -------
+        str.
+            Name of the model.
         """
 
-        return self.name        
-    
+        return self.name
+
     def get_processes(self):
         """ Retrieve all the processes in the model.
 
@@ -242,8 +227,185 @@ class Model:
 
         return self.products
 
+    def get_impacts(self):
+        """ Retrieve all the impacts in the model categorized by life cycle stage.
+
+            Returns
+            -------
+            dict.
+                Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+        """
+
+        return self.impacts
+            
+    # ================================
+    # Methods to add items to the model
+    # ================================
+    # TODO: extend add methods to include qty, unit, and impact entry
+    
+    def add_process(self, name, stage, qty, unit):
+        """ Create and add process to the model.
+
+            Parameters
+            ----------
+            name : str.
+                Name of the process.
+            stage : str.
+                Life cycle stage.
+            qty : float
+                Quantity processed.
+            unit : Unit Obj
+                Unit of the quantity.
+
+            Returns
+            -------
+            Process Obj.
+                Process object created.
+
+        """
+
+        n = len(self.processes)
+        process = Process(n, name, self, stage)
+
+        process.set_qty(qty)
+        process.set_unit(unit)
+
+        self.processes.append(process)
+        self.impacts[stage].append(process.get_impacts())
+
+        return process
+    
+    def add_transportation_process(self, name:str, stage:str):
+        """ Create and add process to the model.
+
+            Parameters
+            ----------
+            name : str.
+                Name of the process.
+            stage : str.
+                Life cycle stage.
+
+            Returns
+            -------
+            Process Obj.
+                Process object created.
+
+        """
+
+        n = len(self.processes)
+        process = transportationProcess(n, name, self, stage)
+
+        self.processes.append(process)
+        self.impacts[stage].append(process.get_impacts())
+
+        return process
+    
+    def add_product(self, name, stage):
+        """ Create and add product to the model.
+
+            Parameters
+            ----------
+            name : str.
+                Name of the product.
+            stage : str.
+                Life cycle stage.
+
+            Returns
+            -------
+            Product Obj.
+                Product object created.
+
+        """
+
+        n = len(self.products)
+        product = Product(n, name, self, stage)
+
+        self.products.append(product)
+        self.impacts[stage].append(product.get_impacts())
+
+        return product
+    
+    def add_energy(self, name, stage):
+        """ Create and add energy product to the model.
+
+            Parameters
+            ----------
+            name : str.
+                Name of the product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
+
+            Returns
+            -------
+            Product Obj.
+                Energy product object created.
+
+        """
+
+        n = len(self.products)
+        energy = Fuel(n, name, self, stage)
+
+        self.products.append(energy)
+        self.impacts[stage].append(energy.get_impacts())
+
+        return energy
+    
+    def add_emission(self, name, stage):
+        """ Create and add emission product to the model.
+
+            Parameters
+            ----------
+            name : str.
+                Name of the emission product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
+
+            Returns
+            -------
+            Product Obj.
+                Emission object created.
+
+        """
+
+        n = len(self.products)
+        emission = Emission(n, name, self, stage)
+
+        self.products.append(emission)
+        self.impacts[stage].append(emission.get_impacts())
+
+        return emission
+
+    def add_waste(self, name, stage):
+        """ Create and add waste product to the model.
+
+            Parameters
+            ----------
+            name : str.
+                Name of the waste product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
+
+            Returns
+            -------
+            Product Obj.
+                Waste object created.
+
+        """
+
+        n = len(self.products)
+        waste = Waste(n, name, self, stage)
+
+        self.products.append(waste)
+        self.impacts[stage].append(waste.get_impacts())
+
+        return waste   
+
+    # ================================
+    # Methods to interact with items
+    # ================================
+  
     def find_item(self, name):
-        """ Find an item (produc/process) in the model, given a name string.
+        """ Find an item (product/process) in the model, given a name string.
             If multiple objects of the same name exist, returns all.
         
             Parameters
@@ -265,41 +427,7 @@ class Model:
         else:
             return items 
     
-    def get_impacts(self):
-        """ Retrieve all the impacts in the model categorized by life cycle stage.
-
-            Returns
-            -------
-            dict.
-                Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
-        """
-
-        return self.impacts
-    
-    def get_project(self):
-        """ Retrieve the project to which the model belong.
-
-            Returns
-            -------
-            Project Obj.
-                Project to which the model belong.
-
-        """
-
-        return self.project
-    
-    def get_name(self):
-        """ Retrieve the model name.
-
-            Returns
-            -------
-            str.
-                Name of the model.
-
-        """
-        return self.name
-    
-    def delete_obj(self, obj):
+    def delete_item(self, obj):
         """ Removes products or processes, along with the impact objects, from the model.
 
             Parameters
