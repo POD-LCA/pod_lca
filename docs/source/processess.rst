@@ -13,7 +13,7 @@ Similar to a product, process quantities, units, and impact can be set for a pro
     sand.set_unit('m3')
     sand.set_impact_database_entry("mixer")
 
-:class:`Transportation <model.process.transportationProcess>` is special type of a process. The units of a transportation process is of dimensions *mass* x *length*. The mass is from the :attr:`transported weight <model.process.transportationProcess.transported_weight>` and the distance is from :attr:`transported distance <model.process.transportationProcess.transported_distance>`. The former will be automatically updated if :attr:`transported products <model.process.transportationProcess.transported_products>` are set.
+:class:`Transportation <material.process.transportationProcess>` is special type of a process. The units of a transportation process is of dimensions *mass* x *length*. The mass is from the :attr:`transported weight <material.process.transportationProcess.transported_weight>` and the distance is from :attr:`transported distance <material.process.transportationProcess.transported_distance>`. The former will be automatically updated if :attr:`transported products <material.process.transportationProcess.transported_products>` are set.
 
 .. code-block:: python
     
@@ -23,7 +23,7 @@ Similar to a product, process quantities, units, and impact can be set for a pro
     propane_by_truck.set_transported_distance_unit('km')
     propane_by_truck.set_impact_database_entry("Transportation by truck")
 
-.. currentmodule:: model.process
+.. currentmodule:: material.process
 
 .. autoclass:: Process
    :show-inheritance:

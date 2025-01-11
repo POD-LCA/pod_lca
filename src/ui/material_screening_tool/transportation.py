@@ -31,7 +31,7 @@ class Transportation(Item):
         
         model_id = self.get_current_model()
 
-        process = GUIInputManager.create_transport_process(name, self.project, unit, float(qty), stage, lca_data)
+        process = GUIInputManager.create_transport_process(name, model_id, self.project, unit, float(qty), stage, lca_data)
 
         if not process is None:
             slider_min = 0.0

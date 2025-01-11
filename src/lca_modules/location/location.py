@@ -3,12 +3,10 @@ from geopy.geocoders import Photon
 import pandas as pd
 
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
-
-
 
 
 class Location:

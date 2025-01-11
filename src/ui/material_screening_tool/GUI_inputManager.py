@@ -1,6 +1,8 @@
-from lca_modules.material.projectManager import Project
+from lca_modules.material.project_manager import Project
 from lca_modules.material.product import Product, Fuel, Waste
 from lca_modules.material.process import Process, transportationProcess
+from lca_modules.impacts.impacts_database import ImpactsDatabase
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
 
 from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
@@ -18,7 +20,7 @@ class GUIInputManager():
     @staticmethod
     def create_project(name=None):
 
-        return Project(name)
+        return Project.new(name)
     
     @staticmethod
     def clear_project(project, model=True, database=True):
@@ -28,7 +30,7 @@ class GUIInputManager():
     @staticmethod
     def create_model(project, name):
 
-        return project.create_model(name)
+        return project.add_model(name)
     
     @staticmethod
     def set_model(project, model, model_name):
@@ -36,14 +38,9 @@ class GUIInputManager():
         project.models[model_name] = model
 
     @staticmethod
-    def set_current_model(project, name):
-
-        project.set_current_model(name)
-
-    @staticmethod
     def import_model_from_csv(project, file_path, name):
 
-        return project.create_model_from_csv(file_path, name)
+        return project.add_model(name, file_path)
     
     @staticmethod
     def get_model(project, model_id):
@@ -69,90 +66,86 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_product(project, name, unit, qty, stage, lca_data):
+    def create_product(project, model_name, name, unit, qty, stage, lca_data):
 
         unit = GUIInputManager.units_map[unit]
 
-        product = project.get_current_model().create_product(name, stage)
-        product.set_unit(unit) 
-        product.update_qty(qty)
+        model = project.get_model(model_name)
+
         try:
-            if not (lca_data == 'None'):
-                product.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            product = model.add_product(name, stage, qty, unit, lca_data)
         except ImportError as e:
-            project.get_current_model().delete_obj(product)
+            model.delete_item(product)
             GUIInputManager.show_error_popup("ImportError", str(e))
             return None
             
         return product
     
     @staticmethod
-    def create_energy(project, name, unit, qty, stage, lca_data):
+    def create_energy(project, model_name, name, unit, qty, stage, lca_data):
 
         unit = GUIInputManager.units_map[unit]
 
-        energy = project.get_current_model().create_energy(name, stage)
-        energy.set_unit(unit)
-        energy.update_qty(qty)
+        model = project.get_model(model_name)
+
         try:
-            if not (lca_data == 'None'):
-                energy.set_impact_database_entry(lca_data)  
+            lca_data = None if lca_data == 'None' else lca_data
+            energy = model.add_energy(name, stage, qty, unit, lca_data)
         except ImportError as e:
-            project.get_current_model().delete_obj(energy)
+            model.delete_item(energy)
             GUIInputManager.show_error_popup("ImportError", str(e))
             return None
         
         return energy
   
     @staticmethod
-    def create_emission(project, name, unit, qty, stage, lca_data):
+    def create_emission(project, model_name, name, unit, qty, stage, lca_data):
 
         unit = GUIInputManager.units_map[unit]
 
-        emission = project.get_current_model().create_emission(name, stage)
-        emission.set_unit(unit)
-        emission.update_qty(qty)
+        model = project.get_model(model_name)
+
+        
         try:
-            if not (lca_data == 'None'):
-                emission.set_impact_database_entry(lca_data)   
+            lca_data = None if lca_data == 'None' else lca_data
+            emission = model.add_emission(name, stage, qty, unit, lca_data)  
         except ImportError as e:
-            project.get_current_model().delete_obj(emission)
+            model.delete_item(emission)
             GUIInputManager.show_error_popup("ImportError", str(e))
             return None
             
         return emission
 
     @staticmethod
-    def create_waste(project, name, unit, qty, stage, lca_data):
+    def create_waste(project, model_name, name, unit, qty, stage, lca_data):
 
         unit = GUIInputManager.units_map[unit]
 
-        waste = project.get_current_model().create_waste(name, stage)
-        waste.set_unit(unit)
-        waste.update_qty(qty)
+        model = project.get_model(model_name)
+        
         try:
-            if not (lca_data == 'None'):
-                waste.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            waste = model.add_waste(name, stage, qty, unit, lca_data)
         except ImportError as e:
-            project.get_current_model().delete_obj(waste)
+            model.delete_item(waste)
             GUIInputManager.show_error_popup("ImportError", str(e))
             return None
         
         return waste
     
     @staticmethod
-    def create_process(project, name, unit, qty, stage, lca_data):
+    def create_process(project, model_name, name, unit, qty, stage, lca_data):
 
         unit = GUIInputManager.units_map[unit]
 
-        process =  project.get_current_model().create_process(name, stage)
-        process.set_unit(unit)
-        process.update_qty(qty)
+        model = project.get_model(model_name)
+
         try:
-            if not (lca_data == 'None'):
-                process.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            process =  model.add_process(name, stage, qty, unit, lca_data)
         except ImportError as e:
-            project.get_current_model().delete_obj(process)
+            model.delete_item(process)
             GUIInputManager.show_error_popup("ImportError", str(e))
             return None
         
@@ -182,7 +175,7 @@ class GUIInputManager():
     def update_qty(visualizer, item, qty, close_error=True):
 
         try: 
-            item.update_qty(qty)
+            item.set_qty(qty)
         except ImportError as e:
             GUIInputManager.show_error_popup("ImportError", str(e))
             if not close_error:
@@ -243,7 +236,7 @@ class GUIInputManager():
     @staticmethod
     def get_database_row(item):
 
-        return item.get_database_row()
+        return item.get_impact_database_entry()
     
     @staticmethod
     def get_qty(item):
@@ -269,7 +262,7 @@ class GUIInputManager():
         unit = GUIInputManager.units_map[unit]
 
         try:
-            obj.change_units(unit)
+            obj.set_unit(unit)
         except ValueError as e:
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
@@ -306,7 +299,7 @@ class GUIInputManager():
     @staticmethod
     def set_id(item, new_id):
 
-        item.overide_id(new_id)
+        item.set_id(new_id)
 
     @staticmethod
     def unit_conversion(project, old_unit, new_unit, close_error=True):
@@ -365,7 +358,9 @@ class GUIInputManager():
     @staticmethod
     def delete(visualizer, obj):
 
-        model = visualizer.project.get_current_model().delete_obj(obj)
+        model = visualizer.project.get_model(visualizer.get_current_model())
+
+        model.delete_item(obj)
         visualizer.update_plot()
 
     @staticmethod
@@ -380,18 +375,17 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def create_transport_process(name, project, unit, qty, stage, lca_data):
+    def create_transport_process(name, model_name, project, unit, qty, stage, lca_data):
 
         unit = GUIInputManager.units_map[unit]
 
-        transport_process =  project.get_current_model().create_transportation_process(name, stage)
-        transport_process.set_transported_distance_unit(unit)
-        transport_process.set_transported_distance(qty)
+        model = project.get_model(model_name)
+
         try:
-            if not (lca_data == 'None'):
-                transport_process.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            transport_process =  model.add_transportation_process(name, stage, qty, unit, lca_data)
         except ImportError as e:
-            project.get_current_model().delete_obj(transport_process)
+            model.delete_item(transport_process)
             GUIInputManager.show_error_popup("ImportError", str(e))
             return None
         
@@ -401,7 +395,7 @@ class GUIInputManager():
     def update_transport_dist(visualizer, item, qty, close_error=True):
 
         try:
-             item.set_transported_distance(qty)                
+            item.set_transported_distance(qty)                
         except TypeError as e:
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
@@ -428,7 +422,7 @@ class GUIInputManager():
     @staticmethod
     def set_travel_weight(visualizer, item):  
 
-        item.set_travel_weight()
+        item.set_transported_weight()
         visualizer.update_plot()
 
     @staticmethod
@@ -475,19 +469,22 @@ class GUIInputManager():
     # =================================
 
     @staticmethod
-    def import_data_from_CSV(file_path, project, headers=None, multipliers=None):
+    def set_database(file_path, project, headers=None, multipliers=None):
 
-        project.get_database().import_data_from_CSV(file_path, headers, multipliers)
+        project_impact_database = ImpactsDatabase.new("Project database")
+        project_impact_database.set_data(file_path, headers, multipliers)
+
+        project.set_database(project_impact_database)
 
     @staticmethod
     def get_database_data(project):
 
-        return project.get_database().get_data()
+        return project.get_database().get_data_all()
     
     @staticmethod
-    def set_impact_categories(project, impact_cats):
+    def get_impact_categories():
 
-        project.get_database().set_impact_categories(impact_cats)
+        return IMPACT_CATEGOREIS
 
     @staticmethod
     def get_all_units_list(project):

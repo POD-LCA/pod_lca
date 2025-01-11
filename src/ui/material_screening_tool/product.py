@@ -28,10 +28,9 @@ class Product(Item):
 
     def create_product(self, popup, name, qty, unit, stage, lca_data):
 
-
         model_id = self.get_current_model()
 
-        product = GUIInputManager.create_product(self.project, name, unit, float(qty), stage, lca_data)
+        product = GUIInputManager.create_product(self.project, model_id, name, unit, float(qty), stage, lca_data)
 
         if not product is None:
             slider_min = 0.0

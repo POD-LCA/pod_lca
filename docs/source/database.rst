@@ -2,7 +2,7 @@
 Database
 **********
 
-**Database** maintains the impacts data used in the current :class:`Project <projectManager.projectManager.Project>`.
+**Database** maintains the impacts data used in the current :class:`Project <material.projectManager.Project>`.
 
 Impact data can be imported from a CSV file where the headings correspond to *name of the impact*, *unit*, *Global Warming potential* (in :math:`kg CO_{2} eq`), *acidification potential* (in :math:`kg SO_{2} eq`), *eutrophiction potential* (in :math:`kg N eq`), *ozone depletion* (in :math:`kg CFC^{-11} eq`), *smog* (in :math:`kg O_3 eq`). If the units are not compatible with above, a multiplier can be given for each column.
 
@@ -27,5 +27,5 @@ Custom impact data entries can also be created.
 
 --------
 
-.. autoclass:: databaseManager.databaseManager.DatabaseManager
+.. autoclass:: material.databaseManager.DatabaseManager
     :members:

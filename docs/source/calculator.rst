@@ -10,6 +10,6 @@ Calculator
 
 --------
 
-.. autoclass:: calculator.calculator.Calculator
+.. autoclass:: material.calculator.Calculator
     :members:
 

@@ -1,4 +1,6 @@
 
+from lca_modules.material.calculator import Calculator
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -43,11 +45,9 @@ def compute_sensitivity(obj, param, **kwargs):
     printout = kwargs['printout'] if 'printout' in kwargs else True
 
     model = obj.get_model()
-    project =  model.get_project()
-    claculator = project.get_calculator()
 
     base_val = getattr(obj, param)
-    base_impact = claculator.get_total_impact(model.get_name(), impact_cat)
+    base_impact = Calculator.get_total_impact(model, impact_cat)
 
     result_range = [0, 0]
     if 'range' in kwargs:
@@ -57,7 +57,7 @@ def compute_sensitivity(obj, param, **kwargs):
         for i in [0,1]:
             setattr(obj, param, kwargs['range'][i])
             obj.update_impacts()
-            impact_new = claculator.get_total_impact(model.get_name(), impact_cat)
+            impact_new = Calculator.get_total_impact(model, impact_cat)
             percentage_change = 100 * (impact_new - base_impact) / base_impact
 
             result_range[i] = percentage_change
@@ -67,7 +67,7 @@ def compute_sensitivity(obj, param, **kwargs):
         for option in kwargs['options']:
             setattr(obj, param, option)
             obj.update_impacts()
-            impact_new = claculator.get_total_impact(model.get_name(), impact_cat)
+            impact_new = Calculator.get_total_impact(model, impact_cat)
             percentage_change = 100 * (impact_new - base_impact) / base_impact
 
             results.append(percentage_change)
