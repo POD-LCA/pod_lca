@@ -18,7 +18,6 @@ class Calculator():
     # ================================
     # Constructors
     # ================================
-
     @classmethod
     def new(cls):
         """ Create new calculator.

@@ -123,10 +123,7 @@ class TestBuilder(unittest.TestCase):
 
         model_0 = project.add_model("Model_0")
 
-        sprinkles = model_0.add_product("Sprinkles", "A1")
-        sprinkles.set_qty(2.0)
-        sprinkles.set_unit(KILOGRAM)
-        sprinkles.set_impact_database_entry("Sprinkles")
+        sprinkles = model_0.add_product(name="Sprinkles", stage="A1", qty=2.0, unit=KILOGRAM, impacts_from="Sprinkles")
 
         project.save(file_path)
 
@@ -172,16 +169,12 @@ class TestBuilder(unittest.TestCase):
 
         model_0 = project.add_model("Model_0")
 
-        sprinkles = model_0.add_product("Sprinkles", "A1")
-        sprinkles.set_qty(2.0)
-        sprinkles.set_unit(KILOGRAM)
-        sprinkles.set_impact_database_entry("Sprinkles")
+        sprinkles = model_0.add_product(name="Sprinkles", stage="A1", qty=2.0, unit=KILOGRAM, impacts_from="Sprinkles")
 
-        sprinkles_by_truck = model_0.add_transportation_process("Sprinkle Transportation", "A2")
+        sprinkles_by_truck = model_0.add_transportation_process(name="Sprinkle Transportation", stage="A2",
+                                                                transported_distance=30.0, unit=KILOMETER,
+                                                                impacts_from="Transportation by truck")
         sprinkles_by_truck.set_transported_product(sprinkles)
-        sprinkles_by_truck.set_transported_distance(30.0)
-        sprinkles_by_truck.set_transported_distance_unit(KILOMETER)
-        sprinkles_by_truck.set_impact_database_entry("Transportation by truck")
 
         project.save(file_path)
 
@@ -203,10 +196,7 @@ class TestBuilder(unittest.TestCase):
 
         model_0 = project.add_model("Model_0")
 
-        CO2 = model_0.add_emission("CO2", "A3")
-        CO2.set_qty(0.5)
-        CO2.set_unit(KILOGRAM)
-        CO2.set_impact_database_entry("CO2")
+        CO2 = model_0.add_emission(name="CO2", stage="A3", qty=0.5, unit=KILOGRAM, impacts_from="CO2")
 
         project.save(file_path)
 
@@ -231,10 +221,8 @@ class TestBuilder(unittest.TestCase):
 
         model_0 = project.add_model("Model_0")
 
-        electricity_2 = model_0.add_energy("Electricity for Chemical Reaction", "A3")
-        electricity_2.set_qty(10.0)
-        electricity_2.set_unit(KILO * WATT_HOUR)
-        electricity_2.set_impact_database_entry("Electricity_New")
+        electricity_2 = model_0.add_energy(name="Electricity for Chemical Reaction", stage="A3",
+                                           qty=10.0, unit=KILO * WATT_HOUR, impacts_from="Electricity_New")
 
         project.save(file_path)
 
@@ -256,10 +244,7 @@ class TestBuilder(unittest.TestCase):
 
         model_0 = project.add_model("Model_0")
 
-        waste = model_0.add_waste("Waste to landfill", "A3")
-        waste.set_qty(1.0)
-        waste.set_unit(KILOGRAM)
-        waste.set_impact_database_entry("Waste to landfill")
+        waste = model_0.add_waste(name="Waste to landfill", stage="A3", qty=1.0, unit=KILOGRAM, impacts_from="Waste to landfill")
 
         project.save(file_path)
 

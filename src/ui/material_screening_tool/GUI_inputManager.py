@@ -72,12 +72,9 @@ class GUIInputManager():
 
         model = project.get_model(model_name)
 
-        product = model.add_product(name, stage)
-        product.set_unit(unit) 
-        product.set_qty(qty)
         try:
-            if not (lca_data == 'None'):
-                product.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            product = model.add_product(name, stage, qty, unit, lca_data)
         except ImportError as e:
             model.delete_item(product)
             GUIInputManager.show_error_popup("ImportError", str(e))
@@ -92,12 +89,9 @@ class GUIInputManager():
 
         model = project.get_model(model_name)
 
-        energy = model.add_energy(name, stage)
-        energy.set_unit(unit)
-        energy.set_qty(qty)
         try:
-            if not (lca_data == 'None'):
-                energy.set_impact_database_entry(lca_data)  
+            lca_data = None if lca_data == 'None' else lca_data
+            energy = model.add_energy(name, stage, qty, unit, lca_data)
         except ImportError as e:
             model.delete_item(energy)
             GUIInputManager.show_error_popup("ImportError", str(e))
@@ -112,12 +106,10 @@ class GUIInputManager():
 
         model = project.get_model(model_name)
 
-        emission = model.add_emission(name, stage)
-        emission.set_unit(unit)
-        emission.set_qty(qty)
+        
         try:
-            if not (lca_data == 'None'):
-                emission.set_impact_database_entry(lca_data)   
+            lca_data = None if lca_data == 'None' else lca_data
+            emission = model.add_emission(name, stage, qty, unit, lca_data)  
         except ImportError as e:
             model.delete_item(emission)
             GUIInputManager.show_error_popup("ImportError", str(e))
@@ -131,13 +123,10 @@ class GUIInputManager():
         unit = GUIInputManager.units_map[unit]
 
         model = project.get_model(model_name)
-
-        waste = model.add_waste(name, stage)
-        waste.set_unit(unit)
-        waste.set_qty(qty)
+        
         try:
-            if not (lca_data == 'None'):
-                waste.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            waste = model.add_waste(name, stage, qty, unit, lca_data)
         except ImportError as e:
             model.delete_item(waste)
             GUIInputManager.show_error_popup("ImportError", str(e))
@@ -152,12 +141,9 @@ class GUIInputManager():
 
         model = project.get_model(model_name)
 
-        process =  model.add_process(name, stage)
-        process.set_unit(unit)
-        process.set_qty(qty)
         try:
-            if not (lca_data == 'None'):
-                process.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            process =  model.add_process(name, stage, qty, unit, lca_data)
         except ImportError as e:
             model.delete_item(process)
             GUIInputManager.show_error_popup("ImportError", str(e))
@@ -250,7 +236,7 @@ class GUIInputManager():
     @staticmethod
     def get_database_row(item):
 
-        return item.get_database_row()
+        return item.get_impact_database_entry()
     
     @staticmethod
     def get_qty(item):
@@ -276,7 +262,7 @@ class GUIInputManager():
         unit = GUIInputManager.units_map[unit]
 
         try:
-            obj.change_units(unit)
+            obj.set_unit(unit)
         except ValueError as e:
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
@@ -313,7 +299,7 @@ class GUIInputManager():
     @staticmethod
     def set_id(item, new_id):
 
-        item.overide_id(new_id)
+        item.set_id(new_id)
 
     @staticmethod
     def unit_conversion(project, old_unit, new_unit, close_error=True):
@@ -395,12 +381,9 @@ class GUIInputManager():
 
         model = project.get_model(model_name)
 
-        transport_process =  model.add_transportation_process(name, stage)
-        transport_process.set_transported_distance_unit(unit)
-        transport_process.set_transported_distance(qty)
         try:
-            if not (lca_data == 'None'):
-                transport_process.set_impact_database_entry(lca_data)
+            lca_data = None if lca_data == 'None' else lca_data
+            transport_process =  model.add_transportation_process(name, stage, qty, unit, lca_data)
         except ImportError as e:
             model.delete_item(transport_process)
             GUIInputManager.show_error_popup("ImportError", str(e))
@@ -412,7 +395,7 @@ class GUIInputManager():
     def update_transport_dist(visualizer, item, qty, close_error=True):
 
         try:
-             item.set_transported_distance(qty)                
+            item.set_transported_distance(qty)                
         except TypeError as e:
             GUIInputManager.show_error_popup("TypeError", str(e))
             if not close_error:
@@ -439,7 +422,7 @@ class GUIInputManager():
     @staticmethod
     def set_travel_weight(visualizer, item):  
 
-        item.set_travel_weight()
+        item.set_transported_weight()
         visualizer.update_plot()
 
     @staticmethod

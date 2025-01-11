@@ -31,10 +31,14 @@ class ImpactsDatabase:
         self.name = None
         self.data = DataFrame(columns=['Flow','Unit'] + list(IMPACT_CATEGOREIS.keys()))
 
+    def __str__(self):
+        str = "="*75 + "\n" + f"Impact Database: {self.get_name()}\n" + "="*75 + "\n"
+        str += f"{self.get_data_all()}"
+        return str
+    
     # =================================
     # Constructors
     # =================================
-
     @classmethod
     def new(cls, name):
         """ Create a new database.
@@ -58,7 +62,6 @@ class ImpactsDatabase:
     # =================================
     # Getters and Setters
     # =================================
-
     def set_name(self, name):
         """ Set the name of the database.
         

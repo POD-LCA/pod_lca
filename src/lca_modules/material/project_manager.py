@@ -34,10 +34,17 @@ class Project:
         self.HotSpotAnalysis = None
         self.DataQualityAnalysis = None
 
+    def __str__(self):
+        str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
+
+        for model_name in self.get_model_names():
+            str += f"{model_name} \n"
+
+        return str
+
     # ================================
     # Constructors
     # ================================
-
     @classmethod
     def new(cls, name=None):
         """ Create a new project.
@@ -62,7 +69,6 @@ class Project:
     # ================================
     # Setters and Getters
     # ================================
-
     def set_name(self, name:(str)):
         """ Set the name of the project.
         
@@ -114,7 +120,6 @@ class Project:
     # ================================
     # Model Methods
     # ================================
-    
     def add_model(self, model_name:(str), file_path=None):
         """ Create and add a model to the current project.
 
@@ -172,7 +177,6 @@ class Project:
     # ================================
     # Project Methods
     # ================================
-    
     def clear_project(self, model=True, database=True):
         """ Remove all existing models and the impact database of the project.
 

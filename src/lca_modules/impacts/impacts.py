@@ -33,7 +33,6 @@ class Impacts:
     # ========================
     # Constructors
     # ========================
-
     @classmethod
     def from_parent(cls, parent):
         """ Create an impact object from a parent object.

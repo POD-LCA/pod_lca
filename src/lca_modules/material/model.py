@@ -39,10 +39,22 @@ class Model:
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}
 
+    def __str__(self):
+        str = "="*75 + "\n" + f"Product/Process List of {self.get_name()}\n" + "="*75 + "\n"
+        for item in self.get_products() + self.get_processes():
+            name_tag = f"{item.get_name()} ({type(item).__name__})"
+            if len(name_tag) > 50:
+                formated_name_tag = f"{name_tag[:{47}]}..."
+            else:
+                formated_name_tag = f"{name_tag:<50}" 
+
+            str += f"{formated_name_tag:<50} {item.get_life_cycle_stage():<10} {item.get_qty():<5} {item.get_unit().get_standard_notation():<20}\n"
+
+        return str        
+
     # ================================
     # Constructors
     # ================================
-
     @classmethod
     def in_project(cls, project, name=None):    
         """ Create a model object from a parent object.
@@ -152,10 +164,10 @@ class Model:
                 tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
                 
         return model    
+    
     # ================================
     # Getters and Setters
     # ================================
-
     def set_project(self, project):
         """ Set the project object.
         
@@ -241,9 +253,7 @@ class Model:
     # ================================
     # Methods to add items to the model
     # ================================
-    # TODO: extend add methods to include qty, unit, and impact entry
-    
-    def add_process(self, name, stage, qty, unit):
+    def add_process(self, name, stage, qty, unit, impacts_from):
         """ Create and add process to the model.
 
             Parameters
@@ -256,6 +266,8 @@ class Model:
                 Quantity processed.
             unit : Unit Obj
                 Unit of the quantity.
+            impacts_from : str
+                Name of the impact database entry from which to use impacts.
 
             Returns
             -------
@@ -263,9 +275,8 @@ class Model:
                 Process object created.
 
         """
-
-        n = len(self.processes)
-        process = Process(n, name, self, stage)
+        n = len(self.get_processes())
+        process = Process.new(n, name, self, stage, qty, unit, impacts_from)
 
         process.set_qty(qty)
         process.set_unit(unit)
@@ -275,7 +286,7 @@ class Model:
 
         return process
     
-    def add_transportation_process(self, name:str, stage:str):
+    def add_transportation_process(self, name, stage, transported_distance, unit, impacts_from):
         """ Create and add process to the model.
 
             Parameters
@@ -284,6 +295,12 @@ class Model:
                 Name of the process.
             stage : str.
                 Life cycle stage.
+            qty : float
+                Quantity processed.
+            unit : Unit Obj
+                Unit of the quantity.
+            impacts_from : str
+                Name of the impact database entry from which to use impacts.
 
             Returns
             -------
@@ -291,16 +308,15 @@ class Model:
                 Process object created.
 
         """
-
-        n = len(self.processes)
-        process = transportationProcess(n, name, self, stage)
+        n = len(self.get_processes()) 
+        process = transportationProcess.new(n, name, self, stage, transported_distance, unit, impacts_from)
 
         self.processes.append(process)
         self.impacts[stage].append(process.get_impacts())
 
         return process
     
-    def add_product(self, name, stage):
+    def add_product(self, name, stage, qty, unit, impacts_from):
         """ Create and add product to the model.
 
             Parameters
@@ -309,6 +325,12 @@ class Model:
                 Name of the product.
             stage : str.
                 Life cycle stage.
+            qty : float
+                Product quantity.
+            unit : Unit Obj.
+                Unit of measurement.            
+            impacts_from : str
+                Name of the impact database entry from which to use impacts.
 
             Returns
             -------
@@ -316,16 +338,15 @@ class Model:
                 Product object created.
 
         """
-
-        n = len(self.products)
-        product = Product(n, name, self, stage)
-
+        n = len(self.get_products())
+        product = Product.new(n, name, self, stage, qty, unit, impacts_from)
+        
         self.products.append(product)
         self.impacts[stage].append(product.get_impacts())
 
         return product
     
-    def add_energy(self, name, stage):
+    def add_energy(self, name, stage, qty, unit, impacts_from):
         """ Create and add energy product to the model.
 
             Parameters
@@ -334,6 +355,12 @@ class Model:
                 Name of the product.
             stage : str.
                 Life cycle stage: 'A1', 'A2', 'A3'.
+            qty : float
+                Product quantity.
+            unit : Unit Obj.
+                Unit of measurement.    
+            impacts_from : str
+                Name of the impact database entry from which to use impacts.
 
             Returns
             -------
@@ -341,16 +368,15 @@ class Model:
                 Energy product object created.
 
         """
-
-        n = len(self.products)
-        energy = Fuel(n, name, self, stage)
+        n = len(self.get_products())
+        energy = Fuel.new(n, name, self, stage, qty, unit, impacts_from)
 
         self.products.append(energy)
         self.impacts[stage].append(energy.get_impacts())
 
         return energy
     
-    def add_emission(self, name, stage):
+    def add_emission(self, name, stage, qty, unit, impacts_from):
         """ Create and add emission product to the model.
 
             Parameters
@@ -359,6 +385,12 @@ class Model:
                 Name of the emission product.
             stage : str.
                 Life cycle stage: 'A1', 'A2', 'A3'.
+            qty : float
+                Product quantity.
+            unit : Unit Obj.
+                Unit of measurement.   
+            impacts_from : str
+                Name of the impact database entry from which to use impacts.
 
             Returns
             -------
@@ -366,16 +398,15 @@ class Model:
                 Emission object created.
 
         """
-
-        n = len(self.products)
-        emission = Emission(n, name, self, stage)
+        n = len(self.get_products())
+        emission = Emission.new(n, name, self, stage, qty, unit, impacts_from)
 
         self.products.append(emission)
         self.impacts[stage].append(emission.get_impacts())
 
         return emission
 
-    def add_waste(self, name, stage):
+    def add_waste(self, name, stage, qty, unit, impacts_from):
         """ Create and add waste product to the model.
 
             Parameters
@@ -384,6 +415,12 @@ class Model:
                 Name of the waste product.
             stage : str.
                 Life cycle stage: 'A1', 'A2', 'A3'.
+            qty : float
+                Product quantity.
+            unit : Unit Obj.
+                Unit of measurement.   
+            impacts_from : str
+                Name of the impact database entry from which to use impacts.
 
             Returns
             -------
@@ -391,9 +428,8 @@ class Model:
                 Waste object created.
 
         """
-
-        n = len(self.products)
-        waste = Waste(n, name, self, stage)
+        n = len(self.get_products())
+        waste = Waste.new(n, name, self, stage, qty, unit, impacts_from)
 
         self.products.append(waste)
         self.impacts[stage].append(waste.get_impacts())
@@ -403,7 +439,6 @@ class Model:
     # ================================
     # Methods to interact with items
     # ================================
-  
     def find_item(self, name):
         """ Find an item (product/process) in the model, given a name string.
             If multiple objects of the same name exist, returns all.
@@ -445,7 +480,7 @@ class Model:
                 if type(process) is transportationProcess:
                     if obj in process.get_transported_products():
                         process.get_transported_products().remove(obj)
-                        process.set_travel_weight()
+                        process.set_transported_weight()
         elif type(obj) == Process:
             self.get_processes().remove(obj)
 
