@@ -29,21 +29,20 @@ class Product(Master):
 
     """
 
-    def __init__(self, id, name, model, stage):
-        super().__init__(id, name, model, stage)
+    def __init__(self):
+        super().__init__()
         self.weight = 0.0
-        self.weight_unit = 'kg'
+        self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
         self.is_material = True
 
-    def __reduce__(self):
-        return (self.__class__, (self.id, self.name, None, self.life_cycle_stage), {"model": self.model, "impacts": self.impacts,
-                                                                                    "database_item": self.impact_database_entry, 
-                                                                                    "qty": self.qty, "weight": self.weight, "transporter": self.transporter,
-                                                                                    "density": self.density, "unit":self.unit, 
-                                                                                    "is_material":self.is_material})
+    def __str__(self):
+        return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
+    # ================================
+    # Setters
+    # ================================
     def set_qty(self, qty):
         """ Update the qty of the product.
             This will also re-calculate the corresponding impact quantities.
@@ -70,6 +69,40 @@ class Product(Master):
 
         self.update_impacts()
 
+        return self
+
+    def set_unit(self, unit):
+        """ Set unit of measurement for the product.
+            If the unit of measurement is of mass dimensions, same unit is set as weight unit of the product.
+        
+            Parameters
+            ----------
+            unit : Unit Obj.
+                Unit of measurement.
+        
+        """
+
+        self.unit = unit
+        if unit.get_qty_measured() == 'mass':
+            self.set_weight_unit(unit)
+            self.density = 1.0
+
+        return self
+
+    def set_weight_unit(self, unit):
+        """ Set unit of measurement for the mass of the product.
+
+            Parameters
+            ----------
+            str
+                Unit of measurement of mass.
+        
+        """
+
+        self.weight_unit = unit
+
+        return self
+
     def set_density(self, density):
         """ Set density of the product.
             Density is defined here as mass per unit measurement of product (not necessarily volume)
@@ -92,48 +125,9 @@ class Product(Master):
                 raise TypeError(f"Density of {self.get_name()} should be a numerical value.")
     
         self.density = density
-    
-    def set_unit(self, unit):
-        """ Set unit of measurement for the product.
-            If the unit of measurement is of mass dimensions, same unit is set as weight unit of the product.
-        
-            Parameters
-            ----------
-            unit : str
-                Unit of measurement.
-        
-        """
 
-        if self.get_unit() is not None:
-            value_in = self.get_qty()
-            unit_in = self.get_unit()
+        return self
 
-            conversion_factor = self.get_project().get_calculator().conversion_factor(unit_in, unit)
-
-            if conversion_factor is not None:
-                self.unit = unit
-                self.set_qty(value_in * conversion_factor)
-            else:
-                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
-        else:
-            self.unit = unit
-
-        if self.get_unit().get_qty_measured() == 'mass':
-            self.set_weight_unit(unit)
-            self.density = 1.0
-
-    def set_weight_unit(self, unit):
-        """ Set unit of measurement for the mass of the product.
-
-            Parameters
-            ----------
-            str
-                Unit of measurement of mass.
-        
-        """
-
-        self.weight_unit = unit
-    
     def set_transporter(self, transporter):
         """ Set transport processes the product is subject to.
             If not already added, will add the product to the transportation process as a transported product.
@@ -151,8 +145,13 @@ class Product(Master):
 
         self.transporter = transporter
         if self not in transporter.get_transported_products():
-            transporter.set_transported_product(self)  
-           
+            transporter.set_transported_product(self)
+
+        return self
+
+    # ================================
+    # Getters
+    # ================================      
     def get_weight(self):
         """ Retrieve the mass of the product.
         
@@ -163,19 +162,7 @@ class Product(Master):
         """
 
         return self.weight
-    
-    def get_transporter(self):
-        """ Retrieve transport processes the product is subject to, if any.
 
-            Returns
-            -------
-            TransportationProcess Obj.
-                Transportation process the product is subject to, if any.
-                None, otherwise.
-        """
-
-        return self.transporter
-    
     def get_weight_unit(self):
         """ Retrieve the unit of measurement of mass of the product.
             This is used for the definition of density of the product.
@@ -199,7 +186,19 @@ class Product(Master):
 
         """
 
-        return self.density
+        return self.density 
+       
+    def get_transporter(self):
+        """ Retrieve transport processes the product is subject to, if any.
+
+            Returns
+            -------
+            TransportationProcess Obj.
+                Transportation process the product is subject to, if any.
+                None, otherwise.
+        """
+
+        return self.transporter
 
 
 class Fuel(Product):
@@ -215,11 +214,13 @@ class Fuel(Product):
 
     """
 
-    def __init__(self, id, name, model, stage):
-        super().__init__(id, name, model, stage)
+    def __init__(self):
+        super().__init__()
         self.is_material = True
         self.is_energy = True
 
+    def __str__(self):
+        return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
 class Emission(Product):
     """
@@ -232,10 +233,12 @@ class Emission(Product):
         
     """
 
-    def __init__(self, id, name, model, stage):
-        super().__init__(id, name, model, stage)
+    def __init__(self):
+        super().__init__()
         self.is_emssion = True
 
+    def __str__(self):
+        return f"Emission(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
 class Waste(Product):
     """
@@ -248,9 +251,13 @@ class Waste(Product):
         
     """
 
-    def __init__(self, id, name, model, stage):
-        super().__init__(id, name, model, stage)
+    def __init__(self):
+        super().__init__()
         self.is_waste = True
+
+    def __str__(self):
+        return f"Waste(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
+
 
 if __name__ == '__main__':
     pass

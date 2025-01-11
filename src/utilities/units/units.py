@@ -279,8 +279,8 @@ class Unit:
                     return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
                 elif self.get_base() == to_unit.get_base():
                     return self.prefix.get_conversion_factor(to_unit.get_prefix())
-                else:
-                    raise NotImplementedError # This case should not exist  
+                else: # both units are prefixed
+                    return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
             else:
                 components_in = self.get_components()
                 components_out = to_unit.get_components()

@@ -1,10 +1,10 @@
-
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from utilities.objects.array_methods import get_attribute_as_list, sort_by_attribute
 
 import numpy as np
 
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu; mhtaba@uw.edu"
 __version__ = "0.1.0"
@@ -12,42 +12,30 @@ __version__ = "0.1.0"
 
 class Calculator():
     """
-    Calculator object carries varies calculations on the project data.
-    This include, conversion of units of measurements and generating data for visualization.
-
-    Attributes
-    ----------
-    project : Project Obj.
-        Project on which the calculator operates.
+    Calculator object carries out varies calculations on the project data.
     """
-
-    def __init__(self, project):
-        self.project = project
  
-    def __reduce__(self):
-        return (self.__class__, (None,), {"project": self.project})
-    
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-
-    def get_project(self):
-        """ Get the project linked to the calculator.
-        
-        Retruns
-        -------
-        Project Obj.
-            Project linked to the calculator.
+    # ================================
+    # Constructors
+    # ================================
+    @classmethod
+    def new(cls):
+        """ Create new calculator.
         """
 
-        return self.project
+        return cls()
     
-    def get_total_impact(self, model_name, impact_cat):
+    # ================================
+    # Calcualotror methods
+    # ================================
+    @staticmethod
+    def get_total_impact(model, impact_cat):
         """ Calculate the total impact of the products and processes in the model.
         
             Parameters
             ----------
-            model_name : str
-                Name of the model
+            model: Model Obj.
+                Model in which the impacts are calculated.
             impact_cat : str
                 Impact category considered, including 'weighted'.
 
@@ -57,16 +45,12 @@ class Calculator():
                 Total impact value.
         """
 
-        items = self.project.get_model(model_name).get_all_items()
-        for item in items:
-            item.update_impacts()
-
-        impacts_dict = self.project.get_model(model_name).get_impacts()
+        impacts_dict = model.get_impacts()
         impacts_lst = []
-        for key, list in impacts_dict.items():
-            impacts_lst.extend(list)
+        for key, lst in impacts_dict.items():
+            impacts_lst.extend(lst)
 
-        if impact_cat not in self.get_project().get_database().get_impact_categories() + ['weighted']:
+        if impact_cat not in list(IMPACT_CATEGOREIS.keys()) + ['weighted']:
             raise AttributeError(f"{impact_cat} does not exist in the current project.")
         else:
             if impact_cat == 'weighted':
@@ -79,16 +63,16 @@ class Calculator():
     # =================================
     # PLOT DATA METHODS
     # =================================
-
-    def get_data_by_LCstage(self, impact_category, model_name='Model_0'):
+    @staticmethod
+    def get_data_by_LCstage(impact_category, model):
         """ Returns impact data by life cycle stage for given model and impact category.
 
             Parameters
             ----------
             impact_category : str
                 Name of impact category.
-            model_name : str
-                Name of the model considered.
+            model : Model Obj
+                The model considered.
 
             Returns
             -------
@@ -101,9 +85,9 @@ class Calculator():
         
         """
 
-        impacts_dict = self.project.get_model(model_name).get_impacts()
+        impacts_dict = model.get_impacts()
 
-        if impact_category not in self.get_project().get_database().get_impact_categories():
+        if impact_category not in IMPACT_CATEGOREIS.keys():
             raise AttributeError(f"{impact_category} does not exist in the current project.")
         else:
             vals = {}
@@ -115,16 +99,16 @@ class Calculator():
 
             return vals, impacts_dict.keys()
     
-
-    def get_barchart_data(self, impact_category, model_lst=['Model_0']):
+    @staticmethod
+    def get_barchart_data(impact_category, model_lst=['Model_0']):
         """ Returns data for a barchart.
             
             Parameters
             ----------
             impact_category : str
                 Name of the Impact category.
-            model_lst : List of str.
-                Names of the models.
+            model_lst : List of Model Obj.
+                List of the models.
 
             Returns
             -------
@@ -135,21 +119,21 @@ class Calculator():
         """
 
         data_dict ={}
-        for model_name in model_lst:
-            data_dict[model_name], stages = self.get_data_by_LCstage(impact_category, model_name)
+        for model in model_lst:
+            data_dict[model.get_name()], stages = Calculator.get_data_by_LCstage(impact_category, model)
         
         return  stages, data_dict
         
-
-    def get_barchart2_data (self, impact_category, model_name='Model_0'):
+    @staticmethod
+    def get_barchart2_data (impact_category, model):
         """ Returns data for a barchart.
             
             Parameters
             ----------
             impact_category : str
                 Name of the Impact category.
-            model : str.
-                Names of the model.
+            model : Model Obj.
+                Model.
 
             Returns
             -------
@@ -167,7 +151,8 @@ class Calculator():
         data_qty=[]
         data_len=[]
 
-        model = self.get_project().get_model(model_name)
+        model_name = model.get_name()
+
         for lc_stage in model.get_impacts():
             item_count = 0
             other_qty = 0.0
@@ -202,15 +187,16 @@ class Calculator():
 
         return data_name, data_qty, data_len, impacts
 
-    def get_barchart3_data(self, impact_category, model= 'Model_0'):
+    @staticmethod
+    def get_barchart3_data(impact_category, model= 'Model_0'):
         """ Returns data for a barchart.
             
             Parameters
             ----------
             impact_category : str
                 Name of the Impact category.
-            model : str.
-                Names of the model.
+            model : Model Obj.
+                The model considered.
 
             Returns
             -------
@@ -221,7 +207,7 @@ class Calculator():
         labels = ['A1', 'A2', 'A3']
         data=[]
         for category in impact_category:
-            tmp_dict, _ = self.get_data_by_LCstage(category, model)
+            tmp_dict, _ = Calculator.get_data_by_LCstage(category, model)
             plt_data = [tmp_dict["A1"], tmp_dict["A2"], tmp_dict["A3"]]
             data.append(plt_data)
 
@@ -229,15 +215,16 @@ class Calculator():
         
         return impact_by_stage
 
-    def get_spider_chart_data (self, impact_category, model_lst=['Model_0'], stage='all'):
+    @staticmethod
+    def get_spider_chart_data (impact_category, model_lst=['Model_0'], stage='all'):
         """ Returns data for a barchart.
             
             Parameters
             ----------
             impact_category : List
                 List of impact categories.
-            model_lst : List of str.
-                Names of the models.
+            model_lst : List of Model Obj.
+                List of the models.
             stage : str
                 Life Cycle Stage considered.
 
@@ -251,9 +238,9 @@ class Calculator():
         for impact in impact_category:
             impact_data = {}
 
-            for model_name in model_lst:
-                model_data, _ = self.get_data_by_LCstage(impact, model_name)
-                impact_data[model_name] = model_data  
+            for model in model_lst:
+                model_data, _ = Calculator.get_data_by_LCstage(impact, model)
+                impact_data[model.get_name()] = model_data  
 
             if stage == 'all':
                 stage_values = {model: sum(impact_data[model].values()) for model in impact_data}

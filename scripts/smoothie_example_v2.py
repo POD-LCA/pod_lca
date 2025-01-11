@@ -1,4 +1,4 @@
-from lca_modules.material.projectManager import Project
+from lca_modules.material.project_manager import Project
 from lca_modules.material.visualizer.bar_chart import BarChart
 from lca_modules.material.visualizer.bar_chart2 import BarChart2
 from lca_modules.material.visualizer.bar_chart3 import BarChart3
@@ -11,7 +11,7 @@ from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 project = Project()
 project.get_database().import_data_from_CSV(r'data/impact_data_smoothie.csv')
 
-project.get_database().set_custom_entry("Electricity_New", "kWh", 
+project.get_database().set_data_entry("Electricity_New", "kWh", 
                                         {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
 
@@ -37,25 +37,25 @@ propane.set_density(0.02)
 propane.set_weight_unit('kg')
 propane.set_impact_database_entry("Propane")
 
-sprinkles_by_truck = project.current_model.create_transportation_process("Sprinkle Transportation", "A2")
+sprinkles_by_truck = project.current_model.add_transportation_process("Sprinkle Transportation", "A2")
 sprinkles_by_truck.set_transported_product(sprinkles)
 sprinkles_by_truck.set_transported_distance(30.0)
 sprinkles_by_truck.set_transported_distance_unit('km')
 sprinkles_by_truck.set_impact_database_entry("Transportation by truck")
 
-sand_by_truck = project.current_model.create_transportation_process("Sand Transportation", "A2")
+sand_by_truck = project.current_model.add_transportation_process("Sand Transportation", "A2")
 sand_by_truck.set_transported_product(sand)
 sand_by_truck.set_transported_distance(40.0)
 sand_by_truck.set_transported_distance_unit('km')
 sand_by_truck.set_impact_database_entry("Transportation by truck")
 
-pickles_by_truck = project.current_model.create_transportation_process("Pickles Transportation", "A2")
+pickles_by_truck = project.current_model.add_transportation_process("Pickles Transportation", "A2")
 pickles_by_truck.set_transported_product(pickles)
 pickles_by_truck.set_transported_distance(17.0)
 pickles_by_truck.set_transported_distance_unit('km')
 pickles_by_truck.set_impact_database_entry("Transportation by truck")
 
-propane_by_truck = project.current_model.create_transportation_process("Propane Transportation", "A2")
+propane_by_truck = project.current_model.add_transportation_process("Propane Transportation", "A2")
 propane_by_truck.set_transported_product(propane)
 propane_by_truck.set_transported_distance(20.0)
 propane_by_truck.set_transported_distance_unit('km')
@@ -79,13 +79,13 @@ product_2 = project.current_model.create_product("Product of mixing", "A3")
 product_2.set_qty(4.0)
 product_2.set_unit('kg')
 
-product1_by_truck = project.current_model.create_transportation_process("Product 01 Transportation", "A2")
+product1_by_truck = project.current_model.add_transportation_process("Product 01 Transportation", "A2")
 product1_by_truck.set_transported_product(product_1)
 product1_by_truck.set_transported_distance(3.0)
 product1_by_truck.set_transported_distance_unit('km')
 product1_by_truck.set_impact_database_entry("Transportation by truck")
 
-product2_by_truck = project.current_model.create_transportation_process("Product 02 Transportation", "A2")
+product2_by_truck = project.current_model.add_transportation_process("Product 02 Transportation", "A2")
 product2_by_truck.set_transported_product(product_2)
 product2_by_truck.set_transported_distance(14.0)
 product2_by_truck.set_transported_distance_unit('km')
@@ -118,7 +118,7 @@ waste.set_impact_database_entry("Waste to landfill")
 
 #----------------------------------------------------
 
-model2 = project.create_model('Model_02')
+model2 = project.add_model('Model_02')
 project.set_current_model('Model_02')
 
 sprinkles = model2.create_product("Sprinkles", "A1")
@@ -143,25 +143,25 @@ propane.set_density(0.02)
 propane.set_weight_unit('kg')
 propane.set_impact_database_entry("Propane")
 
-sprinkles_by_truck = model2.create_transportation_process("Sprinkle Transportation", "A2")
+sprinkles_by_truck = model2.add_transportation_process("Sprinkle Transportation", "A2")
 sprinkles_by_truck.set_transported_product(sprinkles)
 sprinkles_by_truck.set_transported_distance(30.0)
 sprinkles_by_truck.set_transported_distance_unit('km')
 sprinkles_by_truck.set_impact_database_entry("Transportation by truck")
 
-sand_by_truck = model2.create_transportation_process("Sand Transportation", "A2")
+sand_by_truck = model2.add_transportation_process("Sand Transportation", "A2")
 sand_by_truck.set_transported_product(sand)
 sand_by_truck.set_transported_distance(100.0)
 sand_by_truck.set_transported_distance_unit('km')
 sand_by_truck.set_impact_database_entry("Transportation by truck")
 
-pickles_by_truck = model2.create_transportation_process("Pickles Transportation", "A2")
+pickles_by_truck = model2.add_transportation_process("Pickles Transportation", "A2")
 pickles_by_truck.set_transported_product(pickles)
 pickles_by_truck.set_transported_distance(17.0)
 pickles_by_truck.set_transported_distance_unit('km')
 pickles_by_truck.set_impact_database_entry("Transportation by truck")
 
-propane_by_truck = model2.create_transportation_process("Propane Transportation", "A2")
+propane_by_truck = model2.add_transportation_process("Propane Transportation", "A2")
 propane_by_truck.set_transported_product(propane)
 propane_by_truck.set_transported_distance(25.0)
 propane_by_truck.set_transported_distance_unit('km')
@@ -185,13 +185,13 @@ product_2 = model2.create_product("Product of mixing", "A3")
 product_2.set_qty(4.0)
 product_2.set_unit('kg')
 
-product1_by_truck = model2.create_transportation_process("Product 01 Transportation", "A2")
+product1_by_truck = model2.add_transportation_process("Product 01 Transportation", "A2")
 product1_by_truck.set_transported_product(product_1)
 product1_by_truck.set_transported_distance(30.0)
 product1_by_truck.set_transported_distance_unit('km')
 product1_by_truck.set_impact_database_entry("Transportation by truck")
 
-product2_by_truck = model2.create_transportation_process("Product 02 Transportation", "A2")
+product2_by_truck = model2.add_transportation_process("Product 02 Transportation", "A2")
 product2_by_truck.set_transported_product(product_2)
 product2_by_truck.set_transported_distance(14.0)
 product2_by_truck.set_transported_distance_unit('km')
@@ -224,7 +224,7 @@ waste.set_impact_database_entry("Waste to landfill")
 
 #----------------------------------------------------
 #model 03
-model3 = project.create_model('Model_03')
+model3 = project.add_model('Model_03')
 project.set_current_model('Model_03')
 
 
@@ -250,25 +250,25 @@ propane.set_density(0.02)
 propane.set_weight_unit('kg')
 propane.set_impact_database_entry("Propane")
 
-sprinkles_by_truck = model3.create_transportation_process("Sprinkle Transportation", "A2")
+sprinkles_by_truck = model3.add_transportation_process("Sprinkle Transportation", "A2")
 sprinkles_by_truck.set_transported_product(sprinkles)
 sprinkles_by_truck.set_transported_distance(30.0)
 sprinkles_by_truck.set_transported_distance_unit('km')
 sprinkles_by_truck.set_impact_database_entry("Transportation by truck")
 
-sand_by_truck = model3.create_transportation_process("Sand Transportation", "A2")
+sand_by_truck = model3.add_transportation_process("Sand Transportation", "A2")
 sand_by_truck.set_transported_product(sand)
 sand_by_truck.set_transported_distance(46.0)
 sand_by_truck.set_transported_distance_unit('km')
 sand_by_truck.set_impact_database_entry("Transportation by truck")
 
-pickles_by_truck = model3.create_transportation_process("Pickles Transportation", "A2")
+pickles_by_truck = model3.add_transportation_process("Pickles Transportation", "A2")
 pickles_by_truck.set_transported_product(pickles)
 pickles_by_truck.set_transported_distance(14.0)
 pickles_by_truck.set_transported_distance_unit('km')
 pickles_by_truck.set_impact_database_entry("Transportation by truck")
 
-propane_by_truck = model3.create_transportation_process("Propane Transportation", "A2")
+propane_by_truck = model3.add_transportation_process("Propane Transportation", "A2")
 propane_by_truck.set_transported_product(propane)
 propane_by_truck.set_transported_distance(27.0)
 propane_by_truck.set_transported_distance_unit('km')
@@ -292,13 +292,13 @@ product_2 = model3.create_product("Product of mixing", "A3")
 product_2.set_qty(4.0)
 product_2.set_unit('kg')
 
-product1_by_truck = model3.create_transportation_process("Product 01 Transportation", "A2")
+product1_by_truck = model3.add_transportation_process("Product 01 Transportation", "A2")
 product1_by_truck.set_transported_product(product_1)
 product1_by_truck.set_transported_distance(35.0)
 product1_by_truck.set_transported_distance_unit('km')
 product1_by_truck.set_impact_database_entry("Transportation by truck")
 
-product2_by_truck = model3.create_transportation_process("Product 02 Transportation", "A2")
+product2_by_truck = model3.add_transportation_process("Product 02 Transportation", "A2")
 product2_by_truck.set_transported_product(product_2)
 product2_by_truck.set_transported_distance(12.0)
 product2_by_truck.set_transported_distance_unit('km')

@@ -30,7 +30,7 @@ class EnergyProduct(Product):
 
         model_id = self.get_current_model()
 
-        product = GUIInputManager.create_energy(self.project, name, unit, float(qty), stage, lca_data)
+        product = GUIInputManager.create_energy(self.project, model_id, name, unit, float(qty), stage, lca_data)
 
         if not product is None:
             slider_min = 0.0

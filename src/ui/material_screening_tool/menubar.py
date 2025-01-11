@@ -304,7 +304,7 @@ class MenubarMixin:
             headers = [entry.get() for entry in header_list]
             multipliers = [float(entry.get()) for entry in multiplier_list]
             
-            GUIInputManager.import_data_from_CSV(file_path, self.project, headers, multipliers)
+            GUIInputManager.set_database(file_path, self.project, headers, multipliers)
             file_flags[file_path] = True
 
             return self

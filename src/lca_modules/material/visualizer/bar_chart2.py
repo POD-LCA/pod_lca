@@ -1,4 +1,5 @@
 from plotters.matplotlib_plotter import Plotter
+from lca_modules.material.calculator import Calculator
 
 import numpy as np
 
@@ -30,7 +31,7 @@ class BarChart2(Plotter):
         width = (1.0 - gap) / len(self.active_models)
         model_no = 0
         for model in self.active_models:
-            _, _, _, impacts = self.calculator.get_barchart2_data(self.impact_category, model)
+            _, _, _, impacts = Calculator.get_barchart2_data(self.impact_category, model)
             bottom = np.zeros(3)
             x_positions = stages_nos + model_no * width
             for label, impact in impacts.items():

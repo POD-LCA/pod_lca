@@ -1,4 +1,6 @@
 
+from lca_modules.material.calculator import Calculator
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -38,8 +40,6 @@ def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=Tru
     """
 
     model = obj.get_model()
-    project =  model.get_project()
-    claculator = project.get_calculator()
 
     base_impact = claculator.get_total_impact(model.get_name(), impact_cat)
     base_val = getattr(obj, param)

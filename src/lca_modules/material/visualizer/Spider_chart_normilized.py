@@ -1,4 +1,5 @@
 from plotters.matplotlib_plotter import Plotter
+from lca_modules.material.calculator import Calculator
 
 import numpy as np
 
@@ -44,7 +45,7 @@ class Spiderchart_n(Plotter):
         """
 
         # Obtain data from the calculator
-        data_dict = self.calculator.get_spider_chart_data(
+        data_dict = Calculator.get_spider_chart_data(
             self.impact_category, self.active_models, self.lca_stage)
 
         # Normalize the data

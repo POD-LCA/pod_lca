@@ -31,8 +31,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         self.state("zoomed")
         self.database_file_path = r'data\Impact_data.csv'
         self.documentation_file_path = r'docs\user_manuals\material_screening_tool_user_manual.pdf'
-        data_headers = ['Flow', 'Units', 'Global warming potential (kg CO2 eq)', 'Acidification potential (kg SO2 eq)', 'Eutrophication potential (kg N eq)', 
-                        'Ozone depletion potential (kg CFC-11 eq)', 'Smog potential (kg O3 eq)']
+        data_headers = ['Flow', 'Unit'] + list(GUIInputManager.get_impact_categories().keys())
         self.save_path = None
 
         # canvas properties
@@ -90,9 +89,8 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         self.dependents = {'Model_0':{}}
 
         # back-end
-        self.impact_categories = {'GWP':'kg CO2 eq', 'AP':'kg SO2 eq', 'EP':'kg N eq', 'ODP':'kg CFC-11 eq', 'SFP':'kg O3 eq'}
         self.project = GUIInputManager.create_project()
-        GUIInputManager.set_impact_categories(self.project, list(self.impact_categories))     
+        GUIInputManager.create_model(self.project, "Model_0") 
         
         # GUI
         # self.create_window()
@@ -104,7 +102,9 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
 
         self.create_bindings()
         self.set_protocols()
-        GUIInputManager.import_data_from_CSV(self.database_file_path, self.project, data_headers)
+
+
+        GUIInputManager.set_database(self.database_file_path, self.project, data_headers)
         
     # =================================
     # GUI COMPONENTS
@@ -256,7 +256,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         label = Label(input_frame_impact_cat, bg=self.plotter_bg_color, fg='white', text="Environmental impact category", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
 
-        options = list(self.impact_categories.keys())
+        options = list(GUIInputManager.get_impact_categories())
         self.impact_var_list = [BooleanVar(value=False) for _ in options] 
         self.impact_var_list[0].set(True)
         self.impact_single_var = IntVar(value=0)
@@ -280,7 +280,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         self.plot_checkboxes["Model_0"]  = checkbox
 
         self.plot_data = {"Model_0":{}}
-        for impact in self.impact_categories.keys():
+        for impact in GUIInputManager.get_impact_categories().keys():
             self.plot_data["Model_0"][impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
         
         # plot

@@ -3,7 +3,7 @@ from lca_modules.material.visualizer.bar_chart2 import BarChart2
 from lca_modules.material.visualizer.bar_chart3 import BarChart3
 from lca_modules.material.visualizer.Spider_chart import Spiderchart
 from lca_modules.material.visualizer.Spider_chart_normilized import Spiderchart_n
-
+from ui.material_screening_tool.GUI_inputManager import GUIInputManager
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import RIGHT, LEFT, Radiobutton, Checkbutton
@@ -13,8 +13,9 @@ class PlotsMixin:
     def create_figure(self, plot_frame, impact_cat, plot_type='Bar chart 1'):
         
         model_lst = []
-        for model in self.plot_models:
-            if self.plot_models[model].get():
+        for model_name in self.plot_models:
+            if self.plot_models[model_name].get():
+                model = GUIInputManager.get_model(self.project, model_name)
                 model_lst.append(model)
         
         if plot_type == 'Bar chart 1':
@@ -45,8 +46,9 @@ class PlotsMixin:
         self.canvas_plot = None
 
         model_lst = []
-        for model in self.plot_models:
-            if self.plot_models[model].get():
+        for model_name in self.plot_models:
+            if self.plot_models[model_name].get():
+                model = GUIInputManager.get_model(self.project, model_name)
                 model_lst.append(model)
         
         if plot_type == 'Bar chart 1':
@@ -87,8 +89,9 @@ class PlotsMixin:
         
         if not self.resetting_plot:
             model_lst = []
-            for model in self.plot_models:
-                if self.plot_models[model].get():
+            for model_name in self.plot_models:
+                if self.plot_models[model_name].get():
+                    model = GUIInputManager.get_model(self.project, model_name)
                     model_lst.append(model)
 
             self.plot.set_active_models(model_lst)
@@ -122,7 +125,7 @@ class PlotsMixin:
             self.impact_single_var.set(0)
 
         # create buttons
-        options = list(self.impact_categories.keys())
+        options = list(GUIInputManager.get_impact_categories().keys())
         for widget in self.input_frame_impact_cat.winfo_children():
             widget.destroy()
 
@@ -152,7 +155,7 @@ class PlotsMixin:
 
     def get_impact_selection(self):
 
-        options = list(self.impact_categories.keys())
+        options = list(GUIInputManager.get_impact_categories().keys())
 
         if self.allow_plot_multiple_impact_categories:
             selected_options = [option for option, var in zip(options, self.impact_var_list) if var.get()]

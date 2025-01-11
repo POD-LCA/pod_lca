@@ -30,7 +30,7 @@ class Process(Item):
 
         model_id = self.get_current_model()
 
-        process = GUIInputManager.create_process(self.project, name, unit, float(qty), stage, lca_data)
+        process = GUIInputManager.create_process(self.project, model_id, name, unit, float(qty), stage, lca_data)
 
         if not process is None:
             slider_min = 0.0

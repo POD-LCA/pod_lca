@@ -118,15 +118,12 @@ class SaveLoadMethods:
             if self.hotspot_on_off.get():
                 self.show_hotspots()
         self.connectors = state["connectors"]
-        
-        self.plot.calculator.project = self.project
 
         self.update_plot()
 
     def load_model_state(self, state, model):
 
         self.current_canvas = self.models[model]
-        GUIInputManager.set_current_model(self.project, model)
         # products need to be restored first due to possible dependency of transportation processes
         # on products
         item_map = state["item_map"]
@@ -179,7 +176,7 @@ class SaveLoadMethods:
 
         var = BooleanVar(value=True)
         self.plot_models["Model_0"] = var
-        checkbox = Checkbutton(self.checkbox_frame, text="Model_0", variable=var, command=self.update_plot,
+        checkbox = Checkbutton(self.input_frame_model_pick, text="Model_0", variable=var, command=self.update_plot,
                                 bg=self.plotter_bg_color, fg='white', selectcolor="gray")
         checkbox.pack(side=LEFT)
         self.plot_checkboxes["Model_0"] = checkbox
@@ -204,10 +201,8 @@ class SaveLoadMethods:
         self.dependents = {'Model_0':{}}
 
         GUIInputManager.clear_project(self.project, database=False)
+        GUIInputManager.create_model(self.project, "Model_0")
 
         self.update_plot()
 
         return self
-
-
-    

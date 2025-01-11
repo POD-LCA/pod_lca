@@ -1,4 +1,5 @@
 from plotters.matplotlib_plotter import Plotter
+from lca_modules.material.calculator import Calculator
 
 import numpy as np
 
@@ -27,7 +28,7 @@ class Spiderchart(Plotter):
             self.impact_category = self.impact_category[0]
             print("A list of impact categories given. Graph plotted for the first category in the list.")
         
-        data_dict = self.calculator.get_spider_chart_data([self.impact_category], self.active_models, self.lca_stage)
+        data_dict = Calculator.get_spider_chart_data([self.impact_category], self.active_models, self.lca_stage)
         values = list(data_dict[self.impact_category].values())
 
         # Calculate the angle for each model
