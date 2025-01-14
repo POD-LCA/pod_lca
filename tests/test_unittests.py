@@ -76,7 +76,7 @@ class TestBuilder(unittest.TestCase):
         """
         print('testing importing data from database.')
 
-        database_path = r'data/impact_data_smoothie.csv'
+        database_path = r'data/impact_data.csv'
 
         project = Project.new()
 

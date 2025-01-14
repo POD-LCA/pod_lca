@@ -12,7 +12,7 @@ from numpy import random
 project = Project.new("Smoothie Project")
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data_new.csv')
+custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
 custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                       {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 print(custom_impact_database)
@@ -78,12 +78,12 @@ waste = model_0.add_waste(name="Waste to landfill", stage="A3", qty=1.0, unit=KI
 print(model_0)
 print(project)
 
-hotspot_analysis = HotSpotAnalysis(model_0)
-hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP", printout=True)
-hot_spots_ODP = hotspot_analysis.run(impact_category= "ODP", printout=True)
-hot_spots_wghtd = hotspot_analysis.run(impact_category= "weighted", printout=True)
+hotspot_analysis = HotSpotAnalysis.from_model(model_0)
+hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
+hot_spots_ODP = hotspot_analysis.run(impact_category= "ODP")
+hot_spots_wghtd = hotspot_analysis.run(impact_category= "weighted")
 
 graph = BarChart(project)
 graph.set_impact_category("GWP")
-graph.set_active_models(['Model_0'])
+graph.set_active_models(model_0)
 graph.show()
