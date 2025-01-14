@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Project:
     """
-    Project class which maintains the process models, impact database, and calculator.
+    Project class which maintains the process models at a link to the impact database.
 
     Attributes
     ----------
@@ -23,8 +23,6 @@ class Project:
         All models created/compared in the current project.
     database : Database Obj.
         Maintains input impact data.
-    calculator : Calculator Obj.
-        Carries out varies calculations to generate output data.
     """
 
     def __init__(self):

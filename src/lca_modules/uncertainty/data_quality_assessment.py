@@ -125,7 +125,6 @@ class DataQualityAnalysis:
             ValueError
                 If the scores are not within the score ranges specified.
                 If the input are not in expected format.
-
         """
 
         pedigree_score = self.pedigreeScores[model_name][obj]

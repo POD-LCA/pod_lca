@@ -1,4 +1,4 @@
-from lca_modules.uncertainity.utils import UncertainityUtils
+from lca_modules.uncertainty.utils import UncertainityUtils
 
 import numpy as np
 import scipy.stats as stats

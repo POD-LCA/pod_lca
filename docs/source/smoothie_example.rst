@@ -1,6 +1,6 @@
-**********
-Example
-**********
+*****************
+Smoothie Example
+*****************
 
 The following process is to be modelled and impacts visualised.
 

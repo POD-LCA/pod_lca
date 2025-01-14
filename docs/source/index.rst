@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to POD|LCA Materials Tool's documentation!
+POD|LCA Packages
 ==================================================
 
 The POD|LCA Materials Tool is developed by ....
@@ -17,18 +17,12 @@ This python module is written in Python 3.11.9. The other dependendent packages 
 .. toctree::
    :maxdepth: 3
 
-   project
-   database
-   model
-   products
-   processess
-   impacts
-   calculator
-   visualizer
-   analysis
-   example
+   installation
+   tutorials
+   API_reference
+   license
+   acknowledgements
    developer
-
 
 Indices and tables
 ==================
