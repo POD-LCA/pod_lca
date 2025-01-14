@@ -5,8 +5,8 @@ from ui.material_screening_tool.cell_table import CellTable
 
 import os
 import sys
-from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar, StringVar
-from tkinter.ttk import Notebook, Combobox
+from tkinter import Button, Menu, filedialog, END, LEFT, TOP, RIGHT, BOTH, W, Frame, Label, Entry, BooleanVar, StringVar, Canvas
+from tkinter.ttk import Notebook, Combobox, Scrollbar, Style
 
 class MenubarMixin:
     
@@ -304,7 +304,7 @@ class MenubarMixin:
             headers = [entry.get() for entry in header_list]
             multipliers = [float(entry.get()) for entry in multiplier_list]
             
-            GUIInputManager.import_data_from_CSV(file_path, self.project, headers, multipliers)
+            GUIInputManager.set_database(file_path, self.project, headers, multipliers)
             file_flags[file_path] = True
 
             return self
@@ -370,8 +370,141 @@ class MenubarMixin:
         menu_hotspot.add_radiobutton(label="ODP", variable=self.hotspot_impact_cat, value='ODP', command=lambda: self.show_hotspots())
         menu_hotspot.add_radiobutton(label="SFP", variable=self.hotspot_impact_cat, value='SFP', command=lambda: self.show_hotspots())
         menu_analysis.add_cascade(menu=menu_hotspot, label='Hotspot Analysis')
+        menu_analysis.add_command(label='Data Quality Assessment (DQA)', command=lambda: self.open_DQA_view(menubar))
+        menu_analysis.add_command(label='Sensitivity Analysis (SA)', command='')
         menu_analysis.add_separator()
-        menu_analysis.add_command(label='Monte Carlo Simulation', command='')
+        menu_analysis.add_command(label='Monte Carlo Simulation (MCS)', command='')
+        menu_analysis.add_command(label='Scenario Aware Monte Carlo Simulation (SA-MCS)', command='')
+
+    def open_DQA_view(self, menubar):
+
+        popup = Popup(menubar, "Data Quality Assessment", "1100x500")
+
+        # set scroll bar
+        container = Frame(popup)
+        container.pack(fill="both", expand=True)
+
+        canvas = Canvas(container)
+        canvas.pack(side="left", fill="both", expand=True)
+
+        scrollbar = Scrollbar(container, orient="vertical", command=canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        content_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=content_frame, anchor="nw")
+        content_frame.bind("<Configure>", lambda x: canvas.configure(scrollregion=canvas.bbox("all")))
+
+        # model picker
+        dropdown_frame = Frame(content_frame)
+        dropdown_frame.pack(pady=10)
+        
+        label = Label(dropdown_frame, bg=self.plotter_bg_color, fg='white', text="Model", font = ('Helvetica', 12,'bold'))
+        label.pack(side=LEFT, padx=(0, 10))
+        
+        model_dropdown = Combobox(dropdown_frame, values=list(GUIInputManager.get_all_model_names(self.project)))
+        model_dropdown.pack(side=RIGHT, fill=BOTH, pady=10)
+        model_dropdown.current(0)
+        model_dropdown.bind("<<ComboboxSelected>>", lambda x:self.create_score_panel(score_panel_frame, x.widget.get()))
+
+        # create score panel
+        score_panel_frame = Frame(content_frame)
+        score_panel_frame.pack(pady=10)
+        self.create_score_panel(score_panel_frame, model_dropdown.get())
+
+        # close button
+        Popup.button_pack_Close(content_frame, popup)
+    
+    def create_score_panel(self, frame, model_name):
+
+        # destroy the previous score panel
+        for widget in frame.winfo_children():
+            widget.destroy()
+        
+        GUIInputManager.create_DQA(self.project)
+        indicators = GUIInputManager.DQA_inidcators(self.project)
+        GUIOutputManager.get_hotspots(self.project, model_name, impact_category='weighted') # update hotspots to 'weighted'
+
+        # build score panel
+        width = 15
+        col_entry_frame = Frame(frame)
+        col_entry_frame.pack(pady=10)
+
+        n = len(self.impact_categories) + 3
+        headers = ['Flow', 'Impact (weighted)'] + indicators + ['DQS']
+        for i in range(n):
+            data = Entry(col_entry_frame, relief="solid", width=width + 2, justify='center')
+            data.insert(0, headers[i])
+            data.pack(side=LEFT, padx=11)
+
+        pedigree_score_dict = GUIInputManager.get_pedigree_score_objs(self.project, model_name)
+        score_list = list(GUIInputManager.get_DQS_range(self.project))
+        DQS_entry_dict = {}
+        for obj in pedigree_score_dict:
+            tmp_entry_frame = Frame(frame)
+            tmp_entry_frame.pack(pady=10)
+            
+            if obj.is_hotspot:
+                entry_vars = {'bg':"red", 'fg':"white", 'relief':"solid", 'width':width + 2, 'justify':'center'}  
+            else: 
+                entry_vars = {'relief':"solid", 'width':width + 2, 'justify':'center'}  
+            
+            data = Entry(tmp_entry_frame, **entry_vars)  
+            data.insert(0, GUIInputManager.get_name(obj))
+            data.pack(side=LEFT, padx=11)
+
+            data = Entry(tmp_entry_frame, **entry_vars)
+            data.insert(0, GUIInputManager.get_weighted_impact(obj))
+            data.pack(side=LEFT, padx=11)
+
+            for indicator in indicators:
+                dropdown = Combobox(tmp_entry_frame, values=score_list, width=width - 2)
+                dropdown.pack(side=LEFT, padx=11)
+                dropdown.current(score_list.index(GUIInputManager.get_pedigree_score(pedigree_score_dict[obj], indicator)))
+                dropdown.bind("<<ComboboxSelected>>", lambda x, obj=obj, indicator=indicator: self.update_DQS(x, obj, pedigree_score_dict, indicator, DQS_entry_dict, model_name, 
+                                                                                                              gradient_bar, marker, marker_label,gb_width, gb_height))
+                
+            data = Entry(tmp_entry_frame, **entry_vars)
+            data.insert(0, GUIInputManager.get_DQS(pedigree_score_dict[obj]))
+            data.pack(side=LEFT, padx=11)
+            DQS_entry_dict[obj] = data
+
+        # create gradient bar for DQS for model
+        gb_height, gb_width = 25, 500
+        gradient_bar = Canvas(frame, width=gb_width, height=gb_height + 20, bg="white")
+        gradient_bar.pack(pady=20)
+        for i in range(gb_width):
+            r = int((1 - i / gb_width) * 255)
+            g = int((i / gb_width) * 255)
+            color = f"#{r:02x}{g:02x}00"
+            gradient_bar.create_line(i, 0, i, gb_height, fill=color, width=1)
+
+        value = GUIInputManager.calculate_model_DQS(self.project, model_name)
+        x_position = value * gb_width / 100
+        marker =  gradient_bar.create_line(0, 0, 0, gb_height, fill="black", width=2)
+        marker_label =  gradient_bar.create_text(0, gb_height + 10, text="", anchor="n", font=("Arial", 10))
+        gradient_bar.coords(marker, x_position, 0, x_position, gb_height)
+        gradient_bar.itemconfig(marker_label, text=f"{int(value):2d}")
+
+    def update_DQS(self, event, obj, pedigree_score_dict, indicator, DQS_entry_dict, model_name, gradient_bar, marker, marker_label,gb_width, gb_height):
+
+        new_value = event.widget.get()
+
+        GUIInputManager.set_pedigree_score(pedigree_score_dict[obj], indicator, int(new_value))
+
+        DQS_entry_dict[obj].delete(0, END)
+        DQS_entry_dict[obj].insert(0, GUIInputManager.get_DQS(pedigree_score_dict[obj]))
+     
+        self.update_marker(model_name, gradient_bar, marker, marker_label,gb_width, gb_height)
+
+    def update_marker(self, model_name, gradient_bar, marker, marker_label,gb_width, gb_height):
+
+        value = GUIInputManager.calculate_model_DQS(self.project, model_name)
+        x_position = value * gb_width / 100
+        gradient_bar.coords(marker, x_position, 0, x_position, gb_height)
+        gradient_bar.coords(marker_label, x_position, gb_height + 10)
+        gradient_bar.itemconfig(marker_label, text=f"{int(value):2d}")
 
     # =================================
     # VIEW MENU

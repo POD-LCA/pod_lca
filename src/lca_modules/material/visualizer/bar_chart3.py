@@ -1,4 +1,5 @@
 from plotters.matplotlib_plotter import Plotter
+from lca_modules.material.calculator import Calculator
 
 import numpy as np
 
@@ -28,13 +29,14 @@ class BarChart3(Plotter):
         else:
             raise ValueError("Impact category not recognized.")
 
+        gap = 0.2 # gap between two groups of bars  
         num_models = len(self.active_models) 
         num_impact_cats = len(impact_category)
-        width = 0.8 / num_models
+        width = (1.0 - gap) / num_models
 
         for i, model in enumerate(self.active_models):
 
-            impact_by_stage = self.calculator.get_barchart3_data(impact_category, model)
+            impact_by_stage = Calculator.get_barchart3_data(impact_category, model)
             bottom = np.zeros(num_impact_cats)
 
             x_positions = np.arange(num_impact_cats) + i * width
@@ -43,7 +45,7 @@ class BarChart3(Plotter):
                 rounded_impacts = self.round_to_significant(impacts)
                 p = self.ax.bar(
                     x_positions, rounded_impacts, width, 
-                    label=f"{model} - {stage}", bottom=bottom
+                    label=f"{model.get_name()} - {stage}", bottom=bottom
                 )
                 bottom += rounded_impacts 
                 self.ax.bar_label(p, labels=self.format_labels(rounded_impacts), label_type='center')

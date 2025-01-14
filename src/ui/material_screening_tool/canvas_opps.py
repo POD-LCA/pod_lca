@@ -28,8 +28,6 @@ class CanvasOperationsMixin:
         self.update()
 
         self.current_canvas = self.models[name]
-        
-        GUIInputManager.set_current_model(self.project, name)
 
         return name
     
@@ -43,7 +41,6 @@ class CanvasOperationsMixin:
 
         name = self.get_current_model()
         self.current_canvas = self.models[name]
-        GUIInputManager.set_current_model(self.project, name)
 
         self.on_canvas_configure(event)
 
