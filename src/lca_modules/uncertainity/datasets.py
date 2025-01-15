@@ -1,5 +1,6 @@
 from lca_modules.uncertainity.utils import UncertainityUtils
 
+from collections import Counter
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
@@ -11,7 +12,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-# TODO create discrete distributions
+
 class DataDistribution: 
     """
     Dataset object with the corresponding distribution fitted from Scipy.stats package.
@@ -21,11 +22,11 @@ class DataDistribution:
     ----------
     name : str.
         Name of the data set.
-    data : list of floats
+    data : list of floats (or str)
         The data set.
     dist_name : str.
         Distribution name as used in scipy.stats.
-    dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
+    dist : rv_continous or rv_discrete (Scipy) Obj.
         Fitted distribution object from Scipy.
     parent : Object.
         Object to which the dataset is attached.
@@ -34,7 +35,12 @@ class DataDistribution:
     scenarios : dict
         Definition of quartile points for scenarios.
         For continous variables values are numbers between 0-1.
+    is_cts : bool
+        If true, the data are from a contrinous variable, otherwise a discrete variable.
     """
+
+    CONTNS_DIST_SHORTLIST = ['norm', 'expon', 'uniform', 'beta', 'gamma', 'chi2', 't', 'f', 'lognorm', 'weibull_min']
+
     def __init__(self):
         self.name = None
         self.data = None
@@ -43,18 +49,17 @@ class DataDistribution:
         self.attr = None
         self.parent = None
         self.scenarios = {'low': 0.2, 'med': 0.5, 'high':0.8}
+        self.is_cts =None
 
     def __str__(self):
-
         string = f"Dataset has {len(self.get_data())} entries in the range {min(self.get_data()):.2f} to {max(self.get_data()):.2f}"
         if  self.get_distribution() is not None:             
             string += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 
 
         return string
         
-
     @classmethod
-    def from_data(cls, data, name='unspecified'):
+    def from_data(cls, data, is_cts, name='unspecified'):
         """ Create a Dataset object from data input.
         
             Parameters
@@ -63,7 +68,9 @@ class DataDistribution:
                 The data set.  
             name : str.
                 Name of the data set.
-                      
+            is_cts : bool
+                If true, the data are from a contrinous variable, otherwise a discrete variable. 
+                 
             Returns
             -------
             DataSet Obj.
@@ -73,11 +80,14 @@ class DataDistribution:
         dataset = cls()
         dataset.set_data(data)
         dataset.set_name(name)
+        dataset.set_distribution()
+
+        dataset.is_cts = is_cts
 
         return dataset
 
     @classmethod
-    def from_distributions(cls, dist, name='unspecified'):
+    def from_distributions(cls, dist, is_cts, name='unspecified'):
         """ Create a Dataset object from data input.
         
             Parameters
@@ -86,7 +96,9 @@ class DataDistribution:
                 Fitted distribution object from Scipy.  
             name : str.
                 Name of the data set.
-                      
+            is_cts : bool
+                If true, the data are from a contrinous variable, otherwise a discrete variable. 
+
             Returns
             -------
             DataSet Obj.
@@ -94,8 +106,10 @@ class DataDistribution:
         """
 
         dataset = cls()
-        dataset.set_distribution(dist)
         dataset.set_name(name)
+        dataset.set_distribution(dist)
+        
+        dataset.is_cts = is_cts
 
         return dataset    
 
@@ -125,18 +139,32 @@ class DataDistribution:
 
         return self
 
-    def set_distribution(self, dist):
+    def set_distribution(self, dist=None):
         """ Set a Distribution Obj to the DataSet Obj.
 
             Parameters
             ----------
-            dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
+            dist : rv_continuous or rv_discrete (Scipy) Obj.
                 Fitted distribution object from Scipy.
         
         """
-
-        self.dist = dist
-        self.dist_name = dist.dist.name
+        if dist is None:
+            if self.is_cts:
+                try:
+                    best_fit = self.find_best_fit(is_cts=True)
+                    if best_fit is not None:
+                        dist, _ = self.fit_cts_distribution(best_fit, fit_method='MLE')
+                        self.dist = dist
+                        self.dist_name = best_fit
+                    else:
+                        raise ValueError("A best-fit found could not be found.")
+                except:
+                    print("A valid distribution could not be fitted.")        
+            else:
+                self.generate_discrete_distribution()
+        else:
+            self.dist = dist
+            self.dist_name = dist.dist.name
 
         return self
     
@@ -246,7 +274,7 @@ class DataDistribution:
 
         return self.scenarios[scenario_name]
 
-    def find_best_fit(self, is_cts=True, fit_method='MLE', validate=True, short_list=None, printout=True):
+    def find_best_fit(self, is_cts=True, fit_method='MLE'):
         """ Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
 
             Parameters
@@ -257,12 +285,6 @@ class DataDistribution:
                 True, if the data comes from a continous variable.
             fit_methods : str
                 'MLE', 'MSE'
-            validate : bool
-                If True, the selected fit will be checked against the critical KS parameter value.
-            short_list : list of str.
-                A short list of distributions to considered for best-fit.
-            printout : bool
-                If True, print out outcomes.
 
             Returns
             -------
@@ -271,48 +293,64 @@ class DataDistribution:
         
         """
 
-        if short_list is None:
-            if is_cts:
-                dists_lst = UncertainityUtils.get_all_cts_distributions() 
-            else:
-                dists_lst = UncertainityUtils.get_all_disc_distributions()
+        if is_cts:
+            full_dists_lst = UncertainityUtils.get_all_cts_distributions()
+            short_lst = DataDistribution.CONTNS_DIST_SHORTLIST
         else:
-            dists_lst = short_list
+            full_dists_lst = UncertainityUtils.get_all_disc_distributions()
+            short_lst = []
 
         best_k_param = 10000
         best_fit = None
-        for dist_name in dists_lst:
-            try:
-                _, params = self.fit_distribution(dist_name, fit_method)
-                k_test = stats.kstest(self.data, dist_name, args=params)
-            except:
-                continue
+        for dist_lst in [short_lst, full_dists_lst]:
+            for dist_name in dist_lst:
+                try:
+                    _, params = self.fit_cts_distribution(dist_name, fit_method)
+                    k_test = stats.kstest(self.data, dist_name, args=params)
+                except:
+                    continue
 
-            if k_test.statistic < best_k_param:
-                best_fit = dist_name
-                best_k_param = k_test.statistic
-            elif k_test.statistic < best_k_param:
-                raise NotImplementedError(f"Equally best fit distributions found!! {best_fit} and {dist_name}")
-                # TODO: what if multiple best fits
-
-        if printout:
-            print(f"Choosen fit {best_fit} with KS statistic of {best_k_param}")
-
-        if validate:
-            alpha = 0.05
-            critical_ks_param = UncertainityUtils.get_critical_ks_param(alpha, len(self.data))
-            if best_k_param < critical_ks_param:
-                if printout:
-                    print(f"KS statistic fall below KS test critical values at a significance level: alpha = {alpha} => KS_crit. = {critical_ks_param}.")
+                if k_test.statistic < best_k_param:
+                    if self.validate_dist_fit(dist_name, params):
+                        best_fit = dist_name
+                        best_k_param = k_test.statistic
+                elif k_test.statistic == best_k_param:
+                    raise NotImplementedError(f"Equally best fit distributions found!! {best_fit} and {dist_name}")
+                    # TODO: what if multiple best fits
+            
+            if best_fit is not None: # a best-fit is found from the short list
                 return best_fit
-            else:
-                if printout:
-                    print(f"KS statistic is not statistically significant.")
-                return None
-        else:
-            return best_fit
+
+        return best_fit
+
+    def validate_dist_fit(self, dist_name, params):
+        """ Validate a distribution fitted to a dataset.
         
-    def fit_distribution(self, dist_fit, fit_method='MLE'):
+            Parameters
+            ----------
+            dist_name : str.
+                Distribution name as used in scipy.stats.
+            params : tuple
+                Parameters corresponding to the fit.
+
+            Returns
+            -------
+            bool
+                True if validated, otherwise False.      
+        """
+
+        alpha = 0.05
+        critical_ks_param = UncertainityUtils.get_critical_ks_param(alpha, len(self.data))
+
+        k_test = stats.kstest(self.data, dist_name, args=params)
+        k_param = k_test.statistic
+        if k_param < critical_ks_param:
+            return True
+        else:
+            return False
+
+        
+    def fit_cts_distribution(self, dist_fit, fit_method='MLE'):
         """ Fit a distribution to the data.
 
             Parameters
@@ -336,6 +374,22 @@ class DataDistribution:
         dist = dist_tmp(*params)
 
         return dist, params
+    
+    def generate_discrete_distribution(self):
+        """ Generate a discrete distribution from the data.
+
+            Returns
+            -------
+            rv_discrete (Scipy) Obj.
+                Scipy discrete distribution.
+        """
+
+        freq = Counter(self.data)
+
+        xk = np.array(list(freq.keys()))
+        pk = np.array(list(freq.values())) / len(self.data)
+
+        return stats.rv_discrete(name='from_data', values=(xk, pk))
 
     def plot_data(self): # TODO move out with plotter
         """ Plot the data histogram with the  proposed distribution fit overlayed.
@@ -387,7 +441,8 @@ class DataDistribution:
         """
 
         return self.dist.rvs(size=n)
-    
+
+        
     def prob_of(self, x):
         """ Get the probability density at the given random variate.
 
@@ -402,8 +457,11 @@ class DataDistribution:
                 Probability density.
         """
 
-        return self.dist.pdf(x)
-        # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
+        if self.is_cts:
+            return self.dist.pdf(x)
+            # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
+        else:
+            return self.dist.pmf(x)
     
 
 if __name__ == '__main__':

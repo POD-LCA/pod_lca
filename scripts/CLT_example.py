@@ -55,7 +55,7 @@ print(electricity.get_pedigree_score())
 electricity.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 1,'temporal correlation': 4,'geographical correlation': 1,'technological representativeness': 3})
 lumber.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 2, 'temporal correlation': 2, 'geographical correlation': 2, 'technological representativeness': 4})
 lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, 'completeness': 3, 'temporal correlation': 4, 'geographical correlation': 3, 'technological representativeness': 3})
-DQS, nDQS = data_quality_assessment.calculate_DQS('GWP')
+DQS, nDQS = data_quality_assessment.calculate_model_DQS('GWP')
 data_quality_assessment.print_results()
 
 # # Sensitivity Analysis
@@ -77,7 +77,7 @@ sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
 mu = log(mean_val) - 0.5 * sigma**2
 
 dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
-data_set = DataDistribution.from_distributions(dist)
+data_set = DataDistribution.from_distributions(dist, is_cts=True)
 lumber.set_data_distribution(data_set, 'qty')
 
 # x = linspace(500, 600, 1)

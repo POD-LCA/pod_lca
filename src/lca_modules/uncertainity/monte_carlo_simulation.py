@@ -43,8 +43,6 @@ class MonteCarloSimulator:
         self.scenario = {}
 
         self.result = None
-        
-        self.dists_short_list = ['norm', 'expon', 'uniform', 'beta', 'gamma', 'chi2', 't', 'f', 'lognorm', 'weibull_min']
 
     @classmethod
     def from_model(cls, model):
@@ -136,13 +134,14 @@ class MonteCarloSimulator:
         
         """
 
-        result_obj = MonteCarlo_reults.from_data(results, name='MonteCarloSimualation')
+        result_obj = MonteCarlo_reults.from_data(results, name='MonteCarloSimualation', is_cts=True)
         if not(max(results) - min(results) == 0.0):
-            best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE', validate=True, short_list=self.dists_short_list, printout=False)
-            if best_fit is None:
-                best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=False)
-            dist, _ = result_obj.fit_distribution(best_fit)
-            result_obj.set_distribution(dist)
+            best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE')
+            if best_fit is not None:
+                dist, _ = result_obj.fit_cts_distribution(best_fit)
+                result_obj.set_distribution(dist)
+            else:
+                raise ValueError("Resutls data could not be fitted to a distribution")
 
         self.result = result_obj
 
@@ -327,17 +326,12 @@ class MonteCarloSimulator:
     def update_all_distributions(self):
         """Set distribution objects to all data objects in the project objects with dataset.
         """
-
         objects = self.model.get_all_items()
 
         for object in objects:
             for dataset in object.get_data_distributions().values():
                 if dataset.get_distribution() is None:
-                    best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, short_list=self.dists_short_list, printout=False)
-                    if best_fit is None:
-                        best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=False)
-                    distribution, _ = dataset.fit_distribution(best_fit, fit_method='MLE')
-                    dataset.set_distribution(distribution)                 
+                    dataset.set_distribution()               
 
 class MonteCarlo_reults(DataDistribution):
 
