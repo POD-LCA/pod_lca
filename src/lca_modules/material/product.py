@@ -105,12 +105,13 @@ class Product(Master):
         
             Parameters
             ----------
-            float
+            density : float
                 Denisty of product (mass per unit mesurement of product).
 
             Raises
             ------
-            TypeError : Density must be a numerical value.
+            TypeError
+                Density must be a numerical value.
 
         """
 
