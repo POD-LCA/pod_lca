@@ -85,5 +85,5 @@ hot_spots_wghtd = hotspot_analysis.run(impact_category= "weighted")
 
 graph = BarChart(project)
 graph.set_impact_category("GWP")
-graph.set_active_models(model_0)
+graph.set_active_models([model_0])
 graph.show()

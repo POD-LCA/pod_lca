@@ -34,7 +34,9 @@ class PedigreeScore:
                 string += f"\n{attr}: {getattr(self, attr)}"
 
         return string
-    
+    # ================================
+    # Constructors
+    # ================================
     @classmethod
     def from_parent(cls, parent):
         """ Create pedigree score object from parent. 
@@ -54,7 +56,10 @@ class PedigreeScore:
         parent.set_pedigree_score(pedigree_score)
 
         return pedigree_score
-    
+
+    # ================================
+    # Setters and Getters
+    # ================================
     def set_parent(self, obj):
         """ Set parent of the pedigree score.
 

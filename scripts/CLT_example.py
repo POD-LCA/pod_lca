@@ -1,7 +1,8 @@
-from lca_modules.material.projectManager import Project
+from lca_modules.material.project_manager import Project
+from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainity.hotspots import HotSpotAnalysis
 from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainity import sensitivity_analysis
+from lca_modules.uncertainity.sensitivity_analysis import SensitivityAnalysis
 from lca_modules.uncertainity.datasets import DataDistribution
 from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulator
 from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, CUBIC_METER
@@ -16,66 +17,32 @@ import time
 # CLT example #TODO add reference
 
 project = Project()
-project.get_database().import_data_from_CSV(r'data/impact_data.csv')
 
-CLT_model = project.get_current_model()
+custom_impact_database = ImpactsDatabase.new("My database")
+custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
+                                      {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
+project.set_database(custom_impact_database)
 
-lumber = CLT_model.create_product("Lumber", "A1")
-lumber.set_qty(562.75)
-lumber.set_unit(KILOGRAM)
-lumber.set_impact_database_entry("Lumber_[CORRIM_LCA]")
+CLT_model = project.add_model("CLT_01")
 
-meth_diphenyl_d = CLT_model.create_product("Methylene diphenyl diisocyanate resin", "A1")
-meth_diphenyl_d.set_qty(3.22)
-meth_diphenyl_d.set_unit(KILOGRAM)
-meth_diphenyl_d.set_impact_database_entry("Methylene diphenyl diisocyanate resin_[FHWA_MTU]")
+lumber = CLT_model.add_product(name="Lumber", stage="A1", qty=562.75, unit=KILOGRAM, impacts_from="Lumber_[CORRIM_LCA]")
+meth_diphenyl_d = CLT_model.add_product(name="Methylene diphenyl diisocyanate resin", stage="A1", qty=3.22, unit=KILOGRAM, impacts_from="Methylene diphenyl diisocyanate resin_[FHWA_MTU]")
+prop_glycol = CLT_model.add_product(name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, impacts_from="Propylene glycol_[ecoinvent]")
+dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None)
+dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
+dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
+electricity = CLT_model.add_product(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR, impacts_from="Electricity_NWPP(eGrid)_[USLCI]")
+natural_gas = CLT_model.add_product(name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]")
 
-prop_glycol = CLT_model.create_product("Propylene glycol", "A1")
-prop_glycol.set_qty(2.77)
-prop_glycol.set_unit(KILOGRAM)
-prop_glycol.set_impact_database_entry("Propylene glycol_[ecoinvent]")
-
-dummy_PUR_1 = CLT_model.create_product("PUR_1", "A1")
-dummy_PUR_1.set_qty(0.05)
-dummy_PUR_1.set_unit(KILOGRAM)
-
-dummy_PUR_2 = CLT_model.create_product("PUR_2", "A1")
-dummy_PUR_2.set_qty(0.01)
-dummy_PUR_2.set_unit(KILOGRAM)
-
-dummy_PUR_3 = CLT_model.create_product("PUR_3", "A1")
-dummy_PUR_3.set_qty(0.01)
-dummy_PUR_3.set_unit(KILOGRAM)
-
-kilo_watt_hour = KILO * WATT_HOUR
-electricity = CLT_model.create_energy("Electricity", "A3")
-electricity.set_qty(128.75)
-electricity.set_unit(kilo_watt_hour)
-electricity.set_impact_database_entry("Electricity_NWPP(eGrid)_[USLCI]")
-
-natural_gas = CLT_model.create_energy("Natural gas", "A3")
-natural_gas.set_qty(2.63)
-natural_gas.set_unit(CUBIC_METER)
-natural_gas.set_impact_database_entry("Natural gas_insustrial_equipment_[USLCI]")
-
-lumber_by_truck = CLT_model.create_transportation_process("Lumber Transportation", "A2")
+lumber_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=302, unit=KILOMETER, impacts_from="Transportation_combination_truck_short-haul_diesel_NW_[USLCI]")
 lumber_by_truck.set_transported_product(lumber)
-lumber_by_truck.set_transported_distance(302)
-lumber_by_truck.set_transported_distance_unit(KILOMETER)
-lumber_by_truck.set_impact_database_entry("Transportation_combination_truck_short-haul_diesel_NW_[USLCI]")
 
-PUR1_by_truck = CLT_model.create_transportation_process("Lumber Transportation", "A2")
+PUR1_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=2160, unit=KILOMETER, impacts_from="Transportation_combination_truck_diesel_US_[USLCI]")
 PUR1_by_truck.set_transported_product(dummy_PUR_1)
-PUR1_by_truck.set_transported_distance(2160)
-PUR1_by_truck.set_transported_distance_unit(KILOMETER)
-PUR1_by_truck.set_impact_database_entry("Transportation_combination_truck_diesel_US_[USLCI]")
 
-PUR2_by_truck = CLT_model.create_transportation_process("Lumber Transportation", "A2")
+PUR2_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=64800, unit=KILOMETER, impacts_from="Transportation_freight_train_diesel_US_[ecoinvent]")
 PUR2_by_truck.set_transported_product(dummy_PUR_2)
-PUR2_by_truck.set_transported_distance(64800)
-PUR2_by_truck.set_transported_distance_unit(KILOMETER)
-PUR2_by_truck.set_impact_database_entry("Transportation_freight_train_diesel_US_[ecoinvent]")
-
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
@@ -92,13 +59,13 @@ DQS, nDQS = data_quality_assessment.calculate_DQS('GWP')
 data_quality_assessment.print_results()
 
 # # Sensitivity Analysis
-result_range = sensitivity_analysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
                                                                  impact_cat='GWP', 
                                                                  options=['Electricity_NWPP(eGrid)_[USLCI]', 'Electricity_UnknownHigh_[USLCI]', 'Electricity_UnknownLow_[USLCI]'])
-result_range = sensitivity_analysis.compute_sensitivity_of_param(lumber,  'qty', 
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber,  'qty', 
                                                                  impact_cat='GWP', 
                                                                  range=(506.48, 619.03))
-result_range = sensitivity_analysis.compute_sensitivity_of_params(CLT_model, 
+result_range = SensitivityAnalysis.compute_sensitivity_of_params(CLT_model, 
                                                                   [{'obj': lumber_by_truck,  'param': 'transported_distance', 'range': (226.57, 453.13)},
                                                                    {'obj': PUR1_by_truck,  'param': 'transported_distance', 'range': (1620, 3240)},
                                                                    {'obj': PUR2_by_truck,  'param': 'transported_distance', 'range': (48600, 97200)}],
@@ -123,7 +90,7 @@ lumber.set_data_distribution(data_set, 'qty')
 # pyplot.show()
 
 MCS = MonteCarloSimulator.from_model(CLT_model)
-MCS.set_iterations(1000000)
+MCS.set_iterations(1000)
 start = time.time()
 MCS.run()
 elapsed = time.time() - start

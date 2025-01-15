@@ -153,7 +153,7 @@ class DataDistribution:
         
         return self
 
-    def set_attr(self, attr):
+    def set_attr_name(self, attr):
         """ Set attribute to which the dataset belong.
 
             Parameters

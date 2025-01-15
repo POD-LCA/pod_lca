@@ -1,4 +1,5 @@
 
+from lca_modules.material.calculator import Calculator
 from lca_modules.uncertainity.datasets import DataDistribution
 from lca_modules.uncertainity.utils import UncertainityUtils
 
@@ -108,7 +109,7 @@ class MonteCarloSimulator:
 
         objects = self.model.get_all_items()
         for object in objects:
-            self.var_params.extend(list(object.get_data_distribution().values()))
+            self.var_params.extend(list(object.get_data_distributions().values()))
 
         return self.var_params
     
@@ -241,7 +242,7 @@ class MonteCarloSimulator:
                 for distribution in var_params:        
                     methods_list[distribution](var_values[distribution][iter])
 
-                total_impact = project.get_calculator().get_total_impact(self.model.get_name(), self.impact_cat)
+                total_impact = Calculator.get_total_impact(self.model, self.impact_cat)
                 result.append(total_impact)
                 iter +=1
 
@@ -330,7 +331,7 @@ class MonteCarloSimulator:
         objects = self.model.get_all_items()
 
         for object in objects:
-            for dataset in object.get_data_distribution().values():
+            for dataset in object.get_data_distributions().values():
                 if dataset.get_distribution() is None:
                     best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, short_list=self.dists_short_list, printout=False)
                     if best_fit is None:
