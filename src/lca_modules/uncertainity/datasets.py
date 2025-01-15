@@ -57,7 +57,10 @@ class DataDistribution:
             string += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 
 
         return string
-        
+
+    # ================================
+    # Constructors
+    # ================================    
     @classmethod
     def from_data(cls, data, is_cts, name='unspecified'):
         """ Create a Dataset object from data input.
@@ -113,6 +116,9 @@ class DataDistribution:
 
         return dataset    
 
+    # ================================
+    # Setters
+    # ================================
     def set_data(self, data):
         """ Set data to the DataSet Obj.
         
@@ -208,6 +214,9 @@ class DataDistribution:
 
         self.scenarios[scenario_name] = value
 
+    # ================================
+    # Getters
+    # ================================
     def get_data(self):
         """ Get data list.
         
@@ -274,6 +283,9 @@ class DataDistribution:
 
         return self.scenarios[scenario_name]
 
+    # ================================
+    # Methods for fitting distributions
+    # ================================
     def find_best_fit(self, is_cts=True, fit_method='MLE'):
         """ Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
 
@@ -348,8 +360,7 @@ class DataDistribution:
             return True
         else:
             return False
-
-        
+     
     def fit_cts_distribution(self, dist_fit, fit_method='MLE'):
         """ Fit a distribution to the data.
 
@@ -391,7 +402,10 @@ class DataDistribution:
 
         return stats.rv_discrete(name='from_data', values=(xk, pk))
 
-    def plot_data(self): # TODO move out with plotter
+    # ================================
+    # Plotters # TODO move out with plotter
+    # ================================
+    def plot_data(self): 
         """ Plot the data histogram with the  proposed distribution fit overlayed.
         """
 
@@ -400,7 +414,7 @@ class DataDistribution:
         plt.legend()
         plt.show()
 
-    def plot_fit(self): # TODO move out with plotter
+    def plot_fit(self):
         """ Plot the data histogram with the fitted distribution overlayed. 
         """
 
@@ -415,6 +429,9 @@ class DataDistribution:
         plt.legend()
         plt.show()
 
+    # ================================
+    # Methods on distributions
+    # ================================
     def pick_data_point_from_distribution(self):
         """ Pick a random variate from the distibution.
 
@@ -441,8 +458,7 @@ class DataDistribution:
         """
 
         return self.dist.rvs(size=n)
-
-        
+ 
     def prob_of(self, x):
         """ Get the probability density at the given random variate.
 
