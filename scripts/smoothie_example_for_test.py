@@ -4,7 +4,7 @@ from lca_modules.material.visualizer.bar_chart2 import BarChart2
 from lca_modules.material.visualizer.bar_chart3 import BarChart3
 from lca_modules.material.visualizer.Spider_chart import Spiderchart
 from lca_modules.material.visualizer.Spider_chart_normilized import Spiderchart_n
-from lca_modules.uncertainity.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 
 # Smoothie example
 

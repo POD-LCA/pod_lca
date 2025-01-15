@@ -1,4 +1,4 @@
-from lca_modules.uncertainity.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 
 class GUIOutputManager():
 

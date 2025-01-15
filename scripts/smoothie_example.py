@@ -3,11 +3,11 @@ from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.visualizer.bar_chart import BarChart
 from lca_modules.material.visualizer.bar_chart2 import BarChart2
 from lca_modules.material.visualizer.bar_chart3 import BarChart3
-from lca_modules.uncertainity.hotspots import HotSpotAnalysis
-from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainity.sensitivity_analysis import compute_sensitivity
-from lca_modules.uncertainity.datasets import DataSet, Distribution
-from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulation
+from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
+from lca_modules.uncertainty.sensitivity_analysis import compute_sensitivity
+from lca_modules.uncertainty.datasets import DataSet, Distribution
+from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulation
 from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
 
