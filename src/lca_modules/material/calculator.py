@@ -60,11 +60,8 @@ class Calculator():
 
             return sum(val_lst)
         
-    # =================================
-    # PLOT DATA METHODS
-    # =================================
     @staticmethod
-    def get_data_by_LCstage(impact_category, model):
+    def get_impacts_by_LCstages(impact_category, model):
         """ Returns impact data by life cycle stage for given model and impact category.
 
             Parameters
@@ -90,18 +87,18 @@ class Calculator():
         if impact_category not in IMPACT_CATEGOREIS.keys():
             raise AttributeError(f"{impact_category} does not exist in the current project.")
         else:
-            vals = {}
+            data = {}
             for stage in impacts_dict.keys():
                 impact_lst = impacts_dict[stage]
-                vals[stage] = 0.0
+                data[stage] = 0.0
                 for impact in impact_lst:
-                    vals[stage] += impact.get_impact(impact_category)
+                    data[stage] += impact.get_impact(impact_category)
 
-            return vals, impacts_dict.keys()
+            return data
     
     @staticmethod
-    def get_barchart_data(impact_category, model_lst=['Model_0']):
-        """ Returns data for a barchart.
+    def get_impacts_by_LCstages_models(impact_category, model_lst=['Model_0']):
+        """ Returns impact data by life cycle stage for given multiple model and impact category.
             
             Parameters
             ----------
@@ -112,109 +109,81 @@ class Calculator():
 
             Returns
             -------
-            dict_keys
-                x-labels.
             dict
-                Heights of bars: { model_name (str): { stage (str): height (float)}}.
+                Impacts dictionary where {model_name (str): { stage (str): quantity of impact (float)}}.
         """
 
-        data_dict ={}
+        data ={}
         for model in model_lst:
-            data_dict[model.get_name()], stages = Calculator.get_data_by_LCstage(impact_category, model)
+            data[model.get_name()] = Calculator.get_impacts_by_LCstages(impact_category, model)
         
-        return  stages, data_dict
+        return data
         
     @staticmethod
-    def get_barchart2_data (impact_category, model):
-        """ Returns data for a barchart.
+    def get_impacts_by_LCstages_models_items(impact_category, model_lst=['Model_0']):
+        """ Returns impact data by life cycle stage for given multiple model and impact category, with impacts 
+            identifieable by individaul item.
             
             Parameters
             ----------
             impact_category : str
                 Name of the Impact category.
-            model : Model Obj.
-                Model.
+            model_lst : List of Model Obj.
+                List of the models.
 
             Returns
             -------
-            list
-                List of names of items.
-            list
-                List of qtys.
-            list
-                List of ints (no of items).
             dict
-                #TODO: update.
+                Impacts dictionary where {model_name (str): {stage (str): {item_name (str): quantity of impact (float)}}.
 
         """
-        data_name=[]
-        data_qty=[]
-        data_len=[]
 
-        model_name = model.get_name()
+        data ={}
+        for model in model_lst:
+            model_data = {}
+            impacts_dict = model.get_impacts()
+            for stage in impacts_dict.keys():
+                stage_data = {}
+                impact_lst = impacts_dict[stage]
+                for impact in impact_lst:
+                    stage_data[impact.get_parent().get_name()] = impact.get_impact(impact_category)
+                model_data[stage] = stage_data
+            data[model.get_name()] = model_data
 
-        for lc_stage in model.get_impacts():
-            item_count = 0
-            other_qty = 0.0
-            impacts_lst = model.get_impacts()[lc_stage]
-            impacts_lst_sorted = sort_by_attribute(impacts_lst, impact_category, descending=True)
-            for impact in impacts_lst_sorted:
-                if impact.get_parent().is_hotspot:
-                    data_qty.append(impact.get_impact(impact_category))
-                    data_name.append(impact.get_parent().get_name() + f'({model_name})')
-                    item_count += 1
-                else:
-                    other_qty += impact.get_impact(impact_category)
-            if other_qty > 0.0:
-                data_qty.append(other_qty)
-                data_name.append('Other' + f'({model_name})')
-                item_count += 1
-            data_len.append(item_count)
-
-        impacts = {}
-        other_dict = {'Other'  + f'({model_name})': np.array([0.] * len(data_len))}
-        start_index = 0
-        for lc_stage, length in enumerate(data_len):
-            end_index = start_index + length
-            for impact in range(start_index, end_index):
-                if data_name[impact] == 'Other' + f'({model_name})':
-                    other_dict['Other' + f'({model_name})'] += np.array([0] * lc_stage + [data_qty[impact]] + [0] * (len(data_len) - lc_stage - 1))
-                else:
-                    impacts[data_name[impact]] = np.array([0] * lc_stage + [data_qty[impact]] + [0] * (len(data_len) - lc_stage - 1))
-            start_index = end_index
-        
-        impacts.update(other_dict)
-
-        return data_name, data_qty, data_len, impacts
+        return data
 
     @staticmethod
-    def get_barchart3_data(impact_category, model= 'Model_0'):
+    def get_impacts_by_LCstages_models_hotspots(impact_category, model_lst=['Model_0']):
+
+        pass # TODO implement
+    
+    @staticmethod
+    def get_impacts_by_impactcategorys_models_LCstage(impact_categories,  model_lst=['Model_0']):
         """ Returns data for a barchart.
             
             Parameters
             ----------
-            impact_category : str
-                Name of the Impact category.
-            model : Model Obj.
-                The model considered.
+            impact_categories : List of str
+                List of impact categories.
+            model_lst : List of Model Obj.
+                List of the models.
 
             Returns
             -------
             dict
-                #TODO: update.
+                Impacts dictionary where {model_name (str): {impact_category (str): {stage (str): quantity of impact (float)}}.
         """
 
-        labels = ['A1', 'A2', 'A3']
-        data=[]
-        for category in impact_category:
-            tmp_dict, _ = Calculator.get_data_by_LCstage(category, model)
-            plt_data = [tmp_dict["A1"], tmp_dict["A2"], tmp_dict["A3"]]
-            data.append(plt_data)
-
-        impact_by_stage = {labels[i]: np.array([row[i] for row in data]) for i in range(len(labels))}
+        data = {model.get_name(): {} for model in model_lst}
+        for impact_category in impact_categories:
+            for model in model_lst:
+                data[model.get_name()][impact_category] = Calculator.get_impacts_by_LCstages(impact_category, model)
         
-        return impact_by_stage
+        return data
 
+    # =================================
+    # PLOT DATA METHODS
+    # =================================
     @staticmethod
     def get_spider_chart_data (impact_category, model_lst=['Model_0'], stage='all'):
         """ Returns data for a barchart.
@@ -239,7 +208,7 @@ class Calculator():
             impact_data = {}
 
             for model in model_lst:
-                model_data, _ = Calculator.get_data_by_LCstage(impact, model)
+                model_data, _ = Calculator.get_impacts_by_LCstages(impact, model)
                 impact_data[model.get_name()] = model_data  
 
             if stage == 'all':
