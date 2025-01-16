@@ -1,7 +1,9 @@
 from lca_modules.material.project_manager import Project
 from lca_modules.material.calculator import Calculator
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from plotters.bar_chart import BarChart
+from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+from plotters.plots.bar_chart import BarChart
+from plotters.plots.radar_chart import RadarChart
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 from lca_modules.uncertainty.datasets import DataSet
 from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
@@ -118,8 +120,14 @@ print(project)
 # MCS = MonteCarloSimulation(project)
 # MCS.run('Model_0')
 
-graph = BarChart(project)
-graph.show(Calculator.get_impacts_by_LCstages("GWP", model_0), "GWP by Life Cycle Stages", "Life Cycle Stages", "GWP")
-# graph.show(Calculator.get_impacts_by_LCstages_models("GWP", [model_0, model_1]), "GWP by Life Cycle Stages for all models", "Life Cycle Stages", "GWP")
-# graph.show(Calculator.get_impacts_by_LCstages_models_items("GWP", [model_0, model_1]), "GWP by Life Cycle Stages for all models", "Life Cycle Stages", "GWP")
-# graph.show(Calculator.get_impacts_by_impactcategorys_models_LCstage(["GWP","ODP"], [model_0, model_1]), "Impacts by stages", "Impact Category", "Impact Value")
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(Calculator.get_impacts_by_LCstages("GWP", model_0), "GWP by Life Cycle Stages", "Life Cycle Stages", "GWP")
+# graph.draw(Calculator.get_impacts_by_LCstages_models("GWP", [model_0, model_1]), "GWP by Life Cycle Stages for all models", "Life Cycle Stages", "GWP")
+# graph.draw(Calculator.get_impacts_by_LCstages_models_items("GWP", [model_0, model_1]), "GWP by Life Cycle Stages for all models", "Life Cycle Stages", "GWP")
+# graph.draw(Calculator.get_impacts_by_impactcategorys_models_LCstage(["GWP","ODP"], [model_0, model_1]), "Impacts by stages", "Impact Category", "Impact Value")
+
+graph = RadarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(Calculator.get_impacts_by_category_models([model_0, model_1]), "Impacts by category")
+graph.draw(Calculator.get_normalized_impacts_by_category(model_1), "Impacts by category")
+
+graph.show()

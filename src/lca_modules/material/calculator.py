@@ -1,7 +1,5 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
-from utilities.objects.array_methods import get_attribute_as_list, sort_by_attribute
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS, IMPACT_NORMALIZATION_FACTOR
 
-import numpy as np
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -95,7 +93,49 @@ class Calculator():
                     data[stage] += impact.get_impact(impact_category)
 
             return data
+
+    @staticmethod
+    def get_impacts_by_category(model):
+        """ Returns impact data by impact category for given model.
+            
+            Parameters
+            ----------
+            model : Model Obj
+                The model considered.
+
+            Returns
+            -------
+            dict
+                Impacts dictionary where {impact_category (str): quantity of impact (float)}.
+        """
+
+        data ={}
+        for impact_category in IMPACT_CATEGOREIS.keys():
+            data[impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values())
+        
+        return data
     
+    @staticmethod
+    def get_normalized_impacts_by_category(model):
+        """ Returns impact data by impact category for given model.
+            
+            Parameters
+            ----------
+            model : Model Obj
+                The model considered.
+
+            Returns
+            -------
+            dict
+                Impacts dictionary where {impact_category (str): quantity of impact (float)}.
+        """
+
+        data ={}
+        for impact_category in IMPACT_CATEGOREIS.keys():
+            data[impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values()) * IMPACT_NORMALIZATION_FACTOR[impact_category]
+        
+        return data
+
     @staticmethod
     def get_impacts_by_LCstages_models(impact_category, model_lst=['Model_0']):
         """ Returns impact data by life cycle stage for given multiple model and impact category.
@@ -118,7 +158,53 @@ class Calculator():
             data[model.get_name()] = Calculator.get_impacts_by_LCstages(impact_category, model)
         
         return data
+
+    @staticmethod
+    def get_impacts_by_category_models(model_lst=['Model_0']):
+        """ Returns impact data by impact category for given multiple models.
+            
+            Parameters
+            ----------
+            model_lst : List of Model Obj.
+                List of the models.
+
+            Returns
+            -------
+            dict
+                Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
+        """
+
+        data ={}
+        for model in model_lst:
+            data[model.get_name()] = {}
+            for impact_category in IMPACT_CATEGOREIS.keys():
+                data[model.get_name()][impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values())
         
+        return data
+
+    @staticmethod
+    def get_normalized_impacts_by_category_models(model_lst=['Model_0']):
+        """ Returns impact data by impact category for given multiple models.
+            
+            Parameters
+            ----------
+            model_lst : List of Model Obj.
+                List of the models.
+
+            Returns
+            -------
+            dict
+                Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
+        """
+
+        data ={}
+        for model in model_lst:
+            data[model.get_name()] = {}
+            for impact_category in IMPACT_CATEGOREIS.keys():
+                data[model.get_name()][impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values()) * IMPACT_NORMALIZATION_FACTOR[impact_category]
+        
+        return data
+
     @staticmethod
     def get_impacts_by_LCstages_models_items(impact_category, model_lst=['Model_0']):
         """ Returns impact data by life cycle stage for given multiple model and impact category, with impacts 
@@ -180,45 +266,6 @@ class Calculator():
                 data[model.get_name()][impact_category] = Calculator.get_impacts_by_LCstages(impact_category, model)
         
         return data
-
-    # =================================
-    # PLOT DATA METHODS
-    # =================================
-    @staticmethod
-    def get_spider_chart_data (impact_category, model_lst=['Model_0'], stage='all'):
-        """ Returns data for a barchart.
-            
-            Parameters
-            ----------
-            impact_category : List
-                List of impact categories.
-            model_lst : List of Model Obj.
-                List of the models.
-            stage : str
-                Life Cycle Stage considered.
-
-            Returns
-            -------
-            dict
-                #TODO: update.
-        """
-
-        data={}
-        for impact in impact_category:
-            impact_data = {}
-
-            for model in model_lst:
-                model_data, _ = Calculator.get_impacts_by_LCstages(impact, model)
-                impact_data[model.get_name()] = model_data  
-
-            if stage == 'all':
-                stage_values = {model: sum(impact_data[model].values()) for model in impact_data}
-            else:
-                stage_values = {model: values[stage] for model, values in impact_data.items()}
-            data[impact] = stage_values
-
-        return data
-    
 
 if __name__ == '__main__':
     pass
