@@ -15,6 +15,7 @@ class MatplotlibPlotter(AbstractPlotter):
         Axes of the figure being plotted.
     """
     def __init__(self):
+        super().__init__()
         self.fig = None 
         self.ax = None
 

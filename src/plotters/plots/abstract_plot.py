@@ -1,4 +1,6 @@
 
+from plotters.plotters.abstract_plotter import AbstractPlotter
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -17,7 +19,7 @@ class AbstractPlot():
     # ================================
     @classmethod
     def from_plotter(cls, plotter):
-        """ Create a bar chart from a plotter.
+        """ Create a plot from a plotter.
         
             Parameters
             ----------
@@ -32,14 +34,49 @@ class AbstractPlot():
 
         chart = cls()
 
-        chart.set_plot(plotter)
+        chart.set_plot_from_plotter(plotter)
+
+        return chart
+    
+    @classmethod
+    def from_plot(cls, plot):
+        """ Create a plot from an existing plot.
+        
+            Parameters
+            ----------
+            plot : Object
+                Plot created by an AbstractPlotter Obj.
+
+            Returns
+            -------
+            BarChart Obj.
+                Plot created.        
+        
+        """
+
+        chart = cls()
+
+        chart.set_plot(plot)
 
         return chart
     
     # ================================
     # Setters and Getters
     # ================================  
-    def set_plot(self, plotter):
+    def set_plot(self, plot):
+        """ Set the plot.
+        
+            Parameters
+            ----------
+            plot : Object
+                Plot created by an AbstractPlotter Obj.        
+        """
+
+        self.plot = plot
+
+        return self
+
+    def set_plot_from_plotter(self, plotter):
         """ Set the plot.
         
             Parameters
@@ -47,6 +84,7 @@ class AbstractPlot():
             plotter : AbstractPlotter Obj.
                 Plotter.        
         """
+
         self.plot = plotter.create_plot()
 
         return self

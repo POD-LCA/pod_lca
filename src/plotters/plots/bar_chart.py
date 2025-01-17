@@ -41,22 +41,21 @@ class BarChart(AbstractPlot):
         categories = list(data.keys())
         if not isinstance(data[categories[0]], float):
             groups = list(next(iter(data.values())).keys())
-            no_groups = len(groups)
         else:
             groups = None
-            no_groups = 1
 
         gap = 0.2
         x = arange(len(categories))
-        width = (1.0 - gap) / no_groups
-        
+          
         for i, (category, category_data) in enumerate(data.items()):
             if isinstance(category_data, float):
+                width = (1.0 - gap)
                 height = math_funcs.round_to_significant([category_data])[0]
                 self.get_plot().draw_bar(x[i], height, width, label=f'{category}', label_pos='center')  
             else:
+                width = (1.0 - gap) / len(groups)
                 for j, (group, group_data) in enumerate(category_data.items()):
-                    pos = j - (1.0 - gap - width)/2 + (i * width)
+                    pos = j - ((len(categories) - 1) *(width)/2) + (i * width)
                     if isinstance(group_data, float):
                         height = math_funcs.round_to_significant([group_data])[0]
                         self.get_plot().draw_bar(pos, height, width, label=f'{group} ({category})', label_pos='center')
@@ -71,7 +70,7 @@ class BarChart(AbstractPlot):
         if isinstance(category_data, float):
             self.get_plot().set_xticks(range(len(categories)), categories)
         else:
-            self.get_plot().set_xticks(range(no_groups), groups)
+            self.get_plot().set_xticks(range(len(groups)), groups)
 
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)

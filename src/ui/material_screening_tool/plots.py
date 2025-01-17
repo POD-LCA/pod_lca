@@ -1,8 +1,7 @@
-from lca_modules.material.visualizer.bar_chart import BarChart
-from lca_modules.material.visualizer.bar_chart2 import BarChart2
-from lca_modules.material.visualizer.bar_chart3 import BarChart3
-from lca_modules.material.visualizer.Spider_chart import Spiderchart
-from lca_modules.material.visualizer.Spider_chart_normilized import Spiderchart_n
+from lca_modules.material.calculator import Calculator
+from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+from plotters.plots.bar_chart import BarChart
+from plotters.plots.radar_chart import RadarChart
 from ui.material_screening_tool.GUI_inputManager import GUIInputManager
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -17,23 +16,25 @@ class PlotsMixin:
             if self.plot_models[model_name].get():
                 model = GUIInputManager.get_model(self.project, model_name)
                 model_lst.append(model)
-        
+      
         if plot_type == 'Bar chart 1':
-            plot = BarChart(self.project)
+            graph = BarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_impacts_by_LCstages_models(impact_cat, model_lst), f"{impact_cat} by Life Cycle Stages", "Life Cycle Stages", f"{impact_cat}")
         elif plot_type == 'Bar chart 2':
-            plot = BarChart2(self.project)
+            graph = BarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_impacts_by_LCstages_models_items(impact_cat, model_lst), f"{impact_cat} by Life Cycle Stages-categorized by ", "Life Cycle Stages", f"{impact_cat}")
         elif plot_type == 'Bar chart 3':
-            plot = BarChart3(self.project)
+            graph = BarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_impacts_by_impactcategorys_models_LCstage(impact_cat, model_lst), "Impacts by stages", "Impact Category", "Impact Value")
+        elif plot_type == 'Radar plot':
+            graph = RadarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_normalized_impacts_by_category_models(model_lst), "Impacts by category")
         else:
             raise NotImplementedError
-        
-        plot.set_active_models(model_lst)
-        plot.set_impact_category(impact_cat)
-        plot.draw()
 
-        self.plot = plot
+        self.plot = graph.get_plot()
 
-        canvas_plot = FigureCanvasTkAgg(plot.fig, master=plot_frame)
+        canvas_plot = FigureCanvasTkAgg(self.plot.fig, master=plot_frame)
         canvas_plot.draw()
         
         canvas_plot.get_tk_widget().pack(side=RIGHT, padx=10, pady=10)
@@ -53,34 +54,30 @@ class PlotsMixin:
         
         if plot_type == 'Bar chart 1':
             self.allow_plot_multiple_impact_categories = False
-            self.create_checkbuttons()
-            plot = BarChart(self.project)
+            self.create_checkbuttons() 
+            graph = BarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_impacts_by_LCstages_models(self.get_impact_selection(), model_lst), f"Impacts by Life Cycle Stages", "Life Cycle Stages", f"{self.get_impact_selection()}")
         elif plot_type == 'Bar chart 2':
             self.allow_plot_multiple_impact_categories = False
             self.create_checkbuttons()
-            plot = BarChart2(self.project)
+            graph = BarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_impacts_by_LCstages_models_items(self.get_impact_selection(), model_lst), f"{self.get_impact_selection()} by Life Cycle Stages-categorized by ", "Life Cycle Stages", f"{self.get_impact_selection()}")
         elif plot_type == 'Bar chart 3':
             self.allow_plot_multiple_impact_categories = True
-            self.create_checkbuttons()
-            plot = BarChart3(self.project)
+            self.create_checkbuttons(setall=True)
+            graph = BarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_impacts_by_impactcategorys_models_LCstage(self.get_impact_selection(), model_lst), "Impacts by stages", "Impact Category", "Impact Value")
         elif plot_type == 'Radar plot':
-            self.allow_plot_multiple_impact_categories = False
-            self.create_checkbuttons()
-            plot = Spiderchart(self.project)
-        elif plot_type == 'Radar plot (normalized)':
             self.allow_plot_multiple_impact_categories = True
             self.create_checkbuttons(setall=True)
-            plot = Spiderchart_n(self.project)
+            graph = RadarChart.from_plotter(MatplotlibPlotter)
+            graph.draw(Calculator.get_normalized_impacts_by_category_models(model_lst), "Impacts by category")
         else:
             raise NotImplementedError
         
-        plot.set_active_models(model_lst)
-        plot.set_impact_category(self.get_impact_selection())
-        plot.draw()
+        self.plot = graph.get_plot()
 
-        self.plot = plot
-
-        self.canvas_plot = FigureCanvasTkAgg(plot.fig, master=plot_frame)
+        self.canvas_plot = FigureCanvasTkAgg(self.plot.fig, master=plot_frame)
         self.canvas_plot.draw()
         
         self.canvas_plot.get_tk_widget().pack(side=RIGHT, padx=10, pady=10)
@@ -94,9 +91,21 @@ class PlotsMixin:
                     model = GUIInputManager.get_model(self.project, model_name)
                     model_lst.append(model)
 
-            self.plot.set_active_models(model_lst)
-            self.plot.set_impact_category(self.get_impact_selection())
-            self.plot.draw()
+            if self.dropdown_plot.get() == 'Bar chart 1':
+                graph = BarChart.from_plot(self.plot)
+                graph.draw(Calculator.get_impacts_by_LCstages_models(self.get_impact_selection(), model_lst), f"Impacts by Life Cycle Stages", "Life Cycle Stages", f"{self.get_impact_selection()}")
+            elif self.dropdown_plot.get() == 'Bar chart 2':
+                graph = BarChart.from_plot(self.plot)
+                graph.draw(Calculator.get_impacts_by_LCstages_models_items(self.get_impact_selection(), model_lst), f"{self.get_impact_selection()} by Life Cycle Stages-categorized by ", "Life Cycle Stages", f"{self.get_impact_selection()}")
+            elif self.dropdown_plot.get() == 'Bar chart 3':
+                graph = BarChart.from_plot(self.plot)
+                graph.draw(Calculator.get_impacts_by_impactcategorys_models_LCstage(self.get_impact_selection(), model_lst), "Impacts by stages", "Impact Category", "Impact Value")
+            elif self.dropdown_plot.get() == 'Radar plot':
+                graph = RadarChart.from_plotter(MatplotlibPlotter)
+                graph.draw(Calculator.get_normalized_impacts_by_category_models(model_lst), "Impacts by category")
+            else:
+                raise NotImplementedError
+            
             self.canvas_plot.draw()
 
     def _update_plot_from_combo(self, event):
@@ -108,7 +117,6 @@ class PlotsMixin:
 # ============================================
 # UTILS
 # ============================================
-
     def create_checkbuttons(self, setall=False):
 
         # reset values
@@ -151,6 +159,7 @@ class PlotsMixin:
 
         for btn in checkbuttons:
             btn.pack(side=LEFT, padx=5)
+
         self.resetting_plot = False
 
     def get_impact_selection(self):
