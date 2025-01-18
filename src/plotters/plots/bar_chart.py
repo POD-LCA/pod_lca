@@ -39,7 +39,7 @@ class BarChart(AbstractPlot):
         self.get_plot().clear_plot()
 
         categories = list(data.keys())
-        if not isinstance(data[categories[0]], float):
+        if not (isinstance(data[categories[0]], float) or isinstance(data[categories[0]], int)):
             groups = list(next(iter(data.values())).keys())
         else:
             groups = None
@@ -48,15 +48,15 @@ class BarChart(AbstractPlot):
         x = arange(len(categories))
           
         for i, (category, category_data) in enumerate(data.items()):
-            if isinstance(category_data, float):
+            if isinstance(category_data, float) or isinstance(category_data, int):
                 width = (1.0 - gap)
                 height = math_funcs.round_to_significant([category_data])[0]
                 self.get_plot().draw_bar(x[i], height, width, label=f'{category}', label_pos='center')  
             else:
-                width = (1.0 - gap) / len(groups)
+                width = (1.0 - gap) / len(categories)
                 for j, (group, group_data) in enumerate(category_data.items()):
                     pos = j - ((len(categories) - 1) *(width)/2) + (i * width)
-                    if isinstance(group_data, float):
+                    if isinstance(group_data, float) or isinstance(group_data, int):
                         height = math_funcs.round_to_significant([group_data])[0]
                         self.get_plot().draw_bar(pos, height, width, label=f'{group} ({category})', label_pos='center')
                     else:
@@ -67,7 +67,7 @@ class BarChart(AbstractPlot):
                             self.get_plot().draw_bar(pos, height, width, bottom=bottom, label=f'{component_name}', label_pos='center')
                             bottom += height
                     
-        if isinstance(category_data, float):
+        if isinstance(category_data, float) or isinstance(category_data, int):
             self.get_plot().set_xticks(range(len(categories)), categories)
         else:
             self.get_plot().set_xticks(range(len(groups)), groups)
