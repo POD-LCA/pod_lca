@@ -9,7 +9,8 @@ __version__ = "0.1.0"
 
 
 class AbstractPlot():
-    """An abstract class for specific implementation of graphs and charts.
+    """ An abstract class for specific implementation of graphs and charts.
+        A plot is a set of instructions for plotting the graph.
     """
     def __init__(self):
         self.plot = None
