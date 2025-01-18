@@ -1,4 +1,5 @@
 from plotters.plots.abstract_plot import AbstractPlot
+from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST
 
 from numpy import linspace, pi
 
@@ -46,10 +47,12 @@ class RadarChart(AbstractPlot):
             title : str
                 Title of the radar plot.
         """
+        COLOUR_BASE = 2
         
         self.get_plot().clear_plot()
 
-        for key, group in data.items():
+        counter = 0
+        for key, group in data.items(): 
             if isinstance(group, float):
                 num_spokes = len(data)
                 angles = linspace(0, 2 * pi, num_spokes, endpoint=False).tolist()
@@ -58,7 +61,7 @@ class RadarChart(AbstractPlot):
                 values = [value for value in data.values()]
                 values += values[:1] 
 
-                self.get_plot().draw_radar(angles, values, key, alpha=0.25)
+                self.get_plot().draw_radar(angles, values, key, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[counter]][COLOUR_BASE], alpha=0.25)
                 break
             elif isinstance(group, dict):
                 num_spokes = len(data[list(data.keys())[0]])
@@ -68,7 +71,8 @@ class RadarChart(AbstractPlot):
                 values = [group[item] for item in group.keys()]
                 values += values[:1] 
             
-                self.get_plot().draw_radar(angles, values, key, alpha=0.25)
+                self.get_plot().draw_radar(angles, values, key, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[counter]][COLOUR_BASE], alpha=0.25)
+                counter += 1
             else:
                 raise NotImplementedError
 

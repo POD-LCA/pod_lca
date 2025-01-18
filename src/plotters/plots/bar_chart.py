@@ -1,5 +1,6 @@
 from utilities.maths.funcs import math_funcs
 from plotters.plots.abstract_plot import AbstractPlot
+from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST
 
 from numpy import arange
 
@@ -35,7 +36,9 @@ class BarChart(AbstractPlot):
             x_label : str
                 X-label of the barchart.
         """
-         
+        
+        COLOUR_BASE = 2
+
         self.get_plot().clear_plot()
 
         categories = list(data.keys())
@@ -51,21 +54,23 @@ class BarChart(AbstractPlot):
             if isinstance(category_data, float) or isinstance(category_data, int):
                 width = (1.0 - gap)
                 height = math_funcs.round_to_significant([category_data])[0]
-                self.get_plot().draw_bar(x[i], height, width, label=f'{category}', label_pos='center')  
+                self.get_plot().draw_bar(x[i], height, width, label=f'{category}', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE], label_pos='center')  
             else:
                 width = (1.0 - gap) / len(categories)
                 for j, (group, group_data) in enumerate(category_data.items()):
                     pos = j - ((len(categories) - 1) *(width)/2) + (i * width)
                     if isinstance(group_data, float) or isinstance(group_data, int):
                         height = math_funcs.round_to_significant([group_data])[0]
-                        self.get_plot().draw_bar(pos, height, width, label=f'{group} ({category})', label_pos='center')
+                        self.get_plot().draw_bar(pos, height, width, label=f'{category}', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE], label_pos='center')
                     else:
                         bottom = 0
+                        counter = 0
                         sorted_group_data = dict(sorted(group_data.items(), key=lambda item: item[1], reverse=True))
                         for component_name, value in sorted_group_data.items():
                             height = math_funcs.round_to_significant([value])[0]
-                            self.get_plot().draw_bar(pos, height, width, bottom=bottom, label=f'{component_name} - ({category})', label_pos='center')
+                            self.get_plot().draw_bar(pos, height, width, bottom=bottom, label=f'{component_name} - ({category})', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][counter], label_pos='center')
                             bottom += height
+                            counter += 1
                     
         if isinstance(category_data, float) or isinstance(category_data, int):
             self.get_plot().set_xticks(range(len(categories)), categories)
@@ -75,7 +80,7 @@ class BarChart(AbstractPlot):
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
-        self.get_plot().set_legend()
+        self.get_plot().set_legend() #TODO use patches for legends for grouped bar charts and grouped bar charts with components
 
 if __name__ == '__main__':
     pass

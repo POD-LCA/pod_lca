@@ -54,7 +54,7 @@ class MatplotlibPlotter(AbstractPlotter):
     # ================================
     # Draw methods
     # ================================ 
-    def draw_bar(self, pos, height, width, bottom=0., label='', label_pos='center'):
+    def draw_bar(self, pos, height, width, bottom=0., color='blue', label='', label_pos='center'):
         """ draw a bar in a bar chart.
         
             Parameters
@@ -73,15 +73,15 @@ class MatplotlibPlotter(AbstractPlotter):
                 Label position on the bar.
         """
 
-        rect = self.ax.bar(pos, height, width, bottom, label=label)
+        rect = self.ax.bar(pos, height, width, bottom, color=color, label=label)
         self.ax.bar_label(rect, label_type=label_pos)
 
         return self
     
-    def draw_radar(self, angles, values, label, alpha=0.25):
+    def draw_radar(self, angles, values, label, color, alpha=0.5):
 
-        self.ax.plot(angles, values, label=label)
-        self.ax.fill(angles, values, alpha=alpha)
+        self.ax.plot(angles, values, color=color, label=label)
+        self.ax.fill(angles, values, color=color, alpha=alpha)
 
     # ================================
     # Set plot components
