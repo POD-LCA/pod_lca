@@ -64,7 +64,7 @@ class BarChart(AbstractPlot):
                         sorted_group_data = dict(sorted(group_data.items(), key=lambda item: item[1], reverse=True))
                         for component_name, value in sorted_group_data.items():
                             height = math_funcs.round_to_significant([value])[0]
-                            self.get_plot().draw_bar(pos, height, width, bottom=bottom, label=f'{component_name}', label_pos='center')
+                            self.get_plot().draw_bar(pos, height, width, bottom=bottom, label=f'{component_name} - ({category})', label_pos='center')
                             bottom += height
                     
         if isinstance(category_data, float) or isinstance(category_data, int):
