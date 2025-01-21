@@ -166,7 +166,7 @@ class Model:
         return model    
     
     # ================================
-    # Getters and Setters
+    # Setters and Getters
     # ================================
     def set_project(self, project):
         """ Set the project object.
@@ -238,6 +238,18 @@ class Model:
         """
 
         return self.products
+    
+    def get_all_items(self):
+        """ Retrieve all the products and processes in the model.
+        
+            Returns
+            -------
+            list of Master Obj.
+                All products and processess in the model.
+
+        """
+
+        return self.get_products() + self.get_processes()
 
     def get_impacts(self):
         """ Retrieve all the impacts in the model categorized by life cycle stage.

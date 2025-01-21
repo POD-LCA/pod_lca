@@ -48,7 +48,8 @@ class CellTable(Treeview):
     def import_data(self, hotspots=True):
 
         if hotspots:
-            hotspots = GUIOutputManager.get_hotspots(self.GUI.project, self.model)
+            model = GUIInputManager.get_model(self.GUI.project,  self.GUI.get_current_model())
+            hotspots = GUIOutputManager.get_hotspots(model)
             self.tag_configure("hotspot", background=self.GUI.hotspot_color)
 
         for product in GUIInputManager.get_all_products(self.GUI, self.model) + GUIInputManager.get_all_processes(self.GUI, self.model): 
@@ -245,7 +246,8 @@ class CellTable(Treeview):
     def update_hotspots(self):
 
         self.clear_tag("hotspot")
-        hot_spots = GUIOutputManager.get_hotspots(self.GUI.project, self.GUI.get_current_model(), impact_category=self.GUI.hotspot_impact_cat.get())
+        model = GUIInputManager.get_model(self.GUI.project,  self.GUI.get_current_model())
+        hot_spots = GUIOutputManager.get_hotspots(model, impact_category=self.GUI.hotspot_impact_cat.get())
         for hot_spot in hot_spots:
             row_id = str(GUIInputManager.get_id(hot_spot))
             tags = list(self.item(row_id, "tags"))

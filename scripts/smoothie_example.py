@@ -19,7 +19,7 @@ from numpy import random
 project = Project.new("Smoothie Project")
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data_new.csv')
+custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
 custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                       {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 print(custom_impact_database)

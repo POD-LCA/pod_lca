@@ -4,7 +4,7 @@ from lca_modules.material.process import Process, transportationProcess
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
-
+from lca_modules.uncertainty import DATA_QUALITY_INDICATORS, MAX_DQS, MIN_DQS
 from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
 
@@ -201,7 +201,7 @@ class GUIInputManager():
     @staticmethod
     def update_life_cycle_stage(visualizer, item, stage):
 
-        item.update_life_cycle_stage(stage)
+        item.set_life_cycle_stage(stage)
         visualizer.update_plot()
 
         return item
@@ -513,21 +513,26 @@ class GUIInputManager():
     @staticmethod
     def create_DQA(project):
 
-        DQA = DataQualityAnalysis(project)
         for model_name in project.get_model_names():
-            DQA.setPedigreeScores(model_name)
+            model = project.get_model(model_name)
+            DQA = DataQualityAnalysis.from_model(model)
+            DQA.setPedigreeScores()
 
         return
     
     @staticmethod
-    def DQA_inidcators(project):
+    def DQA_inidcators(model):
 
-        return project.DataQualityAnalysis.get_indicators()
+        return DATA_QUALITY_INDICATORS
     
     @staticmethod
     def get_pedigree_score_objs(project, model_name):
 
-        return project.DataQualityAnalysis.pedigreeScores[model_name]
+        model = project.get_model(model_name)
+        pedigree_scores = {}
+        for object in model.get_all_items():
+            pedigree_scores[object] = object.get_pedigree_score()
+        return pedigree_scores
     
     @staticmethod
     def get_pedigree_score(pedigree_obj, indicator):
@@ -542,17 +547,18 @@ class GUIInputManager():
     @staticmethod
     def get_DQS(pedigree_obj):
 
-        return pedigree_obj.calculate_DQS()
+        pedigree_obj.set_DQS()
+
+        return pedigree_obj.get_DQS()
     
     @staticmethod
     def get_DQS_range(project):
 
-        min = project.DataQualityAnalysis.min_score
-        max = project.DataQualityAnalysis.max_score
-
-        return range(min, max + 1, 1)
+        return range(MIN_DQS, MAX_DQS + 1, 1)
     
     @staticmethod
     def calculate_model_DQS(project, model_name):
 
-        return project.DataQualityAnalysis.calculate_DQS(model_name, printout=False)
+        model = project.get_model(model_name)
+
+        return model.data_quality.calculate_DQS()

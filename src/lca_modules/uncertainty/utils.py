@@ -57,6 +57,17 @@ class UncertainityUtils:
         plt.title(f"Q-Q Plot (distribution: {dist_name})")
         plt.show()
 
+    @staticmethod
+    def get_groups(total, part_size):
+
+        full_parts = total // part_size
+        remainder = total % part_size
+        
+        parts = [part_size] * full_parts
+        if remainder > 0:
+            parts.append(remainder)
+        
+        return parts
 
 if __name__ == '__main__':
     pass

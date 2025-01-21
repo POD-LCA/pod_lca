@@ -112,6 +112,40 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.plot(angles, values, color=color, label=label)
         self.ax.fill(angles, values, color=color, alpha=alpha)
 
+    def draw_histogram(self, data, no_bins, color, alpha):
+        """ Draw a histogram.
+        
+            Parameters
+            ----------
+            data : list
+                List of all data points.
+            no_bins : int
+                Number of bins in the histogram
+            color : str
+                Color of the radar plot as a named or hex string.
+            alpha : float
+                Transparency of the radar (value between 0 and 1).
+        """        
+
+        self.ax.hist(data, bins=no_bins, density=True, alpha=alpha, label='Histogram', color=color)
+
+        return self
+    
+    def draw_line(self, x_data, y_data, label):
+        """ Draw a line plot through (x, y) data pairs.
+        
+            Parameters
+            ----------
+            x_data : list
+                List of x values.
+            y_data : list
+                f(x) for all the y values.
+            label : str
+                label for the function plotted
+        """
+
+        self.ax.plot(x_data, y_data, 'k', linewidth=2, label=label)
+
     # ================================
     # Set plot components
     # ================================

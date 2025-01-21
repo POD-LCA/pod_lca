@@ -24,7 +24,7 @@ class Master:
         Life cycle stage corresponding to the product/process.
     impacts : Impacts Obj.
         Impacts object corresponding to the product/process.
-    database_item : str
+    impact_database_entry : str
         Flow name corresponding to the database entry which gives the unit impact of the product.
     qty : float
         Quantity of the product/process.
@@ -32,10 +32,10 @@ class Master:
         Unit of measurement corresponding to the quantity of the product/process.
     is_hotspot : bool
         True, if the object is a hotspot in the model.
-    datasets : dict.
-        Datasets corresponding to attributes: {attr (str): Dataset Obj}.
-    distributions : dict.
-        Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.
+    data_distribution : dict.
+        Data distributions corresponding to attributes: {attr (str): Dataset Obj}.
+    pedigree_score : PedigreeScore Obj
+        Data quality indicator for the object
     """
 
     def __init__(self):
@@ -44,12 +44,12 @@ class Master:
         self.name = None
         self.life_cycle_stage = None
         self.impacts = Impacts.from_parent(self)
-        self.database_item = None
+        self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
         self.is_hotspot = False
-        self.datasets = {}
-        self.distributions = {}
+        self.data_distributions = {}
+        self.pedigree_score = None
 
     # ================================
     # Constructors
@@ -189,10 +189,10 @@ class Master:
 
         original_database_item = self.get_impact_database_entry()
         try:
-            self.database_item = database_item
+            self.impact_database_entry = database_item
             self.update_impacts()
         except ImportError as e:
-            self.database_item = original_database_item
+            self.impact_database_entry = original_database_item
             raise e
         
     def set_qty(self, qty:float):
@@ -242,41 +242,33 @@ class Master:
 
         return self
 
-    def set_dataset(self, dataset, attr):
-        """ Set a dataset object to the Master Obj.
+    def set_data_distribution(self, distribution, attr):
+        """ Set a data_distribution object to the Master Obj.
 
             Parameters
             ----------
-            dataset : Dataset Obj.
-                Dataset object to be set
-            attr : str.
-                Attribute to which the dataset correspond.
-        """
-
-        if hasattr(self, attr):
-            self.datasets[attr] = dataset
-            dataset.set_parent(self)
-            dataset.set_attr(attr)
-        else:
-            print(f"Object {type(self)} does not have an attribute {attr}")
-
-    def set_distribution(self, distribution, attr):
-        """ Set a set_distribution object to the Master Obj.
-
-            Parameters
-            ----------
-            distribution : Distribution Obj.
-                Distribution object to be set
+            distribution : DataDistribution Obj.
+                DataDistribution object to be set
             attr : str.
                 Attribute to which the distribution correspond.
         """
 
         if hasattr(self, attr):
-            self.distributions[attr] = distribution
+            self.data_distributions[attr] = distribution
             distribution.set_parent(self)
             distribution.set_attr_name(attr)
         else:
             print(f"Object {type(self)} does not have an attribute {attr}")
+
+    def set_pedigree_score(self, pedigree_score):
+        """ Set a pedigree score (data quality score) to the Master Obj.
+            Parameters
+            ----------
+            pedigree_score : PedigreeScore Obj
+                Data quality indicator for the object
+        """
+
+        self.pedigree_score = pedigree_score
 
     # ================================
     # Getters
@@ -339,7 +331,7 @@ class Master:
 
         """
 
-        return self.database_item
+        return self.impact_database_entry
 
     def get_qty(self):
         """ Retrieve the quantity of the product/process.
@@ -377,19 +369,35 @@ class Master:
 
         return self.impacts
 
-    def get_datasets(self):
-        """ Get dataset objects of the Master Obj.
+    def get_data_distributions(self):
+        """ Get data_distribution objects of the Master obj.
 
             Returns
             -------
             dict.
-                Datasets corresponding to attributes: {attr (str): Dataset Obj}        
+                DataDistribution objects corresponding to attributes: {attr (str): Dataset Obj}        
         """
 
-        return self.datasets
-        
-    def get_distributions(self):
-        """ Get distribution objects of the Master Obj.
+        return self.data_distributions
+    
+    def get_data_distribution(self, attr):
+        """ Get data_distribution object corresponding to the given attribute.
+
+            Parameters
+            ----------
+            attr : str.
+                Attribute to which the distribution correspond.
+
+            Returns
+            -------
+            DataDistribution Obj.
+                Data distribution.        
+        """
+
+        return self.data_distributions[attr]
+    
+    def get_pedigree_score(self):
+        """ Get pedigree score of the Master Obj.
 
             Returns
             -------
@@ -397,7 +405,7 @@ class Master:
                 Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.
         """
 
-        return self.distributions
+        return self.pedigree_score
 
     def get_project(self):
         """ Retrieve the corresponding project.
@@ -424,12 +432,12 @@ class Master:
             ImportError : Incompatible units of Master object and database entry.
         """
 
-        if self.database_item:
-            unit_impacts = self.get_project().get_database().get_data_entry(self.database_item)
+        if self.impact_database_entry:
+            unit_impacts = self.get_project().get_database().get_data_entry(self.impact_database_entry)
             conversion_factor = self.get_unit().get_conversion_factor(unit_impacts["Unit"])
 
             if conversion_factor is None:
-                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.database_item} of units {unit_impacts['Unit']}) are of incompatible units.")
+                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
 

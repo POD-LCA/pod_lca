@@ -61,7 +61,7 @@ class TestBuilder(unittest.TestCase):
         """
         print('testing importing data to database.')
         
-        database_path = r'data/impact_data.csv'
+        database_path = r'data/impact_data_smoothie.csv'
 
         project = Project()
 
@@ -76,7 +76,7 @@ class TestBuilder(unittest.TestCase):
         """
         print('testing importing data from database.')
 
-        database_path = r'data/impact_data.csv'
+        database_path = r'data/impact_data_smoothie.csv'
 
         project = Project.new()
 
@@ -96,7 +96,7 @@ class TestBuilder(unittest.TestCase):
         project = Project()
 
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                             {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
@@ -115,7 +115,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                             {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 
@@ -141,7 +141,7 @@ class TestBuilder(unittest.TestCase):
         project = Project()
 
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
         # product_1 = project.current_model.create_product("Product of mixing", "A3")
@@ -164,7 +164,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
         model_0 = project.add_model("Model_0")
@@ -191,7 +191,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
         model_0 = project.add_model("Model_0")
@@ -213,7 +213,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
         project.get_database().set_data_entry("Electricity_New", KILO * WATT_HOUR, 
@@ -239,7 +239,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
         custom_impact_database = ImpactsDatabase.new("My database")
-        custom_impact_database.set_data(r'data/impact_data_new.csv')
+        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
         model_0 = project.add_model("Model_0")

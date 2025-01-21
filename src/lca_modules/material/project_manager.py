@@ -29,8 +29,6 @@ class Project:
         self.name = None
         self.database = None
         self.models = {}
-        self.HotSpotAnalysis = None
-        self.DataQualityAnalysis = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
