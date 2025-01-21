@@ -1,4 +1,5 @@
 from utilities.objects import array_methods
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 
 __author__ = ["POD/LCA Team"]
@@ -24,6 +25,25 @@ class HotSpotAnalysis:
         self.model = None
         self.hotspots = {}
 
+    def __str__(self):
+        str = "*"*50 + "\nHOTSPOTS\n" + "*"*50 + "\n"
+        hotspots = self.get_hotspots()
+        if hotspots is None:
+            str += "No hotspot analysis has been run yet."
+        else:
+            for impact_category in hotspots:
+                for obj in hotspots[impact_category]:
+                    if impact_category == 'weighted':
+                        impact_val = obj.get_impacts().get_weighted_impact()
+                    else:
+                        impact_val = obj.get_impacts().get_impact(impact_category)
+                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {IMPACT_CATEGOREIS[impact_category]} \n"
+        
+        return str
+
+    # ================================
+    # Constructors
+    # ================================  
     @classmethod
     def from_model(cls, model):
         """ Create a hotspot analyis from a a model.
@@ -42,6 +62,9 @@ class HotSpotAnalysis:
 
         return hotspot_analysis
 
+    # ================================
+    # Setters and Getters
+    # ================================
     def set_model(self, model):
         """ Set a model to the analyser.
         
@@ -115,6 +138,9 @@ class HotSpotAnalysis:
         else:
             print("No hotspots set yet. Run hotspot analysis first.")
 
+    # ================================
+    # Methods
+    # ================================
     def run(self, impact_category= "GWP"):
         """ Determines the hotspot of the model.
             The hotspots are the largest group out of (a) top 20% contributors to the impact or 
@@ -174,15 +200,6 @@ class HotSpotAnalysis:
 
             return hot_spots
         
-    def print_results(self):
-        """ Print results of the hotspot analysis."""
 
-        print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
-        hotspots = self.get_hotspots()
-        for impact_category in hotspots:
-            for obj in hotspots[impact_category]:
-                if impact_category == 'weighted':
-                    impact_val = obj.get_impacts().get_weighted_impact()
-                else:
-                    impact_val = obj.get_impacts().get_impact(impact_category)
-                print(obj, "Impact ():".format(impact_category), f"{impact_val:.2f}")
+if __name__ == '__main__':
+    pass

@@ -303,3 +303,6 @@ class DataQualityAnalysis:
         print("*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50)
         print(f"Data Quality Score: {self.get_model_DQS():.2f}")
         print(f"Normalised Data Quality Score (0-100 scale): {self.get_normalised_DQS():.0f}")
+
+if __name__ == '__main__':
+    pass

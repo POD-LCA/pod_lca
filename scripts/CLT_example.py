@@ -5,6 +5,8 @@ from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
 from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
+from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+from plotters.plots.histogram import Histogram
 from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO, MEGA
 
@@ -47,7 +49,7 @@ PUR2_by_truck.set_transported_product(dummy_PUR_2)
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
-hotspot_analysis.print_results()
+print(hotspot_analysis)
 
 # Data Quality Assessment
 data_quality_assessment = DataQualityAnalysis.from_model(CLT_model)
@@ -95,9 +97,18 @@ start = time.time()
 MCS.run()
 elapsed = time.time() - start
 print("elapsed time", elapsed)
-MCS.print_results()
-MCS.plot_hist(bin_size=25)
+print(MCS)
 
-MCS.set_scenario({lumber: 'low'})
-MCS.run()
-MCS.plot_hist(bin_size=25)
+graph = Histogram.from_plotter(MatplotlibPlotter)
+graph.draw(MCS.result.get_data(), no_bins=25, title="Distribution from Monte Carlo Simulation.", x_label='qty', y_label="probability density")
+
+results_data = MCS.result.get_data()
+x = linspace(min(results_data), max(results_data), 100)
+p = MCS.result.get_distribution().pdf(x)
+
+graph.draw_pdf(x, p, label="fitted distribution")
+graph.show()
+
+# MCS.set_scenario({lumber: 'low'})
+# MCS.run()
+# MCS.plot_hist(bin_size=25)

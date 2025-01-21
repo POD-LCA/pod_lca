@@ -3,9 +3,6 @@ from lca_modules.material.calculator import Calculator
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.utils import UncertainityUtils
 
-import matplotlib.pyplot as plt
-from numpy import mean, std, histogram, exp, log, linspace
-from scipy.integrate import quad
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -44,6 +41,23 @@ class MonteCarloSimulator:
 
         self.result = None
 
+    def __str__(self):
+        """ Print results of the Monte Carlo Simulation."""
+
+        str = "*"*50 + "\nMONTE CARLO SIMULATION\n" + "*"*50 + "\n"
+        str += f"number of iterations: {self.get_iterations()}\n"
+
+        data = self.result.get_data()
+        if max(data) - min(data) == 0.0:
+            str += f"Single point of data at {max(data)}"
+        else:
+            str += f"{self.get_result()}\n"
+
+        return str
+
+    # ================================
+    # Constructors
+    # ================================  
     @classmethod
     def from_model(cls, model):
         """ Create a Monte Carlo Simulator for a model.
@@ -62,7 +76,10 @@ class MonteCarloSimulator:
         monte_carlo_simulator.set_var_params()
         
         return monte_carlo_simulator
-    
+
+    # ================================
+    # Setters
+    # ================================    
     def set_model(self, model):
         """ Set a model to the Simulator.
         
@@ -134,7 +151,7 @@ class MonteCarloSimulator:
         
         """
 
-        result_obj = MonteCarlo_reults.from_data(results, name='MonteCarloSimualation', is_cts=True)
+        result_obj = MonteCarlo_results.from_data(results, name='MonteCarloSimualation', is_cts=True)
         if not(max(results) - min(results) == 0.0):
             best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE')
             if best_fit is not None:
@@ -145,6 +162,9 @@ class MonteCarloSimulator:
 
         self.result = result_obj
 
+    # ================================
+    # Getters
+    # ================================
     def get_model(self):
         """ Get the model for which the simulation will be run.
         
@@ -206,13 +226,14 @@ class MonteCarloSimulator:
         
         """
         return self.result
-    
+
+    # ================================
+    # Methods
+    # ================================    
     def run(self):
         """ Run a Monte Carlo Simulation.
-        
         """
 
-        project = self.get_model().get_project()
         var_params_tmp = self.get_var_params()
         scenarios = self.get_scenario()
 
@@ -246,41 +267,9 @@ class MonteCarloSimulator:
                 iter +=1
 
         self.set_result(result)
-        self.print_results()
 
         return result
     
-    def print_results(self):
-        """ Print results of the hotspot analysis."""
-
-        print("*"*50 + "\nMONTE CARLO SIMULATION\n" + "*"*50)
-        print(f"number of iterations: {self.get_iterations()}")
-
-        data = self.result.get_data()
-        if max(data) - min(data) == 0.0:
-            print(f"Single point of data at {max(data)}")
-        else:
-            print(self.get_result())
-
-    # TODO: move to plotter
-    def plot_hist(self, bin_size):
-        
-        _, ax = plt.subplots()
-
-        res = 100
-        data = self.result.get_data()
-        if not (max(data) - min(data) == 0.0):
-            x = linspace(min(data), max(data), res)
-            p = self.result.get_distribution().pdf(x)
-            ax.plot(x, p, 'k', linewidth=2, label='Fitted')
-        
-        ax.hist(data, bins=int(self.iterations/bin_size), density=True, alpha=0.5, label='Histogram', color='blue')
-        
-        ax.set_xlabel('Impact')
-        ax.set_ylabel('Count')
-        ax.legend()
-        plt.show()
-
     # def run(self):
 
 
@@ -333,13 +322,12 @@ class MonteCarloSimulator:
                 if dataset.get_distribution() is None:
                     dataset.set_distribution()               
 
-class MonteCarlo_reults(DataDistribution):
+class MonteCarlo_results(DataDistribution):
 
     def __init__(self):
         super().__init__()
 
     def __str__(self):
-
         str = f"Generated {len(self.get_data())} models giving impact values in the range {min(self.get_data()):.2f} to {max(self.get_data()):.2f}"
         if  self.get_distribution() is not None:             
             str += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 

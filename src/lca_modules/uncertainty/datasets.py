@@ -62,7 +62,7 @@ class DataDistribution:
     # Constructors
     # ================================    
     @classmethod
-    def from_data(cls, data, is_cts, name='unspecified'):
+    def from_data(cls, data, is_cts, name='unspecified', del_data=False):
         """ Create a Dataset object from data input.
         
             Parameters
@@ -84,6 +84,9 @@ class DataDistribution:
         dataset.set_data(data)
         dataset.set_name(name)
         dataset.set_distribution()
+
+        if del_data:
+            dataset.delete_data()
 
         dataset.is_cts = is_cts
 
@@ -282,6 +285,17 @@ class DataDistribution:
         """
 
         return self.scenarios[scenario_name]
+
+    # ================================
+    # Delete
+    # ================================
+    def delete_data(self):
+        """ Delete data from the dataset.
+        """
+
+        self.data = None
+
+        return self
 
     # ================================
     # Methods for fitting distributions
