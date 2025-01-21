@@ -189,7 +189,7 @@ class GUIInputManager():
         
         if isinstance(item, Product):
             if item.get_transporter() is not None:
-                item.get_transporter().set_travel_weight()
+                item.get_transporter().set_transported_weight()
 
         visualizer.update_dependent_qtys(item, qty)
         visualizer.update_plot()
