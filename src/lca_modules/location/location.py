@@ -43,11 +43,11 @@ class Location:
         """
 
         try:
-            geolocator_ph = Photon(user_agent="pod_lca1")
-            geolocator_no = Nominatim(user_agent="pod_lca2")
+            geolocator_ph = Photon(user_agent="pod_lca11")
+            geolocator_no = Nominatim(user_agent="pod_lca22")
 
-            self.location_data_ph = geolocator_ph.geocode(location)
-            self.location_data_no = geolocator_no.geocode(location)
+            self.location_data_ph = geolocator_ph.geocode(location, timeout = 10)
+            self.location_data_no = geolocator_no.geocode(location, timeout = 10)
 
         except Exception as e:
             print(f"Error retrieving location data: {e}")
@@ -200,7 +200,7 @@ if __name__ == '__main__':
     
     # print (location_obj.get_faf_foreign_region(location_input))
 
-    location_input = "Mexico"
+    location_input = "Portland"
     location_obj = Location(location_input)
 
     print(f"State: {location_obj.get_state()}")
