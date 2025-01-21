@@ -1,5 +1,3 @@
-COLOUR_ORDER_LIST = ["blue", "green", "grey", "yellow", "orange", "red", "purple"]
-
 COLOUR_PALETTES = {
                     "blue"  : ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3'],
                     "orange": ['#7F1C00', '#9C2B00', '#ED7D31', '#F4B183', '#FCE4D6'],
@@ -9,3 +7,7 @@ COLOUR_PALETTES = {
                     "red"   : ['#7F0000', '#9C0000', '#C00000', '#E26B6B', '#F4CCCC'],
                     "purple": ['#3F1C59', '#5B2A8F', '#7030A0', '#B4A7D6', '#EAD1DC']
                     }
+
+
+COLOUR_ORDER_LIST = ["blue", "green", "grey", "yellow", "orange", "red", "purple"]
+COLOUR_BASE = 2 

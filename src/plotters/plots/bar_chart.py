@@ -1,6 +1,6 @@
 from utilities.maths.funcs import math_funcs
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST
+from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
 
 from numpy import arange
 
@@ -35,10 +35,10 @@ class BarChart(AbstractPlot):
                 Title of the barchart.
             x_label : str
                 X-label of the barchart.
+            y_label : str
+                Y-label of the barchart.
         """
         
-        COLOUR_BASE = 2
-
         self.get_plot().clear_plot()
 
         categories = list(data.keys())
@@ -61,7 +61,7 @@ class BarChart(AbstractPlot):
                     pos = j - ((len(categories) - 1) *(width)/2) + (i * width)
                     if isinstance(group_data, float) or isinstance(group_data, int):
                         height = math_funcs.round_to_significant([group_data])[0]
-                        self.get_plot().draw_bar(pos, height, width, label=f'{category}', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE], label_pos='center')
+                        self.get_plot().draw_bar(pos, height, width, label=None, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE], label_pos='center')
                     else:
                         bottom = 0
                         counter = 0
@@ -74,13 +74,20 @@ class BarChart(AbstractPlot):
                     
         if isinstance(category_data, float) or isinstance(category_data, int):
             self.get_plot().set_xticks(range(len(categories)), categories)
+            self.get_plot().set_legend(title=x_label)
         else:
-            self.get_plot().set_xticks(range(len(groups)), groups)
+            if isinstance(group_data, float) or isinstance(group_data, int):
+                self.get_plot().set_xticks(range(len(groups)), groups)
+                colors = [COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE] for i in arange(len(categories))]
+                labels = categories
+                self.get_plot().set_legend(colors, labels)
+            else:
+                self.get_plot().set_xticks(range(len(groups)), groups)
+                self.get_plot().set_legend(title=x_label)
 
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
-        self.get_plot().set_legend() #TODO use patches for legends for grouped bar charts and grouped bar charts with components
 
 if __name__ == '__main__':
     pass

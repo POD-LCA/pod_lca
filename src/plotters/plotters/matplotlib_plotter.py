@@ -1,7 +1,14 @@
 from plotters.plotters.abstract_plotter import AbstractPlotter
 
+from matplotlib.patches import Patch
 import matplotlib.pyplot as plt
-import numpy as np
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
 
 class MatplotlibPlotter(AbstractPlotter):
     """
@@ -24,7 +31,13 @@ class MatplotlibPlotter(AbstractPlotter):
     # ================================
     @classmethod
     def create_plot(cls, polar=False):
-        """ Creates a new matplotlib plot"""
+        """ Creates a new matplotlib plot.
+        
+            Parameters
+            ----------
+            Polar : bool
+                If true, create a plot with polar axis.
+        """
 
         plt.close('all')
 
@@ -54,7 +67,7 @@ class MatplotlibPlotter(AbstractPlotter):
     # ================================
     # Draw methods
     # ================================ 
-    def draw_bar(self, pos, height, width, bottom=0., color='blue', label='', label_pos='center'):
+    def draw_bar(self, pos, height, width, bottom=0., color='blue', label=None, label_pos='center'):
         """ draw a bar in a bar chart.
         
             Parameters
@@ -79,6 +92,22 @@ class MatplotlibPlotter(AbstractPlotter):
         return self
     
     def draw_radar(self, angles, values, label, color, alpha=0.5):
+        """ Draw radar lines in a polar plot.
+        
+            Parameters
+            ----------
+            angles : list
+                List of angles for the radar lines.
+            values : list
+                List of values to be marked in each radar line.
+            label : str
+                Label for the radar created.
+            color : str
+                Color of the radar plot as a named or hex string.
+            alpha : float
+                Transparency of the radar (value between 0 and 1).
+        
+        """
 
         self.ax.plot(angles, values, color=color, label=label)
         self.ax.fill(angles, values, color=color, alpha=alpha)
@@ -115,16 +144,36 @@ class MatplotlibPlotter(AbstractPlotter):
 
         return self
 
-    def set_legend(self):
-        """Set the legend of the plot."""
-        self.ax.legend()
+    def set_legend(self, colors=None, labels=None, title=None):
+        """Set the legend of the plot. If colors and labels are given, override with patches.
+        
+            Parameters
+            ----------
+            colors : list
+                List of colors, if patches are being used.
+            labels : str
+                List of labels, if patches are being used.
+            title : str
+                Title of the legend.
+        """
+        if (colors is None) and (labels is None):
+            self.ax.legend(title=title)
+        else:
+            if len(colors) == len(labels):
+                legend_patches = [Patch(color=colors[i], label=labels[i]) for i in range(len(labels))]
+                self.ax.legend(handles=legend_patches, title=title)
+            else:
+                raise IndexError("Number of colors and labels should match")
 
     def set_xticks(self, tick, labels):
         """Set and label ticks along the x-axis of the plot.
         
             Parameters
             ----------
-            list : 
+            tick : 1D array-like
+                List of x values where ticks to be added.
+            labels : list
+                List of labels for the ticks.
         """
         self.ax.set_xticks(tick, labels)
 
@@ -152,35 +201,6 @@ class MatplotlibPlotter(AbstractPlotter):
         return self
 
 
-
-
-
-
-    # def set_color_palette(self, palette):
-    #     """Set color palette for the plot.
-
-    #     Parameters
-    #     ----------
-    #     palette : str or list
-    #         Predefined palette name or a custom list of colors.
-    #     """
-    #     if isinstance(palette, str):
-    #         self.plot_colors = self.PALETTES.get(palette, self.PALETTES["default"])
-    #     elif isinstance(palette, list) and all(isinstance(color, str) for color in palette):
-    #         self.plot_colors = palette
-    #     else:
-    #         raise ValueError("Invalid palette. Provide a predefined name or a list of color strings.")
-
-    # @staticmethod
-    # def format_labels(values, decimal_places=3):
-    #     """Format labels for bar charts."""
-    #     labels = []
-    #     for v in values:
-    #         if v == 0.0:
-    #             labels.append('')
-    #         else:
-    #             labels.append(f"{v:.{decimal_places}g}")
-
-    #     return labels
-
-#TODO setting colors
+if __name__ == '__main__':
+    pass
+       

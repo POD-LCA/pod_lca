@@ -1,5 +1,5 @@
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST
+from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
 
 from numpy import linspace, pi
 
@@ -47,7 +47,6 @@ class RadarChart(AbstractPlot):
             title : str
                 Title of the radar plot.
         """
-        COLOUR_BASE = 2
         
         self.get_plot().clear_plot()
 

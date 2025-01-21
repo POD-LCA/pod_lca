@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 class AbstractPlotter:
     """
     A plotter provides a means of drawing and displaying plots (graphs, charts. etc.).
-    This is an abstract class with the methods need to be implemented in a sepcific implementation of a plotter.
     """
     def __init__(self):
         pass
@@ -73,3 +72,7 @@ class AbstractPlotter:
     def set_grid(self):
         """Set grid lines of the plot."""
         return self
+
+if __name__ == '__main__':
+    pass
+       
