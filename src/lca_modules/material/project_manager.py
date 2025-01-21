@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Project:
     """
-    Project class which maintains the process models, impact database, and calculator.
+    Project class which maintains the process models at a link to the impact database.
 
     Attributes
     ----------
@@ -96,7 +96,7 @@ class Project:
         
         Returns
         -------
-        str
+        str.
             Name of the project.
         """
 
@@ -105,7 +105,7 @@ class Project:
     def get_database(self):
         """ Get the impacts database of the project.
         
-        Retruns
+        Returns
         -------
         DatabaseManager Obj.
             Impact database of the project.
@@ -143,7 +143,7 @@ class Project:
         model_name : str
             Name of the model to be retrieved.
 
-        Retruns
+        Returns
         -------
         Model Obj.
             Current working model.
@@ -161,7 +161,7 @@ class Project:
     def get_model_names(self):
         """ Get all names of all the models in the project.
 
-        Retruns
+        Returns
         -------
         list of str.
             List of model names.
@@ -213,8 +213,10 @@ class Project:
 
         Raises
         ------
-            FileNotFoundError : File not found.
-            PermissionError : Permission denied.
+        FileNotFoundError
+            File not found.
+        PermissionError
+            Permission denied to access file.
         """
 
         try:

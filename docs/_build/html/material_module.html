@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+
+<html lang="Python">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Material Module &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Project" href="project.html" />
+    <link rel="prev" title="API Reference" href="API_reference.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Material Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project.html">Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html">Products</a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html">Processes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html">Calculator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="material-module">
+<span id="section-api-material-module"></span><h1>Material Module<a class="headerlink" href="#material-module" title="Permalink to this heading">¶</a></h1>
+<p>A brief description...</p>
+<hr class="docutils" />
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="project.html">Project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.models"><code class="docutils literal notranslate"><span class="pre">Project.models</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.database"><code class="docutils literal notranslate"><span class="pre">Project.database</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.add_model"><code class="docutils literal notranslate"><span class="pre">Project.add_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.clear_project"><code class="docutils literal notranslate"><span class="pre">Project.clear_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.get_database"><code class="docutils literal notranslate"><span class="pre">Project.get_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.get_model"><code class="docutils literal notranslate"><span class="pre">Project.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.get_model_names"><code class="docutils literal notranslate"><span class="pre">Project.get_model_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.get_name"><code class="docutils literal notranslate"><span class="pre">Project.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.load"><code class="docutils literal notranslate"><span class="pre">Project.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.new"><code class="docutils literal notranslate"><span class="pre">Project.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.save"><code class="docutils literal notranslate"><span class="pre">Project.save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.set_database"><code class="docutils literal notranslate"><span class="pre">Project.set_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project.set_name"><code class="docutils literal notranslate"><span class="pre">Project.set_name()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#lca_modules.material.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.project"><code class="docutils literal notranslate"><span class="pre">Model.project</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.name"><code class="docutils literal notranslate"><span class="pre">Model.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.processes"><code class="docutils literal notranslate"><span class="pre">Model.processes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.products"><code class="docutils literal notranslate"><span class="pre">Model.products</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.impacts"><code class="docutils literal notranslate"><span class="pre">Model.impacts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.add_emission"><code class="docutils literal notranslate"><span class="pre">Model.add_emission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.add_energy"><code class="docutils literal notranslate"><span class="pre">Model.add_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.add_process"><code class="docutils literal notranslate"><span class="pre">Model.add_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.add_product"><code class="docutils literal notranslate"><span class="pre">Model.add_product()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.add_transportation_process"><code class="docutils literal notranslate"><span class="pre">Model.add_transportation_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.add_waste"><code class="docutils literal notranslate"><span class="pre">Model.add_waste()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.delete_item"><code class="docutils literal notranslate"><span class="pre">Model.delete_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.find_item"><code class="docutils literal notranslate"><span class="pre">Model.find_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.from_CSV"><code class="docutils literal notranslate"><span class="pre">Model.from_CSV()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.get_impacts"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.get_name"><code class="docutils literal notranslate"><span class="pre">Model.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.get_processes"><code class="docutils literal notranslate"><span class="pre">Model.get_processes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.get_products"><code class="docutils literal notranslate"><span class="pre">Model.get_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.get_project"><code class="docutils literal notranslate"><span class="pre">Model.get_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.in_project"><code class="docutils literal notranslate"><span class="pre">Model.in_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.set_name"><code class="docutils literal notranslate"><span class="pre">Model.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model.set_project"><code class="docutils literal notranslate"><span class="pre">Model.set_project()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="products.html">Products</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="products.html#lca_modules.material.product.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.weight"><code class="docutils literal notranslate"><span class="pre">Product.weight</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.weight_unit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.density"><code class="docutils literal notranslate"><span class="pre">Product.density</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.trnasporter"><code class="docutils literal notranslate"><span class="pre">Product.trnasporter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.is_material"><code class="docutils literal notranslate"><span class="pre">Product.is_material</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.is_fuel"><code class="docutils literal notranslate"><span class="pre">Product.is_fuel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.copy"><code class="docutils literal notranslate"><span class="pre">Product.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_datasets"><code class="docutils literal notranslate"><span class="pre">Product.get_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_density"><code class="docutils literal notranslate"><span class="pre">Product.get_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_distributions"><code class="docutils literal notranslate"><span class="pre">Product.get_distributions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_id"><code class="docutils literal notranslate"><span class="pre">Product.get_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Product.get_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_impacts"><code class="docutils literal notranslate"><span class="pre">Product.get_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Product.get_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_model"><code class="docutils literal notranslate"><span class="pre">Product.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_name"><code class="docutils literal notranslate"><span class="pre">Product.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_project"><code class="docutils literal notranslate"><span class="pre">Product.get_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_qty"><code class="docutils literal notranslate"><span class="pre">Product.get_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_transporter"><code class="docutils literal notranslate"><span class="pre">Product.get_transporter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_unit"><code class="docutils literal notranslate"><span class="pre">Product.get_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_weight"><code class="docutils literal notranslate"><span class="pre">Product.get_weight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.get_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.get_weight_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.new"><code class="docutils literal notranslate"><span class="pre">Product.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_dataset"><code class="docutils literal notranslate"><span class="pre">Product.set_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_density"><code class="docutils literal notranslate"><span class="pre">Product.set_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_distribution"><code class="docutils literal notranslate"><span class="pre">Product.set_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_id"><code class="docutils literal notranslate"><span class="pre">Product.set_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Product.set_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Product.set_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_model"><code class="docutils literal notranslate"><span class="pre">Product.set_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_name"><code class="docutils literal notranslate"><span class="pre">Product.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_qty"><code class="docutils literal notranslate"><span class="pre">Product.set_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_transporter"><code class="docutils literal notranslate"><span class="pre">Product.set_transporter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.set_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_weight_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product.update_impacts"><code class="docutils literal notranslate"><span class="pre">Product.update_impacts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#lca_modules.material.product.Fuel"><code class="docutils literal notranslate"><span class="pre">Fuel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Fuel.is_material"><code class="docutils literal notranslate"><span class="pre">Fuel.is_material</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Fuel.is_energy"><code class="docutils literal notranslate"><span class="pre">Fuel.is_energy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#lca_modules.material.product.Emission"><code class="docutils literal notranslate"><span class="pre">Emission</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Emission.is_emission"><code class="docutils literal notranslate"><span class="pre">Emission.is_emission</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#lca_modules.material.product.Waste"><code class="docutils literal notranslate"><span class="pre">Waste</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Waste.is_waste"><code class="docutils literal notranslate"><span class="pre">Waste.is_waste</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processess.html">Processes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processess.html#lca_modules.material.process.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.inputs"><code class="docutils literal notranslate"><span class="pre">Process.inputs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.copy"><code class="docutils literal notranslate"><span class="pre">Process.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_datasets"><code class="docutils literal notranslate"><span class="pre">Process.get_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_distributions"><code class="docutils literal notranslate"><span class="pre">Process.get_distributions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_id"><code class="docutils literal notranslate"><span class="pre">Process.get_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Process.get_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_impacts"><code class="docutils literal notranslate"><span class="pre">Process.get_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Process.get_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_model"><code class="docutils literal notranslate"><span class="pre">Process.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_name"><code class="docutils literal notranslate"><span class="pre">Process.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_project"><code class="docutils literal notranslate"><span class="pre">Process.get_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_qty"><code class="docutils literal notranslate"><span class="pre">Process.get_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.get_unit"><code class="docutils literal notranslate"><span class="pre">Process.get_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.new"><code class="docutils literal notranslate"><span class="pre">Process.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_dataset"><code class="docutils literal notranslate"><span class="pre">Process.set_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_distribution"><code class="docutils literal notranslate"><span class="pre">Process.set_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_id"><code class="docutils literal notranslate"><span class="pre">Process.set_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Process.set_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Process.set_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_model"><code class="docutils literal notranslate"><span class="pre">Process.set_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_name"><code class="docutils literal notranslate"><span class="pre">Process.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_qty"><code class="docutils literal notranslate"><span class="pre">Process.set_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.set_unit"><code class="docutils literal notranslate"><span class="pre">Process.set_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process.update_impacts"><code class="docutils literal notranslate"><span class="pre">Process.update_impacts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess"><code class="docutils literal notranslate"><span class="pre">transportationProcess</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.transported_distance"><code class="docutils literal notranslate"><span class="pre">transportationProcess.transported_distance</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.transported_weight"><code class="docutils literal notranslate"><span class="pre">transportationProcess.transported_weight</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.transported_distance_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.transported_distance_unit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.transported_weight_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.transported_weight_unit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.transported_products"><code class="docutils literal notranslate"><span class="pre">transportationProcess.transported_products</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.get_transported_distance"><code class="docutils literal notranslate"><span class="pre">transportationProcess.get_transported_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.get_transported_distance_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.get_transported_distance_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.get_transported_products"><code class="docutils literal notranslate"><span class="pre">transportationProcess.get_transported_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.get_transported_weight"><code class="docutils literal notranslate"><span class="pre">transportationProcess.get_transported_weight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.get_transported_weight_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.get_transported_weight_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.new"><code class="docutils literal notranslate"><span class="pre">transportationProcess.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.remove_transported_product"><code class="docutils literal notranslate"><span class="pre">transportationProcess.remove_transported_product()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_transported_distance"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_transported_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_transported_distance_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_transported_distance_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_transported_product"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_transported_product()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_transported_products"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_transported_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_transported_weight"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_transported_weight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_transported_weight_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_transported_weight_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess.set_unit"><code class="docutils literal notranslate"><span class="pre">transportationProcess.set_unit()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="calculator.html">Calculator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator"><code class="docutils literal notranslate"><span class="pre">Calculator</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.get_barchart2_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_barchart2_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.get_barchart3_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_barchart3_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.get_barchart_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_barchart_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.get_data_by_LCstage"><code class="docutils literal notranslate"><span class="pre">Calculator.get_data_by_LCstage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.get_spider_chart_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_spider_chart_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.get_total_impact"><code class="docutils literal notranslate"><span class="pre">Calculator.get_total_impact()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator.new"><code class="docutils literal notranslate"><span class="pre">Calculator.new()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="API_reference.html">
+                    <span class="icon">&lt;</span><span>API Reference</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="project.html"><span>Project</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

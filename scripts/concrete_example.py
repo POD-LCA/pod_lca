@@ -1,7 +1,7 @@
-from lca_modules.material.projectManager import Project
-from lca_modules.uncertainity.hotspots import HotSpotAnalysis
-from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainity.sensitivity_analysis import compute_sensitivity_of_param
+from lca_modules.material.project_manager import Project
+from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
+from lca_modules.uncertainty.sensitivity_analysis import compute_sensitivity_of_param
 
 # CLT example #TODO add reference
 

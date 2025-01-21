@@ -141,10 +141,10 @@ class Master:
     def set_life_cycle_stage(self, stage):
         """ Set life cycle stage of the product/process.
 
-            Notes
-            -----
-            This method will just change the life cycle stage, without any knock-on effects.
-            To have the relevant knock on effects, use 'update_life_cycle_stage' method
+            Parameters
+            ----------
+            stage : str
+                Life cycle stage of the product/process.
         """
 
         if self.get_life_cycle_stage() is None:

@@ -1,10 +1,10 @@
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.uncertainity.hotspots import HotSpotAnalysis
-from lca_modules.uncertainity.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainity.sensitivity_analysis import SensitivityAnalysis
-from lca_modules.uncertainity.datasets import DataDistribution
-from lca_modules.uncertainity.monte_carlo_simulation import MonteCarloSimulator
+from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
+from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
+from lca_modules.uncertainty.datasets import DataDistribution
+from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
 from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO, MEGA
 
