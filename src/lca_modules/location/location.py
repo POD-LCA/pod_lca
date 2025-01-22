@@ -40,6 +40,9 @@ class Location:
         self.cfs_area = None
         self.faf_foreign = None
 
+    def __str__(self):
+        return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
+
     # ================================
     # Constructors
     # ================================
@@ -295,14 +298,15 @@ if __name__ == '__main__':
     
     # print (location_obj.get_faf_foreign_region(location_input))
 
-    location_obj = Location.from_str("Sri Lanka")
+    location_obj = Location.from_str("Architecture Hall, Washington")
+    print(location_obj)
 
     # location_input = 98102
     # location_obj = Location(location_input)
 
-    print(f"State: {location_obj.get_state()}")
-    print(f"City: {location_obj.get_city()}")
-    print(f"Zipcode: {location_obj.get_zip()}")
-    print(f"Coordinates: {location_obj.get_cordinates()}")
-    print (f"Country: {location_obj.get_country()}")
-    print (f"CFS Area: {location_obj.get_cfs_area()}")
+    # print(f"State: {location_obj.get_state()}")
+    # print(f"City: {location_obj.get_city()}")
+    # print(f"Zipcode: {location_obj.get_zip()}")
+    # print(f"Coordinates: {location_obj.get_cordinates()}")
+    # print (f"Country: {location_obj.get_country()}")
+    # print (f"CFS Area: {location_obj.get_cfs_area()}")
