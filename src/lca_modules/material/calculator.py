@@ -132,7 +132,7 @@ class Calculator():
 
         data ={}
         for impact_category in IMPACT_CATEGOREIS.keys():
-            data[impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values()) * IMPACT_NORMALIZATION_FACTOR[impact_category]
+            data[impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values()) / IMPACT_NORMALIZATION_FACTOR[impact_category]
         
         return data
 

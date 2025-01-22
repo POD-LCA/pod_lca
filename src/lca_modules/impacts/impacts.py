@@ -1,4 +1,4 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS, IMPACT_WEIGHTING_FACTOR_EPA, IMPACT_WEIGHTING_FACTOR_NIST
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -74,7 +74,6 @@ class Impacts:
     # ========================
     # Getters and Setters
     # ========================
-
     def set_parent(self, parent):
         """ Set the parent object.
         
@@ -102,7 +101,6 @@ class Impacts:
     # ========================
     # Methods
     # ========================
-
     def update_impact_qty(self, impacts):
         """ Update the impact quantities.
         
@@ -148,12 +146,11 @@ class Impacts:
         float
             The weighted impact.
         """
-        # FIXME: The method needs to be updated
 
         if method == 'TRACI_EPA':
-            weights = {'GWP':16, 'AP':5, 'EP':5, 'ODP':5, 'SFP':6}
+            weights = IMPACT_WEIGHTING_FACTOR_EPA
         elif method == 'TRACI_NIST':
-            weights = {'GWP':16, 'AP':5, 'EP':5, 'ODP':5, 'SFP':6}
+            weights = IMPACT_WEIGHTING_FACTOR_NIST
         else:
             raise NotImplementedError
         
