@@ -60,7 +60,7 @@ class Location:
         location = cls()
 
         try:
-            geolocator = Nominatim(user_agent="pod_lca2")
+            geolocator = Nominatim(user_agent="pod_lca")
 
             location_data = geolocator.geocode(string)
             location.set_cordinates(location_data)
