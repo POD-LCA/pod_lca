@@ -112,7 +112,7 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.plot(angles, values, color=color, label=label)
         self.ax.fill(angles, values, color=color, alpha=alpha)
 
-    def draw_histogram(self, data, no_bins, color, alpha):
+    def draw_histogram(self, data, no_bins, label, color, alpha, unitize):
         """ Draw a histogram.
         
             Parameters
@@ -121,13 +121,17 @@ class MatplotlibPlotter(AbstractPlotter):
                 List of all data points.
             no_bins : int
                 Number of bins in the histogram
+            label : str
+                Identifier of the histogram.
             color : str
                 Color of the radar plot as a named or hex string.
             alpha : float
                 Transparency of the radar (value between 0 and 1).
+            unitize : bool
+                If true, the area under of the histogram is set to 1.
         """        
 
-        self.ax.hist(data, bins=no_bins, density=True, alpha=alpha, label='Histogram', color=color)
+        self.ax.hist(data, bins=no_bins, density=unitize, alpha=alpha, label=label, color=color)
 
         return self
     

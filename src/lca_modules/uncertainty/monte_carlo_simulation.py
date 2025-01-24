@@ -3,6 +3,8 @@ from lca_modules.material.calculator import Calculator
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.utils import UncertainityUtils
 
+import time
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -39,6 +41,7 @@ class MonteCarloSimulator:
         self.var_params = []
         self.scenario = {}
 
+        self.run_time = None
         self.result = None
 
     def __str__(self):
@@ -46,6 +49,8 @@ class MonteCarloSimulator:
 
         str = "*"*50 + "\nMONTE CARLO SIMULATION\n" + "*"*50 + "\n"
         str += f"number of iterations: {self.get_iterations()}\n"
+        str += f"impact category considered: {self.get_impact_cat()}\n"
+        str += f"CPU time (s): {self.run_time:.2f}\n"
 
         data = self.result.get_data()
         if max(data) - min(data) == 0.0:
@@ -59,7 +64,7 @@ class MonteCarloSimulator:
     # Constructors
     # ================================  
     @classmethod
-    def from_model(cls, model):
+    def from_model(cls, model, no_iter=10000, impact_cat='GWP'):
         """ Create a Monte Carlo Simulator for a model.
         
             Attributes
@@ -70,8 +75,8 @@ class MonteCarloSimulator:
         """
         monte_carlo_simulator = cls()
         monte_carlo_simulator.set_model(model)
-        monte_carlo_simulator.set_iterations(10000)
-        monte_carlo_simulator.set_impact_cat("GWP")
+        monte_carlo_simulator.set_iterations(no_iter)
+        monte_carlo_simulator.set_impact_cat(impact_cat)
 
         monte_carlo_simulator.set_var_params()
         
@@ -116,15 +121,24 @@ class MonteCarloSimulator:
 
         self.impact_cat = impact_cat
 
-    def set_var_params(self):
+    def set_var_params(self, params=None, set_all=True):
         """Find and set the variable parameters within the model.
+
+            Parameters
+            ----------
+            params : list
+                List of distributions to be considered in the MCS.
+            set_all : bool
+                If true, set all the parameters in the model with a distribution.
         """
-
-        self.update_all_distributions()
-
-        objects = self.model.get_all_items()
-        for object in objects:
-            self.var_params.extend(list(object.get_data_distributions().values()))
+        if params is not None:
+            self.var_params = params
+        elif set_all and params is None:
+            objects = self.model.get_all_items()
+            for object in objects:
+                self.var_params.extend(list(object.get_data_distributions().values()))    
+        else:
+            raise NotImplementedError
 
         return self.var_params
     
@@ -141,26 +155,19 @@ class MonteCarloSimulator:
 
         self.scenario = dict
 
-    def set_result(self, results):
+    def set_result(self, results, is_cts):
         """ Sets the results of the Monte Carlo Simulation.
         
             Parameters
             ----------
             results : list of float
                 A list of impact data from each iteration of the simulation.
+            is_cts : bool
+                True, if the results are in a continous scale.
         
         """
 
-        result_obj = MonteCarlo_results.from_data(results, name='MonteCarloSimualation', is_cts=True)
-        if not(max(results) - min(results) == 0.0):
-            best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE')
-            if best_fit is not None:
-                dist, _ = result_obj.fit_cts_distribution(best_fit)
-                result_obj.set_distribution(dist)
-            else:
-                raise ValueError("Resutls data could not be fitted to a distribution")
-
-        self.result = result_obj
+        self.result = MonteCarlo_results.from_data(results, name='MonteCarloSimualation', is_cts=is_cts, set_dist=False)
 
     # ================================
     # Getters
@@ -233,10 +240,12 @@ class MonteCarloSimulator:
     def run(self):
         """ Run a Monte Carlo Simulation.
         """
+        
 
         var_params_tmp = self.get_var_params()
         scenarios = self.get_scenario()
 
+        is_cts = False
         var_params = []
         methods_list = {}
         for distribution in var_params_tmp:
@@ -251,6 +260,10 @@ class MonteCarloSimulator:
                 method_name = 'set_'+ distribution.get_attr()
                 methods_list[distribution] = getattr(obj, method_name)
 
+            if distribution.is_cts:
+                is_cts =True
+
+        start = time.time()
         result = []
         for iter_in_group in UncertainityUtils.get_groups(self.iterations, 1000):
             var_values = {}
@@ -266,7 +279,10 @@ class MonteCarloSimulator:
                 result.append(total_impact)
                 iter +=1
 
-        self.set_result(result)
+        elapsed = time.time() - start
+        self.run_time = elapsed
+
+        self.set_result(result, is_cts)
 
         return result
     

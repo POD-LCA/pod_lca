@@ -18,7 +18,7 @@ class Histogram(AbstractPlot):
     # ================================
     # Methods
     # ================================ 
-    def draw(self, data, no_bins, title, x_label, y_label):
+    def draw(self, data, no_bins, title, x_label, y_label, label='', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE], unitize=True):
         """ Draw the histogram.
         
             Parameters
@@ -35,7 +35,7 @@ class Histogram(AbstractPlot):
                 Y-label of the barchart.
         """
 
-        self.get_plot().draw_histogram(data, no_bins, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE], alpha=0.5)
+        self.get_plot().draw_histogram(data, no_bins, label=label, color=color, unitize=unitize, alpha=0.5)
         
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
