@@ -1,6 +1,6 @@
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.impacts.units_map import UNITS_MAP
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.from_csv import CSV_Importer
 
 from pandas import DataFrame
 from pandas import concat

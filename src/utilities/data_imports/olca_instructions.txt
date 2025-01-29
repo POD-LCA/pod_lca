@@ -1,0 +1,19 @@
+1. Download USLCI database as a *.zolca file from https://github.com/FLCAC-admin/uslci-content/blob/dev/docs/release_info/release-downloads.md. Use the Release version 1.2024-12.0*
+2. open the openLCA 2.4.0 application
+3. In the openLCA application menubar, select 'Database> New database> from file'. From the pop-up window select the downloaded *.zolca file. 
+4. Double click the database loaded in the navigation pane. This will load the database.
+5. Start the IPC client 'Tools > Developer Tools > IPC Server > start server'. Click the green arrow button.
+
+6. 
+
+
+In the code block: 
+(i) specify the file location and name for the .csv file export (file_path) (TODO: will automate this); 
+(ii) specify the headers for the LCIA impacts to export, according to the impact method selected (default: ISO 21930 GWP, AP, EP, POCP, ODP, CO2, CH4, N2O); 
+(iii) specify the LCIA impact method by UUID; (iv) set the allocation method in the calculation setup (optionally, also set the product amount); 
+(v) check that the impact_results indices are correct so the impacts match the csv file headers
+Run the code block. The loading bar will show progress and how many processes have been evaluated.
+Once complete, the database .csv file will be available in the specified file location.
+
+olca-ipc api documentation
+https://greendelta.github.io/olca-ipc.py/olca/schema.html#olca.schema.ImpactMethod
