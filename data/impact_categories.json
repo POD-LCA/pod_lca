@@ -1,0 +1,52 @@
+{
+    "GWP (AR5)": {
+        "@type":"ImpactCategory",
+        "@id":"866db1c8-b06b-304e-8664-65621476beea",
+        "name":"Greenhouse Gases",
+        "category":"ISO21930-LCIA-US",
+        "refUnit":"kg CO2 eq",
+        "normalizationFactor": 24223.71,
+        "weightingFactor_EPA": 16,
+        "weightingFactor_NIST": 29
+    },
+    "AP": {
+        "@type":"ImpactCategory",
+        "@id":"420c955a-6f4f-39ae-ac4e-2276e141ef13",
+        "name":"Acidification potential",
+        "category":"ISO21930-LCIA-US",
+        "refUnit":"kg SO2 eq",
+        "normalizationFactor": 90.86,
+        "weightingFactor_EPA": 5,
+        "weightingFactor_NIST": 3
+    },
+    "EP": {
+        "@type":"ImpactCategory",
+        "@id":"d78c428f-907b-3d9d-967e-e87db83e987b",
+        "name":"Eutrophication potential",
+        "category":"ISO21930-LCIA-US",
+        "refUnit":"kg N eq",
+        "normalizationFactor": 21.62,
+        "weightingFactor_EPA": 5,
+        "weightingFactor_NIST": 6
+    },
+    "ODP": {
+        "@type":"ImpactCategory",
+        "@id":"39a1d262-bb86-3742-80b7-26c8e9a521ee",
+        "name":"Ozone depletion potential",
+        "category":"ISO21930-LCIA-US",
+        "refUnit":"kg CFC-11 eq",
+        "normalizationFactor": 0.16,
+        "weightingFactor_EPA": 5,
+        "weightingFactor_NIST": 2
+    },
+    "POCP": {
+        "@type":"ImpactCategory",
+        "@id":"a5cae9e0-23bc-3366-b8c8-a46aa6401ed2",
+        "name":"Photochemical oxidant creation potential",
+        "category":"ISO21930-LCIA-US",
+        "refUnit":"kg O3 eq",
+        "normalizationFactor": 1392.05,
+        "weightingFactor_EPA": 6,
+        "weightingFactor_NIST": 4
+    }
+}

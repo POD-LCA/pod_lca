@@ -1,6 +1,6 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS #TODO Move reference to the json file
 from lca_modules.impacts.units_map import UNITS_MAP
-from utilities.data_imports.from_csv import CSV_Importer
+from utilities.data.transfer import DataHandler
 
 from pandas import DataFrame
 from pandas import concat
@@ -95,7 +95,7 @@ class ImpactsDatabase:
             multipliers = [1.0] * len(headers)
         multipliers = [None, None] + multipliers
 
-        data = CSV_Importer.import_as_pandas(file_path, headers, multipliers)
+        data = DataHandler.import_as_pandas(file_path, headers, multipliers)
 
         data.columns = default_headers
         data['Unit'] = data['Unit'].map(UNITS_MAP)

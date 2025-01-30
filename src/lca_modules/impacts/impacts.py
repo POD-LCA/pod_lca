@@ -1,4 +1,5 @@
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+#TODO Move reference to the json file
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -102,7 +103,6 @@ class Impacts:
     # ========================
     # Methods
     # ========================
-
     def update_impact_qty(self, impacts):
         """ Update the impact quantities.
         
