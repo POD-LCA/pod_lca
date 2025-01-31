@@ -1,5 +1,3 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
-#TODO Move reference to the json file
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -26,7 +24,8 @@ class Impacts:
 
     def __str__(self):
         str = "="*50 + "\n" + f"Impacts of {self.parent.get_name()}\n" + "="*50 + "\n"
-        for impact, unit in IMPACT_CATEGOREIS.items():
+        for impact, unit in zip(self.parent.get_project().get_database().get_impact_categories_names(),
+                                self.parent.get_project().get_database().get_impact_category_units()):
             str += f"{impact:<20} {getattr(self, impact):<5} {unit:<20}\n"
 
         return str
@@ -52,7 +51,7 @@ class Impacts:
         impact_obj = cls()
         impact_obj.set_parent(parent)
 
-        for impact in IMPACT_CATEGOREIS:
+        for impact in parent.get_project().get_database().get_impact_categories_names():
             setattr(impact_obj, impact, 0.0)
 
         return impact_obj
@@ -75,7 +74,6 @@ class Impacts:
     # ========================
     # Getters and Setters
     # ========================
-
     def set_parent(self, parent):
         """ Set the parent object.
         

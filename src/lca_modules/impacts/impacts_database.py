@@ -1,9 +1,9 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS #TODO Move reference to the json file
 from lca_modules.impacts.units_map import UNITS_MAP
 from utilities.data.transfer import DataHandler
 
 from pandas import DataFrame
 from pandas import concat
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -20,6 +20,8 @@ class ImpactsDatabase:
     ----------
     name : str
         Name of the database.
+    impact_categories : dict
+        Dictionary of impact categories and other data.
     data : pandas DataFrame Obj.
         Impact data, with following headings.
             'Flow' (str) : name of impact
@@ -29,7 +31,8 @@ class ImpactsDatabase:
 
     def __init__(self):
         self.name = None
-        self.data = DataFrame(columns=['Flow','Unit'] + list(IMPACT_CATEGOREIS.keys()))
+        self.impact_ceteogries = None
+        self.data = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Impact Database: {self.get_name()}\n" + "="*75 + "\n"
@@ -40,13 +43,15 @@ class ImpactsDatabase:
     # Constructors
     # =================================
     @classmethod
-    def new(cls, name):
+    def new(cls, name, file_path):
         """ Create a new database.
         
         Parameters
         ----------
         name : str
             Name of the database.
+        file_path : str
+            Location of the impact categories json file.
         
         Returns
         -------
@@ -56,6 +61,11 @@ class ImpactsDatabase:
 
         new_db = cls()
         new_db.set_name(name)
+
+        impact_categories = DataHandler.json_to_dict(file_path)
+
+        new_db.set_impact_categories(impact_categories)
+        new_db.data = DataFrame(columns=['Flow','Unit'] + new_db.get_impact_categories_names())
 
         return new_db
 
@@ -88,14 +98,14 @@ class ImpactsDatabase:
             Values of each column of the CSV will be multiplied by these values.
         """
 
-        default_headers = ['Flow','Unit'] + list(IMPACT_CATEGOREIS.keys())
+        default_headers = ['Flow','Unit'] + list(self.get_impact_categories_names())
         if headers == None:
             headers = default_headers
         if multipliers == None:
             multipliers = [1.0] * len(headers)
         multipliers = [None, None] + multipliers
 
-        data = DataHandler.import_as_pandas(file_path, headers, multipliers)
+        data = DataHandler.csv_to_pandas(file_path, headers, multipliers)
 
         data.columns = default_headers
         data['Unit'] = data['Unit'].map(UNITS_MAP)
@@ -104,6 +114,19 @@ class ImpactsDatabase:
             self.data = data
         else:
             self.data = concat([self.get_data_all(), data], ignore_index=True)
+
+        return self
+    
+    def set_impact_categories(self, impact_categories):
+        """ Set the impact categories.
+        
+        Parameters
+        ----------
+        impact_categories : list
+            List of impact categories.
+        """
+
+        self.impact_ceteogries = impact_categories
 
         return self
 
@@ -125,23 +148,49 @@ class ImpactsDatabase:
         tmp_data['Flow'] = flow
         tmp_data['Unit'] = unit
 
-        if list(IMPACT_CATEGOREIS.keys()) + ['Flow', 'Unit'] == list(tmp_data.keys()) :
+        if list(self.get_impact_categories_names()) + ['Flow', 'Unit'] == list(tmp_data.keys()) :
             self.data.loc[len(self.data)] = tmp_data
         else:
-            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {IMPACT_CATEGOREIS.keys()}")
+            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {self.get_impact_categories_names()}")
 
         return self.data
     
     def get_name(self):
         """ Get the name of the database.
         
-        Returns
-        -------
-        str
-            Name of the database.
+            Returns
+            -------
+            str
+                Name of the database.
         """
 
         return self.name
+    
+    def get_impact_categories_names(self):
+        """ Get the impact categories.
+        
+            Returns
+            -------
+            list of str
+                List of impact categories.
+        """
+
+        return list(self.impact_ceteogries.keys())
+    
+    def get_impact_category_units(self):
+        """ Get the units of the impact categories.
+        
+            Returns
+            -------
+            list of str
+                List of units of the impact categories.
+        """
+
+        units = []
+        for key, value in self.impact_ceteogries.items():
+            units.append(value['refUnit'])
+
+        return units
     
     def get_data_all(self):
         """ Retrieve impact data in the database.
