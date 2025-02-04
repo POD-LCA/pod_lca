@@ -1,0 +1,32 @@
+{
+    "National":{
+        "USA": "United State of America"
+    },
+    "FERC": {
+        "CAISO": "California Independent System Operator",
+        "MISO": "Midcontinent Independent System Operator",
+        "ISO-NE": "Independent System Operator - New England",
+        "NYISO": "New York Independent System Operator",
+        "Northwest": "Northwest",
+        "PJM":"Pennsylvania-New Jersey-Maryland Interconnection",
+        "Southeast": "Southeast",
+        "Southwest": "Southwest",
+        "SPP": "Southwest Power Pool",
+        "ERCOT": "Electric Reliability Council of Texas"
+    },
+    "NERC":{
+
+    },
+    "GEA": {
+
+    },
+    "eGRID": {
+
+    },
+    "Balancing Authority":{
+
+    },
+    "Balancing Area":{
+
+    }
+}
