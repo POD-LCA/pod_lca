@@ -249,7 +249,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        if "electricity" in node.provider.name.lower():
+        if "electricity" in node.product.name.lower():
             elec_required_sum += node.required_amount
             elec_impact += node.result
 
