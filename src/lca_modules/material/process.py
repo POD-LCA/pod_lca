@@ -238,6 +238,7 @@ class transportationProcess(Process):
 
         """
 
+
         return self.transported_weight
     
     def get_transported_distance_unit(self):

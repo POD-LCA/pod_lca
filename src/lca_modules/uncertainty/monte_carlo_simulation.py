@@ -1,6 +1,8 @@
-from utilities.objects import array_methods
 
-import matplotlib.pyplot as plt
+from lca_modules.material.calculator import Calculator
+from lca_modules.uncertainty.datasets import DataDistribution
+from lca_modules.uncertainty.utils import UncertainityUtils
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -9,119 +11,329 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 
-class MonteCarloSimulation:
+class MonteCarloSimulator:
     """
     MonteCarloSimulation object carries out Monte Carlo Simulation.
 
     Attributes
     ----------
-    project : Project Obj.
-        Project on which the calculator operates.
+    model : Model Obj.
+        Model on which the Monte Carlo Simulation is performed.
     iterations : int
         No of iterations.
-    var_param : List
-        List of Distribution objects.
     impact_cat : str.
         Impact category considered for the impact calculation.
+    var_param : List
+        List of Distribution objects.
+    scenario : dict.
+        Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+        Scenario values are 'low', 'med', and 'high'.
+    result : result Obj.
+        Data from the Monte Carlo Simulation
 
     """
-
-    def __init__(self, project):
-        self.project = project
-        self.iterations = 10000
+    def __init__(self):
+        self.model = None
+        self.iterations = None
+        self.impact_cat = None
         self.var_params = []
-        self.impact_cat = 'weighted'
+        self.scenario = {}
 
-        self.dists_short_list = ['norm', 'expon', 'uniform', 'beta', 'gamma', 'chi2', 't', 'f', 'lognorm', 'weibull_min']
+        self.result = None
 
-        for model_name in project.get_model_names():
-            self.set_var_params(model_name)
+    def __str__(self):
+        """ Print results of the Monte Carlo Simulation."""
 
-    def run(self, model_name):
+        str = "*"*50 + "\nMONTE CARLO SIMULATION\n" + "*"*50 + "\n"
+        str += f"number of iterations: {self.get_iterations()}\n"
 
-        var_params = self.get_var_params(model_name)
+        data = self.result.get_data()
+        if max(data) - min(data) == 0.0:
+            str += f"Single point of data at {max(data)}"
+        else:
+            str += f"{self.get_result()}\n"
+
+        return str
+
+    # ================================
+    # Constructors
+    # ================================  
+    @classmethod
+    def from_model(cls, model):
+        """ Create a Monte Carlo Simulator for a model.
         
-        prob_data = []
-        impact_data = []
-        iter = 0
-        while iter < self.iterations:
-            prob = 1.00
-            for distribution in var_params:
-                var_value = distribution.pick_data_point()
-                prob *= distribution.prob_of(var_value)
-                
-                obj = distribution.get_parent()
-                setattr(obj, distribution.get_attr_name(), var_value)
-                obj.update_impacts()
-
-                total_impact = self.project.get_calculator().get_total_impact(model_name, self.impact_cat)
-                prob_data.append(prob)
-                impact_data.append(total_impact)
-            iter +=1
-
-
-        plt.scatter(impact_data, prob_data)
-        plt.xlabel("X-axis")
-        plt.ylabel("Y-axis")
-        plt.title("Quick Scatter Plot")
-        plt.show(block=True)
-        # TODO: plot the output_data set
-        # TODO: fix curve and get distribution params
-
-    #TODO Statistical analysis and variance reduction (https://onlinelibrary.wiley.com/doi/book/10.1002/9781118014967)
+            Attributes
+            ----------
+            model : Model Obj.
+                Model on which the Monte Carlo Simulation is performed.
             
+        """
+        monte_carlo_simulator = cls()
+        monte_carlo_simulator.set_model(model)
+        monte_carlo_simulator.set_iterations(10000)
+        monte_carlo_simulator.set_impact_cat("GWP")
 
-    def set_distributions(self, model_name):
-        """Set distribution objects to all data objects in the project objects with dataset.
+        monte_carlo_simulator.set_var_params()
+        
+        return monte_carlo_simulator
+
+    # ================================
+    # Setters
+    # ================================    
+    def set_model(self, model):
+        """ Set a model to the Simulator.
+        
+            Attributes
+            ----------
+            model : Model Obj.
+                Model on which the Monte Carlo Simulation is performed.        
+        
         """
 
-        objects = self.project.get_model(model_name).get_products() + self.project.get_model(model_name).get_processes()
+        self.model = model
 
-        for object in objects:
-            for attr, dataset in object.get_datasets().items():
-                if dataset.get_dist_fitted() is None:
-                    best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, short_list=self.dists_short_list, printout=False)
-                    if best_fit is None:
-                        best_fit = dataset.find_best_fit(is_cts=True, fit_method='MLE', validate=True, printout=False)
-                    distribution = dataset.set_distribution(best_fit)
-                    object.set_distribution(distribution, attr)                 
-                else:
-                    # TODO: if it is not already in the distribution list, add it
-                    pass
-
-        # TODO: check the dataset and distribution are of same length
+    def set_iterations(self, no_iters):
+        """ Set the number of iterations of the simulation.
         
-        pass
-
-    def set_var_params(self, model_name):
-        """Get variable parameters within the model.
+            Attributes
+            ----------
+            no_iters : int.
+                Number of iterations of the simulations.        
+        
         """
 
-        self.set_distributions(model_name)
-
-        objects = self.project.get_model(model_name).get_products() + self.project.get_model(model_name).get_processes()
-        for object in objects:
-            self.var_params.extend(list(object.get_distributions().values()))
-
-        return self.var_params
-        
+        self.iterations = no_iters
 
     def set_impact_cat(self, impact_cat):
+        """ Set the impact category considered for the simulation.
+        
+            Attributes
+            ----------
+            impact_cat : str.
+                Impact category considered for the impact calculation.    
+        
+        """
 
         self.impact_cat = impact_cat
 
-    def get_var_params(self, model_name):
+    def set_var_params(self):
+        """Find and set the variable parameters within the model.
+        """
+
+        self.update_all_distributions()
+
+        objects = self.model.get_all_items()
+        for object in objects:
+            self.var_params.extend(list(object.get_data_distributions().values()))
+
+        return self.var_params
+    
+    def set_scenario(self, dict):
+        """ Set scenarios for a simulation.
+        
+            Parameters
+            ----------
+            scenario : dict.
+                Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+                Scenario values are 'low', 'med', and 'high'.
+        
+        """
+
+        self.scenario = dict
+
+    def set_result(self, results):
+        """ Sets the results of the Monte Carlo Simulation.
+        
+            Parameters
+            ----------
+            results : list of float
+                A list of impact data from each iteration of the simulation.
+        
+        """
+
+        result_obj = MonteCarlo_results.from_data(results, name='MonteCarloSimualation', is_cts=True)
+        if not(max(results) - min(results) == 0.0):
+            best_fit = result_obj.find_best_fit(is_cts=True, fit_method='MLE')
+            if best_fit is not None:
+                dist, _ = result_obj.fit_cts_distribution(best_fit)
+                result_obj.set_distribution(dist)
+            else:
+                raise ValueError("Resutls data could not be fitted to a distribution")
+
+        self.result = result_obj
+
+    # ================================
+    # Getters
+    # ================================
+    def get_model(self):
+        """ Get the model for which the simulation will be run.
+        
+            Returns
+            ----------
+            Model Obj.
+                Model on which the Monte Carlo Simulation is performed.        
+        
+        """
+        return self.model
+    
+    def get_iterations(self):
+        """ Get the number of iterations of the simulation.
+        
+            Returns
+            ----------
+            int.
+                Number of iterations of the simulations.        
+        
+        """
+        return self.iterations
+    
+    def get_impact_cat(self):
+        """ Get the impact category considered for the simulation.
+        
+            Returns
+            ----------
+            str.
+                Impact category considered for the impact calculation.    
+        
+        """
+        return self.impact_cat
+
+    def get_var_params(self):
         """Get variable parameters within the model.
         """
 
         return self.var_params
+    
+    def get_scenario(self):
+        """ Get scenarios set for the simulation.
+        
+            Returns
+            ----------
+            dict.
+                Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+                Scenario values are 'low', 'med', and 'high'.
+        
+        """
+        return self.scenario
 
-    def set_scenarios(self, *args, **kwargs):
-        """ Set scenarios for Scenario Aware Monte Carlo Simulations.
-            This will update the variable parameters.
+    def get_result(self):
+        """ Sets the results of the Monte Carlo Simulation.
+        
+            Returns
+            ----------
+            MonteCarlo_reults Obj.
+                Data from the Monte Carlo Simulation.
+        
+        """
+        return self.result
+
+    # ================================
+    # Methods
+    # ================================    
+    def run(self):
+        """ Run a Monte Carlo Simulation.
         """
 
-        pass # TODO: implement
+        var_params_tmp = self.get_var_params()
+        scenarios = self.get_scenario()
+
+        var_params = []
+        methods_list = {}
+        for distribution in var_params_tmp:
+            obj = distribution.get_parent()
+            if obj in scenarios:
+                method_name = 'set_'+ distribution.get_attr()
+                method_obj = getattr(obj, method_name)
+                value = distribution.get_distribution().ppf(distribution.get_scenario(scenarios[obj]))
+                method_obj(value)
+            else:
+                var_params.append(distribution)
+                method_name = 'set_'+ distribution.get_attr()
+                methods_list[distribution] = getattr(obj, method_name)
+
+        result = []
+        for iter_in_group in UncertainityUtils.get_groups(self.iterations, 1000):
+            var_values = {}
+            for distribution in var_params:
+                var_values[distribution] = distribution.pick_data_points_from_distribution(iter_in_group)
+
+            iter = 0        
+            while iter < iter_in_group:
+                for distribution in var_params:        
+                    methods_list[distribution](var_values[distribution][iter])
+
+                total_impact = Calculator.get_total_impact(self.model, self.impact_cat)
+                result.append(total_impact)
+                iter +=1
+
+        self.set_result(result)
+
+        return result
+    
+    # def run(self):
+
+
+    #     project = self.get_model().get_project()
+    #     var_params = self.get_var_params()
+        
+    #     prob_data = []
+    #     impact_data = []
+    #     iter = 0
+    #     while iter < self.iterations:
+    #         prob = 1.00
+    #         for distribution in var_params:
+
+    #             var_value = distribution.pick_data_point()
+    #             prob *= distribution.prob_of(var_value) # TODO: deciding the rounding value
+                
+    #             obj = distribution.get_parent()
+
+    #             method_name = 'set_'+ distribution.get_attr_name()
+    #             method = getattr(obj, method_name)
+    #             method(var_value)
+
+    #         total_impact = project.get_calculator().get_total_impact(self.model.get_name(), self.impact_cat)
+    #         prob_data.append(prob)
+    #         impact_data.append(total_impact)
+    #         iter +=1
+
+    #     _, ax = plt.subplots()
+    #     target_bin_width = 10
+    #     _, bins = histogram(impact_data, bins=int(self.iterations/target_bin_width))
+    #     bin_width = bins[1] - bins[0]
+    #     ax.hist(impact_data, bins=int(self.iterations/target_bin_width), alpha=0.5, label='Histogram', color='blue')
+    #     ax.scatter(impact_data, [prob * self.iterations * bin_width for prob in prob_data], label='Scatter Plot', alpha=0.1, color='black', edgecolor='black')
+    #     ax.set_xlabel('Impact')
+    #     ax.set_ylabel('Count')
+    #     ax.legend()
+    #     plt.show()
+    #     # TODO: plot the output_data set
+    #     # TODO: fix curve and get distribution params
+
+    # #TODO Statistical analysis and variance reduction (https://onlinelibrary.wiley.com/doi/book/10.1002/9781118014967)
+
+    def update_all_distributions(self):
+        """Set distribution objects to all data objects in the project objects with dataset.
+        """
+        objects = self.model.get_all_items()
+
+        for object in objects:
+            for dataset in object.get_data_distributions().values():
+                if dataset.get_distribution() is None:
+                    dataset.set_distribution()               
+
+class MonteCarlo_results(DataDistribution):
+
+    def __init__(self):
+        super().__init__()
+
+    def __str__(self):
+        str = f"Generated {len(self.get_data())} models giving impact values in the range {min(self.get_data()):.2f} to {max(self.get_data()):.2f}"
+        if  self.get_distribution() is not None:             
+            str += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 
+
+        return str
+
 
 if __name__ == '__main__':
     pass

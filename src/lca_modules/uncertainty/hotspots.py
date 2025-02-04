@@ -1,4 +1,5 @@
 from utilities.objects import array_methods
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 
 __author__ = ["POD/LCA Team"]
@@ -14,21 +15,136 @@ class HotSpotAnalysis:
 
     Attributes
     ----------
-    project : Project Obj.
-        Project on which the calculator operates.
-    hotspots : dict of dict of list
-        {model_name (str): {impact_category (str): list (Master Obj)} .
+    model : Model Obj.
+        Model on which the hotspot analysis is performed.
+    hotspots : dict of list
+        {impact_category (str): list (Master Obj)} .
     """
 
-    def __init__(self, project):
-        self.project = project
-        self.hotspots = dict.fromkeys(project.get_model_names(), None)
+    def __init__(self):
+        self.model = None
+        self.hotspots = {}
 
-        project.HotSpotAnalysis = self
+    def __str__(self):
+        str = "*"*50 + "\nHOTSPOTS\n" + "*"*50 + "\n"
+        hotspots = self.get_hotspots()
+        if hotspots is None:
+            str += "No hotspot analysis has been run yet."
+        else:
+            for impact_category in hotspots:
+                for obj in hotspots[impact_category]:
+                    if impact_category == 'weighted':
+                        impact_val = obj.get_impacts().get_weighted_impact()
+                    else:
+                        impact_val = obj.get_impacts().get_impact(impact_category)
+                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {IMPACT_CATEGOREIS[impact_category]} \n"
+        
+        return str
 
-    def run(self, model_name='Model_0', impact_category= "GWP", printout=False):
+    # ================================
+    # Constructors
+    # ================================  
+    @classmethod
+    def from_model(cls, model):
+        """ Create a hotspot analyis from a a model.
+        
+            Attributes
+            ----------
+            model : Model Obj.
+                Model on which the hotspot analysis is performed.
+            
+        """
+
+        hotspot_analysis = cls()
+        hotspot_analysis.set_model(model)
+
+        model.hotspots = hotspot_analysis.hotspots
+
+        return hotspot_analysis
+
+    # ================================
+    # Setters and Getters
+    # ================================
+    def set_model(self, model):
+        """ Set a model to the analyser.
+        
+            Attributes
+            ----------
+            model : Model Obj.
+                Model on which the hotspot analysis is performed.        
+        
+        """
+
+        self.model = model
+
+    def set_hotspots(self, hotspots, impact_category):
+        """ Set attribute in hotspots to identify as hotspots.
+
+            Parameters
+            ----------
+            hotspots : list of Master Objs.
+                List of hotspot object of the model.
+            impact_category : str
+                Impact category for which the hotspot analysis was run.
+        """
+        self.hotspots[impact_category] = hotspots
+
+        all_items = self.model.get_all_items()
+
+        array_methods.set_value(all_items, 'is_hotspot', False)
+        array_methods.set_value(hotspots, 'is_hotspot', True)
+
+    def get_model(self):
+        """ Get the model for which the analsysis will be run.
+        
+            Returns
+            ----------
+            Model Obj.
+                Model on which the hotspot analysis is performed.        
+        
+        """
+        return self.model
+    
+    def get_hotspots(self):
+        """ Get hotspots of the model.
+
+            Returns
+            ----------
+            dict.
+                {impact_category (str): list (Master Obj)} .
+
+        """
+
+        return self.hotspots
+
+    def get_hotspots_by_impact_category(self, impact_category):
+        """ Get hotspots of the model, by the impact category.
+
+            Parameters
+            ----------
+            impact_category : str
+                Impact category.
+
+            Returns
+            ----------
+            list of Master Objs.
+                List of hotspot object of the model.
+                None if hotspots are not set.
+
+        """
+
+        if impact_category in self.hotspots:
+            return self.hotspots[impact_category]
+        else:
+            print("No hotspots set yet. Run hotspot analysis first.")
+
+    # ================================
+    # Methods
+    # ================================
+    def run(self, impact_category= "GWP"):
         """ Determines the hotspot of the model.
-            The hotspots are the largest group out of (a) top 20% contributors to the impact or (b) the smallest group of contributors to the 80% (or more) of GWP.
+            The hotspots are the largest group out of (a) top 20% contributors to the impact or 
+            (b) the smallest group of contributors to the 80% (or more) of the impact category specified.
 
             Parameters
             ----------
@@ -36,8 +152,6 @@ class HotSpotAnalysis:
                 Name of the model considered.
             impact_category : str
                 Impact category considered.
-            printout : bool
-                Printout the results if true.
             
             Retrurn
             -------
@@ -45,7 +159,7 @@ class HotSpotAnalysis:
                 Hotspot objects.
         """
 
-        impacts = self.project.get_model(model_name).get_impacts()
+        impacts = self.model.get_impacts()
 
         impacts_lst = []
         for key, list in impacts.items():
@@ -81,65 +195,11 @@ class HotSpotAnalysis:
                 contributions_in_hotspots += biggest_contribution
 
                 all_found = True if len(hot_spots) >= 0.2 * no_contributors and contributions_in_hotspots > 0.8 * total_impact else False
-
-            if printout:
-                print("*"*50 + "\nHOTSPOTS\n" + "*"*50)
-                for obj in hot_spots:
-                    
-                    if impact_category == 'weighted':
-                        impact_val = obj.get_impacts().get_weighted_impact()
-                    else:
-                        impact_val = obj.get_impacts().get_impact(impact_category)
-                    print(obj, "Impact ({}):".format(impact_category), impact_val)
             
-            self.set_hotspots(hot_spots, model_name)
-            hot_spots_dict = self.hotspots[model_name]
-            if hot_spots_dict == None:
-                hot_spots_dict = {impact_category: hot_spots}
-            else:
-                hot_spots_dict[impact_category] = hot_spots
-            self.hotspots[model_name] = hot_spots_dict
+            self.set_hotspots(hot_spots, impact_category)
 
             return hot_spots
-    
-    def set_hotspots(self, hotspots, model_name):
-        """ Set attribute in hotspots to identify as hotspots.
-
-            Parameters
-            ----------
-            hotspots : list of Master Objs.
-                List of hotspot object of the model.
-            model_name : str.
-                Name of the model
-
-        """
         
-        model = self.project.get_model(model_name)
-        all_items = model.get_products() + model.get_processes()
 
-        array_methods.set_value(all_items, 'is_hotspot', False)
-        array_methods.set_value(hotspots, 'is_hotspot', True)
-
-
-    def get_hotspots(self, model_name='Model_0', impact_category='GWP'):
-        """ Get hotspots of the model.
-
-            Parameters
-            ----------
-            model_name : str
-                Name of the model.
-            impact_category : str
-                Impact category.
-
-            Returns
-            ----------
-            list of Master Objs.
-                List of hotspot object of the model.
-                None if hotspots are not set.
-
-        """
-
-        if self.hotspots[model_name][impact_category] == None:
-            print("No hotspots set yet. Run hotspot analysis first.")
-        else:
-            return self.hotspots[model_name][impact_category]
+if __name__ == '__main__':
+    pass
