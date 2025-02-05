@@ -1,7 +1,7 @@
 from geopy.geocoders import Nominatim
 import pandas as pd
 
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA
+from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FERC_ZIPCODE_MAP_PATH, BA_ZIPCODE_MAP_PATH
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -39,6 +39,8 @@ class Location:
         self.country = None
         self.cfs_area = None
         self.faf_foreign = None
+        self.FERC_region = None
+        self.balancing_authority = None
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -202,6 +204,36 @@ class Location:
             return self.faf_foreign
         
         return self
+    
+    def set_ferc_region(self):
+        """ Set the Federal Energy Regulatory Commission (FERC) Region."""
+
+        df = pd.read_csv(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = int(self.get_zip())
+
+        ferc_region = df[df['zip code'] == zipcode]['FERC Region'].unique()
+
+        self.FERC_region = ferc_region[0]
+
+        if len(ferc_region) > 1:
+            print("More than one FERC region for the given zip code. {ferc_region[0]} selected.")
+            
+        return self
+    
+    def set_balancing_authority(self):
+        """ Set the Balancing Authority under the FERC region."""
+
+        df = pd.read_csv(BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = self.get_zip()
+
+        balancing_authority = df[df['zip code'] == zipcode]['balancing authority'].unique()
+
+        self.balancing_authority = balancing_authority[0]
+
+        if len(balancing_authority) > 1:
+            print("More than one balancing authority for the given zip code. {ferc_region[0]} selected.")
+            
+        return self    
 
     # ================================
     # Getters
@@ -291,6 +323,16 @@ class Location:
 
         pass #TODO we have to find a dataset for this
 
+    def get_ferc_region(self):
+        """ Set the Federal Energy Regulatory Commission (FERC) Region."""
+
+        return self.FERC_region
+
+    def get_balancing_authority(self):
+        """ Set the Federal Energy Regulatory Commission (FERC) Region."""
+
+        return self.balancing_authority
+    
 if __name__ == '__main__':
 
     # location_input = "Mexico"
