@@ -29,6 +29,8 @@ class Location:
         Name of the state the location is in.
     country : str
         Name of the country the location is in.
+    country_code : str
+        Country code from ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country code
     """
     def __init__(self):
         self.location_name = None
@@ -73,6 +75,7 @@ class Location:
             location.set_city(location_data)
             location.set_state(location_data)
             location.set_country(location_data)
+            location.set_country_code(location_data)
             location.set_cfs_area()
             location.set_faf_foreign_region(string)
 
@@ -168,7 +171,22 @@ class Location:
             self.country = None
 
         return self
+    
+    def set_country_code(self, geopy_location_photon):
+        """ Set the country code of the location.
 
+            Parameters
+            ----------
+            geopy_location_photon : <class 'geopy.location.Location'>
+                Geopy location object from Photon
+        """
+        try:
+            self.country_code = geopy_location_photon.raw['address']['country_code'].upper()
+        except:
+            self.country_code = None
+
+        return self
+    
     def set_cfs_area(self):
         """ Set the country of the location.
         """    
@@ -298,6 +316,16 @@ class Location:
         """
         return self.country
 
+    def get_country_code(self):
+        """ Retrieve the country code of the location.
+
+            Returns
+            -------
+            str
+                Country code from IS) 3166-1.
+        """
+        return self.country_code
+    
     def get_egrid(self):
 
         #TODO we have to find a dataset for this

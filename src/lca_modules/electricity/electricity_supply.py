@@ -1,5 +1,7 @@
-from utilities.data_imports.csv import CSV_Importer
+
+from lca_modules.electricity.data_sources import NATIONAL_DATA, REGIONAL_DATA, LOCAL_DATA
 from lca_modules.impacts.impacts import Impacts
+from utilities.data_imports.csv import CSV_Importer
 
 
 __author__ = ["POD/LCA Team"]
@@ -16,8 +18,8 @@ class ElectricitySupplyAuthority:
         ----------
         name : str
             The name of the electricity supply authority.
-        regional_resolution : str
-            Regional resolution fo the electricity supply.
+        spatial_resolution : str
+            Spatial resolution fo the electricity supply.
                 'National': US average
                 'Regional': FERC region
                 'Local': Balancing Authority.
@@ -33,19 +35,28 @@ class ElectricitySupplyAuthority:
 
     def __init__(self):
         self.name = None
-        self.regional_resolution = None
+        self.spatial_resolution = None
+        self.region_name = None
         self.location = None
         self.generation_mix = None
         self.consumption_mix = None
         self.year = None
         self.impacts = None
 
+
+    def __str__(self):
+        str = "="*75 + "\n" + f"Electricity Supply: {self.get_name()}\n" + "="*75 + "\n"
+        str += f"Spatial resolution: {self.get_spatial_resolution()}\n"
+        str += f"Region: {self.get_region_name()}\n"
+        str += f"Year: {self.get_year()}\n"
+
+        return str
+
     # TODO: [Q] Is there usefulness to keeping the consumption mix and generation mix data
     #       [Q] Is it prefered to run the calcs here (with mixes and raw impacts from generations) from base level rather than directly getting the impact factors from the tables provided
-    #       [Q] 
 
     @classmethod
-    def from_location(cls, location, regional_resolution):
+    def from_location(cls, location, regional_resolution='National'):
         """ Create a new ElectricitySupplyAuthority object with the given location 
         
             Parameters
@@ -67,8 +78,7 @@ class ElectricitySupplyAuthority:
         elec_supp_authority = cls()
 
         elec_supp_authority.set_location(location)
-        elec_supp_authority.set_regional_resolution(regional_resolution)
-        elec_supp_authority.set_impacts()
+        elec_supp_authority.set_spatial_resolution(regional_resolution)
 
         return elec_supp_authority
     
@@ -88,7 +98,7 @@ class ElectricitySupplyAuthority:
 
         return self
     
-    def set_regional_resolution(self, regional_resolution):
+    def set_spatial_resolution(self, regional_resolution):
         """ Set the set_regional resolution of the electricity supply authority.
         
             Parameters
@@ -101,8 +111,22 @@ class ElectricitySupplyAuthority:
             
         """
 
-        self.regional_resolution = regional_resolution
+        self.spatial_resolution = regional_resolution
+        self.set_impacts(update_region=True)
 
+        return self
+    
+    def set_region_name(self, name):
+        """ Set the name of the region.
+        
+            Parameters
+            ----------
+            name : str
+                Name of the region based on the regional resolution
+        """
+
+        self.region_name = name
+        
         return self
     
     def set_location(self, location):
@@ -128,7 +152,7 @@ class ElectricitySupplyAuthority:
         """
 
         self.consumption_mix = consumption_mix
-        self.set_impacts()
+        self.set_impacts(update_mix=True)
 
         return self
     
@@ -142,44 +166,70 @@ class ElectricitySupplyAuthority:
         """
 
         self.year = year
-        self.set_impacts()
+        self.set_impacts(update_year=True)
 
         return self
     
-    def set_impacts(self):
+    def set_impacts(self, update_region=False, update_mix=False, update_year=False):
         """ Set the impacts of the electricity supply authority.
     
         """
-        #TODO: move references to the data files
-        REGIONAL_DATA = "data\\FERC_consumption_impacts.csv"
-        LOCAL_DATA = "data\\BA_consumption_impacts.csv"
 
-        region_type = self.get_set_regional_resolution()
-        if region_type== 'National':
-            pass
-        elif region_type == 'Regional':
-            self.get_location().set_ferc_region()
-            region = self.get_location().get_ferc_region()
-            df = CSV_Importer.import_as_pandas(REGIONAL_DATA)
+        if update_region:
+            region_type = self.get_spatial_resolution()
 
-            data_tmp = df[df['Region'] == region]
-            impact = Impacts.from_parent(self)
-            # TODO: create impact object
+            if region_type== 'National':
+                country = self.get_location().get_country()
+                country_code = self.get_location().get_country_code()
+                df = CSV_Importer.import_as_pandas(NATIONAL_DATA)
 
-        elif region_type == 'Local':
-            self.get_location().set_balancing_authority()
-            area = self.get_location().get_balancing_authority()
-            df = CSV_Importer.import_as_pandas(LOCAL_DATA)
+                if country_code in df['Country code'].values:
+                    impact_data_dict = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns').squeeze().to_dict()
+                else:
+                    raise KeyError(f"{country} ({country_code}) not in the dataset provided in file: '{NATIONAL_DATA}.'")
+                
+                self.set_region_name(country + '(' + country_code + ')')
 
-            data_tmp = df[df['Area'] == area]
-            impact = Impacts.from_parent(self)
-            # TODO: create impact object
-        else:
-            raise ValueError("Regional resolution of electricity supply is not recognized.")
+            elif region_type == 'Regional':
+                self.get_location().set_ferc_region() # TODO: make it possible to pass this method as a variable
+                region = self.get_location().get_ferc_region()
+                df = CSV_Importer.import_as_pandas(REGIONAL_DATA)
+
+                if region in df['Region'].values:
+                    impact_data_dict = df[df['Region'] == region].drop('Region', axis='columns').squeeze().to_dict()
+                else:
+                    raise KeyError(f"{region} not in the dataset provided in file: '{REGIONAL_DATA}.'")
+                
+                self.set_region_name(region)
+                
+            elif region_type == 'Local':
+                self.get_location().set_balancing_authority() # TODO: make it possible to pass this method as a variable
+                area = self.get_location().get_balancing_authority()
+                df = CSV_Importer.import_as_pandas(LOCAL_DATA)
+
+                if area in df['Area'].values:
+                    impact_data_dict = df[df['Area'] == area].drop('Area', axis='columns').squeeze().to_dict()
+                else:
+                    raise KeyError(f"{area} not in the dataset provided in file: '{LOCAL_DATA}.'")
+                
+                self.set_region_name(area)
+                
+            else:
+                raise ValueError("Regional resolution of electricity supply is not recognized.")
         
+            impact_obj = Impacts.from_parent(self)
+            impact_obj.update_impact_qty(impact_data_dict)
 
-        # TODO: calculate the impacts based on the consumption mix and year (defaulting values when not set)
+            self.impacts = impact_obj
 
+        if update_mix:
+            pass
+            # TODO: calculate the impacts based on the consumption year (defaulting values when not set)
+
+        if update_year:
+            pass
+            # TODO: calculate the impacts based on the consumption mix (defaulting values when not set)
+        
         return self
     
     # ================================
@@ -196,8 +246,8 @@ class ElectricitySupplyAuthority:
 
         return self.name
     
-    def get_set_regional_resolution(self):
-        """ Get the set regional_resolution of the electricity supply authority.
+    def get_spatial_resolution(self):
+        """ Get the set regional resolution of the electricity supply authority.
         
             Returns
             -------
@@ -205,7 +255,18 @@ class ElectricitySupplyAuthority:
                 The set_regional_resolution of the electricity supply.
         """
 
-        return self.regional_resolution
+        return self.spatial_resolution
+    
+    def get_region_name(self):
+        """ Get the name of the region, corresponding to the regional resolution.
+        
+            Returns
+            -------
+            str
+                Name of the region
+        """
+
+        return self.region_name
 
     def get_location(self):
         """ Get the location of the electricity supply authority.
@@ -255,8 +316,11 @@ if __name__ == '__main__':
     
     from lca_modules.location.location import Location
 
-    my_factory = Location.from_str("Seattle")
+    my_factory = Location.from_str("98102")
 
-    electricity_supplier = ElectricitySupplyAuthority.from_location(my_factory, 'Regional')
+    electricity_supplier = ElectricitySupplyAuthority.from_location(my_factory, 'National')
+    electricity_supplier.set_name("my electricity")
+    print(electricity_supplier)
 
     impacts = electricity_supplier.get_impacts()
+    print(impacts)
