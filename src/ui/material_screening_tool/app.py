@@ -242,11 +242,11 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         label = Label(input_frame_plot_type, bg=self.plotter_bg_color, fg='white', text="Plot type", font = ('Helvetica', 12,'bold'))
         label.pack(side=LEFT, padx=(0, 10))
 
-        dropdown_plot = Combobox(input_frame_plot_type, values=['Bar chart 1', 'Bar chart 2', 'Bar chart 3', 'Radar plot', 'Radar plot (normalized)'])
-        dropdown_plot.pack(side=RIGHT, fill=BOTH)
-        dropdown_plot.current(0)
+        self.dropdown_plot = Combobox(input_frame_plot_type, values=['Bar chart 1', 'Bar chart 2', 'Bar chart 3', 'Radar plot'])
+        self.dropdown_plot.pack(side=RIGHT, fill=BOTH)
+        self.dropdown_plot.current(0)
         self.allow_plot_multiple_impact_categories = False
-        dropdown_plot.bind("<<ComboboxSelected>>", lambda x:self.replace_figure(plot_frame, x.widget.get()))
+        self.dropdown_plot.bind("<<ComboboxSelected>>", lambda x:self.replace_figure(plot_frame, x.widget.get()))
 
         # impact category pick
         input_frame_impact_cat = Frame(plot_frame)
@@ -284,7 +284,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
             self.plot_data["Model_0"][impact] = {'A1':0.0, 'A2':0.0, 'A3':0.0}
         
         # plot
-        canvas_plot = self.create_figure(plot_frame, self.get_impact_selection(), dropdown_plot.get())
+        canvas_plot = self.create_figure(plot_frame, self.get_impact_selection(), self.dropdown_plot.get())
 
         return plot_frame, canvas_plot
     

@@ -3,6 +3,14 @@ from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 from pandas import read_csv
 
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu; mhtaba@uw.edu"
+__version__ = "0.1.0"
+
+
 class CSV_Importer:
 
     def import_as_pandas(file_path, headers=None, multipliers=None):

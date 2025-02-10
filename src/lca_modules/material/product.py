@@ -63,6 +63,10 @@ class Product(Master):
         self.qty = qty
         self.weight = self.qty * self.density
 
+        if self.get_transporter() is not None:
+            transporter = self.get_transporter()
+            transporter.set_transported_weight()
+
         self.update_impacts()
 
         return self
@@ -105,12 +109,13 @@ class Product(Master):
         
             Parameters
             ----------
-            float
+            density : float
                 Denisty of product (mass per unit mesurement of product).
 
             Raises
             ------
-            TypeError : Density must be a numerical value.
+            TypeError
+                Density must be a numerical value.
 
         """
 

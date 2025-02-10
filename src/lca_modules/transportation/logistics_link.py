@@ -60,10 +60,8 @@ class Link:
         self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project)
         self.unit_conversion = 1.60934
 
-
     def compute_impact(self):
-        """ 
-        compute the impaact of the transportation link.
+        """ compute the impaact of the transportation link.
 
             Returns
             -------
@@ -90,8 +88,7 @@ class Link:
 
 
     def get_qty (self):
-        """ 
-        Retrieve the quantity of the transportation link.
+        """ Retrieve the quantity of the transportation link.
 
             Returns
             -------
@@ -101,8 +98,7 @@ class Link:
         return self.qty
 
     def get_material (self):
-        """ 
-        Retrieve the material name of the transportation link.
+        """ Retrieve the material name of the transportation link.
 
             Returns
             -------
