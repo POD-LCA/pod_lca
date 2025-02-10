@@ -67,6 +67,7 @@ class Scenario:
         data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
         sctg = data_material[data_material["material"] == self.material].iloc[0, 1]
         sctg = int(str(sctg)[:digit])
+
         return sctg
     
     
@@ -75,58 +76,33 @@ class Scenario:
         process the data for the US scenarios.
 
         """
-        cfs = self.project.get_subdataset("cfs_2017")
+        cfs = self.project.get_subdataset("cfs_2017_cleaned")
         emission = self.project.get_subdataset("Emission")
-        cfs = cfs.drop(columns=["SHIPMT_ID", "QUARTER", "SHIPMT_VALUE", "TEMP_CNTL_YN", "EXPORT_CNTRY",
-                                "HAZMAT", "WGT_FACTOR", "ORIG_MA", "ORIG_CFS_AREA", "DEST_MA", "DEST_CFS_AREA"])
-
         sctg = self.get_sctg(2)
-        df = cfs[cfs["SCTG"] == str(sctg)].copy()
-        quartiles = df["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
-
-        def assign_quartile(x, q1, q2, q3):
-            if x <= q1:
-                return 'Q1'
-            elif x <= q2:
-                return 'Q2'
-            elif x <= q3:
-                return 'Q3'
-            else:
-                return 'Q4'
-
-        df['quartile'] = df["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
-
-        quartile_mapping = {
-            "Local": df[df['quartile'] == 'Q1'],
-            "Regional": df[df['quartile'] == 'Q2'],
-            "Regional_c": df[df['quartile'] == 'Q3'],
-            "National": df[df['quartile'] == 'Q4']
-        }
+        cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
         
-        def process_scenario(df, emission, mode, shipping_org, shipping_dest, eff):
+        if self.mode is not None:
+            cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode(0) [self.mode.get_name()])]
 
-            df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
-            if shipping_org is not None:
-                df = df[df["ORIG_STATE"] == shipping_org.get_cfs_area()]
+        elif shipping_org is not None:
+            cfs = cfs[cfs["ORIG_STATE"] == shipping_org.get_cfs_area()]
 
-            if shipping_dest is not None:
-                df = df[df["DEST_STATE"] == shipping_dest.get_cfs_area()]
+        elif shipping_dest is not None:
+            cfs = cfs[cfs["DEST_STATE"] == shipping_dest.get_cfs_area()]
 
-            if mode is not None:
-                df = df[(df["mode_name"] == self.mode.get_name()) & (df["eff"] == eff)]
-                    
-            if df.empty:
-                #print("There is no shipping for this information, the value shows the average of shipping based on CFS")
-                df = pd.merge(emission, df, left_on="mode_cfs", right_on="MODE")
-
-            impact_cols = df.columns[5:10]
-            df[impact_cols] = df[impact_cols].multiply(df["SHIPMT_DIST_ROUTED"], axis=0)
+        else:
             
-            return df[impact_cols].mean().to_dict()
+            cfs_mapping = self.mode.get_cfs_mode()[1]
+            reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
+            cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
+            merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
+            merged_data = merged_data["eff" == self.mode.get_efficiency()]
+            merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
 
-        for scenario_name, scenario_df in quartile_mapping.items():
-            impact = process_scenario(scenario_df, emission, self.mode, self.shipping_org, self.shipping_dest, None if self.mode is None else self.mode.get_efficiency())
-            setattr(self, scenario_name.lower(), impact)
+            self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
+            self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
+            self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
+            self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
 
 
     def pre_global_processing (self):
@@ -157,11 +133,14 @@ class Scenario:
         if self.mode_domestic is not None:
             faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
 
+        if self.mode is not None:
+            faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+
         # Truck------------------------------------
         if self.mode is not None: 
+
             if self.mode.get_name() == "Truck":
                 
-                faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
                 distance = faf["avr_dom_dist_km"].mean()
                 
                 total_impacts = {}
@@ -174,8 +153,7 @@ class Scenario:
                 self.na = total_impacts
 
         #Rail------------------------------------
-        if self.mode is not None: 
-            if self.mode.get_name() == "Rail":
+            elif self.mode.get_name() == "Rail":
                 distance = cfaf["Average_Distance_per_Shipment"].mean()
                 
                 total_impacts = {}
@@ -186,8 +164,7 @@ class Scenario:
                 self.na = total_impacts
 
         #Water------------------------------------
-        if self.mode is not None: 
-            if self.mode.get_name() == "Water":
+            elif self.mode.get_name() == "Water":
 
                 domestic_total = {}
                 foreign_total = {}
@@ -215,8 +192,7 @@ class Scenario:
                 self.global_ = {key: domestic_total[key] + foreign_total[key] for key in domestic_total}
 
         #Air------------------------------------
-        if self.mode is not None: 
-            if self.mode.get_name() == "Air":
+            elif self.mode.get_name() == "Air":
 
                 if self.shipping_dest is not None:
                     dest_location = self.shipping_dest.get_cordinates()
@@ -235,7 +211,11 @@ class Scenario:
                     total_impacts[key] = value * distance
 
                 self.global_ = total_impacts
-
+        
+        else:
+            
+            self.na = 
+            self.global_ =
 
     def scenario_impact (self):
 

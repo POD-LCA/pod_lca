@@ -119,9 +119,42 @@ def cfaf(output_path_cfaf):
 
     return cfaf2017
 
+
+def cfs (input_path, output_path):
+
+    cfs = pd.read_csv (input_path)
+    cfs = cfs.drop(columns=["SHIPMT_ID", "QUARTER", "SHIPMT_VALUE", "TEMP_CNTL_YN", "EXPORT_CNTRY",
+                            "HAZMAT", "WGT_FACTOR", "ORIG_MA", "ORIG_CFS_AREA", "DEST_MA", "DEST_CFS_AREA"])
+    
+    quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
+
+    def assign_quartile(x, q1, q2, q3):
+        if x <= q1:
+            return 'Q1'
+        elif x <= q2:
+            return 'Q2'
+        elif x <= q3:
+            return 'Q3'
+        else:
+            return 'Q4'
+
+    cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
+
+    cfs.to_csv(output_path, index=False)
+    return cfs
+
+
+
+
+
+
 input_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561.csv"
 output_path_faf = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\FAF561_cleaned.csv"
 output_path_cfaf= r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\transportation_dataset\cfaf_cleaned.csv"
 
 #cleaning_faf(input_path_faf, output_path_faf)
-cfaf(output_path_cfaf)
+
+input_path = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset\cfs_2017.csv"
+output_path = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset\cfs_2017_cleaned.csv"
+
+cfs(input_path, output_path)

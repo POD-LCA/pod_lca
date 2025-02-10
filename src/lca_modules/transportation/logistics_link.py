@@ -111,3 +111,15 @@ class Link:
         """
 
         return self.material
+
+    def get_travel_dist (self):
+        """ 
+        Retrieve the transportation distance of the transportation link.
+
+            Returns
+            -------
+            float
+                transportation distance of the transportation link.
+        """
+
+        return self.travel_dist
