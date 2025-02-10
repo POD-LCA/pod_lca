@@ -101,7 +101,7 @@ class ProjectLogisticManager:
         Retrieve the impact of the project.
         """
 
-        return {k: round(v, 2) for k, v in self.impact.items()}
+        return {k: round(v, 4) for k, v in self.impact.items()}
 
     def get_links (self):
         """

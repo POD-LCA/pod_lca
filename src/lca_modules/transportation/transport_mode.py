@@ -87,11 +87,11 @@ class TransportMode:
         Retrieve the CFS mode code of the transportation mode.
         """
 
-        cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Water": [8, 9, 10, 101], "Air": [11]}
+        cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [8, 9, 10, 101], "Air": [11]}
         if self.mode_name in cfs_mapping:
             self.cfs_mode = cfs_mapping[self.mode_name]
 
-        return self.cfs_mode, cfaf_mapping
+        return self.cfs_mode, cfs_mapping
 
 
 if __name__ == '__main__':

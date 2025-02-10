@@ -82,27 +82,27 @@ class Scenario:
         cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
         
         if self.mode is not None:
-            cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode(0) [self.mode.get_name()])]
+            cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
 
-        elif shipping_org is not None:
+        if self.shipping_org is not None:
             cfs = cfs[cfs["ORIG_STATE"] == shipping_org.get_cfs_area()]
 
-        elif shipping_dest is not None:
+        if self.shipping_dest is not None:
             cfs = cfs[cfs["DEST_STATE"] == shipping_dest.get_cfs_area()]
 
-        else:
             
-            cfs_mapping = self.mode.get_cfs_mode()[1]
-            reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
-            cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
-            merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
-            merged_data = merged_data["eff" == self.mode.get_efficiency()]
-            merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
+        cfs_mapping = self.mode.get_cfs_mode()[1]
+        reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
+        cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
+        merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
 
-            self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
-            self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
-            self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
-            self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
+        merged_data = merged_data[ merged_data["eff"] == self.mode.get_efficiency()]
+        merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
+
+        self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
+        self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
+        self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
+        self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
 
 
     def pre_global_processing (self):
@@ -110,21 +110,16 @@ class Scenario:
         process the data for the North America and Global scenarios.
         
         """
-        #reading the data
         emission = self.project.get_subdataset("Emission")
         faf = self.project.get_subdataset("FAF561_cleaned")
         cfaf = self.project.get_subdataset("cfaf_cleaned")
-        pod_lca_dataset = self.project.get_subdataset("PODlLDA_transport_dataset")
         marine = self.project.get_subdataset("Marine_cleaned")
-
-        #filtering the data by sctg code
         sctg = self.get_sctg(2)
         
         faf = faf[faf["sctg2"] == sctg].copy()
         cfaf = cfaf[cfaf["SCTG_2digits"] == sctg].copy()
         
         
-        #filtering the data by location if is defined
         if self.shipping_dest is not None:
             pass
             # location = self.shipping_dest.get_faf_domestic_region()
@@ -214,8 +209,8 @@ class Scenario:
         
         else:
             
-            self.na = 
-            self.global_ =
+            self.na = None
+            self.global_ = None
 
     def scenario_impact (self):
 
