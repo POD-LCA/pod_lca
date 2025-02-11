@@ -1,7 +1,7 @@
 from geopy.geocoders import Nominatim
 import pandas as pd
-
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA
+import json
+from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -39,6 +39,7 @@ class Location:
         self.country = None
         self.cfs_area = None
         self.faf_foreign = None
+        self.faf_domestic = None
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -73,6 +74,7 @@ class Location:
             location.set_country(location_data)
             location.set_cfs_area()
             location.set_faf_foreign_region(string)
+            location.set_faf_domestic_region()
 
             return location
 
@@ -203,6 +205,22 @@ class Location:
         
         return self
 
+    def set_faf_domestic_region(self):
+        """ Set the FAF region (domestic) of the location.
+        """
+        try:
+            with open(FAF_DOMESTIC_REGION) as f:
+                data = json.load(f)
+            state  = self.get_state()
+            
+            if state in data.keys():
+                self.faf_domestic = data[state]
+                return self.faf_domestic
+        except:
+            self.faf_domestic = None
+        
+        return self
+
     # ================================
     # Getters
     # ================================
@@ -288,25 +306,21 @@ class Location:
         return self.faf_foreign
 
     def get_faf_domestic_region(self):
-
-        pass #TODO we have to find a dataset for this
+        """ Set the FAF region (domestic) of the location.
+        """
+        return self.faf_domestic
 
 if __name__ == '__main__':
 
-    # location_input = "Mexico"
-    # location_obj = Location(location_input)
-    
-    # print (location_obj.get_faf_foreign_region(location_input))
+    location_input = "7530 37th ave NE, Seattle, WA 98115"
+    location_obj = Location.from_str(location_input)
 
-    location_obj = Location.from_str("Architecture Hall, Washington")
-    print(location_obj)
 
-    # location_input = 98102
-    # location_obj = Location(location_input)
-
-    # print(f"State: {location_obj.get_state()}")
-    # print(f"City: {location_obj.get_city()}")
-    # print(f"Zipcode: {location_obj.get_zip()}")
-    # print(f"Coordinates: {location_obj.get_cordinates()}")
-    # print (f"Country: {location_obj.get_country()}")
-    # print (f"CFS Area: {location_obj.get_cfs_area()}")
+    print(f"State: {location_obj.get_state()}")
+    print(f"City: {location_obj.get_city()}")
+    print(f"Zipcode: {location_obj.get_zip()}")
+    print(f"Coordinates: {location_obj.get_cordinates()}")
+    print (f"Country: {location_obj.get_country()}")
+    print (f"CFS Area: {location_obj.get_cfs_area()}")
+    print (f"FAF Foreign Region: {location_obj.get_faf_foreign_region()}")
+    print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")

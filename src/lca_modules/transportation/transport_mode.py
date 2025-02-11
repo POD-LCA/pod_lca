@@ -76,7 +76,7 @@ class TransportMode:
         Retrieve the FAF mode code of the transportation mode.
         """
 
-        faf_mapping = {"Truck": 1 , "Rail": 2, "Water": 3, "Air": 4}
+        faf_mapping = {"Truck": 1 , "Rail": 2, "Barge": 3, "Ocean": 3, "Air": 4}
         if self.mode_name in faf_mapping:
             self.faf_mode = faf_mapping[self.mode_name]
 
