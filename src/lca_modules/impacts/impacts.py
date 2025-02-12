@@ -74,7 +74,6 @@ class Impacts:
     # ========================
     # Getters and Setters
     # ========================
-
     def set_parent(self, parent):
         """ Set the parent object.
         
@@ -102,7 +101,6 @@ class Impacts:
     # ========================
     # Methods
     # ========================
-
     def update_impact_qty(self, impacts):
         """ Update the impact quantities.
         

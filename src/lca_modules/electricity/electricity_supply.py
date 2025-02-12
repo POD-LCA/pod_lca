@@ -1,5 +1,7 @@
 
 from lca_modules.electricity.data_sources import NATIONAL_DATA, REGIONAL_DATA, LOCAL_DATA
+from lca_modules.electricity.electricity_technologies import ELECTRICITY_TECHNOLOGIES
+from lca_modules.electricity.processs_cambium import CambiumData
 from lca_modules.impacts.impacts import Impacts
 from utilities.data_imports.csv import CSV_Importer
 
@@ -225,10 +227,17 @@ class ElectricitySupplyAuthority:
         if update_mix:
             pass
             # TODO: calculate the impacts based on the consumption year (defaulting values when not set)
+            # TODO: generating mix impacts from NETL data
 
-        if update_year:
-            pass
-            # TODO: calculate the impacts based on the consumption mix (defaulting values when not set)
+        if update_year: # TODO: test with different years
+            region_type = self.get_spatial_resolution()
+            year = self.get_year()
+            temporal_data = CambiumData.from_regional_resolution(region_type)
+
+            energy_mix = temporal_data.get_mix(year, ELECTRICITY_TECHNOLOGIES) # TODO: setting scenario
+
+            self.set_consumption_mix(energy_mix)
+
         
         return self
     
@@ -324,3 +333,5 @@ if __name__ == '__main__':
 
     impacts = electricity_supplier.get_impacts()
     print(impacts)
+
+    electricity_supplier.set_year(2028)

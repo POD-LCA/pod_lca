@@ -1,6 +1,7 @@
 CFS_DATA_PATH = "data\\location_cfs.csv"
 FERC_ZIPCODE_MAP_PATH = "data\\FERC_zip_mapping.csv"
 BA_ZIPCODE_MAP_PATH = "data\\BA_zip_mapping.csv"
+GEA_ZIPCODE_MAP_PATH = "data\\GEA_zip_mapping.csv"
 
 FAF_DATA = {"Canada": 801, 
             "Mexico": 802, 
