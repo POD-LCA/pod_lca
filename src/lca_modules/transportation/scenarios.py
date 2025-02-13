@@ -76,38 +76,42 @@ class Scenario:
         process the data for the US scenarios.
 
         """
-        cfs = self.project.get_subdataset("cfs_2017_cleaned")
-        emission = self.project.get_subdataset("Emission")
-        sctg = self.get_sctg(2)
-        cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
-        
         try:
-            if self.mode is not None:
-                cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
+            cfs = self.project.get_subdataset("cfs_2017_cleaned")
+            emission = self.project.get_subdataset("Emission")
+            sctg = self.get_sctg(2)
+            cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
+            
+            try:
+                if self.mode is not None:
+                    cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
 
-            if self.shipping_dest is not None:
-                cfs = cfs[cfs["DEST_STATE"] == shipping_dest.get_cfs_area()]
+                if self.shipping_dest is not None:
+                    cfs = cfs[cfs["DEST_STATE"] == shipping_dest.get_cfs_area()]
 
-            if self.shipping_org is not None:
-                cfs = cfs[cfs["ORIG_STATE"] == shipping_org.get_cfs_area()]
+                if self.shipping_org is not None:
+                    cfs = cfs[cfs["ORIG_STATE"] == shipping_org.get_cfs_area()]
 
-                #if cfs.empty:
+                    #if cfs.empty:
+            except:
+                pass
+
+                
+            cfs_mapping = self.mode.get_cfs_mode()[1]
+            reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
+            cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
+            merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
+
+            merged_data = merged_data[ merged_data["eff"] == self.mode.get_efficiency()]
+            merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
+
+            self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
+            self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
+            self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
+            self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
+
         except:
             pass
-
-            
-        cfs_mapping = self.mode.get_cfs_mode()[1]
-        reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
-        cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
-        merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
-
-        merged_data = merged_data[ merged_data["eff"] == self.mode.get_efficiency()]
-        merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
-
-        self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
-        self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
-        self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
-        self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
 
 
     def pre_global_processing (self):
@@ -124,24 +128,39 @@ class Scenario:
         faf = faf[faf["sctg2"] == sctg].copy()
         cfaf = cfaf[cfaf["SCTG_2digits"] == sctg].copy()
         
-        try:
-            if self.shipping_dest is not None:
-                location = self.shipping_dest.get_faf_domestic_region()
-                faf = faf[faf["dms_dest"].isin(location)]
 
-            if self.shipping_org is not None:
-                location = self.shipping_org.get_faf_foreign_region()
-                faf = faf[faf["fr_orig"] == location]
-            else:
-                faf = faf[faf [ "fr_orig"].isin([801, 802])]
+        if self.shipping_dest is not None:
+            fafc = faf.copy()
+            location = self.shipping_dest.get_faf_domestic_region()
+            faf = faf[faf["dms_dest"].isin(location)]
+            if faf.empty:
+                faf = fafc
+                print ("The value shows the avrage of the US")
 
-            if self.mode_domestic is not None:
-                faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
+        if self.shipping_org is not None:
+            fafc = faf.copy()
+            location = self.shipping_org.get_faf_foreign_region()
+            faf = faf[faf["fr_orig"] == location]
+            if faf.empty:
+                faf = fafc[fafc [ "fr_orig"].isin([801, 802])]
+                print ("The value shows the avrage of Canada and Mexico")
 
-            if self.mode is not None:
-                    faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
-        except:
-            pass
+        if self.mode_domestic is not None:
+            fafc = faf.copy()
+            faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
+            
+            if faf.empty:
+                faf = fafc
+                print ("No domestic mode found in faf, value shows the avarage distance of the modes")
+
+        if self.mode is not None:
+            fafc = faf.copy()
+            faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+            
+            if faf.empty:
+                faf = fafc
+                print ("No mode found in faf, value shows the avarage distance of the mode")
+                
 
         # Truck------------------------------------
         if self.mode is not None: 
@@ -221,9 +240,7 @@ class Scenario:
                     self.global_ = total_impacts
         
                 else:
-                    
-                    self.na = None
-                    self.global_ = None
+                    print ("Mode not found")
 
             except:
                 pass

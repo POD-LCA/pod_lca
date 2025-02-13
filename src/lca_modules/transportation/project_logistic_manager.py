@@ -39,9 +39,9 @@ class ProjectLogisticManager:
     def __init__(self, name, shipping_dest, data_folder, shipping_org):
 
         self.name = name
-        self.shipping_dest = None if shipping_dest is None else Location(shipping_dest)
+        self.shipping_dest = None if shipping_dest is None else Location.from_str (shipping_dest)
         self.data_folder = data_folder
-        self.shipping_org = None if shipping_org is None else Location(shipping_org)
+        self.shipping_org = None if shipping_org is None else Location.from_str (shipping_org)
         self.links = []
         self.impact = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
         self.subdataset = {}

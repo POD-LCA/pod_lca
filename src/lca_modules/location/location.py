@@ -1,7 +1,8 @@
 from geopy.geocoders import Nominatim
+from shapely.geometry import Point, Polygon
 import pandas as pd
 import json
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION
+from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION, FAF_BOUNDARIES
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -73,7 +74,7 @@ class Location:
             location.set_state(location_data)
             location.set_country(location_data)
             location.set_cfs_area()
-            location.set_faf_foreign_region(string)
+            location.set_faf_foreign_region()
             location.set_faf_domestic_region()
 
             return location
@@ -182,27 +183,33 @@ class Location:
                 elif state in df["State_Initial"].values:
                     self.cfs_area = df[df['State_Initial'] == state].iloc[0, 2]
                 else:
+                    print (f"State {state} not found in CFS data")
                     self.cfs_area = None
             else:
                 self.cfs_area = None
 
             return self.cfs_area
 
-        except:
+        except Exception as e:
+            print (f"Error in set CFS area: {e}")
             self.cfs_area = None
 
         return self
 
-    def set_faf_foreign_region(self, location):
+    def set_faf_foreign_region(self):
         """ Set the FAF region (foreign) of the location.
         """  
-        #TODO: need a more comprehensive way to do this (e.g., consider bounding boxes of the regions and check if location cooridinate is inside)
-        if location in FAF_DATA.keys(): 
-            
-            self.faf_foreign = FAF_DATA[location]
 
-            return self.faf_foreign
-        
+        point = Point(self.get_cordinates())
+        BOUNDARIES = {key: Polygon(coords) for key, coords in FAF_BOUNDARIES.items()}
+
+        for region, polygon in BOUNDARIES.items():
+            if polygon.contains(point):
+                self.faf_foreign = FAF_DATA[region]
+                print (f"Region: {region}")
+                return self
+
+        self.faf_foreign = 803 #rest of americas
         return self
 
     def set_faf_domestic_region(self):
@@ -312,7 +319,7 @@ class Location:
 
 if __name__ == '__main__':
 
-    location_input = "7530 37th ave NE, Seattle, WA 98115"
+    location_input = "Canada"
     location_obj = Location.from_str(location_input)
 
 
