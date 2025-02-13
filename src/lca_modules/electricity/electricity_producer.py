@@ -11,18 +11,19 @@ class ElectricityProducer:
     def __init__(self):
         self.name = None
         self.energy_source = None
-        self.location = None
         self.year = None
         self.impacts = None
 
     @classmethod
-    def from_location(cls, location):
+    def from_technology_year(cls, technology, year):
         """ Create a new ElectricityProducer object with the given location 
         
             Parameters
             ----------
-            location : Location Obj.
-                The location of the electricity producer.
+            technology : str.
+                The name of the electricity technology.
+            year : int
+                The year of electricity production.
             
             Returns
             -------
@@ -32,7 +33,8 @@ class ElectricityProducer:
 
         elec_producer = cls()
 
-        elec_producer.set_location(location)
+        elec_producer.set_energy_source(technology)
+        elec_producer.set_year(year)
         elec_producer.set_impacts()
 
         return elec_producer
@@ -40,7 +42,6 @@ class ElectricityProducer:
     # ================================
     # Setters
     # ================================
-
     def set_name(self, name):
         """ Set the name of the electricity producer.
         
@@ -64,19 +65,6 @@ class ElectricityProducer:
         """
 
         self.energy_source = energy_source
-
-        return self
-    
-    def set_location(self, location):
-        """ Set the location of the electricity producer.
-        
-            Parameters
-            ----------
-            location : Location Obj.
-                The location of the electricity producer.
-        """
-
-        self.location = location
 
         return self
     
@@ -134,17 +122,6 @@ class ElectricityProducer:
         """
 
         return self.energy_source
-    
-    def get_location(self):
-        """ Get the location of the electricity producer.
-        
-            Returns
-            -------
-            Location Obj.
-                The location of the electricity producer.
-        """
-
-        return self.location
     
     def get_year(self):
         """ Get the year of the electricity producer.

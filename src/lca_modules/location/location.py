@@ -1,7 +1,7 @@
 from geopy.geocoders import Nominatim
 import pandas as pd
 
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FERC_ZIPCODE_MAP_PATH, BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH
+from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -42,8 +42,9 @@ class Location:
         self.cfs_area = None
         self.faf_foreign = None
         self.ferc_region = None
-        self.balancing_authority = None
+        self.ferc_balancing_authority = None
         self.cambium_gea_region = None
+        self.reeds_balancing_authority = None
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -229,6 +230,8 @@ class Location:
 
         df = pd.read_csv(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = int(self.get_zip())
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
 
         ferc_region = df[df['zip code'] == zipcode]['FERC Region'].unique()
 
@@ -239,28 +242,32 @@ class Location:
             
         return self
     
-    def set_balancing_authority(self):
-        """ Set the Balancing Authority under the FERC region."""
+    def set_ferc_balancing_authority(self):
+        """ Set the Balancing Authority under the Federal Energy Regulatory Commission (FERC) region."""
 
-        df = pd.read_csv(BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = pd.read_csv(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
 
         balancing_authority = df[df['zip code'] == zipcode]['balancing authority'].unique()
 
-        self.balancing_authority = balancing_authority[0]
+        self.ferc_balancing_authority = balancing_authority[0]
 
         if len(balancing_authority) > 1:
             print("More than one balancing authority for the given zip code. {balancing_authority[0]} selected.")
             
         return self
     
-    def set_gea_region(self):
+    def set_cambium_gea_region(self):
         """ Set the Cambium Generation and Emissions Assessment (GEA) region."""
 
         df = pd.read_csv(GEA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
 
-        cambium_gea_region = df[df['zip code'] == zipcode]['balancing authority'].unique()
+        cambium_gea_region = df[df['zip code'] == zipcode]['gea'].unique()
 
         self.cambium_gea_region = cambium_gea_region[0]
 
@@ -268,7 +275,23 @@ class Location:
             print("More than one Cambium GEA region for the given zip code. {cambium_gea_region[0]} selected.")
             
         return self
+    
+    def set_reeds_balancing_authority(self):
+        """ Set the Balancing Authority under the Get the Regional Energy Deployment System (ReEDS)."""
 
+        df = pd.read_csv(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = self.get_zip()
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
+
+        balancing_authority = df[df['zip code'] == zipcode]['reeds ba'].unique()
+
+        self.reeds_balancing_authority = balancing_authority[0]
+
+        if len(balancing_authority) > 1:
+            print("More than one balancing authority for the given zip code. {balancing_authority[0]} selected.")
+            
+        return self
     # ================================
     # Getters
     # ================================
@@ -372,15 +395,20 @@ class Location:
 
         return self.FERC_region
 
-    def get_balancing_authority(self):
-        """ Get the balancing authority."""
+    def get_ferc_balancing_authority(self):
+        """ Get the Federal Energy Regulatory Commission (FERC) balancing authority."""
 
-        return self.balancing_authority
+        return self.ferc_balancing_authority
     
     def get_cambium_gea_region(self):
         """ Get Cambium Generation and Emissions Assessment (GEA) region."""
 
         return self.cambium_gea_region
+    
+    def get_reeds_balancing_authority(self):
+        """ Get the Regional Energy Deployment System (ReEDS) balancing authority."""
+
+        return self.reeds_balancing_authority
     
 if __name__ == '__main__':
 

@@ -17,7 +17,7 @@ __version__ = "0.1.0"
 #   <impact categories> : Impact category names should match the impact categories used across the project (default path: data/impact_categories.json.
 #                           Impact category names are case sensitive.
 
-NATIONAL_DATA = "data\\National_consumption_impacts.csv"
+NATIONAL_DATA = "data\\National_consumption_impacts_by_technology.csv"
 
 # File path to the Regional level electricity data to be provided here
 # The data file should have the following columns

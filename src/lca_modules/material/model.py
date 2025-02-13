@@ -358,7 +358,7 @@ class Model:
 
         return product
     
-    def add_energy(self, name, stage, qty, unit, impacts_from):
+    def add_energy(self, name, stage, qty, unit):
         """ Create and add energy product to the model.
 
             Parameters
@@ -370,9 +370,7 @@ class Model:
             qty : float
                 Product quantity.
             unit : Unit Obj.
-                Unit of measurement.    
-            impacts_from : str
-                Name of the impact database entry from which to use impacts.
+                Unit of measurement.
 
             Returns
             -------
@@ -381,7 +379,7 @@ class Model:
 
         """
         n = len(self.get_products())
-        energy = Fuel.new(n, name, self, stage, qty, unit, impacts_from)
+        energy = Fuel.new(n, name, self, stage, qty, unit)
 
         self.products.append(energy)
         self.impacts[stage].append(energy.get_impacts())
