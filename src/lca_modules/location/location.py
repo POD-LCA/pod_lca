@@ -2,7 +2,7 @@ from geopy.geocoders import Nominatim
 from shapely.geometry import Point, Polygon
 import pandas as pd
 import json
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION, FAF_BOUNDARIES
+from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION, FAF_BOUNDARIES, MARINE_REGION, US_COAST
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -41,6 +41,8 @@ class Location:
         self.cfs_area = None
         self.faf_foreign = None
         self.faf_domestic = None
+        self.marine_region = None
+        self.us_coast = None
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -76,6 +78,8 @@ class Location:
             location.set_cfs_area()
             location.set_faf_foreign_region()
             location.set_faf_domestic_region()
+            location.set_marine_region()
+            location.set_us_coast()
 
             return location
 
@@ -191,7 +195,7 @@ class Location:
             return self.cfs_area
 
         except Exception as e:
-            print (f"Error in set CFS area: {e}")
+            #print (f"Error in set CFS area: {e}")
             self.cfs_area = None
 
         return self
@@ -206,7 +210,6 @@ class Location:
         for region, polygon in BOUNDARIES.items():
             if polygon.contains(point):
                 self.faf_foreign = FAF_DATA[region]
-                print (f"Region: {region}")
                 return self
 
         self.faf_foreign = 803 #rest of americas
@@ -226,6 +229,34 @@ class Location:
         except:
             self.faf_domestic = None
         
+        return self
+
+    def set_marine_region(self):
+        """ Set the marine region of the location.
+        """
+        point = Point(self.get_cordinates())
+        BOUNDARIES = {key: Polygon(coords) for key, coords in MARINE_REGION.items()}
+
+        for region, polygon in BOUNDARIES.items():
+            if polygon.contains(point):
+                self.marine_region = region
+                return self
+
+        self.marine_region = None
+        return self
+
+    def set_us_coast(self):
+        """ Set the US coast of the location.
+        """
+        point = Point(self.get_cordinates())
+        BOUNDARIES = {key: Polygon(coords) for key, coords in US_COAST.items()}
+
+        for region, polygon in BOUNDARIES.items():
+            if polygon.contains(point):
+                self.us_coast = region
+                return self
+
+        self.us_coast = None
         return self
 
     # ================================
@@ -317,9 +348,19 @@ class Location:
         """
         return self.faf_domestic
 
+    def get_marine_region(self):
+        """ Set the marine region of the location.
+        """
+        return self.marine_region
+
+    def get_us_coast(self):
+        """ Set the US coast of the location.
+        """
+        return self.us_coast
+
 if __name__ == '__main__':
 
-    location_input = "Canada"
+    location_input = "Seattle"
     location_obj = Location.from_str(location_input)
 
 
@@ -331,3 +372,5 @@ if __name__ == '__main__':
     print (f"CFS Area: {location_obj.get_cfs_area()}")
     print (f"FAF Foreign Region: {location_obj.get_faf_foreign_region()}")
     print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
+    print (f"Marine Region: {location_obj.marine_region}")
+    print (f"US Coast: {location_obj.us_coast}")

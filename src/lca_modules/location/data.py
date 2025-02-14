@@ -1,5 +1,7 @@
 CFS_DATA_PATH = r"data\location_dataset\location_cfs.csv" 
 
+FAF_DOMESTIC_REGION = r"data\location_dataset\faf_domestic_region.json"
+
 FAF_DATA = {"Canada": 801, 
             "Mexico": 802, 
             "Rest of Americas": 803,
@@ -21,5 +23,17 @@ FAF_BOUNDARIES = {
 }
 
 
+MARINE_REGION = {
+    "Canada": ([(69, -140), (68, -82), (53, -55), (44, -78), (49, -91), (49, -124), (69, -140)]),
+    "Mexico": ([(32, -116), (30, -105), (25, -97), (21, -86), (15, -91), (20, -105), (32, -116)]),
+    "Europe": ([(65, -24), (71, 25), (40, 35), (40, 48), (65, -24)]),
+    "China": ([(50, 97), (49, 145), (25, 139), (19, 91), (50, 97)]),
+    "South America": ([(12, -91), (13, -32), (-25, -30), (-58, -67), (-43, -83), (12, -91)]),
+}
 
-FAF_DOMESTIC_REGION = r"data\location_dataset\faf_domestic_region.json"
+
+US_COAST = {
+    "West Coast": ([(49, -124), (48, -104), (32, -116), (31, -106), (32, -124), (49, -124)]),
+    "East Coast": ([(48, -103), (36, -101), (40, -48), (32, -79), (48, -62), (48, -103)]),
+    "Gulf Coast": ([(36, -100), (32, -82), (21, -86), (24, -78), (25, -97), (28, -106), (36, -100)]),
+}

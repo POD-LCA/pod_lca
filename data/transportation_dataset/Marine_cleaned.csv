@@ -1,5 +1,21 @@
-Region,Distance_km
-Canada,2479.828
-Mexico,1779.772
-Europe,10138.67111
-China,16314.88533
+﻿Region,Coast,USA Port,Foreign Port,Distance_km,Distance (nautical miles)
+Canada,West Coast,New York,Montreal,2808,1516
+Canada,East Coast,Los Angeles,Vancouver,2152,1162
+Mexico,East Coast,New York,Veracruz,1874,1012
+Mexico,Gulf Coast,Houston,Veracruz,1232,665
+Mexico,West Coast,Los Angeles,Manzanillo,2234,1206
+South America,East Coast,New York,Santos (Brazil),9130,4930
+South America,East Coast,Houston,Santos (Brazil),10205,5510
+South America,West Coast,Los Angeles,Callao (Peru),6767,3654
+Europe,East Coast,New York,Rotterdam,6265,3383
+Europe,East Coast,New York,Antwerp,6275,3388
+Europe,East Coast,New York,Hamburg,6704,3620
+Europe,Gulf Coast,Houston,Rotterdam,9356,5052
+Europe,Gulf Coast,Houston,Antwerp,9366,5057
+Europe,Gulf Coast,Houston,Hamburg,9734,5256
+Europe,West Coast,Los Angeles,Rotterdam,14357,7752
+Europe,West Coast,Los Angeles,Antwerp,14366,7757
+Europe,West Coast,Los Angeles,Hamburg,14825,8005
+China,East Coast,New York,Shanghai,19598,10582
+China,Gulf Coast,Houston,Shanghai,18776,10138
+China,West Coast,Los Angeles,Shanghai,10571,5708
