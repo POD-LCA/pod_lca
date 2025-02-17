@@ -58,7 +58,7 @@ class Link:
         self.dist_unit = dist_unit
         self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project)
         self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project)
-        self.unit_conversion = 1.60934
+        self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
 
     def compute_impact(self):
         """ compute the impaact of the transportation link.
@@ -74,7 +74,7 @@ class Link:
             impact = self.mode.get_impacts()
 
             for key in impact:
-                impact[key] *= self.qty * self.travel_dist * self.return_trip_factor
+                impact[key] *= self.qty * self.travel_dist * self.return_trip_factor* self.unit_conversion
             return impact
 
         else:

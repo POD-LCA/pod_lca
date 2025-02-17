@@ -77,66 +77,81 @@ class Scenario:
         process the data for the US scenarios.
 
         """
-        try:
-            cfs = self.project.get_subdataset("cfs_2017_cleaned")
-            emission = self.project.get_subdataset("Emission")
-            sctg = self.get_sctg(2)
-            cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
-            df = pd.read_csv(CFS_DATA_PATH)
 
-            if self.mode is not None:
-                cfs_c = cfs.copy()
-                cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
-                if cfs.empty:
-                    cfs = cfs_c
-                    print ("No mode found in cfs, value shows the avarage distance of the modes")
+        cfs = self.project.get_subdataset("cfs_2017_cleaned")
+        emission = self.project.get_subdataset("Emission")
+        sctg = self.get_sctg(2)
+        cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
+        df = pd.read_csv(CFS_DATA_PATH)
 
-            if self.shipping_dest is not None:
-                cfs_c = cfs.copy()
-                cfs = cfs[cfs["DEST_STATE"] == shipping_dest.get_cfs_area()]
-                if cfs.empty:
-                    cfs = cfs_c
-                    print ("No location for destination found in cfs, The value shows the avrage of the US")
+        if self.mode is not None:
+            cfs_c = cfs.copy()
+            cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
+            if cfs.empty:
+                cfs = cfs_c
+                print ("No mode found in cfs, value shows the avarage distance of the modes")
+        else:
+            self.mode = TransportMode("Truck", 1, self.project)
 
-            if self.shipping_org is not None:
-                cfs_c = cfs.copy()
-                cfs = cfs[cfs["ORIG_STATE"] == shipping_org.get_cfs_area()]
-                if cfs.empty:
+        if self.shipping_dest is not None:
+            cfs_c = cfs.copy()
+            cfs = cfs[cfs["DEST_STATE"] == self.shipping_dest.get_cfs_area()]
+            if cfs.empty:
+                cfs = cfs_c
+                print ("No location for destination found in cfs, The value shows the avrage of the US")
 
-                    cfs_list = cfs_c["ORIG_STATE"].tolist()
-                    cfs_list_cord = []
-                    for cfs in cfs_list:
-                        cfs_list_cord.append(df[df["Code"] == cfs].iloc[0, 3])
-                    origin_to_dest =[]
-                    for cord in cfs_list_cord:
-                        distance = geodesic(cord, shipping_org.get_cordinates()).km
-                        origin_to_dest.append(distance)
-                    
-                    
-                        
+        if self.shipping_org is not None:
+            cfs_c = cfs.copy()
+            cfs_cc = cfs.copy()
+            cfs = cfs[cfs["ORIG_STATE"] == self.shipping_org.get_cfs_area()]
 
-                    cfs = cfs_c
-                    print ("No location for origin found in cfs, The value shows the avrage of the US")
+            if cfs.empty:
+                cfs_list = cfs_c["ORIG_STATE"].tolist()
+                cfs_lat = []
+                cfs_lon = []
 
-                #if cfs.empty:
+                for state in cfs_list:
+                    lat = df[df["Code"] == state]["lat"].values
+                    lon = df[df["Code"] == state]["lon"].values
 
+                    if len(lat) > 0 and len(lon) > 0:
+                        cfs_lat.append(lat[0])
+                        cfs_lon.append(lon[0])
 
+                coords = list(zip(cfs_lat, cfs_lon))
+                origin_to_dest = []
                 
-            cfs_mapping = self.mode.get_cfs_mode()[1]
-            reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
-            cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
-            merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
+                for coord in coords:
+                    distance = geodesic(coord, self.shipping_org.get_cordinates()).km
+                    origin_to_dest.append(distance)
 
-            merged_data = merged_data[ merged_data["eff"] == self.mode.get_efficiency()]
-            merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
+                cfs_dist = dict(zip(cfs_list, origin_to_dest))
+                sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
 
-            self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
-            self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
-            self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
-            self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
+                while cfs.empty:
+                    closest_state = list(sorted_cfs_dist.keys())[0]
+                    cfs = cfs_cc[cfs_cc["ORIG_STATE"] == closest_state]
+                    del sorted_cfs_dist[closest_state]
+                    print (f"No location for origin found in cfs, The value shows the closest shipping to the selected origin {closest_state}")
 
-        except:
-            pass
+            if cfs.empty:
+                cfs = cfs_cc
+                print ("No location for origin found in cfs, The value shows the avrage of the US")
+
+
+        cfs_mapping = self.mode.get_cfs_mode()[1]
+        reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
+        cfs = cfs.copy()
+        cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
+        merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
+
+        merged_data = merged_data[ merged_data["eff"] == self.mode.get_efficiency()]
+        merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
+
+        self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
+        self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
+        self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
+        self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
 
 
     def pre_global_processing (self):
@@ -220,7 +235,7 @@ class Scenario:
                 self.global_ = total_impacts
 
 
-            elif self.mode.get_name() == "Rail":
+            if self.mode.get_name() == "Rail":
                 distance = cfaf["Average_Distance_per_Shipment"].mean()
                 
                 total_impacts = {}
@@ -232,7 +247,7 @@ class Scenario:
                 self.global_ = total_impacts
 
 
-            elif self.mode.get_name() == "Barge" or "Ocean":
+            if self.mode.get_name() == "Barge" or "Ocean":
 
                 domestic_total = {}
                 foreign_total = {}
@@ -258,7 +273,7 @@ class Scenario:
                 self.na = self.global_
 
 
-            elif self.mode.get_name() == "Air":
+            if self.mode.get_name() == "Air":
 
                 if self.shipping_dest is not None:
                     dest_location = self.shipping_dest.get_cordinates()
@@ -267,17 +282,20 @@ class Scenario:
 
                 if self.shipping_org is not None:
                     org_location = self.shipping_org.get_cordinates()
-                else:
-                    org_location = (31.2304, 121.4737) #Shanghai
+                    distance = geodesic(org_location, dest_location).km
 
-                distance = geodesic(org_location, dest_location).km
+                else:
+                    major_cities = faf["fr_orig"].mode()[0]
+                    distance = faf[faf["fr_orig"] == major_cities]["avr_dom_dist_km"].mean()
+
                 total_impacts = {}
 
                 for key, value in self.mode.get_impacts().items():
                     total_impacts[key] = value * distance
 
                 self.global_ = total_impacts
-    
+                self.na = self.global_
+
             else:
                 print ("Mode not found")
 
