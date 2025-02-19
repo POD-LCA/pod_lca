@@ -1,0 +1,18 @@
+{
+    "CO2": {
+        "@type":"ImpactCategory",
+        "@id":"eea1e0ca-ea6d-49c0-8b18-4102420e02cd",
+        "name":"CO2",
+        "refUnit":"kg"
+    }, 
+    "N2O": {
+        "@type":"ImpactCategory",
+        "@id":"99fb7a66-2150-4a4a-99bc-c024cf5531e8",
+        "name":"N2O",
+        "refUnit":"kg"}, 
+    "CH4": {
+        "@type":"ImpactCategory",
+        "@id":"41670b48-d87b-4c6e-84b8-02470bcb2102",
+        "name":"CH4",
+        "refUnit":"kg"} 
+}

@@ -138,6 +138,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
+        #for FLCAC use impact method uuid: 68c8e8cd-e64a-49b1-954e-bec0da4e4574 ; for ecoinvent use impact method uuid: 1bd6fac2-7dd4-400a-8e56-3c677967c3d8
         impact_method = client.get_descriptor(schema.ImpactMethod, '68c8e8cd-e64a-49b1-954e-bec0da4e4574')
 
         return impact_method
@@ -221,7 +222,7 @@ class openLCA:
 
         return results_dict
     
-    def get_electricity_in_process(node, level, elec_impact, elec_required_sum, max_levels=3):
+    def get_electricity_in_process(node, level, elec_impact, elec_required_sum, max_levels=1):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
@@ -357,7 +358,9 @@ class openLCA:
         impact_method = openLCA.get_impact_method(openLCA_client)
 
         results = {}
+
         for process in tqdm(process_list):
+
             process_results = {'Name': process.name, 'UUID': process.id}
 
             product_system_ref = openLCA.create_product_system(openLCA_client, process)

@@ -1,0 +1,62 @@
+{
+    "GWP-total (AR5)": {
+        "@type":"ImpactCategory",
+        "@id":"6209b35f-9447-40b5-b68c-a1099e3674a0",
+        "name":"GWP-total (AR5)",
+        "refUnit":"kg CO2 eq"
+    },
+    "GWP-fossil (AR5)": {
+        "@type":"ImpactCategory",
+        "@id":"7fce5b3a-66b8-4ce1-91e8-a925aee1f186",
+        "name":"GWP-fossil (AR5)",
+        "refUnit":"kg CO2 eq"
+    },
+    "GWP-biogenic (AR5)": {
+        "@type":"ImpactCategory",
+        "@id":"9133cddf-b99e-4df5-8a28-f0069722b323",
+        "name":"GWP-biogenic (AR5)",
+        "refUnit":"kg CO2 eq"
+    },
+    "GWP-luluc (AR5)": {
+        "@type":"ImpactCategory",
+        "@id":"c0046257-b6fa-4d54-9cb0-620aa76e6f8f",
+        "name":"GWP-luluc (AR5)",
+        "refUnit":"kg CO2 eq"
+    },
+    "GWP-TRACI (AR4 w/ bioC)": {
+        "@type":"ImpactCategory",
+        "@id":"81eedfc1-c5c8-435b-947b-279177079ead",
+        "name":"GWP-TRACI (AR4 w/ bioC)",
+        "refUnit":"kg CO2 eq"
+    },
+    "GWP-TRACI (AR4 w/o bioC)": {
+        "@type":"ImpactCategory",
+        "@id":"31967441-d687-313d-9910-13da3a584ab7",
+        "name":"GWP-TRACI (AR4 w/o bioC)",
+        "refUnit":"kg CO2 eq"
+    },
+    "AP": {
+        "@type":"ImpactCategory",
+        "@id":"b8a0d65e-1879-4678-a5c0-1f49a6a117ec",
+        "name":"Acidification",
+        "refUnit":"kg SO2 eq"
+    },
+    "EP": {
+        "@type":"ImpactCategory",
+        "@id":"45b8cd56-498a-3c6f-9488-134e951d8c02",
+        "name":"Eutrophication",
+        "refUnit":"kg N eq"
+    },
+    "ODP": {
+        "@type":"ImpactCategory",
+        "@id":"448ee97a-bebc-467f-8b12-cdd8f11ca17a",
+        "name":"Ozone depletion",
+        "refUnit":"kg CFC-11 eq"
+    },
+    "POCP": {
+        "@type":"ImpactCategory",
+        "@id":"47422855-d937-4f0d-b66e-b396ccd3db1f",
+        "name":"Smog",
+        "refUnit":"kg O3 eq"
+    }
+}
