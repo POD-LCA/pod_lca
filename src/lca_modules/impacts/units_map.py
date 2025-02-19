@@ -6,4 +6,5 @@ UNITS_MAP = {'kg': KILOGRAM,
              'tkm': TON_KILOMETER, 
              'MJ': MEGA * JOULE, 
              'kWh': KILO * WATT_HOUR,
-             'm3': CUBIC_METER}
+             'm3': CUBIC_METER,
+             't*km': TON_KILOMETER}
