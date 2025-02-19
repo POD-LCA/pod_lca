@@ -1,4 +1,6 @@
 
+from lca_modules.impacts.units_map import UNITS_MAP
+
 from tqdm import tqdm
 
 try:
@@ -221,20 +223,24 @@ class openLCA:
 
         return results_dict
     
-    def get_electricity_in_process(node, level, elec_impact, elec_required_sum, max_levels=3):
+    def get_category_in_process(categories, node, level, impact, qty, unit, max_levels=3):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
             Parameters
             ----------
+            categories : list or int.
+                IDs of categories to be identified. Category IDs from the North American Industry Classification System (NAICS)
             node : utree.Node
                 The node object.
             level : int
                 The level of the node in the tree.
-            elec_impact : float
-                The electricity impact.
-            elec_required_sum : float
-                The electricity required sum.
+            impact : float
+                The impact from the category.
+            qty : float
+                The declared quantity of the category.
+            unit : Unit Obj.
+                The declared unit of the category.
             max_levels : int
                 The maximum number of levels to expand the tree.
 
@@ -244,30 +250,40 @@ class openLCA:
                 The electricity impact.
             float   
                 The electricity required sum.
+            Unit Obj.
+                The declared unit of the category.
         """
 
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
-
-        if "electricity" in node.provider.name.lower():
-            elec_required_sum += node.required_amount
-            elec_impact += node.result
-
-            return elec_impact, elec_required_sum
-
-        elif level < max_levels:
-            for childs in node.childs:
-                elec_impact, elec_required_sum = openLCA.get_electricity_in_process(childs, level + 1, elec_impact, elec_required_sum, max_levels)
-            return elec_impact, elec_required_sum
-    
-        else:
-            return elec_impact, elec_required_sum
         
+        if isinstance(categories, int):
+            categories = [categories]
+        
+        for category in categories:
+            if '/' + str(category) + ':' in node.product.category:
+                if unit is None:
+                    unit = UNITS_MAP[node.product.ref_unit]
+                    conversion_factor = 1.0
+                elif unit.get_standard_notation() == node.product.ref_unit:
+                    conversion_factor = 1.0
+                else:
+                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+
+                qty += node.required_amount * conversion_factor
+                impact += node.result
+
+                return impact, qty, unit
+
+        if level < max_levels:
+            for child in node.childs:
+                impact, qty, unit = openLCA.get_category_in_process(categories, child, level + 1, impact, qty, unit, max_levels)
+        
+        return impact, qty, unit
+
     # =================================
     # Utilities
     # =================================
-
-
     def compare_dicts(d1, d2):
         if d1.keys() != d2.keys():
             return False
@@ -293,7 +309,6 @@ class openLCA:
     # =================================
     # Operations
     # =================================
-
     def compute_impacts(client, product_system_ref, impact_method_ref):
         """ Compute the impacts of the product system.
         
@@ -327,15 +342,16 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(impact_dict, seperate_elec=False):
+    def generate_impacts_dir(impact_dict, group_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
             ----------
             impact_dict : dict
                 Dictionary of impact categories.
-            seperate_elec : bool
-                Flag to indicate whether to seperate the electricity impacts.
+            group_by : dict
+                Dictionary of group categorization: {category name (str) : [categoty id (int)]}
+                Category IDs are from the North American Industry Classification System (NAICS).
             
             Returns
             -------
@@ -349,7 +365,7 @@ class openLCA:
 
         openLCA_client = openLCA.set_connection()
 
-        process_list = openLCA.get_process_list(openLCA_client)
+        process_list = openLCA.get_process_list(openLCA_client)[607:]
 
         # TODO: Update and expand data import methods for openLCA
         # impact_category_references = openLCA.set_impact_categoreis(openLCA_client, list(impact_dict.values()))
@@ -365,19 +381,18 @@ class openLCA:
             result = openLCA.compute_impacts(openLCA_client, product_system_ref, impact_method)
             impact_results = openLCA.get_impacts(openLCA_client, result, impact_dict)
 
-            if seperate_elec:
-                for impact_cat in impact_dict:
-                    impact_cat_ref = openLCA_client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
-                    
-                    root = utree.of(result, impact_cat_ref)
-                    elec_impact, elec_required_sum = openLCA.get_electricity_in_process(root, 0, elec_impact=0, elec_required_sum=0, max_levels=1)
+            if not group_by is None:
+                for name, ids in group_by.items():
+                    for impact_cat in impact_dict:
+                        impact_cat_ref = openLCA_client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
+                        
+                        root = utree.of(result, impact_cat_ref)
+                        group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
 
-                    impact_results['Elec ' + impact_cat] = elec_impact
+                        impact_results[name + '_' + impact_cat] = group_impact
 
-                Elec_required = elec_required_sum
-                # TODO: How elec requirement handled is not the most elegant way.
-
-                impact_results['Total Elec [MJ]'] = Elec_required
+                    impact_results[name + '_qty'] = ref_qty
+                    impact_results[name + '_unit'] = 'N/A' if ref_unit is None else ref_unit.get_standard_notation() 
 
             results[process.id] = process_results | impact_results
 
