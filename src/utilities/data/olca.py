@@ -351,7 +351,7 @@ class openLCA:
             impact_dict : dict
                 Dictionary of impact categories.
             group_by : dict
-                Dictionary of group categorization: {category name (str) : [categoty id (int)]}
+                Dictionary of group categorization: {category name (str) : [category id (int)]}
                 Category IDs are from the North American Industry Classification System (NAICS).
             
             Returns
@@ -375,9 +375,12 @@ class openLCA:
 
         results = {}
 
+        category_filter = '' #ADD CATEGORY NAME IDENTIFIER HERE, OR LEAVE EMPTY TO RUN ALL PROCESSES IN ACTIVE DATABASE
+        process_list = [process for process in process_list if category_filter in process.category]
+
         for process in tqdm(process_list):
 
-            process_results = {'Name': process.name, 'UUID': process.id}
+            process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id}
 
             product_system_ref = openLCA.create_product_system(openLCA_client, process)
             process_results['Amount'], process_results['Unit'] = openLCA.get_product_amount(openLCA_client, product_system_ref)
