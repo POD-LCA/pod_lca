@@ -365,7 +365,7 @@ class openLCA:
 
         openLCA_client = openLCA.set_connection()
 
-        process_list = openLCA.get_process_list(openLCA_client)[607:]
+        process_list = openLCA.get_process_list(openLCA_client)
 
         # TODO: Update and expand data import methods for openLCA
         # impact_category_references = openLCA.set_impact_categoreis(openLCA_client, list(impact_dict.values()))
