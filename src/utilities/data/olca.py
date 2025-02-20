@@ -343,7 +343,7 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(impact_dict, group_by=None):
+    def generate_impacts_dir(impact_dict, filter_by=None, group_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
@@ -352,8 +352,11 @@ class openLCA:
                 Dictionary of impact categories.
             group_by : dict
                 Dictionary of group categorization: {category name (str) : [category id (int)]}
-                Category IDs are from the North American Industry Classification System (NAICS).
-            
+                For Federal LCA commons LCI data, category IDs are from the North American Industry Classification System (NAICS).
+            filter_by : list or int.
+                Category id(s) to filter the process list by.
+                For Federal LCA commons LCI data, category IDs are from the North American Industry Classification System (NAICS). 
+
             Returns
             -------
             dict
@@ -367,6 +370,10 @@ class openLCA:
         openLCA_client = openLCA.set_connection()
 
         process_list = openLCA.get_process_list(openLCA_client)
+        if not filter_by is None:
+            if isinstance(filter_by, int):
+                filter_by = [filter_by]    
+            process_list = [process for process in process_list if any(str(filter) in process.category for filter in filter_by)]
 
         # TODO: Update and expand data import methods for openLCA
         # impact_category_references = openLCA.set_impact_categoreis(openLCA_client, list(impact_dict.values()))
@@ -374,9 +381,6 @@ class openLCA:
         impact_method = openLCA.get_impact_method(openLCA_client)
 
         results = {}
-
-        category_filter = '' #ADD CATEGORY NAME IDENTIFIER HERE, OR LEAVE EMPTY TO RUN ALL PROCESSES IN ACTIVE DATABASE
-        process_list = [process for process in process_list if category_filter in process.category]
 
         for process in tqdm(process_list):
 
