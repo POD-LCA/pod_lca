@@ -14,7 +14,7 @@ __version__ = "0.1.0"
 impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
 inventories = DataHandler.json_to_dict('./data/inventories.json')
 
-save_path = './data/USLCI_Categorized.csv'
+save_path = './data/USLCI_Categorized_tmp.csv'
 group_by = {'Electricity': 2211, 'Waste': [5621, 5622,5629]}
 results = openLCA.generate_impacts_dir(impact_categories | inventories, group_by)
 DataHandler.dict_to_csv(results, save_path) 

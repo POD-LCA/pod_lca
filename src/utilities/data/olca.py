@@ -108,8 +108,8 @@ class openLCA:
 
             Returns
             -------
-            schema.Ref
-                Reference to the product system object.
+            schema.ProductSystem
+                Product system object.
         """
 
         if not OLCA_IMPORTED:
@@ -117,8 +117,9 @@ class openLCA:
 
         config = schema.LinkingConfig(prefer_unit_processes=True, provider_linking=schema.ProviderLinking.PREFER_DEFAULTS, )
         product_system_ref = client.create_product_system(process, config)
+        product_system = client.get(schema.ProductSystem, product_system_ref.id)
 
-        return product_system_ref
+        return product_system
     
     # =================================
     # Getters
@@ -165,31 +166,6 @@ class openLCA:
 
         return process_list
 
-    def get_product_amount(client, product_system_ref):
-        """ Get the target amount and unit for the product system.
-        
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            product_system_ref : schema.Ref
-                Reference to the product system object.
-
-            Returns
-            -------
-            tuple
-                The target amount and unit for the product system.
-        """
-
-        if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
-
-        product_system = client.get(schema.ProductSystem, product_system_ref.id)
-        product_amount = product_system.target_amount
-        unit = product_system.target_unit.name
-
-        return product_amount, unit
-
     def get_impacts(client, result, impact_dict):
         """ Get the impact results of the product system.
         
@@ -211,7 +187,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        results_dict = {}
+        results_dict = {'Amount': result.get_demand().amount, 'Unit':result.get_demand().tech_flow.flow.ref_unit}
         for impact in impact_dict:
             uid = impact_dict[impact]['@id']
             unit = impact_dict[impact]['refUnit']
@@ -309,7 +285,7 @@ class openLCA:
     # =================================
     # Operations
     # =================================
-    def compute_impacts(client, product_system_ref, impact_method_ref):
+    def compute_impacts(client, product_system, impact_method_ref , qty=1.0):
         """ Compute the impacts of the product system.
         
             Notes
@@ -321,8 +297,8 @@ class openLCA:
             ----------
             client : olca_ipc.Client
                 The client object for the openLCA server.
-            product_system_ref : schema.Ref
-                Reference to the product system object.
+            product_system : schema.ProductSystem
+                Product system object.
             impact_method_ref : schema.Ref
                 Reference to the impact method object.
 
@@ -335,7 +311,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        setup = schema.CalculationSetup(allocation=schema.AllocationType.USE_DEFAULT_ALLOCATION, target=product_system_ref, impact_method=impact_method_ref)
+        setup = schema.CalculationSetup(allocation=schema.AllocationType.USE_DEFAULT_ALLOCATION, target=product_system, impact_method=impact_method_ref, amount=qty)
 
         result = client.calculate(setup)
         result.wait_until_ready()
@@ -376,9 +352,8 @@ class openLCA:
         for process in tqdm(process_list):
             process_results = {'Name': process.name, 'UUID': process.id}
 
-            product_system_ref = openLCA.create_product_system(openLCA_client, process)
-            process_results['Amount'], process_results['Unit'] = openLCA.get_product_amount(openLCA_client, product_system_ref)
-            result = openLCA.compute_impacts(openLCA_client, product_system_ref, impact_method)
+            product_system = openLCA.create_product_system(openLCA_client, process)
+            result = openLCA.compute_impacts(openLCA_client, product_system, impact_method)
             impact_results = openLCA.get_impacts(openLCA_client, result, impact_dict)
 
             if not group_by is None:
@@ -398,7 +373,7 @@ class openLCA:
 
             result.dispose()
 
-            openLCA_client.delete(product_system_ref)
+            openLCA_client.delete(product_system)
 
         return results
 
