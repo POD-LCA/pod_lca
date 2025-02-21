@@ -343,7 +343,7 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(impact_dict, filter_by=None, group_by=None):
+    def generate_impacts_dir(impact_dict, group_by=None, filter_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
