@@ -90,6 +90,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
+        # TODO: remove hard coding of impact method dict input 
         impact_method = schema.ImpactMethod().from_dict({"@type":"ImpactMethod","@id":"68c8e8cd-e64a-49b1-954e-bec0da4e4574","name":"ISO21930-LCIA-US (POD|LCA)","description":"ISO21930-LCIA-US is built from LCIA Formatter v1.1.3 and flows from the Federal Elementary Flow List (FEDEFL) v1.2.2\n\n","version":"01.01.005","lastChange":"2025-01-24T00:10:23.424Z"})
         impact_method.impact_categories = impact_category_references
         client.put(impact_method)
@@ -108,8 +109,8 @@ class openLCA:
 
             Returns
             -------
-            schema.Ref
-                Reference to the product system object.
+            schema.ProductSystem
+                Product system object.
         """
 
         if not OLCA_IMPORTED:
@@ -117,13 +118,14 @@ class openLCA:
 
         config = schema.LinkingConfig(prefer_unit_processes=True, provider_linking=schema.ProviderLinking.PREFER_DEFAULTS, )
         product_system_ref = client.create_product_system(process, config)
+        product_system = client.get(schema.ProductSystem, product_system_ref.id)
 
-        return product_system_ref
+        return product_system
     
     # =================================
     # Getters
     # =================================
-    def get_impact_method(client):
+    def get_impact_method(client, impact_method_uuid):
         """ Get the impact method from the openLCA server.
         
             Parameters
@@ -140,8 +142,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        #for FLCAC use impact method uuid: 68c8e8cd-e64a-49b1-954e-bec0da4e4574 ; for ecoinvent use impact method uuid: 1bd6fac2-7dd4-400a-8e56-3c677967c3d8
-        impact_method = client.get_descriptor(schema.ImpactMethod, '68c8e8cd-e64a-49b1-954e-bec0da4e4574')
+        impact_method = client.get_descriptor(schema.ImpactMethod, impact_method_uuid)
 
         return impact_method
 
@@ -166,31 +167,6 @@ class openLCA:
 
         return process_list
 
-    def get_product_amount(client, product_system_ref):
-        """ Get the target amount and unit for the product system.
-        
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            product_system_ref : schema.Ref
-                Reference to the product system object.
-
-            Returns
-            -------
-            tuple
-                The target amount and unit for the product system.
-        """
-
-        if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
-
-        product_system = client.get(schema.ProductSystem, product_system_ref.id)
-        product_amount = product_system.target_amount
-        unit = product_system.target_unit.name
-
-        return product_amount, unit
-
     def get_impacts(client, result, impact_dict):
         """ Get the impact results of the product system.
         
@@ -212,7 +188,7 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        results_dict = {}
+        results_dict = {'Amount': result.get_demand().amount, 'Unit':result.get_demand().tech_flow.flow.ref_unit}
         for impact in impact_dict:
             uid = impact_dict[impact]['@id']
             unit = impact_dict[impact]['refUnit']
@@ -282,6 +258,63 @@ class openLCA:
         
         return impact, qty, unit
 
+    def get_process_in_process(processes, node, level, impact, qty, unit, max_levels=3):
+        """ This function recursively expands an upstream tree.
+            The maximum number of levels and maximum number of child nodes are defined with the constants above.
+        
+            Parameters
+            ----------
+            processes : list or str.
+                UUIDs of processess to be identified.
+            node : utree.Node
+                The node object.
+            level : int
+                The level of the node in the tree.
+            impact : float
+                The impact from the category.
+            qty : float
+                The declared quantity of the category.
+            unit : Unit Obj.
+                The declared unit of the category.
+            max_levels : int
+                The maximum number of levels to expand the tree.
+
+            Returns
+            -------
+            float
+                The electricity impact.
+            float   
+                The electricity required sum.
+            Unit Obj.
+                The declared unit of the category.
+        """
+
+        if not OLCA_IMPORTED:
+            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+        
+        if isinstance(processes, str):
+            processes = [processes]
+        
+        if node.provider.id in processes:
+            if unit is None:
+                unit = UNITS_MAP[node.product.ref_unit]
+                conversion_factor = 1.0
+            elif unit.get_standard_notation() == node.product.ref_unit:
+                conversion_factor = 1.0
+            else:
+                conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+
+            qty += node.required_amount * conversion_factor
+            impact += node.result
+
+            return impact, qty, unit
+
+        if level < max_levels:
+            for child in node.childs:
+                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, max_levels)
+        
+        return impact, qty, unit
+    
     # =================================
     # Utilities
     # =================================
@@ -310,7 +343,7 @@ class openLCA:
     # =================================
     # Operations
     # =================================
-    def compute_impacts(client, product_system_ref, impact_method_ref):
+    def compute_impacts(client, product_system, impact_method_ref , qty=1.0):
         """ Compute the impacts of the product system.
         
             Notes
@@ -322,8 +355,8 @@ class openLCA:
             ----------
             client : olca_ipc.Client
                 The client object for the openLCA server.
-            product_system_ref : schema.Ref
-                Reference to the product system object.
+            product_system : schema.ProductSystem
+                Product system object.
             impact_method_ref : schema.Ref
                 Reference to the impact method object.
 
@@ -336,18 +369,25 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        setup = schema.CalculationSetup(allocation=schema.AllocationType.USE_DEFAULT_ALLOCATION, target=product_system_ref, impact_method=impact_method_ref)
+        setup = schema.CalculationSetup(allocation=schema.AllocationType.USE_DEFAULT_ALLOCATION, 
+                                        target=product_system, 
+                                        impact_method=impact_method_ref, 
+                                        amount=qty)
 
         result = client.calculate(setup)
         result.wait_until_ready()
 
         return result
     
-    def generate_impacts_dir(impact_dict, group_by=None, filter_by=None):
+    def generate_impacts_dir(client, process_list, impact_dict, group_by=None, filter_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
             ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            process_list : list
+                List of UUIDs of the processess to be tested
             impact_dict : dict
                 Dictionary of impact categories.
             group_by : dict
@@ -367,9 +407,8 @@ class openLCA:
         else:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        openLCA_client = openLCA.set_connection()
-
         process_list = openLCA.get_process_list(openLCA_client)
+        
         if not filter_by is None:
             if isinstance(filter_by, int):
                 filter_by = [filter_by]    
@@ -378,7 +417,7 @@ class openLCA:
         # TODO: Update and expand data import methods for openLCA
         # impact_category_references = openLCA.set_impact_categoreis(openLCA_client, list(impact_dict.values()))
         # impact_method = openLCA.set_impact_method(openLCA_client, impact_category_references)
-        impact_method = openLCA.get_impact_method(openLCA_client)
+        impact_method = openLCA.get_impact_method(client, impact_method_uuid='68c8e8cd-e64a-49b1-954e-bec0da4e4574')
 
         results = {}
 
@@ -386,19 +425,23 @@ class openLCA:
 
             process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id}
 
-            product_system_ref = openLCA.create_product_system(openLCA_client, process)
-            process_results['Amount'], process_results['Unit'] = openLCA.get_product_amount(openLCA_client, product_system_ref)
-            result = openLCA.compute_impacts(openLCA_client, product_system_ref, impact_method)
-            impact_results = openLCA.get_impacts(openLCA_client, result, impact_dict)
+            product_system = openLCA.create_product_system(client, process)
+            result = openLCA.compute_impacts(client, product_system, impact_method)
+            impact_results = openLCA.get_impacts(client, result, impact_dict)
 
             if not group_by is None:
                 for name, ids in group_by.items():
                     for impact_cat in impact_dict:
-                        impact_cat_ref = openLCA_client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
+                        impact_cat_ref = client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
                         
                         root = utree.of(result, impact_cat_ref)
-                        group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
-
+                        if all(isinstance(item, int) for item in ids):
+                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                        elif all(isinstance(item, str) for item in ids):
+                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                        else:
+                            raise ValueError("ids should be all NAICS ids or all UUIDs.")
+                    
                         impact_results[name + '_' + impact_cat] = group_impact
 
                     impact_results[name + '_qty'] = ref_qty
@@ -408,7 +451,7 @@ class openLCA:
 
             result.dispose()
 
-            openLCA_client.delete(product_system_ref)
+            client.delete(product_system)
 
         return results
 

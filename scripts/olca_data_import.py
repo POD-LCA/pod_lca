@@ -10,6 +10,15 @@ __license__ = "MIT License"
 __email__ = "etel5501@uw.edu"
 __version__ = "0.1.0"
 
+
+openLCA_client = openLCA.set_connection()
+
+process_list_all = openLCA.get_process_list(openLCA_client)
+
+# different options for process list
+my_process_list = process_list_all
+# my_process_list = process_list_all[125:135]
+# my_process_list = ['f41111d1-1668-325a-abd2-a40af161e35d', 'd4031d82-ca6e-3548-b07c-2acd79f47a3f']
 #To evaluate Federal LCA Commons (FLCAC) data, use the following impact_categories and inventories
 impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
 inventories = DataHandler.json_to_dict('./data/inventories.json')
@@ -18,10 +27,14 @@ inventories = DataHandler.json_to_dict('./data/inventories.json')
 #impact_categories = DataHandler.json_to_dict('./data/impact_categories_ecoinvent.json')
 #inventories = DataHandler.json_to_dict('./data/inventories_ecoinvent.json')
 
-save_path = './data/USLCI_Categorized.csv'
-group_by = {'Electricity': 2211, 'Waste': [5621, 5622,5629]}
+# different options for grouping
+# group_by = {'Electricity': 2211, 'Waste': [5621, 5622,5629]}
+group_by = {'fuel combustion':['6c96a609-cd7e-3f19-a151-27deb823d3e4' , '5198d618-7bc8-3639-b4a1-de71d6d5f49a']}
 filter_by = [3211, 3212]
-results = openLCA.generate_impacts_dir(impact_categories | inventories, filter_by, group_by)
+
+results = openLCA.generate_impacts_dir(openLCA_client, my_process_list, impact_categories | inventories, filter_by, group_by)
+
+save_path = './data/USLCI_Categorized_uuid.csv'
 DataHandler.dict_to_csv(results, save_path) 
 
 # dict_A = DataHandler.csv_to_dict('./data/USLCI_tax_elec_1L_ISO21930_1_24_25.csv', 'UUID')
