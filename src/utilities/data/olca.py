@@ -407,13 +407,6 @@ class openLCA:
         else:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        process_list = openLCA.get_process_list(openLCA_client)
-        
-        if not filter_by is None:
-            if isinstance(filter_by, int):
-                filter_by = [filter_by]    
-            process_list = [process for process in process_list if any(str(filter) in process.category for filter in filter_by)]
-
         # TODO: Update and expand data import methods for openLCA
         # impact_category_references = openLCA.set_impact_categoreis(openLCA_client, list(impact_dict.values()))
         # impact_method = openLCA.set_impact_method(openLCA_client, impact_category_references)
