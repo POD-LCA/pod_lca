@@ -379,7 +379,7 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(client, process_list, impact_dict, group_by=None, filter_by=None):
+    def generate_impacts_dir(client, process_list, impact_dict, group_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
@@ -393,9 +393,6 @@ class openLCA:
             group_by : dict
                 Dictionary of group categorization: {category name (str) : [category id (int)]}
                 For Federal LCA commons LCI data, category IDs are from the North American Industry Classification System (NAICS).
-            filter_by : list or int.
-                Category id(s) to filter the process list by.
-                For Federal LCA commons LCI data, category IDs are from the North American Industry Classification System (NAICS). 
 
             Returns
             -------
