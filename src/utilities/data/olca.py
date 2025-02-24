@@ -207,7 +207,8 @@ class openLCA:
             Parameters
             ----------
             categories : list or int.
-                IDs of categories to be identified. Category IDs from the North American Industry Classification System (NAICS)
+                IDs of categories to be identified. 
+                Category IDs from the North American Industry Classification System (NAICS) or International Standard Industrial Classification (ISIC).
             node : utree.Node
                 The node object.
             level : int
@@ -238,7 +239,13 @@ class openLCA:
             categories = [categories]
         
         for category in categories:
-            if '/' + str(category) + ':' in node.product.category:
+            category = str(category)
+            if category.isdigit(): # ISIC division / NAICS code
+                test = '/' + category + ':' in node.product.category
+            else: # ISIC section
+                test = node.product.category.startswith(category + ':')
+
+            if test:
                 if unit is None:
                     unit = UNITS_MAP[node.product.ref_unit]
                     conversion_factor = 1.0
@@ -319,6 +326,20 @@ class openLCA:
     # Utilities
     # =================================
     def compare_dicts(d1, d2):
+        """ Compare two dictionaries.
+        
+            Parameters
+            ----------
+            d1 : dict
+                The first dictionary to be compared.
+            d2 : dict
+                The second dictionary to be compared.
+            
+            Returns
+            -------
+            bool
+                True if the dictionaries are equal, False otherwise.
+        """
         if d1.keys() != d2.keys():
             return False
 
@@ -339,6 +360,69 @@ class openLCA:
                             return False
 
         return True 
+
+    @staticmethod
+    def is_UUID(uuid):
+        """ Check if the input is a valid UUID.
+
+            Parameters
+            ----------
+            uuid : str or int
+                The input to be checked.
+            
+            Returns
+            -------
+            bool
+                True if the input is a valid UUID, False otherwise.
+        """
+        try:
+            uuid = uuid.replace('-', '')
+            val = int(uuid, 16)
+        except AttributeError:
+            return False
+        except ValueError:
+            return False
+
+        return len(uuid) == 32
+
+    @staticmethod
+    def is_NAICS(naics):
+        """ Check if the input is a valid North American Industry Classification System (NAICS) code.
+
+            Parameters
+            ----------
+            naics : int
+                The input integer to be checked.
+            
+            Returns
+            -------
+            bool
+                True if the input is a valid NAICS code, False otherwise.
+        """
+        return len(str(naics)) >= 2 and len(str(naics)) <= 6
+
+    @staticmethod
+    def is_ISIC(isic):
+        """ Check if the input is a valid International Standard Industrial Classification (ISIC) code.
+
+            Parameters
+            ----------
+            isic : int
+                The input integer to be checked.
+            
+            Returns
+            -------
+            bool
+                True if the input is a valid ISIC code, False otherwise.
+        """ 
+        if isinstance(isic, int):
+            return len(str(isic)) >= 2 and len(str(isic)) <= 4
+
+        if isinstance(isic, str):
+            if isic.isdigit():
+                return len(isic) >= 2 and len(isic) <= 4
+            else: # ISIC section
+                return len(isic) == 1
 
     # =================================
     # Operations
@@ -419,16 +503,19 @@ class openLCA:
 
             if not group_by is None:
                 for name, ids in group_by.items():
+                    if not isinstance(ids, list):
+                        ids = [ids]
+
                     for impact_cat in impact_dict:
                         impact_cat_ref = client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
                         
                         root = utree.of(result, impact_cat_ref)
-                        if all(isinstance(item, int) for item in ids):
-                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
-                        elif all(isinstance(item, str) for item in ids):
+                        if all(openLCA.is_UUID(item) for item in ids):
                             group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                        elif all([openLCA.is_ISIC(item) or openLCA.is_NAICS(item) for item in ids]):
+                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
                         else:
-                            raise ValueError("ids should be all NAICS ids or all UUIDs.")
+                            raise ValueError("ids should be all NAICS/ISIC ids or all UUIDs.")
                     
                         impact_results[name + '_' + impact_cat] = group_impact
 
