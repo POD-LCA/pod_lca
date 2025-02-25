@@ -1,6 +1,7 @@
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
 from utilities.units.common_units import KILOGRAM
 
 
@@ -33,8 +34,6 @@ air_entraining_admixture = concrete_model.add_product(name="Air entraining admix
 plasticizers_superplasticizers = concrete_model.add_product(name="Plasticizers and superplasticizers", stage="A1", qty=0.255, unit=KILOGRAM, impacts_from="Plasticizer and Superplasticizers_[EFCA]")
 set_accelerators = concrete_model.add_product(name="Set accelerators", stage="A1", qty=0.369, unit=KILOGRAM, impacts_from="Set accelerators_[EFCA]")
 
-# TODO: Add transportation processes
-
 print(concrete_model)
 print(project)
 
@@ -42,3 +41,12 @@ print(project)
 hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
 print(hotspot_analysis)
+
+# uncertainty
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(portland_cement,  'qty', 
+                                                                 impact_cat='GWP', 
+                                                                 range=(367.410*.9, 367.410*1.1))
+
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(natural_coarse_aggregate,  'qty', 
+                                                                 impact_cat='GWP', 
+                                                                 range=(900.381*.9, 900.381*1.1))

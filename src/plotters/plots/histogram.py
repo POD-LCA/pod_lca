@@ -18,7 +18,7 @@ class Histogram(AbstractPlot):
     # ================================
     # Methods
     # ================================ 
-    def draw(self, data, no_bins, title, x_label, y_label):
+    def draw(self, data, no_bins, title, x_label, y_label, label='', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE], unitize=True):
         """ Draw the histogram.
         
             Parameters
@@ -35,12 +35,12 @@ class Histogram(AbstractPlot):
                 Y-label of the barchart.
         """
 
-        self.get_plot().draw_histogram(data, no_bins, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE], alpha=0.5)
+        self.get_plot().draw_histogram(data, no_bins, label=label, color=color, unitize=unitize, alpha=0.5)
         
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
-        self.get_plot().set_legend()
+        # self.get_plot().set_legend(title="legend")
 
     def draw_pdf(self, x_data, y_data, label, title=None, x_label=None, y_label=None):
         """ Overlay the probability distribution function on a histogram.
