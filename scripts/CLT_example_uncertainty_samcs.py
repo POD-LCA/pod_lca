@@ -12,13 +12,14 @@ from scipy import stats
 from numpy import linspace, sqrt, log
 import time
 
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
-__email__ = "kiun@uw.edu; mhtaba@uw.edu"
+__email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-# CLT example #TODO add reference
+# CLT model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 project = Project()
 
@@ -69,6 +70,7 @@ print(MCS)
 graph = Histogram.from_plotter(MatplotlibPlotter)
 graph.draw(MCS.result.get_data(), no_bins=25, title="Distribution from Monte Carlo Simulation.", x_label='qty', y_label="probability density")
 
+MCS.result.set_distribution()
 results_data = MCS.result.get_data()
 x = linspace(min(results_data), max(results_data), 100)
 p = MCS.result.get_distribution().pdf(x)

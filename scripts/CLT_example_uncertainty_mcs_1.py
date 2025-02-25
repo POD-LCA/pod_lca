@@ -1,30 +1,24 @@
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.uncertainty.hotspots import HotSpotAnalysis
-from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
 from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 from plotters.plots.histogram import Histogram
-from plotters.plots.bar_chart import BarChart
-from utilities.units.common_units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, CUBIC_METER
-from utilities.units.metric_prefixes import KILO, MEGA
+from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
+from utilities.units.metric_prefixes import KILO
 
 from math import exp
+from numpy import linspace, sqrt, log
 from scipy import stats
-from numpy import linspace, mean, std, sqrt, log
-from matplotlib import pyplot
-import time
-from collections import Counter
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
-__email__ = "kiun@uw.edu; mhtaba@uw.edu"
+__email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-# CLT example #TODO add reference
+# CLT model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 project = Project()
 

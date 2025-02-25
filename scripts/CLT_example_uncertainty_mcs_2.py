@@ -3,7 +3,7 @@ from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.project_manager import Project
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
-from plotters.plots.colour_palettes import COLOUR_BASE, COLOUR_ORDER_LIST, COLOUR_PALETTES
+from plotters.plots.colour_palettes import COLOUR_ORDER_LIST, COLOUR_PALETTES
 from plotters.plots.histogram import Histogram
 from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 from utilities.units.common_units import CUBIC_METER, KILOGRAM, KILOMETER, WATT_HOUR 
@@ -17,10 +17,10 @@ from scipy import stats
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
-__email__ = "kiun@uw.edu; mhtaba@uw.edu"
+__email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-# CLT example #TODO add reference
+# CLT model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 project = Project()
 

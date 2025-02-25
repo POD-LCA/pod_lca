@@ -40,7 +40,7 @@ class Histogram(AbstractPlot):
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
-        self.get_plot().set_legend()
+        # self.get_plot().set_legend(title="legend")
 
     def draw_pdf(self, x_data, y_data, label, title=None, x_label=None, y_label=None):
         """ Overlay the probability distribution function on a histogram.

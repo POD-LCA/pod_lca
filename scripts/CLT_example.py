@@ -4,7 +4,14 @@ from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO
 
-# CLT example #TODO add reference
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
+# CLT model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 project = Project()
 
