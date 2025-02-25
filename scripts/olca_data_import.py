@@ -36,7 +36,9 @@ inventories = DataHandler.json_to_dict('./data/inventories.json')
 
 # different options for grouping
 # group_by = {'Electricity': 2211, 'Waste': [5621, 5622,5629]}
-group_by = {'fuel combustion':['6c96a609-cd7e-3f19-a151-27deb823d3e4' , '5198d618-7bc8-3639-b4a1-de71d6d5f49a']}
+# group_by = {'fuel combustion':['6c96a609-cd7e-3f19-a151-27deb823d3e4' , '5198d618-7bc8-3639-b4a1-de71d6d5f49a']}
+renewable_fuels_process_list = DataHandler.csv_to_list('./data/USLCI_renewable_fuels.csv', 1)
+group_by = {'renewable_fuel_combustion':renewable_fuels_process_list}
 
 results = openLCA.generate_impacts_dir(openLCA_client, my_process_list, impact_categories | inventories, group_by)
 
