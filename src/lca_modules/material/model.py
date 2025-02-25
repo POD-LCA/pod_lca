@@ -1,6 +1,7 @@
 
 from lca_modules.material.process import Process, transportationProcess
 from lca_modules.material.product import Emission, Fuel, Product, Waste
+from lca_modules.impacts.units_map import UNITS_MAP
 
 import csv
 import os
@@ -83,7 +84,7 @@ class Model:
         return model
     
     @classmethod
-    def from_CSV(cls, file_path, name=None):
+    def from_CSV(cls, file_path, project, name=None):
         """ Create a model from data in a csv file.
             The csv file with headers: "Name", "Impact data", "type", "LC stage", "qty", "unit", "transported item", "density", "weight unit" (in any order).
             Transported item is the name of the product transported.
@@ -94,10 +95,14 @@ class Model:
         file_path : str
             Location of the csv file.
         name : str
-            Name of the model to be created.       
+            Name of the model to be created.   
+        project : Project Obj.
+            Project to which the model belong.    
         """        
 
         model = cls()
+
+        model.set_project(project)
 
         if name is not None:
             model.set_name(name)
@@ -117,47 +122,40 @@ class Model:
                 
                 item_type = row[header_map['type']]
                 if item_type == 'Product':
-                    item = model.add_product(name, life_cycle_stage)
+                    item = model.add_product(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Process':
-                    item = model.add_process(name, life_cycle_stage)
+                    item = model.add_process(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Transportation':
-                    item = model.add_transportation_process(name, life_cycle_stage)
+                    item = model.add_transportation_process(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Energy':
-                    item = model.add_energy(name, life_cycle_stage)
+                    item = model.add_energy(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Emission':
-                    item = model.add_emission(name, life_cycle_stage)
+                    item = model.add_emission(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Waste':
-                    item = model.add_waste(name, life_cycle_stage)                    
+                    item = model.add_waste(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)                    
                 else:
                     raise TypeError(f"Item type of {item_type} is undefined.")
 
                 if item_type == 'Transportation':
-                    item.set_transported_distance_unit(unit)
-                    item.set_transported_distance(qty)
-
                     transported_item = row[header_map['transported item']]
                     transported_product = model.find_item(transported_item) # TODO: create functionality for multiple transported items
                     if not (transported_product is None):
                         item.set_transported_products(transported_product)
                     else:
                         if not (transported_item == ''):
-                            tmp_transportation_map[transported_item] = {}
-                            tmp_transportation_map[transported_item]['transporter'] = item
+                            if transported_item in tmp_transportation_map:
+                                tmp_transportation_map[transported_item]['transporter'].append(item)
+                            else:
+                                tmp_transportation_map[transported_item] = {}
+                                tmp_transportation_map[transported_item]['transporter'] = [item]
                 else:
-                    item.set_unit(unit)
-                    item.set_qty(qty)
-                    density = row[header_map['density']]
-                    weight_unit = row[header_map['weight unit']]
-                    if not (density == ''):
-                        item.set_density(density)        
-                    if not (weight_unit == ''):
-                        item.set_weight_unit(weight_unit)  
+                    if not (row[header_map['density']] == ''):
+                        item.set_density(row[header_map['density']])        
+                    if not (row[header_map['weight unit']] == ''):
+                        item.set_weight_unit(UNITS_MAP[row[header_map['weight unit']]])  
 
                     if name in tmp_transportation_map:
                         tmp_transportation_map[name]['product'] = item
-
-                if not (database_item == ''):
-                    item.set_impact_database_entry(database_item)
         
         if tmp_transportation_map:
             for entry in tmp_transportation_map:
