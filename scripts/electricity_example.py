@@ -1,7 +1,6 @@
 from lca_modules.material.project_manager import Project 
 from lca_modules.location.location import Location
-from utilities.units.common_units import WATT_HOUR   
-from utilities.units.metric_prefixes import KILO
+from utilities.units.common_units import WATT_HOUR, KILO  
 
 my_manufacturing_project = Project()
 

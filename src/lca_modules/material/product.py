@@ -226,6 +226,10 @@ class Fuel(Product):
     def __str__(self):
         return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
+class Electricity(Fuel):
+    """
+    Electricity product object, inheriting from the Fuel object.
+    """
     @classmethod
     def new(cls, id, name, model, stage, qty, unit):
         

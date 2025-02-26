@@ -1,7 +1,8 @@
+from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
-from utilities.units.common_units import KILOGRAM
+from utilities.units.common_units import KILOGRAM, WATT_HOUR, KILO
 
 
 __author__ = ["POD/LCA Team"]
@@ -13,6 +14,9 @@ __version__ = "0.1.0"
 # Concrete model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 project = Project()
+
+concrete_yard = Location.from_str("98126, seattle")
+project.set_location(concrete_yard)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impact_data.csv')
@@ -33,10 +37,12 @@ air_entraining_admixture = concrete_model.add_product(name="Air entraining admix
 plasticizers_superplasticizers = concrete_model.add_product(name="Plasticizers and superplasticizers", stage="A1", qty=0.255, unit=KILOGRAM, impacts_from="Plasticizer and Superplasticizers_[EFCA]")
 set_accelerators = concrete_model.add_product(name="Set accelerators", stage="A1", qty=0.369, unit=KILOGRAM, impacts_from="Set accelerators_[EFCA]")
 
+electricity = concrete_model.add_electricity(name="Electricity", stage="A3", qty=4.72, unit=KILO * WATT_HOUR)
 # TODO: Add transportation processes
 
 print(concrete_model)
 print(project)
+print(electricity)
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)

@@ -1,3 +1,4 @@
+from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.material.model import Model
 from lca_modules.material.calculator import Calculator
@@ -7,6 +8,9 @@ from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 
 
 project = Project()
+
+concrete_yard = Location.from_str("98126, seattle")
+project.set_location(concrete_yard)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impact_data.csv')
