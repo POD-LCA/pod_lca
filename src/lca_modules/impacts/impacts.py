@@ -30,6 +30,59 @@ class Impacts:
 
         return str
 
+    def __add__(self, other):
+        """ Addition of two impacts."""
+        if not isinstance(other, Impacts):
+            return NotImplemented
+
+        summed_impacts = {attr: getattr(self, attr, 0.0) + getattr(other, attr, 0.0)
+                        for attr in IMPACT_CATEGOREIS.keys()}
+        
+        new_impact = Impacts()
+        new_impact.set_parent(None)
+        new_impact.update_impact_qty(summed_impacts)
+
+        return new_impact
+
+    def __iadd__(self, other):
+        """ In-place addition of two impacts."""
+        if not isinstance(other, Impacts):
+            return NotImplemented
+
+        for attr in IMPACT_CATEGOREIS.keys():
+            setattr(self, attr, getattr(self, attr, 0) + getattr(other, attr, 0.0))
+
+        return self
+    
+    def __mul__(self, scalar):
+        """ Multiplication of an impact by a scalar."""
+        if not isinstance(scalar, (int, float)):
+            return NotImplemented
+
+        multiplied_impacts = {attr: getattr(self, attr, 0.0) * scalar
+                            for attr in IMPACT_CATEGOREIS.keys()}
+        
+        new_impact = Impacts()
+        new_impact.set_parent(self.parent)
+        new_impact.update_impact_qty(multiplied_impacts)
+
+        return new_impact
+    
+    def __imul__(self, scalar):
+        """ In-place multiplication of an impact."""
+
+        if not isinstance(scalar, (int, float)):
+            return NotImplemented
+
+        for attr in IMPACT_CATEGOREIS.keys():
+            setattr(self, attr, getattr(self, attr, 0) * scalar)
+
+        return self
+
+    def __rmul__(self, scalar):
+        """ Reflexive multiplication of an impact by a scalar."""
+        return self.__mul__(scalar)
+    
     # ========================
     # Constructors
     # ========================
@@ -101,6 +154,14 @@ class Impacts:
     # ========================
     # Methods
     # ========================
+    def clear_impact_qty(self):
+        """ Set all impact quantities to zero."""
+
+        for impact in IMPACT_CATEGOREIS:
+            setattr(self, impact, 0.0)
+
+        return self
+    
     def update_impact_qty(self, impacts):
         """ Update the impact quantities.
         
@@ -112,6 +173,8 @@ class Impacts:
 
         for key, value in impacts.items():
             setattr(self, key, value)
+
+        return self
 
     def get_impact(self, impact_cat):
         """ Get the quantity of a specific impact category.

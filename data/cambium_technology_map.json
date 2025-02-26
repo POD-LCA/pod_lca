@@ -1,0 +1,18 @@
+{
+    "battery": "Mixed",
+    "biomass": "Biomass",
+    "canada": "Mixed",
+    "coal": "Coal",
+    "csp": "Solar",
+    "distpv": "Solar",
+    "gas-cc": "NGCC",
+    "gas-ct": "Natural gas",
+    "geothermal": "Geothermal",
+    "hydro": "Hydro",
+    "nuclear": "Nuclear",
+    "o-g-s": "Petroleum",
+    "phs": "Hydro",
+    "upv": "Solar",
+    "wind-ons": "Wind",
+    "wind-ofs": "Wind"
+}

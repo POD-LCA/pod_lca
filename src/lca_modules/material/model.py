@@ -1,7 +1,8 @@
 
 from lca_modules.material.process import Process, transportationProcess
-from lca_modules.material.product import Emission, Fuel, Product, Waste
+from lca_modules.material.product import Emission, Fuel, Product, Waste, Electricity
 from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.units.common_units import WATT_HOUR, KILO 
 
 import csv
 import os
@@ -129,6 +130,8 @@ class Model:
                     item = model.add_transportation_process(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Energy':
                     item = model.add_energy(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
+                elif item_type == 'Electricity':
+                    item = model.add_electricity(name, life_cycle_stage, qty, UNITS_MAP[unit])
                 elif item_type == 'Emission':
                     item = model.add_emission(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Waste':
@@ -368,7 +371,7 @@ class Model:
             qty : float
                 Product quantity.
             unit : Unit Obj.
-                Unit of measurement.    
+                Unit of measurement.
             impacts_from : str
                 Name of the impact database entry from which to use impacts.
 
@@ -385,6 +388,33 @@ class Model:
         self.impacts[stage].append(energy.get_impacts())
 
         return energy
+    
+    def add_electricity(self, name, stage, qty, unit=KILO * WATT_HOUR):
+        """ Create and add electricity product to the model.
+
+            Parameters
+            
+            name : str.
+                Name of the product.
+            stage : str.
+                Life cycle stage: 'A1', 'A2', 'A3'.
+            qty : float
+                Product quantity.
+            unit : Unit Obj.
+                Unit of measurement.
+        
+            Returns
+            -------
+            Product Obj.
+                Electricity object created.
+        """
+        n = len(self.get_products())
+        electricity = Electricity.new(n, name, self, stage, qty, unit)
+
+        self.products.append(electricity)
+        self.impacts[stage].append(electricity.get_impacts())
+
+        return electricity
     
     def add_emission(self, name, stage, qty, unit, impacts_from):
         """ Create and add emission product to the model.
