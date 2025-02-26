@@ -2,6 +2,8 @@
 from lca_modules.impacts.units_map import UNITS_MAP
 
 from tqdm import tqdm
+import zipfile
+import json
 
 try:
     import olca_ipc as ipc
@@ -43,59 +45,60 @@ class openLCA:
     # =================================
     # Setters
     # =================================
-    def set_impact_categoreis(client, impact_categories_list):
-        """ Set the impact categories for the openLCA server.
 
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            impact_categories_list : list
-                List of impact categories to be set for the openLCA server.
+    # def set_impact_categoreis(client, impact_categories_list):
+    #     """ Set the impact categories for the openLCA server.
 
-            Returns
-            -------
-            list
-                List of impact category references.
-        """
+    #         Parameters
+    #         ----------
+    #         client : olca_ipc.Client
+    #             The client object for the openLCA server.
+    #         impact_categories_list : list
+    #             List of impact categories to be set for the openLCA server.
 
-        if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+    #         Returns
+    #         -------
+    #         list
+    #             List of impact category references.
+    #     """
 
-        impact_category_references = []
+    #     if not OLCA_IMPORTED:
+    #         raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        for impact_category in impact_categories_list:
-            impact_category_object = schema.ImpactCategory().from_dict(impact_category)
-            client.put(impact_category_object)  
-            impact_category_references.append(client.get_descriptor(schema.ImpactCategory, impact_category["@id"]))
+    #     impact_category_references = []
 
-        return impact_category_references
+    #     for impact_category in impact_categories_list:
+    #         impact_category_object = schema.ImpactCategory().from_dict(impact_category)
+    #         client.put(impact_category_object)  
+    #         impact_category_references.append(client.get_descriptor(schema.ImpactCategory, impact_category["@id"]))
 
-    def set_impact_method(client, impact_category_references):
-        """ Set the impact method for the openLCA server.
+    #     return impact_category_references
+
+    # def set_impact_method(client, impact_category_references):
+    #     """ Set the impact method for the openLCA server.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            impact_category_references : list
-                List of impact category references to be set for the openLCA server.
+    #         Parameters
+    #         ----------
+    #         client : olca_ipc.Client
+    #             The client object for the openLCA server.
+    #         impact_category_references : list
+    #             List of impact category references to be set for the openLCA server.
 
-            Returns
-            -------
-            schema.ImpactMethod
-                The impact method object.
-        """
+    #         Returns
+    #         -------
+    #         schema.ImpactMethod
+    #             The impact method object.
+    #     """
 
-        if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+    #     if not OLCA_IMPORTED:
+    #         raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        # TODO: remove hard coding of impact method dict input 
-        impact_method = schema.ImpactMethod().from_dict({"@type":"ImpactMethod","@id":"68c8e8cd-e64a-49b1-954e-bec0da4e4574","name":"ISO21930-LCIA-US (POD|LCA)","description":"ISO21930-LCIA-US is built from LCIA Formatter v1.1.3 and flows from the Federal Elementary Flow List (FEDEFL) v1.2.2\n\n","version":"01.01.005","lastChange":"2025-01-24T00:10:23.424Z"})
-        impact_method.impact_categories = impact_category_references
-        client.put(impact_method)
+    #     # TODO: remove hard coding of impact method dict input 
+    #     impact_method = schema.ImpactMethod().from_dict({"@type":"ImpactMethod","@id":"68c8e8cd-e64a-49b1-954e-bec0da4e4574","name":"ISO21930-LCIA-US (POD|LCA)","description":"ISO21930-LCIA-US is built from LCIA Formatter v1.1.3 and flows from the Federal Elementary Flow List (FEDEFL) v1.2.2\n\n","version":"01.01.005","lastChange":"2025-01-24T00:10:23.424Z"})
+    #     impact_method.impact_categories = impact_category_references
+    #     client.put(impact_method)
 
-        return impact_method
+    #     return impact_method
 
     def create_product_system(client, process):
         """ Set the product system for the process.
@@ -424,6 +427,81 @@ class openLCA:
             else: # ISIC section
                 return len(isic) == 1
 
+    @staticmethod     
+    def import_from_zip(client, path):
+        """ Import a database from a zip file.
+        
+            Parameters
+            ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            path : str
+                The path to the zip file.
+        """
+        
+        if not OLCA_IMPORTED:
+            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+
+        with zipfile.ZipFile(path, 'r') as zipObject:
+            files = zipObject.namelist()
+
+            if 'categories.json' in files:
+                with zipObject.open('categories.json') as data:
+                    json_dict = json.load(data)
+                    for category in json_dict:
+                        obj = schema.ImpactCategory()
+                        type_object = obj.from_dict(category)
+                        client.put(type_object)
+
+
+            for file in files:
+                if not file.endswith('/'):
+                    file_type_found = True
+                    with zipObject.open(file) as data:
+                        if file.startswith('actors/'):         
+                            obj = schema.Actor()
+                        elif file.startswith('currencies/'):
+                            obj = schema.Currency()
+                        elif file.startswith('dq_systems/'):
+                            obj = schema.DQSystem()
+                        elif file.startswith('epds/'):
+                            obj = schema.Epd()
+                        elif file.startswith('flows/'):
+                            obj = schema.Flow()
+                        elif file.startswith('flow_properties/'):
+                            obj = schema.FlowProperty()
+                        elif file.startswith('lcia_categories/'):
+                            obj = schema.ImpactCategory()
+                        elif file.startswith('lcia_methods/'):
+                            obj = schema.ImpactMethod()
+                        elif file.startswith('locations/'):
+                            obj = schema.Location()
+                        elif file.startswith('parameters/'):
+                            obj = schema.Parameter()
+                        elif file.startswith('processes/'):
+                            obj = schema.Process()
+                        elif file.startswith('product_systems/'):
+                            obj = schema.ProductSystem()
+                        elif file.startswith('projects/'):
+                            obj = schema.Project()
+                        elif file.startswith('results/'):
+                            obj = schema.Result()
+                        elif file.startswith('social_indicators/'):
+                            obj = schema.SocialIndicator()
+                        elif file.startswith('sources/'):
+                            obj = schema.Source()
+                        elif file.startswith('unit_groups/'):
+                            obj = schema.UnitGroup()
+                        else:
+                            file_type_found = False
+                        
+                        if file_type_found:
+                            json_dict = json.load(data)
+                            type_object = obj.from_dict(json_dict)
+                            client.put(type_object)
+
+        return client
+
     # =================================
     # Operations
     # =================================
@@ -463,7 +541,7 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(client, process_list, impact_dict, group_by=None):
+    def generate_impacts_dir(client, process_list, impact_dict, impact_method, group_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
@@ -474,6 +552,8 @@ class openLCA:
                 List of UUIDs of the processess to be tested
             impact_dict : dict
                 Dictionary of impact categories.
+            impact_method : str
+                UUID of the impact method.
             group_by : dict
                 Dictionary of group categorization: {category name (str) : [categoty id (int) or product uuid (str)]}
                 Category IDs are from the North American Industry Classification System (NAICS).
@@ -488,10 +568,7 @@ class openLCA:
         else:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        # TODO: Update and expand data import methods for openLCA
-        # impact_category_references = openLCA.set_impact_categoreis(openLCA_client, list(impact_dict.values()))
-        # impact_method = openLCA.set_impact_method(openLCA_client, impact_category_references)
-        impact_method = openLCA.get_impact_method(client, impact_method_uuid='68c8e8cd-e64a-49b1-954e-bec0da4e4574')
+        impact_method = openLCA.get_impact_method(client, impact_method_uuid=impact_method)
 
         results = {}
         for process in tqdm(process_list):
