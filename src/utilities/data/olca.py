@@ -265,7 +265,7 @@ class openLCA:
         
         return impact, qty, unit
 
-    def get_process_in_process(processes, node, level, impact, qty, unit, max_levels=3):
+    def get_process_in_process(processes, node, level, impact, qty, unit, max_levels=3, heating_values=None):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
@@ -285,6 +285,8 @@ class openLCA:
                 The declared unit of the category.
             max_levels : int
                 The maximum number of levels to expand the tree.
+            heating_values: dict
+                Dictionary of heating values for fuel group unit conversion to energy units, read from a csv file.
 
             Returns
             -------
@@ -303,7 +305,16 @@ class openLCA:
             processes = [processes]
         
         if node.provider.id in processes:
-            if unit is None:
+            if not heating_values is None:
+                if node.product.ref_unit == 'l': 
+                    #this unit conversion from l to m3 is specified because it is the only necessary conversion for the USLCI fuels processes list
+                    #find a more elegant solution to this issue if possible
+                    unit = 'm3'
+                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+                else:
+                    conversion_factor = 1.0
+                unit = UNITS_MAP['MJ']
+            elif unit is None:
                 unit = UNITS_MAP[node.product.ref_unit]
                 conversion_factor = 1.0
             elif unit.get_standard_notation() == node.product.ref_unit:
@@ -311,14 +322,21 @@ class openLCA:
             else:
                 conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
 
-            qty += node.required_amount * conversion_factor
+            if not heating_values is None:
+                if node.provider.id in heating_values:
+                    qty += node.required_amount * conversion_factor * float(heating_values[node.provider.id]['heating_value'])
+                else:
+                    qty += node.required_amount * conversion_factor
+            else:        
+                qty += node.required_amount * conversion_factor
+            
             impact += node.result
 
             return impact, qty, unit
 
         if level < max_levels:
             for child in node.childs:
-                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, max_levels)
+                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, max_levels, heating_values)
         
         return impact, qty, unit
     
@@ -463,7 +481,7 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(client, process_list, impact_dict, group_by=None):
+    def generate_impacts_dir(client, process_list, impact_dict, group_by=None, heating_values=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
@@ -477,7 +495,8 @@ class openLCA:
             group_by : dict
                 Dictionary of group categorization: {category name (str) : [category id (int)]}
                 For Federal LCA commons LCI data, category IDs are from the North American Industry Classification System (NAICS).
-
+            heating_values: dict
+                Dictionary of heating values for fuel group unit conversion to energy units, read from a csv file.
             Returns
             -------
             dict
@@ -513,7 +532,7 @@ class openLCA:
                         
                         root = utree.of(result, impact_cat_ref)
                         if all(openLCA.is_UUID(item) for item in ids):
-                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1, heating_values=heating_values)
                         elif all([openLCA.is_ISIC(item) or openLCA.is_NAICS(item) for item in ids]):
                             group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
                         else:
