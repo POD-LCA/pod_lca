@@ -312,7 +312,7 @@ class openLCA:
                 if node.product.ref_unit == 'l': 
                     #this unit conversion from l to m3 is specified because it is the only necessary conversion for the USLCI fuels processes list
                     #find a more elegant solution to this issue if possible
-                    unit = 'm3'
+                    unit = UNITS_MAP['m3']
                     conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
                 else:
                     conversion_factor = 1.0
