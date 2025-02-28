@@ -20,7 +20,7 @@ process_list_all = openLCA.get_process_list(openLCA_client)
 
 # different options for process list
 # my_process_list = process_list_all
-my_process_list = process_list_all
+my_process_list = process_list_all[606:610]
 # my_process_list = ['f41111d1-1668-325a-abd2-a40af161e35d', 'd4031d82-ca6e-3548-b07c-2acd79f47a3f']
 
 impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')

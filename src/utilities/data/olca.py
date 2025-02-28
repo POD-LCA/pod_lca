@@ -265,7 +265,7 @@ class openLCA:
 
         if level < max_levels:
             for child in node.childs:
-                impact, qty, unit = openLCA.get_category_in_process(categories, child, level + 1, impact, qty, unit, max_levels)
+                impact, qty, unit = openLCA.get_category_in_process(categories, child, level + 1, impact, qty, unit, conversion_map, max_levels)
         
         return impact, qty, unit
 
@@ -324,11 +324,8 @@ class openLCA:
                         conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
                     else:
                         conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
-                    
 
             qty += node.required_amount * conversion_factor
-            impact += node.result
-
             impact += node.result
 
             return impact, qty, unit
@@ -638,9 +635,14 @@ class openLCA:
                 Dictionary of impact categories.
             impact_method : str
                 UUID of the impact method.
-            group_by : dict
-                Dictionary of group categorization: {category name (str) : [categoty id (int) or product uuid (str)]}
+            group_by : dict or list of dict
+                Dictionary of group categorization: {'name' : category name (str),
+                                                     'ids' : [categoty id (int) or product uuid (str)], 
+                                                     'unit': unit to be reported - optional (Unit Obj), 
+                                                     'conversion_map': conversion map - optional (dict)}
                 Category IDs are from the North American Industry Classification System (NAICS).
+                When unit is not given the default unit of the first item in the group is used.
+                Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'heating_value', 'heating_unit'.
             
             Returns
             -------
@@ -663,12 +665,15 @@ class openLCA:
             impact_results = openLCA.get_impacts(client, result, impact_dict)
 
             if not group_by is None:
+                if not isinstance(group_by, list):
+                    group_by = [group_by]
+
                 for group in group_by:
                     ids = group['ids']
                     name = group['name']
                     unit = group['unit'] if 'unit' in group else None
                     conversion_map = group['conversion_map'] if 'conversion_map' in group else None
-                    
+
                     if not isinstance(ids, list):
                         ids = [ids]
 
