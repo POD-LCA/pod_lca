@@ -113,4 +113,44 @@ class DataHandler:
             data = json.load(file)
 
         return data
+
+    def csv_to_list(file_path, column_index):
+        """ Import data to a list from a CSV file.
+        
+            Parameters
+            ----------
+            file_path : str
+                Location of the csv file.
+
+            column_index : int
+                Index of the column in the CSV file to be read to the list.
+            
+            Returns
+            -------
+            list
+                A list of strings read from the specified column in the CSV data.
+        """
+        data = []
+        with open(file_path, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                data.append(row[column_index])
+        
+        return data
     
+    def list_to_csv(input_list, file_path):
+        """ Write data to a CSV file from a list of lists.
+        
+            Parameters
+            ----------
+            input_list : list of str
+                List of strings to be written to the CSV file. 
+            
+            file_path : str
+                Location of the CSV file.
+        """
+        
+        with open(file_path, "w", newline = "") as file:
+            writer = csv.writer(file)
+            writer.writerows(input_list)
+            

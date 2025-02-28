@@ -204,7 +204,7 @@ class openLCA:
 
         return results_dict
     
-    def get_category_in_process(categories, node, level, impact, qty, unit, max_levels=3):
+    def get_category_in_process(categories, node, level, impact, qty, unit, conversion_map, max_levels=3):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
@@ -269,7 +269,7 @@ class openLCA:
         
         return impact, qty, unit
 
-    def get_process_in_process(processes, node, level, impact, qty, unit, max_levels=3):
+    def get_process_in_process(processes, node, level, impact, qty, unit, conversion_map, max_levels=3):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
@@ -313,16 +313,29 @@ class openLCA:
             elif unit.get_standard_notation() == node.product.ref_unit:
                 conversion_factor = 1.0
             else:
-                conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+                if conversion_map is None:
+                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)        
+                else:
+                    if node.provider.id in conversion_map:
+                        conversion_factor_a = UNITS_MAP[node.product.ref_unit].get_conversion_factor(UNITS_MAP[conversion_map[node.provider.id]['declared_unit']])
+                        conversion_factor_b = float(conversion_map[node.provider.id]['heating_value']) / float(conversion_map[node.provider.id]['declared_qty'])
+                        conversion_factor_c = UNITS_MAP[conversion_map[node.provider.id]['heating_unit']].get_conversion_factor(unit)
+                        
+                        conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
+                    else:
+                        conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+                    
 
             qty += node.required_amount * conversion_factor
+            impact += node.result
+
             impact += node.result
 
             return impact, qty, unit
 
         if level < max_levels:
             for child in node.childs:
-                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, max_levels)
+                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, conversion_map, max_levels)
         
         return impact, qty, unit
     
@@ -650,7 +663,12 @@ class openLCA:
             impact_results = openLCA.get_impacts(client, result, impact_dict)
 
             if not group_by is None:
-                for name, ids in group_by.items():
+                for group in group_by:
+                    ids = group['ids']
+                    name = group['name']
+                    unit = group['unit'] if 'unit' in group else None
+                    conversion_map = group['conversion_map'] if 'conversion_map' in group else None
+                    
                     if not isinstance(ids, list):
                         ids = [ids]
 
@@ -659,9 +677,9 @@ class openLCA:
                         
                         root = utree.of(result, impact_cat_ref)
                         if all(openLCA.is_UUID(item) for item in ids):
-                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1)
                         elif all([openLCA.is_ISIC(item) or openLCA.is_NAICS(item) for item in ids]):
-                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1)
                         else:
                             raise ValueError("ids should be all NAICS/ISIC ids or all UUIDs.")
                     
