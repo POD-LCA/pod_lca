@@ -3,6 +3,7 @@ from lca_modules.impacts.units_map import UNITS_MAP
 
 from tqdm import tqdm
 import zipfile
+import io
 import json
 
 try:
@@ -428,8 +429,8 @@ class openLCA:
                 return len(isic) == 1
 
     @staticmethod     
-    def import_from_zip(client, path):
-        """ Import a database from a zip file.
+    def import_from_zip(client, path, duplicates='overwrite'):
+        """ Import a database from a zip file. Handle only the first level of nested zip files.
         
             Parameters
             ----------
@@ -437,6 +438,8 @@ class openLCA:
                 The client object for the openLCA server.
             path : str
                 The path to the zip file.
+            duplicates : str
+                The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
         """
         
         if not OLCA_IMPORTED:
@@ -444,62 +447,130 @@ class openLCA:
 
         with zipfile.ZipFile(path, 'r') as zipObject:
             files = zipObject.namelist()
-
-            if 'categories.json' in files:
-                with zipObject.open('categories.json') as data:
-                    json_dict = json.load(data)
-                    for category in json_dict:
-                        obj = schema.ImpactCategory()
-                        type_object = obj.from_dict(category)
-                        client.put(type_object)
-
-
             for file in files:
-                if not file.endswith('/'):
-                    file_type_found = True
-                    with zipObject.open(file) as data:
-                        if file.startswith('actors/'):         
-                            obj = schema.Actor()
-                        elif file.startswith('currencies/'):
-                            obj = schema.Currency()
-                        elif file.startswith('dq_systems/'):
-                            obj = schema.DQSystem()
-                        elif file.startswith('epds/'):
-                            obj = schema.Epd()
-                        elif file.startswith('flows/'):
-                            obj = schema.Flow()
-                        elif file.startswith('flow_properties/'):
-                            obj = schema.FlowProperty()
-                        elif file.startswith('lcia_categories/'):
-                            obj = schema.ImpactCategory()
-                        elif file.startswith('lcia_methods/'):
-                            obj = schema.ImpactMethod()
-                        elif file.startswith('locations/'):
-                            obj = schema.Location()
-                        elif file.startswith('parameters/'):
-                            obj = schema.Parameter()
-                        elif file.startswith('processes/'):
-                            obj = schema.Process()
-                        elif file.startswith('product_systems/'):
-                            obj = schema.ProductSystem()
-                        elif file.startswith('projects/'):
-                            obj = schema.Project()
-                        elif file.startswith('results/'):
-                            obj = schema.Result()
-                        elif file.startswith('social_indicators/'):
-                            obj = schema.SocialIndicator()
-                        elif file.startswith('sources/'):
-                            obj = schema.Source()
-                        elif file.startswith('unit_groups/'):
-                            obj = schema.UnitGroup()
-                        else:
-                            file_type_found = False
-                        
-                        if file_type_found:
-                            json_dict = json.load(data)
-                            type_object = obj.from_dict(json_dict)
-                            client.put(type_object)
+                client = openLCA._handle_file(file, zipObject, client, duplicates)
+                # if file.endswith('.zip'): # handle nested zip files
+                #     with zipObject.open(file) as inner_zip_file:
+                #         with zipfile.ZipFile(io.BytesIO(inner_zip_file.read())) as inner_zip:
+                #             inner_files = inner_zip.namelist()
+                #             for inner_file in inner_files:
+                #                 if not inner_file.endswith('/'):  # Ignore directories
+                #                     with inner_zip.open(inner_file) as data:
+                #                         openLCA.import_from_json(client, inner_file, data, duplicates)
 
+                # elif not file.endswith('/'): # Ignore directories
+                #     with zipObject.open(file) as data:
+                #         openLCA.import_from_json(client, file, data, duplicates)
+    
+
+        print("database loaded")
+        return client
+    
+    @staticmethod
+    def _handle_file(file, zipObject, client, duplicates):
+
+        if file.endswith('.zip'): # handle nested zip files
+            with zipObject.open(file) as inner_zip_file:
+                with zipfile.ZipFile(io.BytesIO(inner_zip_file.read())) as inner_zip:
+                    inner_files = inner_zip.namelist()
+                    for inner_file in inner_files:
+                        client = openLCA._handle_file(inner_file, inner_zip, client, duplicates)
+
+        elif not file.endswith('/'): # Ignore directories
+            with zipObject.open(file) as data:
+                openLCA.import_from_json(client, file, data, duplicates)
+
+        return client
+    
+    @staticmethod
+    def import_from_json(client, file_name, data, duplicates):
+        """ Import a database item from a json file.
+        
+            Parameters
+            ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            file_name : str
+                The name of the file.
+            data : ZipExtFile
+                The data from the file.
+            duplicates : str
+                The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
+        """
+
+        if file_name.startswith('actors/'):         
+            obj = schema.Actor()
+            model_type = 'Actor'
+        elif file_name.startswith('currencies/'):
+            obj = schema.Currency()
+            model_type = 'Currency'
+        elif file_name.startswith('dq_systems/'):
+            obj = schema.DQSystem()
+            model_type = 'DQSystem'
+        elif file_name.startswith('epds/'):
+            obj = schema.Epd()
+            model_type = 'Epd'
+        elif file_name.startswith('flows/'):
+            obj = schema.Flow()
+            model_type = 'Flow'
+        elif file_name.startswith('flow_properties/'):
+            obj = schema.FlowProperty()
+            model_type = 'FlowProperty'
+        elif file_name.startswith('lcia_categories/'):
+            obj = schema.ImpactCategory()
+            model_type = 'ImpactCategory'
+        elif file_name.startswith('lcia_methods/'):
+            obj = schema.ImpactMethod()
+            model_type = 'ImpactMethod'
+        elif file_name.startswith('locations/'):
+            obj = schema.Location()
+            model_type = 'Location'
+        elif file_name.startswith('parameters/'):
+            obj = schema.Parameter()
+            model_type = 'Parameter'
+        elif file_name.startswith('processes/'):
+            obj = schema.Process()
+            model_type = 'Process'
+        elif file_name.startswith('projects/'):
+            obj = schema.Project()
+            model_type = 'Project'
+        elif file_name.startswith('results/'):
+            obj = schema.Result()
+            model_type = 'Result'
+        elif file_name.startswith('social_indicators/'):
+            obj = schema.SocialIndicator()
+            model_type = 'SocialIndicator'
+        elif file_name.startswith('sources/'):
+            obj = schema.Source()
+            model_type = 'Source'
+        elif file_name.startswith('unit_groups/'):
+            obj = schema.UnitGroup()
+            model_type = 'UnitGroup'
+        else:
+            return None
+        
+        json_dict = json.load(data)
+
+        result, _ = client.rpc_call("data/get", {'@type': model_type, '@id': json_dict['@id']})
+
+        if not result: # new item
+            type_object = obj.from_dict(json_dict)
+            client.put(type_object)
+        else:
+            if duplicates == 'overwrite':
+                type_object = obj.from_dict(json_dict)
+                client.put(type_object)
+            elif duplicates == 'update':
+                for key, value in json_dict.items():
+                    if value is not None and not key in ['@type', '@id']:
+                        result[key] = value
+                type_object = obj.from_dict(result)
+                client.put(type_object)
+            elif duplicates == 'never':
+                pass
+            else:
+                raise ValueError("Invalid duplicates option.")
+                
         return client
 
     # =================================

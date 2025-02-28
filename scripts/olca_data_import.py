@@ -7,20 +7,20 @@ from utilities.units.metric_prefixes import MEGA
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
-__email__ = "etel5501@uw.edu"
+__email__ = "etel5501@uw.edu, kiun@uw.edu"
 __version__ = "0.1.0"
 
 
 openLCA_client = openLCA.set_connection()
-openLCA.import_from_zip(openLCA_client, r'C:/Users/kiun/National_Renewable_Energy_Laboratory-USLCI_Database_Public.zip')
-openLCA.import_from_zip(openLCA_client, r'C:/Users/kiun/ISO21930-LCIA-US (POD_LCA).zip')
-# openLCA.import_from_zip(openLCA_client, r'C:/Users/kiun/elci_6_2024 for uslci_q2_2024_final.zip')
+# openLCA.import_from_zip(openLCA_client, r'C:/Users/kiun/elci_6_2024 for uslci_q2_2024_final.zip', duplicates='update')
+# openLCA.import_from_zip(openLCA_client, r'C:/Users/kiun/National_Renewable_Energy_Laboratory-USLCI_Database_Public.zip', duplicates='update')
+# openLCA.import_from_zip(openLCA_client, r'C:/Users/kiun/ISO21930-LCIA-US (POD_LCA).zip', duplicates='update')
 
 process_list_all = openLCA.get_process_list(openLCA_client)
 
 # different options for process list
 # my_process_list = process_list_all
-my_process_list = process_list_all[125:135]
+my_process_list = process_list_all[0:10]
 # my_process_list = ['f41111d1-1668-325a-abd2-a40af161e35d', 'd4031d82-ca6e-3548-b07c-2acd79f47a3f']
 
 impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
@@ -34,7 +34,7 @@ group_by = {'Electricity': '2211', 'Waste': [5621, 5622,5629]}
 
 results = openLCA.generate_impacts_dir(openLCA_client, my_process_list, impact_categories | inventories, impact_method_uuid, group_by)
 
-save_path = './data/USLCI_Categorized_uuid.csv'
+save_path = './data/USLCI_Categorized_all.csv'
 DataHandler.dict_to_csv(results, save_path) 
 
 # dict_A = DataHandler.csv_to_dict('./data/USLCI_tax_elec_1L_ISO21930_1_24_25.csv', 'UUID')
