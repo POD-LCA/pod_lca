@@ -187,7 +187,7 @@ class Location:
                 elif state in df["State_Initial"].values:
                     self.cfs_area = df[df['State_Initial'] == state].iloc[0, 2]
                 else:
-                    print (f"State {state} not found in CFS data")
+                    #print (f"State {state} not found in CFS data")
                     self.cfs_area = None
             else:
                 self.cfs_area = None
@@ -360,7 +360,7 @@ class Location:
 
 if __name__ == '__main__':
 
-    location_input = "Florida"
+    location_input = "Louisiana"
     location_obj = Location.from_str(location_input)
 
 

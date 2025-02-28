@@ -56,9 +56,12 @@ class Link:
         self.travel_dist = travel_dist
         self.return_trip_factor = return_trip_factor
         self.dist_unit = dist_unit
+        self.efficiency = efficiency
+        self.efficiency_dms = efficiency_dms
         self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project)
         self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project)
         self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
+        self.scenario_distances = None
 
     def compute_impact(self):
         """ compute the impaact of the transportation link.
@@ -119,3 +122,50 @@ class Link:
         """
 
         return self.travel_dist
+
+
+    def get_mode (self):
+        """ Retrieve the transportation mode of the transportation link.
+
+            Returns
+            -------
+            str
+                transportation mode of the transportation link.
+        """
+
+        return self.mode
+
+
+    def get_efficiency (self):
+        """ Retrieve the transportation efficiency of the transportation link.
+
+            Returns
+            -------
+            int
+                transportation efficiency of the transportation link.
+        """
+
+        return self.efficiency
+
+    def get_efficiency_dms (self):
+        """ Retrieve the transportation domestic efficiency of the transportation link.
+
+            Returns
+            -------
+            int
+                transportation domestic efficiency of the transportation link.
+        """
+
+        return self.efficiency_dms
+
+    def get_scenario_distances (self):
+        """ Retrieve the scenario distances of the transportation link.
+
+            Returns
+            -------
+            float
+                scenario distances of the transportation link.
+        """
+        self.scenario_distances = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_distances()
+
+        return self.scenario_distances

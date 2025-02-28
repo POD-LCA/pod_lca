@@ -3,6 +3,7 @@ import pandas as pd
 from lca_modules.transportation.logistics_link import Link
 from lca_modules.transportation.scenarios import Scenario
 from lca_modules.location.location import Location
+import matplotlib.pyplot as plt
 
 
 __author__ = ["POD/LCA Team"]
@@ -121,6 +122,28 @@ class ProjectLogisticManager:
         """
 
         return self.shipping_org
+
+    def get_scenario_distance (self, link):
+        """
+        Retrieve the scenario distance of the project.
+        """
+        return self.links[link].get_scenario_distances()
+
+
+    def get_scenario_distance_plot(self, link):
+        """
+        Retrieve the scenario distance plot of the project.
+        """
+        scenario_distances = self.links[link].get_scenario_distances()
+        labels = list(scenario_distances.keys())
+        distances = list(scenario_distances.values())
+
+        plt.bar(labels, distances)
+        plt.xlabel('Scenario')
+        plt.ylabel('Distance')
+        plt.title('Scenario Distance Plot')
+        plt.show()
+
 
 
 

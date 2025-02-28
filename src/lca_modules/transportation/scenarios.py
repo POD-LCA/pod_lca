@@ -1,7 +1,9 @@
 import pandas as pd
+import numpy as np
 from lca_modules.transportation.transport_mode import TransportMode
 from geopy.distance import geodesic
 from lca_modules.location.data import CFS_DATA_PATH
+from lca_modules.location.location import Location
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -41,6 +43,7 @@ class Scenario:
         self.scenario = scenario
         self.project = project
         self.material = material
+        self.distances = {"Local": 0, "Regional": 0, "Regional_c": 0, "National": 0, "NA": 0, "Global": 0, "None": 0}
         self.mode = mode
         self.mode_domestic = mode_domestic
         self.shipping_dest = project.get_shipping_dest()
@@ -51,9 +54,11 @@ class Scenario:
         self.national = None
         self.na = None
         self.global_ = None
+        self.none = None
 
-        self.pre_us_processing()
         self.pre_global_processing()
+        self.pre_us_processing()
+        
 
     def get_sctg(self, digit):
         """
@@ -86,13 +91,14 @@ class Scenario:
 
         if self.mode is not None:
             cfs_c = cfs.copy()
+ 
             cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
             if cfs.empty:
                 cfs = cfs_c
                 print ("No mode found in cfs, value shows the avarage distance of the modes")
         else:
             self.mode = TransportMode("Truck", 1, self.project)
-
+        
         if self.shipping_dest is not None:
             cfs_c = cfs.copy()
             cfs = cfs[cfs["DEST_STATE"] == self.shipping_dest.get_cfs_area()]
@@ -149,10 +155,20 @@ class Scenario:
         merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
 
         self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
-        self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
-        self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
-        self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
+        self.distances["Local"] = merged_data[merged_data["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
 
+        self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
+        self.distances["Regional"] = merged_data[merged_data["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
+
+        self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
+        self.distances["Regional_c"] = merged_data[merged_data["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+
+        self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
+        self.distances["National"] = merged_data[merged_data["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
+
+        self.none = merged_data.iloc[:, -5:].mean().to_dict()
+        self.distances["None"] = merged_data["SHIPMT_DIST_ROUTED"].mean()
+        
 
     def pre_global_processing (self):
         """
@@ -232,7 +248,9 @@ class Scenario:
                     total_impacts[key] = domestic_total + foreign_total
                 
                 self.na = total_impacts
+                self.distances["NA"] = distance
                 self.global_ = total_impacts
+                self.distances["Global"] = distance
 
 
             if self.mode.get_name() == "Rail":
@@ -244,7 +262,9 @@ class Scenario:
                     total_impacts[key] = value * distance
                 
                 self.na = total_impacts
+                self.distances["NA"] = distance
                 self.global_ = total_impacts
+                self.distances["Global"] = distance
 
 
             if self.mode.get_name() == "Barge" or "Ocean":
@@ -270,7 +290,10 @@ class Scenario:
                     foreign_total[key] = value * marine_dis
                 
                 self.global_ = {key: domestic_total[key] + foreign_total[key] for key in domestic_total}
+                self.distances["Global"] = distance + marine_dis
+                self.distances["NA"] = distance + marine_dis
                 self.na = self.global_
+                #self.none = self.global_
 
 
             if self.mode.get_name() == "Air":
@@ -294,11 +317,38 @@ class Scenario:
                     total_impacts[key] = value * distance
 
                 self.global_ = total_impacts
+                self.distances["Global"] = distance
+                self.distances["NA"] = distance
                 self.na = self.global_
 
-            else:
-                print ("Mode not found")
+        else:
 
+            mode_na = emission[emission["eff"] == self.project.get_links()[0].get_efficiency()].iloc[:, -5:].mean().to_dict()
+            mode_global = emission[emission["eff"] == self.project.get_links()[0].get_efficiency()].iloc[:, -5:].mean().to_dict()
+
+            if self.shipping_dest is None:
+                shipping_dest_coords = (39.8283, -98.5795)  # Default location (center of the U.S.)
+            else:
+                shipping_dest_coords = self.shipping_dest.get_cordinates()
+
+            # Calculate the distances
+            distance_na = (
+                geodesic(shipping_dest_coords, Location.from_str("Mexico").get_cordinates()).km +
+                geodesic(shipping_dest_coords, Location.from_str("Canada").get_cordinates()).km
+            ) / 2
+
+            distance_global = (marine["Distance_km"].mean() + cfaf["Average_Distance_per_Shipment"].mean() + faf["avr_dom_dist_km"].mean()) / 3
+
+            for key in mode_na:
+                mode_na[key] *= distance_na
+            
+            for key in mode_global:
+                mode_global[key] *= distance_global
+
+            self.na = mode_na
+            self.distances["NA"] = distance_na
+            self.distances["Global"] = distance_global
+            self.global_ = mode_global
 
     def scenario_impact (self):
 
@@ -323,6 +373,17 @@ class Scenario:
 
         if self.scenario == "Global":
             return self.global_
+
+        if self.scenario == "None":
+            return self.none
+
+    def get_distances (self):
+    
+        """
+        return the distances of the transportation based on the scenario.
+        
+        """
+        return self.distances
 
 
     def get_local_impact (self):
