@@ -24,7 +24,8 @@ my_process_list = process_list_all
 # my_process_list = ['f41111d1-1668-325a-abd2-a40af161e35d', 'd4031d82-ca6e-3548-b07c-2acd79f47a3f']
 
 # filter my_process_list by one or more category numbers (USLCI categories follow NAICS classification)
-filter_by = [2213]
+filter_by = None
+# filter_by = [2213]
 if not filter_by is None:
     if isinstance(filter_by, int):
         filter_by = [filter_by]    

@@ -593,7 +593,7 @@ class openLCA:
 
         for process in tqdm(process_list):
 
-            process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id}
+            process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id, 'Location': process.location, 'Process Type': process.process_type, 'Description': process.description}
 
             product_system = openLCA.create_product_system(client, process)
             result = openLCA.compute_impacts(client, product_system, impact_method)
@@ -627,6 +627,34 @@ class openLCA:
             client.delete(product_system)
 
         return results
+
+    def fix_last_internal_ids(client, process_list):
+        """ Finds any processes in process_list for which last_internal_id < len(exchanges), and fixes by setting last_internal_id = len(exchanges).
+        
+            Parameters
+            ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            process_list : list
+                List of UUIDs of the processess to be tested
+        """
+        if OLCA_IMPORTED:
+            import olca_ipc.utree as utree
+        else:
+            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+        
+        for process_ref in tqdm(process_list):
+            process = client.get(schema.Process, process_ref.id)
+            if process.last_internal_id < len(process.exchanges):
+                process.last_internal_id = len(process.exchanges)
+               
+            
+            if any(exchange.internal_id > process.last_internal_id for exchange in process.exchanges):
+                i=1
+                for exchange in process.exchanges:
+                    exchange.internal_id = i
+                    i+=1
+            client.put(process) 
 
 
 if __name__ == '__main__':
