@@ -3,6 +3,7 @@ from lca_modules.impacts.units_map import UNITS_MAP
 
 from tqdm import tqdm
 import zipfile
+import io
 import json
 
 try:
@@ -203,7 +204,7 @@ class openLCA:
 
         return results_dict
     
-    def get_category_in_process(categories, node, level, impact, qty, unit, max_levels=3):
+    def get_category_in_process(categories, node, level, impact, qty, unit, conversion_map, max_levels=3):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
@@ -264,11 +265,11 @@ class openLCA:
 
         if level < max_levels:
             for child in node.childs:
-                impact, qty, unit = openLCA.get_category_in_process(categories, child, level + 1, impact, qty, unit, max_levels)
+                impact, qty, unit = openLCA.get_category_in_process(categories, child, level + 1, impact, qty, unit, conversion_map, max_levels)
         
         return impact, qty, unit
 
-    def get_process_in_process(processes, node, level, impact, qty, unit, max_levels=3, heating_values=None):
+    def get_process_in_process(processes, node, level, impact, qty, unit, conversion_map, max_levels=3):
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
@@ -323,7 +324,17 @@ class openLCA:
             elif unit.get_standard_notation() == node.product.ref_unit:
                 conversion_factor = 1.0
             else:
-                conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+                if conversion_map is None:
+                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)        
+                else:
+                    if node.provider.id in conversion_map:
+                        conversion_factor_a = UNITS_MAP[node.product.ref_unit].get_conversion_factor(UNITS_MAP[conversion_map[node.provider.id]['declared_unit']])
+                        conversion_factor_b = float(conversion_map[node.provider.id]['heating_value']) / float(conversion_map[node.provider.id]['declared_qty'])
+                        conversion_factor_c = UNITS_MAP[conversion_map[node.provider.id]['heating_unit']].get_conversion_factor(unit)
+                        
+                        conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
+                    else:
+                        conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
 
             if not heating_values is None:
                 if node.provider.id in heating_values:
@@ -339,7 +350,7 @@ class openLCA:
 
         if level < max_levels:
             for child in node.childs:
-                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, max_levels, heating_values)
+                impact, qty, unit = openLCA.get_process_in_process(processes, child, level + 1, impact, qty, unit, conversion_map, max_levels)
         
         return impact, qty, unit
     
@@ -446,8 +457,8 @@ class openLCA:
                 return len(isic) == 1
 
     @staticmethod     
-    def import_from_zip(client, path):
-        """ Import a database from a zip file.
+    def import_from_zip(client, path, duplicates='overwrite'):
+        """ Import a database from a zip file. Handle only the first level of nested zip files.
         
             Parameters
             ----------
@@ -455,6 +466,8 @@ class openLCA:
                 The client object for the openLCA server.
             path : str
                 The path to the zip file.
+            duplicates : str
+                The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
         """
         
         if not OLCA_IMPORTED:
@@ -462,62 +475,130 @@ class openLCA:
 
         with zipfile.ZipFile(path, 'r') as zipObject:
             files = zipObject.namelist()
-
-            if 'categories.json' in files:
-                with zipObject.open('categories.json') as data:
-                    json_dict = json.load(data)
-                    for category in json_dict:
-                        obj = schema.ImpactCategory()
-                        type_object = obj.from_dict(category)
-                        client.put(type_object)
-
-
             for file in files:
-                if not file.endswith('/'):
-                    file_type_found = True
-                    with zipObject.open(file) as data:
-                        if file.startswith('actors/'):         
-                            obj = schema.Actor()
-                        elif file.startswith('currencies/'):
-                            obj = schema.Currency()
-                        elif file.startswith('dq_systems/'):
-                            obj = schema.DQSystem()
-                        elif file.startswith('epds/'):
-                            obj = schema.Epd()
-                        elif file.startswith('flows/'):
-                            obj = schema.Flow()
-                        elif file.startswith('flow_properties/'):
-                            obj = schema.FlowProperty()
-                        elif file.startswith('lcia_categories/'):
-                            obj = schema.ImpactCategory()
-                        elif file.startswith('lcia_methods/'):
-                            obj = schema.ImpactMethod()
-                        elif file.startswith('locations/'):
-                            obj = schema.Location()
-                        elif file.startswith('parameters/'):
-                            obj = schema.Parameter()
-                        elif file.startswith('processes/'):
-                            obj = schema.Process()
-                        elif file.startswith('product_systems/'):
-                            obj = schema.ProductSystem()
-                        elif file.startswith('projects/'):
-                            obj = schema.Project()
-                        elif file.startswith('results/'):
-                            obj = schema.Result()
-                        elif file.startswith('social_indicators/'):
-                            obj = schema.SocialIndicator()
-                        elif file.startswith('sources/'):
-                            obj = schema.Source()
-                        elif file.startswith('unit_groups/'):
-                            obj = schema.UnitGroup()
-                        else:
-                            file_type_found = False
-                        
-                        if file_type_found:
-                            json_dict = json.load(data)
-                            type_object = obj.from_dict(json_dict)
-                            client.put(type_object)
+                client = openLCA._handle_file(file, zipObject, client, duplicates)
+                # if file.endswith('.zip'): # handle nested zip files
+                #     with zipObject.open(file) as inner_zip_file:
+                #         with zipfile.ZipFile(io.BytesIO(inner_zip_file.read())) as inner_zip:
+                #             inner_files = inner_zip.namelist()
+                #             for inner_file in inner_files:
+                #                 if not inner_file.endswith('/'):  # Ignore directories
+                #                     with inner_zip.open(inner_file) as data:
+                #                         openLCA.import_from_json(client, inner_file, data, duplicates)
 
+                # elif not file.endswith('/'): # Ignore directories
+                #     with zipObject.open(file) as data:
+                #         openLCA.import_from_json(client, file, data, duplicates)
+    
+
+        print("database loaded")
+        return client
+    
+    @staticmethod
+    def _handle_file(file, zipObject, client, duplicates):
+
+        if file.endswith('.zip'): # handle nested zip files
+            with zipObject.open(file) as inner_zip_file:
+                with zipfile.ZipFile(io.BytesIO(inner_zip_file.read())) as inner_zip:
+                    inner_files = inner_zip.namelist()
+                    for inner_file in inner_files:
+                        client = openLCA._handle_file(inner_file, inner_zip, client, duplicates)
+
+        elif not file.endswith('/'): # Ignore directories
+            with zipObject.open(file) as data:
+                openLCA.import_from_json(client, file, data, duplicates)
+
+        return client
+    
+    @staticmethod
+    def import_from_json(client, file_name, data, duplicates):
+        """ Import a database item from a json file.
+        
+            Parameters
+            ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            file_name : str
+                The name of the file.
+            data : ZipExtFile
+                The data from the file.
+            duplicates : str
+                The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
+        """
+
+        if file_name.startswith('actors/'):         
+            obj = schema.Actor()
+            model_type = 'Actor'
+        elif file_name.startswith('currencies/'):
+            obj = schema.Currency()
+            model_type = 'Currency'
+        elif file_name.startswith('dq_systems/'):
+            obj = schema.DQSystem()
+            model_type = 'DQSystem'
+        elif file_name.startswith('epds/'):
+            obj = schema.Epd()
+            model_type = 'Epd'
+        elif file_name.startswith('flows/'):
+            obj = schema.Flow()
+            model_type = 'Flow'
+        elif file_name.startswith('flow_properties/'):
+            obj = schema.FlowProperty()
+            model_type = 'FlowProperty'
+        elif file_name.startswith('lcia_categories/'):
+            obj = schema.ImpactCategory()
+            model_type = 'ImpactCategory'
+        elif file_name.startswith('lcia_methods/'):
+            obj = schema.ImpactMethod()
+            model_type = 'ImpactMethod'
+        elif file_name.startswith('locations/'):
+            obj = schema.Location()
+            model_type = 'Location'
+        elif file_name.startswith('parameters/'):
+            obj = schema.Parameter()
+            model_type = 'Parameter'
+        elif file_name.startswith('processes/'):
+            obj = schema.Process()
+            model_type = 'Process'
+        elif file_name.startswith('projects/'):
+            obj = schema.Project()
+            model_type = 'Project'
+        elif file_name.startswith('results/'):
+            obj = schema.Result()
+            model_type = 'Result'
+        elif file_name.startswith('social_indicators/'):
+            obj = schema.SocialIndicator()
+            model_type = 'SocialIndicator'
+        elif file_name.startswith('sources/'):
+            obj = schema.Source()
+            model_type = 'Source'
+        elif file_name.startswith('unit_groups/'):
+            obj = schema.UnitGroup()
+            model_type = 'UnitGroup'
+        else:
+            return None
+        
+        json_dict = json.load(data)
+
+        result, _ = client.rpc_call("data/get", {'@type': model_type, '@id': json_dict['@id']})
+
+        if not result: # new item
+            type_object = obj.from_dict(json_dict)
+            client.put(type_object)
+        else:
+            if duplicates == 'overwrite':
+                type_object = obj.from_dict(json_dict)
+                client.put(type_object)
+            elif duplicates == 'update':
+                for key, value in json_dict.items():
+                    if value is not None and not key in ['@type', '@id']:
+                        result[key] = value
+                type_object = obj.from_dict(result)
+                client.put(type_object)
+            elif duplicates == 'never':
+                pass
+            else:
+                raise ValueError("Invalid duplicates option.")
+                
         return client
 
     # =================================
@@ -572,11 +653,15 @@ class openLCA:
                 Dictionary of impact categories.
             impact_method : str
                 UUID of the impact method.
-            group_by : dict
-                Dictionary of group categorization: {category name (str) : [category id (int)]}
-                For Federal LCA commons LCI data, category IDs are from the North American Industry Classification System (NAICS).
-            heating_values: dict
-                Dictionary of heating values for fuel group unit conversion to energy units, read from a csv file.
+            group_by : dict or list of dict
+                Dictionary of group categorization: {'name' : category name (str),
+                                                     'ids' : [categoty id (int) or product uuid (str)], 
+                                                     'unit': unit to be reported - optional (Unit Obj), 
+                                                     'conversion_map': conversion map - optional (dict)}
+                Category IDs are from the North American Industry Classification System (NAICS).
+                When unit is not given the default unit of the first item in the group is used.
+                Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'heating_value', 'heating_unit'.
+            
             Returns
             -------
             dict
@@ -600,7 +685,15 @@ class openLCA:
             impact_results = openLCA.get_impacts(client, result, impact_dict)
 
             if not group_by is None:
-                for name, ids in group_by.items():
+                if not isinstance(group_by, list):
+                    group_by = [group_by]
+
+                for group in group_by:
+                    ids = group['ids']
+                    name = group['name']
+                    unit = group['unit'] if 'unit' in group else None
+                    conversion_map = group['conversion_map'] if 'conversion_map' in group else None
+
                     if not isinstance(ids, list):
                         ids = [ids]
 
@@ -609,9 +702,9 @@ class openLCA:
                         
                         root = utree.of(result, impact_cat_ref)
                         if all(openLCA.is_UUID(item) for item in ids):
-                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1, heating_values=heating_values)
+                            group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1)
                         elif all([openLCA.is_ISIC(item) or openLCA.is_NAICS(item) for item in ids]):
-                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=None, max_levels=1)
+                            group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1)
                         else:
                             raise ValueError("ids should be all NAICS/ISIC ids or all UUIDs.")
                     

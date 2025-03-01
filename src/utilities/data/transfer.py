@@ -113,7 +113,7 @@ class DataHandler:
             data = json.load(file)
 
         return data
-    
+
     def csv_to_list(file_path, column_index):
         """ Import data to a list from a CSV file.
         
@@ -153,4 +153,4 @@ class DataHandler:
         with open(file_path, "w", newline = "") as file:
             writer = csv.writer(file)
             writer.writerows(input_list)
-        
+            
