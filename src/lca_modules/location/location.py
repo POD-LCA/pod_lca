@@ -222,11 +222,12 @@ class Location:
             with open(FAF_DOMESTIC_REGION) as f:
                 data = json.load(f)
             state  = self.get_state()
-            
+
             if state in data.keys():
                 self.faf_domestic = data[state]
                 return self.faf_domestic
-        except:
+        except Exception as e:
+            print (f"Error in set FAF domestic region: {e}")
             self.faf_domestic = None
         
         return self
@@ -360,7 +361,7 @@ class Location:
 
 if __name__ == '__main__':
 
-    location_input = "Louisiana"
+    location_input = "Seattle"
     location_obj = Location.from_str(location_input)
 
 

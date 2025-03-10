@@ -4,7 +4,7 @@ from lca_modules.transportation.project_logistic_manager import ProjectLogisticM
 data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
 
 
-project = ProjectLogisticManager(name="Building A", shipping_dest= "Texas",
+project = ProjectLogisticManager(name="Building A", shipping_dest= "Seattle",
                                  data_folder=data_folder, shipping_org= None)
 
 
