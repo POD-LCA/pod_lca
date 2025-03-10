@@ -1,6 +1,4 @@
-CFS_DATA_PATH = r"data\location_dataset\location_cfs.csv" 
-
-FAF_DOMESTIC_REGION = r"data\location_dataset\faf_domestic_region.json"
+CFS_DATA_PATH = "data\\location_cfs.csv"
 
 FAF_DATA = {"Canada": 801, 
             "Mexico": 802, 

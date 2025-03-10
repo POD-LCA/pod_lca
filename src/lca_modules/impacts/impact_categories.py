@@ -23,7 +23,7 @@ IMPACT_WEIGHTING_FACTOR_EPA = {'GWP': 16,
 # REF:The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
 #     DOI: http://hdl.handle.net/1773/41885
 
-IMPACT_WEIGHTING_FACTOR_EPA = {'GWP': 29,
+IMPACT_WEIGHTING_FACTOR_NIST = {'GWP': 29,
                                'AP': 3,
                                'EP': 6,
                                'ODP': 2,

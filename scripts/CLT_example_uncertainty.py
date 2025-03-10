@@ -2,6 +2,9 @@ from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
+from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
+
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO
 
@@ -21,6 +24,8 @@ project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
+                                      {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
@@ -31,7 +36,7 @@ prop_glycol = CLT_model.add_product(name="Propylene glycol", stage="A1", qty=2.7
 dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None)
 dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
 dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
-electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR)
+electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR, impacts_from="Electricity_NWPP(eGrid)_[USLCI]")
 natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]")
 
 lumber_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=302, unit=KILOMETER, impacts_from="Transportation_combination_truck_short-haul_diesel_NW_[USLCI]")
@@ -43,10 +48,30 @@ PUR1_by_truck.set_transported_product(dummy_PUR_1)
 PUR2_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=64800, unit=KILOMETER, impacts_from="Transportation_freight_train_diesel_US_[ecoinvent]")
 PUR2_by_truck.set_transported_product(dummy_PUR_2)
 
-print(CLT_model)
-print(project)
-
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
 print(hotspot_analysis)
+
+# Data Quality Assessment
+data_quality_assessment = DataQualityAnalysis.from_model(CLT_model)
+print(electricity.get_pedigree_score())
+electricity.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 1,'temporal correlation': 4,'geographical correlation': 1,'technological representativeness': 3})
+lumber.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 2, 'temporal correlation': 2, 'geographical correlation': 2, 'technological representativeness': 4})
+lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, 'completeness': 3, 'temporal correlation': 4, 'geographical correlation': 3, 'technological representativeness': 3})
+DQS, nDQS = data_quality_assessment.calculate_model_DQS('GWP')
+data_quality_assessment.print_results()
+
+# # Sensitivity Analysis
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
+                                                                 impact_cat='GWP', 
+                                                                 options=['Electricity_NWPP(eGrid)_[USLCI]', 'Electricity_UnknownHigh_[USLCI]', 'Electricity_UnknownLow_[USLCI]'])
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber,  'qty', 
+                                                                 impact_cat='GWP', 
+                                                                 range=(506.48, 619.03))
+result_range = SensitivityAnalysis.compute_sensitivity_of_params(CLT_model, 
+                                                                  [{'obj': lumber_by_truck,  'param': 'transported_distance', 'range': (226.57, 453.13)},
+                                                                   {'obj': PUR1_by_truck,  'param': 'transported_distance', 'range': (1620, 3240)},
+                                                                   {'obj': PUR2_by_truck,  'param': 'transported_distance', 'range': (48600, 97200)}],
+                                                                   impact_cat='GWP')
+
