@@ -4,6 +4,7 @@ from lca_modules.transportation.logistics_link import Link
 from lca_modules.transportation.scenarios import Scenario
 from lca_modules.location.location import Location
 import matplotlib.pyplot as plt
+from lca_modules.impacts.impacts import Impacts
 
 
 __author__ = ["POD/LCA Team"]
@@ -44,7 +45,7 @@ class ProjectLogisticManager:
         self.data_folder = data_folder
         self.shipping_org = None if shipping_org is None else Location.from_str (shipping_org)
         self.links = []
-        self.impact = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
+        self.impacts = Impacts.from_parent(self)
         self.subdataset = {}
 
 
@@ -85,8 +86,8 @@ class ProjectLogisticManager:
         """
         link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms)
         self.links.append(link)
-        self.impact = self.merge_impacts(self.impact, link.compute_impact())
-        
+        #self.impact = self.merge_impacts(self.impact, link.compute_impact())
+        self.impacts.update_impact_qty(link.compute_impact())
 
     @staticmethod
     def merge_impacts(impact1, impact2):
@@ -97,12 +98,24 @@ class ProjectLogisticManager:
             impact1[key] += impact2.get(key, 0)
         return impact1
 
-    def get_impact(self):
+    def get_name(self):
         """
-        Retrieve the impact of the project.
+        Retrieve the name of the project.
+        """
+        return self.name
+
+
+    def get_impacts(self):
+        """ Retrieve the impacts of the Transportation.
+
+            Returns
+            -------
+            Impacts Obj.
+                Impacts of the Transportation.
+
         """
 
-        return {k: round(v, 4) for k, v in self.impact.items()}
+        return self.impacts
 
     def get_links (self):
         """

@@ -73,11 +73,14 @@ class Link:
         """
         if isinstance(self.travel_dist, float) or isinstance(self.travel_dist, int): 
 
-            impact = self.mode.set_impact()
-            impact = self.mode.get_impacts()
+            # impact = self.mode.set_impact()
+            # impact = self.mode.get_impacts()
 
-            for key in impact:
-                impact[key] *= self.qty * self.travel_dist * self.return_trip_factor* self.unit_conversion
+            impact = self.mode.get_impacts()
+            print (type(impact))
+            impact = impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
+            # for key in impact:
+            #     impact[key] *= self.qty * self.travel_dist * self.return_trip_factor* self.unit_conversion
             return impact
 
         else:

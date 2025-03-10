@@ -1,3 +1,5 @@
+from lca_modules.impacts.impacts import Impacts
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
@@ -24,7 +26,7 @@ class TransportMode:
         self.mode_name = mode_name
         self.efficiency = efficiency
         self.project = project
-        self.impacts = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
+        self.impacts = Impacts.from_parent(self)
         self.limitations = []
         self.faf_mode = None
         self.cfs_mode = None
@@ -42,13 +44,15 @@ class TransportMode:
         # If data is found, update the impacts
         if not filtered_data.empty:
             row = filtered_data.iloc[0]  # Get the first (and only) matching row
-            self.impacts = {
+            impacts = {
                 "GWP": row["GWP"],
                 "AP": row["AP"],
                 "EP": row["EP"],
                 "ODP": row["ODP"],
                 "SFP": row["SFP"]
             }
+
+            self.impacts.update_impact_qty(impacts)
         else:
             print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
 
