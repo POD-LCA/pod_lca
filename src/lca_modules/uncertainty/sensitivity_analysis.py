@@ -10,7 +10,7 @@ __version__ = "0.1.0"
 
 class SensitivityAnalysis:
 
-    def compute_sensitivity_of_param(obj, param, impact_cat='weighted', printout=True, **kwargs):
+    def compute_sensitivity_of_param(obj, param, impact_cat='weighted', sensitivity_type='relative', printout=True, **kwargs):
         """ Compute the sensitivity of a parameter of an object.
 
             Parameters
@@ -23,6 +23,10 @@ class SensitivityAnalysis:
             impact_cat : str
                 Impact category considered.
                 Weighted impact, if 'weighted'
+            sensitivity_type : str
+                Type of sensitivity analysis.
+                'relative' - relative percentage change of impact.  (default)
+                'symmetric' - symmetric percentage change of impact.
             printout : bool
                 Printout results if true.
                 Default - True
@@ -63,7 +67,13 @@ class SensitivityAnalysis:
                 relative_percentage_change = 100 * (impact_new - base_impact) / base_impact # TODO: make a choice (also Lines 70 and 178)
                 symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-                result_range[i] = relative_percentage_change
+                if sensitivity_type == 'relative':
+                    result_range[i] = relative_percentage_change
+                elif sensitivity_type == 'symmetric':
+                    result_range[i] = symmetric_percentage_change
+                else:
+                    raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")   
+
                 impacts_range[i] = impact_new
 
                 method(base_val)
@@ -76,7 +86,13 @@ class SensitivityAnalysis:
                 relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
                 symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
-                results.append(relative_percentage_change)
+                if sensitivity_type == 'relative':
+                    results.append(relative_percentage_change)
+                elif sensitivity_type == 'symmetric':
+                    results.append(symmetric_percentage_change)
+                else:
+                    raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
+
                 impacts.append(impact_new)
 
                 method(base_val)
@@ -108,7 +124,12 @@ class SensitivityAnalysis:
                 print(f"Impacts Range: {impacts_range}")
                 if 'options' in kwargs:
                     print(f"       : {corr_options}")
-                print("(Sensitivity as symmetric percentage change)")
+                if sensitivity_type == 'relative':
+                    print("(Sensitivity as relative percentage change)")
+                elif sensitivity_type == 'symmetric':
+                    print("(Sensitivity as symmetric percentage change)")
+                else:
+                    raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
 
         return result_range
 

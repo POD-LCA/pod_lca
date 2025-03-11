@@ -2,7 +2,7 @@ from geopy.geocoders import Nominatim
 from shapely.geometry import Point, Polygon
 import pandas as pd
 import json
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION, FAF_BOUNDARIES, MARINE_REGION, US_COAST
+from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION, FAF_BOUNDARIES, MARINE_REGION, US_COAST, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -30,6 +30,8 @@ class Location:
         Name of the state the location is in.
     country : str
         Name of the country the location is in.
+    country_code : str
+        Country code from ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country code
     """
     def __init__(self):
         self.location_name = None
@@ -40,6 +42,10 @@ class Location:
         self.country = None
         self.cfs_area = None
         self.faf_foreign = None
+        self.ferc_region = None
+        self.ferc_balancing_authority = None
+        self.cambium_gea_region = None
+        self.reeds_balancing_authority = None
         self.faf_domestic = None
         self.marine_region = None
         self.us_coast = None
@@ -75,6 +81,7 @@ class Location:
             location.set_city(location_data)
             location.set_state(location_data)
             location.set_country(location_data)
+            location.set_country_code(location_data)
             location.set_cfs_area()
             location.set_faf_foreign_region()
             location.set_faf_domestic_region()
@@ -173,7 +180,22 @@ class Location:
             self.country = None
 
         return self
+    
+    def set_country_code(self, geopy_location_photon):
+        """ Set the country code of the location.
 
+            Parameters
+            ----------
+            geopy_location_photon : <class 'geopy.location.Location'>
+                Geopy location object from Photon
+        """
+        try:
+            self.country_code = geopy_location_photon.raw['address']['country_code'].upper()
+        except:
+            self.country_code = None
+
+        return self
+    
     def set_cfs_area(self):
         """ Set the country of the location.
         """    
@@ -231,7 +253,74 @@ class Location:
             self.faf_domestic = None
         
         return self
+    
+    def set_ferc_region(self):
+        """ Set the Federal Energy Regulatory Commission (FERC) Region."""
 
+        df = pd.read_csv(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = int(self.get_zip())
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
+
+        ferc_region = df[df['zip code'] == zipcode]['FERC Region'].unique()
+
+        self.FERC_region = ferc_region[0]
+
+        if len(ferc_region) > 1:
+            print("More than one FERC region for the given zip code. {ferc_region[0]} selected.")
+            
+        return self
+    
+    def set_ferc_balancing_authority(self):
+        """ Set the Balancing Authority under the Federal Energy Regulatory Commission (FERC) region."""
+
+        df = pd.read_csv(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = self.get_zip()
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
+
+        balancing_authority = df[df['zip code'] == zipcode]['balancing authority'].unique()
+
+        self.ferc_balancing_authority = balancing_authority[0]
+
+        if len(balancing_authority) > 1:
+            print("More than one balancing authority for the given zip code. {balancing_authority[0]} selected.")
+            
+        return self
+    
+    def set_cambium_gea_region(self):
+        """ Set the Cambium Generation and Emissions Assessment (GEA) region."""
+
+        df = pd.read_csv(GEA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = self.get_zip()
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
+
+        cambium_gea_region = df[df['zip code'] == zipcode]['gea'].unique()
+
+        self.cambium_gea_region = cambium_gea_region[0]
+
+        if len(cambium_gea_region) > 1:
+            print("More than one Cambium GEA region for the given zip code. {cambium_gea_region[0]} selected.")
+            
+        return self
+    
+    def set_reeds_balancing_authority(self):
+        """ Set the Balancing Authority under the Get the Regional Energy Deployment System (ReEDS)."""
+
+        df = pd.read_csv(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        zipcode = self.get_zip()
+        if df['zip code'].dtype == 'int64':
+            zipcode = int(zipcode)
+
+        balancing_authority = df[df['zip code'] == zipcode]['reeds ba'].unique()
+
+        self.reeds_balancing_authority = balancing_authority[0]
+
+        if len(balancing_authority) > 1:
+            print("More than one balancing authority for the given zip code. {balancing_authority[0]} selected.")
+            
+        return self
     def set_marine_region(self):
         """ Set the marine region of the location.
         """
@@ -323,6 +412,16 @@ class Location:
         """
         return self.country
 
+    def get_country_code(self):
+        """ Retrieve the country code of the location.
+
+            Returns
+            -------
+            str
+                Country code from IS) 3166-1.
+        """
+        return self.country_code
+    
     def get_egrid(self):
 
         #TODO we have to find a dataset for this
@@ -340,7 +439,7 @@ class Location:
         return self.cfs_area
 
     def get_faf_foreign_region(self):
-        """ Set the FAF region (foreign) of the location.
+        """ Get the FAF region (foreign) of the location.
         """  
         return self.faf_foreign
 
@@ -359,6 +458,26 @@ class Location:
         """
         return self.us_coast
 
+    def get_ferc_region(self):
+        """ Get the Federal Energy Regulatory Commission (FERC) Region."""
+
+        return self.FERC_region
+
+    def get_ferc_balancing_authority(self):
+        """ Get the Federal Energy Regulatory Commission (FERC) balancing authority."""
+
+        return self.ferc_balancing_authority
+    
+    def get_cambium_gea_region(self):
+        """ Get Cambium Generation and Emissions Assessment (GEA) region."""
+
+        return self.cambium_gea_region
+    
+    def get_reeds_balancing_authority(self):
+        """ Get the Regional Energy Deployment System (ReEDS) balancing authority."""
+
+        return self.reeds_balancing_authority
+    
 if __name__ == '__main__':
 
     location_input = "Seattle"

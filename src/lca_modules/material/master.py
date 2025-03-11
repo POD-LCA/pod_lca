@@ -1,5 +1,6 @@
 
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -439,9 +440,8 @@ class Master:
             if conversion_factor is None:
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
-            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
-
-            self.impacts.update_impact_qty(impacts) 
+            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in IMPACT_CATEGOREIS}
+            self.impacts.update_impact_qty(impacts)
 
 
 if __name__ == '__main__':

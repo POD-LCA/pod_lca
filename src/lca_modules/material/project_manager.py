@@ -23,12 +23,15 @@ class Project:
         All models created/compared in the current project.
     database : Database Obj.
         Maintains input impact data.
+    location : Location Obj.
+        Location of the project.
     """
 
     def __init__(self):
         self.name = None
         self.database = None
         self.models = {}
+        self.location = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
@@ -91,6 +94,19 @@ class Project:
 
         return self
     
+    def set_location(self, location):
+        """ Set the location of the project.
+        
+            Parameters
+            ----------
+            location : Location Obj.
+                Location of the project.
+        """
+
+        self.location = location
+
+        return self
+
     def get_name(self):
         """ Retrieve the name of the project.
         
@@ -112,6 +128,17 @@ class Project:
         """
 
         return self.database
+
+    def get_location(self):
+        """ Retrieve the location of the project.
+        
+            Returns
+            -------
+            Location Obj.
+                Location of the project.
+        """
+
+        return self.location
     
     # ================================
     # Model Methods
