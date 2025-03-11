@@ -8,9 +8,9 @@ project = ProjectLogisticManager(name="Building A", shipping_dest= "Seattle",
                                  data_folder=data_folder, shipping_org= None)
 
 
-project.create_link ( material="Cement", qty=1, travel_dist= 44,
+project.create_link ( material="Cement", qty=1, travel_dist= "Local",
                       return_trip_factor=1, dist_unit="km",
-                      mode_name= "Rail" ,mode_dms_name = "Truck",
+                      mode_name= "Truck" ,mode_dms_name = None,
                       efficiency= 1 , efficiency_dms= 1)
 
 print (project.get_impacts())

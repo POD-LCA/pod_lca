@@ -86,8 +86,11 @@ class ProjectLogisticManager:
         """
         link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms)
         self.links.append(link)
-        #self.impact = self.merge_impacts(self.impact, link.compute_impact())
-        self.impacts.update_impact_qty(link.compute_impact())
+
+        if link.compute_impact() is object:
+            self.impacts.update_impact_qty(link.compute_impact().get_impact_dict())
+        else:
+            self.impacts.update_impact_qty(link.compute_impact())
 
     @staticmethod
     def merge_impacts(impact1, impact2):

@@ -227,5 +227,18 @@ class Impacts:
         
         return weighted_impact
 
+    def get_impact_dict(self):
+        """ Get the impact dictionary.
+        
+        Returns
+        -------
+        dict
+            Dictionary of impacts {impact catergory (str): impact quantity (float)}
+        """
+
+        impacts = {impact: getattr(self, impact, 0.0) for impact in IMPACT_CATEGOREIS}
+        return impacts
+
+        
 if __name__ == '__main__':
     pass

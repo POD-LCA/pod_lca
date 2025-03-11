@@ -445,7 +445,7 @@ class Location:
 
     def get_faf_domestic_region(self):
 
-        pass #TODO we have to find a dataset for this
+        return self.faf_domestic
 
 if __name__ == '__main__':
 

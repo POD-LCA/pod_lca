@@ -189,7 +189,7 @@ class Scenario:
             faf_c = faf.copy()
             marine_c = marine.copy()
 
-            marine_location = self.shipping_dest.get_us_coast()
+            marine_location = self.shipping_dest.us_coast
             location = self.shipping_dest.get_faf_domestic_region()
 
             marine = marine[marine["Coast"] == marine_location]
@@ -242,10 +242,14 @@ class Scenario:
                 distance = faf["avr_dom_dist_km"].mean()
                 total_impacts = {}
                 
-                for key, value in self.mode.get_impacts().items():
-                    domestic_total = value * distance
-                    foreign_total = value * 200  
-                    total_impacts[key] = domestic_total + foreign_total
+                domestic_total = self.mode.get_impacts() * distance
+                foreign_total = self.mode.get_impacts() * 200
+                total_impact = domestic_total + foreign_total
+
+                # for key, value in self.mode.get_impacts().items():
+                #     domestic_total = value * distance
+                #     foreign_total = value * 200  
+                #     total_impacts[key] = domestic_total + foreign_total
                 
                 self.na = total_impacts
                 self.distances["NA"] = distance
@@ -280,16 +284,12 @@ class Scenario:
                 else:
                     faf = faf[faf["dms_mode"] == 1] #Truck as default
                     distance = faf["avr_dom_dist_km"].mean()
-
-                    for key, value in TransportMode ("Truck", 1, self.project).get_impacts().items():
-                        domestic_total[key] = value * distance
+                    domestic_total = TransportMode ("Truck", 1, self.project).get_impacts() * distance
                     
                 marine_dis = marine["Distance_km"].mean()
-                for key, value in self.mode.get_impacts().items():
+                foreign_total = self.mode.get_impacts() * marine_dis
 
-                    foreign_total[key] = value * marine_dis
-                
-                self.global_ = {key: domestic_total[key] + foreign_total[key] for key in domestic_total}
+                self.global_ = foreign_total + domestic_total
                 self.distances["Global"] = distance + marine_dis
                 self.distances["NA"] = distance + marine_dis
                 self.na = self.global_
@@ -311,10 +311,7 @@ class Scenario:
                     major_cities = faf["fr_orig"].mode()[0]
                     distance = faf[faf["fr_orig"] == major_cities]["avr_dom_dist_km"].mean()
 
-                total_impacts = {}
-
-                for key, value in self.mode.get_impacts().items():
-                    total_impacts[key] = value * distance
+                total_impacts = self.mode.get_impacts() * distance
 
                 self.global_ = total_impacts
                 self.distances["Global"] = distance
