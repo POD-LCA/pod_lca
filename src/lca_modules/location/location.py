@@ -444,40 +444,9 @@ class Location:
         return self.faf_foreign
 
     def get_faf_domestic_region(self):
-        """ Set the FAF region (domestic) of the location.
-        """
-        return self.faf_domestic
 
-    def get_marine_region(self):
-        """ Set the marine region of the location.
-        """
-        return self.marine_region
+        pass #TODO we have to find a dataset for this
 
-    def get_us_coast(self):
-        """ Set the US coast of the location.
-        """
-        return self.us_coast
-
-    def get_ferc_region(self):
-        """ Get the Federal Energy Regulatory Commission (FERC) Region."""
-
-        return self.FERC_region
-
-    def get_ferc_balancing_authority(self):
-        """ Get the Federal Energy Regulatory Commission (FERC) balancing authority."""
-
-        return self.ferc_balancing_authority
-    
-    def get_cambium_gea_region(self):
-        """ Get Cambium Generation and Emissions Assessment (GEA) region."""
-
-        return self.cambium_gea_region
-    
-    def get_reeds_balancing_authority(self):
-        """ Get the Regional Energy Deployment System (ReEDS) balancing authority."""
-
-        return self.reeds_balancing_authority
-    
 if __name__ == '__main__':
 
     location_input = "Seattle"
