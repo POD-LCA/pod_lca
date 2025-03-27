@@ -80,17 +80,19 @@ class ProjectLogisticManager:
             self.sub_dataset()
         return self.subdataset.get(sub_dataset)
 
-    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms):
+    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms):
         """
         Create a link of transportation for the project.
         """
-        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms)
+        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms)
         self.links.append(link)
 
-        if link.compute_impact() is object:
-            self.impacts.update_impact_qty(link.compute_impact().get_impact_dict())
-        else:
+        if isinstance (link.compute_impact(), dict):
             self.impacts.update_impact_qty(link.compute_impact())
+        else:
+            self.impacts.update_impact_qty(link.compute_impact().get_impact_dict())
+
+            
 
     @staticmethod
     def merge_impacts(impact1, impact2):

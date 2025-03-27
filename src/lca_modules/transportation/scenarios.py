@@ -2,8 +2,9 @@ import pandas as pd
 import numpy as np
 from lca_modules.transportation.transport_mode import TransportMode
 from geopy.distance import geodesic
-from lca_modules.location.data import CFS_DATA_PATH
+from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION
 from lca_modules.location.location import Location
+from lca_modules.transportation.modes_mapping import cfs_mapping
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -86,7 +87,7 @@ class Scenario:
         cfs = self.project.get_subdataset("cfs_2017_cleaned")
         emission = self.project.get_subdataset("Emission")
         sctg = self.get_sctg(2)
-        cfs = cfs[cfs["SCTG"] == str(sctg)].copy()
+        cfs = cfs[cfs["SCTG"] == sctg].copy()
         df = pd.read_csv(CFS_DATA_PATH)
 
         if self.mode is not None:
@@ -97,8 +98,13 @@ class Scenario:
                 cfs = cfs_c
                 print ("No mode found in cfs, value shows the avarage distance of the modes")
         else:
-            self.mode = TransportMode("Truck", 1, self.project)
-        
+            major_mode = cfs["MODE"].mode()
+            cfs = cfs[cfs["MODE"] == major_mode[0]]
+
+            for key, value in cfs_mapping.items():
+                if major_mode[0] in value:
+                    self.mode = TransportMode(key, self.project.get_links()[0].get_efficiency(), self.project)
+                    
         if self.shipping_dest is not None:
             cfs_c = cfs.copy()
             cfs = cfs[cfs["DEST_STATE"] == self.shipping_dest.get_cfs_area()]
@@ -145,29 +151,36 @@ class Scenario:
                 print ("No location for origin found in cfs, The value shows the avrage of the US")
 
 
-        cfs_mapping = self.mode.get_cfs_mode()[1]
-        reverse_mapping = {mode: key for key, modes in cfs_mapping.items() for mode in modes}
-        cfs = cfs.copy()
-        cfs["mode_name"] = cfs["MODE"].map(reverse_mapping)
-        merged_data = pd.merge(cfs, emission, on="mode_name", how="inner")
+        quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
 
-        merged_data = merged_data[ merged_data["eff"] == self.mode.get_efficiency()]
-        merged_data.iloc[:, -5:] *= merged_data["SHIPMT_DIST_ROUTED"].values[:, None]
+        def assign_quartile(x, q1, q2, q3):
+            if x <= q1:
+                return 'Q1'
+            elif x <= q2:
+                return 'Q2'
+            elif x <= q3:
+                return 'Q3'
+            else:
+                return 'Q4'
 
-        self.local = merged_data[merged_data["quartile"] == "Q1"].iloc[:, -5:].mean().to_dict()
-        self.distances["Local"] = merged_data[merged_data["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
+        cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
 
-        self.regional = merged_data[merged_data["quartile"] == "Q2"].iloc[:, -5:].mean().to_dict()
-        self.distances["Regional"] = merged_data[merged_data["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
+        impact = self.mode.get_impacts()
 
-        self.regional_c = merged_data[merged_data["quartile"] == "Q3"].iloc[:, -5:].mean().to_dict()
-        self.distances["Regional_c"] = merged_data[merged_data["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+        self.local = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()* impact
+        self.distances["Local"] = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
 
-        self.national = merged_data[merged_data["quartile"] == "Q4"].iloc[:, -5:].mean().to_dict()
-        self.distances["National"] = merged_data[merged_data["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
+        self.regional = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()* impact
+        self.distances["Regional"] = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
 
-        self.none = merged_data.iloc[:, -5:].mean().to_dict()
-        self.distances["None"] = merged_data["SHIPMT_DIST_ROUTED"].mean()
+        self.regional_c = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean() * impact
+        self.distances["Regional_c"] = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+
+        self.national = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()* impact
+        self.distances["National"] = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
+
+        self.none = cfs["SHIPMT_DIST_ROUTED"].mean()* impact
+        self.distances["None"] = cfs["SHIPMT_DIST_ROUTED"].mean()
         
 
     def pre_global_processing (self):
@@ -239,61 +252,64 @@ class Scenario:
 
             if self.mode.get_name() == "Truck":
                 
-                distance = faf["avr_dom_dist_km"].mean()
+                distance_na = faf["avr_dom_dist_km"].mean()
                 total_impacts = {}
                 
                 domestic_total = self.mode.get_impacts() * distance
                 foreign_total = self.mode.get_impacts() * 200
                 total_impact = domestic_total + foreign_total
-
-                # for key, value in self.mode.get_impacts().items():
-                #     domestic_total = value * distance
-                #     foreign_total = value * 200  
-                #     total_impacts[key] = domestic_total + foreign_total
                 
+
                 self.na = total_impacts
                 self.distances["NA"] = distance
                 self.global_ = total_impacts
                 self.distances["Global"] = distance
+                self.distances["None"] = distance
+                self.none = total_impacts
 
 
             if self.mode.get_name() == "Rail":
                 distance = cfaf["Average_Distance_per_Shipment"].mean()
                 
                 total_impacts = {}
-                
-                for key, value in self.mode.get_impacts().items():
-                    total_impacts[key] = value * distance
+                total_impacts = self.mode.get_impacts()* distance
                 
                 self.na = total_impacts
                 self.distances["NA"] = distance
                 self.global_ = total_impacts
                 self.distances["Global"] = distance
+                self.distances["None"] = distance
+                self.none = total_impacts
 
 
             if self.mode.get_name() == "Barge" or "Ocean":
 
-                domestic_total = {}
-                foreign_total = {}
-
                 if self.mode_domestic is not None:
                     distance = faf["avr_dom_dist_km"].mean()
-                    for key, value in self.mode_domestic.get_impacts().items():
-                        domestic_total[key] = value * distance
+                    domestic_total = self.mode_domestic.get_impacts() * distance
 
                 else:
                     faf = faf[faf["dms_mode"] == 1] #Truck as default
                     distance = faf["avr_dom_dist_km"].mean()
                     domestic_total = TransportMode ("Truck", 1, self.project).get_impacts() * distance
-                    
-                marine_dis = marine["Distance_km"].mean()
-                foreign_total = self.mode.get_impacts() * marine_dis
+                
+                marine_none_dis = marine["Distance_km"].mean()
+                marine_none_impacts = self.mode.get_impacts() * marine_none_dis
 
-                self.global_ = foreign_total + domestic_total
-                self.distances["Global"] = distance + marine_dis
-                self.distances["NA"] = distance + marine_dis
-                self.na = self.global_
-                #self.none = self.global_
+                marine_na = marine[(marine["Region"] == "Canada") | (marine["Region"] == "Mexico")]
+                marine_na_dis = marine_na["Distance_km"].mean()
+                marine_na_impacts = self.mode.get_impacts() * marine_na_dis
+
+                marine_global = marine [(marine["Region"] != "Canada") & (marine["Region"] != "Mexico")]
+                marine_global_dis = marine["Distance_km"].mean()
+                marine_global_impacts = self.mode.get_impacts() * marine_global_dis
+
+                self.global_ = marine_global_impacts + domestic_total
+                self.distances["Global"] = marine_global_dis + distance
+                self.distances["NA"] = marine_na_dis + distance
+                self.distances["None"] = marine_none_dis + distance
+                self.na = marine_na_impacts + domestic_total
+                self.none = marine_none_impacts + domestic_total
 
 
             if self.mode.get_name() == "Air":
@@ -301,22 +317,38 @@ class Scenario:
                 if self.shipping_dest is not None:
                     dest_location = self.shipping_dest.get_cordinates()
                 else:
-                    dest_location = (39.8283, -98.5795) #USA middle
+                    major_domes = faf["dms_dest"].mode()[0]
+                    with open (FAF_DOMESTIC_REGION, "r") as f:
+                        FAF_DOMESTIC_REGION = json.load(f)
+
+                        for key, value in FAF_DOMESTIC_REGION.items():
+                            if major_domes == value:
+                                major_domes = key
+
+                    dest_location = Location.from_str(major_domes).get_cordinates()
 
                 if self.shipping_org is not None:
                     org_location = self.shipping_org.get_cordinates()
-                    distance = geodesic(org_location, dest_location).km
+                    air_none_dist = geodesic(org_location, dest_location).km
 
                 else:
+                    air_none_dist = None
                     major_cities = faf["fr_orig"].mode()[0]
-                    distance = faf[faf["fr_orig"] == major_cities]["avr_dom_dist_km"].mean()
+                    for key, value in FAF_city_representation.items():
+                        if major_cities == key:
+                            major_cities = value
+                            major_cities = Location.from_str(major_cities).get_cordinates()
 
-                total_impacts = self.mode.get_impacts() * distance
-
-                self.global_ = total_impacts
-                self.distances["Global"] = distance
-                self.distances["NA"] = distance
-                self.na = self.global_
+                    air_global_dist = geodesic(major_cities, dest_location).km
+                    air_na_dist = (geodesic((50.000678, -86.000977), dest_location).km + geodesic((19.4326296, -99.1331785), dest_location).km) / 2
+                    
+                
+                self.global_ = air_global_dist* self.mode.get_impacts()
+                self.distances["Global"] = air_global_dist
+                self.distances["NA"] = air_na_dist
+                self.na = air_na_dist * self.mode.get_impacts()
+                self.distances["None"] = air_none_dist
+                self.none = None if air_none_dist is None else air_none_dist* self.mode.get_impacts()
 
         else:
 
@@ -324,28 +356,50 @@ class Scenario:
             mode_global = emission[emission["eff"] == self.project.get_links()[0].get_efficiency()].iloc[:, -5:].mean().to_dict()
 
             if self.shipping_dest is None:
-                shipping_dest_coords = (39.8283, -98.5795)  # Default location (center of the U.S.)
+                
+                major_domes = faf["dms_dest"].mode()[0]
+                with open (FAF_DOMESTIC_REGION, "r") as f:
+                    FAF_DOMESTIC_REGION = json.load(f)
+
+                    for key, value in FAF_DOMESTIC_REGION.items():
+                        if major_domes == value:
+                            major_domes = key
+
+                    shipping_dest_coords = Location.from_str(major_domes).get_cordinates()
             else:
                 shipping_dest_coords = self.shipping_dest.get_cordinates()
 
-            # Calculate the distances
-            distance_na = (
-                geodesic(shipping_dest_coords, Location.from_str("Mexico").get_cordinates()).km +
-                geodesic(shipping_dest_coords, Location.from_str("Canada").get_cordinates()).km
-            ) / 2
+            major_cities = faf["fr_orig"].mode()[0]
+            for key, value in FAF_city_representation.items():
+                if major_cities == key:
+                    major_cities = value
+                    major_cities = Location.from_str(major_cities).get_cordinates()
 
-            distance_global = (marine["Distance_km"].mean() + cfaf["Average_Distance_per_Shipment"].mean() + faf["avr_dom_dist_km"].mean()) / 3
 
-            for key in mode_na:
-                mode_na[key] *= distance_na
-            
-            for key in mode_global:
-                mode_global[key] *= distance_global
+            rail_global_na_distance = (cfaf["Average_Distance_per_Shipment"].mean())/4
+            rail_global_na_impact = rail_global_na_distance *TransportMode("Rail", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
 
-            self.na = mode_na
-            self.distances["NA"] = distance_na
-            self.distances["Global"] = distance_global
-            self.global_ = mode_global
+            marine_na_distance = marine[(marine["Region"] == "Canada") | (marine["Region"] == "Mexico")]
+            marine_na_distance = (marine_na_distance ["Distance_km"].mean())/4
+            marine_na_impact = marine_na_distance*TransportMode("Ocean", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
+
+            truck_global_na_distance = 200 /4
+            truck_global_na_impact = truck_global_na_distance * TransportMode("Truck", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
+
+            air_na_distance = ((geodesic((50.000678, -86.000977), shipping_dest_coords).km + geodesic((19.4326296, -99.1331785), shipping_dest_coords).km) / 2 )/4
+            air_na_impact = air_na_distance * TransportMode("Air", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
+
+            marine_global_distance = (marine["Distance_km"].mean())/4
+            marine_global_impact = marine_global_distance * TransportMode("Ocean", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
+
+            air_global_dist = (geodesic(major_cities, shipping_dest_coords).km)/4
+            air_global_impact = air_global_dist * TransportMode("Air", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
+
+
+            self.na = rail_global_na_impact + marine_na_impact + truck_global_na_impact + air_na_impact
+            self.distances["NA"] = rail_global_na_distance + marine_na_distance + truck_global_na_distance + air_na_distance
+            self.distances["Global"] = rail_global_na_distance + truck_global_na_distance + marine_global_distance + air_global_dist
+            self.global_ = rail_global_na_impact + truck_global_na_impact + marine_global_impact + air_global_impact
 
     def scenario_impact (self):
 

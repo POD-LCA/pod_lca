@@ -126,25 +126,11 @@ def cfs (input_path, output_path):
     cfs = cfs.drop(columns=["SHIPMT_ID", "QUARTER", "SHIPMT_VALUE", "TEMP_CNTL_YN", "EXPORT_CNTRY",
                             "HAZMAT", "WGT_FACTOR", "ORIG_MA", "ORIG_CFS_AREA", "DEST_MA", "DEST_CFS_AREA"])
     
-    quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
-
-    def assign_quartile(x, q1, q2, q3):
-        if x <= q1:
-            return 'Q1'
-        elif x <= q2:
-            return 'Q2'
-        elif x <= q3:
-            return 'Q3'
-        else:
-            return 'Q4'
-
-    cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
+    cfs = cfs[cfs["EXPORT_YN"] == "N"]
+    cfs = cfs[cfs["MODE"].isin([3, 4, 5, 6, 7, 8, 9, 10, 101, 11])]
 
     cfs.to_csv(output_path, index=False)
     return cfs
-
-
-
 
 
 

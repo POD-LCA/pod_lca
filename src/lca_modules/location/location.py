@@ -70,7 +70,7 @@ class Location:
         location = cls()
 
         try:
-            geolocator = Nominatim(user_agent="pod_lca")
+            geolocator = Nominatim(user_agent="pod_lca", timeout=10)
 
             location_data = geolocator.geocode(string)
             location.set_cordinates(location_data)
@@ -447,9 +447,14 @@ class Location:
 
         return self.faf_domestic
 
+    def get_marine_region(self):
+        """ Get the marine region of the location.
+        """
+        return self.marine_region
+
 if __name__ == '__main__':
 
-    location_input = "Seattle"
+    location_input = "Washington State"
     location_obj = Location.from_str(location_input)
 
 
@@ -461,5 +466,5 @@ if __name__ == '__main__':
     print (f"CFS Area: {location_obj.get_cfs_area()}")
     print (f"FAF Foreign Region: {location_obj.get_faf_foreign_region()}")
     print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
-    print (f"Marine Region: {location_obj.marine_region}")
+    print (f"Marine Region: {location_obj.get_marine_region()}")
     print (f"US Coast: {location_obj.us_coast}")

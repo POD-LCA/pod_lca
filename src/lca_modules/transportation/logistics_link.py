@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Link:
     
-    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms):
+    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms):
         """
         Link object create a link of transportation for each material.
 
@@ -58,8 +58,8 @@ class Link:
         self.dist_unit = dist_unit
         self.efficiency = efficiency
         self.efficiency_dms = efficiency_dms
-        self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project)
-        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project)
+        self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project, feul_type)
+        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project, feul_type)
         self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
         self.scenario_distances = None
 
@@ -82,12 +82,12 @@ class Link:
             
             impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).scenario_impact() 
 
-            if impact is object:
-                impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
-            else:
+            if isinstance(impact, dict):
                 for key in impact:
                     impact[key] *= self.qty * self.return_trip_factor * self.unit_conversion
-                    
+            
+            else:
+                impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
             return impact
 
 
