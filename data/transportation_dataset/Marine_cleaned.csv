@@ -4,18 +4,21 @@ Canada,East Coast,Los Angeles,Vancouver,2152,1162
 Mexico,East Coast,New York,Veracruz,1874,1012
 Mexico,Gulf Coast,Houston,Veracruz,1232,665
 Mexico,West Coast,Los Angeles,Manzanillo,2234,1206
-South America,East Coast,New York,Santos (Brazil),9130,4930
-South America,East Coast,Houston,Santos (Brazil),10205,5510
-South America,West Coast,Los Angeles,Callao (Peru),6767,3654
-Europe,East Coast,New York,Rotterdam,6265,3383
-Europe,East Coast,New York,Antwerp,6275,3388
+Rest of America,East Coast,New York,Santos,9130,4930
+Rest of America,East Coast,Houston,Santos,10205,5510
+Rest of America,West Coast,Los Angeles,Santos,13675,7384
 Europe,East Coast,New York,Hamburg,6704,3620
-Europe,Gulf Coast,Houston,Rotterdam,9356,5052
-Europe,Gulf Coast,Houston,Antwerp,9366,5057
 Europe,Gulf Coast,Houston,Hamburg,9734,5256
-Europe,West Coast,Los Angeles,Rotterdam,14357,7752
-Europe,West Coast,Los Angeles,Antwerp,14366,7757
 Europe,West Coast,Los Angeles,Hamburg,14825,8005
-China,East Coast,New York,Shanghai,19598,10582
-China,Gulf Coast,Houston,Shanghai,18776,10138
-China,West Coast,Los Angeles,Shanghai,10571,5708
+Eastern Asia,East Coast,New York,Shanghai,19598,10582
+Eastern Asia,Gulf Coast,Houston,Shanghai,18776,10138
+Eastern Asia,West Coast,Los Angeles,Shanghai,10571,5708
+Africa,East Coast,New York,Durban,14017.788,7569
+Africa,Gulf Coast,Houston,Durban,15329.004,8277
+Africa,West Coast,Los Angeles,Durban,22920.352,12376
+Southeastern Asia and Oceania,East Coast,New York,Saigon,19962.708,10779
+Southeastern Asia and Oceania,Gulf Coast,Houston,Saigon,21092.428,11389
+Southeastern Asia and Oceania,West Coast,Los Angeles,Saigon,13315.88,7190
+"Southern, Central, and Western Asia",East Coast,New York,Mumbai,15121.58,8165
+"Southern, Central, and Western Asia",Gulf Coast,Houston,Mumbai,18014.404,9727
+"Southern, Central, and Western Asia",West Coast,Los Angeles,Mumbai,18712.608,10104

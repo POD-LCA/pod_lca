@@ -5,6 +5,7 @@ from geopy.distance import geodesic
 from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION
 from lca_modules.location.location import Location
 from lca_modules.transportation.modes_mapping import cfs_mapping
+import json
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -57,9 +58,10 @@ class Scenario:
         self.global_ = None
         self.none = None
 
-        self.pre_global_processing()
+
         self.pre_us_processing()
-        
+        # self.pre_global_processing()
+
 
     def get_sctg(self, digit):
         """
@@ -88,43 +90,58 @@ class Scenario:
         emission = self.project.get_subdataset("Emission")
         sctg = self.get_sctg(2)
         cfs = cfs[cfs["SCTG"] == sctg].copy()
-        df = pd.read_csv(CFS_DATA_PATH)
+        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+
 
         if self.mode is not None:
-            cfs_c = cfs.copy()
- 
-            cfs = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
-            if cfs.empty:
-                cfs = cfs_c
-                print ("No mode found in cfs, value shows the avarage distance of the modes")
+
+            cfs_filterd = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
+            cfs = cfs_filterd if not cfs_filterd.empty else cfs
         else:
             major_mode = cfs["MODE"].mode()
-            cfs = cfs[cfs["MODE"] == major_mode[0]]
 
+            cfs = cfs[cfs["MODE"] == major_mode[0]]
             for key, value in cfs_mapping.items():
                 if major_mode[0] in value:
                     self.mode = TransportMode(key, self.project.get_links()[0].get_efficiency(), self.project)
-                    
+            
+
         if self.shipping_dest is not None:
-            cfs_c = cfs.copy()
-            cfs = cfs[cfs["DEST_STATE"] == self.shipping_dest.get_cfs_area()]
-            if cfs.empty:
-                cfs = cfs_c
-                print ("No location for destination found in cfs, The value shows the avrage of the US")
+            cfs_filtered = cfs[cfs["DEST_STATE"] == self.shipping_dest.get_cfs_area()]
+            cfs = cfs_filtered if not cfs_filtered.empty else cfs
+
+
+            if cfs_filtered.empty:
+                major_dest = cfs["DEST_STATE"].mode()[0]
+                cfs = cfs[cfs["DEST_STATE"] == major_dest]
+
+                for code in cfs_state_code["Code"].tolist():
+                    if code == major_dest:
+                        shipping_dest = cfs_state_code[cfs_state_code["Code"] == code]["State"].values[0]
+                        self.shipping_dest = Location.from_str(shipping_dest)
+        # else:
+        #     major_dest = cfs["DEST_STATE"].mode()[0]
+        #     cfs = cfs[cfs["DEST_STATE"] == major_dest]
+
+        #     for code in cfs_state_code["Code"].tolist():
+        #         if code == major_dest:
+        #             shipping_dest = cfs_state_code[cfs_state_code["Code"] == code]["State"].values[0]
+        #             self.shipping_dest = Location.from_str(shipping_dest)
 
         if self.shipping_org is not None:
-            cfs_c = cfs.copy()
-            cfs_cc = cfs.copy()
-            cfs = cfs[cfs["ORIG_STATE"] == self.shipping_org.get_cfs_area()]
 
-            if cfs.empty:
-                cfs_list = cfs_c["ORIG_STATE"].tolist()
+            cfs_filtered = cfs[cfs["ORIG_STATE"] == self.shipping_org.get_cfs_area()]
+            cfs = cfs_filtered if not cfs_filtered.empty else cfs
+
+
+            if cfs_filtered.empty:
+                cfs_list = cfs["ORIG_STATE"].tolist()
                 cfs_lat = []
                 cfs_lon = []
 
                 for state in cfs_list:
-                    lat = df[df["Code"] == state]["lat"].values
-                    lon = df[df["Code"] == state]["lon"].values
+                    lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
+                    lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
 
                     if len(lat) > 0 and len(lon) > 0:
                         cfs_lat.append(lat[0])
@@ -140,15 +157,13 @@ class Scenario:
                 cfs_dist = dict(zip(cfs_list, origin_to_dest))
                 sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
 
-                while cfs.empty:
+                while cfs_filtered.empty:
                     closest_state = list(sorted_cfs_dist.keys())[0]
-                    cfs = cfs_cc[cfs_cc["ORIG_STATE"] == closest_state]
+                    cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state]
                     del sorted_cfs_dist[closest_state]
                     print (f"No location for origin found in cfs, The value shows the closest shipping to the selected origin {closest_state}")
 
-            if cfs.empty:
-                cfs = cfs_cc
-                print ("No location for origin found in cfs, The value shows the avrage of the US")
+            cfs = cfs_filtered if not cfs_filtered.empty else cfs
 
 
         quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
@@ -188,6 +203,7 @@ class Scenario:
         process the data for the North America and Global scenarios.
         
         """
+        scenarios = ["NA","Global","None"]
         emission = self.project.get_subdataset("Emission")
         faf = self.project.get_subdataset("FAF561_cleaned")
         cfaf = self.project.get_subdataset("cfaf_cleaned")
@@ -196,210 +212,225 @@ class Scenario:
         
         faf = faf[faf["sctg2"] == sctg].copy()
         cfaf = cfaf[cfaf["SCTG_2digits"] == sctg].copy()
-        
-
-        if self.shipping_dest is not None:
-            faf_c = faf.copy()
-            marine_c = marine.copy()
-
-            marine_location = self.shipping_dest.us_coast
-            location = self.shipping_dest.get_faf_domestic_region()
-
-            marine = marine[marine["Coast"] == marine_location]
-            faf = faf[faf["dms_dest"].isin(location)]
-            if faf.empty:
-                faf = faf_c
-                print ("The value shows the avrage of the US")
-            
-            if marine.empty:
-                marine = marine_c
-                print ("The value shows the avrage of the US coast")
-
-        if self.shipping_org is not None:
-            faf_c = faf.copy()
-            marine_c = marine.copy()
-
-            marine_location = self.shipping_org.get_marine_region()
-            location = self.shipping_org.get_faf_foreign_region()
-
-            marine = marine[marine["Region"] == marine_location]
-            faf = faf[faf["fr_orig"] == location]
-
-            if faf.empty:
-                faf = faf_c[faf_c [ "fr_orig"].isin([801, 802])]
-                print ("The value shows the avrage of Canada and Mexico")
-
-            if marine.empty:
-                marine = marine_c
-                print ("The value shows the avrage of the marine region")
-
-        if self.mode_domestic is not None:
-            faf_c = faf.copy()
-            faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
-            
-            if faf.empty:
-                faf = faf_c
-                print ("No domestic mode found in faf, value shows the avarage distance of the modes")
+        print (sctg)
 
         if self.mode is not None:
-            faf_c = faf.copy()
-            faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
-            
-            if faf.empty:
-                faf = faf_c
-                print ("No mode found in faf, value shows the avarage distance of the mode")
+            faf_filtered = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+            faf = faf_filtered if not faf_filtered.empty else faf
+        else:
+            self.mode = TransportMode("Barge", self.project.get_links()[0].get_efficiency(), self.project)
+            faf_filtered = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+            faf = faf_filtered if not faf_filtered.empty else faf
+
+
+        if self.shipping_dest is not None:
+
+            marine_location = self.shipping_dest.us_coast
+            dms_domestic_faf = self.shipping_dest.get_faf_domestic_region()
+            dms_coordinates = self.shipping_dest.get_cordinates()
+
+            marine_filtered = marine[marine["Coast"] == marine_location]
+            faf_filtered = faf[faf["dms_dest"].isin(dms_domestic_faf)]
+        
+            # check if the filtered data is empty
+            faf = faf_filtered if not faf_filtered.empty else faf
+            marine = marine_filtered if not marine_filtered.empty else marine
+
+        else:
+            major_domes = faf["dms_dest"].mode()[0]
+
+            with open (FAF_DOMESTIC_REGION, "r") as f:
+                faf_domestic_data = json.load(f)
+                for key, value in faf_domestic_data.items():
+                    if major_domes in value:
+                        major_domes = key
+
+            self.shipping_dest = Location.from_str(major_domes)
+
+            marine_location = self.shipping_dest.us_coast
+            dms_domestic_faf = self.shipping_dest.get_faf_domestic_region()
+            dms_coordinates = self.shipping_dest.get_cordinates()
+
+            marine_filtered = marine[marine["Coast"] == marine_location]
+            faf_filtered = faf[faf["dms_dest"].isin(dms_domestic_faf)]
+
+            # check if the filtered data is empty
+            faf = faf_filtered if not faf_filtered.empty else faf
+            marine = marine_filtered if not marine_filtered.empty else marine
+
+
+        if self.shipping_org is not None:
+
+            marine_location = self.shipping_org.get_marine_region()
+            fr_origin_faf = self.shipping_org.get_faf_foreign_region()
+            fr_coordinates = self.shipping_org.get_cordinates()
+
+            marine_filtered = marine[marine["Region"] == marine_location]
+            faf_filtered = faf[faf["fr_orig"] == fr_origin_faf]
+            # check if the filtered data is empty
+            faf = faf_filtered if not faf_filtered.empty else faf
+            marine = marine_filtered if not marine_filtered.empty else marine
+
+
+
+        if self.mode_domestic is not None:
+
+            faf_filtered = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
+            faf = faf_filtered if not faf_filtered.empty else faf
+        else:
+            self.mode_domestic = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
+            faf_filtered = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
+            faf = faf_filtered if not faf_filtered.empty else faf
+
+        if self.mode is not None:
+
+            faf_filterd = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+            faf = faf_filterd if not faf_filterd.empty else faf
         
 
             if self.mode.get_name() == "Truck":
                 
-                distance_na = faf["avr_dom_dist_km"].mean()
-                total_impacts = {}
-                
-                domestic_total = self.mode.get_impacts() * distance
-                foreign_total = self.mode.get_impacts() * 200
-                total_impact = domestic_total + foreign_total
-                
+                for scenario in scenarios:
 
-                self.na = total_impacts
-                self.distances["NA"] = distance
-                self.global_ = total_impacts
-                self.distances["Global"] = distance
-                self.distances["None"] = distance
-                self.none = total_impacts
+                    if scenario == "NA":
+                        faf_filtered_na = faf[faf["fr_orig"].isin([801, 802])]
+                        faf_na = faf_filtered_na if not faf_filtered_na.empty else faf
+                        domestic_total = self.mode.get_impacts() * faf_na["avr_dom_dist_km"].mean()
+                        foreign_total = self.mode.get_impacts() * 200
+                        total_impact = domestic_total + foreign_total
 
+                        self.na = total_impact
+                        self.distances["NA"] = 200 + faf_na["avr_dom_dist_km"].mean()
+
+                    elif scenario == "Global":
+                        faf_filtered_global = faf[faf["fr_orig"].isin([801, 802]) == False]
+                        faf_global = faf_filtered_global if not faf_filtered_global.empty else faf
+                        domestic_total = self.mode.get_impacts() * faf_global["avr_dom_dist_km"].mean()
+                        foreign_total = self.mode.get_impacts() * 200
+                        total_impact = domestic_total + foreign_total
+
+                        self.global_ = total_impact
+                        self.distances["Global"] = 200 + faf_global["avr_dom_dist_km"].mean()
+
+                    elif scenario == "None":
+                        domestic_total = self.mode.get_impacts() * faf["avr_dom_dist_km"].mean()
+                        foreign_total = self.mode.get_impacts() * 200
+                        total_impact = domestic_total + foreign_total
+    
+                        self.none = total_impact
+                        self.distances["None"] = 200 + faf["avr_dom_dist_km"].mean()
 
             if self.mode.get_name() == "Rail":
+
                 distance = cfaf["Average_Distance_per_Shipment"].mean()
-                
-                total_impacts = {}
                 total_impacts = self.mode.get_impacts()* distance
                 
                 self.na = total_impacts
                 self.distances["NA"] = distance
                 self.global_ = total_impacts
                 self.distances["Global"] = distance
-                self.distances["None"] = distance
                 self.none = total_impacts
-
+                self.distances["None"] = distance
+                
 
             if self.mode.get_name() == "Barge" or "Ocean":
-
-                if self.mode_domestic is not None:
-                    distance = faf["avr_dom_dist_km"].mean()
-                    domestic_total = self.mode_domestic.get_impacts() * distance
-
-                else:
-                    faf = faf[faf["dms_mode"] == 1] #Truck as default
-                    distance = faf["avr_dom_dist_km"].mean()
-                    domestic_total = TransportMode ("Truck", 1, self.project).get_impacts() * distance
                 
-                marine_none_dis = marine["Distance_km"].mean()
-                marine_none_impacts = self.mode.get_impacts() * marine_none_dis
+                for scenario in scenarios:
 
-                marine_na = marine[(marine["Region"] == "Canada") | (marine["Region"] == "Mexico")]
-                marine_na_dis = marine_na["Distance_km"].mean()
-                marine_na_impacts = self.mode.get_impacts() * marine_na_dis
+                    if scenario == "NA":
+                        faf_filtered_na = faf[faf["fr_orig"].isin([801, 802])]
+                        marine_flitered_na = marine[marine["Region"].isin(["Canada", "Mexico"])]
+                        faf_na = faf_filtered_na if not faf_filtered_na.empty else faf
+                        marine_na = marine_flitered_na if not marine_flitered_na.empty else marine
+                        domestic_na_dis = faf_na["avr_dom_dist_km"].mean()
+                        domestic_total = self.mode_domestic.get_impacts() * domestic_na_dis
+                        marine_na_dis = marine_na["Distance_km"].mean()
+                        marine_na_impacts = self.mode.get_impacts() * marine_na_dis
 
-                marine_global = marine [(marine["Region"] != "Canada") & (marine["Region"] != "Mexico")]
-                marine_global_dis = marine["Distance_km"].mean()
-                marine_global_impacts = self.mode.get_impacts() * marine_global_dis
+                        self.distances["NA"] = marine_na_dis + domestic_na_dis
+                        self.na = marine_na_impacts + domestic_total
 
-                self.global_ = marine_global_impacts + domestic_total
-                self.distances["Global"] = marine_global_dis + distance
-                self.distances["NA"] = marine_na_dis + distance
-                self.distances["None"] = marine_none_dis + distance
-                self.na = marine_na_impacts + domestic_total
-                self.none = marine_none_impacts + domestic_total
+                    elif scenario == "Global":
+                        faf_filtered_global = faf[faf["fr_orig"].isin([801, 802]) == False]
+                        marine_filtered_global = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]
+                        faf_global = faf_filtered_global if not faf_filtered_global.empty else faf
+                        marine_global = marine_filtered_global if not marine_filtered_global.empty else marine
+                        domestic_global_dis = faf_global["avr_dom_dist_km"].mean()
+                        domestic_total = self.mode_domestic.get_impacts() * domestic_global_dis
+                        marine_global_dis = marine_global["Distance_km"].mean()
+                        marine_global_impacts = self.mode.get_impacts() * marine_global_dis
+
+                        self.global_ = marine_global_impacts + domestic_total
+                        self.distances["Global"] = marine_global_dis + domestic_global_dis
+
+                    
+                    elif scenario == "None":
+
+                        marine_none_dis = marine["Distance_km"].mean()
+                        marine_none_impacts = self.mode.get_impacts() * marine_none_dis
+                        domestic_none_dis = faf["avr_dom_dist_km"].mean()
+                        domestic_total = self.mode_domestic.get_impacts() * domestic_none_dis
+
+                        self.distances["None"] = marine_none_dis + domestic_none_dis
+                        self.none = marine_none_impacts + domestic_total
+
 
 
             if self.mode.get_name() == "Air":
+                
+                for scenario in scenarios:
+                    if scenario == "NA":
+                        faf_filtered_na = faf[faf["fr_orig"].isin([801, 802])]
+                        faf_na_mode = faf_filtered_na ["fr_orig"].mode (0)[0]
 
-                if self.shipping_dest is not None:
-                    dest_location = self.shipping_dest.get_cordinates()
-                else:
-                    major_domes = faf["dms_dest"].mode()[0]
-                    with open (FAF_DOMESTIC_REGION, "r") as f:
-                        FAF_DOMESTIC_REGION = json.load(f)
+                        for key, value in FAF_city_representation.items():
+                            if faf_na_mode == key:
+                                faf_na_mode = value
+                                self.shipping_org = Location.from_str(faf_na_mode)
+                        
+                        fr_coordinates_na = self.shipping_org.get_cordinates()
+                        air_na_dist = geodesic(fr_coordinates_na, dms_coordinates).km
 
-                        for key, value in FAF_DOMESTIC_REGION.items():
-                            if major_domes == value:
-                                major_domes = key
 
-                    dest_location = Location.from_str(major_domes).get_cordinates()
+                        self.distances["NA"] = air_na_dist
+                        self.na = air_na_dist * self.mode.get_impacts()
 
-                if self.shipping_org is not None:
-                    org_location = self.shipping_org.get_cordinates()
-                    air_none_dist = geodesic(org_location, dest_location).km
+                    elif scenario == "Global":
+                        faf_filtered_global = faf[faf["fr_orig"].isin([801, 802]) == False]
+                        faf_global_mode = faf_filtered_global ["fr_orig"].mode (0)[0]
 
-                else:
-                    air_none_dist = None
-                    major_cities = faf["fr_orig"].mode()[0]
-                    for key, value in FAF_city_representation.items():
-                        if major_cities == key:
-                            major_cities = value
-                            major_cities = Location.from_str(major_cities).get_cordinates()
+                        for key, value in FAF_city_representation.items():
+                            if faf_global_mode == key:
+                                faf_global_mode = value
+                                self.shipping_org = Location.from_str(faf_global_mode)
+                        
+                        fr_coordinates_global = self.shipping_org.get_cordinates()
+                        air_global_dist = geodesic(fr_coordinates_global, dms_coordinates).km
 
-                    air_global_dist = geodesic(major_cities, dest_location).km
-                    air_na_dist = (geodesic((50.000678, -86.000977), dest_location).km + geodesic((19.4326296, -99.1331785), dest_location).km) / 2
+
+                        self.global_ = air_global_dist* self.mode.get_impacts()
+                        self.distances["Global"] = air_global_dist
+                        
+                    elif scenario == "None":
+                        
+                        if self.shipping_org is not None:
+                            fr_coordinates = self.shipping_org.get_cordinates()
+                            air_none_dist = geodesic(fr_coordinates, dms_coordinates).km
+
+                        else:
+                            faf_none_mode = faf["fr_orig"].mode (0)[0]
+                            for key, value in FAF_city_representation.items():
+                                if faf_none_mode == key:
+                                    faf_none_mode = value
+                                    self.shipping_org = Location.from_str(faf_none_mode)
+
+                            fr_coordinates = self.shipping_org.get_cordinates()
+                            air_none_dist = geodesic(fr_coordinates, dms_coordinates).km
+
+                        self.distances["None"] = air_none_dist
+                        self.none = air_none_dist * self.mode.get_impacts()
                     
-                
-                self.global_ = air_global_dist* self.mode.get_impacts()
-                self.distances["Global"] = air_global_dist
-                self.distances["NA"] = air_na_dist
-                self.na = air_na_dist * self.mode.get_impacts()
-                self.distances["None"] = air_none_dist
-                self.none = None if air_none_dist is None else air_none_dist* self.mode.get_impacts()
 
-        else:
-
-            mode_na = emission[emission["eff"] == self.project.get_links()[0].get_efficiency()].iloc[:, -5:].mean().to_dict()
-            mode_global = emission[emission["eff"] == self.project.get_links()[0].get_efficiency()].iloc[:, -5:].mean().to_dict()
-
-            if self.shipping_dest is None:
-                
-                major_domes = faf["dms_dest"].mode()[0]
-                with open (FAF_DOMESTIC_REGION, "r") as f:
-                    FAF_DOMESTIC_REGION = json.load(f)
-
-                    for key, value in FAF_DOMESTIC_REGION.items():
-                        if major_domes == value:
-                            major_domes = key
-
-                    shipping_dest_coords = Location.from_str(major_domes).get_cordinates()
-            else:
-                shipping_dest_coords = self.shipping_dest.get_cordinates()
-
-            major_cities = faf["fr_orig"].mode()[0]
-            for key, value in FAF_city_representation.items():
-                if major_cities == key:
-                    major_cities = value
-                    major_cities = Location.from_str(major_cities).get_cordinates()
-
-
-            rail_global_na_distance = (cfaf["Average_Distance_per_Shipment"].mean())/4
-            rail_global_na_impact = rail_global_na_distance *TransportMode("Rail", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
-
-            marine_na_distance = marine[(marine["Region"] == "Canada") | (marine["Region"] == "Mexico")]
-            marine_na_distance = (marine_na_distance ["Distance_km"].mean())/4
-            marine_na_impact = marine_na_distance*TransportMode("Ocean", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
-
-            truck_global_na_distance = 200 /4
-            truck_global_na_impact = truck_global_na_distance * TransportMode("Truck", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
-
-            air_na_distance = ((geodesic((50.000678, -86.000977), shipping_dest_coords).km + geodesic((19.4326296, -99.1331785), shipping_dest_coords).km) / 2 )/4
-            air_na_impact = air_na_distance * TransportMode("Air", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
-
-            marine_global_distance = (marine["Distance_km"].mean())/4
-            marine_global_impact = marine_global_distance * TransportMode("Ocean", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
-
-            air_global_dist = (geodesic(major_cities, shipping_dest_coords).km)/4
-            air_global_impact = air_global_dist * TransportMode("Air", self.project.get_links()[0].get_efficiency() , self.project).get_impacts()
-
-
-            self.na = rail_global_na_impact + marine_na_impact + truck_global_na_impact + air_na_impact
-            self.distances["NA"] = rail_global_na_distance + marine_na_distance + truck_global_na_distance + air_na_distance
-            self.distances["Global"] = rail_global_na_distance + truck_global_na_distance + marine_global_distance + air_global_dist
-            self.global_ = rail_global_na_impact + truck_global_na_impact + marine_global_impact + air_global_impact
 
     def scenario_impact (self):
 

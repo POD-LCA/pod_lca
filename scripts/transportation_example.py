@@ -3,14 +3,14 @@ from lca_modules.transportation.project_logistic_manager import ProjectLogisticM
 
 data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
 
-project = ProjectLogisticManager(name="Building A", shipping_dest= "Pennsylvania",
-                                 data_folder=data_folder, shipping_org= None)
+project = ProjectLogisticManager(name="Building A", shipping_dest= None,
+                                 data_folder=data_folder, shipping_org= None )
 
 
-project.create_link ( material="CeilingPanel", qty=1, travel_dist= "NA",
+project.create_link ( material="BlanketInsulation", qty=1, travel_dist= "None",
                       return_trip_factor=1, dist_unit="km",
-                      mode_name= "Barge" , feul_type = "Regular" ,mode_dms_name = "Truck",
-                      efficiency= 1 , efficiency_dms= 1)
+                      mode_name= "Truck" , feul_type = "Regular" ,mode_dms_name = None,
+                      efficiency= 2 , efficiency_dms= 1)
 
 print (project.get_impacts())
 

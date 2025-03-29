@@ -454,7 +454,7 @@ class Location:
 
 if __name__ == '__main__':
 
-    location_input = "Washington State"
+    location_input = "Hawaii, USA"
     location_obj = Location.from_str(location_input)
 
 

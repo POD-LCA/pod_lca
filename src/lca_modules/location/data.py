@@ -15,14 +15,14 @@ FAF_DATA = {"Canada": 801,
             "Eastern Asia": 807, 
             "SE Asia & Oceania": 808}
 
-FAF_city_representation = { 801: "Ontario",
-                            802: "Mexico City",
-                            803: "Sao Paulo",
+FAF_city_representation = { 801: "Montreal",
+                            802: "Veracruz",
+                            803: "Santos",
                             804: "Antwerp",
-                            805: "Cairo",
+                            805: "Durban",
                             806: "Mumbai",
                             807: "Shanghai",
-                            808: "Singapore"}
+                            808: "Saigon"}
 
 #Clockwise order
 FAF_BOUNDARIES = {
@@ -40,8 +40,11 @@ MARINE_REGION = {
     "Canada": ([(69, -140), (68, -82), (53, -55), (44, -78), (49, -91), (49, -124), (69, -140)]),
     "Mexico": ([(32, -116), (30, -105), (25, -97), (21, -86), (15, -91), (20, -105), (32, -116)]),
     "Europe": ([(65, -24), (71, 25), (40, 35), (30, -23), (65, -24)]),
-    "China": ([(50, 97), (49, 145), (25, 139), (19, 91), (50, 97)]),
-    "South America": ([(12, -91), (13, -32), (-25, -30), (-58, -67), (-43, -83), (12, -91)]),
+    "Eastern Asia": ([(50, 97), (49, 145), (25, 139), (19, 91), (50, 97)]),
+    "Rest of America": ([(12, -91), (13, -32), (-25, -30), (-58, -67), (-43, -83), (12, -91)]),
+    "Africa": ([(36, -17), (31, 31), (-31, 56), (-33, -11), (36, -17)]),
+    "Southeastern Asia and Oceania": ([(9, 89), (20, 124), (-37, 177), (-45, 109), (9, 89)]),
+    "Southern, Central, and Western Asia": ([(51, 47), (13, 44), (9, 90), (49, 88), (51, 47)]),
 }
 
 
