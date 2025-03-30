@@ -28,8 +28,9 @@ class Link:
         qty : str.
             quantity of the of the material.
 
-        travel_dist : float.
+        travel_dist : float or str.
             transportation distance.
+            transportaion scenario.
 
         return_trip_factor : float.
             transportation return trip factor.
@@ -81,13 +82,8 @@ class Link:
         else:
             
             impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).scenario_impact() 
+            impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
 
-            if isinstance(impact, dict):
-                for key in impact:
-                    impact[key] *= self.qty * self.return_trip_factor * self.unit_conversion
-            
-            else:
-                impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
             return impact
 
 

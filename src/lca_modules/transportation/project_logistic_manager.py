@@ -17,28 +17,28 @@ __version__ = "0.1.0"
 
 class ProjectLogisticManager:
 
-    """
-    ProjectLogisticManager class which maintains the links of transportation.
-
-    Attributes
-    ----------
-    name : int.
-        name of the project.
-    shipping_dest : str.
-        neme of the shipping destination location.
-    data_folder : str.
-        path to the data folder.
-    shipping_org : str.
-        name of the shipping origin location.
-    links : list.
-        list of links.
-    impact : dict.
-        dictionary of impacts.
-    subdataset : dict.
-        dictionary of subdatasets.
-    """
-
     def __init__(self, name, shipping_dest, data_folder, shipping_org):
+
+        """
+        ProjectLogisticManager class which maintains the links of transportation.
+
+        Attributes
+        ----------
+        name : int.
+            name of the project.
+        shipping_dest : str.
+            neme of the shipping destination location.
+        data_folder : str.
+            path to the data folder.
+        shipping_org : str.
+            name of the shipping origin location.
+        links : list.
+            list of links.
+        impact : obj.
+            impact object.
+        subdataset : dict.
+            dictionary of subdatasets.
+        """
 
         self.name = name
         self.shipping_dest = None if shipping_dest is None else Location.from_str (shipping_dest)
@@ -87,13 +87,9 @@ class ProjectLogisticManager:
         link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms)
         self.links.append(link)
 
-        if isinstance (link.compute_impact(), dict):
-            self.impacts.update_impact_qty(link.compute_impact())
-        else:
-            self.impacts.update_impact_qty(link.compute_impact().get_impact_dict())
+        self.impacts.update_impact_qty(link.compute_impact().get_impact_dict())
 
             
-
     @staticmethod
     def merge_impacts(impact1, impact2):
         """
@@ -148,19 +144,6 @@ class ProjectLogisticManager:
         return self.links[link].get_scenario_distances()
 
 
-    def get_scenario_distance_plot(self, link):
-        """
-        Retrieve the scenario distance plot of the project.
-        """
-        scenario_distances = self.links[link].get_scenario_distances()
-        labels = list(scenario_distances.keys())
-        distances = list(scenario_distances.values())
-
-        plt.bar(labels, distances)
-        plt.xlabel('Scenario')
-        plt.ylabel('Distance')
-        plt.title('Scenario Distance Plot')
-        plt.show()
 
 
 
