@@ -2,6 +2,7 @@
 from lca_modules.electricity.electricity_supply import ElectricitySupply
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.material.master import Master
+from lca_modules.uncertainty.datasets import DataDistribution
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -265,7 +266,7 @@ class Electricity(Fuel):
 
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
-            impacts = {key: getattr(unit_impacts, key, 0.0) * conversion_factor * self.qty for key in IMPACT_CATEGOREIS}
+            impacts = {category: unit_impacts.get_impact(category) * conversion_factor * self.qty for category in IMPACT_CATEGOREIS}
             self.impacts.update_impact_qty(impacts)      
 
     def set_supplier(self, supplier):
@@ -291,7 +292,40 @@ class Electricity(Fuel):
                 Year of electricity consumption.
         """
 
+        self.get_supplier().set_year(year)
+        self.update_impacts()
+
         self.year = year
+
+        return self
+    
+    def set_spatial_resolution(self, spatial_resolution):
+        """ Set the spatial resolution of the electricity supply.
+        
+            Parameters
+            ----------
+            spatial_resolution : str
+                Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
+        """
+
+        self.get_supplier().set_spatial_resolution(spatial_resolution)
+        self.update_impacts()
+
+        return self
+    
+    def set_scenario(self, scenario):
+        """ Set scenario name. This will be used with cambium data.
+        
+            Parameters
+            ----------
+            scenario : str
+                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        """
+        if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
+            self.get_supplier().set_scenario(scenario)
+            self.update_impacts()
+        else:
+            raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")
 
         return self
     
@@ -317,6 +351,41 @@ class Electricity(Fuel):
 
         return self.year
 
+    def get_data_distribution(self, attr):
+        """ Get data_distribution object corresponding to the given attribute.
+
+            Parameters
+            ----------
+            attr : str.
+                Attribute to which the distribution correspond.
+
+            Returns
+            -------
+            DataDistribution Obj.
+                Data distribution.        
+        """
+        
+        if attr == 'impacts':
+
+            supplier = self.get_supplier()
+            impact_distribution = supplier.get_impact_distribution() # this is a sampling of unit impacts
+
+            declared_unit = supplier.get_unit()
+            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
+
+            impact_distributions = []
+            for category in IMPACT_CATEGOREIS:
+                data = []
+                for impact in impact_distribution:
+                    data.append(impact.get_impact(category) * conversion_factor * self.get_qty())
+
+                impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category))
+
+            return impact_distributions
+
+        else:
+            return self.data_distributions[attr]
+    
 class Emission(Product):
     """
     Emission product object, inheriting from the product object.

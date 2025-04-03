@@ -1,4 +1,6 @@
 from utilities.data_imports.csv import CSV_Importer
+from lca_modules.electricity import DEFAULT_COUNTRY_CODE
+from lca_modules.location.location import Location
 
 from pandas import DataFrame, concat
 import bisect
@@ -38,6 +40,7 @@ class CambiumData:
     DATA_YEARS = [2025, 2030, 2035, 2040, 2045, 2050]
     HEADER_MAP = "data\\cambium_headers.json"
     TECHNOLOGY_MAP = "data\\cambium_technology_map.json"
+    REGIONS_MAP = "data\\cambium_regions_map.json"
 
     def __init__(self):
         self.data = None
@@ -50,35 +53,55 @@ class CambiumData:
             ----------
             regional_resolution : str
                 Level of regionality of data: e.g., 'National', 'Regional', 'Local'.
-            location : Location Obj.
+            location : Location Obj. or str
                 Location of electricity supply.
+                If a string is provided, it should be the country code for national level data,
+                region name for regional level data, or REEDS balancing authority for local level data.
         """
 
         cambium_data = cls()
         
+        # get country/region name
         if location is None:
-            raise ValueError('No region name set.')
-        else:
+            if regional_resolution== 'National':
+                country_code = DEFAULT_COUNTRY_CODE
+            else:
+                raise KeyError("No default location for regional resolution {regional_resolution}.")
+        elif isinstance(location, str):
+            if regional_resolution== 'National':
+                country_code = location
+            elif regional_resolution == 'Regional':
+                region = location
+            elif regional_resolution == 'Local':
+                region = location
+        elif isinstance(location, Location):
             if regional_resolution== 'National':
                 country_code = location.get_country_code()
-                df = CSV_Importer.import_as_pandas(CambiumData.NATIONAL_DATA)
-                cambium_data.data = df[df['country code'] == country_code]
             elif regional_resolution == 'Regional':
                 if location.get_cambium_gea_region() is None:
                     location.set_cambium_gea_region()
                 region = location.get_cambium_gea_region()
-                df = CSV_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
-                cambium_data.data = df[df['gea'] == region]
             elif regional_resolution == 'Local':
                 if location.get_reeds_balancing_authority() is None:
                     location.set_reeds_balancing_authority()
                 region = location.get_reeds_balancing_authority()
-                df = CSV_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
-                cambium_data.data = df[df['r'] == region]
-            else:
-                raise KeyError("Regional resolution not recognized. Should be 'National', 'Regional', or 'Local'")
+        else:
+            raise TypeError("Location should be a string or Location object.")
+        
+        # get cambium data
+        if regional_resolution== 'National':
+            df = CSV_Importer.import_as_pandas(CambiumData.NATIONAL_DATA)
+            cambium_data.data = df[df['country code'] == country_code]
+        elif regional_resolution == 'Regional':
+            df = CSV_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
+            cambium_data.data = df[df['gea'] == region]
+        elif regional_resolution == 'Local':
+            df = CSV_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
+            cambium_data.data = df[df['r'] == region]
+        else:
+            raise KeyError("Regional resolution not recognized. Should be 'National', 'Regional', or 'Local'")
 
-            return cambium_data
+        return cambium_data
 
     def get_mix(self, year, technologies, scenario="MidCase"):
         """ Get technology mix of the electricity consumption by year.
@@ -107,7 +130,7 @@ class CambiumData:
         if idx == 0:
             years = [CambiumData.DATA_YEARS[0]]
         elif idx == len(CambiumData.DATA_YEARS):
-            years = [CambiumData.DATA_YEARS[0][-1]]
+            years = [CambiumData.DATA_YEARS[-1]]
         else:
             years = [CambiumData.DATA_YEARS[idx - 1], CambiumData.DATA_YEARS[idx]]
 
