@@ -637,7 +637,7 @@ class openLCA:
                 UUID of the impact method.
             group_by : dict or list of dict
                 Dictionary of group categorization: {'name' : category name (str),
-                                                     'ids' : [categoty id (int) or product uuid (str)], 
+                                                     'ids' : [category id (int) or product uuid (str)], 
                                                      'unit': unit to be reported - optional (Unit Obj), 
                                                      'conversion_map': conversion map - optional (dict)}
                 Category IDs are from the North American Industry Classification System (NAICS).
