@@ -309,16 +309,7 @@ class openLCA:
             processes = [processes]
         
         if node.provider.id in processes:
-            if not heating_values is None:
-                if node.product.ref_unit == 'l': 
-                    #this unit conversion from l to m3 is specified because it is the only necessary conversion for the USLCI fuels processes list
-                    #find a more elegant solution to this issue if possible
-                    unit = UNITS_MAP['m3']
-                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
-                else:
-                    conversion_factor = 1.0
-                unit = UNITS_MAP['MJ']
-            elif unit is None:
+            if unit is None:
                 unit = UNITS_MAP[node.product.ref_unit]
                 conversion_factor = 1.0
             elif unit.get_standard_notation() == node.product.ref_unit:
@@ -335,15 +326,8 @@ class openLCA:
                         conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
                     else:
                         conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
-
-            if not heating_values is None:
-                if node.provider.id in heating_values:
-                    qty += node.required_amount * conversion_factor * float(heating_values[node.provider.id]['heating_value'])
-                else:
-                    qty += node.required_amount * conversion_factor
-            else:        
-                qty += node.required_amount * conversion_factor
-            
+      
+            qty += node.required_amount * conversion_factor
             impact += node.result
 
             return impact, qty, unit
@@ -640,7 +624,7 @@ class openLCA:
 
         return result
     
-    def generate_impacts_dir(client, process_list, impact_dict, impact_method, group_by=None, heating_values=None):
+    def generate_impacts_dir(client, process_list, impact_dict, impact_method, group_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
             Parameters
@@ -677,14 +661,25 @@ class openLCA:
         results = {}
 
         for process in tqdm(process_list):
-
-            process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id, 'Location': process.location, 'Process Type': process.process_type, 'Description': process.description}
+            process_object = client.get(schema.Process, process.id)
+            exchanges = process_object.exchanges
+            if process_object.description is str:
+                process_description = process_object.description.encode("utf-8")
+            else:
+                process_description = process_object.description
+            process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id, 'Location': process.location, 'Process Type': process.process_type.name, 'Description': process_description}
 
             product_system = openLCA.create_product_system(client, process)
             result = openLCA.compute_impacts(client, product_system, impact_method)
             impact_results = openLCA.get_impacts(client, result, impact_dict)
 
-            if not group_by is None:
+            impact_amounts_list = []
+            for impact in impact_dict:
+                unit = impact_dict[impact]['refUnit']
+                amount = impact_results[impact + ' [' + unit + ']']
+                impact_amounts_list.append(amount)
+           
+            if ((not group_by is None) and (not all(impact_amount==0 for impact_amount in impact_amounts_list))):
                 if not isinstance(group_by, list):
                     group_by = [group_by]
 
@@ -736,19 +731,23 @@ class openLCA:
         else:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
         
+        lastid_count = 0
+        exchangeid_count = 0
         for process_ref in tqdm(process_list):
             process = client.get(schema.Process, process_ref.id)
             if process.last_internal_id < len(process.exchanges):
                 process.last_internal_id = len(process.exchanges)
+                lastid_count += 1
                
-            
             if any(exchange.internal_id > process.last_internal_id for exchange in process.exchanges):
+                exchangeid_count += 1
                 i=1
                 for exchange in process.exchanges:
                     exchange.internal_id = i
                     i+=1
             client.put(process) 
-
+        print("Fixed process last_internal_id for:", lastid_count, "processes")
+        print ("Fixed exchange internal_ids for:", exchangeid_count, "processes")    
 
 if __name__ == '__main__':
     pass

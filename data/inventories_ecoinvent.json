@@ -1,18 +1,20 @@
 {
     "CO2": {
         "@type":"ImpactCategory",
-        "@id":"eea1e0ca-ea6d-49c0-8b18-4102420e02cd",
+        "@id":"342cd1d7-7b4f-43f6-8de9-7eb1cce300ca",
         "name":"CO2",
+        "refUnit":"kg"
+    },
+    "CH4": {
+        "@type":"ImpactCategory",
+        "@id":"600a0e04-0c60-4722-ac04-b2f918d71c40",
+        "name":"CH4",
         "refUnit":"kg"
     }, 
     "N2O": {
         "@type":"ImpactCategory",
-        "@id":"99fb7a66-2150-4a4a-99bc-c024cf5531e8",
+        "@id":"6fe1339d-1800-4b26-bd57-35080077aabb",
         "name":"N2O",
-        "refUnit":"kg"}, 
-    "CH4": {
-        "@type":"ImpactCategory",
-        "@id":"41670b48-d87b-4c6e-84b8-02470bcb2102",
-        "name":"CH4",
-        "refUnit":"kg"} 
+        "refUnit":"kg"
+    }  
 }
