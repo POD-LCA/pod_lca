@@ -315,7 +315,7 @@ class Scenario:
                     if scenario == "NA":
                         faf_filtered_na = faf[faf["fr_orig"].isin([801, 802])]
                         faf_na = faf_filtered_na if not faf_filtered_na.empty else faf
-                        domestic_total = self.mode.get_impacts() * faf_na["avr_dom_dist_km"].mean()
+                        domestic_total = self.mode_domestic.get_impacts() * faf_na["avr_dom_dist_km"].mean()
                         foreign_total = self.mode.get_impacts() * 200
                         total_impact = domestic_total + foreign_total
 
@@ -325,7 +325,7 @@ class Scenario:
                     elif scenario == "Global":
                         faf_filtered_global = faf[faf["fr_orig"].isin([801, 802]) == False]
                         faf_global = faf_filtered_global if not faf_filtered_global.empty else faf
-                        domestic_total = self.mode.get_impacts() * faf_global["avr_dom_dist_km"].mean()
+                        domestic_total = self.mode_domestic.get_impacts() * faf_global["avr_dom_dist_km"].mean()
                         foreign_total = self.mode.get_impacts() * 200
                         total_impact = domestic_total + foreign_total
 
