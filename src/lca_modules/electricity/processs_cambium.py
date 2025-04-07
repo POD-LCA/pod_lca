@@ -1,10 +1,12 @@
-from utilities.data_imports.csv import CSV_Importer
-from lca_modules.electricity import DEFAULT_COUNTRY_CODE
+
+from lca_modules.electricity import DEFAULT_COUNTRY_CODE, CAMBIUM_TECHNOLOGY_MAP, CAMBIUM_LOCAL_DATA, CAMBIUM_REGIONAL_DATA, CAMBIUM_NATIONAL_DATA, CAMBIUM_HEADER_MAP, CAMBIUM_DATA_YEARS
 from lca_modules.location.location import Location
+from utilities.data_imports.csv import CSV_Importer
 
 from pandas import DataFrame, concat
 import bisect
 import gc
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -34,13 +36,7 @@ class CambiumData:
             Pandas dataframe of cambium data loaded.
     """
 
-    NATIONAL_DATA = "data\\cambium_data_national.csv"
-    REGIONAL_DATA = "data\\cambium_data_regional.csv"
-    LOCAL_DATA = "data\\cambium_data_local.csv"
-    DATA_YEARS = [2025, 2030, 2035, 2040, 2045, 2050]
-    HEADER_MAP = "data\\cambium_headers.json"
-    TECHNOLOGY_MAP = "data\\cambium_technology_map.json"
-    REGIONS_MAP = "data\\cambium_regions_map.json"
+
 
     def __init__(self):
         self.data = None
@@ -90,16 +86,16 @@ class CambiumData:
         
         # get cambium data
         if regional_resolution== 'National':
-            df = CSV_Importer.import_as_pandas(CambiumData.NATIONAL_DATA)
+            df = CSV_Importer.import_as_pandas(CAMBIUM_NATIONAL_DATA)
             cambium_data.data = df[df['country code'] == country_code]
         elif regional_resolution == 'Regional':
-            df = CSV_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
+            df = CSV_Importer.import_as_pandas(CAMBIUM_REGIONAL_DATA)
             cambium_data.data = df[df['gea'] == region]
         elif regional_resolution == 'Local':
-            df = CSV_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
+            df = CSV_Importer.import_as_pandas(CAMBIUM_LOCAL_DATA)
             cambium_data.data = df[df['r'] == region]
         else:
-            raise KeyError("Regional resolution not recognized. Should be 'National', 'Regional', or 'Local'")
+            raise KeyError(f"Regional resolution {regional_resolution} not recognized. Should be 'National', 'Regional', or 'Local'")
 
         return cambium_data
 
@@ -126,15 +122,15 @@ class CambiumData:
         """
 
         # match year with years available in dataset.
-        idx = bisect.bisect_left(CambiumData.DATA_YEARS, year)
+        idx = bisect.bisect_left(CAMBIUM_DATA_YEARS, year)
         if idx == 0:
-            years = [CambiumData.DATA_YEARS[0]]
-        elif idx == len(CambiumData.DATA_YEARS):
-            years = [CambiumData.DATA_YEARS[-1]]
+            years = [CAMBIUM_DATA_YEARS[0]]
+        elif idx == len(CAMBIUM_DATA_YEARS):
+            years = [CAMBIUM_DATA_YEARS[-1]]
         else:
-            years = [CambiumData.DATA_YEARS[idx - 1], CambiumData.DATA_YEARS[idx]]
+            years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
 
-        mix_names = list(CSV_Importer.json_to_dict(CambiumData.HEADER_MAP).values())
+        mix_names = list(CSV_Importer.json_to_dict(CAMBIUM_HEADER_MAP).values())
         mix_set = DataFrame()
         for yr in years:
             data_set_tmp = self.data[self.data['scenario']==scenario]
@@ -150,9 +146,9 @@ class CambiumData:
             mix = mix_set.squeeze()
 
         # map
-        technology_map = CSV_Importer.json_to_dict(CambiumData.TECHNOLOGY_MAP)
+        technology_map = CSV_Importer.json_to_dict(CAMBIUM_TECHNOLOGY_MAP)
         mix_dict = dict.fromkeys(technologies, 0.0)
-        for technology, header in CSV_Importer.json_to_dict(CambiumData.HEADER_MAP).items():
+        for technology, header in CSV_Importer.json_to_dict(CAMBIUM_HEADER_MAP).items():
             technology_mapped = technology_map[technology]
             value = mix[header]
 

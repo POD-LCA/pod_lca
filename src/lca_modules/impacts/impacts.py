@@ -238,6 +238,7 @@ class Impacts:
         else:
             raise NotImplementedError
         
+        # TODO: normalise the impacts begore applying weights
         weighted_impact = 0.0
         for (impact_cat, weight) in weights.items():
             impact = getattr(self, impact_cat, None)

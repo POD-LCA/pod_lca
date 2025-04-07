@@ -88,7 +88,45 @@ class Location:
             return location
 
         except Exception as e:
-            print(f"Error retrieving location data: {e}")        
+            print(f"Error retrieving location data: {e}") 
+
+    @classmethod
+    def from_US_zip(cls, zipcode, set_all_location_data=False):
+        """ Create location from US zipcode.
+            The location data populated based on the centroid of the area represented by the zipcode.
+        
+            Parameters
+            ----------
+            zipcode : str
+                Zipcode of the location.
+        """
+        location = cls()
+
+        location.country = "USA"
+        location.country_code = "US"
+        location.zipcode = zipcode
+        location.regionality = 'Local'
+
+        if set_all_location_data:
+            try:
+                string = zipcode + ", USA"
+                geolocator = Nominatim(user_agent="pod_lca")
+
+                location_data = geolocator.geocode(string, featuretype=['settlement', 'city', 'town', 'village', 'county', 'state', 'country'], language='en', addressdetails=True, extratags=True) 
+                location.set_regionality(location_data)
+                location.set_cordinates(location_data)
+
+                location_data = geolocator.reverse(location.get_cordinates(), addressdetails=True, zoom=15, language='en') # zoom level 14 = neighbourhood
+
+                location.set_city(location_data)
+                location.set_state(location_data)
+                location.set_cfs_area()
+                location.set_faf_foreign_region(string)
+
+            except Exception as e:
+                print(f"Error retrieving location data: {e}")
+
+        return location
     
     # ================================
     # Setters
@@ -265,10 +303,7 @@ class Location:
 
         ferc_region = df[df['zip code'] == zipcode]['FERC Region'].unique()
 
-        self.FERC_region = ferc_region
-
-        # if len(ferc_region) > 1:
-        #     print("More than one FERC region for the given zip code. {ferc_region[0]} selected.")
+        self.ferc_region = ferc_region[0]
             
         return self
     

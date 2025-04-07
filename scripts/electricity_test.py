@@ -3,6 +3,7 @@ from lca_modules.location.location import Location
 from utilities.units.common_units import WATT_HOUR
 from utilities.units.metric_prefixes import MEGA, KILO
 
+
 my_manufacturing_project = Project()
 tests = {'test_01': {'location': 'USA', 'elec_qty': 1, 'yr': 2025, 'sp_res': 'National', 'scenario': 'MidCase'},
          'test_02': {'location': 'USA', 'elec_qty': 1, 'yr': 2037, 'sp_res': 'National', 'scenario': 'MidCase'},
