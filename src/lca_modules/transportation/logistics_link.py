@@ -64,6 +64,36 @@ class Link:
         self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
         self.scenario_distances = None
 
+
+    def get_scenario_distances (self):
+        """ Retrieve the scenario distances of the transportation link.
+
+            Returns
+            -------
+            float
+                scenario distances of the transportation link.
+        """
+        self.scenario_distances = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_distances()
+
+        return self.scenario_distances
+
+
+    def get_travel_dist (self):
+        """ Retrieve the distance of the transportation link.
+
+            Returns
+            -------
+            float
+                 distance of the transportation link.
+        """
+        if isinstance(self.travel_dist, str):
+            distance = self.get_scenario_distances ()[self.travel_dist]
+        else:
+            distance = self.travel_dist
+
+        return distance
+
+
     def compute_impact(self):
         """ compute the impaact of the transportation link.
 
@@ -72,6 +102,15 @@ class Link:
             dict
                 A dictionary of impacts for each category.
         """
+
+        if self.return_trip_factor is None:
+
+            dist = self.get_travel_dist()
+            if self.dist_unit == "mi":
+                self.return_trip_factor = 1.5 if dist < 500 else 1
+            elif self.dist_unit == "km":
+                self.return_trip_factor = 1.5 if dist < 805 else 1
+
         if isinstance(self.travel_dist, float) or isinstance(self.travel_dist, int): 
 
             impact = self.mode.get_impacts()
@@ -108,18 +147,6 @@ class Link:
 
         return self.material
 
-    def get_travel_dist (self):
-        """ 
-        Retrieve the transportation distance of the transportation link.
-
-            Returns
-            -------
-            float
-                transportation distance of the transportation link.
-        """
-
-        return self.travel_dist
-
 
     def get_mode (self):
         """ Retrieve the transportation mode of the transportation link.
@@ -155,14 +182,16 @@ class Link:
 
         return self.efficiency_dms
 
-    def get_scenario_distances (self):
-        """ Retrieve the scenario distances of the transportation link.
+    def get_return_trip_factor (self):
+        """ Retrieve the return trip factor of the transportation link.
 
             Returns
             -------
             float
-                scenario distances of the transportation link.
+                return trip factor of the transportation link.
         """
-        self.scenario_distances = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_distances()
 
-        return self.scenario_distances
+        return self.return_trip_factor
+
+
+
