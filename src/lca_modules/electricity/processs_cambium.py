@@ -78,16 +78,16 @@ class CambiumData:
                     location.set_cambium_gea_region()
                 region = location.get_cambium_gea_region()
             elif regional_resolution == 'Local':
-                if location.get_reeds_balancing_authority() is None:
-                    location.set_reeds_balancing_authority()
-                region = location.get_reeds_balancing_authority()
+                if location.get_reeds_balancing_area() is None:
+                    location.set_reeds_balancing_area()
+                region = location.get_reeds_balancing_area()
         else:
             raise TypeError("Location should be a string or Location object.")
         
         # get cambium data
         if regional_resolution== 'National':
             df = CSV_Importer.import_as_pandas(CAMBIUM_NATIONAL_DATA)
-            cambium_data.data = df[df['country code'] == country_code]
+            cambium_data.data = df[df['country_code'] == country_code]
         elif regional_resolution == 'Regional':
             df = CSV_Importer.import_as_pandas(CAMBIUM_REGIONAL_DATA)
             cambium_data.data = df[df['gea'] == region]

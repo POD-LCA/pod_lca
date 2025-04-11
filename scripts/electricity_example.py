@@ -10,9 +10,9 @@ my_manufacturing_project = Project()
 # ================================= 
 # Spatial resolution ('National', 'Regional', 'Local') will be automatically detected as the location is set
 # If no location is set, the spatial resolution will be set to 'National' (and 'USA') by default.
-my_factory_location = Location.from_str("90210, USA")
+# my_factory_location = Location.from_US_zip("98105")
 # my_factory_location = Location.from_str("oklahoma")
-# my_factory_location = Location.from_str("98102, USA")
+my_factory_location = Location.from_str("USA")
 
 my_manufacturing_project.set_location(my_factory_location)
 
@@ -57,13 +57,13 @@ print(impacts)
 # =================================
 # changing the electricity supplier spatial resolution would only change the unit impacts
 # and not the electricity product impacts
-electricity_supplier.set_spatial_resolution('National')
+electricity_supplier.set_spatial_resolution('Regional')
 print(unit_impacts)
 print(impacts)
 
 # to change the electricity product impacts, we need to set the spatial resolution on the electricity product
 # this will automatically update the supplier year as well
-electricity.set_spatial_resolution('National')
+electricity.set_spatial_resolution('Regional')
 print(unit_impacts)
 print(impacts)
 

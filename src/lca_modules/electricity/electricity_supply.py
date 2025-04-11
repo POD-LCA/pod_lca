@@ -2,6 +2,7 @@
 from lca_modules.electricity import DEFAULT_YEAR, DEFAULT_SCENARIO, DEFAULT_DECLARED_UNIT, DEFAULT_REIGIONAL_RESOLUTION, DEFAULT_COUNTRY, DEFAULT_COUNTRY_CODE, ELECTRICITY_IMPACT_NATIONAL_DATA, ELECTRICITY_IMPACT_REGIONAL_DATA, CAMBIUM_REGIONS_MAP, ELECTRICITY_TECHNOLOGIES
 from lca_modules.electricity.electricity_producer import ElectricityProducer
 from lca_modules.electricity.processs_cambium import CambiumData
+from lca_modules.impacts.impact_categories import PRIMARY_IMPACT_CATEGORY
 from lca_modules.impacts.impacts import Impacts
 from utilities.data_imports.csv import CSV_Importer
 
@@ -70,10 +71,10 @@ class ElectricitySupply:
             else:
                 str += f"GEA Region: {self.get_location().get_cambium_gea_region()}\n"
         elif self.get_spatial_resolution() == 'Local':
-            if self.get_location().get_reeds_balancing_authority() is not None:
-                str += f"ReEDS BA: {self.get_location().get_reeds_balancing_authority()[0]}\n"
+            if self.get_location().get_reeds_balancing_area() is not None:
+                str += f"ReEDS BA: {self.get_location().get_reeds_balancing_area()[0]}\n"
             else:
-                str += f"ReEDS BA: {self.get_location().get_reeds_balancing_authority()}\n"
+                str += f"ReEDS BA: {self.get_location().get_reeds_balancing_area()}\n"
 
         str += "-"*75 + "\n" + "Impacts per technology:\n" 
         if self.get_spatial_resolution() == 'National':
@@ -288,10 +289,23 @@ class ElectricitySupply:
                 raise KeyError(f"{country} ({country_code}) not in the dataset provided in file: '{ELECTRICITY_IMPACT_NATIONAL_DATA}.'")                
 
         elif (regional_resolution == 'Regional') or (regional_resolution== 'Local'):
-            self.get_location().set_ferc_region()
-            region = self.get_location().get_ferc_region()
             df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_REGIONAL_DATA)
 
+            if self.get_location().get_ferc_region() is None:
+                self.get_location().set_ferc_region()
+
+            region = self.get_location().get_ferc_region()
+            if len(region) == 0:
+                raise KeyError(f"FERC region not found for location: {self.get_location().get_zip()}.")
+            elif len(region) == 1:
+                region = region[0]
+            else:
+                impact_data = df[df['Region'].isin(region)]
+                region =self.pick_region(region, impact_data)
+
+            # if self.get_location().get_zip() in ['46779', '39481', '14013', '49006', '27556']:
+            #     print(self.get_location().get_zip(), region)
+            
             if region in df['Region'].values:
                 impact_data = df[df['Region'] == region].drop('Region', axis='columns')
             else:
@@ -405,6 +419,40 @@ class ElectricitySupply:
     # ================================
     # Methods
     # ================================
+    def pick_region(self, regions, impact_data, impact_category=PRIMARY_IMPACT_CATEGORY):
+        """ Pick the region with the highest impact from a list of regions.
+        
+            Parameters
+            ----------
+            regions : list of str
+                List of regions to choose from.
+            impact_data : DataFrame
+                DataFrame containing impact data for the regions.
+            impact_category : str
+                The impact category to consider for the selection.
+            
+            Returns
+            -------
+            str
+                The region with the highest impact.
+        """
+
+        consumption_mix = self.get_consumption_mix()
+        
+        impact_dict = {}
+        for item in regions:
+            impact_dict[item] = 0
+            for technology, percentage in consumption_mix.items():
+                impact = impact_data[(impact_data['Region'] == item) & (impact_data['Technology Type'] == technology)][impact_category].values[0]
+                impact_dict[item] += impact * percentage
+
+        region_selected = max(impact_dict, key=impact_dict.get)
+
+        print(f"Of {regions} considered, {region_selected} is picked as the most concervative, considering {impact_category} impact.")
+        
+        return region_selected
+
+
     def update_impacts(self):
         """ Set the impacts of the electricity supply authority.
         """
