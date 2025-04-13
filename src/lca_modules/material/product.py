@@ -368,7 +368,7 @@ class Electricity(Fuel):
         if attr == 'impacts':
 
             supplier = self.get_supplier()
-            impact_distribution = supplier.get_impact_distribution() # this is a sampling of unit impacts
+            impact_distribution, weights = supplier.get_impact_distribution() # this is a sampling of unit impacts
 
             declared_unit = supplier.get_unit()
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
@@ -376,10 +376,10 @@ class Electricity(Fuel):
             impact_distributions = []
             for category in IMPACT_CATEGOREIS:
                 data = []
-                for impact in impact_distribution:
-                    data.append(impact.get_impact(category) * conversion_factor * self.get_qty())
+                for impact, weight in zip(impact_distribution, weights):
+                    data.extend([impact.get_impact(category) * conversion_factor * self.get_qty()] * int(weight))
 
-                impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category))
+                impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category, set_dist=False))
 
             return impact_distributions
 

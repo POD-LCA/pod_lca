@@ -6,6 +6,8 @@ from lca_modules.impacts.impact_categories import PRIMARY_IMPACT_CATEGORY
 from lca_modules.impacts.impacts import Impacts
 from utilities.data_imports.csv import CSV_Importer
 
+from numpy import round as np_round
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -474,71 +476,52 @@ class ElectricitySupply:
                 Impact objects representing the distribution of the impacts.
         """
 
+        year = self.get_year()
+
+        # impacts by technology
+        df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
+        country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
+        if country_code in df['Country code'].values:
+            impact_data_by_tech = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns') 
+        
+        # set regionality
+        regions_map = CSV_Importer.json_to_dict(CAMBIUM_REGIONS_MAP)
         if self.get_spatial_resolution() == 'National':
             regional_resolution = 'Regional'
-            year = self.get_year()
-
-            # impacts by technology
-            df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
-            country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
-            if country_code in df['Country code'].values:
-                impact_data_by_tech = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns')  
-  
-            regions_map = CSV_Importer.json_to_dict(CAMBIUM_REGIONS_MAP)
-
-            impact_distribution = []
-            for region in list(regions_map[country_code].keys()):
-                temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
-                energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
-
-                temporal_data.delete_data()
-
-                impact_obj = Impacts.from_parent(self)
-                for technology, percentage in energy_mix.items():
-                    impact_dict = impact_data_by_tech[impact_data_by_tech['Technology Type'] == technology].drop(['Technology Type'], axis='columns').squeeze().to_dict()
-                    tmp_impact_obj = Impacts.from_dict(impact_dict) 
-                    impact_obj += tmp_impact_obj * percentage
-
-                impact_distribution.append(impact_obj)
-
-            return impact_distribution  
+            regions_list = list(regions_map[country_code].keys())
 
         elif self.get_spatial_resolution() == 'Regional':
-            regional_resolution = 'Local'
-            year = self.get_year()
-
-            # impacts by technology
-            df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
-            country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
+            regional_resolution = 'Local' 
             region = self.get_location().get_cambium_gea_region() if self.get_location() is not None else None
-            if country_code in df['Country code'].values:
-                impact_data_by_tech = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns')  
-  
-            regions_map = CSV_Importer.json_to_dict(CAMBIUM_REGIONS_MAP)
-
-            impact_distribution = []
-            for region in regions_map[country_code][region]:
-                temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
-                energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
-
-                temporal_data.delete_data()
-
-                impact_obj = Impacts.from_parent(self)
-                for technology, percentage in energy_mix.items():
-                    impact_dict = impact_data_by_tech[impact_data_by_tech['Technology Type'] == technology].drop(['Technology Type'], axis='columns').squeeze().to_dict()
-                    tmp_impact_obj = Impacts.from_dict(impact_dict) 
-                    impact_obj += tmp_impact_obj * percentage
-
-                impact_distribution.append(impact_obj)
-
-            return impact_distribution  
-
+            regions_list = regions_map[country_code][region]
 
         elif self.get_spatial_resolution() == 'Local':
             print("Data on impact data variability available at local level.")
             return [self.get_impacts()]
         else:
             raise ValueError("Regional resolution of electricity supply is not recognized.")
+
+        # create data points
+        impact_distribution = []
+        electricity_loads = [] 
+        for region in regions_list:
+            temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
+            energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+            electricity_load = temporal_data.get_load(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+            temporal_data.delete_data()
+
+            impact_obj = Impacts.from_parent(self)
+            for technology, percentage in energy_mix.items():
+                impact_dict = impact_data_by_tech[impact_data_by_tech['Technology Type'] == technology].drop(['Technology Type'], axis='columns').squeeze().to_dict()
+                tmp_impact_obj = Impacts.from_dict(impact_dict) 
+                impact_obj += tmp_impact_obj * percentage
+
+            impact_distribution.append(impact_obj)
+            electricity_loads.append(electricity_load)
+
+        weights = np_round((electricity_loads / sum(electricity_loads)) * 100)
+
+        return impact_distribution, weights  
 
 
 if __name__ == '__main__':

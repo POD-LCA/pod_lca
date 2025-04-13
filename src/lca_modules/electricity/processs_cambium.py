@@ -157,6 +157,49 @@ class CambiumData:
         total = sum(mix_dict.values())
 
         return  {k: (v / total) for k, v in mix_dict.items()}
+    
+    def get_load(self, year, technologies, scenario="MidCase"):
+        """ Get electricity load of the electricity consumption by year.
+        
+            
+            Parameters
+            ----------
+            year : int
+                Year of electricity consumption.
+            scenario : str
+                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+
+            Returns
+            -------
+            float
+                Electricity load in GWh.
+        """
+
+        # match year with years available in dataset.
+        idx = bisect.bisect_left(CAMBIUM_DATA_YEARS, year)
+        if idx == 0:
+            years = [CAMBIUM_DATA_YEARS[0]]
+        elif idx == len(CAMBIUM_DATA_YEARS):
+            years = [CAMBIUM_DATA_YEARS[-1]]
+        else:
+            years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
+
+        load = DataFrame()
+        for yr in years:
+            data_set_tmp = self.data[self.data['scenario']==scenario]
+            data_set_tmp = data_set_tmp[data_set_tmp['t']==yr]
+            load = concat([load, data_set_tmp[['t'] + ['busbar_load']]], ignore_index=True)
+
+        if len(years) == 2: # interpolate data
+            weight = (year - load.iloc[0]['t']) / (load.iloc[1]['t'] - load.iloc[0]['t'])
+            new_row = load.iloc[0] + weight * (load.iloc[1] - load.iloc[0])
+            new_row['t'] = year
+            load =  new_row
+        else:
+            load = load.squeeze()
+
+        return  load['busbar_load']
+
 
     def delete_data(self):
         """ Delete the cambium data object"""
