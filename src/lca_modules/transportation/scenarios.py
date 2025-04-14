@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from lca_modules.transportation.transport_mode import TransportMode
 from geopy.distance import geodesic
-from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION
+from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION, FAF_DATA
 from lca_modules.location.location import Location
 from lca_modules.transportation.modes_mapping import cfs_mapping
 import json
@@ -51,7 +51,7 @@ class Scenario:
         self.scenario = scenario
         self.project = project
         self.material = material
-        self.distances = {"Local": 0, "Regional": 0, "Regional_c": 0, "National": 0, "NA": 0, "Global": 0, "None": 0}
+        self.distances = {"Local": 0, "Regional": 0, "Regional_c": 0, "National": 0, "NA": 0, "Global": 0, "None": 0, "Known": 0}
         self.mode = mode
         self.mode_domestic = mode_domestic
         self.shipping_dest = project.get_shipping_dest()
@@ -63,6 +63,7 @@ class Scenario:
         self.na = None
         self.global_ = None
         self.none = None
+        self.Known = None
 
         self.pre_us_processing()
         self.pre_global_processing()
@@ -230,7 +231,6 @@ class Scenario:
         self.none = cfs["SHIPMT_DIST_ROUTED"].mean()* impact
         self.distances["None"] = cfs["SHIPMT_DIST_ROUTED"].mean()
 
-        print (cfs)
 
     def pre_global_processing (self):
         """
@@ -350,7 +350,13 @@ class Scenario:
                 faf_global = 0
 
             try:
-                marine_na_mode = marine[marine["Region"].isin(["Canada", "Mexico"])]["Region"].mode()[0]
+                marine_na = marine[marine["Region"].isin(["Canada", "Mexico"])]
+
+                for key,value in FAF_DATA.items():
+                    if faf_na_mode in value:
+                        marine_na_mode = key
+                        break
+                marine_na_mode = Location.from_str(marine_na_mode).get_marine_region()
                 marine_na = marine[marine["Region"] == marine_na_mode]
                 
                 if marine_na.empty:
@@ -360,7 +366,13 @@ class Scenario:
                 marine_na = 0
 
             try:
-                marine_global_mode = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]["Region"].mode()[0]
+                marine_global_mode = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]
+
+                for key,value in FAF_DATA.items():
+                    if faf_global_mode in value:
+                        marine_global_mode = key
+                        break
+                marine_global_mode = Location.from_str(marine_global_mode).get_marine_region()
                 marine_global = marine[marine["Region"] == marine_global_mode]
 
                 if marine_global.empty:
@@ -590,6 +602,9 @@ class Scenario:
 
         if self.scenario == "None":
             return self.none
+
+        if self.scenario == "Known":
+            return self.Known
 
 
     def get_distances (self):

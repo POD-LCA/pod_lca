@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from lca_modules.transportation.scenarios import Scenario
+from lca_modules.transportation.scenarios2 import Scenario
 from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
@@ -62,7 +62,7 @@ class Link:
         self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project, feul_type)
         self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project, feul_type)
         self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
-        self.scenario_distances = None
+        self.scenario_distances = {"Domestic": None, "Foreign": None, "Total": None}
 
 
     def get_scenario_distances (self):
@@ -73,7 +73,7 @@ class Link:
             float
                 scenario distances of the transportation link.
         """
-        self.scenario_distances = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_distances()
+        self.scenario_distances["Domestic"],self.scenario_distances["Foreign"], self.scenario_distances ["Total"]  = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_distances()
 
         return self.scenario_distances
 
@@ -87,7 +87,8 @@ class Link:
                  distance of the transportation link.
         """
         if isinstance(self.travel_dist, str):
-            distance = self.get_scenario_distances ()[self.travel_dist]
+
+            distance = self.get_scenario_distances()["Total"]
         else:
             distance = self.travel_dist
 
@@ -120,7 +121,7 @@ class Link:
 
         else:
             
-            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).scenario_impact() 
+            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_scenario_impact() 
             impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
 
             return impact
