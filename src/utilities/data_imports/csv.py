@@ -1,7 +1,14 @@
 
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
-
+import json
 from pandas import read_csv
+
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu; mhtaba@uw.edu"
+__version__ = "0.1.0"
+
 
 class CSV_Importer:
 
@@ -27,3 +34,39 @@ class CSV_Importer:
                     data_frame[headers[i]] *= multipliers[i]
 
         return data_frame
+    
+    def dict_to_json(input_dict, file_path):
+        """ Transfer data from a dictionary to a JSON file.
+        
+            Parameters
+            ----------
+            input_dict : dict
+                A dictionary with the UUID as the key and the row as the value.
+            file_path : str
+                Location of the JSON file.
+        """
+
+        with open(file_path, "w") as file:
+            json.dump(input_dict, file)
+
+    def json_to_dict(file_path):
+        """ Import data to dictionary from a JSON file.
+        
+            Parameters
+            ----------
+            file_path : str
+                Location of the JSON file.
+            
+            Returns
+            -------
+            dict
+                A dictionary with the UUID as the key and the row as the value.
+        """
+
+        with open(file_path, "r") as file:
+            data = json.load(file)
+
+        return data
+    
+if __name__ == '__main__':
+    pass

@@ -4,7 +4,7 @@ from utilities.objects.array_methods import get_attribute_as_list
 from math import log10
 
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"

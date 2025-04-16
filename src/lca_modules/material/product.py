@@ -1,4 +1,6 @@
 
+from lca_modules.electricity.electricity_supply import ElectricitySupply
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.material.master import Master
 
 __author__ = ["POD/LCA Team"]
@@ -62,6 +64,10 @@ class Product(Master):
             
         self.qty = qty
         self.weight = self.qty * self.density
+
+        if self.get_transporter() is not None:
+            transporter = self.get_transporter()
+            transporter.set_transported_weight()
 
         self.update_impacts()
 
@@ -215,9 +221,101 @@ class Fuel(Product):
         super().__init__()
         self.is_material = True
         self.is_energy = True
+        self.electricity_supplier = None
 
     def __str__(self):
         return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
+
+class Electricity(Fuel):
+    """
+    Electricity product object, inheriting from the Fuel object.
+    """
+    @classmethod
+    def new(cls, id, name, model, stage, qty, unit):
+        
+        item = cls()
+
+        item.set_id(id)
+        item.set_name(name)
+        item.set_model(model)
+        item.set_life_cycle_stage(stage)
+        item.set_qty(qty)
+        item.set_unit(unit)
+
+        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
+        item.set_supplier(electricity_supplier)
+
+        return item
+
+    def update_impacts(self):
+        """ Sets impacts quantities, based on database item asigned to the product/process 
+            and the product/process quantity.
+            If no database entry is asigned, impacts are not updated.
+
+            Raises
+            ------
+            ImportError : Incompatible units of Master object and database entry.
+        """
+
+        if not self.get_supplier() is None:
+            supplier = self.get_supplier()
+            
+            declared_unit = supplier.get_unit()
+            unit_impacts = supplier.get_impacts()
+
+            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
+
+            impacts = {key: getattr(unit_impacts, key, 0.0) * conversion_factor * self.qty for key in IMPACT_CATEGOREIS}
+            self.impacts.update_impact_qty(impacts)      
+
+    def set_supplier(self, supplier):
+        """ Set electricity supplier.
+        
+            Parameters
+            ----------
+            supplier : ElectricitySupply Obj.
+                Electricity supply
+        """
+
+        self.electricity_supplier = supplier
+        self.update_impacts()
+
+        return self
+
+    def set_year(self, year):
+        """ Set the year of electricity consumption.
+        
+            Parameters
+            ----------
+            year : int
+                Year of electricity consumption.
+        """
+
+        self.year = year
+
+        return self
+    
+    def get_supplier(self):
+        """ Get the electricity supplier.
+        
+            Returns
+            -------
+            ElectricitySupply Obj.
+                Electricity supplier.
+        """
+
+        return self.electricity_supplier
+    
+    def get_year(self):
+        """ Get the year of electricity consumption.
+        
+            Returns
+            -------
+            int
+                Year of electricity consumption.
+        """
+
+        return self.year
 
 class Emission(Product):
     """
