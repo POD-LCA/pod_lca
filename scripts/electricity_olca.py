@@ -18,15 +18,7 @@ __version__ = "0.1.0"
 
 # TODO: add brief of what this do
 # olca possibilities not tested
-# TODO: create issue for the following fix in eia923_generation.py
-# try:
-#     from electricitylci.model_config import model_specs
-# except ImportError:
-#     import electricitylci.model_config as config
-#     model_specs = config.build_model_class()
-#     config.model_specs = model_specs
 
-# TODO: raise issue - The method name is misleading... this is infact the losses
 trans_dist_grid_loss = electricitylci.get_distribution_mix_df(subregion='BA')
 trading_matrix = electricitylci.get_consumption_mix_df()
 generation_mix = electricitylci.get_generation_mix_process_df(regions='BA')
