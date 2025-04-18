@@ -20,8 +20,8 @@ openLCA_client = openLCA.set_connection()
 process_list_all = openLCA.get_process_list(openLCA_client)
 
 # different options for process list
-my_process_list = process_list_all
-# my_process_list = process_list_all[0:2]
+# my_process_list = process_list_all
+my_process_list = process_list_all[0:15]
 
 # To evaluate a single process, copy uuid here
 '''
@@ -41,23 +41,25 @@ for uuid in my_uuid_list:
 
 # filter my_process_list by one or more category numbers (FLCAC: NAICS classification; ecoinvent: ISIC classification)
 # filter_by = None
-filter_by = [1111]
+filter_by = 22
+# filter_by = '8292:Packaging'
+process_list_filtered = openLCA.filter_processes_by(process_list_all, filter_by)
 # filter_by = ['8292:Packaging']
-if not filter_by is None:
-    if isinstance(filter_by, int):
-        filter_by = [filter_by]    
-    my_process_list = [process for process in my_process_list if any(str(filter) in process.category for filter in filter_by)]
+# if not filter_by is None:
+#     if isinstance(filter_by, int):
+#         filter_by = [filter_by]    
+#     my_process_list = [process for process in my_process_list if any(str(filter) in process.category for filter in filter_by)]
 
 impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
 inventories = DataHandler.json_to_dict('./data/inventories.json')
-impact_method_uuid = '0ed73bce-2198-4148-8c4d-8b2ce68b6e1a'
+impact_method_uuid = '68c8e8cd-e64a-49b1-954e-bec0da4e4574'
 
 # different options for grouping
 # group_by = [{'name':'Electricity','ids': 2211}, 
 #             {'name':'Waste', 'ids': [5621, 5622,5629]}]
 # group_by = {'name':'fuel combustion', 'ids':['6c96a609-cd7e-3f19-a151-27deb823d3e4' , '5198d618-7bc8-3639-b4a1-de71d6d5f49a']}
-renewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_renewable_fuels.csv', 1)
-nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', 1)
+renewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_renewable_fuels.csv', header_name='UUID')
+nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', column_index=1)
 heating_values = DataHandler.csv_to_dict('./data/FLCAC_heating_values.csv', 'UUID')
 group_by = [{'name':'electricity','ids':2211},
             {'name':'nonrenewable fuel combustion','ids':nonrenewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}, 

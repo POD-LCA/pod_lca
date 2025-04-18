@@ -152,9 +152,11 @@ UNIT_CONVERSIONS['energy'] = {'watt-hour': 1.0,
 # REF [2] pp.55 
 
 # ==================================
-# ITEMS UNITS
+# DISCRETE COUNTING UNITS
 # ==================================
 
-ITEMS = Unit.from_basics('Item(s)', 'Item(s)', 'Item(s)')
+ITEM = Unit.from_basics('item', 'Item(s)', 'count')
+DOZEN = Unit.from_basics('dozen', 'Doz', 'count')
 
-UNIT_CONVERSIONS['Item(s)'] = {'Item(s)': 1.0} 
+UNIT_CONVERSIONS['count'] = {'item': 12,
+                             'dozen': 1} 

@@ -1,4 +1,4 @@
-name,UUID,declared_qty,declared_unit,heating_value,heating_unit
+name,UUID,declared_qty,declared_unit,conversion_factor,converted_unit
 "Hog fuel, pur., combusted in industrial boiler, at pulp and paper mill (EXCL.)",b6884185-30b8-391a-9dff-dbded4429a66,1,kg,20.92,MJ
 "Hog fuel, self-gen., combusted in ind. boiler, at pulp and paper mill (EXCL.)",7906c042-7330-3046-9b9a-92a4af4f2150,1,kg,20.92,MJ
 "Wood Combusted, at boiler, at cellulosic fiberboard mill",106bcee8-0d5f-30c6-ac98-fa6dab41d4d1,1,kg,20.92,MJ

@@ -114,16 +114,17 @@ class DataHandler:
 
         return data
 
-    def csv_to_list(file_path, column_index):
+    def csv_to_list(file_path, column_index=0, header_name=None):
         """ Import data to a list from a CSV file.
         
             Parameters
             ----------
             file_path : str
                 Location of the csv file.
-
             column_index : int
-                Index of the column in the CSV file to be read to the list.
+                Index of the column in the CSV file to be read to the list, when the file does not have headers.
+            header_name : str
+                Header of the column from where the data to be read to the list, when the file has headers.
             
             Returns
             -------
@@ -133,8 +134,12 @@ class DataHandler:
         data = []
         with open(file_path, 'r') as file:
             reader = csv.reader(file)
+            if not (header_name is None):
+                headers = next(reader, None)
+                column_index = headers.index(header_name)
             for row in reader:
                 data.append(row[column_index])
+
         
         return data
     

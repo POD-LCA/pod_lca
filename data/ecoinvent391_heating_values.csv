@@ -1,4 +1,4 @@
-name,UUID,declared_qty,declared_unit,heating_value,heating_unit
+name,UUID,declared_qty,declared_unit,conversion_factor,converted_unit
 "blow moulding | blow moulding | EN15804, U",e3716672-40aa-4da2-bff5-aae3d33ae904,1,kg,6.12,MJ
 "blow moulding | blow moulding | EN15804, U",ec4afb08-e6ca-419f-b33f-b640684a377f,1,kg,6.12,MJ
 "blow moulding | blow moulding | EN15804, U",f5abe8b8-80b7-49f1-bfdb-1f9f39f86e31,1,kg,6.12,MJ

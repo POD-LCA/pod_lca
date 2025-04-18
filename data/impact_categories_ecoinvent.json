@@ -1,48 +1,40 @@
 {
     "GWP-total (AR5)": {
-        "@type":"ImpactCategory",
         "@id":"84fb6ba7-954b-450c-b3cf-b16ee3668a1f",
         "name":"GWP-total (AR5)",
         "refUnit":"kg CO2 eq"
     },
     "GWP-fossil (AR5)": {
-        "@type":"ImpactCategory",
         "@id":"95c6d48c-8990-4388-88b0-3547eff67b33",
         "name":"GWP-fossil (AR5)",
         "refUnit":"kg CO2 eq"
     },
     "GWP-biogenic (AR5)": {
-        "@type":"ImpactCategory",
         "@id":"58755fa4-1a33-4a76-a2db-ba2cb61d73f3",
         "name":"GWP-biogenic (AR5)",
         "refUnit":"kg CO2 eq"
     },
     "GWP-luluc (AR5)": {
-        "@type":"ImpactCategory",
         "@id":"842c217d-bff1-4cb3-98a8-62db3c8831c3",
         "name":"GWP-luluc (AR5)",
         "refUnit":"kg CO2 eq"
     },
     "AP": {
-        "@type":"ImpactCategory",
         "@id":"70bd8aa7-7f62-4c5c-b163-569c761c2b34",
         "name":"Acidification",
         "refUnit":"kg SO2 eq"
     },
     "EP": {
-        "@type":"ImpactCategory",
         "@id":"55863471-9515-4ada-9fd9-3613c4519596",
         "name":"Eutrophication",
         "refUnit":"kg N eq"
     },
     "ODP": {
-        "@type":"ImpactCategory",
         "@id":"ae129244-e881-451d-8aff-4b74c3cecd1b",
         "name":"Ozone depletion",
         "refUnit":"kg CFC-11 eq"
     },
     "POCP": {
-        "@type":"ImpactCategory",
         "@id":"b764d78a-e615-4737-87b2-27fe84767ed0",
         "name":"Smog",
         "refUnit":"kg O3 eq"

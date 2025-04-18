@@ -100,7 +100,7 @@ class openLCA:
     #     client.put(impact_method)
 
     #     return impact_method
-
+    
     def create_product_system(client, process):
         """ Set the product system for the process.
         
@@ -289,8 +289,13 @@ class openLCA:
                 The declared unit of the category.
             max_levels : int
                 The maximum number of levels to expand the tree.
-            heating_values: dict
-                Dictionary of heating values for fuel group unit conversion to energy units, read from a csv file.
+            conversion_map: dict
+                A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
+                {uuid (str): {'name' : name of the process (str), 
+                              'declared_qty': declared quantity of the process (str or float),
+                              'declared_unit': standard notation of the declared units of the process (str),
+                              'conversion_factor': conversion factor (str or float),
+                              'converted_unit': standard notation of the unit to which the process quantity is converted (str)}}
 
             Returns
             -------
@@ -320,8 +325,8 @@ class openLCA:
                 else:
                     if node.provider.id in conversion_map:
                         conversion_factor_a = UNITS_MAP[node.product.ref_unit].get_conversion_factor(UNITS_MAP[conversion_map[node.provider.id]['declared_unit']])
-                        conversion_factor_b = float(conversion_map[node.provider.id]['heating_value']) / float(conversion_map[node.provider.id]['declared_qty'])
-                        conversion_factor_c = UNITS_MAP[conversion_map[node.provider.id]['heating_unit']].get_conversion_factor(unit)
+                        conversion_factor_b = float(conversion_map[node.provider.id]['conversion_factor']) / float(conversion_map[node.provider.id]['declared_qty'])
+                        conversion_factor_c = UNITS_MAP[conversion_map[node.provider.id]['converted_unit']].get_conversion_factor(unit)
                         
                         conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
                     else:
@@ -341,42 +346,6 @@ class openLCA:
     # =================================
     # Utilities
     # =================================
-    def compare_dicts(d1, d2):
-        """ Compare two dictionaries.
-        
-            Parameters
-            ----------
-            d1 : dict
-                The first dictionary to be compared.
-            d2 : dict
-                The second dictionary to be compared.
-            
-            Returns
-            -------
-            bool
-                True if the dictionaries are equal, False otherwise.
-        """
-        if d1.keys() != d2.keys():
-            return False
-
-        for key in d1:
-            if key not in d2:
-                return False 
-
-            if d1[key].keys() != d2[key].keys():
-                return False
-
-            for sub_key in d1[key]:
-                if sub_key in ['Name', 'UUID', 'Unit']:
-                    if d1[key][sub_key] != d2[key].get(sub_key):
-                        return False 
-                else:
-                    if not (float(d1[key][sub_key]) == 0 and float(d2[key].get(sub_key)) == 0):
-                        if abs(float(d1[key][sub_key]) - float(d2[key].get(sub_key)))/ abs(float(d1[key][sub_key]) + float(d2[key].get(sub_key)))  > 0.005:
-                            return False
-
-        return True 
-
     @staticmethod
     def is_UUID(uuid):
         """ Check if the input is a valid UUID.
@@ -393,7 +362,6 @@ class openLCA:
         """
         try:
             uuid = uuid.replace('-', '')
-            val = int(uuid, 16)
         except AttributeError:
             return False
         except ValueError:
@@ -440,6 +408,82 @@ class openLCA:
             else: # ISIC section
                 return len(isic) == 1
 
+    def fix_last_internal_ids(client, process_list):
+        """ Finds any processes in process_list for which last_internal_id < len(exchanges), and fixes by setting last_internal_id = len(exchanges).
+        
+            Parameters
+            ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            process_list : list
+                List of UUIDs of the processess to be tested
+        """
+        if OLCA_IMPORTED:
+            import olca_ipc.utree as utree
+        else:
+            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+        
+        lastid_count = 0
+        exchangeid_count = 0
+        for process_ref in tqdm(process_list):
+            process = client.get(schema.Process, process_ref.id)
+            if process.last_internal_id < len(process.exchanges):
+                process.last_internal_id = len(process.exchanges)
+                lastid_count += 1
+               
+            if any(exchange.internal_id > process.last_internal_id for exchange in process.exchanges):
+                exchangeid_count += 1
+                i=1
+                for exchange in process.exchanges:
+                    exchange.internal_id = i
+                    i+=1
+            client.put(process) 
+
+        print("Fixed process last_internal_id for:", lastid_count, "processes")
+        print ("Fixed exchange internal_ids for:", exchangeid_count, "processes")
+
+        return client
+
+    @staticmethod
+    def filter_processes_by(process_list, filter_by):
+        """ Filters the process list by the category given by NAICS or ISIC ids.
+        
+            Parameters
+            ----------
+            process_list : list of Schema.Process Obj
+                List of processes.
+            filter_by : str, int, or list of str, int
+                NAICS or ISIC ids of Categories to be filter by.
+
+            Returns
+            -------
+            list of Schema.Process Obj.
+                List of processess.
+        """
+
+        if not isinstance(filter_by, list):
+            filter_by = [filter_by] 
+
+        new_process_lst = []
+        if not filter_by is None:
+            for filter in filter_by:
+                if isinstance(filter, int):
+                    filter = str(filter)
+
+                for process in process_list:
+                    if filter.isdigit(): # ISIC division / NAICS code
+                        test = ('/' + filter + ':' in process.category) or process.category.startswith(filter + ':')
+                    else: # ISIC section
+                        test = process.category.startswith(filter + ':')
+
+                    if test:
+                        new_process_lst.append(process)
+
+        return new_process_lst 
+    
+    # =================================
+    # Import Methods
+    # =================================    
     @staticmethod     
     def import_from_zip(client, path, duplicates='overwrite'):
         """ Import a database from a zip file. Handle only the first level of nested zip files.
@@ -644,7 +688,7 @@ class openLCA:
                                                      'conversion_map': conversion map - optional (dict)}
                 Category IDs are from the North American Industry Classification System (NAICS).
                 When unit is not given the default unit of the first item in the group is used.
-                Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'heating_value', 'heating_unit'.
+                Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.
             
             Returns
             -------
@@ -662,7 +706,7 @@ class openLCA:
 
         for process in tqdm(process_list):
             process_object = client.get(schema.Process, process.id)
-            exchanges = process_object.exchanges
+            # exchanges = process_object.exchanges
             if process_object.description is str:
                 process_description = process_object.description.encode("utf-8")
             else:
@@ -716,38 +760,7 @@ class openLCA:
 
         return results
 
-    def fix_last_internal_ids(client, process_list):
-        """ Finds any processes in process_list for which last_internal_id < len(exchanges), and fixes by setting last_internal_id = len(exchanges).
-        
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            process_list : list
-                List of UUIDs of the processess to be tested
-        """
-        if OLCA_IMPORTED:
-            import olca_ipc.utree as utree
-        else:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
-        
-        lastid_count = 0
-        exchangeid_count = 0
-        for process_ref in tqdm(process_list):
-            process = client.get(schema.Process, process_ref.id)
-            if process.last_internal_id < len(process.exchanges):
-                process.last_internal_id = len(process.exchanges)
-                lastid_count += 1
-               
-            if any(exchange.internal_id > process.last_internal_id for exchange in process.exchanges):
-                exchangeid_count += 1
-                i=1
-                for exchange in process.exchanges:
-                    exchange.internal_id = i
-                    i+=1
-            client.put(process) 
-        print("Fixed process last_internal_id for:", lastid_count, "processes")
-        print ("Fixed exchange internal_ids for:", exchangeid_count, "processes")    
+ 
 
 if __name__ == '__main__':
     pass
