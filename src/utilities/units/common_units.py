@@ -150,3 +150,11 @@ UNIT_CONVERSIONS['energy'] = {'watt-hour': 1.0,
                               'joule': 3600,
                               'therm': 3600 / 1.054804e+08} 
 # REF [2] pp.55 
+
+# ==================================
+# ITEMS UNITS
+# ==================================
+
+ITEMS = Unit.from_basics('Item(s)', 'Item(s)', 'Item(s)')
+
+UNIT_CONVERSIONS['Item(s)'] = {'Item(s)': 1.0} 

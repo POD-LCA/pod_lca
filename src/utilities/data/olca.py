@@ -289,6 +289,8 @@ class openLCA:
                 The declared unit of the category.
             max_levels : int
                 The maximum number of levels to expand the tree.
+            heating_values: dict
+                Dictionary of heating values for fuel group unit conversion to energy units, read from a csv file.
 
             Returns
             -------
@@ -324,7 +326,7 @@ class openLCA:
                         conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
                     else:
                         conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
-
+      
             qty += node.required_amount * conversion_factor
             impact += node.result
 
@@ -657,14 +659,27 @@ class openLCA:
         impact_method = openLCA.get_impact_method(client, impact_method_uuid=impact_method)
 
         results = {}
+
         for process in tqdm(process_list):
-            process_results = {'Name': process.name, 'UUID': process.id}
+            process_object = client.get(schema.Process, process.id)
+            exchanges = process_object.exchanges
+            if process_object.description is str:
+                process_description = process_object.description.encode("utf-8")
+            else:
+                process_description = process_object.description
+            process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id, 'Location': process.location, 'Process Type': process.process_type.name, 'Description': process_description}
 
             product_system = openLCA.create_product_system(client, process)
             result = openLCA.compute_impacts(client, product_system, impact_method)
             impact_results = openLCA.get_impacts(client, result, impact_dict)
 
-            if not group_by is None:
+            impact_amounts_list = []
+            for impact in impact_dict:
+                unit = impact_dict[impact]['refUnit']
+                amount = impact_results[impact + ' [' + unit + ']']
+                impact_amounts_list.append(amount)
+           
+            if ((not group_by is None) and (not all(impact_amount==0 for impact_amount in impact_amounts_list))):
                 if not isinstance(group_by, list):
                     group_by = [group_by]
 
@@ -701,6 +716,38 @@ class openLCA:
 
         return results
 
+    def fix_last_internal_ids(client, process_list):
+        """ Finds any processes in process_list for which last_internal_id < len(exchanges), and fixes by setting last_internal_id = len(exchanges).
+        
+            Parameters
+            ----------
+            client : olca_ipc.Client
+                The client object for the openLCA server.
+            process_list : list
+                List of UUIDs of the processess to be tested
+        """
+        if OLCA_IMPORTED:
+            import olca_ipc.utree as utree
+        else:
+            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+        
+        lastid_count = 0
+        exchangeid_count = 0
+        for process_ref in tqdm(process_list):
+            process = client.get(schema.Process, process_ref.id)
+            if process.last_internal_id < len(process.exchanges):
+                process.last_internal_id = len(process.exchanges)
+                lastid_count += 1
+               
+            if any(exchange.internal_id > process.last_internal_id for exchange in process.exchanges):
+                exchangeid_count += 1
+                i=1
+                for exchange in process.exchanges:
+                    exchange.internal_id = i
+                    i+=1
+            client.put(process) 
+        print("Fixed process last_internal_id for:", lastid_count, "processes")
+        print ("Fixed exchange internal_ids for:", exchangeid_count, "processes")    
 
 if __name__ == '__main__':
     pass
