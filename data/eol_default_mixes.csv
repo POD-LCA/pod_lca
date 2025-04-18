@@ -1,0 +1,20 @@
+Material,Recycle,Compost,Incinerate,Landfill
+Aluminum,77%,NA,NA,23%
+Steel,77%,NA,NA,23%
+Drywall,14%,NA,NA,86%
+Concrete,18%,NA,NA,82%
+Inert/ND,NA,NA,NA,100%
+Paint,NA,NA,NA,100%
+Polyurethane,NA,NA,NA,100%
+Polystyrene,NA,NA,21%,79%
+Polyethylene,2%,NA,19%,79%
+Polypropylene,2%,NA,19%,79%
+Polyvinylchloride,NA,NA,21%,79%
+Unspecified Plastics,NA,NA,21%,79%
+Wood,10%,5%,10%,75%
+Bamboo,NA,NA,NA,100%
+Agricultural Residues- Low Lignin,NA,NA,NA,100%
+Agricultural Residues- High Lignin,NA,NA,NA,100%
+Cellulose,NA,NA,NA,100%
+Fungi,NA,NA,NA,100%
+DEFAULT,NA,NA,NA,100%

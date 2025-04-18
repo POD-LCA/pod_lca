@@ -29,7 +29,10 @@ class ImpactsDatabase:
 
     def __init__(self):
         self.name = None
-        self.data = DataFrame(columns=['Flow','Unit'] + list(IMPACT_CATEGOREIS.keys()))
+        self.primary_key = 'Flow'
+        self.unit_key = 'Unit'
+        self.qty_key = 'Qty'
+        self.data = DataFrame(columns=[self.get_primary_key(), self.get_unit_key()] + list(IMPACT_CATEGOREIS.keys()))
 
     def __str__(self):
         str = "="*75 + "\n" + f"Impact Database: {self.get_name()}\n" + "="*75 + "\n"
@@ -75,31 +78,39 @@ class ImpactsDatabase:
 
         return self
 
-    def set_data(self, file_path, headers=None, multipliers=None):
+    def set_data(self, file_path, impact_headers=None, additional_headers=None, multipliers=None):
         """ Set the database data.
         
         Parameters
         ----------
         file_path : str
             Location of the CSV file
-        headers : list of str
+        impact_headers : list of str
             The headers of the CSV file as they would be mapped to the database.
+        additional_headers : list of str
+            Headers of the columns to be imported, other than name, unit, and impact categories.
         multipliers : list of float
             Values of each column of the CSV will be multiplied by these values.
         """
 
-        default_headers = ['Flow','Unit'] + list(IMPACT_CATEGOREIS.keys())
-        if headers == None:
-            headers = default_headers
+        if impact_headers == None:
+            impact_headers = list(IMPACT_CATEGOREIS.keys())
+        data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] +  impact_headers
+        if not (additional_headers ==  None):
+            data_headers = data_headers + additional_headers
+        
+        no_headers = len(data_headers)
+
         if multipliers == None:
-            multipliers = [1.0] * len(headers)
-        multipliers = [None, None] + multipliers
+            multipliers = [1.0] * len(impact_headers)
 
-        data = CSV_Importer.import_as_pandas(file_path, headers, multipliers)
+        multipliers = [None, None, None] + multipliers + [None] * (no_headers - 3 - len(multipliers))
 
-        data.columns = default_headers
-        data['Unit'] = data['Unit'].map(UNITS_MAP)
+        data = CSV_Importer.import_as_pandas(file_path, data_headers, multipliers)
 
+        data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
+
+        # loading data to existing dataset
         if self.get_data_all().empty:
             self.data = data
         else:
@@ -107,31 +118,56 @@ class ImpactsDatabase:
 
         return self
 
-    def set_data_entry(self, flow, unit, impacts):
+    def set_data_entry(self, flow, qty, unit, impacts, add_data=None):
         """ Add a custom entry the database.
 
             Parameters
             ----------
             flow : str
                 Name of the impact.
+            qty : float
+                Quantity of the flow.
             unit : str
                 Unit of measurement for which the impacts are applied.
             impacts : dict
                 Dictionary of impacts {impact catergory (str): impact (float)}
+            add_data : dict
+                Dictionary of additional data {header (str): value (str / float/ int)}
 
         """
 
         tmp_data = impacts
-        tmp_data['Flow'] = flow
-        tmp_data['Unit'] = unit
+        tmp_data[self.get_primary_key()] = flow
+        tmp_data[self.get_qty_key()] = qty
+        tmp_data[self.get_unit_key()] = unit
 
-        if list(IMPACT_CATEGOREIS.keys()) + ['Flow', 'Unit'] == list(tmp_data.keys()) :
+        if list(IMPACT_CATEGOREIS.keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] == list(tmp_data.keys()) :
             self.data.loc[len(self.data)] = tmp_data
         else:
             raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {IMPACT_CATEGOREIS.keys()}")
 
+        # TODO: check if the additional headers exist/ if not create them and add the new data
+
         return self.data
+
+    def set_primary_key(self, key):
+
+        self.primary_key = key
+
+        return self
     
+    def set_unit_key(self, key):
+
+        self.unit_key = key
+
+        return self
+    
+    def set_qty_key(self, key):
+
+        self.qty_key = key
+
+        return self
+        
     def get_name(self):
         """ Get the name of the database.
         
@@ -169,8 +205,137 @@ class ImpactsDatabase:
         """
 
         if self.data is not None:
-            row_id = self.data.index[self.data['Flow'] == flow_name][0]
-            return self.data.iloc[row_id]
+            row_id = self.data.index[self.data[self.get_primary_key()] == flow_name]
+            if len(row_id) == 1:
+                return self.data.iloc[row_id[0]]
+            else:
+                raise ImportError("Multiple matching entries exist...")
+
+    def get_primary_key(self):
+
+        return self.primary_key
+    
+    def get_unit_key(self):
+
+        return self.unit_key
+    
+    def get_qty_key(self):
+
+        return self.qty_key
+    
+class EOLImpactsDatabase(ImpactsDatabase):
+
+    def __init__(self):
+        super().__init__()
+        self.process_key = 'Process'
+
+    def set_data(self, file_path, impact_headers=None, additional_headers=None, multipliers=None):
+        """ Set the database data.
+        
+        Parameters
+        ----------
+        file_path : str
+            Location of the CSV file
+        impact_headers : list of str
+            The headers of the CSV file as they would be mapped to the database.
+        additional_headers : list of str
+            Headers of the columns to be imported, other than name, unit, and impact categories.
+        multipliers : list of float
+            Values of each column of the CSV will be multiplied by these values.
+        """
+
+        if impact_headers == None:
+            impact_headers = list(IMPACT_CATEGOREIS.keys())
+        data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key()] +  impact_headers
+        if not (additional_headers ==  None):
+            data_headers = data_headers + additional_headers
+        
+        no_headers = len(data_headers)
+
+        if multipliers == None:
+            multipliers = [1.0] * len(impact_headers)
+
+        multipliers = [None] * 4 + multipliers + [None] * (no_headers - 4 - len(multipliers))
+
+        data = CSV_Importer.import_as_pandas(file_path, data_headers, multipliers)
+
+        data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
+
+        # loading data to existing dataset
+        if self.get_data_all().empty:
+            self.data = data
+        else:
+            self.data = concat([self.get_data_all(), data], ignore_index=True)
+
+        return self
+
+    def set_data_entry(self, flow, qty, unit, process, impacts, add_data=None):
+        """ Add a custom entry the database.
+
+            Parameters
+            ----------
+            flow : str
+                Name of the impact.
+            qty : float
+                Quantity of the flow.
+            unit : str
+                Unit of measurement for which the impacts are applied.
+            process : str
+                End-of-Life process.
+            impacts : dict
+                Dictionary of impacts {impact catergory (str): impact (float)}
+            add_data : dict
+                Dictionary of additional data {header (str): value (str / float/ int)}
+
+        """
+
+        tmp_data = impacts
+        tmp_data[self.get_primary_key()] = flow
+        tmp_data[self.get_qty_key()] = qty
+        tmp_data[self.get_unit_key()] = unit
+        tmp_data[self.get_process_key()] = process
+
+        if list(IMPACT_CATEGOREIS.keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key()] == list(tmp_data.keys()) :
+            self.data.loc[len(self.data)] = tmp_data
+        else:
+            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {IMPACT_CATEGOREIS.keys()}")
+
+        # TODO: check if the additional headers exist/ if not create them and add the new data
+
+        return self.data
+
+    def set_process_key(self, key):
+
+        self.process_key = key
+
+        return self
+
+    def get_data_entry(self, material_name, process_name):
+        """ Retrieve impacts for given flow.
+        
+            Parameters
+            ----------
+            material_name : str
+                Name of the material
+            process_name: str
+                End-of-Life process name.
+            
+            Returns
+            -------
+            Pandas Series
+                Databse entry corresponding to the flow.
+        """
+
+        if self.data is not None:
+            row_id = self.data.index[(self.data[self.get_primary_key()] == material_name) & (self.data[self.get_process_key()] == process_name)]
+            if len(row_id) == 1:
+                return self.data.iloc[row_id[0]]
+            else:
+                raise ImportError("Multiple matching entries exist...")
+            
+    def get_process_key(self):
+
+        return self.process_key
 
 if __name__ == '__main__':
     pass
