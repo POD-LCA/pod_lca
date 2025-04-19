@@ -1,4 +1,5 @@
 from lca_modules.impacts.impacts import Impacts
+import pandas as pd
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -6,7 +7,8 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-
+cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [7, 8, 9, 10, 101 ], "Air": [11]}
+faf_mapping = {"Truck": 1 , "Rail": 2, "Barge": 3, "Ocean": 3, "Air": 4}
 
 class TransportMode:
     def __init__(self, mode_name, efficiency, project, feul_type = "Regular"):
@@ -37,7 +39,7 @@ class TransportMode:
         """
         Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
-        emission_data = self.project.get_subdataset("Emission")
+        emission_data = pd.read_csv(r"data\transportation_dataset\Emission.csv")
 
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
                                        (emission_data["eff"] == self.efficiency) & (emission_data["feul"] == self.feul_type) ]
@@ -96,7 +98,7 @@ class TransportMode:
         if self.mode_name in cfs_mapping:
             self.cfs_mode = cfs_mapping[self.mode_name]
 
-        return self.cfs_mode, cfs_mapping
+        return self.cfs_mode
 
     def get_feul_type (self):
         """
@@ -113,4 +115,4 @@ if __name__ == '__main__':
     project = ProjectLogisticManager(name="Building A", shipping_dest= None, data_folder=data_folder, shipping_org= None)
 
     transport = TransportMode ("Truck", 1, project)
-    print (transport.get_impacts ())
+    print (transport.get_cfs_mode()[0])

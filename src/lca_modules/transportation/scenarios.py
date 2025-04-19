@@ -1,10 +1,8 @@
 import pandas as pd
-import numpy as np
-from lca_modules.transportation.transport_mode import TransportMode
+from lca_modules.transportation.transport_mode import TransportMode, cfs_mapping
 from geopy.distance import geodesic
-from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION, FAF_DATA
+from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION
 from lca_modules.location.location import Location
-from lca_modules.transportation.modes_mapping import cfs_mapping
 import json
 
 __author__ = ["POD/LCA Team"]
@@ -51,24 +49,23 @@ class Scenario:
         self.scenario = scenario
         self.project = project
         self.material = material
-        self.distances = {"Local": 0, "Regional": 0, "Regional_c": 0, "National": 0, "NA": 0, "Global": 0, "None": 0, "Known": 0}
+        self.sctg = None
+        self.foreign_dis = 0
+        self.domestic_dis = 0
         self.mode = mode
         self.mode_domestic = mode_domestic
         self.shipping_dest = project.get_shipping_dest()
         self.shipping_org = project.get_shipping_org()
-        self.local = None
-        self.regional = None
-        self.regional_c = None
-        self.national = None
-        self.na = None
-        self.global_ = None
-        self.none = None
-        self.Known = None
+        self.scenario_impact = None
 
-        self.pre_us_processing()
-        self.pre_global_processing()
+        self.set_sctg(material)
 
-    def get_sctg(self, digit):
+        if self.scenario in ["Local", "Regional", "Regional_c", "National", "None", "Known_us"]:
+            self.pre_us_processing()
+        elif self.scenario in ["NA", "Global", "Known"]:
+            self.pre_global_processing()
+
+    def set_sctg(self, material ,digit=2):
         """
         Get the SCTG code based on the material category.
 
@@ -78,13 +75,423 @@ class Scenario:
         Returns:
         - int, the SCTG code.
         """
-        data_material = self.project.get_subdataset("EC3 Category to CFS Group mapping")
-        sctg = data_material[data_material["material"] == self.material].iloc[0, 1]
-        sctg = int(str(sctg)[:digit])
+        data_material = pd.read_csv(r"data\transportation_dataset\EC3 Category to CFS Group mapping.csv")
 
-        return sctg
-    
-    
+        try:
+            if material not in data_material["material"].values:
+                raise ValueError("material not found in the dataset")
+            sctg = data_material[data_material["material"] == material].iloc[0, 1]
+            sctg = int(str(sctg)[:digit])
+
+        except Exception as e:
+            print("Error:", e)
+
+        self.sctg = sctg
+        return self
+
+    @staticmethod
+    def faf_region_to_cfs_area_mapping(region):
+
+        """
+        Map the FAF region to CFS area.
+
+        Parameters:
+        - region: str, the FAF region to map.
+
+        Returns:
+        - int, the CFS area code.
+        """
+
+        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+        with open(FAF_DOMESTIC_REGION, "r") as f:
+            faf_domestic_data = json.load(f)
+
+        for key, value in faf_domestic_data.items():
+            if region in value:
+                state_name = key
+                break
+        else:
+            raise ValueError(f"Region '{region}' not found in FAF data.")
+
+        cfs_code = cfs_state_code[cfs_state_code["State"] == state_name]["Code"].values[0]
+        return cfs_code
+
+    @staticmethod
+    def cfs_area_to_faf_region_mapping(area):
+        """
+        Map the CFS area to FAF region.
+
+        Parameters:
+        - area: int, the CFS area code to map.
+
+        Returns:
+        - str, the FAF region.
+        """
+
+        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+        with open(FAF_DOMESTIC_REGION, "r") as f:
+            faf_domestic_data = json.load(f)
+
+        state_row = cfs_state_code[cfs_state_code["Code"] == area]
+        if state_row.empty:
+            raise ValueError(f"CFS area code '{area}' not found.")
+        state_name = state_row["State"].values[0]
+
+        for key, value in faf_domestic_data.items():
+            if key == state_name:
+                region = value
+                break
+        else:
+            raise ValueError(f"State '{state_name}' not found in FAF data.")
+
+        return region
+
+    def filter_faf(self, sctg=None, destination=None, origin=None, mode=None, domestic_mode=None, scenario=None):
+        faf = pd.read_csv(r"data\transportation_dataset\FAF561_cleaned.csv")
+        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+        failed = False
+
+        # SCTG
+        try:
+            if sctg is not None:
+                faf = faf[faf["sctg2"] == sctg]
+                if faf.empty:
+                    raise ValueError("no data for the selected SCTG code in FAF561 dataset")
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        # Destination
+        try:
+            faf_without_dest = faf.copy()
+            if destination is not None:
+                faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
+                
+                if faf.empty:
+
+                    faf_region_list = faf["dms_dest"].tolist()
+                    faf_to_cfs_code = []
+                    for region in faf_region_list:
+                        faf_to_cfs_code.append(faf_region_to_cfs_area_mapping(region))
+
+                    cfs_lat = []
+                    cfs_lon = []
+
+                    for state in faf_to_cfs_code:
+                        lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
+                        lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
+
+                        if len(lat) > 0 and len(lon) > 0:
+                            cfs_lat.append(lat[0])
+                            cfs_lon.append(lon[0])
+
+                    coords = list(zip(cfs_lat, cfs_lon))
+                    dest_to_org = []
+                    
+                    for coord in coords:
+                        distance = geodesic(coord, self.shipping_dest.get_cordinates()).km
+                        dest_to_org.append(distance)
+
+                    cfs_dist = dict(zip(faf_to_cfs_code, dest_to_org))
+                    sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
+
+                    while faf.empty:
+                        closest_state = list(sorted_cfs_dist.keys())[0]
+                        faf_region = cfs_area_to_faf_region_mapping(closest_state) 
+                        faf = faf[faf["dms_dest"].isin(faf_region)] 
+                        del sorted_cfs_dist[closest_state]
+                        print(f"No location for destination found in FAF, The value shows the closest shipping to the selected destination {closest_state}")
+                        for key, value in faf_domestic_data.items():
+                            if closest_state in value:
+                                closest_state = key
+                        self.shipping_dest = Location.from_str(closest_state)
+            
+            else:
+                major_domes = faf["dms_dest"].mode()[0]
+                with open (FAF_DOMESTIC_REGION, "r") as f:
+                    faf_domestic_data = json.load(f)
+                    for key, value in faf_domestic_data.items():
+                        if major_domes in value:
+                            major_domes = key
+                self.shipping_dest = Location.from_str(major_domes)
+                faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
+                print (f"destination is the most frequent shipping destination {major_domes}")
+
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        # Origin
+        try:
+            if origin is not None:
+                faf = faf[faf["fr_orig"] == origin.get_faf_foreign_region()]
+                faf_without_dest = faf_without_dest[faf_without_dest["fr_orig"] == origin.get_faf_foreign_region()]
+
+                if faf.empty:
+
+                    faf_region_list =  faf_without_dest["dms_dest"].tolist()
+
+                    faf_to_cfs_code = []
+                    for region in faf_region_list:
+                        faf_to_cfs_code.append(faf_region_to_cfs_area_mapping(region))
+
+                    cfs_lat = []
+                    cfs_lon = []
+
+                    for state in faf_to_cfs_code:
+                        lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
+                        lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
+
+                        if len(lat) > 0 and len(lon) > 0:
+                            cfs_lat.append(lat[0])
+                            cfs_lon.append(lon[0])
+
+                    coords = list(zip(cfs_lat, cfs_lon))
+                    dest_to_dest = []
+
+                    for coord in coords:
+                        distance = geodesic(coord, self.shipping_dest.get_cordinates()).km
+                        dest_to_dest.append(distance)
+
+                    cfs_dist = dict(zip(faf_to_cfs_code, dest_to_dest))
+                    sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
+
+                    while faf.empty:
+                        closest_state = list(sorted_cfs_dist.keys())[0]
+                        faf_region = cfs_area_to_faf_region_mapping(closest_state)
+                        faf = faf[faf["dms_dest"].isin(faf_region)]
+                        del sorted_cfs_dist[closest_state]
+                        print(f"No location for origin and selected destination found in FAF, The value shows the closest shipping to the selected destination with datapoint to the selected origin {closest_state}")
+                        for key, value in faf_domestic_data.items():
+                            if closest_state in value:
+                                closest_state = key
+                                self.shipping_dest = Location.from_str(closest_state)
+            else:
+                if scenario == "NA":
+                    faf = faf[faf["fr_orig"].isin([801, 802])]
+                    faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
+                    self.shipping_org = Location.from_str(FAF_city_representation[faf["fr_orig"].mode()[0]])
+                elif scenario == "Global":
+                    faf = faf[faf["fr_orig"].isin([801, 802]) == False]
+                    faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
+                    self.shipping_org = Location.from_str(FAF_city_representation[faf["fr_orig"].mode()[0]])
+            
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        # Mode
+        try:
+            if mode is not None:
+                faf = faf[faf["fr_inmode"] == mode.get_faf_mode()]
+                if faf.empty:
+                    self.mode = TransportMode("Barge", self.project.get_links()[0].get_efficiency(), self.project)
+                    faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+                    print ("No datapoint for selected mode of transportation.Using Barge as the default mode of transportation instead.")
+            else:
+
+                self.mode = TransportMode("Barge", self.project.get_links()[0].get_efficiency(), self.project)
+                faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+                if faf.empty:
+                    raise ValueError("no data for Barge as a mode in FAF561 dataset")
+
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+        # Domestic Mode
+        try:
+            if domestic_mode is not None:
+                faf = faf[faf["dms_mode"] == domestic_mode.get_faf_mode()]
+                if faf.empty:
+                    raise ValueError("no data for the selected domestic mode in FAF561 dataset")
+            else:
+                self.mode_domestic = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
+                faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
+                if faf.empty:
+                    raise ValueError("no data for Truck as a domestic mode in FAF561 dataset")
+
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        return faf, failed
+
+    def filter_cfaf(self, sctg=None):
+        cfaf = pd.read_csv(r"data\transportation_dataset\cfaf_cleaned.csv")
+        try:
+            if sctg is not None:
+                cfaf = cfaf[cfaf["SCTG_2digits"] == sctg]
+                if cfaf.empty:
+                    raise ValueError("no data for the selected SCTG code in cfaf dataset")
+        except Exception as e:
+            print("Error:", e)
+
+        return cfaf
+
+    def filter_marine(self, destination=None, origin=None, scenario=None):
+
+        marine = pd.read_csv(r"data\transportation_dataset\marine_cleaned.csv")
+        failed = False
+        # Destination
+        try:
+            if destination is not None:
+                marine = marine[marine["Coast"] == destination.us_coast]
+                if marine.empty:
+                    raise ValueError("no data for the selected destination in Marine dataset")
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        # Origin
+        try:
+            if origin is not None:
+                marine = marine[marine["Region"] == origin.get_marine_region()]
+                if marine.empty:
+                    raise ValueError("no data for the selected origin in Marine dataset")
+                
+            else:
+                if scenario == "NA":
+                    marine = marine[marine["Region"].isin(["Canada", "Mexico"])]
+                    marine = marine[marine["Region"] == origin.get_marine_region()]
+
+                elif scenario == "Global":
+                    marine = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]
+                    marine = marine[marine["Region"] == origin.get_marine_region()]
+        
+        except Exception as e:
+            print("Error:", e)
+
+        return marine, failed
+
+    def filter_cfs(self, sctg=None, destination=None, origin=None, mode=None):
+        cfs = pd.read_csv(r"data\transportation_dataset\cfs_2017_cleaned.csv")
+        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+        failed = False
+
+        # SCTG
+        try:
+            if sctg is not None:
+                cfs_filtered = cfs[cfs["SCTG"] == sctg]
+                if cfs_filtered.empty:
+                    raise ValueError("no data for the selected SCTG code in CFS dataset")
+                cfs = cfs_filtered
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+        
+        # Destination
+        try:
+            if destination is not None:
+                cfs_filtered = cfs[cfs["DEST_STATE"] == destination.get_cfs_area()]
+
+                if cfs_filtered.empty:
+                    cfs_list = cfs["DEST_STATE"].tolist()
+                    cfs_lat = []
+                    cfs_lon = []
+
+                    for state in cfs_list:
+                        lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
+                        lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
+
+                        if len(lat) > 0 and len(lon) > 0:
+                            cfs_lat.append(lat[0])
+                            cfs_lon.append(lon[0])
+
+                    coords = list(zip(cfs_lat, cfs_lon))
+                    dest_to_org = []
+                    
+                    for coord in coords:
+                        distance = geodesic(coord, self.shipping_dest.get_cordinates()).km
+                        dest_to_org.append(distance)
+
+                    cfs_dist = dict(zip(cfs_list, dest_to_org))
+                    sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
+
+                    while cfs_filtered.empty:
+                        closest_state = list(sorted_cfs_dist.keys())[0]
+                        cfs_filtered = cfs[cfs["DEST_STATE"] == closest_state]
+                        del sorted_cfs_dist[closest_state]
+                        print(f"No location for destination found in cfs, The value shows the closest shipping to the selected destination {closest_state}")
+                
+                else:
+                    cfs = cfs_filtered
+            else:
+                major_dests = cfs["DEST_STATE"].mode()[0]
+                cfs_filtered = cfs[cfs["DEST_STATE"] == major_dests]
+                cfs = cfs_filtered
+
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        
+        # Origin
+        try:
+            if origin is not None:
+                cfs_filtered = cfs[cfs["ORIG_STATE"] == origin.get_cfs_area()]
+
+                if cfs_filtered.empty:
+                    cfs_list = cfs["ORIG_STATE"].tolist()
+                    cfs_lat = []
+                    cfs_lon = []
+
+                    for state in cfs_list:
+                        lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
+                        lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
+
+                        if len(lat) > 0 and len(lon) > 0:
+                            cfs_lat.append(lat[0])
+                            cfs_lon.append(lon[0])
+
+                    coords = list(zip(cfs_lat, cfs_lon))
+                    origin_to_dest = []
+                    
+                    for coord in coords:
+                        distance = geodesic(coord, self.shipping_org.get_cordinates()).km
+                        origin_to_dest.append(distance)
+
+                    cfs_dist = dict(zip(cfs_list, origin_to_dest))
+                    sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
+
+                    while cfs_filtered.empty:
+                        closest_state = list(sorted_cfs_dist.keys())[0]
+                        cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state]
+                        del sorted_cfs_dist[closest_state]
+                        print (f"No location for origin found in cfs, The value shows the closest shipping to the selected origin {closest_state}")
+            
+                else:
+                    cfs = cfs_filtered
+
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+        
+        # Mode
+        try:
+            if mode is not None:
+                cfs_filtered = cfs[cfs["MODE"].isin(mode.get_cfs_mode())]
+                
+                if cfs_filtered.empty:
+                    self.mode = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
+                    cfs_filtered = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode())]
+                    cfs = cfs_filtered
+                    print ("Using Truck as the default mode of transportation instead.")
+
+                else:
+                    cfs = cfs_filtered  
+            else:
+                self.mode = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
+                cfs_filtered = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode())]
+                cfs = cfs_filtered
+                print ("Using Truck as the default mode of transportation instead.")       
+        except Exception as e:
+            print("Error:", e)
+            failed = True
+
+
+        return cfs, failed
+
     def pre_us_processing(self):
         """
         process the data for the US scenarios.
@@ -106,132 +513,53 @@ class Scenario:
 
         """
 
-        cfs = self.project.get_subdataset("cfs_2017_cleaned")
-        sctg = self.get_sctg(2)
-        cfs = cfs[cfs["SCTG"] == sctg].copy()
-        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+        
+        cfs = self.filter_cfs(self.sctg, self.shipping_dest, self.shipping_org, self.mode)
+        if cfs[1] == True:
+            print (" An error occurred while filtering the data, please check the data and try again.")
+            self.scenario_impact = 0* self.mode.get_impacts()
 
-        print (sctg)
-
-        if self.shipping_dest is not None:
-            cfs_filtered = cfs[cfs["DEST_STATE"] == self.shipping_dest.get_cfs_area()]
-            cfs = cfs_filtered if not cfs_filtered.empty else cfs
-
-            if cfs_filtered.empty:
-                cfs_list = cfs["DEST_STATE"].tolist()
-                cfs_lat = []
-                cfs_lon = []
-
-                for state in cfs_list:
-                    lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
-                    lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
-
-                    if len(lat) > 0 and len(lon) > 0:
-                        cfs_lat.append(lat[0])
-                        cfs_lon.append(lon[0])
-
-                coords = list(zip(cfs_lat, cfs_lon))
-                dest_to_org = []
-                
-                for coord in coords:
-                    distance = geodesic(coord, self.shipping_dest.get_cordinates()).km
-                    dest_to_org.append(distance)
-
-                cfs_dist = dict(zip(cfs_list, dest_to_org))
-                sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
-
-                while cfs_filtered.empty:
-                    closest_state = list(sorted_cfs_dist.keys())[0]
-                    cfs_filtered = cfs[cfs["DEST_STATE"] == closest_state]
-                    del sorted_cfs_dist[closest_state]
-                    print (f"No location for destination found in cfs, The value shows the closest shipping to the selected destination {closest_state}")
-
-
-        if self.shipping_org is not None:
-
-            cfs_filtered = cfs[cfs["ORIG_STATE"] == self.shipping_org.get_cfs_area()]
-            cfs = cfs_filtered if not cfs_filtered.empty else cfs
-
-            if cfs_filtered.empty:
-                cfs_list = cfs["ORIG_STATE"].tolist()
-                cfs_lat = []
-                cfs_lon = []
-
-                for state in cfs_list:
-                    lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
-                    lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
-
-                    if len(lat) > 0 and len(lon) > 0:
-                        cfs_lat.append(lat[0])
-                        cfs_lon.append(lon[0])
-
-                coords = list(zip(cfs_lat, cfs_lon))
-                origin_to_dest = []
-                
-                for coord in coords:
-                    distance = geodesic(coord, self.shipping_org.get_cordinates()).km
-                    origin_to_dest.append(distance)
-
-                cfs_dist = dict(zip(cfs_list, origin_to_dest))
-                sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
-
-                while cfs_filtered.empty:
-                    closest_state = list(sorted_cfs_dist.keys())[0]
-                    cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state]
-                    del sorted_cfs_dist[closest_state]
-                    print (f"No location for origin found in cfs, The value shows the closest shipping to the selected origin {closest_state}")
-
-            cfs = cfs_filtered if not cfs_filtered.empty else cfs
-
-        if self.mode is not None:
-
-            cfs_filtered = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode()[1] [self.mode.get_name()])]
-            cfs = cfs_filtered if not cfs_filtered.empty else cfs
         else:
-            major_mode = cfs["MODE"].mode()
-            cfs = cfs[cfs["MODE"] == major_mode[0]]
-            for key, value in cfs_mapping.items():
-                if major_mode[0] in value:
-                    mode_cfs_t = TransportMode(key, self.project.get_links()[0].get_efficiency(), self.project)
+            cfs = cfs[0]
+
+            try:
+                quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
+                def assign_quartile(x, q1, q2, q3):
+                    if x <= q1:
+                        return 'Q1'
+                    elif x <= q2:
+                        return 'Q2'
+                    elif x <= q3:
+                        return 'Q3'
+                    else:
+                        return 'Q4'
+                cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
+                
+                impact = self.mode.get_impacts()
 
 
+                if self.scenario == "Local":
+                    self.domestic_dis = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
+                    self.scenario_impact = self.domestic_dis * impact
 
-        quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
-
-        def assign_quartile(x, q1, q2, q3):
-            if x <= q1:
-                return 'Q1'
-            elif x <= q2:
-                return 'Q2'
-            elif x <= q3:
-                return 'Q3'
-            else:
-                return 'Q4'
-
-        cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
-
-        if self.mode is not None:
-            impact = self.mode.get_impacts()
-        else:
-            impact = mode_cfs_t.get_impacts()
-
-
-        self.local = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()* impact
-        self.distances["Local"] = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
-
-        self.regional = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()* impact
-        self.distances["Regional"] = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
-
-        self.regional_c = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean() * impact
-        self.distances["Regional_c"] = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
-
-        self.national = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()* impact
-        self.distances["National"] = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
-
-        self.none = cfs["SHIPMT_DIST_ROUTED"].mean()* impact
-        self.distances["None"] = cfs["SHIPMT_DIST_ROUTED"].mean()
-
-
+                elif self.scenario == "Regional":
+                    self.domestic_dis = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
+                    self.scenario_impact = self.domestic_dis * impact
+                
+                elif self.scenario == "Regional_c":
+                    self.domestic_dis = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+                    self.scenario_impact = self.domestic_dis * impact
+                
+                elif self.scenario == "National":
+                    self.domestic_dis = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
+                    self.scenario_impact = self.domestic_dis * impact
+                
+                elif self.scenario == "None" or self.scenario == "Known_us":
+                    self.domestic_dis = cfs["SHIPMT_DIST_ROUTED"].mean()
+                    self.scenario_impact = self.domestic_dis * impact
+            except:
+                self.scenario_impact = 0* self.mode.get_impacts()
+                
     def pre_global_processing (self):
         """
         process the data for the North America and Global scenarios.
@@ -251,420 +579,69 @@ class Scenario:
             - if the mode is not defined it will select Truck as the domestic mode of transportation.
             
         """
-        scenarios = ["NA","Global"]
-        emission = self.project.get_subdataset("Emission")
-        faf = self.project.get_subdataset("FAF561_cleaned")
-        cfaf = self.project.get_subdataset("cfaf_cleaned")
-        marine = self.project.get_subdataset("Marine_cleaned")
-        sctg = self.get_sctg(2)
-        
-        faf = faf[faf["sctg2"] == sctg].copy()
-        cfaf = cfaf[cfaf["SCTG_2digits"] == sctg].copy()
+        faf = self.filter_faf(self.sctg, self.shipping_dest, self.shipping_org, self.mode, self.mode_domestic, self.scenario)
+        marine = self.filter_marine(self.shipping_dest, self.shipping_org, self.scenario)
+        cfaf = self.filter_cfaf(self.sctg)
 
-
-
-        if self.shipping_dest is not None:
-            
-            try:
-                marine_location = self.shipping_dest.us_coast
-                dms_domestic_faf = self.shipping_dest.get_faf_domestic_region()
-                dms_coordinates = self.shipping_dest.get_cordinates()
-
-                marine = marine[marine["Coast"] == marine_location]
-                faf = faf[faf["dms_dest"].isin(dms_domestic_faf)]
-
-                if faf.empty or marine.empty:
-                    raise ValueError("no destination found in the dataset")
-
-            except Exception as e:
-                print("Error:", e)
-                marine = 0
-                faf = 0
-
+        if faf[1] == True:
+            print (" An error occurred while filtering the FAF data, please check the data and try again.")
+            self.scenario_impact = 0* self.mode.get_impacts()
         else:
+            faf = faf[0]
 
-            try:
-                major_domes = faf["dms_dest"].mode()[0]
-                with open (FAF_DOMESTIC_REGION, "r") as f:
-                    faf_domestic_data = json.load(f)
-                    for key, value in faf_domestic_data.items():
-                        if major_domes in value:
-                            major_domes = key
-
-                self.shipping_dest = Location.from_str(major_domes)
-                marine_location = self.shipping_dest.us_coast
-                dms_domestic_faf = self.shipping_dest.get_faf_domestic_region()
-                dms_coordinates = self.shipping_dest.get_cordinates()
-                marine = marine[marine["Coast"] == marine_location]
-                faf = faf[faf["dms_dest"].isin(dms_domestic_faf)]
-                
-                print (f"destination is the most frequent shipping destination {major_domes}")
-
-                if faf.empty or marine.empty:
-                    raise ValueError("no destination found in the dataset")
-
-            except Exception as e:
-                print("Error:", e)
-                marine = 0
-                faf = 0
-
-
-        if self.shipping_org is not None:
-
-            try:
-                marine_location = self.shipping_org.get_marine_region()
-                fr_origin_faf = self.shipping_org.get_faf_foreign_region()
-                fr_coordinates = self.shipping_org.get_cordinates()
-
-                marine = marine[marine["Region"] == marine_location]
-                faf = faf[faf["fr_orig"] == fr_origin_faf]
-
-                if faf.empty or marine.empty:
-                    raise ValueError("no origin found in the dataset")
-
-            except Exception as e:
-                print("Error:", e)
-                marine = 0
-                faf = 0
-
+        if marine[1] == True:
+            print (" An error occurred while filtering the Marine data, please check the data and try again.")
         else:
+            marine = marine[0]
 
-            try:
-                faf_na_mode = faf[faf["fr_orig"].isin([801, 802])]["fr_orig"].mode()[0]
-                faf_na = faf[faf["fr_orig"] == faf_na_mode]
-
-                if faf_na.empty:
-                    raise ValueError("no origin found in North America")
-            except Exception as e:
-                print("Error:", e)
-                faf_na = 0
-
-            try:
-                faf_global_mode = faf[faf["fr_orig"].isin([801, 802]) == False]["fr_orig"].mode()[0]
-                faf_global = faf[faf["fr_orig"] == faf_global_mode]
-
-                if faf_global.empty:
-                    raise ValueError("no origin found in global")
-            except Exception as e:
-                print("Error:", e)
-                faf_global = 0
-
-            try:
-                marine_na = marine[marine["Region"].isin(["Canada", "Mexico"])]
-
-                for key,value in FAF_DATA.items():
-                    if faf_na_mode in value:
-                        marine_na_mode = key
-                        break
-                marine_na_mode = Location.from_str(marine_na_mode).get_marine_region()
-                marine_na = marine[marine["Region"] == marine_na_mode]
-                
-                if marine_na.empty:
-                    raise ValueError("no origin for North America scenario in marine dataset")
-            except Exception as e:
-                print("Error:", e)
-                marine_na = 0
-
-            try:
-                marine_global_mode = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]
-
-                for key,value in FAF_DATA.items():
-                    if faf_global_mode in value:
-                        marine_global_mode = key
-                        break
-                marine_global_mode = Location.from_str(marine_global_mode).get_marine_region()
-                marine_global = marine[marine["Region"] == marine_global_mode]
-
-                if marine_global.empty:
-                    raise ValueError("no origin for global scenario in marine dataset")
-            except Exception as e:
-                print("Error:", e)
-                marine_global = 0
-
-
-        if self.mode is not None:
-            try:
-                faf_na = faf_na[faf_na["fr_inmode"] == self.mode.get_faf_mode()]
-                faf_global = faf_global[faf_global["fr_inmode"] == self.mode.get_faf_mode()]
-
-                if faf_na.empty or faf_global.empty:
-                    raise ValueError("no data for the selected mode of transportation")
-            except Exception as e:
-                print("Error:", e)
-                faf_na = 0
-                faf_global = 0
-
-        else:
-            try:
-                self.mode = TransportMode("Barge", self.project.get_links()[0].get_efficiency(), self.project)
-                faf_na = faf_na[faf_na["fr_inmode"] == self.mode.get_faf_mode()]
-                faf_global = faf_global[faf_global["fr_inmode"] == self.mode.get_faf_mode()]
-
-                if faf_na.empty or faf_global.empty:
-                    raise ValueError("no data for the selected mode of transportation")
-            except Exception as e:
-                print("Error:", e)
-                faf_na = 0
-                faf_global = 0
-
-        if self.mode_domestic is not None:
-            try:
-                faf_na = faf_na[faf_na["dms_mode"] == self.mode_domestic.get_faf_mode()]
-                faf_global = faf_global[faf_global["dms_mode"] == self.mode_domestic.get_faf_mode()]
-
-                if faf_na.empty or faf_global.empty:
-                    raise ValueError("no data for the selected domestic mode of transportation")
-
-            except Exception as e:
-                print("Error:", e)
-                faf_na = 0
-                faf_global = 0
-        else:
-            try:
-                self.mode_domestic = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
-                faf_na = faf_na[faf_na["dms_mode"] == self.mode_domestic.get_faf_mode()]
-                faf_global = faf_global[faf_global["dms_mode"] == self.mode_domestic.get_faf_mode()]
-
-                if faf_na.empty or faf_global.empty:
-                    raise ValueError("no data for the selected domestic mode of transportation")
-                    
-            except Exception as e:
-                print("Error:", e)
-                faf_na = 0
-                faf_global = 0
-
-
-        if self.mode is not None:
-
+        try:
             if self.mode.get_name() == "Truck":
-    
-                for scenario in scenarios:
-
-                    if scenario == "NA":
-
-                        try:
-                            domestic_total = self.mode_domestic.get_impacts() * faf_na["avr_dom_dist_km"].mean()
-                            foreign_total = self.mode.get_impacts() * 200
-                            total_impact = domestic_total + foreign_total
-
-                            self.na = total_impact
-                            self.distances["NA"] = 200 + faf_na["avr_dom_dist_km"].mean()
-                        except:
-
-                            print ("No data for the Truck")
-                            self.distances["NA"] = 0
-                            self.na = self.mode.get_impacts() * 0
-
-                    elif scenario == "Global":
-
-                        self.global_ = self.mode.get_impacts() * 0
-                        self.distances["Global"] = 0
-
-
+                self.domestic_dis = faf["avr_dom_dist_km"].mean()
+                self.foreign_dis = 200
+                domestic_dis = self.domestic_dis + self.foreign_dis
+                self.scenario_impact = domestic_dis * self.mode.get_impacts()
+            
             elif self.mode.get_name() == "Rail":
-
-                try:
-                    distance = cfaf["Average_Distance_per_Shipment"].mean()
-                    self.na = self.mode.get_impacts()* distance
-                    self.distances["NA"] = distance
-                    self.global_ = self.mode.get_impacts()*0
-                    self.distances["Global"] = 0
-                except:
-                    print ("No data for the Rail")
-                    self.distances["NA"] = 0
-                    self.na = self.mode.get_impacts() * 0
-                    self.distances["Global"] = 0
-                    self.global_ = self.mode.get_impacts() * 0
-
+                self.foreign_dis = cfaf["Average_Distance_per_Shipment"].mean()
+                self.scenario_impact = self.foreign_dis * self.mode.get_impacts()
 
             elif self.mode.get_name() in ("Barge", "Ocean"):
-
-                for scenario in scenarios:
-
-                    if scenario == "NA":
-
-                        try:
-
-                            domestic_na_dis = faf_na["avr_dom_dist_km"].mean()
-                            domestic_total = self.mode_domestic.get_impacts() * domestic_na_dis
-                            marine_na_dis = marine_na["Distance_km"].mean()
-                            marine_na_impacts = self.mode.get_impacts() * marine_na_dis
-                            self.distances["NA"] = marine_na_dis + domestic_na_dis
-                            self.na = marine_na_impacts + domestic_total
-
-                        except:
-
-                            print ("No data for the Barge")
-                            self.distances["NA"] = 0
-                            self.na = self.mode.get_impacts() * 0
-                            
-
-                    elif scenario == "Global":
-
-                        try:
-                            domestic_global_dis = faf_global["avr_dom_dist_km"].mean()
-                            domestic_total = self.mode_domestic.get_impacts() * domestic_global_dis
-                            marine_global_dis = marine_global["Distance_km"].mean()
-                            marine_global_impacts = self.mode.get_impacts() * marine_global_dis
-
-                            self.global_ = marine_global_impacts + domestic_total
-                            self.distances["Global"] = marine_global_dis + domestic_global_dis
-
-                        except:
-                            print ("No data for the Barge")
-                            self.distances["Global"] = 0
-                            self.global_ = self.mode.get_impacts() * 0
-
+                self.domestic_dis = faf["avr_dom_dist_km"].mean()
+                self.foreign_dis = marine["Distance_km"].mean()
+                domestic_dis = self.domestic_dis + self.foreign_dis
+                self.scenario_impact = domestic_dis * self.mode.get_impacts()
+            
             elif self.mode.get_name() == "Air":
 
-                if self.shipping_org is not None:
+                dms_coordinates = self.shipping_dest.get_cordinates()
+                fr_coordinates = self.shipping_org.get_cordinates()
+                self.foreign_dis = geodesic(dms_coordinates, fr_coordinates).km
+                self.scenario_impact = self.foreign_dis * self.mode.get_impacts()
+        except:
 
-                    if self.shipping_org.get_faf_foreign_region() in (801, 802):
-                        air_dist = geodesic(dms_coordinates, fr_coordinates).km
-                        self.distances["NA"] = air_dist
-                        self.na = air_dist * self.mode.get_impacts()
+            self.foreign_dis = 0
+            self.domestic_dis = 0
+            self.scenario_impact = 0* self.mode.get_impacts()
 
-                    elif self.shipping_org.get_faf_foreign_region() != 803:
-                        air_dist = geodesic(dms_coordinates, fr_coordinates).km
-                        self.distances["Global"] = air_dist
-                        self.global_ = air_dist * self.mode.get_impacts() 
-                    else:
-                        self.global_ = self.distances["Global"] * self.mode.get_impacts()
-                        self.na = self.distances["NA"] * self.mode.get_impacts()
-
-                else:
-
-                    for scenario in scenarios:
-                        if scenario == "NA":
-
-                            try:
-                                faf_na_mode = faf_na ["fr_orig"].mode (0)[0]
-                                for key, value in FAF_city_representation.items():
-                                    if faf_na_mode == key:
-                                        faf_na_mode = value
-                                        shipping_org = Location.from_str(faf_na_mode)
-                                
-                                fr_coordinates_na = shipping_org.get_cordinates()
-                                air_na_dist = geodesic(fr_coordinates_na, dms_coordinates).km
-
-                                self.distances["NA"] = air_na_dist
-                                self.na = air_na_dist * self.mode.get_impacts()
-                            except:
-                                print ("No data for the Air")
-                                self.distances["NA"] = 0
-                                self.na = self.mode.get_impacts() * 0
-
-                        elif scenario == "Global":
-                            
-                            try:
-                                faf_global_mode = faf_global ["fr_orig"].mode (0)[0]
-
-                                for key, value in FAF_city_representation.items():
-                                    if faf_global_mode == key:
-                                        faf_global_mode = value
-                                        shipping_org = Location.from_str(faf_global_mode)
-
-                                fr_coordinates_global = shipping_org.get_cordinates()
-                                air_global_dist = geodesic(fr_coordinates_global, dms_coordinates).km
-
-
-                                self.global_ = air_global_dist* self.mode.get_impacts()
-                                self.distances["Global"] = air_global_dist
-                            except:
-                                print ("No data for the Air")
-                                self.distances["Global"] = 0
-                                self.global_ = self.mode.get_impacts() * 0
-
-
-    def scenario_impact (self):
+    def get_scenario_impact (self):
 
         """
         return the impact of the transportation based on the scenario.
         
         """
-        if self.scenario == "Local":
-            return self.local
-
-        if self.scenario == "Regional":
-            return self.regional
-
-        if self.scenario == "Regional_c":
-            return self.regional_c
-
-        if self.scenario == "National":
-            return self.national
-
-        if self.scenario == "NA":
-            return self.na
-
-        if self.scenario == "Global":
-            return self.global_
-
-        if self.scenario == "None":
-            return self.none
-
-        if self.scenario == "Known":
-            return self.Known
-
+        return self.scenario_impact
 
     def get_distances (self):
-    
+
         """
         return the distances of the transportation based on the scenario.
         
         """
-        return self.distances
+        if self.scenario in ["Local", "Regional", "Regional_c", "National", "None", "NA", "Global", "Known", "Known_us"]:
+            return self.domestic_dis, self.foreign_dis
 
-
-    def get_local_impact (self):
-
-        """
-        return the impact of the transportation based on the local scenario.
-        
-        """
-        return self.local
-
-    def get_regional_impact (self):
-        
-        """
-        return the impact of the transportation based on the regional scenario.
-        
-        """
-        return self.regional
-
-    def get_regional_c_impact (self):
-
-        """
-        return the impact of the transportation based on the regional_c scenario.
-        
-        """
-        return self.regional_c
-
-    def get_national_impact (self):
-
-        """
-        return the impact of the transportation based on the national scenario.
-        
-        """
-        return self.national
-
-    def get_na_impact (self):
-
-        """
-        return the impact of the transportation based on the north america scenario.
-        
-        """
-        return self.na
-
-    def get_global_impact (self):
-
-        """
-        return the impact of the transportation based on the global scenario.
-        
-        """
-        return self.global_
 
 
 if __name__ == '__main__':
-
     pass
+    

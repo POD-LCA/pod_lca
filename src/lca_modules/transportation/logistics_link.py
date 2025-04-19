@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from lca_modules.transportation.scenarios2 import Scenario
+from lca_modules.transportation.scenarios import Scenario
 from lca_modules.transportation.transport_mode import TransportMode
 
 __author__ = ["POD/LCA Team"]
@@ -62,37 +62,8 @@ class Link:
         self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project, feul_type)
         self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project, feul_type)
         self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
-        self.scenario_distances = {"Domestic": None, "Foreign": None, "Total": None}
-
-
-    def get_scenario_distances (self):
-        """ Retrieve the scenario distances of the transportation link.
-
-            Returns
-            -------
-            float
-                scenario distances of the transportation link.
-        """
-        self.scenario_distances["Domestic"],self.scenario_distances["Foreign"], self.scenario_distances ["Total"]  = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_distances()
-
-        return self.scenario_distances
-
-
-    def get_travel_dist (self):
-        """ Retrieve the distance of the transportation link.
-
-            Returns
-            -------
-            float
-                 distance of the transportation link.
-        """
-        if isinstance(self.travel_dist, str):
-
-            distance = self.get_scenario_distances()["Total"]
-        else:
-            distance = self.travel_dist
-
-        return distance
+        self.link_distances = {"Domestic": 0, "Foreign": 0}
+        self.impact = None
 
 
     def compute_impact(self):
@@ -104,27 +75,38 @@ class Link:
                 A dictionary of impacts for each category.
         """
 
-        if self.return_trip_factor is None:
-
-            dist = self.get_travel_dist()
-            if self.dist_unit == "mi":
-                self.return_trip_factor = 1.5 if dist < 500 else 1
-            elif self.dist_unit == "km":
-                self.return_trip_factor = 1.5 if dist < 805 else 1
-
         if isinstance(self.travel_dist, float) or isinstance(self.travel_dist, int): 
+            
+            if self.return_trip_factor is None:
+                dist = self.travel_dist
+                if self.dist_unit == "mi":
+                    self.return_trip_factor = 1.5 if dist < 500 else 1
+                elif self.dist_unit == "km":
+                    self.return_trip_factor = 1.5 if dist < 805 else 1
 
             impact = self.mode.get_impacts()
             impact = impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
+            self.link_distances ["Domestic"] = self.travel_dist
+            self.impact = impact
 
-            return impact
 
         else:
-            
-            impact = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic).get_scenario_impact() 
-            impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
 
-            return impact
+            Scenario_link = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic)
+            self.link_distances["Domestic"],self.link_distances["Foreign"]  = Scenario_link.get_distances()
+
+            if self.return_trip_factor is None:
+
+                dist = self.link_distances["Domestic"] + self.link_distances["Foreign"]
+
+                if self.dist_unit == "mi":
+                    self.return_trip_factor = 1.5 if dist < 500 else 1
+                elif self.dist_unit == "km":
+                    self.return_trip_factor = 1.5 if dist < 805 else 1
+
+            impact = Scenario_link.get_scenario_impact() 
+            impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
+            self.impact = impact
 
 
     def get_qty (self):
@@ -148,7 +130,6 @@ class Link:
 
         return self.material
 
-
     def get_mode (self):
         """ Retrieve the transportation mode of the transportation link.
 
@@ -159,7 +140,6 @@ class Link:
         """
 
         return self.mode
-
 
     def get_efficiency (self):
         """ Retrieve the transportation efficiency of the transportation link.
@@ -194,5 +174,25 @@ class Link:
 
         return self.return_trip_factor
 
+    def get_travel_dist (self):
+        """ Retrieve the travel distance of the transportation link.
 
+            Returns
+            -------
+            float
+                travel distance of the transportation link.
+        """
+
+        return self.link_distances
+    
+    def get_impact (self):
+        """ Retrieve the impact of the transportation link.
+
+            Returns
+            -------
+            object
+                impact of the transportation link.
+        """
+
+        return self.impact
 
