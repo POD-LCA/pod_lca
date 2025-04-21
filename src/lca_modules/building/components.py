@@ -132,6 +132,15 @@ class BuildingComponent:
         """
         return self.materials
     
+    def get_waste_products(self):
+        """ Get the waste products the component was deconstructed/demolished to.
+        """
+
+        if self.deconstructed_to:
+            return self.deconstructed_to
+        else:
+            raise ValueError(f"The component is not deconstructed and therefore no waste products exist.")
+    
     # ================================
     # Methods
     # ================================

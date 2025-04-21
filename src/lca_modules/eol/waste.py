@@ -1,9 +1,9 @@
 from lca_modules.material.master import Master
-from lca_modules.impacts.impacts import Impacts
 from lca_modules.eol import WASTE_PROCESS_DICT
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+from lca_modules.eol.waste_processing import WasteProcess
+from utilities.objects.array_methods import get_attribute_as_list
 
-import gc
+from math import isnan
 
 
 __author__ = ["POD/LCA Team"]
@@ -32,9 +32,21 @@ class Waste(Master):
         super().__init__()
         self.parent = None
         self.is_waste = True
-        self.waste_processess = []
+        self.waste_processes = []
         self.process_mix = {}
-        self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.impacts = {'C2':[], 'C3':[], 'C4':[]}
+
+    def __str__(self):
+        str = "="*50 + "\n" + f"Waste Product ({self.get_name()})\n" + "="*50 + "\n"
+        str += f"Total qty: {self.get_qty()} {self.get_unit().get_standard_notation()}\n"
+        str += "Process mix:\n"
+        for process in self.get_waste_processes():
+            mix_percent = self.get_process_mix()[process.get_process_name()]
+            if isinstance(mix_percent, (float, int)):
+                mix_percent = f"{mix_percent * 100:.2%f}\%"
+            str += f"\t {process.get_process_name()} : {process.get_qty()} {process.get_unit().get_standard_notation()} ({mix_percent})\n"
+
+        return str
 
     # ================================
     # Constructors
@@ -61,12 +73,14 @@ class Waste(Master):
         waste_item = cls()
 
         waste_item.set_parent(parent)
-        waste_item.set_name('Waste' + database_item)
+        waste_item.set_name('Waste ' + database_item)
         waste_item.set_impact_database_entry(database_item)
         waste_item.set_qty(qty)
         waste_item.set_unit(unit)
 
         waste_item.set_waste_processess(process_mix)
+
+        waste_item.update_impacts()
 
         return waste_item
 
@@ -90,22 +104,27 @@ class Waste(Master):
 
             Parameters
             ----------
-            waste_processes : list of WasteProcess Obj.
-                List of processes the waste will be subjected to. These processes are in parallel.
+            process_mix : dict
+                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+                Percentage can be in the form of string with a % sign or decimal value. 
         """
-        
-        process_exist = True
+        # TODO: remove dependence on WASTE_PROCESS_DICT and use the impact directory
+        #       consider the possibility of having both C3 and C4 for the same mix component
         for waste_process_name in WASTE_PROCESS_DICT.keys():
+            process_exist = True
             mix_percent_input = process_mix[waste_process_name]
             if isinstance(mix_percent_input, float) or isinstance(mix_percent_input, int):
-                mix_percent = mix_percent_input
+                if isnan(mix_percent_input):
+                    process_exist = False
+                else:
+                    mix_percent = mix_percent_input
             elif isinstance(mix_percent_input, str):
                 if mix_percent_input in ['NA', 'N/A']:
                     process_exist = False
                 if mix_percent_input[-1] == "%":
                     mix_percent = float(mix_percent_input[:-1]) / 100.0
                 else:
-                    mix_percent = float(mix_percent_input)
+                    mix_percent = float(mix_percent_input)                
             else:
                 raise TypeError(f"mix percentages are of unrecognized type. Must be float, int, or string.")
             
@@ -118,8 +137,8 @@ class Waste(Master):
                                                      self.get_unit(), 
                                                      WASTE_PROCESS_DICT[waste_process_name])
                 
-                self.waste_processess.append(waste_process_obj)
-        
+                self.waste_processes.append(waste_process_obj)
+
         self.process_mix = process_mix
 
         return self
@@ -142,14 +161,13 @@ class Waste(Master):
 
             Returns
             -------
-            process_mix : dict
-                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-                Percentage can be in the form of string with a % sign or decimal value. 
+            waste_processes : list of WasteProcess Obj.
+                List of processes the waste will be subjected to. These processes are in parallel.
         """
 
-        return self.waste_processess
+        return self.waste_processes
     
-    def get_mix(self):
+    def get_process_mix(self):
         """ Get the mix of process the waste product is subjected to.
         
             Returns
@@ -164,203 +182,66 @@ class Waste(Master):
     # Methods
     # ================================
     def update_impacts(self):
-        
+        """ Update the transportation and processing impacts of the waste (C2-C4).
+        """
+
         if self.get_waste_processes():
-            pass # TODO write this method
 
-    def update_mix(self, mix):
+            impacts = self.get_impacts()
+            for key in impacts.keys():
+                impacts[key] = []
 
-        pass # TODO write method
+            for process in self.get_waste_processes():
+                process_impact = process.get_unit_impacts() * process.get_qty()
+                impacts[process.get_life_cycle_stage()].append(process_impact)
 
+            # TODO: updating transportation ("C2" impacts)
 
-class WasteProcess:
-
-
-    def __init__(self):
-        self.parent = None
-        self.process_name = None
-        self.qty = 0.0
-        self.unit = None
-        self.life_cycle_stage = None
-        self.unit_impacts = Impacts.from_parent(self)
-        self.location = None
-        self.transportation_link = None
-
-    # ================================
-    # Constructors
-    # ================================
-    @classmethod
-    def new(cls, parent, process_name, qty, unit, life_cycle_stage):
-
-        waste_process = cls()
-
-        waste_process.set_parent(parent)
-        waste_process.set_process_name(process_name)
-        waste_process.set_qty(qty)
-        waste_process.set_unit(unit)
-        waste_process.set_life_cycle_stage(life_cycle_stage)
-
-        #TODO: create transportaton links
-
-        return waste_process
-
-    # ================================
-    # Setters
-    # ================================    
-    def set_parent(self, parent):
-        """ Set parent Waste object of the Waste Processing.
-        
-            Parameters
-            ----------
-            parent : Waste Obj.
-                Waste object for which the waste processing belong.
-        """
-        self.parent = parent
-
-        return parent
-    
-    def set_process_name(self, name):
-        """ Set the process name.
-
-            Parameters
-            ----------
-            name : str
-                Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'
-
-        """
-        self.process_name = name
-
-        self.set_unit_impacts()
-        
         return self
 
-    def set_unit_impacts(self):
-
-        material = self.get_parent().get_impact_database_entry()
-        process = self.get_process_name()
-        database = self.get_parent().get_parent().get_building().get_eol_database()
-
-        database_entry = database.get_data_entry(material, process)
-        impacts = {key: database_entry[key] for key in IMPACT_CATEGOREIS}
-
-        self.get_unit_impacts().update_impact_qty(impacts)
-
-        
-    def set_qty(self, qty):
-
-        self.qty = qty
-
-        self.get_parent().update_impacts() # TODO: update impacts of the parent
-
-    def set_unit(self, unit):
-        """ Set unit of measurement for the waste amount processed.
+    def update_process_mix(self, process_mix, overide=False):
+        """ Update the waste process mix.
         
             Parameters
             ----------
-            unit : Unit Obj.
-                Unit of measurement.
+            process_mix : dict
+                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+                Percentage can be in the form of string with a % sign or decimal value.
+            overide : bool
+                If true, allows any process to be added, if not only processes created in default are allowed.            
+        
         """
 
-        if self.get_unit() is None:
-            self.unit = unit
-        else:
-            value_in = self.get_qty()
-            unit_in = self.get_unit()
+        # check mix sum to 100%
+        tol = 0.00001
+        for key, value in process_mix.values():
+            if isinstance(value, str):
+                if value[-1] == "%":
+                    process_mix[key] = float(value[:-1]) / 100
 
-            conversion_factor = unit_in.get_conversion_factor(unit)
+        sum =  sum(value for value in process_mix.values() if isinstance(value, (int, float)))
+        if not abs(sum - 1) < tol:
+            raise ValueError(f"Total of mix does not add upp to 100%. Value reached {sum*100}\%.")
 
-            if conversion_factor is not None:
-                self.unit = unit
-                self.set_qty(value_in * conversion_factor)
+        # check if unavailable proceses are in the mix.
+        if not overide:
+            available_processes = get_attribute_as_list(self.get_waste_processes(), 'process_name')
+            for key, value in process_mix.items():
+                if not (key in available_processes): # add only allowable processes.
+                    raise KeyError(f"Waste process of {key} is not available for {self.get_name()}")
+
+        for process in self.get_waste_processes():
+            if process.get_process_name() in process_mix.keys():
+                new_qty = self.get_qty() * process_mix[key]
             else:
-                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
+                new_qty = 0.0
+            process.set_qty(new_qty)
+
+        # TODO: update transportation links
+
+        self.update_impacts()
 
         return self
-
-    def set_life_cycle_stage(self, life_cycle_stage):
-        """ Set life cycle stage of the product/process.
-
-            Parameters
-            ----------
-            life_cycle_stage : str
-                Life cycle stage of the product/process.
-        """
-
-        if self.get_life_cycle_stage() is None:
-            self.life_cycle_stage = life_cycle_stage
-        else:
-            previous_stage = self.get_life_cycle_stage()
-            self.life_cycle_stage = life_cycle_stage
-            
-            impact_obj = self.get_impacts()
-            parent_impacts_list = self.get_parent().get_impacts()[previous_stage]
-            for impact in parent_impacts_list:
-                if impact == impact_obj:
-                    parent_impacts_list.remove(impact_obj)
-                    break
-
-            self.get_parent().get_impacts()[life_cycle_stage].append(impact_obj)
-
-        return self
-
-    def set_location(self, location):
-
-        self.location = location
         
-        # TODO: update the transportation
-
-    # ================================
-    # Getters
-    # ================================
-    def get_parent(self):
-        """ Get parent Waste object of the Waste Processing.
-        
-            Returns
-            -------
-            Waste Obj.
-                Waste object for which the waste processing belong.
-        """
-
-        return self.parent
-    
-    def get_unit(self):
-        """ Get unit of measurement for the waste amount processed.
-        
-            Returns
-            -------
-            unit : Unit Obj.
-                Unit of measurement.
-        """        
-
-        return self.unit
-    
-    def get_life_cycle_stage(self):
-        """ Retrieve the life cycle stage corresponding to the waste process.
-
-            Returns
-            -------
-            str
-                Corresponding life cycle stage.
-
-        """
-
-        return self.life_cycle_stage
-
-    def get_process_name(self):
-        """ Get the process name.
-
-            Returns
-            -------
-            str
-                Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'
-
-        """       
-        return self.process_name
-    
-    def get_unit_impacts(self):
-
-        return self.unit_impacts
-
-
 if __name__ == '__main__':
     pass

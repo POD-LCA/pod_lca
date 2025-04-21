@@ -20,8 +20,7 @@ eol_impact_database = EOLImpactsDatabase.new("EOL database")
 eol_impact_database.set_primary_key('Material')
 eol_impact_database.set_qty_key('Amount')
 eol_impact_database.set_process_key('Process')
-eol_impact_database.set_data(r'data/eol_impact_data_dummy.csv', impact_headers=['GWP-total (AR5) [kg CO2 eq]', 'AP [kg SO2 eq]','EP [kg N eq]', 'ODP [kg CFC-11 eq]','POCP [kg O3 eq]'], 
-                                                                additional_headers=['LCA Stage'])
+eol_impact_database.set_data(r'data/eol_impact_data_dummy.csv')
 
 my_building.set_eol_database(eol_impact_database)
 
@@ -34,10 +33,21 @@ deconstruction_map = {
                         'Wood':{'qty': 4.2, 'unit': KILOGRAM},
                         'Inert/ND': {'qty': 0.5, 'unit': KILOGRAM}
                      }
-my_timber_window.deconstruct(deconstruction_map) # TODO: code and test this
+my_timber_window.deconstruct(deconstruction_map)
+
+for waste in my_timber_window.get_waste_products():
+   print(waste)
+   for lc_stage, impacts_lst in waste.get_impacts().items():
+      if impacts_lst:
+         print(f"Life cycle stage: {lc_stage}")
+         for impact in impacts_lst:
+            print(impact) 
 
 # TODO: code and test transportation links
-# TODO: print outputs
-# TODO: test example
+# TODO: C1 impact dummies
 
-# print eol impacts
+# TODO: test example set
+#        1 - window (multiple material)
+#        2 - concrete (single material)
+#        3 - material name outside list - what is the default value to go to (both mix and impact)
+#        4 - setting a mix that is NA - Error or allow with warning

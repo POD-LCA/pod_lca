@@ -4,5 +4,5 @@ WASTE_PROCESS_DICT = {
                         'Recycle': 'C3', 
                         'Compost': 'C3',
                         'Incinerate': 'C4',
-                        'Landfill': 'D'
+                        'Landfill': 'C3'
                         }
