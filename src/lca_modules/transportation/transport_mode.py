@@ -39,7 +39,7 @@ class TransportMode:
         """
         Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
-        emission_data = pd.read_csv(r"data\transportation_dataset\Emission.csv")
+        emission_data = pd.read_csv(r"data\transportation_dataset\transportation_emission.csv")
 
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
                                        (emission_data["eff"] == self.efficiency) & (emission_data["feul"] == self.feul_type) ]
@@ -58,7 +58,6 @@ class TransportMode:
             self.impacts.update_impact_qty(impacts)
         else:
             print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
-
 
     def get_name (self):
         """
@@ -109,10 +108,4 @@ class TransportMode:
 
 if __name__ == '__main__':
 
-    from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
-
-    data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
-    project = ProjectLogisticManager(name="Building A", shipping_dest= None, data_folder=data_folder, shipping_org= None)
-
-    transport = TransportMode ("Truck", 1, project)
-    print (transport.get_cfs_mode()[0])
+    pass

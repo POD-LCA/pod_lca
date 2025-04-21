@@ -75,7 +75,7 @@ class Scenario:
         Returns:
         - int, the SCTG code.
         """
-        data_material = pd.read_csv(r"data\transportation_dataset\EC3 Category to CFS Group mapping.csv")
+        data_material = pd.read_csv(r"data\transportation_dataset\transportation_material.csv")
 
         try:
             if material not in data_material["material"].values:
@@ -147,7 +147,7 @@ class Scenario:
         return region
 
     def filter_faf(self, sctg=None, destination=None, origin=None, mode=None, domestic_mode=None, scenario=None):
-        faf = pd.read_csv(r"data\transportation_dataset\FAF561_cleaned.csv")
+        faf = pd.read_csv(r"data\transportation_dataset\transportation_faf.csv")
         cfs_state_code = pd.read_csv(CFS_DATA_PATH)
         failed = False
 
@@ -317,7 +317,7 @@ class Scenario:
         return faf, failed
 
     def filter_cfaf(self, sctg=None):
-        cfaf = pd.read_csv(r"data\transportation_dataset\cfaf_cleaned.csv")
+        cfaf = pd.read_csv(r"data\transportation_dataset\transportation_cfaf.csv")
         try:
             if sctg is not None:
                 cfaf = cfaf[cfaf["SCTG_2digits"] == sctg]
@@ -330,7 +330,7 @@ class Scenario:
 
     def filter_marine(self, destination=None, origin=None, scenario=None):
 
-        marine = pd.read_csv(r"data\transportation_dataset\marine_cleaned.csv")
+        marine = pd.read_csv(r"data\transportation_dataset\transportation_marine.csv")
         failed = False
         # Destination
         try:
@@ -364,7 +364,7 @@ class Scenario:
         return marine, failed
 
     def filter_cfs(self, sctg=None, destination=None, origin=None, mode=None):
-        cfs = pd.read_csv(r"data\transportation_dataset\cfs_2017_cleaned.csv")
+        cfs = pd.read_csv(r"data\transportation_dataset\transportation_cfs.csv")
         cfs_state_code = pd.read_csv(CFS_DATA_PATH)
         failed = False
 

@@ -80,6 +80,12 @@ def run_test_files(test_file_path, output_csv_path):
 
 
 if __name__ == "__main__":
-    test_file_path = r"C:\Users\mhtaba\Desktop\transportation_test_file.csv"
-    output_csv_path = r"C:\Users\mhtaba\Desktop\transportation_result_file.csv"
+
+    """"
+    This script is designed to run a series of tests.
+    the input files should be in the form of a CSV file.
+    """
+    
+    test_file_path = r"tests\transportation_QC_4nd.csv"
+    output_csv_path = r"tests\transportation_QC_4nd_result.csv"
     run_test_files(test_file_path, output_csv_path)
