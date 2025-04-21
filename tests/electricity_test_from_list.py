@@ -14,8 +14,8 @@ __version__ = "0.1.0"
 
 # This script compares the electricity impact values from the Excel tool (given in aa CSV file) with the values calculated using the Python Framework.
 
-test_data = "tests\\electricity_test_list.csv"
-output_file = "tests\\electricity_test_report.csv"
+test_data = "tests\\electricity_test_list_2.csv"
+output_file = "tests\\electricity_test_report_2.csv"
 test_dict = CSV_Importer.csv_to_dict(test_data, 'test name')
 
 my_manufacturing_project = Project()
@@ -36,9 +36,10 @@ for test in tqdm(test_dict):
 
     electricity = model_one.add_electricity(name="Electricity", stage="A3", qty=qty, unit=UNITS_MAP[test_dict[test]['unit']])
     electricity.set_year(year)
-    electricity.set_spatial_resolution(test_dict[test]['spatial resolution'])
     electricity.set_scenario(test_dict[test]['cambium_scenario'])
-    output_dict[test] = { 'Zip Code': my_factory_location.get_zip(), 
+    electricity.set_spatial_resolution(test_dict[test]['spatial resolution'])
+    output_dict[test] = { 'test name':test,
+                          'Zip Code': my_factory_location.get_zip(), 
                           'spatial resolution': test_dict[test]['spatial resolution'], 
                           'year': year, 
                           'cambium_scenario': test_dict[test]['cambium_scenario'],

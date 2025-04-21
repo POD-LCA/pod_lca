@@ -227,6 +227,7 @@ class ElectricitySupply:
 
         energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_impacts=False)
+        self.set_electricity_producers(self.get_spatial_resolution())
 
         self.update_impacts()
 
@@ -260,6 +261,7 @@ class ElectricitySupply:
 
         energy_mix = temporal_data.get_mix(self.get_year(), CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), scenario)
         self.set_consumption_mix(energy_mix, update_impacts=False)
+        self.set_electricity_producers(self.get_spatial_resolution())
 
         self.update_impacts()
 
@@ -304,9 +306,6 @@ class ElectricitySupply:
             else:
                 impact_data = df[df['Region'].isin(region)]
                 region =self.pick_region(region, impact_data)
-
-            # if self.get_location().get_zip() in ['46779', '39481', '14013', '49006', '27556']:
-            #     print(self.get_location().get_zip(), region)
             
             if region in df['Region'].values:
                 impact_data = df[df['Region'] == region].drop('Region', axis='columns')
@@ -442,16 +441,16 @@ class ElectricitySupply:
         consumption_mix = self.get_consumption_mix()
         
         impact_dict = {}
-        for item in regions:
-            impact_dict[item] = 0
+        for region in regions:
+            impact_dict[region] = 0
             for technology, percentage in consumption_mix.items():
-                impact = impact_data[(impact_data['Region'] == item) & (impact_data['Technology Type'] == technology)][impact_category].values[0]
-                impact_dict[item] += impact * percentage
+                impact = impact_data[(impact_data['Region'] == region) & (impact_data['Technology Type'] == technology)][impact_category].values[0]
+                impact_dict[region] += impact * percentage
 
         region_selected = max(impact_dict, key=impact_dict.get)
 
         print(f"Of {regions} considered, {region_selected} is picked as the most concervative, considering {impact_category} impact.")
-        
+
         return region_selected
 
 
@@ -522,7 +521,6 @@ class ElectricitySupply:
         weights = np_round((electricity_loads / sum(electricity_loads)) * 100)
 
         return impact_distribution, weights  
-
 
 if __name__ == '__main__':
     pass
