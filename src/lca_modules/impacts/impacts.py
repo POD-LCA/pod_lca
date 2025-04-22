@@ -24,7 +24,11 @@ class Impacts:
         self.parent = None
 
     def __str__(self):
-        str = "="*50 + "\n" + f"Impacts of {self.parent.get_name()}\n" + "="*50 + "\n"
+        if self.get_parent() is None:
+            parent_name = '<None>'
+        else:
+            parent_name = self.get_parent().get_name()
+        str = "="*50 + "\n" + f"Impacts of {parent_name}\n" + "="*50 + "\n"
         for impact, unit in IMPACT_CATEGOREIS.items():
             str += f"{impact:<20} {getattr(self, impact):<5} {unit:<20}\n"
 

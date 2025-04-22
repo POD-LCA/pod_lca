@@ -31,6 +31,10 @@ class WasteProcess:
             Location where the process occurs.
         transporation_link : Link Obj.
             Transportation of the waste object from parent's location to process location.
+        linked_to : WasteProcess Obj.
+            A follow up process. e.g, Recycle processing (C3) and Reuse (D).
+        linked_from : WasteProcess Obj.
+            A previous end-of-life process. e.g, Recycle processing (C3) and Reuse (D).
     """
     def __init__(self):
         self.parent = None
@@ -41,6 +45,9 @@ class WasteProcess:
         self.unit_impacts = Impacts.from_parent(self)
         self.location = None
         self.transportation_link = None
+        self.linked_to = None
+        self.linked_from = None
+
 
     def __str__(self):
         return f"Waste Process(waste product={self.get_parent().get_name()}, name={self.get_process_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -69,11 +76,12 @@ class WasteProcess:
         waste_process = cls()
 
         waste_process.set_parent(parent)
+        waste_process.set_life_cycle_stage(life_cycle_stage)
         waste_process.set_process_name(process_name)
         waste_process.set_name()
         waste_process.set_qty(qty)
         waste_process.set_unit(unit)
-        waste_process.set_life_cycle_stage(life_cycle_stage)
+        
 
         #TODO: create transportaton links/ set and get objects/ setting location as well
 
@@ -137,6 +145,13 @@ class WasteProcess:
 
         self.qty = qty
 
+        if not (self.get_linked_process() is None):
+            if self.get_unit() == self.get_linked_process().get_unit():
+                self.get_linked_process().set_qty(qty)
+            else:
+                self.get_linked_process().set_unit(self.get_unit())
+                self.get_linked_process().set_qty(qty)
+
     def set_unit(self, unit):
         """ Set unit of measurement for the waste amount processed.
         
@@ -195,10 +210,13 @@ class WasteProcess:
 
         material = self.get_parent().get_impact_database_entry()
         process = self.get_process_name()
+        life_cycle_stage = self.get_life_cycle_stage()
         database = self.get_parent().get_parent().get_building().get_eol_database()
 
-        database_entry = database.get_data_entry(material, process)
+        database_entry = database.get_data_entry(material, process, life_cycle_stage)
         impacts = {key: database_entry[key] for key in IMPACT_CATEGOREIS}
+
+        # TODO: check linked processess
 
         # TODO: check units are consistent
 
@@ -216,6 +234,20 @@ class WasteProcess:
         self.location = location
         
         # TODO: update the transportation
+
+    def set_linked_process(self, process):
+        """ Set a linked process to the current process.
+
+            Parameters
+            ----------
+            process : WasteProcess Obj.
+                Secondary process following the current process.
+        """
+
+        self.linked_to = process
+        process.linked_from = self
+
+        return self
 
     # ================================
     # Getters
@@ -291,5 +323,23 @@ class WasteProcess:
         """
         return self.unit_impacts
 
+    def get_linked_process(self, to=True):
+        """ Get the linked process to the current process.
+
+            Parameters
+            ----------
+            to : bool
+                If True, return the process linked to, else linked from.
+
+            Returns
+            -------
+            WasteProcess Obj.
+                Secondary process following the current process.
+        """
+        if to:
+            return self.linked_to
+        else:
+            return self.linked_from
+    
 if __name__ == '__main__':
     pass    

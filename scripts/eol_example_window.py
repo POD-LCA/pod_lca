@@ -3,6 +3,7 @@ from lca_modules.building.components import BuildingComponent
 from lca_modules.location.location import Location
 from lca_modules.impacts.impacts_database import EOLImpactsDatabase
 from utilities.units.common_units import KILOGRAM
+from lca_modules.impacts.impacts import Impacts
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -20,7 +21,8 @@ eol_impact_database = EOLImpactsDatabase.new("EOL database")
 eol_impact_database.set_primary_key('Material')
 eol_impact_database.set_qty_key('Amount')
 eol_impact_database.set_process_key('Process')
-eol_impact_database.set_data(r'data/eol_impact_data_dummy.csv')
+eol_impact_database.set_life_cycle_stage_key('LCA Stage')
+eol_impact_database.set_data(r'data/impacts_podlca_eol-impacts-dummy.csv')
 
 my_building.set_eol_database(eol_impact_database)
 
@@ -35,19 +37,34 @@ deconstruction_map = {
                      }
 my_timber_window.deconstruct(deconstruction_map)
 
+# impacts by material and life cycle stage
+# for waste in my_timber_window.get_waste_products():
+#    print(waste)
+#    for lc_stage, impacts_lst in waste.get_impacts().items():
+#       if impacts_lst:
+#          print(f"Life cycle stage: {lc_stage}")
+#          for impact in impacts_lst:
+#             print(impact) 
+
+# impacts by cycle stage
+impact_dict = {'C3':Impacts.from_parent(my_timber_window), 
+               'C4':Impacts.from_parent(my_timber_window), 
+               'D':Impacts.from_parent(my_timber_window)}
 for waste in my_timber_window.get_waste_products():
-   print(waste)
    for lc_stage, impacts_lst in waste.get_impacts().items():
       if impacts_lst:
-         print(f"Life cycle stage: {lc_stage}")
          for impact in impacts_lst:
-            print(impact) 
+            impact_dict[lc_stage] += impact
+
+for lc_stage, impact in impact_dict.items():
+   print(f"Life cycle stage: {lc_stage}")
+   print(impact)       
+
+
 
 # TODO: code and test transportation links
 # TODO: C1 impact dummies
 
 # TODO: test example set
-#        1 - window (multiple material)
-#        2 - concrete (single material)
 #        3 - material name outside list - what is the default value to go to (both mix and impact)
 #        4 - setting a mix that is NA - Error or allow with warning

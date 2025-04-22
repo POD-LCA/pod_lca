@@ -20,13 +20,19 @@ class ImpactsDatabase:
     ----------
     name : str
         Name of the database.
+    primary_key : str
+        Primary key organizing the database.
+    unit_key : str
+        Data header corresponding to the units of the database entries.
+    qty_key : str
+        Data header corresponding to the quantity of the database entries.
     data : pandas DataFrame Obj.
         Impact data, with following headings.
-            'Flow' (str) : name of impact
-            'Declared Unit' (str) : impacts per this unit of measure
+            primary_key (str) : name of impact
+            qty_key (str) : impacts per this unit of measure
+            unit_key (str) : the unit of measure
             impact catergory (float) : quantity of impact
     """
-
     def __init__(self):
         self.name = None
         self.primary_key = 'Flow'
@@ -63,7 +69,7 @@ class ImpactsDatabase:
         return new_db
 
     # =================================
-    # Getters and Setters
+    # Setters
     # =================================
     def set_name(self, name):
         """ Set the name of the database.
@@ -86,11 +92,11 @@ class ImpactsDatabase:
         file_path : str
             Location of the CSV file
         impact_headers : list of str
-            The headers of the CSV file as they would be mapped to the database.
+            The headers of the CSV file as they would be mapped to the impacts in the database.
         additional_headers : list of str
             Headers of the columns to be imported, other than name, unit, and impact categories.
         multipliers : list of float
-            Values of each column of the CSV will be multiplied by these values.
+            Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.
         """
 
         if impact_headers == None:
@@ -151,23 +157,44 @@ class ImpactsDatabase:
         return self.data
 
     def set_primary_key(self, key):
-
+        """ Set primary key of the database.
+        
+            Parameters
+            ----------
+            key : str
+                Primary key organizing the database.
+        """
         self.primary_key = key
 
         return self
     
     def set_unit_key(self, key):
-
+        """ Set unit key of the database.
+        
+            Parameters
+            ----------
+            key : str
+                Data header corresponding to the units of the database entries.
+        """
         self.unit_key = key
 
         return self
     
     def set_qty_key(self, key):
-
+        """ Set quantity key of the database.
+        
+            Parameters
+            ----------
+            key : str
+                Data header corresponding to the quantity of the database entries.
+        """
         self.qty_key = key
 
         return self
-        
+
+    # =================================
+    # Getters
+    # =================================    
     def get_name(self):
         """ Get the name of the database.
         
@@ -212,41 +239,68 @@ class ImpactsDatabase:
                 raise ImportError("Multiple matching entries exist...")
 
     def get_primary_key(self):
-
+        """ Get primary key of the database.
+        
+            Returns
+            -------
+            str
+                Primary key organizing the database.
+        """
         return self.primary_key
     
     def get_unit_key(self):
-
+        """ Get unit key of the database.
+        
+            Returns
+            -------
+            str
+                Data header corresponding to the units of the database entries.
+        """
         return self.unit_key
     
     def get_qty_key(self):
-
+        """ Get quantity key of the database.
+        
+            Returns
+            -------
+            str
+                Data header corresponding to the quantity of the database entries.
+        """
         return self.qty_key
     
 class EOLImpactsDatabase(ImpactsDatabase):
+    """ Database manager to handle End-of-Life impacts.
 
+        Attributes
+        ----------
+        process_key : str
+            Data header corresponding to the end-of-life process corresponding to the database entry.
+        life_cycle_stage_key : str
+            Data header corresponding to the life cycle stage corresponding to the database entry.
+    """
     def __init__(self):
         super().__init__()
         self.process_key = 'Process'
+        self.life_cycle_stage_key = 'Life Cycle Stage'
 
     def set_data(self, file_path, impact_headers=None, additional_headers=None, multipliers=None):
         """ Set the database data.
         
-        Parameters
-        ----------
-        file_path : str
-            Location of the CSV file
-        impact_headers : list of str
-            The headers of the CSV file as they would be mapped to the database.
-        additional_headers : list of str
-            Headers of the columns to be imported, other than name, unit, and impact categories.
-        multipliers : list of float
-            Values of each column of the CSV will be multiplied by these values.
+            Parameters
+            ----------
+            file_path : str
+                Location of the CSV file
+            impact_headers : list of str
+                The headers of the CSV file as they would be mapped to the database.
+            additional_headers : list of str
+                Headers of the columns to be imported, other than name, unit, and impact categories.
+            multipliers : list of float
+                Values of each column of the CSV will be multiplied by these values.
         """
 
         if impact_headers == None:
             impact_headers = list(IMPACT_CATEGOREIS.keys())
-        data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key()] +  impact_headers
+        data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key(), self.get_life_cycle_stage_key()] +  impact_headers
         if not (additional_headers ==  None):
             data_headers = data_headers + additional_headers
         
@@ -255,7 +309,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         if multipliers == None:
             multipliers = [1.0] * len(impact_headers)
 
-        multipliers = [None] * 4 + multipliers + [None] * (no_headers - 4 - len(multipliers))
+        multipliers = [None] * 5 + multipliers + [None] * (no_headers - 5 - len(multipliers))
 
         data = CSV_Importer.import_as_pandas(file_path, data_headers, multipliers)
 
@@ -269,7 +323,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
 
         return self
 
-    def set_data_entry(self, flow, qty, unit, process, impacts, add_data=None):
+    def set_data_entry(self, flow, qty, unit, process, lc_stage, impacts, add_data=None):
         """ Add a custom entry the database.
 
             Parameters
@@ -282,6 +336,8 @@ class EOLImpactsDatabase(ImpactsDatabase):
                 Unit of measurement for which the impacts are applied.
             process : str
                 End-of-Life process.
+            lc_stage : str
+                Life cycle stage.
             impacts : dict
                 Dictionary of impacts {impact catergory (str): impact (float)}
             add_data : dict
@@ -294,6 +350,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         tmp_data[self.get_qty_key()] = qty
         tmp_data[self.get_unit_key()] = unit
         tmp_data[self.get_process_key()] = process
+        tmp_data[self.get_life_cycle_stage_key()] = lc_stage
 
         if list(IMPACT_CATEGOREIS.keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key()] == list(tmp_data.keys()) :
             self.data.loc[len(self.data)] = tmp_data
@@ -305,12 +362,30 @@ class EOLImpactsDatabase(ImpactsDatabase):
         return self.data
 
     def set_process_key(self, key):
-
+        """ Set process key of the database.
+        
+            Parameters
+            ----------
+            key : str
+                Data header corresponding to the end-of-life process corresponding to the database entry.
+        """
         self.process_key = key
 
         return self
+    
+    def set_life_cycle_stage_key(self, key):
+        """ Set life cycle stage key of the database.
+        
+            Parameters
+            ----------
+            key : str
+                Data header corresponding to the life cycle stage corresponding to the database entry.
+        """
+        self.life_cycle_stage_key = key
 
-    def get_data_entry(self, material_name, process_name):
+        return self
+
+    def get_data_entry(self, material_name, process_name, life_cycle_stage):
         """ Retrieve impacts for given flow.
         
             Parameters
@@ -319,6 +394,8 @@ class EOLImpactsDatabase(ImpactsDatabase):
                 Name of the material
             process_name: str
                 End-of-Life process name.
+            life_cycle_stage : str
+                Life cycle stage.
             
             Returns
             -------
@@ -327,15 +404,33 @@ class EOLImpactsDatabase(ImpactsDatabase):
         """
 
         if self.data is not None:
-            row_id = self.data.index[(self.data[self.get_primary_key()] == material_name) & (self.data[self.get_process_key()] == process_name)]
+            row_id = self.data.index[(self.data[self.get_primary_key()] == material_name) & (self.data[self.get_process_key()] == process_name) & (self.data[self.get_life_cycle_stage_key()] == life_cycle_stage)]
             if len(row_id) == 1:
                 return self.data.iloc[row_id[0]]
+            elif len(row_id) == 0:
+                raise ImportError(f"Data for {material_name} {process_name} process ({life_cycle_stage}) not in database.")
             else:
                 raise ImportError("Multiple matching entries exist...")
             
     def get_process_key(self):
-
+        """ Get process key of the database.
+        
+            Returns
+            -------
+            str
+                Data header corresponding to the end-of-life process corresponding to the database entry.
+        """
         return self.process_key
+    
+    def get_life_cycle_stage_key(self):
+        """ Get life cycle stage key of the database.
+        
+            Returns
+            -------
+            str
+                Data header corresponding to the life cycle stage corresponding to the database entry.
+        """
+        return self.life_cycle_stage_key
 
 if __name__ == '__main__':
     pass
