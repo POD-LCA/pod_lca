@@ -77,12 +77,11 @@ class WasteProcess:
 
         waste_process.set_parent(parent)
         waste_process.set_life_cycle_stage(life_cycle_stage)
+        waste_process.set_unit(unit)
         waste_process.set_process_name(process_name)
         waste_process.set_name()
         waste_process.set_qty(qty)
-        waste_process.set_unit(unit)
         
-
         #TODO: create transportaton links/ set and get objects/ setting location as well
 
         return waste_process
@@ -172,7 +171,7 @@ class WasteProcess:
             if conversion_factor is not None:
                 self.unit = unit
                 self.set_qty(value_in * conversion_factor)
-                # TODO: update unit impacts
+                self.set_unit_impacts()
             else:
                 raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 
@@ -211,14 +210,15 @@ class WasteProcess:
         material = self.get_parent().get_impact_database_entry()
         process = self.get_process_name()
         life_cycle_stage = self.get_life_cycle_stage()
+        unit = self.get_unit()
         database = self.get_parent().get_parent().get_building().get_eol_database()
 
         database_entry = database.get_data_entry(material, process, life_cycle_stage)
-        impacts = {key: database_entry[key] for key in IMPACT_CATEGOREIS}
 
-        # TODO: check linked processess
+        declared_unit = database_entry[database.get_unit_key()]
+        conversion_factor = declared_unit.get_conversion_factor(unit)
 
-        # TODO: check units are consistent
+        impacts = {key: database_entry[key]*conversion_factor for key in IMPACT_CATEGOREIS}
 
         self.get_unit_impacts().update_impact_qty(impacts)
 
