@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Project:
     """
-    Project class which maintains the process models, impact database, and calculator.
+    Project class which maintains the process models at a link to the impact database.
 
     Attributes
     ----------
@@ -23,16 +23,15 @@ class Project:
         All models created/compared in the current project.
     database : Database Obj.
         Maintains input impact data.
-    calculator : Calculator Obj.
-        Carries out varies calculations to generate output data.
+    location : Location Obj.
+        Location of the project.
     """
 
     def __init__(self):
         self.name = None
         self.database = None
         self.models = {}
-        self.HotSpotAnalysis = None
-        self.DataQualityAnalysis = None
+        self.location = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
@@ -95,12 +94,25 @@ class Project:
 
         return self
     
+    def set_location(self, location):
+        """ Set the location of the project.
+        
+            Parameters
+            ----------
+            location : Location Obj.
+                Location of the project.
+        """
+
+        self.location = location
+
+        return self
+
     def get_name(self):
         """ Retrieve the name of the project.
         
         Returns
         -------
-        str
+        str.
             Name of the project.
         """
 
@@ -109,13 +121,24 @@ class Project:
     def get_database(self):
         """ Get the impacts database of the project.
         
-        Retruns
+        Returns
         -------
         DatabaseManager Obj.
             Impact database of the project.
         """
 
         return self.database
+
+    def get_location(self):
+        """ Retrieve the location of the project.
+        
+            Returns
+            -------
+            Location Obj.
+                Location of the project.
+        """
+
+        return self.location
     
     # ================================
     # Model Methods
@@ -147,7 +170,7 @@ class Project:
         model_name : str
             Name of the model to be retrieved.
 
-        Retruns
+        Returns
         -------
         Model Obj.
             Current working model.
@@ -165,7 +188,7 @@ class Project:
     def get_model_names(self):
         """ Get all names of all the models in the project.
 
-        Retruns
+        Returns
         -------
         list of str.
             List of model names.
@@ -217,8 +240,10 @@ class Project:
 
         Raises
         ------
-            FileNotFoundError : File not found.
-            PermissionError : Permission denied.
+        FileNotFoundError
+            File not found.
+        PermissionError
+            Permission denied to access file.
         """
 
         try:

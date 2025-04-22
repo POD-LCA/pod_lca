@@ -1,0 +1,18 @@
+{
+    "battery": "battery_MWh",        
+    "biomass": "biomass_MWh",
+    "canada": "canada_MWh",
+    "coal": "coal_MWh",
+    "csp": "csp_MWh",
+    "distpv": "distpv_MWh",
+    "gas-cc": "gas-cc_MWh",
+    "gas-ct": "gas-ct_MWh",
+    "geothermal": "geothermal_MWh",
+    "hydro": "hydro_MWh",
+    "nuclear": "nuclear_MWh",
+    "o-g-s": "o-g-s_MWh",
+    "phs": "phs_MWh",
+    "upv": "upv_MWh",
+    "wind-ons": "wind-ons_MWh",
+    "wind-ofs": "wind-ofs_MWh"
+}
