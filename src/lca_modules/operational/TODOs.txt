@@ -1,2 +1,0 @@
- - Check why infrared transmittance in glazing material is not getting read from IDF or ending up in actual material
- - Add ground temperatures?
