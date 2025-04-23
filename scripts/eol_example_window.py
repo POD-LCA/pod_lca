@@ -33,7 +33,7 @@ my_building.add_component(my_timber_window)
 # deconstruct window
 deconstruction_map = {
                         'Wood':{'qty': 4.2, 'unit': KILOGRAM},
-                        'Inert/ND': {'qty': 0.5, 'unit': KILOGRAM}
+                        'Glass': {'qty': 0.5, 'unit': KILOGRAM, 'bio_based': False}
                      }
 my_timber_window.deconstruct(deconstruction_map)
 

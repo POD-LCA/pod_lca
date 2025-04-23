@@ -6,3 +6,7 @@ WASTE_PROCESS_DICT = {
                         'Incinerate': 'C4',
                         'Landfill': 'C4'
                         }
+
+EOL_DEFAULT_KEY = 'DEFAULT'
+EOL_DEFAUL_BIO_BASED = False
+

@@ -1,6 +1,7 @@
 from lca_modules.eol.waste import Waste
 from lca_modules.eol import EOL_DEFAULT_MIXES
 from utilities.data_imports.csv import CSV_Importer
+from lca_modules.eol import EOL_DEFAULT_KEY
 
 import gc
 
@@ -182,12 +183,15 @@ class BuildingComponent:
         for key, value in deconstruction_map.items():
             if eol_mix_data['Material'].isin([key]).any():
                 eol_mix = eol_mix_data[eol_mix_data['Material']== key].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
-            elif  eol_mix_data['Material'].isin(['DEFAULT']).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== 'DEFAULT'].drop(labels='Material', axis=1).to_dict(orient='records')[0]
+            elif  eol_mix_data['Material'].isin([EOL_DEFAULT_KEY]).any():
+                eol_mix = eol_mix_data[eol_mix_data['Material']== EOL_DEFAULT_KEY].drop(labels='Material', axis=1).to_dict(orient='records')[0]
             else:
                 print("A mix doesnt exist") # TODO: test this sequence / shall a hardcode default set here
 
-            waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix)
+            if 'bio_based' in value.keys():
+                waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix, bio_based=value['bio_based'])
+            else:
+                waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix)
             self.deconstructed_to.append(waste_obj)
 
         # delete data
