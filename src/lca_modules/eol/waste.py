@@ -178,15 +178,19 @@ class Waste(Master):
                     
                     if linked_process:
                         for lc_stage in WASTE_PROCESS_DICT[waste_process_name][1:]:
-                            linked_from = waste_process_obj
-                            waste_process_obj = WasteProcess.new(self, 
-                                                                waste_process_name, 
-                                                                process_qty, 
-                                                                self.get_unit(), 
-                                                                lc_stage)
-                            linked_from.set_linked_process(waste_process_obj)
+                            try:
+                                linked_from = waste_process_obj
+                                waste_process_obj = WasteProcess.new(self, 
+                                                                    waste_process_name, 
+                                                                    process_qty, 
+                                                                    self.get_unit(), 
+                                                                    lc_stage)
+                                linked_from.set_linked_process(waste_process_obj)
 
-                            self.waste_processes.append(waste_process_obj)
+                                self.waste_processes.append(waste_process_obj)
+                            except ImportError as e:
+                                print(e)
+
             
             self.process_mix = process_mix
 
