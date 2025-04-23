@@ -1,5 +1,6 @@
 
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.inventories import CarbonStorage, Emissions
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 __author__ = ["POD/LCA Team"]
@@ -45,6 +46,8 @@ class Master:
         self.name = None
         self.life_cycle_stage = None
         self.impacts = Impacts.from_parent(self)
+        self.carbon_stroage = CarbonStorage.from_parent(self)
+        self.emissions = Emissions.from_parent(self)
         self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
