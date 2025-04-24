@@ -20,7 +20,7 @@ class CSV_Importer:
             file_path : str
                 Location of the CSV file
             headers : list of str
-                The headers of the CSV file as they would be mapped to the database.
+                The headers of the CSV file as they would be mapped to the dataset.
             multipliers : list of float
                 Values of each column of the CSV will be multiplied by these values.
         """

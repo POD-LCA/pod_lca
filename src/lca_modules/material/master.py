@@ -155,7 +155,7 @@ class Master:
             self.life_cycle_stage = stage
         else:
             previous_stage = self.get_life_cycle_stage()
-            self.set_life_cycle_stage(stage)
+            self.life_cycle_stage = stage
             
             impact_obj = self.get_impacts()
             parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage]

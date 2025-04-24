@@ -15,7 +15,7 @@ __version__ = "0.1.0"
 
 project = Project()
 
-concrete_yard = Location.from_str("98126, seattle")
+concrete_yard = Location.from_str("98126, Seattle")
 project.set_location(concrete_yard)
 
 custom_impact_database = ImpactsDatabase.new("My database")

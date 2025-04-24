@@ -31,7 +31,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         self.state("zoomed")
         self.database_file_path = r'data\Impact_data.csv'
         self.documentation_file_path = r'docs\user_manuals\material_screening_tool_user_manual.pdf'
-        data_headers = ['Flow', 'Unit'] + list(GUIInputManager.get_impact_categories().keys())
+        impact_headers = list(GUIInputManager.get_impact_categories().keys())
         self.save_path = None
 
         # canvas properties
@@ -104,7 +104,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         self.set_protocols()
 
 
-        GUIInputManager.set_database(self.database_file_path, self.project, data_headers)
+        GUIInputManager.set_database(self.database_file_path, self.project, impact_headers)
         
     # =================================
     # GUI COMPONENTS
