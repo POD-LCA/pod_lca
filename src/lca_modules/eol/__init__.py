@@ -8,5 +8,4 @@ WASTE_PROCESS_DICT = {
                         }
 
 EOL_DEFAULT_KEY = 'DEFAULT'
-EOL_DEFAUL_BIO_BASED = False
-
+EOL_DEFAULT_BIO_BASED = False
