@@ -449,7 +449,7 @@ class ElectricitySupply:
 
         region_selected = max(impact_dict, key=impact_dict.get)
 
-        print(f"Of {regions} considered, {region_selected} is picked as the most concervative, considering {impact_category} impact.")
+        print(f"Of {regions} considered, {region_selected} is picked as the most conservative, considering {impact_category} impact.")
 
         return region_selected
 
