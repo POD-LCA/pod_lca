@@ -96,7 +96,7 @@ class CambiumData:
 
         return cambium_data
 
-    def get_mix(self, year, technologies, scenario="MidCase"):
+    def get_mix(self, year, technologies, scenario="MidCase", interpolate="percentages"):
         """ Get technology mix of the electricity consumption by year.
 
             Notes
@@ -111,6 +111,8 @@ class CambiumData:
                 List of electricity generation technoclogies to be classified by.
             scenario : str
                 Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+            interpolate : str
+                Linear interpolation of electricity consumption between two years by 'values' or 'percentages'.
 
             Returns
             -------
@@ -136,18 +138,25 @@ class CambiumData:
 
         if len(years) == 2: # interpolate data
             weight = (year - mix_set.iloc[0]['t']) / (mix_set.iloc[1]['t'] - mix_set.iloc[0]['t'])
-            # TODO: pick option A or B
-            # new_row = mix_set.iloc[0] + weight * (mix_set.iloc[1] - mix_set.iloc[0]) # option A
 
-            percentages_0 = mix_set.iloc[0].div(mix_set.iloc[0].drop('t', axis=0).sum()) # option B
-            percentages_1 = mix_set.iloc[1].div(mix_set.iloc[1].drop('t', axis=0).sum()) # option B
-            new_row = percentages_0 + weight * (percentages_1 - percentages_0) # option B
+            if interpolate == "percentages":
+                percentages_0 = mix_set.iloc[0].div(mix_set.iloc[0].drop('t', axis=0).sum())
+                percentages_1 = mix_set.iloc[1].div(mix_set.iloc[1].drop('t', axis=0).sum())
+                new_row = percentages_0 + weight * (percentages_1 - percentages_0)
+            elif interpolate == "values":
+                new_row = mix_set.iloc[0] + weight * (mix_set.iloc[1] - mix_set.iloc[0])
+            else:
+                raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
             
             new_row['t'] = year
             mix =  new_row
         else:
-            mix = mix_set.iloc[0].div(mix_set.iloc[0].drop('t', axis=0).sum()).squeeze() # option B
-            # mix = mix_set.squeeze() # option A
+            if interpolate == "percentages":
+                mix = mix_set.iloc[0].div(mix_set.iloc[0].drop('t', axis=0).sum()).squeeze()
+            elif interpolate == "values":
+                mix = mix_set.squeeze()
+            else:
+                raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
 
         # map
         technology_map = CSV_Importer.json_to_dict(CAMBIUM_TECHNOLOGY_MAP)
@@ -158,12 +167,15 @@ class CambiumData:
 
             mix_dict[technology_mapped] += value
 
-        return mix_dict # option B
-        # total = sum(mix_dict.values()) # option A
-
-        # return  {k: (v / total) for k, v in mix_dict.items()} # option A
+        if interpolate == "percentages":
+            return mix_dict
+        elif interpolate == "values":
+            total = sum(mix_dict.values())
+            return  {k: (v / total) for k, v in mix_dict.items()}
+        else:
+            raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
     
-    def get_load(self, year, technologies, scenario="MidCase"):
+    def get_load(self, year, scenario="MidCase"):
         """ Get electricity load of the electricity consumption by year.
         
             
