@@ -24,7 +24,7 @@ project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impact_data.csv')
-custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
+custom_impact_database.set_data_entry("Electricity_New", 1.0, KILO * WATT_HOUR, 
                                       {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
 project.set_database(custom_impact_database)
 
@@ -36,7 +36,7 @@ prop_glycol = CLT_model.add_product(name="Propylene glycol", stage="A1", qty=2.7
 dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None)
 dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
 dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
-electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR, impacts_from="Electricity_NWPP(eGrid)_[USLCI]")
+electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR)
 natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]")
 
 lumber_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=302, unit=KILOMETER, impacts_from="Transportation_combination_truck_short-haul_diesel_NW_[USLCI]")
