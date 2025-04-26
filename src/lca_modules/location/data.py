@@ -1,9 +1,4 @@
-CFS_DATA_PATH = "data\\transportation_dataset\\cfs_area_code.csv" 
-FAF_DOMESTIC_REGION = "data\\transportation_dataset\\faf_domestic_region.json"
-FERC_ZIPCODE_MAP_PATH = "data\\FERC_zip_mapping.csv"
-FERC_BA_ZIPCODE_MAP_PATH = "data\\FERC_BA_zip_mapping.csv"
-GEA_ZIPCODE_MAP_PATH = "data\\GEA_zip_mapping.csv"
-REEDS_BA_ZIPCODE_MAP_PATH = "data\\REEDS_BA_zip_mapping.csv"
+
 
 FAF_DATA = {"Canada": 801, 
             "Mexico": 802, 

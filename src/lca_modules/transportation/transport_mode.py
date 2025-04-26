@@ -1,5 +1,5 @@
 from lca_modules.impacts.impacts import Impacts
-import pandas as pd
+from utilities.data_imports.data_importer import Data_Importer
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -39,7 +39,8 @@ class TransportMode:
         """
         Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
-        emission_data = pd.read_csv(r"data\transportation_dataset\transportation_emission.csv")
+
+        emission_data = Data_Importer.import_as_pandas(r"data\transportation_podlca_emission.csv")
 
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
                                        (emission_data["eff"] == self.efficiency) & (emission_data["feul"] == self.feul_type) ]

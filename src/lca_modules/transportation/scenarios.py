@@ -1,7 +1,7 @@
-import pandas as pd
+from utilities.data_imports.data_importer import Data_Importer
 from lca_modules.transportation.transport_mode import TransportMode, cfs_mapping
 from geopy.distance import geodesic
-from lca_modules.location.data import CFS_DATA_PATH, FAF_city_representation, FAF_DOMESTIC_REGION
+from lca_modules.location import CFS_DATA_PATH, FAF_CITY_REPRESENTATION, FAF_DOMESTIC_REGION
 from lca_modules.location.location import Location
 import json
 
@@ -75,8 +75,7 @@ class Scenario:
         Returns:
         - int, the SCTG code.
         """
-        data_material = pd.read_csv(r"data\transportation_dataset\transportation_material.csv")
-
+        data_material = Data_Importer.import_as_pandas(r"data\transportation_podlca_material.csv")
         try:
             if material not in data_material["material"].values:
                 raise ValueError("material not found in the dataset")
@@ -101,10 +100,8 @@ class Scenario:
         Returns:
         - int, the CFS area code.
         """
-
-        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
-        with open(FAF_DOMESTIC_REGION, "r") as f:
-            faf_domestic_data = json.load(f)
+        cfs_state_code = Data_Importer.import_as_pandas(CFS_DATA_PATH)
+        faf_domestic_data = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)
 
         for key, value in faf_domestic_data.items():
             if region in value:
@@ -128,9 +125,8 @@ class Scenario:
         - str, the FAF region.
         """
 
-        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
-        with open(FAF_DOMESTIC_REGION, "r") as f:
-            faf_domestic_data = json.load(f)
+        cfs_state_code = Data_Importer.import_as_pandas(CFS_DATA_PATH)
+        faf_domestic_data = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)
 
         state_row = cfs_state_code[cfs_state_code["Code"] == area]
         if state_row.empty:
@@ -147,10 +143,12 @@ class Scenario:
         return region
 
     def filter_faf(self, sctg=None, destination=None, origin=None, mode=None, domestic_mode=None, scenario=None):
-        faf = pd.read_csv(r"data\transportation_dataset\transportation_faf.csv")
-        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
-        failed = False
 
+        cfs_state_code = Data_Importer.import_as_pandas(CFS_DATA_PATH)
+        faf  = Data_Importer.import_as_pandas(r"data\transportation_faf_dataset.csv")
+        Faf_city_representation = Data_Importer.json_to_dict(FAF_CITY_REPRESENTATION)
+        failed = False
+        
         # SCTG
         try:
             if sctg is not None:
@@ -160,7 +158,7 @@ class Scenario:
         except Exception as e:
             print("Error:", e)
             failed = True
-
+        
         # Destination
         try:
             faf_without_dest = faf.copy()
@@ -208,11 +206,11 @@ class Scenario:
             
             else:
                 major_domes = faf["dms_dest"].mode()[0]
-                with open (FAF_DOMESTIC_REGION, "r") as f:
-                    faf_domestic_data = json.load(f)
-                    for key, value in faf_domestic_data.items():
-                        if major_domes in value:
-                            major_domes = key
+
+                faf_domestic_data = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)     
+                for key, value in faf_domestic_data.items():
+                    if major_domes in value:
+                        major_domes = key
                 self.shipping_dest = Location.from_str(major_domes)
                 faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
                 print (f"destination is the most frequent shipping destination {major_domes}")
@@ -220,12 +218,12 @@ class Scenario:
         except Exception as e:
             print("Error:", e)
             failed = True
-
+        
         # Origin
         try:
             if origin is not None:
-                faf = faf[faf["fr_orig"] == origin.get_faf_foreign_region()]
-                faf_without_dest = faf_without_dest[faf_without_dest["fr_orig"] == origin.get_faf_foreign_region()]
+                faf = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
+                faf_without_dest = faf_without_dest[faf_without_dest["fr_orig"] == float(origin.get_faf_foreign_region())]
 
                 if faf.empty:
 
@@ -267,14 +265,15 @@ class Scenario:
                                 closest_state = key
                                 self.shipping_dest = Location.from_str(closest_state)
             else:
+                
                 if scenario == "NA":
                     faf = faf[faf["fr_orig"].isin([801, 802])]
                     faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
-                    self.shipping_org = Location.from_str(FAF_city_representation[faf["fr_orig"].mode()[0]])
+                    self.shipping_org = Location.from_str(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
                 elif scenario == "Global":
                     faf = faf[faf["fr_orig"].isin([801, 802]) == False]
                     faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
-                    self.shipping_org = Location.from_str(FAF_city_representation[faf["fr_orig"].mode()[0]])
+                    self.shipping_org = Location.from_str(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
             
         except Exception as e:
             print("Error:", e)
@@ -317,7 +316,8 @@ class Scenario:
         return faf, failed
 
     def filter_cfaf(self, sctg=None):
-        cfaf = pd.read_csv(r"data\transportation_dataset\transportation_cfaf.csv")
+
+        cfaf = Data_Importer.import_as_pandas(r"data\transportation_cfaf_dataset.csv")
         try:
             if sctg is not None:
                 cfaf = cfaf[cfaf["SCTG_2digits"] == sctg]
@@ -329,8 +329,8 @@ class Scenario:
         return cfaf
 
     def filter_marine(self, destination=None, origin=None, scenario=None):
-
-        marine = pd.read_csv(r"data\transportation_dataset\transportation_marine.csv")
+        
+        marine = Data_Importer.import_as_pandas(r"data\transportation_podlca_marine.csv")
         failed = False
         # Destination
         try:
@@ -364,8 +364,10 @@ class Scenario:
         return marine, failed
 
     def filter_cfs(self, sctg=None, destination=None, origin=None, mode=None):
-        cfs = pd.read_csv(r"data\transportation_dataset\transportation_cfs.csv")
-        cfs_state_code = pd.read_csv(CFS_DATA_PATH)
+
+        cfs = Data_Importer.import_as_pandas(r"data\transportation_cfs_dataset.csv")  
+        cfs_state_code = Data_Importer.import_as_pandas(CFS_DATA_PATH)  
+
         failed = False
 
         # SCTG
@@ -643,5 +645,5 @@ class Scenario:
 
 
 if __name__ == '__main__':
-    pass
     
+    pass

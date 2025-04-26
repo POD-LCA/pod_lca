@@ -87,5 +87,5 @@ if __name__ == "__main__":
     """
     
     test_file_path = r"tests\transportation_QC_4nd.csv"
-    output_csv_path = r"tests\transportation_QC_4nd_result.csv"
+    output_csv_path = r"tests\transportation_QC_4nd_result3.csv"
     run_test_files(test_file_path, output_csv_path)

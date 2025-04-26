@@ -1,4 +1,3 @@
-
 import json
 from pandas import read_csv
 
@@ -10,8 +9,9 @@ __email__ = "kiun@uw.edu; mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
-class CSV_Importer:
+class Data_Importer:
 
+    @staticmethod
     def import_as_pandas(file_path, headers=None, multipliers=None):
         """ Import data to database from a CSV file.
         
@@ -35,6 +35,7 @@ class CSV_Importer:
 
         return data_frame
     
+    @staticmethod
     def dict_to_json(input_dict, file_path):
         """ Transfer data from a dictionary to a JSON file.
         
@@ -49,6 +50,7 @@ class CSV_Importer:
         with open(file_path, "w") as file:
             json.dump(input_dict, file)
 
+    @staticmethod
     def json_to_dict(file_path):
         """ Import data to dictionary from a JSON file.
         
@@ -69,4 +71,9 @@ class CSV_Importer:
         return data
     
 if __name__ == '__main__':
-    pass
+
+
+    # Example usage
+    file_path = "data/transportation_dataset/transportation_faf_domestic-region.json"
+    data = Data_Importer.json_to_dict(file_path)
+    print(data)
