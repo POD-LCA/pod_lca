@@ -1,5 +1,3 @@
-import os
-import pandas as pd
 from lca_modules.transportation.logistics_link import Link
 from lca_modules.transportation.scenarios import Scenario
 from lca_modules.location.location import Location

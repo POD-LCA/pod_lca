@@ -1,9 +1,7 @@
 from geopy.geocoders import Nominatim
-from shapely.geometry import Point, Polygon
 from lca_modules.location import CFS_DATA_PATH, FAF_FOREIGN_REGION, FAF_DOMESTIC_REGION, FAF_FOREIGN_REGION_COUNTRY, US_COAST, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
 from utilities.data_imports.data_importer import Data_Importer
 
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -333,7 +331,7 @@ class Location:
     def set_ferc_region(self):
         """ Set the Federal Energy Regulatory Commission (FERC) Region."""
 
-        df = pd.read_csv(FERC_BA_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         balancing_authority = self.get_balancing_authority()
         if balancing_authority is None:
             self.set_balancing_authority()
@@ -348,7 +346,7 @@ class Location:
     def set_balancing_authority(self):
         """ Set the Balancing Authority."""
 
-        df = pd.read_csv(BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -367,7 +365,7 @@ class Location:
     def set_cambium_gea_region(self):
         """ Set the Cambium Generation and Emissions Assessment (GEA) region."""
 
-        df = pd.read_csv(GEA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -386,7 +384,7 @@ class Location:
     def set_reeds_balancing_area(self):
         """ Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS)."""
 
-        df = pd.read_csv(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
