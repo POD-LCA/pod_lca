@@ -274,7 +274,7 @@ class Location:
                 if state in cfs_area["State"].values:
                     self.cfs_area = cfs_area[cfs_area['State'] == state].iloc[0, 2]
                 elif state in cfs_area["State_Initial"].values:
-                    self.cfs_area = cfs_area[dcfs_area['State_Initial'] == state].iloc[0, 2]
+                    self.cfs_area = cfs_area[cfs_area['State_Initial'] == state].iloc[0, 2]
                 else:
                     #print (f"State {state} not found in CFS data")
                     self.cfs_area = None
@@ -331,7 +331,7 @@ class Location:
     def set_ferc_region(self):
         """ Set the Federal Energy Regulatory Commission (FERC) Region."""
 
-        df = Data_Importer.import_as_pandas(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_ZIPCODE_MAP_PATH)
         balancing_authority = self.get_balancing_authority()
         if balancing_authority is None:
             self.set_balancing_authority()
@@ -346,7 +346,7 @@ class Location:
     def set_balancing_authority(self):
         """ Set the Balancing Authority."""
 
-        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH)
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -365,7 +365,7 @@ class Location:
     def set_cambium_gea_region(self):
         """ Set the Cambium Generation and Emissions Assessment (GEA) region."""
 
-        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(GEA_ZIPCODE_MAP_PATH)
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -384,7 +384,7 @@ class Location:
     def set_reeds_balancing_area(self):
         """ Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS)."""
 
-        df = Data_Importer.import_as_pandas(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(REEDS_BA_ZIPCODE_MAP_PATH)
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)

@@ -4,7 +4,7 @@ from lca_modules.electricity.electricity_producer import ElectricityProducer
 from lca_modules.electricity.processs_cambium import CambiumData
 from lca_modules.impacts.impact_categories import PRIMARY_IMPACT_CATEGORY
 from lca_modules.impacts.impacts import Impacts
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 
 from numpy import round as np_round
 
@@ -169,7 +169,7 @@ class ElectricitySupply:
 
         # Update consumption mix
         temporal_data = CambiumData.from_regional_resolution(regional_resolution, self.get_location())
-        energy_mix = temporal_data.get_mix(self.get_year(), CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_impacts=False)
 
         # Update impacts by technology
@@ -225,7 +225,7 @@ class ElectricitySupply:
 
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
-        energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+        energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_impacts=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
@@ -259,7 +259,7 @@ class ElectricitySupply:
 
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
-        energy_mix = temporal_data.get_mix(self.get_year(), CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), scenario)
+        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), scenario)
         self.set_consumption_mix(energy_mix, update_impacts=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
@@ -284,7 +284,7 @@ class ElectricitySupply:
 
         # Get regionalised impact data
         if (regional_resolution== 'National'):
-            df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
+            df = Data_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
             country = self.get_location().get_country() if self.get_location() is not None else DEFAULT_COUNTRY
             country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
             if country_code in df['Country code'].values:
@@ -293,7 +293,7 @@ class ElectricitySupply:
                 raise KeyError(f"{country} ({country_code}) not in the dataset provided in file: '{ELECTRICITY_IMPACT_NATIONAL_DATA}.'")                
 
         elif (regional_resolution == 'Regional') or (regional_resolution== 'Local'):
-            df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_REGIONAL_DATA)
+            df = Data_Importer.import_as_pandas(ELECTRICITY_IMPACT_REGIONAL_DATA)
 
             if self.get_location().get_ferc_region() is None:
                 self.get_location().set_ferc_region()
@@ -478,13 +478,13 @@ class ElectricitySupply:
         year = self.get_year()
 
         # impacts by technology
-        df = CSV_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
+        df = Data_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
         country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
         if country_code in df['Country code'].values:
             impact_data_by_tech = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns') 
         
         # set regionality
-        regions_map = CSV_Importer.json_to_dict(CAMBIUM_REGIONS_MAP)
+        regions_map = Data_Importer.json_to_dict(CAMBIUM_REGIONS_MAP)
         if self.get_spatial_resolution() == 'National':
             regional_resolution = 'Regional'
             regions_list = list(regions_map[country_code].keys())
@@ -505,8 +505,8 @@ class ElectricitySupply:
         electricity_loads = [] 
         for region in regions_list:
             temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
-            energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
-            electricity_load = temporal_data.get_load(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+            energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+            electricity_load = temporal_data.get_load(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
             temporal_data.delete_data()
 
             impact_obj = Impacts.from_parent(self)

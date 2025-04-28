@@ -1,6 +1,6 @@
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.impacts.units_map import UNITS_MAP
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 
 from pandas import DataFrame
 from pandas import concat
@@ -112,7 +112,7 @@ class ImpactsDatabase:
 
         multipliers = [None, None, None] + multipliers + [None] * (no_headers - 3 - len(multipliers))
 
-        data = CSV_Importer.import_as_pandas(file_path, data_headers, multipliers)
+        data = Data_Importer.import_as_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
 
@@ -311,7 +311,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
 
         multipliers = [None] * 5 + multipliers + [None] * (no_headers - 5 - len(multipliers))
 
-        data = CSV_Importer.import_as_pandas(file_path, data_headers, multipliers)
+        data = Data_Importer.import_as_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
 

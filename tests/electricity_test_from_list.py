@@ -2,7 +2,7 @@
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project 
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 from lca_modules.impacts.units_map import UNITS_MAP
 from tqdm import tqdm
 
@@ -16,7 +16,7 @@ __version__ = "0.1.0"
 
 test_data = "tests\\electricity_test_list_2.csv"
 output_file = "tests\\electricity_test_report_2.csv"
-test_dict = CSV_Importer.csv_to_dict(test_data, 'test name')
+test_dict = Data_Importer.csv_to_dict(test_data, 'test name')
 
 my_manufacturing_project = Project()
 output_dict = {}
@@ -65,4 +65,4 @@ for test in tqdm(test_dict):
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
 
 
-CSV_Importer.dict_to_csv(output_dict, output_file)
+Data_Importer.dict_to_csv(output_dict, output_file)
