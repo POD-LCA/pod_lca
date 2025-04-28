@@ -14,13 +14,8 @@ def faf_preprocessing (input_path_faf, output_path_faf):
     It also merges the cleaned data with the FAF distance band data and calculates average distances.
     """
 
-
-    PODlLCA_file_path = r"data\transportation_dataset\transportation_pod_lca.xlsx"
-
-    dist_fr = pd.read_excel(PODlLCA_file_path, sheet_name="dist_fr")
-    mot = pd.read_excel(PODlLCA_file_path, sheet_name="MOT")
-    sensitive_material = pd.read_excel(PODlLCA_file_path, sheet_name="sensitive_material")
-    faf_dist_band = pd.read_excel(PODlLCA_file_path, sheet_name="faf_dist_band")
+    dist_fr = pd.read_csv(r"data\transportation_podlca_dist-fr.csv")
+    faf_dist_band = pd.read_csv(r"data\transportation_podlca_faf-dist-band.csv")
 
     dist_fr['fr_inmode'] = pd.to_numeric(dist_fr['fr_inmode'], errors='coerce')
     dist_fr['fr_orig'] = pd.to_numeric(dist_fr['fr_orig'], errors='coerce')

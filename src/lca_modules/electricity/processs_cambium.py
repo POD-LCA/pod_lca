@@ -1,8 +1,12 @@
+
+from lca_modules.electricity import DEFAULT_COUNTRY_CODE, CAMBIUM_TECHNOLOGY_MAP, CAMBIUM_LOCAL_DATA, CAMBIUM_REGIONAL_DATA, CAMBIUM_NATIONAL_DATA, CAMBIUM_HEADER_MAP, CAMBIUM_DATA_YEARS
+from lca_modules.location.location import Location
 from utilities.data_imports.csv import CSV_Importer
 
 from pandas import DataFrame, concat
 import bisect
 import gc
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -31,14 +35,6 @@ class CambiumData:
         data : DataFrame (Pandas)
             Pandas dataframe of cambium data loaded.
     """
-
-    NATIONAL_DATA = "data\\cambium_data_national.csv"
-    REGIONAL_DATA = "data\\cambium_data_regional.csv"
-    LOCAL_DATA = "data\\cambium_data_local.csv"
-    DATA_YEARS = [2025, 2030, 2035, 2040, 2045, 2050]
-    HEADER_MAP = "data\\cambium_headers.json"
-    TECHNOLOGY_MAP = "data\\cambium_technology_map.json"
-
     def __init__(self):
         self.data = None
 
@@ -50,37 +46,57 @@ class CambiumData:
             ----------
             regional_resolution : str
                 Level of regionality of data: e.g., 'National', 'Regional', 'Local'.
-            location : Location Obj.
+            location : Location Obj. or str
                 Location of electricity supply.
+                If a string is provided, it should be the country code for national level data,
+                region name for regional level data, or REEDS balancing authority for local level data.
         """
 
         cambium_data = cls()
         
+        # get country/region name
         if location is None:
-            raise ValueError('No region name set.')
-        else:
+            if regional_resolution== 'National':
+                country_code = DEFAULT_COUNTRY_CODE
+            else:
+                raise KeyError("No default location for regional resolution {regional_resolution}.")
+        elif isinstance(location, str):
+            if regional_resolution== 'National':
+                country_code = location
+            elif regional_resolution == 'Regional':
+                region = location
+            elif regional_resolution == 'Local':
+                region = location
+        elif isinstance(location, Location):
             if regional_resolution== 'National':
                 country_code = location.get_country_code()
-                df = CSV_Importer.import_as_pandas(CambiumData.NATIONAL_DATA)
-                cambium_data.data = df[df['country code'] == country_code]
             elif regional_resolution == 'Regional':
                 if location.get_cambium_gea_region() is None:
                     location.set_cambium_gea_region()
                 region = location.get_cambium_gea_region()
-                df = CSV_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
-                cambium_data.data = df[df['gea'] == region]
             elif regional_resolution == 'Local':
                 if location.get_reeds_balancing_area() is None:
                     location.set_reeds_balancing_area()
                 region = location.get_reeds_balancing_area()
-                df = CSV_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
-                cambium_data.data = df[df['r'] == region]
-            else:
-                raise KeyError("Regional resolution not recognized. Should be 'National', 'Regional', or 'Local'")
+        else:
+            raise TypeError("Location should be a string or Location object.")
+        
+        # get cambium data
+        if regional_resolution== 'National':
+            df = CSV_Importer.import_as_pandas(CAMBIUM_NATIONAL_DATA)
+            cambium_data.data = df[df['country_code'] == country_code]
+        elif regional_resolution == 'Regional':
+            df = CSV_Importer.import_as_pandas(CAMBIUM_REGIONAL_DATA)
+            cambium_data.data = df[df['gea'] == region]
+        elif regional_resolution == 'Local':
+            df = CSV_Importer.import_as_pandas(CAMBIUM_LOCAL_DATA)
+            cambium_data.data = df[df['r'] == region]
+        else:
+            raise KeyError(f"Regional resolution {regional_resolution} not recognized. Should be 'National', 'Regional', or 'Local'")
 
-            return cambium_data
+        return cambium_data
 
-    def get_mix(self, year, technologies, scenario="MidCase"):
+    def get_mix(self, year, technologies, scenario="MidCase", interpolate="percentages"):
         """ Get technology mix of the electricity consumption by year.
 
             Notes
@@ -95,6 +111,8 @@ class CambiumData:
                 List of electricity generation technoclogies to be classified by.
             scenario : str
                 Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+            interpolate : str
+                Linear interpolation of electricity consumption between two years by 'values' or 'percentages'.
 
             Returns
             -------
@@ -103,15 +121,15 @@ class CambiumData:
         """
 
         # match year with years available in dataset.
-        idx = bisect.bisect_left(CambiumData.DATA_YEARS, year)
+        idx = bisect.bisect_left(CAMBIUM_DATA_YEARS, year)
         if idx == 0:
-            years = [CambiumData.DATA_YEARS[0]]
-        elif idx == len(CambiumData.DATA_YEARS):
-            years = [CambiumData.DATA_YEARS[0][-1]]
+            years = [CAMBIUM_DATA_YEARS[0]]
+        elif idx == len(CAMBIUM_DATA_YEARS):
+            years = [CAMBIUM_DATA_YEARS[-1]]
         else:
-            years = [CambiumData.DATA_YEARS[idx - 1], CambiumData.DATA_YEARS[idx]]
+            years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
 
-        mix_names = list(CSV_Importer.json_to_dict(CambiumData.HEADER_MAP).values())
+        mix_names = list(CSV_Importer.json_to_dict(CAMBIUM_HEADER_MAP).values())
         mix_set = DataFrame()
         for yr in years:
             data_set_tmp = self.data[self.data['scenario']==scenario]
@@ -120,24 +138,85 @@ class CambiumData:
 
         if len(years) == 2: # interpolate data
             weight = (year - mix_set.iloc[0]['t']) / (mix_set.iloc[1]['t'] - mix_set.iloc[0]['t'])
-            new_row = mix_set.iloc[0] + weight * (mix_set.iloc[1] - mix_set.iloc[0])
+
+            if interpolate == "percentages":
+                percentages_0 = mix_set.iloc[0].div(mix_set.iloc[0].drop('t', axis=0).sum())
+                percentages_1 = mix_set.iloc[1].div(mix_set.iloc[1].drop('t', axis=0).sum())
+                new_row = percentages_0 + weight * (percentages_1 - percentages_0)
+            elif interpolate == "values":
+                new_row = mix_set.iloc[0] + weight * (mix_set.iloc[1] - mix_set.iloc[0])
+            else:
+                raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
+            
             new_row['t'] = year
             mix =  new_row
         else:
-            mix = mix_set.squeeze()
+            if interpolate == "percentages":
+                mix = mix_set.iloc[0].div(mix_set.iloc[0].drop('t', axis=0).sum()).squeeze()
+            elif interpolate == "values":
+                mix = mix_set.squeeze()
+            else:
+                raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
 
         # map
-        technology_map = CSV_Importer.json_to_dict(CambiumData.TECHNOLOGY_MAP)
+        technology_map = CSV_Importer.json_to_dict(CAMBIUM_TECHNOLOGY_MAP)
         mix_dict = dict.fromkeys(technologies, 0.0)
-        for technology, header in CSV_Importer.json_to_dict(CambiumData.HEADER_MAP).items():
+        for technology, header in CSV_Importer.json_to_dict(CAMBIUM_HEADER_MAP).items():
             technology_mapped = technology_map[technology]
             value = mix[header]
 
             mix_dict[technology_mapped] += value
 
-        total = sum(mix_dict.values())
+        if interpolate == "percentages":
+            return mix_dict
+        elif interpolate == "values":
+            total = sum(mix_dict.values())
+            return  {k: (v / total) for k, v in mix_dict.items()}
+        else:
+            raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
+    
+    def get_load(self, year, scenario="MidCase"):
+        """ Get electricity load of the electricity consumption by year.
+        
+            
+            Parameters
+            ----------
+            year : int
+                Year of electricity consumption.
+            scenario : str
+                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
 
-        return  {k: (v / total) for k, v in mix_dict.items()}
+            Returns
+            -------
+            float
+                Electricity load in GWh.
+        """
+
+        # match year with years available in dataset.
+        idx = bisect.bisect_left(CAMBIUM_DATA_YEARS, year)
+        if idx == 0:
+            years = [CAMBIUM_DATA_YEARS[0]]
+        elif idx == len(CAMBIUM_DATA_YEARS):
+            years = [CAMBIUM_DATA_YEARS[-1]]
+        else:
+            years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
+
+        load = DataFrame()
+        for yr in years:
+            data_set_tmp = self.data[self.data['scenario']==scenario]
+            data_set_tmp = data_set_tmp[data_set_tmp['t']==yr]
+            load = concat([load, data_set_tmp[['t'] + ['busbar_load']]], ignore_index=True)
+
+        if len(years) == 2: # interpolate data
+            weight = (year - load.iloc[0]['t']) / (load.iloc[1]['t'] - load.iloc[0]['t'])
+            new_row = load.iloc[0] + weight * (load.iloc[1] - load.iloc[0])
+            new_row['t'] = year
+            load =  new_row
+        else:
+            load = load.squeeze()
+
+        return  load['busbar_load']
+
 
     def delete_data(self):
         """ Delete the cambium data object"""

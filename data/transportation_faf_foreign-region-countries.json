@@ -1,0 +1,51 @@
+{
+    "801": ["Canada"],
+    "802": ["Mexico"],
+    "803": ["Anguilla", "Antigua and Barbuda", "Argentina", "Aruba", "Bahamas", "Barbados", "Belize",
+            "Bermuda", "Bolivia", "Bonaire, Sint Eustatius and Saba", "Brazil", "British Virgin",
+            "Islands", "Cayman Islands", "Chile", "Colombia", "Costa Rica", "Cuba", "Curacao",
+            "Dominica", "Dominican Republic", "Ecuador", "El Salvador", "Falkland Islands",
+            "French Guiana", "Greenland", "Grenada", "Guadeloupe", "Guatemala", "Guyana", "Haiti",
+            "Honduras", "Jamaica", "Martinique", "Montserrat", "Nicaragua", "Panama", "Paraguay",
+            "Peru", "Puerto Rico", "St. Barthelemy", "St. Kitts and Nevis", "St. Lucia", "St. Martin", "St.",
+            "Pierre and Miquelon", "St. Vincent and the Grenadines", "Sint Maarten", "Suriname",
+            "Trinidad and Tobago", "Turks and Caicos Islands", "U.S. Virgin Islands", "Uruguay",
+            "Venezuela"],
+    "804": ["Aland Islands", "Albania", "Andorra", "Austria", "Belarus", "Belgium", "Bosnia and Herzegovina",
+            "Bulgaria", "Channel Islands (Guernsey, Jersey, and Sark)", "Croatia",
+            "Czech Republic", "Denmark", "Estonia", "Faroe Islands", "Finland", "France", "Germany",
+            "Gibraltar", "Greece", "Hungary", "Iceland", "Ireland", "Isle of Man", "Italy", "Latvia",
+            "Liechtenstein", "Lithuania", "Luxembourg", "Malta", "Moldova", "Monaco", "Montenegro",
+            "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal", "Romania", "Russia",
+            "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Svalbard and Jan Mayen",
+            "Islands", "Sweden", "Switzerland", "Ukraine", "United Kingdom", "Vatican City"],
+
+    
+    "805": [ "Algeria", "Angola", "Benin", "Botswana", "British Indian Ocean Territory", "Burkina Faso",
+            "Burundi", "Cameroon", "Cape Verde", "Central African Republic", "Chad", "Comoros",
+            "Congo", "Djibouti", "Egypt", "Equatorial Guinea", "Eritrea", "Eswatini", "Ethiopia",
+            "French Southern and Antarctic Lands", "Gabon", "Gambia", "Ghana", "Guinea",
+            "Guinea-Bissau", "Ivory Coast", "Kenya", "Lesotho", "Liberia", "Libya", "Madagascar",
+            "Malawi", "Mali", "Mauritania", "Mauritius", "Mayotte", "Morocco", "Mozambique",
+            "Namibia", "Niger", "Nigeria", "Reunion", "Rwanda", "St. Helena",
+            "Sao Tome and Principe", "Senegal", "Seychelles", "Sierra Leone", "Somalia",
+            "South Africa", "South Sudan", "Sudan", "Tanzania", "Togo", "Tunisia",
+            "Uganda", "Western Sahara", "Zambia", "Zimbabwe"],
+
+    
+    "806": ["Afghanistan", "Armenia", "Azerbaijan", "Bahrain", "Bangladesh", "Bhutan", "Cyprus",
+            "Georgia", "India", "Iran", "Iraq", "Israel", "Jordan", "Kazakhstan", "Kuwait",
+            "Kyrgyzstan", "Lebanon", "Maldives", "Nepal", "Oman", "Palestine", "Pakistan",
+            "Qatar", "Saudi Arabia", "Sri Lanka", "Syria", "Tajikistan", "Turkey",
+            "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Yemen"],
+
+    "807": ["China", "Hong Kong", "Japan", "Macao", "Mongolia", "North Korea", "South Korea", "Taiwan"],
+
+    "808": ["American Samoa", "Australia", "Brunei", "Cambodia", "Christmas Island", "Cocos Islands",
+            "Cook Islands", "East Timor", "Federated States of Micronesia", "Fiji", "French Polynesia",
+            "Guam", "Heard and McDonald Islands", "Indonesia", "Kiribati", "Laos", "Malaysia",
+            "Marshall Islands", "Myanmar", "Nauru", "New Caledonia", "New Zealand", "Niue",
+            "Norfolk Island", "Northern Mariana Islands", "Palau", "Papua New Guinea", "Philippines",
+            "Pitcairn Islands", "Samoa", "Singapore", "Solomon Islands", "Thailand", "Tokelau",
+            "Tonga", "Tuvalu", "Vanuatu", "Vietnam", "Wallis and Futuna"]
+}   

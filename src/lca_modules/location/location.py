@@ -1,8 +1,7 @@
 from geopy.geocoders import Nominatim
-from shapely.geometry import Point, Polygon
-import pandas as pd
-import json
-from lca_modules.location.data import CFS_DATA_PATH, FAF_DATA, FAF_DOMESTIC_REGION, FAF_BOUNDARIES, MARINE_REGION, US_COAST, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
+from lca_modules.location import CFS_DATA_PATH, FAF_FOREIGN_REGION, FAF_DOMESTIC_REGION, FAF_FOREIGN_REGION_COUNTRY, US_COAST, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
+from utilities.data_imports.data_importer import Data_Importer
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -20,6 +19,8 @@ class Location:
     ----------
     location_name : str.
         Name of the location.
+    regionality : str
+        Regionality of the location (Local, Regional, National).
     coords : tuple
         Location coordinate using WGS-84 coordinate system.
     zipcode : str
@@ -35,6 +36,7 @@ class Location:
     """
     def __init__(self):
         self.location_name = None
+        self.regionality = None
         self.coords = None
         self.zipcode = None
         self.city = None
@@ -72,11 +74,10 @@ class Location:
         try:
             geolocator = Nominatim(user_agent="pod_lca", timeout=10)
 
-            location_data = geolocator.geocode(string)
-            location.set_regionality(location_data)
+            location_data = geolocator.geocode(string, language='en', addressdetails=True, extratags=True) 
             location.set_cordinates(location_data)
 
-            location_data = geolocator.reverse(location.get_cordinates())
+            location_data = geolocator.reverse(location.get_cordinates(), addressdetails=True, zoom=15, language='en') # zoom level 14 = neighbourhood
 
             location.set_zip(location_data)
             location.set_city(location_data)
@@ -92,7 +93,7 @@ class Location:
             return location
 
         except Exception as e:
-            print(f"Error retrieving location data: {e}")        
+            print(f"Error retrieving location data: {e}") 
 
     @classmethod
     def from_US_zip(cls, zipcode, set_all_location_data=False):
@@ -131,7 +132,7 @@ class Location:
                 print(f"Error retrieving location data: {e}")
 
         return location
-        
+    
     # ================================
     # Setters
     # ================================
@@ -170,7 +171,7 @@ class Location:
             raise ValueError("Regionality not recognized")
 
         return self
-    
+
     def set_cordinates(self, geopy_location_nominatim):
         """ Set the coordinates of the location.
 
@@ -182,7 +183,7 @@ class Location:
         self.coords = geopy_location_nominatim.latitude, geopy_location_nominatim.longitude
 
         return self
-
+    
     def set_zip(self, geopy_location):
         """ Set the zipcode of the location.
 
@@ -265,14 +266,15 @@ class Location:
         """ Set the country of the location.
         """    
         try:
-            df = pd.read_csv(CFS_DATA_PATH)
+
+            cfs_area = Data_Importer.import_as_pandas(CFS_DATA_PATH)
             state = self.get_state()
 
             if state:
-                if state in df["State"].values:
-                    self.cfs_area = df[df['State'] == state].iloc[0, 2]
-                elif state in df["State_Initial"].values:
-                    self.cfs_area = df[df['State_Initial'] == state].iloc[0, 2]
+                if state in cfs_area["State"].values:
+                    self.cfs_area = cfs_area[cfs_area['State'] == state].iloc[0, 2]
+                elif state in cfs_area["State_Initial"].values:
+                    self.cfs_area = cfs_area[dcfs_area['State_Initial'] == state].iloc[0, 2]
                 else:
                     #print (f"State {state} not found in CFS data")
                     self.cfs_area = None
@@ -282,64 +284,69 @@ class Location:
             return self.cfs_area
 
         except Exception as e:
-            #print (f"Error in set CFS area: {e}")
+            print (f"Error in set CFS area: {e}")
             self.cfs_area = None
 
         return self
 
     def set_faf_foreign_region(self):
-        """ Set the FAF region (foreign) of the location.
-        """  
+        """Set the FAF region (foreign) of the location."""
+        try:
+            country = self.get_country()
+            faf_foreign_region = Data_Importer.json_to_dict(FAF_FOREIGN_REGION_COUNTRY)
 
-        point = Point(self.get_cordinates())
-        BOUNDARIES = {key: Polygon(coords) for key, coords in FAF_BOUNDARIES.items()}
+            for key, value in faf_foreign_region.items():
+                if country in value:
+                    self.faf_foreign = key
 
-        for region, polygon in BOUNDARIES.items():
-            if polygon.contains(point):
-                self.faf_foreign = FAF_DATA[region]
-                return self
+                    return self
 
-        self.faf_foreign = 803 #rest of americas
-        return self
+            #print(f"Country '{country}' not found in any FAF region.")
+            self.faf_foreign = None
+
+        except Exception as e:
+            print(f"Error in set FAF foreign region: {e}")
+            self.faf_foreign = None
+
 
     def set_faf_domestic_region(self):
         """ Set the FAF region (domestic) of the location.
         """
         try:
-            with open(FAF_DOMESTIC_REGION) as f:
-                data = json.load(f)
-            state  = self.get_state()
+            faf_domestic_region = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)
+            state = self.get_state()
 
-            if state in data.keys():
-                self.faf_domestic = data[state]
-                return self.faf_domestic
+            for key,value in faf_domestic_region.items():
+                if state in key:
+                    self.faf_domestic = value
+                    return self
+            #print(f"State '{state}' not found in any FAF region.")
+            self.faf_domestic = None
+
         except Exception as e:
             print (f"Error in set FAF domestic region: {e}")
             self.faf_domestic = None
         
-        return self
     
     def set_ferc_region(self):
         """ Set the Federal Energy Regulatory Commission (FERC) Region."""
 
-        df = pd.read_csv(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
-        zipcode = int(self.get_zip())
-        if df['zip code'].dtype == 'int64':
-            zipcode = int(zipcode)
+        df = Data_Importer.import_as_pandas(FERC_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        balancing_authority = self.get_balancing_authority()
+        if balancing_authority is None:
+            self.set_balancing_authority()
+            balancing_authority = self.get_balancing_authority()
 
-        ferc_region = df[df['zip code'] == zipcode]['FERC Region'].unique()
+        ferc_region = df[df['balancing_authority'].isin(balancing_authority)]['FERC_region'].unique()
 
-        self.FERC_region = ferc_region[0]
-
-        if len(ferc_region) > 1:
-            print("More than one FERC region for the given zip code. {ferc_region[0]} selected.")
-            
+        self.ferc_region = ferc_region
+    
         return self
     
     def set_balancing_authority(self):
         """ Set the Balancing Authority."""
 
-        df = pd.read_csv(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -358,66 +365,82 @@ class Location:
     def set_cambium_gea_region(self):
         """ Set the Cambium Generation and Emissions Assessment (GEA) region."""
 
-        df = pd.read_csv(GEA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
-        if df['zip code'].dtype == 'int64':
+        if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
 
-        cambium_gea_region = df[df['zip code'] == zipcode]['gea'].unique()
+        cambium_gea_region = df[df['zip_code'] == zipcode]['cambium_gea'].unique()
+
+        if len(cambium_gea_region) == 0: # If no cambium GEA is found, try to find it by adding leading zeros to the zipcode
+            if df['zip_code'].dtype == 'O': 
+                trail_zeros = '0' * (5 - len(zipcode))
+                cambium_gea_region = df[df['zip_code'] == trail_zeros + zipcode]['cambium_gea'].unique()
 
         self.cambium_gea_region = cambium_gea_region[0]
-
-        if len(cambium_gea_region) > 1:
-            print("More than one Cambium GEA region for the given zip code. {cambium_gea_region[0]} selected.")
             
         return self
     
     def set_reeds_balancing_area(self):
         """ Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS)."""
 
-        df = pd.read_csv(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
+        df = Data_Importer.import_as_pandas(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
-        if df['zip code'].dtype == 'int64':
+        if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
 
-        balancing_area = df[df['zip code'] == zipcode]['reeds ba'].unique()
+        balancing_area = df[df['zip_code'] == zipcode]['reeds_ba'].unique()
 
         if len(balancing_area) == 0: # If no balancing area is found, try to find it by adding leading zeros to the zipcode
-            if df['zip code'].dtype == 'O': 
+            if df['zip_code'].dtype == 'O': 
                 trail_zeros = '0' * (5 - len(zipcode))
-                balancing_area = df[df['zip code'] == trail_zeros + zipcode]['reeds ba'].unique()
+                balancing_area = df[df['zip_code'] == trail_zeros + zipcode]['reeds_ba'].unique()
 
         self.reeds_balancing_area = balancing_area[0]
             
         return self
-    
+
     def set_marine_region(self):
         """ Set the marine region of the location.
         """
-        point = Point(self.get_cordinates())
-        BOUNDARIES = {key: Polygon(coords) for key, coords in MARINE_REGION.items()}
+        try:
+            country = self.get_country()
+            faf_region_countries = Data_Importer.json_to_dict(FAF_FOREIGN_REGION_COUNTRY)
+            faf_region = Data_Importer.json_to_dict(FAF_FOREIGN_REGION)
 
-        for region, polygon in BOUNDARIES.items():
-            if polygon.contains(point):
-                self.marine_region = region
-                return self
+            for key, value in faf_region_countries.items():
+                if country in value:
+                    region = key
 
-        self.marine_region = None
-        return self
+            for key, value in faf_region.items():
+                if region == value:
+                    self.marine_region = key
+                    return self
+
+        except Exception as e:
+            #print (f"Error in set marine region: {e}")
+            self.marine_region = None
 
     def set_us_coast(self):
         """ Set the US coast of the location.
         """
-        point = Point(self.get_cordinates())
-        BOUNDARIES = {key: Polygon(coords) for key, coords in US_COAST.items()}
 
-        for region, polygon in BOUNDARIES.items():
-            if polygon.contains(point):
-                self.us_coast = region
-                return self
+        try:
+            us_coast = Data_Importer.json_to_dict(US_COAST)
+            state = self.get_state()
 
-        self.us_coast = None
-        return self
+            for key, value in us_coast.items():
+                if state in value:
+                    self.us_coast = key
+                    return self
+
+            #print(f"State '{state}' not found in any US coast region.")
+            self.us_coast = None
+        except Exception as e:
+            print (f"Error in set US coast: {e}")
+            self.us_coast = None
+
+
 
     # ================================
     # Getters
@@ -431,7 +454,7 @@ class Location:
                 Name of the location.
         """
         return self.location_name
-
+    
     def get_regionality(self):
         """ Retrieve the regionality of the location.
 
@@ -442,7 +465,7 @@ class Location:
         """
 
         return self.regionality
-    
+
     def get_cordinates(self):
         """ Retrieve the coordinates of the location.
 
@@ -595,7 +618,8 @@ class Location:
     
 if __name__ == '__main__':
 
-    location_input = "Berlin"
+
+    location_input = "Europe"
     location_obj = Location.from_str(location_input)
 
 
@@ -609,3 +633,4 @@ if __name__ == '__main__':
     print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
     print (f"Marine Region: {location_obj.get_marine_region()}")
     print (f"US Coast: {location_obj.us_coast}")
+
