@@ -43,9 +43,9 @@ class Location:
         self.cfs_area = None
         self.faf_foreign = None
         self.ferc_region = None
-        self.ferc_balancing_authority = None
+        self.balancing_authority = None
         self.cambium_gea_region = None
-        self.reeds_balancing_authority = None
+        self.reeds_balancing_area = None
         self.faf_domestic = None
         self.marine_region = None
         self.us_coast = None
@@ -73,6 +73,7 @@ class Location:
             geolocator = Nominatim(user_agent="pod_lca", timeout=10)
 
             location_data = geolocator.geocode(string)
+            location.set_regionality(location_data)
             location.set_cordinates(location_data)
 
             location_data = geolocator.reverse(location.get_cordinates())
@@ -92,7 +93,45 @@ class Location:
 
         except Exception as e:
             print(f"Error retrieving location data: {e}")        
-    
+
+    @classmethod
+    def from_US_zip(cls, zipcode, set_all_location_data=False):
+        """ Create location from US zipcode.
+            The location data populated based on the centroid of the area represented by the zipcode.
+        
+            Parameters
+            ----------
+            zipcode : str
+                Zipcode of the location.
+        """
+        location = cls()
+
+        location.country = "USA"
+        location.country_code = "US"
+        location.zipcode = zipcode
+        location.regionality = 'Local'
+
+        if set_all_location_data:
+            try:
+                string = zipcode + ", USA"
+                geolocator = Nominatim(user_agent="pod_lca")
+
+                location_data = geolocator.geocode(string, featuretype=['settlement', 'city', 'town', 'village', 'county', 'state', 'country'], language='en', addressdetails=True, extratags=True) 
+                location.set_regionality(location_data)
+                location.set_cordinates(location_data)
+
+                location_data = geolocator.reverse(location.get_cordinates(), addressdetails=True, zoom=15, language='en') # zoom level 14 = neighbourhood
+
+                location.set_city(location_data)
+                location.set_state(location_data)
+                location.set_cfs_area()
+                location.set_faf_foreign_region(string)
+
+            except Exception as e:
+                print(f"Error retrieving location data: {e}")
+
+        return location
+        
     # ================================
     # Setters
     # ================================
@@ -109,6 +148,29 @@ class Location:
 
         return self
 
+    def set_regionality(self, geopy_location_nominatim):
+        """ Set the regionality of the location.
+
+            Parameters
+            ----------
+            geopy_location_nominatim : <class 'geopy.location.Location'>
+                Geopy location object from Nominatim
+        """
+        local_type = ['postcode', 'county', 'municipality', 'city', 'town', 'village', 'city_district', 'district', 'borough', 'suburb', 'subdivision', 'hamlet', 'croft', 'neighbourhood', 'allotments', 'quarter']
+        regional_type = ['region', 'state', 'province', 'state_district']
+        national_type = ['country', 'country_code']
+
+        if geopy_location_nominatim.raw['addresstype'] in local_type:
+            self.regionality = 'Local'
+        elif geopy_location_nominatim.raw['addresstype'] in regional_type:
+            self.regionality = 'Regional'
+        elif geopy_location_nominatim.raw['addresstype'] in national_type:
+            self.regionality = 'National'
+        else:
+            raise ValueError("Regionality not recognized")
+
+        return self
+    
     def set_cordinates(self, geopy_location_nominatim):
         """ Set the coordinates of the location.
 
@@ -130,9 +192,12 @@ class Location:
                 Geopy location object.
         """
         try:
-            self.zipcode = geopy_location.raw['address']['postcode']
+            if 'postcode' in geopy_location.raw['address']:
+                self.zipcode = geopy_location.raw['address']['postcode']
+            else:
+                self.zipcode = self.get_closest_zip(geopy_location)
         except:
-            self.zipcode = None
+            self.zipcode = None     
 
         return self
     
@@ -271,20 +336,22 @@ class Location:
             
         return self
     
-    def set_ferc_balancing_authority(self):
-        """ Set the Balancing Authority under the Federal Energy Regulatory Commission (FERC) region."""
+    def set_balancing_authority(self):
+        """ Set the Balancing Authority."""
 
         df = pd.read_csv(FERC_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
-        if df['zip code'].dtype == 'int64':
+        if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
 
-        balancing_authority = df[df['zip code'] == zipcode]['balancing authority'].unique()
+        balancing_authority = df[df['zip_code'] == zipcode]['balancing_authority'].unique()
 
-        self.ferc_balancing_authority = balancing_authority[0]
+        if len(balancing_authority) == 0: # If no balancing authority is found, try to find it by adding leading zeros to the zipcode
+            if df['zip_code'].dtype == 'O': 
+                trail_zeros = '0' * (5 - len(zipcode))
+                balancing_authority = df[df['zip_code'] == trail_zeros + zipcode]['balancing_authority'].unique()
 
-        if len(balancing_authority) > 1:
-            print("More than one balancing authority for the given zip code. {balancing_authority[0]} selected.")
+        self.balancing_authority = balancing_authority
             
         return self
     
@@ -305,22 +372,25 @@ class Location:
             
         return self
     
-    def set_reeds_balancing_authority(self):
-        """ Set the Balancing Authority under the Get the Regional Energy Deployment System (ReEDS)."""
+    def set_reeds_balancing_area(self):
+        """ Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS)."""
 
         df = pd.read_csv(REEDS_BA_ZIPCODE_MAP_PATH, on_bad_lines='warn')
         zipcode = self.get_zip()
         if df['zip code'].dtype == 'int64':
             zipcode = int(zipcode)
 
-        balancing_authority = df[df['zip code'] == zipcode]['reeds ba'].unique()
+        balancing_area = df[df['zip code'] == zipcode]['reeds ba'].unique()
 
-        self.reeds_balancing_authority = balancing_authority[0]
+        if len(balancing_area) == 0: # If no balancing area is found, try to find it by adding leading zeros to the zipcode
+            if df['zip code'].dtype == 'O': 
+                trail_zeros = '0' * (5 - len(zipcode))
+                balancing_area = df[df['zip code'] == trail_zeros + zipcode]['reeds ba'].unique()
 
-        if len(balancing_authority) > 1:
-            print("More than one balancing authority for the given zip code. {balancing_authority[0]} selected.")
+        self.reeds_balancing_area = balancing_area[0]
             
         return self
+    
     def set_marine_region(self):
         """ Set the marine region of the location.
         """
@@ -362,6 +432,17 @@ class Location:
         """
         return self.location_name
 
+    def get_regionality(self):
+        """ Retrieve the regionality of the location.
+
+            Returns
+            -------
+            str
+                Regionality of the location.
+        """
+
+        return self.regionality
+    
     def get_cordinates(self):
         """ Retrieve the coordinates of the location.
 
@@ -452,9 +533,66 @@ class Location:
         """
         return self.marine_region
 
+    def get_ferc_region(self):
+        """ Get the Federal Energy Regulatory Commission (FERC) Region."""
 
+        return self.ferc_region
 
+    def get_balancing_authority(self):
+        """ Get the balancing authority."""
 
+        return self.balancing_authority
+    
+    def get_cambium_gea_region(self):
+        """ Get Cambium Generation and Emissions Assessment (GEA) region."""
+
+        return self.cambium_gea_region
+    
+    def get_reeds_balancing_area(self):
+        """ Get the Regional Energy Deployment System (ReEDS) balancing area."""
+
+        return self.reeds_balancing_area
+
+    # ================================
+    # Methods
+    # ================================
+    @staticmethod
+    def get_closest_zip(geopy_location, max_attempts=10, step=1):
+        """ Get the zipcode of the location.
+
+            Parameters
+            ----------
+            geopy_location : <class 'geopy.location.Location'>
+                Geopy location object.
+            max_attempts: int
+                Maximum number of attempts to find the closest zip code
+            step : float
+                Step size in km (approx.)
+        """
+        geolocator = Nominatim(user_agent="pod_lca")
+
+        if 'county' in geopy_location.raw['address']:
+            query = geopy_location.raw['address']['county']
+            geopy_location = geolocator.geocode(query, exactly_one=True)
+                    
+            lat = geopy_location.latitude
+            lon = geopy_location.longitude
+        else:
+            lat = geopy_location.latitude
+            lon = geopy_location.longitude
+        
+        for i in range(max_attempts):
+            lat_offset = 0.01 * step * (i // 2) * (-1 if i % 2 else 1)
+            lon_offset = 0.01 * step * (i // 2) * (-1 if i % 2 else 1)
+            new_lat, new_lon = lat + lat_offset, lon + lon_offset
+
+            geopy_location = geolocator.reverse((new_lat, new_lon), exactly_one=True, addressdetails=True, zoom=18, language='en')
+
+            if geopy_location and 'postcode' in geopy_location.raw['address']:
+                return geopy_location.raw['address']['postcode']
+        
+        return "ZIP code not found within search range"
+    
 if __name__ == '__main__':
 
     location_input = "Berlin"

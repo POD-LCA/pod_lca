@@ -10,7 +10,7 @@ my_manufacturing_project.set_location(my_factory_location)
 model_one = my_manufacturing_project.add_model("model_01")
 
 # user adding electricity to the model
-electricity = model_one.add_energy(name="Electricity", stage="A3", qty=1000, unit=KILO * WATT_HOUR)
+electricity = model_one.add_electricity(name="Electricity", stage="A3", qty=1000, unit=KILO * WATT_HOUR)
 
 # Advanced operations
 electricity_supplier = electricity.get_supplier()
@@ -20,7 +20,7 @@ impacts = electricity_supplier.get_impacts()
 print(impacts) # FIXME: units missmatch
 
 electricity_supplier.set_year(2045)
-electricity_supplier.set_spatial_resolution('Regional')
+electricity_supplier.set_spatial_resolution('Local')
 print(electricity_supplier)
 print(impacts)
 

@@ -70,9 +70,9 @@ class CambiumData:
                 df = CSV_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
                 cambium_data.data = df[df['gea'] == region]
             elif regional_resolution == 'Local':
-                if location.get_reeds_balancing_authority() is None:
-                    location.set_reeds_balancing_authority()
-                region = location.get_reeds_balancing_authority()
+                if location.get_reeds_balancing_area() is None:
+                    location.set_reeds_balancing_area()
+                region = location.get_reeds_balancing_area()
                 df = CSV_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
                 cambium_data.data = df[df['r'] == region]
             else:
