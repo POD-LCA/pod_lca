@@ -508,7 +508,7 @@ class ElectricitySupply:
         for region in regions_list:
             temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
             energy_mix = temporal_data.get_mix(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
-            electricity_load = temporal_data.get_load(year, CSV_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+            electricity_load = temporal_data.get_load(year, self.get_scenario())
             temporal_data.delete_data()
 
             impact_obj = Impacts.from_parent(self)

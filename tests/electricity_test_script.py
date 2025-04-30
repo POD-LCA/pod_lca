@@ -14,8 +14,8 @@ __version__ = "0.1.0"
 
 # This script compares the electricity impact values from the Excel tool (given in aa CSV file) with the values calculated using the Python Framework.
 
-test_data = "tests\\electricity_test_list_2.csv"
-output_file = "tests\\electricity_test_report_2.csv"
+test_data = "tests\\electricity_test_test-values.csv"
+output_file = "tests\\electricity_test_report.csv"
 test_dict = CSV_Importer.csv_to_dict(test_data, 'test name')
 
 my_manufacturing_project = Project()
