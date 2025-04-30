@@ -2,8 +2,7 @@
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project 
-from utilities.data_imports.csv import CSV_Importer
-from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.data_imports.data_importer import Data_Importer
 from utilities.units.common_units import WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
 from tqdm import tqdm
@@ -17,6 +16,7 @@ __version__ = "0.1.0"
 # This script generates a CSV file with electricity data for different cities, years, and scenarios.
 
 city_list = ['Seattle', 'Portland', 'Los Angeles', 'Denver', 'Chicago', 'Atlanta']
+
 year_list = [2025, 2030, 2035, 2040, 2045, 2050]
 scenario_list = ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']
 qty = 1
@@ -55,4 +55,4 @@ for city in tqdm(city_list):
 
             sequence_no += 1
 
-CSV_Importer.dict_to_csv(output_dict, output_file)
+Data_Importer.dict_to_csv(output_dict, output_file)

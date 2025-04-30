@@ -29,7 +29,6 @@ __version__ = "0.1.0"
 # 1.5 data/electricity_cambium_technology-map.json 
 #           maps the Cambium technology (key of the dictionary) to the corresponding technology type in the impact data (value in the dictionary).
 
-
 # =========================
 # 2. Impact data
 # =========================
@@ -53,7 +52,9 @@ __version__ = "0.1.0"
 
 # 3.1 data/location_doe_ba-zip-mapping.csv [BA_zip_mapping]
 # 3.2 data/location_netl_ferc-ba-mapping.csv [FERC_BA_mapping]
-# 3.3 data/location_cambium_gea-reeds-zip-mapping.csv []
+# 3.3 data/location_cambium_gea-reeds-zip-mapping.csv
+# 3.4 data/electricity_cambium_technology-headers.json [cambium_headers]
+# 3.5 data/electricity_cambium_technology-map.json [cambium_technology_map]
 
 # Balancing authorities are mapped to zip codes using the balancing authority look-up table.
 # The data are available for 40326 zip codes (excluding the zip codes marked as ‘NA’ or ‘Balancing authority not available’, and those from Alaska and Hawaii). 
@@ -64,6 +65,10 @@ __version__ = "0.1.0"
 # The GEA and ReEDS balancing area mappings to zip codes are from data.gov. 
 # This data set has mapping for 40462 zip codes, each uniquely mapped to a GEA and ReEDS balancing area. 
 # The data headers must include ‘zip_code’, ‘reeds_ba’, and ‘cambium_ga’.
+
+# The electricity generation technologies need to be mapped from the Cambium data to the impact data. 
+# ‘Cambium_headers’ JSON files map the Cambium technology type (key of the dictionary) to the corresponding header names (value in the dictionary) in the Cambium data files. 
+# ‘Cambium_technology_map’ JSON file maps the Cambium technology (key of the dictionary) to the corresponding technology type in the impact data (value in the dictionary).
 
 # Note that when saving data from MS Excel worksheets as a CSV file, the number displayed is what is saved, regardless of what is being displayed in the formula bar (e.g., a cell displaying 3.2 and the formula bar displaying 3.25485). 
 # This can end up with the significance of the values being lost. 
