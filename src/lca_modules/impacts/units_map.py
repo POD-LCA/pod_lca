@@ -7,6 +7,7 @@ UNITS_MAP = {'kg': KILOGRAM,
              'kgkm': KILOGRAM * KILOMETER, 
              'MJ': MEGA * JOULE, 
              'kWh': KILO * WATT_HOUR,
+             'MWh': MEGA * WATT_HOUR,
              'm3': CUBIC_METER,
              'ft3': CUBIC_FEET,
              'gal': US_GALLON

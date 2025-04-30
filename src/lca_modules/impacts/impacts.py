@@ -112,6 +112,27 @@ class Impacts:
             setattr(impact_obj, impact, 0.0)
 
         return impact_obj
+    
+    @classmethod
+    def from_dict(cls, impact_dict):
+        """ Create an impact object from a dictionary.
+        
+        Parameters
+        ----------
+        impact_dict : dict
+            Dictionary of impacts {impact catergory (str): impact quantity (float)}
+        
+        Returns
+        -------
+        Impacts Obj.
+            Impact object created.
+        """
+
+        impact_obj = cls()
+        impact_obj.set_parent(None)
+        impact_obj.update_impact_qty(impact_dict)
+
+        return impact_obj
 
     @classmethod
     def copy(cls, impact_obj):
@@ -221,6 +242,7 @@ class Impacts:
         else:
             raise NotImplementedError
         
+        # TODO: normalise the impacts begore applying weights
         weighted_impact = 0.0
         for (impact_cat, weight) in weights.items():
             impact = getattr(self, impact_cat, None)

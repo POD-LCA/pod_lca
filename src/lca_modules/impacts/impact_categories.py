@@ -5,6 +5,8 @@ IMPACT_CATEGOREIS = {'GWP': 'kg CO₂-eq',
                      'SFP': 'kg O₃-eq'
                     }
 
+PRIMARY_IMPACT_CATEGORY = 'GWP'
+
 IMPACT_NORMALIZATION_FACTOR = {'GWP': 24223.71,
                                'AP': 90.86,
                                'EP': 21.62,

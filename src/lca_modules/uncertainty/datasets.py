@@ -503,6 +503,25 @@ class DataDistribution:
             # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
         else:
             return self.dist.pmf(x)
+        
+    def percentile(self, p):
+        """ Get the percentile of the distribution.
+
+            Parameters
+            ----------
+            p : float
+                Percentile to be calculated.
+
+            Returns
+            -------
+            float
+                Percentile of the distribution.
+        """
+
+        if self.is_cts:
+            return self.dist.ppf(p)
+        else:
+            return self.dist.ppf(p)
     
 
 if __name__ == '__main__':
