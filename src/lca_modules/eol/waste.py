@@ -38,7 +38,7 @@ class Waste(Master):
         self.waste_processes = []
         self.process_mix = {}
         self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
-        self.bio_based = False
+        self.bio_based = True
 
     def __str__(self):
         str = "="*50 + "\n" + f"Waste Product ({self.get_name()})\n" + "="*50 + "\n"

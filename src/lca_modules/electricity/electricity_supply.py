@@ -4,7 +4,7 @@ from lca_modules.electricity.electricity_technologies import ELECTRICITY_TECHNOL
 from lca_modules.electricity.electricity_producer import ElectricityProducer
 from lca_modules.electricity.processs_cambium import CambiumData
 from lca_modules.impacts.impacts import Impacts
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 from utilities.units.common_units import WATT_HOUR   
 from utilities.units.metric_prefixes import MEGA
 
@@ -136,7 +136,7 @@ class ElectricitySupply:
 
         # Get regionalised impact data
         if (regional_resolution== 'National') or (regional_resolution== 'Regional') or (regional_resolution== 'Local'):
-            df = CSV_Importer.import_as_pandas(NATIONAL_DATA)
+            df = Data_Importer.import_as_pandas(NATIONAL_DATA)
             country = self.get_location().get_country()
             country_code = self.get_location().get_country_code()
             if country_code in df['Country code'].values:

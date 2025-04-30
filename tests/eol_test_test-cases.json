@@ -1,0 +1,12 @@
+{
+    "test_01" :{
+        "Wood":{"qty": 4.2, "unit": "kg"},
+        "Glass": {"qty": 0.5, "unit": "kg", "bio_based": false}
+    },
+     "test_02":{
+        "Concrete":{"qty": 100000, "unit": "kg"}
+    },
+    "test_03":{
+        "Bamboo":{"qty": 538, "unit": "kg"}
+    }
+}

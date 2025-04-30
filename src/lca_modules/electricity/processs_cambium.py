@@ -1,4 +1,4 @@
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 
 from pandas import DataFrame, concat
 import bisect
@@ -61,19 +61,19 @@ class CambiumData:
         else:
             if regional_resolution== 'National':
                 country_code = location.get_country_code()
-                df = CSV_Importer.import_as_pandas(CambiumData.NATIONAL_DATA)
+                df = Data_Importer.import_as_pandas(CambiumData.NATIONAL_DATA)
                 cambium_data.data = df[df['country code'] == country_code]
             elif regional_resolution == 'Regional':
                 if location.get_cambium_gea_region() is None:
                     location.set_cambium_gea_region()
                 region = location.get_cambium_gea_region()
-                df = CSV_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
+                df = Data_Importer.import_as_pandas(CambiumData.REGIONAL_DATA)
                 cambium_data.data = df[df['gea'] == region]
             elif regional_resolution == 'Local':
                 if location.get_reeds_balancing_authority() is None:
                     location.set_reeds_balancing_authority()
                 region = location.get_reeds_balancing_authority()
-                df = CSV_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
+                df = Data_Importer.import_as_pandas(CambiumData.LOCAL_DATA)
                 cambium_data.data = df[df['r'] == region]
             else:
                 raise KeyError("Regional resolution not recognized. Should be 'National', 'Regional', or 'Local'")
@@ -111,7 +111,7 @@ class CambiumData:
         else:
             years = [CambiumData.DATA_YEARS[idx - 1], CambiumData.DATA_YEARS[idx]]
 
-        mix_names = list(CSV_Importer.json_to_dict(CambiumData.HEADER_MAP).values())
+        mix_names = list(Data_Importer.json_to_dict(CambiumData.HEADER_MAP).values())
         mix_set = DataFrame()
         for yr in years:
             data_set_tmp = self.data[self.data['scenario']==scenario]
@@ -127,9 +127,9 @@ class CambiumData:
             mix = mix_set.squeeze()
 
         # map
-        technology_map = CSV_Importer.json_to_dict(CambiumData.TECHNOLOGY_MAP)
+        technology_map = Data_Importer.json_to_dict(CambiumData.TECHNOLOGY_MAP)
         mix_dict = dict.fromkeys(technologies, 0.0)
-        for technology, header in CSV_Importer.json_to_dict(CambiumData.HEADER_MAP).items():
+        for technology, header in Data_Importer.json_to_dict(CambiumData.HEADER_MAP).items():
             technology_mapped = technology_map[technology]
             value = mix[header]
 
