@@ -96,7 +96,7 @@ class CambiumData:
 
         return cambium_data
 
-    def get_mix(self, year, technologies, scenario="MidCase", interpolate="percentages"):
+    def get_mix(self, year, technologies, scenario="MidCase", interpolate="values"):
         """ Get technology mix of the electricity consumption by year.
 
             Notes

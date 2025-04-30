@@ -473,7 +473,7 @@ class ElectricitySupply:
             -------
             list of Impact Obj.
                 Impact objects representing the distribution of the impacts.
-            list 0f int
+            list of int
                 List of weights for each impact object in the distribution.
         """
 
