@@ -1,7 +1,7 @@
 
 from lca_modules.electricity import DEFAULT_COUNTRY_CODE, CAMBIUM_TECHNOLOGY_MAP, CAMBIUM_LOCAL_DATA, CAMBIUM_REGIONAL_DATA, CAMBIUM_NATIONAL_DATA, CAMBIUM_HEADER_MAP, CAMBIUM_DATA_YEARS
 from lca_modules.location.location import Location
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 
 from pandas import DataFrame, concat
 import bisect
@@ -83,13 +83,13 @@ class CambiumData:
         
         # get cambium data
         if regional_resolution== 'National':
-            df = CSV_Importer.import_as_pandas(CAMBIUM_NATIONAL_DATA)
+            df = Data_Importer.import_as_pandas(CAMBIUM_NATIONAL_DATA)
             cambium_data.data = df[df['country_code'] == country_code]
         elif regional_resolution == 'Regional':
-            df = CSV_Importer.import_as_pandas(CAMBIUM_REGIONAL_DATA)
+            df = Data_Importer.import_as_pandas(CAMBIUM_REGIONAL_DATA)
             cambium_data.data = df[df['gea'] == region]
         elif regional_resolution == 'Local':
-            df = CSV_Importer.import_as_pandas(CAMBIUM_LOCAL_DATA)
+            df = Data_Importer.import_as_pandas(CAMBIUM_LOCAL_DATA)
             cambium_data.data = df[df['r'] == region]
         else:
             raise KeyError(f"Regional resolution {regional_resolution} not recognized. Should be 'National', 'Regional', or 'Local'")
@@ -129,7 +129,7 @@ class CambiumData:
         else:
             years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
 
-        mix_names = list(CSV_Importer.json_to_dict(CAMBIUM_HEADER_MAP).values())
+        mix_names = list(Data_Importer.json_to_dict(CAMBIUM_HEADER_MAP).values())
         mix_set = DataFrame()
         for yr in years:
             data_set_tmp = self.data[self.data['scenario']==scenario]
@@ -159,9 +159,9 @@ class CambiumData:
                 raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
 
         # map
-        technology_map = CSV_Importer.json_to_dict(CAMBIUM_TECHNOLOGY_MAP)
+        technology_map = Data_Importer.json_to_dict(CAMBIUM_TECHNOLOGY_MAP)
         mix_dict = dict.fromkeys(technologies, 0.0)
-        for technology, header in CSV_Importer.json_to_dict(CAMBIUM_HEADER_MAP).items():
+        for technology, header in Data_Importer.json_to_dict(CAMBIUM_HEADER_MAP).items():
             technology_mapped = technology_map[technology]
             value = mix[header]
 
