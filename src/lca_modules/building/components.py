@@ -1,6 +1,6 @@
 from lca_modules.eol.waste import Waste
 from lca_modules.eol import EOL_DEFAULT_MIXES
-from utilities.data_imports.csv import CSV_Importer
+from utilities.data_imports.data_importer import Data_Importer
 from lca_modules.eol import EOL_DEFAULT_KEY
 
 import gc
@@ -178,7 +178,7 @@ class BuildingComponent:
                 Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
         
         """
-        eol_mix_data = CSV_Importer.import_as_pandas(EOL_DEFAULT_MIXES)
+        eol_mix_data = Data_Importer.import_as_pandas(EOL_DEFAULT_MIXES)
         
         for key, value in deconstruction_map.items():
             if eol_mix_data['Material'].isin([key]).any():

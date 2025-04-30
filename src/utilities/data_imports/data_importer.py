@@ -11,7 +11,7 @@ __email__ = "kiun@uw.edu; mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
-class CSV_Importer:
+class Data_Importer:
 
     def import_as_pandas(file_path, headers=None, multipliers=None):
         """ Import data to database from a CSV file.
@@ -86,7 +86,7 @@ class CSV_Importer:
         """
 
         data = {}
-        with open(file_path, mode='r') as file:
+        with open(file_path, mode='r', encoding="utf-8-sig") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 id = row[primary_key]
@@ -142,6 +142,6 @@ class CSV_Importer:
                 current_row += 1
 
         return data
-
+        
 if __name__ == '__main__':
     pass

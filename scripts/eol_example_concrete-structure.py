@@ -19,10 +19,9 @@ my_building = Building.build(name='My Shopping Mall', type='Commercial', locatio
 
 eol_impact_database = EOLImpactsDatabase.new("EOL database")
 eol_impact_database.set_primary_key('Material')
-eol_impact_database.set_qty_key('Amount')
 eol_impact_database.set_process_key('Process')
 eol_impact_database.set_life_cycle_stage_key('LCA Stage')
-eol_impact_database.set_data(r'data/impacts_podlca_eol-impacts-dummy.csv')
+eol_impact_database.set_data(r'data/impacts_podlca_eol-impacts.csv')
 
 my_building.set_eol_database(eol_impact_database)
 
