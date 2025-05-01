@@ -474,7 +474,7 @@ class openLCA:
                     if filter.isdigit(): # ISIC division / NAICS code
                         test = ('/' + filter + ':' in process.category) or process.category.startswith(filter + ':')
                     else: # ISIC section
-                        test = process.category.startswith(filter + ':')
+                        test = ('/' + filter + ':' in process.category) or process.category.startswith(filter + ':')
 
                     if test:
                         new_process_lst.append(process)

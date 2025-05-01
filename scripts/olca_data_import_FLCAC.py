@@ -12,15 +12,18 @@ __version__ = "0.1.0"
 openLCA_client = openLCA.set_connection()
 
 process_list_all = openLCA.get_process_list(openLCA_client)
+filter_by = None
+process_list_filtered = openLCA.filter_processes_by(process_list_all, filter_by)
+
 
 impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
 inventories = DataHandler.json_to_dict('./data/inventories.json')
 
-impact_method_uuid = '68c8e8cd-e64a-49b1-954e-bec0da4e4574'
+impact_method_uuid = '0ed73bce-2198-4148-8c4d-8b2ce68b6e1a'
 
-renewable_fuels_process_list = DataHandler.csv_to_list('./data/USLCI_renewable_fuels.csv', 1)
-nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/USLCI_nonrenewable_fuels.csv', 1)
-heating_values = DataHandler.csv_to_dict('./data/USLCI_heating_values.csv', 'UUID')
+renewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_renewable_fuels.csv', header_name='UUID')
+nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', header_name='UUID')
+heating_values = DataHandler.csv_to_dict('./data/FLCAC_heating_values.csv', 'UUID')
 
 group_by = [{
                 'name':'electricity',
@@ -39,10 +42,10 @@ group_by = [{
                 'conversion_map':heating_values
                 }]
 
-results = openLCA.generate_impacts_dir( openLCA_client, process_list_all, 
+results = openLCA.generate_impacts_dir( openLCA_client, process_list_filtered, 
                                         impact_categories | inventories, 
                                         impact_method_uuid, 
                                         group_by)
 
-save_path = './data/USLCI_Categorized_all.csv'
+save_path = './data/FLCAC_Categorized_all.csv'
 DataHandler.dict_to_csv(results, save_path) 
