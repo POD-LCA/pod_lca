@@ -1,5 +1,5 @@
-from utilities.data.transfer import DataHandler
-from utilities.data.olca import openLCA
+from utilities.data_imports.data_importer import Data_Importer
+from lca_modules.impacts.olca_data import openLCA
 from utilities.units.common_units import JOULE
 from utilities.units.metric_prefixes import MEGA
 
@@ -11,19 +11,16 @@ __version__ = "0.1.0"
 
 openLCA_client = openLCA.set_connection()
 
-process_list_all = openLCA.get_process_list(openLCA_client)
-filter_by = None
-process_list_filtered = openLCA.filter_processes_by(process_list_all, filter_by)
+process_list_all = openLCA.get_process_list(openLCA_client)[0:10]
 
-
-impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
-inventories = DataHandler.json_to_dict('./data/inventories.json')
+impact_categories = Data_Importer.json_to_dict('./data/impact_categories.json')
+inventories = Data_Importer.json_to_dict('./data/inventories.json')
 
 impact_method_uuid = '0ed73bce-2198-4148-8c4d-8b2ce68b6e1a'
 
-renewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_renewable_fuels.csv', header_name='UUID')
-nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', header_name='UUID')
-heating_values = DataHandler.csv_to_dict('./data/FLCAC_heating_values.csv', 'UUID')
+renewable_fuels_process_list = Data_Importer.csv_to_list('./data/FLCAC_renewable_fuels.csv', column_header='UUID')
+nonrenewable_fuels_process_list = Data_Importer.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', column_header='UUID')
+heating_values = Data_Importer.csv_to_dict('./data/FLCAC_heating_values.csv', 'UUID')
 
 group_by = [{
                 'name':'electricity',
@@ -42,10 +39,10 @@ group_by = [{
                 'conversion_map':heating_values
                 }]
 
-results = openLCA.generate_impacts_dir( openLCA_client, process_list_filtered, 
+results = openLCA.generate_impacts_dir( openLCA_client, process_list_all, 
                                         impact_categories | inventories, 
                                         impact_method_uuid, 
                                         group_by)
 
-save_path = './data/FLCAC_Categorized_all.csv'
-DataHandler.dict_to_csv(results, save_path) 
+save_path = './data/FLCAC_Categorized_all-TEST-TMP.csv'
+Data_Importer.dict_to_csv(results, save_path) 

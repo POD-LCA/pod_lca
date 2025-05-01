@@ -1,7 +1,7 @@
 
-from pandas import read_csv
 import csv
 import json
+from pandas import read_csv
 
 
 __author__ = ["POD/LCA Team"]
@@ -11,8 +11,11 @@ __email__ = "kiun@uw.edu; mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
-class DataHandler:
+class Data_Importer:
 
+    # ========================
+    # CSV
+    # ========================
     def csv_to_pandas(file_path, headers=None, multipliers=None):
         """ Import data to database from a CSV file.
         
@@ -21,7 +24,7 @@ class DataHandler:
             file_path : str
                 Location of the CSV file
             headers : list of str
-                The headers of the CSV file as they would be mapped to the database.
+                The headers of the CSV file as they would be mapped to the dataset.
             multipliers : list of float
                 Values of each column of the CSV will be multiplied by these values.
         """
@@ -35,7 +38,7 @@ class DataHandler:
                     data_frame[headers[i]] *= multipliers[i]
 
         return data_frame
-    
+
     def csv_to_dict(file_path, primary_key):
         """ Import data to dictionary from a CSV file.
         
@@ -53,11 +56,42 @@ class DataHandler:
         """
 
         data = {}
-        with open(file_path, mode='r') as file:
+        with open(file_path, mode='r', encoding="utf-8-sig") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 id = row[primary_key]
                 data[id] = {key: value for key, value in row.items()} 
+
+        return data
+
+    def csv_to_list(file_path, column_header=None):
+        """ Import data to list from a CSV file. The first row of the CSV file is used as the header. Only one column identified by the column header is imported. If the column header is not provided, the first column of the CSV file is imported.
+        
+            Parameters
+            ----------
+            file_path : str
+                Location of the CSV file.
+            column_header : str
+                Header of the column from where the data to be read to the list, when the file has headers.
+            
+            Returns
+            -------
+            list 
+                A list of data.
+        """
+
+        data = []
+        column_index = 0 if column_header is None else None
+        current_row = 0
+        with open(file_path, 'r') as file:
+            reader = csv.reader(file)
+            if not (column_header is None):
+                headers = next(reader, None)
+                column_index = headers.index(column_header)
+            for row in reader:
+                data.append(row[column_index])
+
+                current_row += 1
 
         return data
     
@@ -74,13 +108,31 @@ class DataHandler:
 
         fieldnames = list(next(iter(input_dict.values())).keys())
 
-        with open(file_path, "w", newline="") as file:
+        with open(file_path, "w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for data in input_dict.values():
                 writer.writerow(data)
 
+    def list_to_csv(input_list, file_path):
+        """ Write data to a CSV file from a list of lists.
+        
+            Parameters
+            ----------
+            input_list : list of str
+                List of strings to be written to the CSV file. 
+            
+            file_path : str
+                Location of the CSV file.
+        """
+        
+        with open(file_path, "w", newline = "") as file:
+            writer = csv.writer(file)
+            writer.writerows(input_list)
 
+    # ========================
+    # JSON
+    # ========================    
     def dict_to_json(input_dict, file_path):
         """ Transfer data from a dictionary to a JSON file.
         
@@ -113,49 +165,6 @@ class DataHandler:
             data = json.load(file)
 
         return data
-
-    def csv_to_list(file_path, column_index=0, header_name=None):
-        """ Import data to a list from a CSV file.
         
-            Parameters
-            ----------
-            file_path : str
-                Location of the csv file.
-            column_index : int
-                Index of the column in the CSV file to be read to the list, when the file does not have headers.
-            header_name : str
-                Header of the column from where the data to be read to the list, when the file has headers.
-            
-            Returns
-            -------
-            list
-                A list of strings read from the specified column in the CSV data.
-        """
-        data = []
-        with open(file_path, 'r') as file:
-            reader = csv.reader(file)
-            if not (header_name is None):
-                headers = next(reader, None)
-                column_index = headers.index(header_name)
-            for row in reader:
-                data.append(row[column_index])
-
-        
-        return data
-    
-    def list_to_csv(input_list, file_path):
-        """ Write data to a CSV file from a list of lists.
-        
-            Parameters
-            ----------
-            input_list : list of str
-                List of strings to be written to the CSV file. 
-            
-            file_path : str
-                Location of the CSV file.
-        """
-        
-        with open(file_path, "w", newline = "") as file:
-            writer = csv.writer(file)
-            writer.writerows(input_list)
-            
+if __name__ == '__main__':
+    pass

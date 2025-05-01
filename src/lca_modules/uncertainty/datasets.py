@@ -62,7 +62,7 @@ class DataDistribution:
     # Constructors
     # ================================    
     @classmethod
-    def from_data(cls, data, is_cts, name='unspecified', del_data=False):
+    def from_data(cls, data, is_cts, name='unspecified', del_data=False, set_dist=True):
         """ Create a Dataset object from data input.
         
             Parameters
@@ -83,12 +83,13 @@ class DataDistribution:
         dataset = cls()
         dataset.set_data(data)
         dataset.set_name(name)
-        dataset.set_distribution()
+        dataset.is_cts = is_cts
+        
+        if set_dist:
+            dataset.set_distribution()
 
         if del_data:
             dataset.delete_data()
-
-        dataset.is_cts = is_cts
 
         return dataset
 
@@ -170,10 +171,11 @@ class DataDistribution:
                 except:
                     print("A valid distribution could not be fitted.")        
             else:
-                self.generate_discrete_distribution()
+                self.dist = self.generate_discrete_distribution()
+                self.dist_name = self.dist.name
         else:
             self.dist = dist
-            self.dist_name = dist.dist.name
+            self.dist_name = dist.dist.name if isinstance(self.dist, stats._distn_infrastructure.rv_continuous_frozen) else dist.name
 
         return self
     
@@ -451,7 +453,7 @@ class DataDistribution:
 
             Returns
             -------
-            float
+            float or str
                 A random variate from the distribution.
         """
 
@@ -467,12 +469,21 @@ class DataDistribution:
 
             Returns
             -------
-            float
-                A random variate from the distribution.
+            list
+                A list of random variates from the distribution.
         """
+        if self.is_cts:
+            return self.dist.rvs(size=n)
+        else:
+            if self.dist.xk.dtype == np.int32:
+                return self.dist.rvs(size=n)
+            else:
+                xk, pk = self.dist.xk, self.dist.pk
+                dist_tmp = stats.rv_discrete(name='custm', values=(np.arange(len(xk)), pk))
+                inidces = dist_tmp.rvs(size=n)
 
-        return self.dist.rvs(size=n)
- 
+                return [xk[idx] for idx in inidces]
+
     def prob_of(self, x):
         """ Get the probability density at the given random variate.
 
@@ -492,6 +503,25 @@ class DataDistribution:
             # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
         else:
             return self.dist.pmf(x)
+        
+    def percentile(self, p):
+        """ Get the percentile of the distribution.
+
+            Parameters
+            ----------
+            p : float
+                Percentile to be calculated.
+
+            Returns
+            -------
+            float
+                Percentile of the distribution.
+        """
+
+        if self.is_cts:
+            return self.dist.ppf(p)
+        else:
+            return self.dist.ppf(p)
     
 
 if __name__ == '__main__':

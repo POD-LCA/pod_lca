@@ -1,4 +1,5 @@
 from plotters.plotters.abstract_plotter import AbstractPlotter
+from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
 
 from matplotlib.patches import Patch
 import matplotlib.pyplot as plt
@@ -112,7 +113,7 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.plot(angles, values, color=color, label=label)
         self.ax.fill(angles, values, color=color, alpha=alpha)
 
-    def draw_histogram(self, data, no_bins, color, alpha):
+    def draw_histogram(self, data, no_bins, label, color, alpha, unitize):
         """ Draw a histogram.
         
             Parameters
@@ -121,17 +122,21 @@ class MatplotlibPlotter(AbstractPlotter):
                 List of all data points.
             no_bins : int
                 Number of bins in the histogram
+            label : str
+                Identifier of the histogram.
             color : str
                 Color of the radar plot as a named or hex string.
             alpha : float
                 Transparency of the radar (value between 0 and 1).
+            unitize : bool
+                If true, the area under of the histogram is set to 1.
         """        
 
-        self.ax.hist(data, bins=no_bins, density=True, alpha=alpha, label='Histogram', color=color)
+        self.ax.hist(data, bins=no_bins, density=unitize, alpha=alpha, label=label, color=color)
 
         return self
     
-    def draw_line(self, x_data, y_data, label):
+    def draw_line(self, x_data, y_data, label, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE]):
         """ Draw a line plot through (x, y) data pairs.
         
             Parameters
@@ -142,9 +147,46 @@ class MatplotlibPlotter(AbstractPlotter):
                 f(x) for all the y values.
             label : str
                 label for the function plotted
+            color : str
+                Color of the radar plot as a named or hex string.
+            
         """
 
-        self.ax.plot(x_data, y_data, 'k', linewidth=2, label=label)
+        self.ax.plot(x_data, y_data, color=color, linewidth=2, label=label)
+
+    def draw_boxplot(self, data):
+        """ Draw a boxplot.
+        
+            Parameters
+            ----------
+            data : list
+                List of all data points.
+            color : str
+                Color of the radar plot as a named or hex string.
+            label : str
+                Identifier of the histogram.
+        """
+
+        self.ax.boxplot(data, patch_artist=True)
+
+        return self
+    
+    def draw_violinplot(self, data):
+        """ Draw a violinplot.
+        
+            Parameters
+            ----------
+            data : list
+                List of all data points.
+            color : str
+                Color of the radar plot as a named or hex string.
+            label : str
+                Identifier of the histogram.
+        """
+
+        self.ax.violinplot(data, showmedians=True)
+
+        return self
 
     # ================================
     # Set plot components

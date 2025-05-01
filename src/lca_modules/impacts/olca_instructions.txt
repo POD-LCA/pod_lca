@@ -4,9 +4,6 @@
 4. Double click the database loaded in the navigation pane. This will load the database.
 5. Start the IPC client 'Tools > Developer Tools > IPC Server > start server'. Click the green arrow button.
 
-6. 
-
-
 In the code block: 
 (i) specify the file location and name for the .csv file export (file_path) (TODO: will automate this); 
 (ii) specify the headers for the LCIA impacts to export, according to the impact method selected (default: ISO 21930 GWP, AP, EP, POCP, ODP, CO2, CH4, N2O); 

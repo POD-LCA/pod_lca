@@ -1,6 +1,6 @@
 import olca_schema as schema
-from utilities.data.transfer import DataHandler
-from utilities.data.olca import openLCA
+from utilities.data_imports.data_importer import Data_Importer
+from lca_modules.impacts.olca_data import openLCA
 from utilities.units.common_units import JOULE, KILOGRAM
 from utilities.units.metric_prefixes import MEGA
 
@@ -50,17 +50,17 @@ process_list_filtered = openLCA.filter_processes_by(process_list_all, filter_by)
 #         filter_by = [filter_by]    
 #     my_process_list = [process for process in my_process_list if any(str(filter) in process.category for filter in filter_by)]
 
-impact_categories = DataHandler.json_to_dict('./data/impact_categories.json')
-inventories = DataHandler.json_to_dict('./data/inventories.json')
+impact_categories = Data_Importer.json_to_dict('./data/impact_categories.json')
+inventories = Data_Importer.json_to_dict('./data/inventories.json')
 impact_method_uuid = '68c8e8cd-e64a-49b1-954e-bec0da4e4574'
 
 # different options for grouping
 # group_by = [{'name':'Electricity','ids': 2211}, 
 #             {'name':'Waste', 'ids': [5621, 5622,5629]}]
 # group_by = {'name':'fuel combustion', 'ids':['6c96a609-cd7e-3f19-a151-27deb823d3e4' , '5198d618-7bc8-3639-b4a1-de71d6d5f49a']}
-renewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_renewable_fuels.csv', header_name='UUID')
-nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', column_index=1)
-heating_values = DataHandler.csv_to_dict('./data/FLCAC_heating_values.csv', 'UUID')
+renewable_fuels_process_list = Data_Importer.csv_to_list('./data/FLCAC_renewable_fuels.csv', header_name='UUID')
+nonrenewable_fuels_process_list = Data_Importer.csv_to_list('./data/FLCAC_nonrenewable_fuels.csv', column_index=1)
+heating_values = Data_Importer.csv_to_dict('./data/FLCAC_heating_values.csv', 'UUID')
 group_by = [{'name':'electricity','ids':2211},
             {'name':'nonrenewable fuel combustion','ids':nonrenewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}, 
             {'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
@@ -68,10 +68,10 @@ group_by = [{'name':'electricity','ids':2211},
 results = openLCA.generate_impacts_dir(openLCA_client, my_process_list, impact_categories | inventories, impact_method_uuid, group_by)
 
 save_path = './data/USLCI_Categorized_all.csv'
-DataHandler.dict_to_csv(results, save_path) 
+Data_Importer.dict_to_csv(results, save_path) 
 
-# dict_A = DataHandler.csv_to_dict('./data/USLCI_tax_elec_1L_ISO21930_1_24_25.csv', 'UUID')
-# dict_B = DataHandler.csv_to_dict('./data/USLCI_Elec.csv', 'UUID')
+# dict_A = Data_Importer.csv_to_dict('./data/USLCI_tax_elec_1L_ISO21930_1_24_25.csv', 'UUID')
+# dict_B = Data_Importer.csv_to_dict('./data/USLCI_Elec.csv', 'UUID')
 # print(openLCA.compare_dicts(dict_A, dict_B))
 
 

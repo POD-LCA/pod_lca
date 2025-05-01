@@ -1,6 +1,6 @@
 import olca_schema as schema
-from utilities.data.transfer import DataHandler
-from utilities.data.olca import openLCA
+from utilities.data_imports.data_importer import Data_Importer
+from lca_modules.impacts.olca_data import openLCA
 from utilities.units.common_units import JOULE, KILOGRAM
 from utilities.units.metric_prefixes import MEGA
 
@@ -53,14 +53,14 @@ for uuid in my_uuid_list:
     process_list_filtered.append(my_process_ref)
 '''
 
-impact_categories = DataHandler.json_to_dict('./data/impact_categories_ecoinvent.json')
-inventories = DataHandler.json_to_dict('./data/inventories_ecoinvent.json')
+impact_categories = Data_Importer.json_to_dict('./data/impact_categories_ecoinvent.json')
+inventories = Data_Importer.json_to_dict('./data/inventories_ecoinvent.json')
 impact_method_uuid = '5d5b2a0c-0a99-48d4-93e9-2f2b9d852655'
 
-electricity_process_list = DataHandler.csv_to_list('./data/ecoinvent391_electricity.csv', column_index=1)
-renewable_fuels_process_list = DataHandler.csv_to_list('./data/ecoinvent391_renewable_fuels.csv', column_index=1)
-nonrenewable_fuels_process_list = DataHandler.csv_to_list('./data/ecoinvent391_nonrenewable_fuels.csv', column_index=1)
-heating_values = DataHandler.csv_to_dict('./data/ecoinvent391_heating_values.csv', 'UUID')
+electricity_process_list = Data_Importer.csv_to_list('./data/ecoinvent391_electricity.csv', column_index=1)
+renewable_fuels_process_list = Data_Importer.csv_to_list('./data/ecoinvent391_renewable_fuels.csv', column_index=1)
+nonrenewable_fuels_process_list = Data_Importer.csv_to_list('./data/ecoinvent391_nonrenewable_fuels.csv', column_index=1)
+heating_values = Data_Importer.csv_to_dict('./data/ecoinvent391_heating_values.csv', 'UUID')
 
 group_by = [{'name':'electricity','ids': electricity_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values},
             {'name':'nonrenewable fuel combustion','ids':nonrenewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}, 
@@ -69,4 +69,4 @@ group_by = [{'name':'electricity','ids': electricity_process_list, 'unit': MEGA 
 results = openLCA.generate_impacts_dir(openLCA_client, process_list_filtered, impact_categories | inventories, impact_method_uuid, group_by)
 
 save_path = './data/ecoinvent391_category01.csv'
-DataHandler.dict_to_csv(results, save_path) 
+Data_Importer.dict_to_csv(results, save_path) 

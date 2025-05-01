@@ -1,5 +1,8 @@
 
+from lca_modules.electricity.electricity_supply import ElectricitySupply
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.material.master import Master
+from lca_modules.uncertainty.datasets import DataDistribution
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -219,10 +222,170 @@ class Fuel(Product):
         super().__init__()
         self.is_material = True
         self.is_energy = True
+        self.electricity_supplier = None
 
     def __str__(self):
         return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
+class Electricity(Fuel):
+    """
+    Electricity product object, inheriting from the Fuel object.
+    """
+    @classmethod
+    def new(cls, id, name, model, stage, qty, unit):
+        
+        item = cls()
+
+        item.set_id(id)
+        item.set_name(name)
+        item.set_model(model)
+        item.set_life_cycle_stage(stage)
+        item.set_qty(qty)
+        item.set_unit(unit)
+
+        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
+        item.set_supplier(electricity_supplier)
+
+        return item
+
+    def update_impacts(self):
+        """ Sets impacts quantities, based on database item asigned to the product/process 
+            and the product/process quantity.
+            If no database entry is asigned, impacts are not updated.
+
+            Raises
+            ------
+            ImportError : Incompatible units of Master object and database entry.
+        """
+
+        if not self.get_supplier() is None:
+            supplier = self.get_supplier()
+            
+            declared_unit = supplier.get_unit()
+            unit_impacts = supplier.get_impacts()
+
+            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
+
+            impacts = {category: unit_impacts.get_impact(category) * conversion_factor * self.qty for category in IMPACT_CATEGOREIS}
+            self.impacts.update_impact_qty(impacts)      
+
+    def set_supplier(self, supplier):
+        """ Set electricity supplier.
+        
+            Parameters
+            ----------
+            supplier : ElectricitySupply Obj.
+                Electricity supply
+        """
+
+        self.electricity_supplier = supplier
+        self.update_impacts()
+
+        return self
+
+    def set_year(self, year):
+        """ Set the year of electricity consumption.
+        
+            Parameters
+            ----------
+            year : int
+                Year of electricity consumption.
+        """
+
+        self.get_supplier().set_year(year)
+        self.update_impacts()
+
+        self.year = year
+
+        return self
+    
+    def set_spatial_resolution(self, spatial_resolution):
+        """ Set the spatial resolution of the electricity supply.
+        
+            Parameters
+            ----------
+            spatial_resolution : str
+                Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
+        """
+
+        self.get_supplier().set_spatial_resolution(spatial_resolution)
+        self.update_impacts()
+
+        return self
+    
+    def set_scenario(self, scenario):
+        """ Set scenario name. This will be used with cambium data.
+        
+            Parameters
+            ----------
+            scenario : str
+                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        """
+        if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
+            self.get_supplier().set_scenario(scenario)
+            self.update_impacts()
+        else:
+            raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")
+
+        return self
+    
+    def get_supplier(self):
+        """ Get the electricity supplier.
+        
+            Returns
+            -------
+            ElectricitySupply Obj.
+                Electricity supplier.
+        """
+
+        return self.electricity_supplier
+    
+    def get_year(self):
+        """ Get the year of electricity consumption.
+        
+            Returns
+            -------
+            int
+                Year of electricity consumption.
+        """
+
+        return self.year
+
+    def get_data_distribution(self, attr):
+        """ Get data_distribution object corresponding to the given attribute.
+
+            Parameters
+            ----------
+            attr : str.
+                Attribute to which the distribution correspond.
+
+            Returns
+            -------
+            DataDistribution Obj.
+                Data distribution.        
+        """
+        
+        if attr == 'impacts':
+
+            supplier = self.get_supplier()
+            impact_distribution, weights = supplier.get_impact_distribution() # this is a sampling of unit impacts
+
+            declared_unit = supplier.get_unit()
+            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
+
+            impact_distributions = []
+            for category in IMPACT_CATEGOREIS:
+                data = []
+                for impact, weight in zip(impact_distribution, weights):
+                    data.extend([impact.get_impact(category) * conversion_factor * self.get_qty()] * int(weight))
+
+                impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category, set_dist=False))
+
+            return impact_distributions
+
+        else:
+            return self.data_distributions[attr]
+    
 class Emission(Product):
     """
     Emission product object, inheriting from the product object.

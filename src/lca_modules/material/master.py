@@ -1,5 +1,7 @@
 
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.inventories import CarbonStorage, Emissions
+from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -43,7 +45,9 @@ class Master:
         self.model = None
         self.name = None
         self.life_cycle_stage = None
-        self.impacts = None
+        self.impacts = Impacts.from_parent(self)
+        self.carbon_stroage = CarbonStorage.from_parent(self)
+        self.emissions = Emissions.from_parent(self)
         self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
@@ -152,7 +156,7 @@ class Master:
             self.life_cycle_stage = stage
         else:
             previous_stage = self.get_life_cycle_stage()
-            self.set_life_cycle_stage(stage)
+            self.life_cycle_stage = stage
             
             impact_obj = self.get_impacts()
             parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage] # FIXME
@@ -440,9 +444,8 @@ class Master:
             if conversion_factor is None:
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
-            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in unit_impacts[2:].index}
-
-            self.impacts.update_impact_qty(impacts) 
+            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in IMPACT_CATEGOREIS}
+            self.impacts.update_impact_qty(impacts)
 
 
 if __name__ == '__main__':

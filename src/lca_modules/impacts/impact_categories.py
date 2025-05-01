@@ -1,9 +1,11 @@
 IMPACT_CATEGOREIS = {'GWP': 'kg CO₂-eq',
                      'AP': 'kg SO₂-eq',
-                     'EP': 'kg PO₄-eq',
+                     'EP': 'kg N-eq',
                      'ODP': 'kg CFC-11-eq',
                      'SFP': 'kg O₃-eq'
                     }
+
+PRIMARY_IMPACT_CATEGORY = 'GWP'
 
 IMPACT_NORMALIZATION_FACTOR = {'GWP': 24223.71,
                                'AP': 90.86,
@@ -23,7 +25,7 @@ IMPACT_WEIGHTING_FACTOR_EPA = {'GWP': 16,
 # REF:The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
 #     DOI: http://hdl.handle.net/1773/41885
 
-IMPACT_WEIGHTING_FACTOR_EPA = {'GWP': 29,
+IMPACT_WEIGHTING_FACTOR_NIST = {'GWP': 29,
                                'AP': 3,
                                'EP': 6,
                                'ODP': 2,

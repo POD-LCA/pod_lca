@@ -1,75 +1,50 @@
+from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
+from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
-from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainty.sensitivity_analysis import compute_sensitivity_of_param
+from utilities.units.common_units import KILOGRAM, WATT_HOUR, KILO
 
-# CLT example #TODO add reference
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
+# Concrete model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 project = Project()
-project.get_database().import_data_from_CSV(r'data/impact_data.csv')
 
-model_0 = project.get_current_model()
+concrete_yard = Location.from_str("98126, Seattle")
+project.set_location(concrete_yard)
 
-portland_cement = model_0.create_product("Portland cement", "A1")
-portland_cement.set_qty(367.410)
-portland_cement.set_unit('kg')
-portland_cement.set_impact_database_entry("Portland Cement")
+custom_impact_database = ImpactsDatabase.new("My database")
+custom_impact_database.set_data(r'data/impact_data.csv')
+project.set_database(custom_impact_database)
 
-fly_ash = model_0.create_product("Fly ash", "A1")
-fly_ash.set_qty(367.410)
-fly_ash.set_unit('kg')
-fly_ash.set_impact_database_entry("Fly Ash")
+concrete_model = project.add_model("concrete_01")
 
-slag_cement = model_0.create_product("Slag cement", "A1")
-slag_cement.set_qty(11.340)
-slag_cement.set_unit('kg')
-slag_cement.set_impact_database_entry("Slag cement")
+portland_cement = concrete_model.add_product(name="Portland cement", stage="A1", qty=367.410, unit=KILOGRAM, impacts_from="Portland Cement")
+fly_ash = concrete_model.add_product(name="Fly ash", stage="A1", qty=367.410, unit=KILOGRAM, impacts_from="Fly Ash")
+slag_cement = concrete_model.add_product(name="Slag cement", stage="A1", qty=11.340, unit=KILOGRAM, impacts_from="Slag cement")
+water_mixing = concrete_model.add_product(name="Water for mixing", stage="A1", qty=185.519, unit=KILOGRAM, impacts_from="Tap water_ROW_[ecoinvent]")
+water_process = concrete_model.add_product(name="Water for processing", stage="A1", qty=239.681, unit=KILOGRAM, impacts_from="Tap water_ROW_[ecoinvent]")
+crushed_coarse_aggregate = concrete_model.add_product(name="Crushed coarse aggregate", stage="A1", qty=71.668, unit=KILOGRAM, impacts_from="Gravel_crushed_ROW_[ecoinvent]")
+natural_coarse_aggregate = concrete_model.add_product(name="Natural coarse aggregate", stage="A1", qty=900.381, unit=KILOGRAM, impacts_from="Gravel_round_ROW_[ecoinvent]")
+crushed_fine_aggregate = concrete_model.add_product(name="Crushed fine aggregate", stage="A1", qty=42.184, unit=KILOGRAM, impacts_from="Gravel_crushed_ROW_[ecoinvent]")
+natural_fine_aggregate = concrete_model.add_product(name="Natural fine aggregate", stage="A1", qty=712.140, unit=KILOGRAM, impacts_from="Gravel_round_ROW_[ecoinvent]")
+air_entraining_admixture = concrete_model.add_product(name="Air entraining admixtures", stage="A1", qty=0.037, unit=KILOGRAM, impacts_from="Air entrainers_[EFCA]")
+plasticizers_superplasticizers = concrete_model.add_product(name="Plasticizers and superplasticizers", stage="A1", qty=0.255, unit=KILOGRAM, impacts_from="Plasticizer and Superplasticizers_[EFCA]")
+set_accelerators = concrete_model.add_product(name="Set accelerators", stage="A1", qty=0.369, unit=KILOGRAM, impacts_from="Set accelerators_[EFCA]")
 
-water_mixing = model_0.create_product("Water for mixing", "A1")
-water_mixing.set_qty(185.519)
-water_mixing.set_unit('kg')
-water_mixing.set_impact_database_entry("Tap water_ROW_[ecoinvent]")
+electricity = concrete_model.add_electricity(name="Electricity", stage="A3", qty=4.72, unit=KILO * WATT_HOUR)
+# TODO: Add transportation processes
 
-water_process = model_0.create_product("Water for processing", "A1")
-water_process.set_qty(239.681)
-water_process.set_unit('kg')
-water_process.set_impact_database_entry("Tap water_ROW_[ecoinvent]")
-
-crushed_coarse_aggregate = model_0.create_product("Crushed coarse aggregate", "A1")
-crushed_coarse_aggregate.set_qty(71.668)
-crushed_coarse_aggregate.set_unit('kg')
-crushed_coarse_aggregate.set_impact_database_entry("Gravel_crushed_ROW_[ecoinvent]")
-
-natural_coarse_aggregate = model_0.create_product("Natural coarse aggregate", "A1")
-natural_coarse_aggregate.set_qty(900.381)
-natural_coarse_aggregate.set_unit('kg')
-natural_coarse_aggregate.set_impact_database_entry("Gravel_round_ROW_[ecoinvent]")
-
-crushed_fine_aggregate = model_0.create_product("Crushed fine aggregate", "A1")
-crushed_fine_aggregate.set_qty(42.184)
-crushed_fine_aggregate.set_unit('kg')
-crushed_fine_aggregate.set_impact_database_entry("Gravel_crushed_ROW_[ecoinvent]")
-
-natural_fine_aggregate = model_0.create_product("Natural fine aggregate", "A1")
-natural_fine_aggregate.set_qty(712.140)
-natural_fine_aggregate.set_unit('kg')
-natural_fine_aggregate.set_impact_database_entry("Gravel_round_ROW_[ecoinvent]")
-
-air_entraining_admixture = model_0.create_product("Air entraining admixtures", "A1")
-air_entraining_admixture.set_qty(0.037)
-air_entraining_admixture.set_unit('kg')
-air_entraining_admixture.set_impact_database_entry("Air entrainers_[EFCA]")
-
-plasticizers_superplasticizers = model_0.create_product("Plasticizers and superplasticizers", "A1")
-plasticizers_superplasticizers.set_qty(0.255)
-plasticizers_superplasticizers.set_unit('kg')
-plasticizers_superplasticizers.set_impact_database_entry("Plasticizer and Superplasticizers_[EFCA]")
-
-set_accelerators = model_0.create_product("Set accelerators", "A1")
-set_accelerators.set_qty(0.369)
-set_accelerators.set_unit('kg')
-set_accelerators.set_impact_database_entry("Set accelerators_[EFCA]")
+print(concrete_model)
+print(project)
+print(electricity)
 
 # Hotspot analysis
-hotspot_analysis = HotSpotAnalysis(project)
-hot_spots_GWP = hotspot_analysis.run(model_name='Model_0', impact_category= "GWP", printout=True)
+hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)
+hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
+print(hotspot_analysis)
