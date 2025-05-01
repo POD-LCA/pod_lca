@@ -178,7 +178,7 @@ class BuildingComponent:
                 Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
         
         """
-        eol_mix_data = Data_Importer.import_as_pandas(EOL_DEFAULT_MIXES)
+        eol_mix_data = Data_Importer.csv_to_pandas(EOL_DEFAULT_MIXES)
         
         for key, value in deconstruction_map.items():
             if eol_mix_data['Material'].isin([key]).any():

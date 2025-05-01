@@ -83,13 +83,13 @@ class CambiumData:
         
         # get cambium data
         if regional_resolution== 'National':
-            df = Data_Importer.import_as_pandas(CAMBIUM_NATIONAL_DATA)
+            df = Data_Importer.csv_to_pandas(CAMBIUM_NATIONAL_DATA)
             cambium_data.data = df[df['country_code'] == country_code]
         elif regional_resolution == 'Regional':
-            df = Data_Importer.import_as_pandas(CAMBIUM_REGIONAL_DATA)
+            df = Data_Importer.csv_to_pandas(CAMBIUM_REGIONAL_DATA)
             cambium_data.data = df[df['gea'] == region]
         elif regional_resolution == 'Local':
-            df = Data_Importer.import_as_pandas(CAMBIUM_LOCAL_DATA)
+            df = Data_Importer.csv_to_pandas(CAMBIUM_LOCAL_DATA)
             cambium_data.data = df[df['r'] == region]
         else:
             raise KeyError(f"Regional resolution {regional_resolution} not recognized. Should be 'National', 'Regional', or 'Local'")

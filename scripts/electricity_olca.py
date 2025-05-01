@@ -48,7 +48,7 @@ for ferc_region in ferc_regions:
 
         tmp_6 = pd.concat([tmp_5['Balancing Authority Name'], calc_2], axis=1)
 
-        electricity_impact = CSV_Importer.import_as_pandas(impact_data_file)
+        electricity_impact = CSV_Importer.csv_to_pandas(impact_data_file)
         impacts_dict = dict.fromkeys(impact_data_headers, 0)
         for index, row in tmp_6.iterrows():
             USLCI_entry = 'Electricity - ' + technology + ' - ' + row['Balancing Authority Name']

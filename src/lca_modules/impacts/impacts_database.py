@@ -112,7 +112,7 @@ class ImpactsDatabase:
 
         multipliers = [None, None, None] + multipliers + [None] * (no_headers - 3 - len(multipliers))
 
-        data = Data_Importer.import_as_pandas(file_path, data_headers, multipliers)
+        data = Data_Importer.csv_to_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
 
@@ -311,7 +311,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
 
         multipliers = [None] * 5 + multipliers + [None] * (no_headers - 5 - len(multipliers))
 
-        data = Data_Importer.import_as_pandas(file_path, data_headers, multipliers)
+        data = Data_Importer.csv_to_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
 

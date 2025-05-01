@@ -13,7 +13,7 @@ __version__ = "0.1.0"
 
 class Data_Importer:
 
-    def import_as_pandas(file_path, headers=None, multipliers=None):
+    def csv_to_pandas(file_path, headers=None, multipliers=None):
         """ Import data to database from a CSV file.
         
             Parameters

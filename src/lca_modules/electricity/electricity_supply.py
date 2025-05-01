@@ -284,7 +284,7 @@ class ElectricitySupply:
 
         # Get regionalised impact data
         if (regional_resolution== 'National'):
-            df = Data_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
+            df = Data_Importer.csv_to_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
             country = self.get_location().get_country() if self.get_location() is not None else DEFAULT_COUNTRY
             country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
             if country_code in df['Country code'].values:
@@ -293,7 +293,7 @@ class ElectricitySupply:
                 raise KeyError(f"{country} ({country_code}) not in the dataset provided in file: '{ELECTRICITY_IMPACT_NATIONAL_DATA}.'")                
 
         elif (regional_resolution == 'Regional') or (regional_resolution== 'Local'):
-            df = Data_Importer.import_as_pandas(ELECTRICITY_IMPACT_REGIONAL_DATA)
+            df = Data_Importer.csv_to_pandas(ELECTRICITY_IMPACT_REGIONAL_DATA)
 
             if self.get_location().get_ferc_region() is None:
                 self.get_location().set_ferc_region()
@@ -480,7 +480,7 @@ class ElectricitySupply:
         year = self.get_year()
 
         # impacts by technology
-        df = Data_Importer.import_as_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
+        df = Data_Importer.csv_to_pandas(ELECTRICITY_IMPACT_NATIONAL_DATA)
         country_code = self.get_location().get_country_code() if self.get_location() is not None else DEFAULT_COUNTRY_CODE
         if country_code in df['Country code'].values:
             impact_data_by_tech = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns') 
