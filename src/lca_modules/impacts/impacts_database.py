@@ -5,6 +5,7 @@ from utilities.data_imports.data_importer import Data_Importer
 from pandas import DataFrame
 from pandas import concat
 
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -56,6 +57,8 @@ class ImpactsDatabase:
         ----------
         name : str
             Name of the database.
+        file_path : str
+            Location of the impact categories json file.
         
         Returns
         -------
@@ -123,6 +126,32 @@ class ImpactsDatabase:
             self.data = concat([self.get_data_all(), data], ignore_index=True)
 
         return self
+    
+    def set_impact_categories(self, impact_categories):
+        """ Set the impact categories.
+        
+        Parameters
+        ----------
+        impact_categories : list
+            List of impact categories.
+        """
+
+        self.impact_ceteogries = impact_categories
+
+        return self
+    
+    def set_impact_categories(self, impact_categories):
+        """ Set the impact categories.
+        
+        Parameters
+        ----------
+        impact_categories : list
+            List of impact categories.
+        """
+
+        self.impact_ceteogries = impact_categories
+
+        return self
 
     def set_data_entry(self, flow, qty, unit, impacts, add_data=None):
         """ Add a custom entry the database.
@@ -150,7 +179,7 @@ class ImpactsDatabase:
         if list(IMPACT_CATEGOREIS.keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] == list(tmp_data.keys()) :
             self.data.loc[len(self.data)] = tmp_data
         else:
-            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {IMPACT_CATEGOREIS.keys()}")
+            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {self.get_impact_categories_names()}")
 
         # TODO: check if the additional headers exist/ if not create them and add the new data
 
@@ -198,13 +227,39 @@ class ImpactsDatabase:
     def get_name(self):
         """ Get the name of the database.
         
-        Returns
-        -------
-        str
-            Name of the database.
+            Returns
+            -------
+            str
+                Name of the database.
         """
 
         return self.name
+    
+    def get_impact_categories_names(self):
+        """ Get the impact categories.
+        
+            Returns
+            -------
+            list of str
+                List of impact categories.
+        """
+
+        return list(self.impact_ceteogries.keys())
+    
+    def get_impact_category_units(self):
+        """ Get the units of the impact categories.
+        
+            Returns
+            -------
+            list of str
+                List of units of the impact categories.
+        """
+
+        units = []
+        for key, value in self.impact_ceteogries.items():
+            units.append(value['refUnit'])
+
+        return units
     
     def get_data_all(self):
         """ Retrieve impact data in the database.

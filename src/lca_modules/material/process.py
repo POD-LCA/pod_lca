@@ -1,4 +1,5 @@
 
+from lca_modules.impacts.impacts import Impacts
 from lca_modules.material.master import Master
 from utilities.units.common_units import KILOGRAM
 
@@ -90,6 +91,7 @@ class transportationProcess(Process):
         item.set_life_cycle_stage(stage)
         item.set_transported_distance(transported_distance)
         item.set_transported_distance_unit(unit)
+        item.impacts = Impacts.from_parent(item)
         item.set_impact_database_entry(impacts_from)
 
         return item

@@ -1,0 +1,979 @@
+name,UUID,declared_qty,declared_unit,conversion_factor,converted_unit
+"blow moulding | blow moulding | EN15804, U",e3716672-40aa-4da2-bff5-aae3d33ae904,1,kg,6.12,MJ
+"blow moulding | blow moulding | EN15804, U",ec4afb08-e6ca-419f-b33f-b640684a377f,1,kg,6.12,MJ
+"blow moulding | blow moulding | EN15804, U",f5abe8b8-80b7-49f1-bfdb-1f9f39f86e31,1,kg,6.12,MJ
+"market for blow moulding | blow moulding | EN15804, U",413dc0cd-5643-483b-b7f6-c7bb3548efbb,1,kg,6.12,MJ
+"market for stretch blow moulding | stretch blow moulding | EN15804, U",548be5b5-b1da-488c-abf9-7ad3db078c96,1,kg,9.18,MJ
+"stretch blow moulding | stretch blow moulding | EN15804, U",2eaf161e-3a00-4e5e-83e8-28edc82fa322,1,kg,9.18,MJ
+"stretch blow moulding | stretch blow moulding | EN15804, U",d2f06933-ced3-4eb2-85cd-95d779420dad,1,kg,9.18,MJ
+"stretch blow moulding | stretch blow moulding | EN15804, U",dd59e0ae-7970-4915-962c-502fa204582e,1,kg,9.18,MJ
+"sheet rolling, chromium steel | sheet rolling, chromium steel | EN15804, U",2e76027a-3a51-47ec-97ee-ddacaffa9068,1,kg,1.639,MJ
+"sheet rolling, chromium steel | sheet rolling, chromium steel | EN15804, U",b1ace13f-713a-4286-a6db-327a822771b5,1,kg,1.639,MJ
+"market for sheet rolling, chromium steel | sheet rolling, chromium steel | EN15804, U",f246f1f5-8604-4488-a720-17fa60bb7872,1,kg,1.639,MJ
+"market for synthetic gas | synthetic gas | EN15804, U",11565faf-5638-4e50-8727-5afeca382d8c,1,m3,5.3,MJ
+"market for synthetic gas | synthetic gas | EN15804, U",f0cf88ac-920f-48c1-82e4-2fbcbee9e923,1,m3,5.3,MJ
+"synthetic gas production, from wood, at fixed bed gasifier | synthetic gas | EN15804, U",e9463b41-bdb3-4643-8c61-740b84766f32,1,m3,5.2,MJ
+"synthetic gas production, from wood, at fixed bed gasifier | synthetic gas | EN15804, U",cfac3b26-4611-4980-bdf4-de0bdc59353f,1,m3,5.2,MJ
+"synthetic gas production, from wood, at fluidized bed gasifier | synthetic gas | EN15804, U",c2b46ddf-b4d8-4408-ad15-a30d2f6c4fbe,1,m3,5.4,MJ
+"synthetic gas production, from wood, at fluidized bed gasifier | synthetic gas | EN15804, ",55ea1c23-3618-4c79-9acb-79537499891a,1,m3,5.4,MJ
+"charcoal production | charcoal | EN15804, U",1ad4eaf7-439c-49c6-9f5b-7411d88f95e1,1,kg,28.4,MJ
+"market for charcoal | charcoal | EN15804, U",b7ba8888-00e3-413f-9161-788fc2764b73,1,kg,28.4,MJ
+"hardwood forestry, birch, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",2b2371f4-84c5-4cc0-bb10-4de9be9a4e21,1,kg,19.6,MJ
+"hardwood forestry, birch, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",1b416563-bef5-4e52-b2eb-c5b04a1a3897,1,kg,19.6,MJ
+"market for bundle, energy wood, measured as dry mass | bundle, energy wood, measured as dry mass | EN15804, U",b05fe3ac-3bfd-421b-b79f-b875b3325aa1,1,kg,19.96,MJ
+"market for bundle, energy wood, measured as dry mass | bundle, energy wood, measured as dry mass | EN15804, U",6cd6c546-502a-4207-aea6-17c3b497ae1f,1,kg,20.146,MJ
+"softwood forestry, pine, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",1c50c30b-52e1-44db-9ade-7183f25e4031,1,kg,20.4,MJ
+"softwood forestry, pine, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",795dfa16-ee80-4860-8fe8-ba53db7073a3,1,kg,20.4,MJ
+"softwood forestry, spruce, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",2c4f1903-5fcd-420b-b321-330b71ad7682,1,kg,20.4,MJ
+"softwood forestry, spruce, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",397336d2-7583-4d7a-a2b5-0935c6298efc,1,kg,20.4,MJ
+"hardwood forestry, beech, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",0aaf3510-6cc6-48c1-9d6c-b4f0892f7595,1,kg,19.6,MJ
+"hardwood forestry, beech, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",da91174e-c15b-433b-b150-b73bda740dcc,1,kg,19.6,MJ
+"hardwood forestry, birch, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",a7ba57e2-f2f5-41b2-ac59-7aaf747eaee5,1,kg,19.6,MJ
+"hardwood forestry, birch, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",36c03b7a-6c31-49b9-855d-29840b298452,1,kg,19.6,MJ
+"hardwood forestry, mixed species, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",53e4dfce-ea02-46f9-9494-37df2b033127,1,kg,19.6,MJ
+"hardwood forestry, oak, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",f10124d2-4c41-42fb-8b85-cf80d8838c1e,1,kg,19.6,MJ
+"hardwood forestry, oak, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",b29273a3-1a56-4bc7-95d1-d7f8f1855121,1,kg,19.6,MJ
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",7748bb76-59b4-4ced-b29d-9c410cc53278,1,kg,20.32,MJ
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",0ef419aa-c72d-45f8-bb0f-2236ccf28184,1,kg,19.871,MJ
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",cca8e902-349f-4980-a1a0-cd72baeb6cfe,1,kg,20.107,MJ
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",c57763a6-671d-41f5-8b87-1b05c2884130,1,kg,19.957,MJ
+"softwood forestry, mixed species, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",46c3c7c8-dd8e-4123-b988-df3c05638ef1,1,kg,20.4,MJ
+"softwood forestry, pine, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",efd8f1c9-80c8-42a1-947c-b8d7331fb87f,1,kg,20.4,MJ
+"softwood forestry, pine, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",238e5b1f-5020-466d-a204-9036319591d8,1,kg,20.4,MJ
+"softwood forestry, pine, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",991d1d5a-f093-4e80-94d1-9e68b22adf10,1,kg,20.4,MJ
+"softwood forestry, spruce, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",d1a4dfbf-8ab9-4456-a45b-53f4e7003f43,1,kg,20.4,MJ
+"softwood forestry, spruce, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",53b4cdaf-531a-4a13-bc3c-9dc15914bb67,1,kg,20.4,MJ
+"softwood forestry, spruce, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",d2821955-fbb3-4ba3-a4e6-67aedfa61892,1,kg,20.4,MJ
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",158b6acd-617f-4fa4-a8f0-58f662991659,1,kg,19.6,MJ
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",a7b1985d-39e1-4094-84ac-de1ffd80f90e,1,kg,19.6,MJ
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",13e45f65-b9d7-4982-a9ed-0ef05d814f36,1,kg,19.6,MJ
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",2ed561dd-1f9a-486c-957a-47fb50da2733,1,kg,19.6,MJ
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",b4457088-c94f-47f5-a6bd-ba6ac43fa2a6,1,kg,20.4,MJ
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",c334ea7c-b569-4d51-97af-427c43fd9847,1,kg,20.4,MJ
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",bdbceb84-2513-4eb4-9df9-92946599d254,1,kg,20.4,MJ
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",ea8d5f10-6e12-45a8-a6a7-f955fe775169,1,kg,20.4,MJ
+"cross-laminated timber production | wood chips, dry, measured as dry mass | EN15804, U",a1c68447-50e9-40d9-a124-52c64d6f4228,1,kg,20.4,MJ
+"cross-laminated timber production | wood chips, dry, measured as dry mass | EN15804, U",b224b594-06ec-4534-afcd-9353467acf76,1,kg,20.4,MJ
+"furniture production, wooden | wood chips, dry, measured as dry mass | EN15804, U",f02649a7-a779-4561-9516-ab8e0e541dd6,1,kg,19.6,MJ
+"glued laminated timber production, average glue mix | wood chips, dry, measured as dry mass | EN15804, U",4980d1b9-5d18-41cb-a0de-d446132854d1,1,kg,20.4,MJ
+"glued laminated timber production, average glue mix | wood chips, dry, measured as dry mass | EN15804, U",a93498ec-1a37-4a40-a7ce-aea5fae06ff2,1,kg,20.4,MJ
+"glued solid timber production | wood chips, dry, measured as dry mass | EN15804, U",11dc1e4d-12c4-4284-accb-159b78fece93,1,kg,20.4,MJ
+"glued solid timber production | wood chips, dry, measured as dry mass | EN15804, U",81989569-500d-490d-b3a3-ffbf90fd5f2e,1,kg,20.4,MJ
+"market for wood chips, dry, measured as dry mass | wood chips, dry, measured as dry mass | EN15804, U",f1884b12-7058-48fc-9af3-1586285b7676,1,kg,20.32,MJ
+"market for wood chips, dry, measured as dry mass | wood chips, dry, measured as dry mass | EN15804, U",d152f68e-6814-4dd9-bb60-b192084ca305,1,kg,19.942,MJ
+"plywood production | wood chips, dry, measured as dry mass | EN15804, U",f1272c0a-ff2c-4829-972b-ed2e05216b75,1,kg,19.6,MJ
+"plywood production | wood chips, dry, measured as dry mass | EN15804, U",2586b380-a76f-4f8c-b9ec-1f34d3b1cef1,1,kg,19.6,MJ
+"plywood production | wood chips, dry, measured as dry mass | EN15804, U",22d96fe3-62e6-49a9-bd9c-15f3e0fa4d4a,1,kg,19.6,MJ
+"structural timber production | wood chips, dry, measured as dry mass | EN15804, U",ea4e912e-3f98-4784-b421-4adcf185211c,1,kg,20.4,MJ
+"structural timber production | wood chips, dry, measured as dry mass | EN15804, U",c5de4877-38d1-4a35-b80e-0f145921e809,1,kg,20.4,MJ
+"three and five layered board production | wood chips, dry, measured as dry mass | EN15804, U",794cc5d8-1528-47f7-93a8-4865d40594ff,1,kg,20.4,MJ
+"three and five layered board production | wood chips, dry, measured as dry mass | EN15804, U",7fe25597-9aea-4cf8-894f-777dd2e6b28f,1,kg,20.4,MJ
+"wood cladding production, softwood | wood chips, dry, measured as dry mass | EN15804, U",47b69701-a80e-4ab7-bc64-f9537e899f7a,1,kg,20.4,MJ
+"wood cladding production, softwood | wood chips, dry, measured as dry mass | EN15804, U",a080d98a-4c38-4941-9360-06252fd83ea2,1,kg,20.4,MJ
+"biogas purification to biomethane by amino washing | biomethane, high pressure | EN15804, U",475acd16-ed1d-4af3-aabf-af99ba659468,1,m3,34.45,MJ
+"biogas purification to biomethane by amino washing | biomethane, high pressure | EN15804, U",25055a72-8e64-42b7-a18c-3a0397f63ca4,1,m3,34.45,MJ
+"biogas purification to biomethane by membrane technique | biomethane, high pressure | EN15804, U",c2a00b2b-a9d1-4134-9617-937cdcd9f141,1,m3,34.45,MJ
+"biogas purification to biomethane by membrane technique | biomethane, high pressure | EN15804, U",034f6766-5e72-480a-a2bf-ed8412127b24,1,m3,34.45,MJ
+"biogas purification to biomethane by pressure swing adsorption | biomethane, high pressure | EN15804, U",f3593937-7ac7-447f-8acf-3f3b3012a023,1,m3,34.45,MJ
+"biogas purification to biomethane by pressure swing adsorption | biomethane, high pressure | EN15804, U",b83da472-bd68-4b65-a9d2-d18cb3e139e4,1,m3,34.45,MJ
+"biomethane production, high pressure from synthetic gas, wood, fixed bed technology | biomethane, high pressure | EN15804, U",3f829e7a-555a-4f99-adb7-6299a4a4ed56,1,m3,34.45,MJ
+"biomethane production, high pressure from synthetic gas, wood, fixed bed technology | biomethane, high pressure | EN15804, U",c9c057b6-a355-4aac-ae5a-249a1f843c51,1,m3,34.45,MJ
+"biomethane production, high pressure from synthetic gas, wood, fluidised technology | biomethane, high pressure | EN15804, U",70771e00-5d66-4ae5-aa56-ca72f25c2ecb,1,m3,34.45,MJ
+"biomethane production, high pressure from synthetic gas, wood, fluidised technology | biomethane, high pressure | EN15804, U",5a3d133e-e964-42bf-ae94-11cb648c4a11,1,m3,34.45,MJ
+"market for biomethane, high pressure | biomethane, high pressure | EN15804, U",4d313168-39ac-4029-b280-055aed7b81db,1,m3,34.45,MJ
+"market for biomethane, high pressure | biomethane, high pressure | EN15804, U",b2c8d806-f750-43ff-a5c7-139db5dbe9d0,1,m3,34.45,MJ
+"biomethane production, high pressure, vehicle grade | biomethane, high pressure, vehicle grade | EN15804, U",55729ccf-fa1d-4069-945e-8b62458ae02c,1,kg,46.5,MJ
+"biomethane production, high pressure, vehicle grade | biomethane, high pressure, vehicle grade | EN15804, U",e7a75aab-34a2-4250-b781-42cc1e23842b,1,kg,46.5,MJ
+"market for biomethane, high pressure, vehicle grade | biomethane, high pressure, vehicle grade | EN15804, U",5af8ef89-d8ab-4971-8deb-c4114eec5c6c,1,kg,46.5,MJ
+"market for biomethane, high pressure, vehicle grade | biomethane, high pressure, vehicle grade | EN15804, U",9a3a355e-2ab6-41ab-bef3-38a5e367037e,1,kg,46.5,MJ
+"biomethane production, medium pressure, vehicle grade | biomethane, medium pressure, vehicle grade | EN15804, U",b7eb040b-c542-4b6c-a7d5-4b5943f55de3,1,kg,46.5,MJ
+"biomethane production, medium pressure, vehicle grade | biomethane, medium pressure, vehicle grade | EN15804, U",0555e745-347c-44a5-9973-cf2b3ffd884c,1,kg,46.5,MJ
+"market for biomethane, medium pressure, vehicle grade | biomethane, medium pressure, vehicle grade | EN15804, U",9ff9814b-773d-4adf-9248-d491f2a7b0df,1,kg,46.5,MJ
+"market for biomethane, medium pressure, vehicle grade | biomethane, medium pressure, vehicle grade | EN15804, U",4240b9ae-37ac-4386-b6fa-b06a15e3a4a7,1,kg,46.5,MJ
+"biomethane production, low pressure, vehicle grade | biomethane, low pressure, vehicle grade | EN15804, U",19115256-dcfb-401d-b6d1-f7689ca3eaf6,1,kg,46.5,MJ
+"biomethane production, low pressure, vehicle grade | biomethane, low pressure, vehicle grade | EN15804, U",24bedbd5-de03-47a5-be21-3137eb8ea5fc,1,kg,46.5,MJ
+"market for biomethane, low pressure, vehicle grade | biomethane, low pressure, vehicle grade | EN15804, U",def8f2eb-993c-4704-b89b-1c13c9cb682a,1,kg,46.5,MJ
+"market for biomethane, low pressure, vehicle grade | biomethane, low pressure, vehicle grade | EN15804, U",aee81a06-1ebc-41a7-970d-50f212e5d109,1,kg,46.5,MJ
+"market for wood pellet, measured as dry mass | wood pellet, measured as dry mass | EN15804, U",dcbf451f-b6b4-4aea-8d8c-94718492347d,1,kg,18.7,MJ
+"market for wood pellet, measured as dry mass | wood pellet, measured as dry mass | EN15804, U",ca74889c-8bbd-4427-9603-31184f73b73f,1,kg,18.7,MJ
+"window frame production, wood, U=1.5 W/m2K | wood pellet, measured as dry mass | EN15804, U",5e320642-17f8-479c-add6-9e28177ee982,1,kg,18.7,MJ
+"window frame production, wood, U=1.5 W/m2K | wood pellet, measured as dry mass | EN15804, U",c2b45f46-6d1f-4ed7-8860-cfe630e5f454,1,kg,18.7,MJ
+"window frame production, wood, U=1.5 W/m2K | wood pellet, measured as dry mass | EN15804, U",431b3e79-90c7-4604-92be-5abb44cef3ae,1,kg,18.7,MJ
+"window frame production, wood-metal, U=1.6 W/m2K | wood pellet, measured as dry mass | EN15804, U",e35ee118-8f28-42e3-8ea2-10fd352b81a6,1,kg,18.7,MJ
+"window frame production, wood-metal, U=1.6 W/m2K | wood pellet, measured as dry mass | EN15804, U",99ea8586-6c96-4aa6-b482-feee6cb2730d,1,kg,18.7,MJ
+"wood pellet production | wood pellet, measured as dry mass | EN15804, U",06877c02-78f6-4e46-a684-089e8e37628d,1,kg,18.7,MJ
+"wood pellet production | wood pellet, measured as dry mass | EN15804, U",7321584c-70a4-490c-a906-0763d24f3db8,1,kg,18.7,MJ
+"hardwood forestry, oak, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",d2de2bbc-95bf-495f-bb61-af107ad5bf12,1,kg,18.55,MJ
+"hardwood forestry, birch, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",8dc42140-bde3-441e-8532-476c67708388,1,kg,18.55,MJ
+"market for cleft timber, measured as dry mass | cleft timber, measured as dry mass | EN15804, U",1e664df6-e557-48bd-82f9-a3ce6bf9f89d,1,kg,18.55,MJ
+"cork forestry | cleft timber, measured as dry mass | EN15804, U",cb3b609e-043d-4ea7-808e-a37672ec5319,1,kg,18.55,MJ
+"softwood forestry, spruce, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",311ffe5a-b326-4abf-86d0-bf89443842ba,1,kg,18.55,MJ
+"hardwood forestry, beech, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",4be61309-9d84-44a0-9179-6efa613822b5,1,kg,18.55,MJ
+"softwood forestry, spruce, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",611aa0f1-12c9-43d0-869a-69a1e41da1e6,1,kg,18.55,MJ
+"softwood forestry, spruce, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",f9bf3be7-970d-4135-9ff4-8f9cea7efffa,1,kg,18.55,MJ
+"market for cleft timber, measured as dry mass | cleft timber, measured as dry mass | EN15804, U",0716d63a-26da-4e6f-99ae-433ae2bb1b1b,1,kg,18.55,MJ
+"market for cleft timber, measured as dry mass | cleft timber, measured as dry mass | EN15804, U",840321f7-8b97-46c9-8e18-2c4072963d16,1,kg,18.55,MJ
+"market for cleft timber, measured as dry mass | cleft timber, measured as dry mass | EN15804, U",20c51db9-ba89-4d6a-98fa-0a4dd23c98e1,1,kg,18.55,MJ
+"hardwood forestry, birch, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",21d91ebf-2cb8-46a1-978a-77eb29a83697,1,kg,18.55,MJ
+"softwood forestry, mixed species, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",08566de6-ae75-41ae-a688-5bf9b306dcdb,1,kg,18.55,MJ
+"cork forestry | cleft timber, measured as dry mass | EN15804, U",e506dac8-bc57-492c-8aed-9812ce772c11,1,kg,18.55,MJ
+"hardwood forestry, beech, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",c8634a78-9c09-44bb-9159-3063d6c57dd9,1,kg,18.55,MJ
+"hardwood forestry, eucalyptus ssp., planted forest management | cleft timber, measured as dry mass | EN15804, U",3acec7ba-e1f2-4518-8af8-29a2a6a23519,1,kg,18.55,MJ
+"softwood forestry, pine, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",8785b84d-5f57-42a1-9545-e633f585b698,1,kg,18.55,MJ
+"hardwood forestry, eucalyptus ssp., planted forest management | cleft timber, measured as dry mass | EN15804, U",c9c52724-af96-49f5-b2bc-223db7c65e90,1,kg,18.55,MJ
+"hardwood forestry, eucalyptus ssp., planted forest management | cleft timber, measured as dry mass | EN15804, U",b0e11670-0d61-48c2-8719-ba01808d6a10,1,kg,18.55,MJ
+"softwood forestry, pine, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",f2d9fdc4-3d0a-4a2c-ac2b-edd97e567f7c,1,kg,18.55,MJ
+"hardwood forestry, eucalyptus ssp., planted forest management | cleft timber, measured as dry mass | EN15804, U",4a558127-b8bd-4945-a4e6-de29b46a045f,1,kg,18.55,MJ
+"hardwood forestry, oak, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",44767eee-bdb5-4a9b-bae9-24ac8c96c536,1,kg,18.55,MJ
+"hardwood forestry, mixed species, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",9b542edf-bd65-4775-9081-f270f18c9a03,1,kg,18.55,MJ
+"softwood forestry, pine, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",35872c1e-d736-4eff-816f-c47703f08c03,1,kg,18.55,MJ
+"treatment of waste wood, post-consumer, sorting and shredding | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",58b4c21f-0ec0-4031-a4e6-5f43f57fd234,1,kg,9.99,MJ
+"treatment of waste wood, post-consumer, sorting and shredding | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",f1eb3d0f-0a5b-46e6-a857-4d6e825bae0f,1,kg,9.99,MJ
+"market for wood chips, from post-consumer wood, measured as dry mass | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",9837f13b-b525-4441-a630-fa464c078dc9,1,kg,9.99,MJ
+"market for wood chips, from post-consumer wood, measured as dry mass | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",0a62ae31-fe02-48fb-931f-dbe9157f7a96,1,kg,9.99,MJ
+"sulfate pulp production, from softwood, bleached | bark chips, wet, measured as dry mass | EN15804, U",25cad839-cada-4218-befd-f68cadda7093,1,kg,13.6,MJ
+"bark chips production, softwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",2353bc13-a3fe-4b33-a71d-afc04c9fcf57,1,kg,13.6,MJ
+"market for bark chips, wet, measured as dry mass | bark chips, wet, measured as dry mass | EN15804, U",4d3ae591-eca3-4754-8007-f3d5b494fca5,1,kg,13.6,MJ
+"folding boxboard carton production | bark chips, wet, measured as dry mass | EN15804, U",684de428-3d7b-43ad-8eba-2e23a69d14db,1,kg,13.6,MJ
+"oriented strand board production | bark chips, wet, measured as dry mass | EN15804, U",2fe11f21-4c30-4810-8030-29e067e66c48,1,kg,13.6,MJ
+"bark chips production, hardwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",be912ab0-6b82-4479-8df6-a76cb8eb8511,1,kg,13.6,MJ
+"kraft paper production | bark chips, wet, measured as dry mass | EN15804, U",a9411b1e-78f3-4346-9486-655b204022bf,1,kg,13.6,MJ
+"bark chips production, softwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",7e52b023-80f9-40bc-a294-29759b12fea6,1,kg,13.6,MJ
+"fibreboard production, soft, from wet & dry processes | bark chips, wet, measured as dry mass | EN15804, U",9d178b27-7777-4e29-96b7-d472ed501eed,1,kg,13.6,MJ
+"bark chips production, softwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",e2e66f90-6698-44d0-87e2-46d4468ca6b8,1,kg,13.6,MJ
+"sulfate pulp production, from softwood, unbleached | bark chips, wet, measured as dry mass | EN15804, U",20c54e1d-433c-4cb4-81df-8f2b7b70e94f,1,kg,13.6,MJ
+"bark chips production, hardwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",57c45e75-a951-4323-8114-cb681515f6ee,1,kg,13.6,MJ
+"market for bark chips, wet, measured as dry mass | bark chips, wet, measured as dry mass | EN15804, U",9b328fe4-458a-4a0d-8b81-51be997919e9,1,kg,13.6,MJ
+"fibreboard production, hard | bark chips, wet, measured as dry mass | EN15804, U",325b853e-0e61-4f52-a85d-7149337d6d18,1,kg,13.6,MJ
+"oriented strand board production | bark chips, wet, measured as dry mass | EN15804, U",5e79ebfc-883f-4034-b7e9-e97ec9be977a,1,kg,13.6,MJ
+"fibreboard production, hard | bark chips, wet, measured as dry mass | EN15804, U",7b8a085c-adff-43df-bba5-ec3659a03714,1,kg,13.6,MJ
+"bark chips production, softwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",25148502-389c-48cb-ba66-c7f90d37d57c,1,kg,13.6,MJ
+"sulfate pulp production, from softwood, unbleached | bark chips, wet, measured as dry mass | EN15804, U",aa9b3e2c-ad13-4e4c-b92c-a5f9238f121d,1,kg,13.6,MJ
+"particleboard production, uncoated, average glue mix | bark chips, wet, measured as dry mass | EN15804, U",1a277614-c755-4822-a202-7bf93d35fc80,1,kg,13.6,MJ
+"market for bark chips, wet, measured as dry mass | bark chips, wet, measured as dry mass | EN15804, U",1984a1ff-a5d9-455e-8bdb-09127d1300ec,1,kg,13.6,MJ
+"bark chips production, hardwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",59ffdf11-68fa-4ba2-b01f-2e7eb0008a7d,1,kg,13.6,MJ
+"bark chips production, hardwood, at sawmill | bark chips, wet, measured as dry mass | EN15804, U",75c59387-8e98-4b6c-a0b2-8c101bad5ea6,1,kg,13.6,MJ
+"fibreboard production, soft, from wet & dry processes | bark chips, wet, measured as dry mass | EN15804, U",c771568f-46f6-4948-a7af-1d41ad17493f,1,kg,13.6,MJ
+"kraft paper production | bark chips, wet, measured as dry mass | EN15804, U",20f722f4-0f55-4c5a-8f46-89cb67b79ad0,1,kg,13.6,MJ
+"debarking, softwood, in forest | bark chips, wet, measured as dry mass | EN15804, U",124744e3-df09-4e40-a566-918e40a49cc8,1,kg,13.6,MJ
+"debarking, softwood, in forest | bark chips, wet, measured as dry mass | EN15804, U",d61a9253-ef6d-42ee-8d75-be15e8c1ffcb,1,kg,13.6,MJ
+"market for bark chips, wet, measured as dry mass | bark chips, wet, measured as dry mass | EN15804, U",08bcc86c-29e3-4268-9e8b-bb8cf98ef5df,1,kg,13.6,MJ
+"particleboard production, uncoated, average glue mix | bark chips, wet, measured as dry mass | EN15804, U",e0b7e1b5-0e8d-4edd-8b49-eb3a3054453b,1,kg,13.6,MJ
+"sulfate pulp production, from softwood, bleached | bark chips, wet, measured as dry mass | EN15804, U",d29ba5a0-bb64-4c1c-a114-801886ec7e5f,1,kg,13.6,MJ
+"folding boxboard carton production | bark chips, wet, measured as dry mass | EN15804, U",d20d76c3-e8a4-464f-8f17-7f0ba626785b,1,kg,13.6,MJ
+"fibreboard production, soft, from wet & dry processes | bark chips, wet, measured as dry mass | EN15804, U",2e02b41f-0ee3-4992-8023-1634814fcc6a,1,kg,13.6,MJ
+"hard coal, import from ZA | hard coal | EN15804, U",2cecaa71-80cf-4769-8adb-f742559dc30a,1,kg,27.91,MJ
+"hard coal preparation, coal washing | hard coal | EN15804, U",3ab1ea1e-1064-4179-9cc1-e7826f6814c5,1,kg,27.91,MJ
+"hard coal, import from ID | hard coal | EN15804, U",fc810825-0270-4278-b9eb-56c472d839c5,1,kg,27.91,MJ
+"hard coal, import from ID | hard coal | EN15804, U",cc7ab3eb-4286-408e-8869-c1e93c03e709,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",0e9e50f0-c955-4ad2-831f-a667d9667380,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",1feb43e4-7320-47a7-a6ff-b9499dbca3ff,1,kg,27.91,MJ
+"hard coal preparation, crushing and destoning | hard coal | EN15804, U",bbc9e6d6-4b79-481b-8ae3-04d68ceacbc6,1,kg,27.91,MJ
+"hard coal, import from RNA | hard coal | EN15804, U",b677fa12-b0aa-4e20-aa06-54e4570d1e35,1,kg,27.91,MJ
+"hard coal, import from Indonesia | hard coal | EN15804, U",eaac3584-0a55-4c26-aa54-64e672069314,1,kg,27.91,MJ
+"hard coal, import from RNA | hard coal | EN15804, U",002ec1a8-0e94-46c6-bcab-7739233a7313,1,kg,27.91,MJ
+"hard coal, import from RNA | hard coal | EN15804, U",cb585ce5-9929-4ff6-ab55-62a27f033bc9,1,kg,27.91,MJ
+"hard coal, import from AU | hard coal | EN15804, U",70fe3d85-651f-4781-86b4-59da7e497480,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",2d09a789-e16a-472a-a1b0-9aca3630c1d1,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",c74c64b7-f93c-48e6-9932-6ab47b5996a8,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",8e30e999-424f-410d-8dbc-b6f5beb830eb,1,kg,27.91,MJ
+"hard coal, import from AU | hard coal | EN15804, U",8f590576-94ad-407f-8282-ce95f7294e0f,1,kg,27.91,MJ
+"hard coal, import from RNA | hard coal | EN15804, U",fe5bda36-ed1f-4672-9278-5475fa0efa2a,1,kg,27.91,MJ
+"hard coal, import from RLA | hard coal | EN15804, U",f86805ee-9d95-406e-a877-8d80265d7c07,1,kg,27.91,MJ
+"hard coal, import from ID | hard coal | EN15804, U",aac0f674-10d5-42d0-ada6-25c7f5dda442,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",61f3f9d3-fa79-4c41-ac89-e08bf7d037ed,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",e97bbc9a-40cc-4c79-ba95-956e1186244d,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",60eaabda-39f4-4a03-96a1-ba52e26980ed,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",1158cc72-539d-4ed9-8318-0fe5cb2e485e,1,kg,27.91,MJ
+"hard coal, import from AU | hard coal | EN15804, U",f1f7e4f8-6709-4607-9f10-fa032a3f7c09,1,kg,27.91,MJ
+"hard coal, import from RU | hard coal | EN15804, U",c3510683-5beb-4b39-90fc-8c45e0ee2243,1,kg,27.91,MJ
+"hard coal, import from RLA | hard coal | EN15804, U",72c80cec-02cc-4cf5-826e-0b786a23a915,1,kg,27.91,MJ
+"hard coal, import from ZA | hard coal | EN15804, U",6b6a7267-478f-4021-8706-bcfc4a6f3ee2,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",f55c96d0-1b7e-4e57-88fa-9356be47bd50,1,kg,27.91,MJ
+"hard coal, import from RNA | hard coal | EN15804, U",ce059cfa-d498-41ac-a9b8-d6847b3de355,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",95ec4bad-c724-4c1e-bdd7-40c1042ab7fc,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",a61062e6-74ba-4acc-b3e5-90cd0307becf,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",ef8f8057-072f-41ab-8cda-0d7450c370d1,1,kg,27.91,MJ
+"hard coal, import from RU | hard coal | EN15804, U",0dc2f0f8-3846-4673-a84d-ad2f7f4dd319,1,kg,27.91,MJ
+"hard coal, import from RLA | hard coal | EN15804, U",68ff0b34-27e3-49ba-a66d-567275a0a52f,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",50978178-2458-406a-9820-45d09562d351,1,kg,27.91,MJ
+"hard coal, import from AU | hard coal | EN15804, U",21975d6c-2678-4059-b28c-d7483b5f8cd3,1,kg,27.91,MJ
+"hard coal, import from ID | hard coal | EN15804, U",bf01e353-fdaf-4c3b-b861-0dc95f512071,1,kg,27.91,MJ
+"hard coal, import from RNA | hard coal | EN15804, U",f9921908-32af-4715-8715-c551d84a12b5,1,kg,27.91,MJ
+"hard coal, import from RU | hard coal | EN15804, U",e0e200a8-9ea6-4448-a581-fd22e1ac1ace,1,kg,27.91,MJ
+"hard coal, import from AU | hard coal | EN15804, U",d0c0d8d4-531a-4444-8b55-9cfed8798308,1,kg,27.91,MJ
+"hard coal, import from AU | hard coal | EN15804, U",657b06e1-4680-4c60-8fc0-7cc6282481be,1,kg,27.91,MJ
+"hard coal, run-of-mine to market for hard coal | hard coal | EN15804, U",18e7498a-7d41-4142-bc02-c5efba452788,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",7e850919-fd59-4832-83cc-bee1b292ffbb,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",442faf3f-cb67-4f61-9bbf-26da0206fb47,1,kg,27.91,MJ
+"hard coal mine operation and hard coal preparation | hard coal | EN15804, U",e3094cdd-30e7-47b6-a15f-ed9b12908d6e,1,kg,27.91,MJ
+"market for hard coal | hard coal | EN15804, U",2adc52a0-62ac-476b-bea4-6d5cca7212a2,1,kg,27.91,MJ
+"hard coal, import from Australia | hard coal | EN15804, U",cd15e7da-8993-463c-8f02-2c4cbe047ad7,1,kg,27.91,MJ
+"hard coal preparation | hard coal | EN15804, U",3e511472-cd02-43d5-b12c-543fd7188819,1,kg,27.91,MJ
+"hard coal, import from RLA | hard coal | EN15804, U",01555da1-9763-4e18-8f38-3d402afc8a50,1,kg,27.91,MJ
+"market for lignite | lignite | EN15804, U",5ac5322e-d775-430f-ac67-ef181d268e69,1,kg,8.8,MJ
+"market for lignite | lignite | EN15804, U",bf4432cb-241d-4231-a833-f7c6a15fdb19,1,kg,8.8,MJ
+"lignite mine operation | lignite | EN15804, U",d8aab2ac-1ab1-416a-9390-7f0d0b91e982,1,kg,8.8,MJ
+"market for lignite | lignite | EN15804, U",2349141c-2bdd-4e17-95e2-4064d44d89a5,1,kg,8.8,MJ
+"lignite mine operation | lignite | EN15804, U",d7075c2e-209a-4a93-a548-78b38473590c,1,kg,8.8,MJ
+"lignite mine operation | lignite | EN15804, U",8874591f-f698-49e8-82aa-d7aa5e52298c,1,kg,8.8,MJ
+"market for natural gas, unprocessed, at extraction | natural gas, unprocessed, at extraction | EN15804, U",a4c37a8f-0864-419f-98e2-2463d65c271b,1,m3,39,MJ
+"natural gas production, unprocessed, at extraction | natural gas, unprocessed, at extraction | EN15804, U",abc139cf-9224-4292-b9c6-08a801a1abc2,1,m3,39,MJ
+"peat production | peat | EN15804, U",09b47a7f-c6de-4fba-ba61-2f2e6676da45,1,kg,10,MJ
+"market for peat | peat | EN15804, U",ac76dd24-19e2-4612-86ec-f804c86ea0fe,1,kg,10,MJ
+"market for peat | peat | EN15804, U",502f78ad-61d4-413a-8f46-51c44c5a2e71,1,kg,10,MJ
+"peat production | peat | EN15804, U",f14c3b71-d8a8-4205-aa0d-73d04c91b464,1,kg,10,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",89a5c057-b443-42c1-894b-3ca172cf0d63,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",a38e3f2d-7008-4e8e-8650-d2e627acccad,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",0eb078b0-88f5-41c3-8391-11d56a609199,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",27f4d405-4b88-4181-9b10-ca34596a49f7,1,kg,42.7,MJ
+"petroleum refinery operation | diesel | EN15804, U",9f69ae31-79a9-4b09-8174-e6aef1a4bdda,1,kg,42.7,MJ
+"diesel, import from RoW | diesel | EN15804, U",3aed0a59-fcec-4572-9225-8b67ed5ddcdd,1,kg,42.7,MJ
+"diesel, import from RoW | diesel | EN15804, U",e97813cc-d207-4c65-aa38-cbeb605e832d,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",4e9f10ca-9ece-467d-9bd5-64cb1ae0e8e5,1,kg,42.7,MJ
+"market group for diesel | diesel | EN15804, U",c912688e-408b-408f-a6f9-16107351387d,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",aef400d0-d3a7-4dc2-b829-b9f67e5de9a5,1,kg,42.7,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",1da6614a-bf2c-4563-8dde-35f2a5826b2d,1,kg,42.7,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",ccfe8728-8b21-429c-a8df-8b2557b80fab,1,kg,42.7,MJ
+"diesel, import from RoW | diesel | EN15804, U",8817f692-3191-4afd-9312-0f45aa58221d,1,kg,42.7,MJ
+"market group for diesel | diesel | EN15804, U",38d077dd-c6f1-4f2f-bc50-cb15773d95bb,1,kg,42.7,MJ
+"diesel, import from RoW | diesel | EN15804, U",73d76e8d-f713-45be-b65d-6c04868ad0ca,1,kg,42.7,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",d188bb58-fd6f-414e-b4e6-e9e31790a5cb,1,kg,42.7,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",670912aa-57c0-45fd-9105-8bebfdeb84f9,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",5481dd0c-28a0-4958-8044-6050094341bb,1,kg,42.7,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",11bb79fa-e1be-4b5f-8485-7e64dc285586,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",d0076ca5-9b8d-46bf-88a6-d3088b2505ac,1,kg,42.7,MJ
+"diesel, import from RoW | diesel | EN15804, U",68af06c1-de24-4885-bd6b-d85e78fc5dc1,1,kg,42.7,MJ
+"diesel production, petroleum refinery operation | diesel | EN15804, U",32d04544-c8a1-4686-b35b-4e4e9a30d833,1,kg,42.7,MJ
+"market for diesel | diesel | EN15804, U",02010f96-da18-4663-8f7f-ca83a24510e9,1,kg,42.7,MJ
+"synthetic fuel production, from coal, high temperature Fisher-Tropsch operations | diesel, low-sulfur | EN15804, U",953facaa-1a76-4f78-8d87-d07ea2399cb7,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",7d5eb592-30f7-4314-9475-af55d80ca73e,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",6df79438-19e9-438e-b905-88aa073f6adc,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",65373d3f-74cd-4090-b498-1f27e26ef995,1,kg,42.8,MJ
+"market group for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",1c101cf8-183d-4776-b2f7-fd817589b4ad,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",383321c2-bed1-4d9e-a858-ac2006a6220d,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",655e1216-7d47-44ff-9b38-32367616b946,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",0b9ab7e1-cdc5-4d47-8270-9bd0cbc91a49,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",1d7a916c-9a4f-4604-8ae5-1d21c1f36e52,1,kg,42.8,MJ
+"diesel, low-sulfur, import from RoW | diesel, low-sulfur | EN15804, U",46e8bb2e-9dc1-4596-b578-5d39ad063935,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",61022038-4573-4e0f-af6e-ed29335bfd81,1,kg,42.8,MJ
+"diesel, low-sulfur, import from Europe | diesel, low-sulfur | EN15804, U",33037c15-2301-4558-bf22-3d089b88c802,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",982b04eb-287e-4bc6-8284-ddf0712c0c44,1,kg,42.8,MJ
+"market group for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",ac4083df-f2b8-4f27-b5fb-e99efe4f4e69,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",38dae3ba-b9c4-4d72-b836-0383fbcccf6c,1,kg,42.8,MJ
+"diesel, low-sulfur, import from RoW | diesel, low-sulfur | EN15804, U",7ab726e8-7958-4e97-a262-52fd80eca59f,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",4f757da9-cd8d-47f5-9293-ceb4ec8934d0,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",6f08ed91-4490-432b-a733-6c5bae892eb9,1,kg,42.8,MJ
+"diesel, low-sulfur, import from RoW | diesel, low-sulfur | EN15804, U",2046a592-25e3-47db-b019-8eb6b3b7a3ba,1,kg,42.8,MJ
+"diesel production, low-sulfur, petroleum refinery operation | diesel, low-sulfur | EN15804, U",9580ffa9-cd3b-48fb-94d5-0fc2ea8ef825,1,kg,42.8,MJ
+"diesel production, low-sulfur | diesel, low-sulfur | EN15804, U",c5aea24b-7f32-4cfb-8423-f9ad47b8c20a,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",b49a1ddd-9a18-41e8-ac04-85214f8b4175,1,kg,42.8,MJ
+"diesel, low-sulfur, import from RoW | diesel, low-sulfur | EN15804, U",de5b2c3f-b517-4fc3-a91f-2a59774a6208,1,kg,42.8,MJ
+"diesel, low-sulfur, import from RoW | diesel, low-sulfur | EN15804, U",4e9ec8bd-785e-4dcb-92c1-85b3ee57db77,1,kg,42.8,MJ
+"market for diesel, low-sulfur | diesel, low-sulfur | EN15804, U",410b0e33-35ae-4f7c-be68-36b77e6f3679,1,kg,42.8,MJ
+"heavy fuel oil, import from RoW | heavy fuel oil | EN15804, U",76acb663-7914-4d32-8914-038914af6158,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",8e231403-de0a-4f9e-8857-d629d6fc8353,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",b7439cdc-4979-491f-bb34-9ec25de84675,1,kg,41.2,MJ
+"synthetic fuel production, from coal, high temperature Fisher-Tropsch operations | heavy fuel oil | EN15804, U",1dd75249-c465-4c1a-8e05-5197576d6b5d,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",cd86056e-7df3-49f9-b49d-5e4523a86fca,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",7570c99e-4647-4bcf-9190-c3e1834c2b7a,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",6906069a-3a39-404d-a681-05afb9912d9a,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",efac5f06-78ee-44fb-a413-a018139f91c3,1,kg,41.2,MJ
+"petroleum refinery operation | heavy fuel oil | EN15804, U",73bcad56-d0f1-403f-9ab5-39f88f06937e,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",93914692-490e-486c-aa8c-c2e00e271bbb,1,kg,41.2,MJ
+"heavy fuel oil, import from RoW | heavy fuel oil | EN15804, U",daa79d13-8ac0-4bd1-a4cc-3ce27cf447ba,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",69658600-9611-46e7-9446-ba2f3ca618d0,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",b49a15a1-09c9-48ad-8a93-f66da3eea953,1,kg,41.2,MJ
+"heavy fuel oil, import from RoW | heavy fuel oil | EN15804, U",7a701447-1e15-4b96-a2a8-abc95baf0b55,1,kg,41.2,MJ
+"market group for heavy fuel oil | heavy fuel oil | EN15804, U",3bb2ca88-aec0-418c-8abe-0639d24e11c0,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",72ef58ab-66e8-4192-b89d-7820139e3b54,1,kg,41.2,MJ
+"heavy fuel oil, import from RoW | heavy fuel oil | EN15804, U",870fcf20-fee2-4836-9200-1e29d9ac453f,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",7ac8888d-9427-42f6-b756-76fb70119416,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",a4d30ac6-5f76-40a5-b6fb-b22b788ec4ef,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",a0105dd7-d038-4907-afbd-ab5e63df21b4,1,kg,41.2,MJ
+"heavy fuel oil production, petroleum refinery operation | heavy fuel oil | EN15804, U",d84a98f9-03c9-4689-b0a0-b4320b8e0ef4,1,kg,41.2,MJ
+"market for heavy fuel oil | heavy fuel oil | EN15804, U",56d624e9-e232-4ee1-8c06-2aff979e33a5,1,kg,41.2,MJ
+"market for kerosene | kerosene | EN15804, U",809a6151-eff4-44b6-bd8a-045d9043f9ed,1,kg,43,MJ
+"kerosene, import from Europe | kerosene | EN15804, U",b2a31c26-1d4d-4d6f-9cfe-ccdf477105fa,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",1a4e1c63-ce73-4aa4-90dc-aaa395f10982,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",66ceaeaf-79d2-4ea8-81e7-51e20509203a,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",7cc7435a-ad0a-4741-b5a0-0487a4c90b76,1,kg,43,MJ
+"kerosene, import from RoW | kerosene | EN15804, U",76cf5e89-dc6a-4129-a924-e240ec52480b,1,kg,43,MJ
+"petroleum refinery operation | kerosene | EN15804, U",b4321640-f734-49ed-8ad7-a2ef3f14285c,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",f0102382-d8c9-4812-9652-afa821bfc485,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",fcf1ff8c-8c7e-4179-9848-cdc7d326febd,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",f53d120d-8970-46c7-9be3-e399e5e17033,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",0e94ba61-3351-4b4e-b6d2-369f2fe72c73,1,kg,43,MJ
+"kerosene, import from RoW | kerosene | EN15804, U",72f9a0db-8dc0-46b0-8f0b-a5409fc9ed5a,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",cc28fb60-abfe-4709-81cd-d63ad7b74e66,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",8d724ffd-d73d-4f80-b00a-1c7f464e8a4a,1,kg,43,MJ
+"kerosene, import from RoW | kerosene | EN15804, U",80be1351-24b4-4a09-846b-1b924481ba1c,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",7537e471-a40a-427a-95dd-5a079e816233,1,kg,43,MJ
+"kerosene, import from RoW | kerosene | EN15804, U",ebce6933-2501-4085-a00f-2558965d4950,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",8626d7b9-f4f2-4fab-92b5-7f6bef1ad6e6,1,kg,43,MJ
+"market for kerosene | kerosene | EN15804, U",ce1e2ed9-deaf-4742-b2fc-f234cb89feae,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",7c6376a6-2b7e-4235-94b9-de318a5f545f,1,kg,43,MJ
+"kerosene, import from RoW | kerosene | EN15804, U",04858594-aeee-4dc4-bad4-992d91fcdf26,1,kg,43,MJ
+"kerosene production, petroleum refinery operation | kerosene | EN15804, U",88b2e0de-58d9-4f24-b3ee-a25739dc552c,1,kg,43,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",ff627133-b17e-4ef7-8ce8-e4ac88cc47c8,1,kg,42.6,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",57ef53d0-3093-4eb9-9f16-31971502ffc5,1,kg,42.6,MJ
+"petroleum refinery operation | light fuel oil | EN15804, U",196e132b-8094-4448-84df-559e95b809a1,1,kg,42.6,MJ
+"light fuel oil, import from RoW | light fuel oil | EN15804, U",b0370d56-3f18-4e04-bc72-02359a557d93,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",4e01463a-f2a2-403c-8eb7-bde31f223260,1,kg,42.6,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",fc3411e9-f14f-49e1-9f88-3182dd19173d,1,kg,42.6,MJ
+"light fuel oil, import from RoW | light fuel oil | EN15804, U",23d50930-ba0b-4e94-9f06-4da7bfb8deae,1,kg,42.6,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",0be41116-e000-4a14-b744-35f6ae1ba613,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",b91847d3-1c5d-4250-87f0-0f96c7359c98,1,kg,42.6,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",330f942c-5db6-49e1-935d-3b8808d25274,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",3d3cb264-6965-4da7-9305-bd7fda2e76d0,1,kg,42.6,MJ
+"light fuel oil, import from RoW | light fuel oil | EN15804, U",2b7bb6b5-9beb-491e-81ab-a69ae6f29553,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",9a03ed7a-39ca-4fea-a198-e5c4b383e8a5,1,kg,42.6,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",79d33589-1682-4368-9a6d-0dd0d5659960,1,kg,42.6,MJ
+"market group for light fuel oil | light fuel oil | EN15804, U",1231b808-2b3b-4372-ae8f-522fa3f2bff1,1,kg,42.6,MJ
+"light fuel oil, import from RoW | light fuel oil | EN15804, U",f2ba2a73-5b53-4924-93d5-68c3f751033c,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",6227e7b4-8d02-4ca8-80d3-db5b5bbd05b4,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",f4fbfbd7-badb-401e-b597-c297d715ddae,1,kg,42.6,MJ
+"light fuel oil production, from waste polyethylene | light fuel oil | EN15804, U",dcb53c4a-6c52-4115-b028-af438f45808b,1,kg,42.6,MJ
+"light fuel oil production, petroleum refinery operation | light fuel oil | EN15804, U",10eb5502-4bd0-413d-987e-35c5148d0b2c,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",94c40280-3cb5-44f1-b720-73afc1cc0427,1,kg,42.6,MJ
+"light fuel oil, import from Europe | light fuel oil | EN15804, U",b8cd1d8a-89dc-4dfd-b7e2-f588404aa56a,1,kg,42.6,MJ
+"market for light fuel oil | light fuel oil | EN15804, U",ca7df18f-d8e8-49bd-8f82-9f8199512979,1,kg,42.6,MJ
+"light fuel oil, import from RoW | light fuel oil | EN15804, U",adbbded3-887f-45d8-95c4-79359b465ec9,1,kg,42.6,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",08bbd34a-fea6-4994-8e30-59de1408d1b7,1,kg,45.5,MJ
+"synthetic fuel production, from coal, high temperature Fisher-Tropsch operations | liquefied petroleum gas | EN15804, U",204c632b-23e9-4222-81ca-82914564fbeb,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",1ff92e6c-cb2f-4be9-a64d-bdec8558e528,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",f21924ac-40b0-4c0d-94bd-ce4d22137eb2,1,kg,45.5,MJ
+"petroleum refinery operation | liquefied petroleum gas | EN15804, U",c11e7c71-7805-403b-b95b-8a6540d2c4e2,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",849d1f1b-8422-4a77-b581-fb1bb12f4c85,1,kg,45.5,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",990bc54a-b28c-4fca-a057-f31ea3ed7683,1,kg,45.5,MJ
+"liquefied petroleum gas, import from RoW | liquefied petroleum gas | EN15804, U",025eafed-8026-4d65-9a1c-bd6981c39d40,1,kg,45.5,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",aa2b36a7-c526-4111-8a7f-a108e88ad2d5,1,kg,45.5,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",237f540a-c96c-46c6-bf9c-f1b634fab6e2,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",8b7fc352-3561-4330-92c0-5a96f638e290,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",b1664c9e-8a8d-4233-8e2a-e7156a48713a,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",b2afaa2c-9432-487d-95e6-30db7f62f257,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",9ecaa309-33e4-47d6-8c8c-0996eb0c3b48,1,kg,45.5,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",fdf4d044-5f32-4029-823e-45e0b3e48301,1,kg,45.5,MJ
+"liquefied petroleum gas, import from RoW | liquefied petroleum gas | EN15804, U",663d61f2-910e-4887-9e13-6c5fbeec22db,1,kg,45.5,MJ
+"market for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",cb276432-34e8-4587-b9ec-3094c153c99d,1,kg,45.5,MJ
+"liquefied petroleum gas, import from RoW | liquefied petroleum gas | EN15804, U",ff98d7b3-093d-4b23-84a1-71e517a4b7a9,1,kg,45.5,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",b750d283-4a1c-4126-85f5-4bb122491ef0,1,kg,45.5,MJ
+"liquefied petroleum gas, import from RoW | liquefied petroleum gas | EN15804, U",0f15cd4c-d18e-4190-9604-257b90f5ed24,1,kg,45.5,MJ
+"liquefied petroleum gas production, petroleum refinery operation | liquefied petroleum gas | EN15804, U",8b3679ed-feb2-4876-b4d7-f659bcbb4f2e,1,kg,45.5,MJ
+"liquefied petroleum gas, import from RoW | liquefied petroleum gas | EN15804, U",01723332-1510-42fc-96b1-ea415a0b9cdb,1,kg,45.5,MJ
+"liquefied petroleum gas, import from Europe | liquefied petroleum gas | EN15804, U",84aeb9d3-7757-457f-afa2-456a41e749a7,1,kg,45.5,MJ
+"market group for liquefied petroleum gas | liquefied petroleum gas | EN15804, U",724487bc-31a9-4ffb-8e4e-66cb624be11e,1,kg,45.5,MJ
+"liquefied petroleum gas, import from RoW | liquefied petroleum gas | EN15804, U",03ddb47e-d70f-4971-a531-370c56547a8e,1,kg,45.5,MJ
+"petrol production, low-sulfur | petrol, low-sulfur | EN15804, U",947d7a7b-22c2-4244-a3a5-346fbc377a71,1,kg,42.5,MJ
+"petrol production, low-sulfur | petrol, low-sulfur | EN15804, U",a5ecd00b-d8ab-438c-9b7f-33fec1d29500,1,kg,42.5,MJ
+"market for petrol, low-sulfur | petrol, low-sulfur | EN15804, U",add973a0-dac3-4299-b9f9-5db6c7167645,1,kg,42.5,MJ
+"market for petrol, low-sulfur | petrol, low-sulfur | EN15804, U",af76c847-925a-4e84-8498-efecbe6213ac,1,kg,42.5,MJ
+"petrol production, low-sulfur | petrol, low-sulfur | EN15804, U",dd2b017b-3318-4b6a-b29f-4ee38e2a0c05,1,kg,42.5,MJ
+"market for petrol, low-sulfur | petrol, low-sulfur | EN15804, U",274678e8-0773-4250-8050-46dab6f81372,1,kg,42.5,MJ
+"petrol, low-sulfur, import from Europe | petrol, low-sulfur | EN15804, U",7131bc15-a7da-4e13-88b7-52f700e2ea63,1,kg,42.5,MJ
+"petrol blending for two-stroke engines | petrol, two-stroke blend | EN15804, U",cdfb4c99-585b-4358-840d-658c5ac41010,1,kg,43.2,MJ
+"market for petrol, two-stroke blend | petrol, two-stroke blend | EN15804, U",56b83fff-0e42-455c-8bfe-7afd9317400a,1,kg,43.2,MJ
+"petrol blending for two-stroke engines | petrol, two-stroke blend | EN15804, U",88783287-e9a9-409d-b343-b024c2c3b778,1,kg,43.2,MJ
+"petrol blending for two-stroke engines | petrol, two-stroke blend | EN15804, U",d1e70f2e-4c85-48b6-8020-c851cd504353,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",20f79a12-f5a0-42db-aa8f-19af112661d4,1,kg,43.2,MJ
+"petrol, unleaded, import from RoW | petrol, unleaded | EN15804, U",15f665db-e867-4a71-92bf-1703fd3a058e,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",d458cc81-e449-407f-9139-0cce3b559d95,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",5d59958a-3b0b-4706-bbb9-9064c96f2f7c,1,kg,43.2,MJ
+"synthetic fuel production, from coal, high temperature Fisher-Tropsch operations | petrol, unleaded | EN15804, U",8314a708-c5b3-4c4b-b812-68c66dac01d5,1,kg,43.2,MJ
+"petroleum refinery operation | petrol, unleaded | EN15804, U",7cae5dfc-6a82-4099-8a71-6da48d7bf1de,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",c65deb85-9925-47a9-a7d6-776ff5981309,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",5058a877-f64a-445e-9387-f9a20b19fc0d,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",03e53495-2776-44eb-a2d5-3b4d23847c53,1,kg,43.2,MJ
+"petrol, unleaded, import from RoW | petrol, unleaded | EN15804, U",f2a5b422-39d2-4a28-b427-5e73d2d0b935,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",f2069c8d-9683-4474-a6af-1e83be3adfe6,1,kg,43.2,MJ
+"petrol, unleaded, import from RoW | petrol, unleaded | EN15804, U",99fad558-919b-45a1-86c1-7c8c78cfc2b3,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",0560a977-7bd9-4d0e-af84-70ef7c9c0a60,1,kg,43.2,MJ
+"petrol, unleaded, import from RoW | petrol, unleaded | EN15804, U",c300486e-89fd-4de4-813b-84a8b067f37c,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",4ad40132-7e7e-4dfc-a909-0aff6b94f799,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",59ae6895-9ec9-4a15-a250-d87f22ad2a89,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",aee628c5-935e-4408-a84b-44248d960eda,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",bbe68503-4a65-4ea9-acd3-1588ee158542,1,kg,43.2,MJ
+"petrol production, unleaded, petroleum refinery operation | petrol, unleaded | EN15804, U",bfd2a764-30da-4bc7-83bc-ec69831b8464,1,kg,43.2,MJ
+"market for petrol, unleaded | petrol, unleaded | EN15804, U",9e23d802-af77-4bc5-ab98-be3e00a88ecc,1,kg,43.2,MJ
+"petrol, unleaded, import from RoW | petrol, unleaded | EN15804, U",e870dcff-4668-4d06-ab24-be5a9ecd8a57,1,kg,43.2,MJ
+"petroleum coke production, petroleum refinery operation | petroleum coke | EN15804, U",a807c3df-77b0-47c7-b7d6-8bcb729a5567,1,kg,35,MJ
+"market for petroleum coke | petroleum coke | EN15804, U",79494cc6-ee93-4324-ab25-bb817e1f55b8,1,kg,35,MJ
+"petroleum coke production, petroleum refinery operation | petroleum coke | EN15804, U",4b1ebd8f-cbc4-4558-a052-ca3a42ae33dd,1,kg,35,MJ
+"petroleum coke production, petroleum refinery operation | petroleum coke | EN15804, U",2cb19191-7396-48d5-9ffb-68663c47ac8e,1,kg,35,MJ
+"market for refinery gas | refinery gas | EN15804, U",e21b8764-3fbc-4580-91c8-f6a509694f21,1,kg,50.3,MJ
+"petroleum refinery operation | refinery gas | EN15804, U",d3362728-6016-4aa5-b38e-3da19ec6253f,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",38271cdb-6649-4c93-8c74-4a0e07decd54,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",ff10af14-4f19-46ba-9866-e559582746ee,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",bb9e0aaa-e472-463d-b446-4eb99fc24edc,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",e3f57910-7f73-4869-93cc-024313c87eeb,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",dfa3fa4b-ef32-4578-8eaa-c4aba52bd90c,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",94f36fa9-6793-4992-b4b7-e5299cbf3ff4,1,kg,50.3,MJ
+"refinery gas production, petroleum refinery operation | refinery gas | EN15804, U",a3e3037a-1f7b-4ec1-806a-f15127d3d131,1,kg,50.3,MJ
+"machine operation, diesel, < 18.64 kW, generators | machine operation, diesel, < 18.64 kW, generators | EN15804, U",bc579599-c75b-4d63-a165-cf268001d513,1,h,47.069,MJ
+"market for machine operation, diesel, < 18.64 kW, generators | machine operation, diesel, < 18.64 kW, generators | EN15804, U",9dacd6dd-1bde-4755-944d-dd704f1386f4,1,h,47.069,MJ
+"machine operation, diesel, >= 18.64 kW and < 74.57 kW, generators | machine operation, diesel, >= 18.64 kW and < 74.57 kW, generators | EN15804, U",d8f3b1ea-a73c-453f-acf5-e6e440ae2c1f,1,h,197.246,MJ
+"market for machine operation, diesel, >= 18.64 kW and < 74.57 kW, generators | machine operation, diesel, >= 18.64 kW and < 74.57 kW, generators | EN15804, U",7c8f15f6-f272-4137-9662-d63923a10a32,1,h,197.246,MJ
+"machine operation, diesel, >= 74.57 kW, generators | machine operation, diesel, >= 74.57 kW, generators | EN15804, U",9b379f50-8ea3-45e4-bcc6-449028f9abc0,1,h,755.126,MJ
+"market for machine operation, diesel, >= 74.57 kW, generators | machine operation, diesel, >= 74.57 kW, generators | EN15804, U",cc5b1f82-5c53-4603-b1dc-4b1a46e73561,1,h,755.126,MJ
+"machine operation, diesel, >= 74.57 kW, underground mining | machine operation, diesel, >= 74.57, underground mining | EN15804, U",0b9a16be-45be-4cb5-a393-c9dcb89b8ccb,1,h,401.968,MJ
+"market for machine operation, diesel, >= 74.57, underground mining | machine operation, diesel, >= 74.57, underground mining | EN15804, U",5fd0c1ba-bdc3-4b10-b52c-e3e5c3795f7a,1,h,401.968,MJ
+"natural gas liquids production | natural gas liquids | EN15804, U",37a0058d-9815-47f8-a336-ffb5f1dbfce0,1,kg,24.624,MJ
+"market for natural gas liquids | natural gas liquids | EN15804, U",36673544-2220-46ad-a70c-ac02264aeac3,1,kg,24.624,MJ
+"market group for natural gas, high pressure | natural gas, high pressure | EN15804, U",87de1d12-b21d-45d9-8caf-b16ac0c22bfe,1,m3,40,MJ
+"natural gas, high pressure, domestic supply with seasonal storage | natural gas, high pressure | EN15804, U",670f053e-f0e9-462a-b6bb-629e83c1ffd3,1,m3,40,MJ
+"natural gas, high pressure, import from AE | natural gas, high pressure | EN15804, U",81d66236-ec75-4893-9a0c-72e0027f8268,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",53e10b88-1d19-4c30-a691-32e68d8c8f4a,1,m3,40,MJ
+"natural gas, high pressure, import from GB | natural gas, high pressure | EN15804, U",169477b2-3dbc-4082-a787-777c2d463d2e,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",107de44a-2fef-4fbe-92a6-5dbb4fc31be5,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",aa245455-bd8d-4da1-b093-0361de11d72b,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",e22908f4-958a-4580-a71d-d00b1752ee8c,1,m3,40,MJ
+"natural gas, high pressure, domestic supply with seasonal storage | natural gas, high pressure | EN15804, U",34de4fca-7b4d-4f7a-bc98-29a7ee0b7f4f,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",a4233d4a-2a20-4e0a-8e23-66126524b43b,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",e18106c6-5b23-4e62-8735-e35cb25693c3,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",850060fc-b699-4b59-aeb8-e5051682f4ba,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",36a69014-e337-408d-a2c7-9e28b8574e44,1,m3,40,MJ
+"natural gas, high pressure, import from KZ | natural gas, high pressure | EN15804, U",64cd865e-5095-471b-b510-e85bc0b016dc,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",f7cf49d3-4453-42d3-af7f-fc8fd5d19ba0,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",7efe974d-3f84-4319-9eea-22af8497cf3f,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",0db6b3aa-ac7a-4e94-aca4-0dd9dd10dcbd,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",cc3f835c-4703-42f2-9863-5b0edf607f17,1,m3,40,MJ
+"evaporation of natural gas, import from NO | natural gas, high pressure | EN15804, U",3e1d127b-62e8-4e1b-ae7b-295c8b2a5fdb,1,m3,40,MJ
+"synthetic fuel production, from coal, high temperature Fisher-Tropsch operations | natural gas, high pressure | EN15804, U",f9ea10da-10d7-4c88-b1e4-225b232e5fa2,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",b8eda347-2184-4099-b177-6696ca373f5b,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",25dc4ce3-02ff-4b2a-b26a-ccd058c6709b,1,m3,40,MJ
+"natural gas, high pressure, import from EC | natural gas, high pressure | EN15804, U",9e865566-3820-49a6-944c-e9f13af9e913,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",8c01304b-4099-4b35-bd1c-fdbcd639841a,1,m3,40,MJ
+"natural gas, high pressure, import from IQ | natural gas, high pressure | EN15804, U",9a334c4e-196b-4d82-9d1e-121f73812145,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",72e09f23-a39b-4a0d-a3b0-c0d3a4339835,1,m3,40,MJ
+"evaporation of natural gas, import from US | natural gas, high pressure | EN15804, U",a06fbdba-8e9a-411f-ae6e-0a23bdb91019,1,m3,40,MJ
+"evaporation of natural gas, import from RU | natural gas, high pressure | EN15804, U",ddb55a49-10b4-4303-bea1-b53cf0b98aca,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",dbf190e6-07c4-40d6-b99b-e9d36ecc6483,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",9374abdc-bd74-4069-abf6-b814186a2113,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",5955df5a-c331-4b79-84bd-c56005a67982,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",a0282539-e73f-422c-9ac0-b48247e6fe07,1,m3,40,MJ
+"natural gas, high pressure, import from ID | natural gas, high pressure | EN15804, U",ee6edc7d-5747-40af-aa35-862d22760c34,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",fc9f6cc2-cd3e-4e42-aa80-8faa3434f4c9,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",2f117176-daba-45ba-879c-8a9d2d864c5a,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",3848fbf4-b761-434f-b39f-9a84929e3ea7,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",9dde217c-0108-47b3-92db-2cd77891fbd6,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",9b42b16e-09d1-4e3f-abf7-8dafe3e24dc7,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",0232eb65-dc0d-495c-9f45-7e9d5230ccf0,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",588877a4-a8bd-4078-bb37-d419bca6ba97,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",0ccf669f-4ce4-4713-baba-8130f92b5aac,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",7e934f12-09cc-40f7-97c0-d7b4d1217038,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",64882939-b935-4c95-9840-208016be780f,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",d9d54748-a9a6-4ddb-9250-8a962c009393,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",040d3298-e877-4401-a4a5-1b488bacdcc4,1,m3,40,MJ
+"natural gas, high pressure, import from CA | natural gas, high pressure | EN15804, U",d0174219-a239-4449-b9da-71716c117981,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",551df93a-b697-4b89-9b5d-66e5bad4bb97,1,m3,40,MJ
+"natural gas, high pressure, import from LY | natural gas, high pressure | EN15804, U",72e9c172-f74e-4dc2-8ebd-883c433de160,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",cf8c8448-8223-445f-af90-5f38008b7131,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",7dd998ad-58dc-4c4f-860a-ddcd1ea100e4,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",5caabcca-03a3-4198-bf5a-2231154ff3d9,1,m3,40,MJ
+"natural gas, high pressure, import from DE | natural gas, high pressure | EN15804, U",fc883677-9737-4206-8f6f-a7665fd1eb2b,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",7f43a3c2-60e3-433a-a3ed-921676af4bed,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",b02b0eea-2e92-4a6b-8512-641b2477f67e,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",75f630d9-74c1-455f-bdb2-5e33d0c4d174,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",55971005-10b4-4d02-a1ac-a9a1a90bfdb0,1,m3,40,MJ
+"natural gas, high pressure, import from CA | natural gas, high pressure | EN15804, U",d4ad08f8-22e2-4209-9fa1-12cc20e513f9,1,m3,40,MJ
+"natural gas, high pressure, import from AZ | natural gas, high pressure | EN15804, U",7a96aed0-e834-43d9-8c99-404822a5bc94,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",b8d768d0-2e07-4368-a406-13cd059cc259,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",dc4e8a0f-f224-4c12-9012-31538a990890,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",4889e462-34e9-457d-855e-823b4bbf2ee0,1,m3,40,MJ
+"natural gas, high pressure, domestic supply with seasonal storage | natural gas, high pressure | EN15804, U",579aedbf-eaf4-4e3a-809e-5a8f24011cc8,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",8fa2307e-dc82-4211-8f35-f0df84f39bcd,1,m3,40,MJ
+"natural gas, high pressure, import from DE | natural gas, high pressure | EN15804, U",5a757bed-3820-4805-bc9b-b8468b61e49a,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",1a81a160-c5e3-49fd-9dda-8df81318f243,1,m3,40,MJ
+"evaporation of natural gas | natural gas, high pressure | EN15804, U",0dda9d84-5ff6-4483-93bd-66de05924ffd,1,m3,40,MJ
+"evaporation of natural gas, import from ID | natural gas, high pressure | EN15804, U",28606bfd-d2d2-4e65-b819-39305e97e239,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",2a6ebd16-689f-4abf-a7c6-bc9f5b5aca94,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",b649e1bd-57d7-45fb-88a0-86b9064b13f4,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",22ac492a-5065-4f51-bbed-445b0d96aa03,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",7726b816-9d16-4013-bb3e-46a77f840a9f,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",81cb0770-5569-4b9f-a1d0-807076936924,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",e52597a3-84d6-4720-8141-8270387b4fc4,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",1dcfc602-ac73-4b2c-99b7-f0207a1e6e77,1,m3,40,MJ
+"natural gas, high pressure, domestic supply with seasonal storage | natural gas, high pressure | EN15804, U",1fbe01fe-2c09-4d7f-b4d4-87ea99daaf80,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",413f5f6f-2455-4b94-a0c6-75450ccda4d4,1,m3,40,MJ
+"natural gas, high pressure, import from MX | natural gas, high pressure | EN15804, U",8121b27c-a5ea-4da8-a042-24d8b6a2c2b9,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",850e5768-7fea-4029-b0ab-f319929e2b55,1,m3,40,MJ
+"natural gas, high pressure, import from RO | natural gas, high pressure | EN15804, U",8f829b17-ab3b-435b-b903-9fa61bda912b,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",1bbda3b4-9759-4b1f-a619-5c8416d1ced2,1,m3,40,MJ
+"evaporation of natural gas, import from RU | natural gas, high pressure | EN15804, U",463f0286-4557-4bcf-b548-6393751bdb35,1,m3,40,MJ
+"natural gas, high pressure, domestic supply with seasonal storage | natural gas, high pressure | EN15804, U",21430ff6-4d40-406a-8c3c-9508b19c7f62,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",71361e4e-d31e-4de5-89b4-1de2e38ae3f8,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",b2b2e5fb-762b-4ccf-9e98-d3c0af9b12e2,1,m3,40,MJ
+"evaporation of natural gas, import from QA | natural gas, high pressure | EN15804, U",6c13844a-d437-4b9f-bde8-678707697d80,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",988634c4-aa43-44d5-8c5b-902b8beb41e4,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",2d99fbbb-d8ee-4b39-8bef-d87be69d43f9,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",4c865c36-2ef5-40ba-82ec-b0e8e68aeafa,1,m3,40,MJ
+"natural gas, high pressure, import from MX | natural gas, high pressure | EN15804, U",6a044def-1566-44d9-a158-2258042d62c9,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",3e085d39-3e05-4530-a83d-fd87040aa64b,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",f07c1d81-18fb-43b9-a1dc-52ab8f68a440,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",22004976-b511-490e-a5cb-76c0c7c21345,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",fafb39b3-12ba-47ce-9157-87e34ee29581,1,m3,40,MJ
+"natural gas, high pressure, import from BR | natural gas, high pressure | EN15804, U",893e60e2-b6d5-4103-8938-2cff38c5772b,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",ed173559-7414-4058-8671-2d83eeadd94e,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",4d005e51-5fa3-4bfd-b0c5-369ebe20be36,1,m3,40,MJ
+"evaporation of natural gas, import from NG | natural gas, high pressure | EN15804, U",21cb3777-6ea2-43c6-8109-0ee2281500b3,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",89214dbf-56bb-483c-b4b6-e60edae5a7df,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",3a347fbf-ddc8-45af-a998-375021bc91fa,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",704902a8-7050-4159-a208-e9f310d834fb,1,m3,40,MJ
+"natural gas, high pressure, import from LY | natural gas, high pressure | EN15804, U",8d5a27ae-dd01-4f0c-9e2a-a6eac505e53e,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",fa414f81-b505-4715-ac5c-4c6736bda46e,1,m3,40,MJ
+"natural gas, high pressure, import from FR | natural gas, high pressure | EN15804, U",a2fa63c5-e86a-4757-b39f-1db2faf70c5e,1,m3,40,MJ
+"natural gas, high pressure, import from GB | natural gas, high pressure | EN15804, U",42569c68-96f0-4fbb-be61-6c9efcb85034,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",3346e39a-dcf5-49f7-9262-788f8eef2916,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",a235815c-78e9-451d-91ea-06cd382f9c65,1,m3,40,MJ
+"natural gas, high pressure, import from IT | natural gas, high pressure | EN15804, U",efac51ea-c749-453b-ac08-ce06e92404c7,1,m3,40,MJ
+"evaporation of natural gas, import from NG | natural gas, high pressure | EN15804, U",034f9d4c-b5a3-46d9-a58e-3a03da0126e9,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",c4f030d6-39f9-4d6d-b733-2591114a1a0d,1,m3,40,MJ
+"natural gas, high pressure, import from DE | natural gas, high pressure | EN15804, U",437307a3-99d6-47ff-893c-9a709501adce,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",a8d63c4a-ee96-492f-831a-24705be3c23c,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",a9db3ff0-14d1-4cab-b90f-6baff0f179cb,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",a5d422ba-89cc-44c9-8c9d-947a09f4d428,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",23ba74e7-0b78-4595-9f2a-90616071d848,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",d90bbb7c-fd7f-4e28-b3d7-95cdfd4305d5,1,m3,40,MJ
+"natural gas, high pressure, import from SA | natural gas, high pressure | EN15804, U",78ba10fd-aaf8-4f2e-8867-fb38fabca85e,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",ce011b04-a35b-4494-8e1f-1c0b4866b5ea,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",35489e32-bffd-4a9e-a58c-ee1357b2b272,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",61954bcb-249d-4fac-a6f4-c7e15eb4fdad,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",c59f4c0b-9238-4fe2-8955-1044f7601f84,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",9e91f46a-762a-4b77-9b0a-29fa57817751,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",08ce19c8-4a92-4372-b311-6159a5049d0b,1,m3,40,MJ
+"evaporation of natural gas | natural gas, high pressure | EN15804, U",6a2c22da-587b-44fd-9c87-d2ddf90d2f08,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",9aeda148-279b-42e1-858c-e7de0b51ba47,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",727d61aa-4cba-4457-b83c-7dd520a7cf0d,1,m3,40,MJ
+"natural gas, high pressure, import from IR | natural gas, high pressure | EN15804, U",7313b38f-3c5d-4564-a028-5c7512ae54e9,1,m3,40,MJ
+"natural gas, high pressure, import from CO | natural gas, high pressure | EN15804, U",c5cd7d9d-eb31-48d7-bfff-6e91335fc1f2,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",a2a6d94b-a152-4d3f-8eaa-33618f4de3a4,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",195fab5b-a832-4c79-96a2-e229973ef380,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",cc7f52c1-364c-4060-8c52-0e222547d01f,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",19aaae64-e41a-46b6-81f2-4d7ff7c29ef4,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",c4d4d1ba-8856-4543-bb2d-9740a54406ae,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",1a9c40b9-55ef-43ae-951b-503db423795c,1,m3,40,MJ
+"natural gas, high pressure, import from TR | natural gas, high pressure | EN15804, U",694a384c-1e20-4b11-8510-f581b7b13446,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",d3d8c888-542b-4e0b-a55f-1149970ed157,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",fc3a7acd-6aef-4ea8-a64e-29e6211139af,1,m3,40,MJ
+"natural gas, high pressure, import from DE | natural gas, high pressure | EN15804, U",6adf8690-5354-4768-a37d-e75d427e3d02,1,m3,40,MJ
+"evaporation of natural gas, import from QA | natural gas, high pressure | EN15804, U",bdb180a2-fff8-44f7-ae16-5b4edb427a09,1,m3,40,MJ
+"evaporation of natural gas, import from DZ | natural gas, high pressure | EN15804, U",3c152fa8-3b7c-4362-a79f-6dde6286f506,1,m3,40,MJ
+"natural gas, high pressure, import from KW | natural gas, high pressure | EN15804, U",3fd7ff74-92c1-4036-a557-578f7c032bce,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",ae326058-d1cb-49d1-89df-73a01adaab00,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",81003155-bf17-4999-a9b8-3a973c7c6a9e,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",d0e1796f-3e67-4f83-9544-41728d0416de,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",8f2d39b9-c2fd-4672-956d-cf21fea44595,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",1a3f1367-c730-4d7b-86d6-e965cff84785,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",61254139-9ed2-4c74-af07-de3a22b0ed44,1,m3,40,MJ
+"evaporation of natural gas, import from AE | natural gas, high pressure | EN15804, U",f4657234-5904-4af0-bc64-88093123d2ab,1,m3,40,MJ
+"evaporation of natural gas, import from US | natural gas, high pressure | EN15804, U",8daf91e0-f02b-4dbb-803d-250033f1fba6,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",eaf2f9f8-5f06-4134-91cb-b643464795c0,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",2b139302-cbf8-450d-9864-6294b72b5f90,1,m3,40,MJ
+"evaporation of natural gas, import from NG | natural gas, high pressure | EN15804, U",a76025ad-294e-4a71-a1da-ccdf19a5b3fa,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",e3497148-2e53-49e3-8439-aed9ea0d34ab,1,m3,40,MJ
+"natural gas, high pressure, import from AZ | natural gas, high pressure | EN15804, U",afb3a14b-c73b-4705-a4a8-17cba7fd075b,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",db9f153e-a5fd-49cc-8a94-7de667514bfe,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",34de43c1-d356-4f24-893b-b0f0dc5eca81,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",9589c297-8365-456b-9c09-eccc75384d62,1,m3,40,MJ
+"natural gas, high pressure, import from LY | natural gas, high pressure | EN15804, U",02c5f093-ec17-44c0-8bad-3824812a1656,1,m3,40,MJ
+"natural gas, high pressure, import from VE | natural gas, high pressure | EN15804, U",acfb3ba9-1878-4023-acbe-c4cd0dafb363,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",d27c4af7-d028-4fca-89f7-8d09909c2ec1,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",8559e3bd-aa14-42b4-aa37-927f793d3cc4,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",9953e83d-7089-4d3d-8733-4ef566118ca7,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",3b34d04b-cf3f-4c70-9b3c-2346ecd2566b,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",e8f01b70-cc66-44c5-a167-411d3967c57a,1,m3,40,MJ
+"natural gas, high pressure, import from DE | natural gas, high pressure | EN15804, U",99f1cda2-198e-48ad-a8e2-af419a652b1a,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",db236b9a-4692-42df-a4f2-bff88ab4d0e2,1,m3,40,MJ
+"evaporation of natural gas, import from DZ | natural gas, high pressure | EN15804, U",191a73d4-247c-4a8c-bf83-c8f428604eab,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",db23f7dd-6a94-434f-bba8-68e3714b9994,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",c15a8a31-ee5e-482c-ad23-16fffe0f3555,1,m3,40,MJ
+"evaporation of natural gas, import from US | natural gas, high pressure | EN15804, U",99a5299f-8693-408a-b83d-821aec4364c9,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",7e530834-e583-4804-8654-c254731b8b98,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",9a913f8d-6a9f-4ac2-84d5-a4b07a2d738b,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",c7fede4a-7867-494e-a73c-0cbd5b3eb8f8,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",8238021f-e922-491f-9400-ac0821aec360,1,m3,40,MJ
+"natural gas, high pressure, import from IR | natural gas, high pressure | EN15804, U",650b7cd0-9287-4ed4-9514-6dff2435af3c,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",a472675b-2369-4ba8-b76d-eea96641fab8,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",f87a207b-24cb-44f7-8012-6affc67fb008,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",0f3585b9-4d21-4cd9-9847-218d73f2e688,1,m3,40,MJ
+"natural gas, high pressure, import from QA | natural gas, high pressure | EN15804, U",4dbbc538-c3da-42e2-bd50-1232ad897208,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",cba738fe-517b-4cb1-b8eb-d347dbc042c3,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",b10ddc40-b7d6-45c6-9ea2-5f74148f684d,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",7db6080a-1d25-4306-951c-e83b71489249,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",928e9e7d-d47b-4388-af8f-6b7ebcdca097,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",4d25f17f-aabb-478e-9b92-bfd6d9e17029,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",e8962867-963b-489c-ae24-49fb7272e8be,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",c2ff6905-81a0-483a-915f-864d2c1f1d82,1,m3,40,MJ
+"evaporation of natural gas, import from MY | natural gas, high pressure | EN15804, U",7a39ce69-479c-4892-90cb-fac16bc8a234,1,m3,40,MJ
+"natural gas, high pressure, domestic supply with seasonal storage | natural gas, high pressure | EN15804, U",0ea50787-51ff-48e2-9254-d521c4095d3d,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",d09aa2ea-0d4b-4ecd-8f80-a952ee840e11,1,m3,40,MJ
+"natural gas, high pressure, import from NO | natural gas, high pressure | EN15804, U",c361b7cf-7f0c-4ea0-9999-747bd82869ec,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",1a629d7a-0ec5-44cd-aaaa-aabf554b44bd,1,m3,40,MJ
+"natural gas, high pressure, import from NL | natural gas, high pressure | EN15804, U",9fe9ca2d-9541-4460-bfe3-719dfc02b9d7,1,m3,40,MJ
+"market group for natural gas, high pressure | natural gas, high pressure | EN15804, U",0bca43f9-2ead-41ef-9c35-4b48e6652b0d,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",49597292-e1b8-4718-9a9c-ff591878eb65,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",4e5b1f18-23e9-40ae-b777-ef294a33b1a4,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",73ae4133-379f-4a93-b98e-73a08e3f20e1,1,m3,40,MJ
+"evaporation of natural gas, import from ID | natural gas, high pressure | EN15804, U",1f5d3bba-639c-4220-bd18-03249dd85147,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",40a143a0-9b75-4a29-9a2d-c975366e6e27,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",3229406d-0d7d-4d73-8039-723f2bbd2f44,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",03ef9c4a-dc0c-4da2-bef8-f8423fb189d0,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",043fd5f6-42f3-4c11-b136-6b85a4c00fe9,1,m3,40,MJ
+"natural gas, high pressure, import from RO | natural gas, high pressure | EN15804, U",5e11b3ef-2f76-493d-b021-e1ee85db4cdb,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",93f5621f-9b70-4257-bd7e-fb2245d8e315,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",18a34bbc-de8b-42d0-838a-cc8a41d1475d,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",9c03875d-930d-4063-90d1-cf890fcb0fd9,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",d79604af-7474-41d5-bf07-72f79c3a78f8,1,m3,40,MJ
+"natural gas, high pressure, import from DE | natural gas, high pressure | EN15804, U",7ce2e2df-0031-468c-b687-cc9cb732e272,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",4f069760-463e-4a61-9f0e-72284aa2f898,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",169b2cb2-1d2b-4887-ac1b-7c682aaf7ed2,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",87444f42-d817-4ed4-afdb-9e918c454d69,1,m3,40,MJ
+"natural gas, high pressure, import from NG | natural gas, high pressure | EN15804, U",97f549a7-83ee-4c12-a6fd-0f82d8bde0e6,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",4f2a7511-9ee7-40f6-a4c4-323b30992458,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",8c53dc55-26f2-4648-bc97-e5729228dc93,1,m3,40,MJ
+"natural gas, high pressure, import from RU | natural gas, high pressure | EN15804, U",c5c619d4-036c-431f-93a0-9806a94fd562,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",b90eaafa-98c7-4a45-99ff-ed61e240b68e,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",4db60171-776e-486d-9f10-42f3abd3296b,1,m3,40,MJ
+"natural gas, high pressure, import from ID | natural gas, high pressure | EN15804, U",1556be51-8865-4899-88f1-a0f06f8297e3,1,m3,40,MJ
+"natural gas, high pressure, import from US | natural gas, high pressure | EN15804, U",923cdd42-cde4-44f1-ae91-fae485375f9f,1,m3,40,MJ
+"evaporation of natural gas, import from NO | natural gas, high pressure | EN15804, U",ba75226a-d955-4c34-b49a-34251095e829,1,m3,40,MJ
+"natural gas, high pressure, import from FI | natural gas, high pressure | EN15804, U",49c2aef9-3112-4c8c-8f52-3358132c8be6,1,m3,40,MJ
+"natural gas, high pressure, import from BE | natural gas, high pressure | EN15804, U",42c2a2d6-3757-4bbf-8735-6b70100dbedf,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",79006de6-d8f3-462b-ada7-3690172602f5,1,m3,40,MJ
+"natural gas, high pressure, import from DZ | natural gas, high pressure | EN15804, U",93d298f5-45cb-497a-baf9-f663a9e0f516,1,m3,40,MJ
+"petroleum and gas production, offshore | natural gas, high pressure | EN15804, U",bfe167b5-06e6-444f-ac1c-861be5d58bbb,1,m3,40,MJ
+"natural gas, high pressure, import from MY | natural gas, high pressure | EN15804, U",dc124b8d-ea57-4ec5-8a01-6ebf8eb2d0dd,1,m3,40,MJ
+"market for natural gas, high pressure | natural gas, high pressure | EN15804, U",5ccae7b7-3b61-482a-a4cb-04473da6d460,1,m3,40,MJ
+"petroleum and gas production, onshore | natural gas, high pressure | EN15804, U",58749b1d-588e-4e01-8377-e832f330794f,1,m3,40,MJ
+"natural gas, high pressure, import from CN | natural gas, high pressure | EN15804, U",c4e54bfc-933a-491a-814a-72ded22250fe,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",eeffa7c5-89df-4663-b467-84ef1016af17,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",6d456a3e-3ba1-44f2-85ab-c3f205994cad,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",7331aafb-2cd7-40cb-a614-adb18f7c0004,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",8c7644e5-a8ca-4444-bcd0-f4b9d38e5f97,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",828d22af-8e95-401b-a0da-53f4f2ccabf4,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",b43d6ab1-2585-4de2-88fe-4f080df9eeef,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",3f64beeb-a851-4c73-b51e-15c2ff50ed81,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",1f840d76-8c70-443b-a07d-14d81108406f,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",7a97cf6a-77fb-4a41-bae4-5874a6e7061b,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",24a846ba-46b4-4a52-8fa6-b63ccc1b9b54,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",708e203f-a5a1-4588-bced-14ad2e3b7928,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",524b2c70-dc59-4b62-aa3b-3c271ddbab7e,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",29de54c4-669f-429d-a1a3-983b88e9e4ac,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",a4e66fb7-17b1-43e3-a57c-5f9195aaff55,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",318d3ba9-41f1-4bef-8e9c-d861ce929413,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",23bbb405-7e6f-4aad-8432-c9f1772469a3,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",3758c868-c67d-4a2f-bd33-4a18962f1894,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",904a6389-d4cc-4b5c-b882-304a7cc53f22,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",dc676889-e674-4aae-916f-8a30bcd379bb,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",6d0e8488-3a19-4650-af5d-4bbc697db137,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",f33262de-0352-459a-84c3-03c6c7c88729,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",976548b4-6b77-4a48-aaaa-745040c2ff46,1,m3,40,MJ
+"market for natural gas, low pressure | natural gas, low pressure | EN15804, U",809a94a9-d622-4702-89b0-61797d7c5e50,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",1c6be94c-9975-4331-8d7c-f05180e5f802,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",c5e0ec36-fb00-412f-ba3c-66b3716a1cb7,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",f7abc96d-e135-4c6d-bcc2-aad567eaa13d,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",78c0fa9a-e557-4cf5-94a3-166e431104f5,1,m3,40,MJ
+"natural gas pressure reduction, from high to low pressure | natural gas, low pressure | EN15804, U",4c089ae4-acf3-43ec-a4cb-2af3859eee30,1,m3,40,MJ
+"market for natural gas, high pressure, vehicle grade | natural gas, high pressure, vehicle grade | EN15804, U",82e55cd9-956e-4232-b47f-e3c9b1a8cb7c,1,kg,46.5,MJ
+"natural gas production, high pressure, vehicle grade | natural gas, high pressure, vehicle grade | EN15804, U",816d7d1e-e15f-4130-a920-937008bafff3,1,kg,46.5,MJ
+"natural gas production, high pressure, vehicle grade | natural gas, high pressure, vehicle grade | EN15804, U",cc09eb7d-c537-437a-8417-a4043f5ee5bf,1,kg,46.5,MJ
+"natural gas production, low pressure, vehicle grade | natural gas, low pressure, vehicle grade | EN15804, U",c514f5dc-d348-45a2-8a71-d29b25a7fb7e,1,kg,46.5,MJ
+"natural gas production, low pressure, vehicle grade | natural gas, low pressure, vehicle grade | EN15804, U",ec6a7d61-3381-40ef-aaaa-fe3c0a0e5778,1,kg,46.5,MJ
+"market for natural gas, low pressure, vehicle grade | natural gas, low pressure, vehicle grade | EN15804, U",c2bc4d11-9bdf-4724-a1b6-d7e4f0e1fa59,1,kg,46.5,MJ
+"market for natural gas, medium pressure, vehicle grade | natural gas, medium pressure, vehicle grade | EN15804, U",a4aef16e-d3c4-44f0-afe5-7ef4872768f4,1,kg,46.5,MJ
+"natural gas production, medium pressure, vehicle grade | natural gas, medium pressure, vehicle grade | EN15804, U",020586dd-1fe0-45cd-b79e-6ca1b0248f0a,1,kg,46.5,MJ
+"natural gas production, medium pressure, vehicle grade | natural gas, medium pressure, vehicle grade | EN15804, U",581c0191-27c3-4e0b-8481-d189e5d3ec26,1,kg,46.5,MJ
+"market for machine operation, diesel, < 18.64 kW, high load factor | machine operation, diesel, < 18.64 kW, high load factor | EN15804, U",c2ec8b49-c9c4-4fa0-bde4-ef16480dcc8a,1,h,68.407,MJ
+"machine operation, diesel, < 18.64 kW, high load factor | machine operation, diesel, < 18.64 kW, high load factor | EN15804, U",597113b1-3e48-4342-b277-cdebf55344c5,1,h,68.407,MJ
+"market for machine operation, diesel, < 18.64 kW, low load factor | machine operation, diesel, < 18.64 kW, low load factor | EN15804, U",3026cabd-da0c-4a5e-a218-83395c1df20c,1,h,39.439,MJ
+"machine operation, diesel, < 18.64 kW, low load factor | machine operation, diesel, < 18.64 kW, low load factor | EN15804, U",3579ea17-0f82-4ff0-8d94-6e2329645d5e,1,h,39.439,MJ
+"machine operation, diesel, < 18.64 kW, steady-state | machine operation, diesel, < 18.64 kW, steady-state | EN15804, U",0f93b6cb-5e50-45ab-b6ef-c99f3867b471,1,h,48.451,MJ
+"market for machine operation, diesel, < 18.64 kW, steady-state | machine operation, diesel, < 18.64 kW, steady-state | EN15804, U",6d34fc1f-f9a6-46d2-bd9c-9a3d7507992c,1,h,48.451,MJ
+"market for machine operation, diesel, < 18.64 kW, underground mining | machine operation, diesel, < 18.64 kW, underground mining | EN15804, U",f9d02f70-c2c0-4702-8cc5-9f72988b5a6d,1,h,44.528,MJ
+"machine operation, diesel, < 18.64 kW, underground mining | machine operation, diesel, < 18.64 kW, underground mining | EN15804, U",9241e4c7-bd2e-4f61-adb9-57c6eed90a49,1,h,44.528,MJ
+"machine operation, diesel, >= 18.64 kW and < 74.57 kW, high load factor | machine operation, diesel, >= 18.64 kW and < 74.57 kW, high load factor | EN15804, U",148e864a-7402-4ebb-98cb-4ab56b847c4e,1,h,334.916,MJ
+"market for machine operation, diesel, >= 18.64 kW and < 74.57 kW, high load factor | machine operation, diesel, >= 18.64 kW and < 74.57 kW, high load factor | EN15804, U",8cdbb26c-b337-4ac7-b917-5d5494ec96bf,1,h,334.916,MJ
+"machine operation, diesel, >= 18.64 kW and < 74.57 kW, low load factor | machine operation, diesel, >= 18.64 kW and < 74.57 kW, low load factor | EN15804, U",ed4031cd-0ac4-4d8d-838d-49fddd3cbaa4,1,h,136.026,MJ
+"market for machine operation, diesel, >= 18.64 kW and < 74.57 kW, low load factor | machine operation, diesel, >= 18.64 kW and < 74.57 kW, low load factor | EN15804, U",73e52e20-4141-4249-8222-badabaeb2632,1,h,136.026,MJ
+"machine operation, diesel, >= 18.64 kW and < 74.57 kW, steady-state | machine operation, diesel, >= 18.64 kW and < 74.57 kW, steady-state | EN15804, U",6b73ee50-55e6-4f43-a5ee-0b3f7a5dc77a,1,h,215.843,MJ
+"market for machine operation, diesel, >= 18.64 kW and < 74.57 kW, steady-state | machine operation, diesel, >= 18.64 kW and < 74.57 kW, steady-state | EN15804, U",61e51ed0-9dc2-431e-b692-e7ed007a336a,1,h,215.843,MJ
+"market for machine operation, diesel, >= 18.64 kW and < 74.57 kW, underground mining | machine operation, diesel, >= 18.64 kW and < 74.57 kW, underground mining | EN15804, U",453a9348-a633-4c06-8126-42ddf2be1b86,1,h,157.337,MJ
+"machine operation, diesel, >= 18.64 kW and < 74.57 kW, underground mining | machine operation, diesel, >= 18.64 kW and < 74.57 kW, underground mining | EN15804, U",e857d24f-4697-4192-b6c8-34aba0793caf,1,h,157.337,MJ
+"market for machine operation, diesel, >= 74.57 kW, high load factor | machine operation, diesel, >= 74.57 kW, high load factor | EN15804, U",b652030c-4211-4b09-91bb-b6e611647165,1,h,1606.895,MJ
+"machine operation, diesel, >= 74.57 kW, high load factor | machine operation, diesel, >= 74.57 kW, high load factor | EN15804, U",a68c080c-bf8a-4ead-bdcf-0308699103f6,1,h,1606.895,MJ
+"market for machine operation, diesel, >= 74.57 kW, low load factor | machine operation, diesel, >= 74.57 kW, low load factor | EN15804, U",5a661950-8cda-4409-ab88-01cfdeac5d93,1,h,254.485,MJ
+"machine operation, diesel, >= 74.57 kW, low load factor | machine operation, diesel, >= 74.57 kW, low load factor | EN15804, U",95b6f579-7ef6-4305-af1f-e14a58859882,1,h,254.485,MJ
+"machine operation, diesel, >= 74.57 kW, steady-state | machine operation, diesel, >= 74.57 kW, steady-state | EN15804, U",3918d781-baa4-4c25-93a8-ef18db052f37,1,h,876.14,MJ
+"market for machine operation, diesel, >= 74.57 kW, steady-state | machine operation, diesel, >= 74.57 kW, steady-state | EN15804, U",d07b5e12-c285-48fe-97dd-a9ba89adf55f,1,h,876.14,MJ
+"combine harvesting | combine harvesting | EN15804, U",dc0abd98-39e6-4497-bb52-3c3f213f4c72,1,m2,0.142,MJ
+"combine harvesting | combine harvesting | EN15804, U",d2f30b70-f706-41a3-b7dc-d7b26babb02e,1,m2,0.142,MJ
+"combine harvesting | combine harvesting | EN15804, U",6cc2655a-ced4-48e3-9070-c25d6e0a858a,1,m2,0.066,MJ
+"market for combine harvesting | combine harvesting | EN15804, U",53fdc0ea-b8f7-4094-99b5-84f449ed1010,1,m2,0.135,MJ
+"combine harvesting | combine harvesting | EN15804, U",dd6e6567-8ccb-404e-b14c-ccf0e2ec3805,1,m2,0.017,MJ
+"combine harvesting | combine harvesting | EN15804, U",52f30202-7c8c-4309-b2ff-ba98b662d92a,1,m2,0.066,MJ
+"combine harvesting | combine harvesting | EN15804, U",6e70ed03-8242-43a8-b62f-4ac3511f03fc,1,m2,0.023,MJ
+"sowing | sowing | EN15804, U",14bd0317-df46-49b4-8765-f1eb9e865c17,1,m2,0.004,MJ
+"sowing | sowing | EN15804, U",1b2acf6b-9ce4-4617-be31-54f472a2a6aa,1,m2,0.015,MJ
+"sowing | sowing | EN15804, U",2e36afd6-2362-454f-93a7-86b41b4fba7b,1,m2,0.016,MJ
+"sowing | sowing | EN15804, U",18c3d51d-42ad-4269-b242-4ddb06b0bf35,1,m2,0.027,MJ
+"market for sowing | sowing | EN15804, U",6e2a73ce-3136-44d9-bdcf-68ebf3e721a6,1,m2,0.016,MJ
+"sowing | sowing | EN15804, U",857d1f93-7b93-47aa-9070-d1a618a3aae2,1,m2,0.016,MJ
+"sowing | sowing | EN15804, U",aa004341-5df7-4dc2-86e1-54a10c5d37d5,1,m2,0.027,MJ
+"application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",2cb2c64d-ff87-4f9e-afb6-810d639114d4,1,m2,0.038,MJ
+"application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",fa1f0f97-6ac9-4ce1-9230-01d671a4c0ba,1,m2,0.008,MJ
+"application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",cca4b4a8-575c-408b-98f4-5ff0ed248704,1,m2,0.007,MJ
+"application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",e49d77b8-5130-41ce-8804-93609ee1d5c8,1,m2,0.001,MJ
+"market for application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",cd896d33-cad7-4d58-97bc-9deda98bfd61,1,m2,0.002,MJ
+"application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",df0f5bf0-c319-461e-b61f-9769aba8fc66,1,m2,0.007,MJ
+"application of plant protection product, by field sprayer | application of plant protection product, by field sprayer | EN15804, U",caf2b8bc-27b4-4e8e-84b8-813808726111,1,m2,0.001,MJ
+"chopping, maize | chopping, maize | EN15804, U",e8345eea-765c-4868-b177-e8d5fc2d290f,1,m2,0.225,MJ
+"chopping, maize | chopping, maize | EN15804, U",facf1a6a-4aba-4974-a372-4351381c0ccc,1,m2,0.225,MJ
+"market for chopping, maize | chopping, maize | EN15804, U",c71ffa45-5d6f-47e9-826b-80356ce282c3,1,m2,0.225,MJ
+"fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",39839de8-afb3-49c0-9bb6-8d129c44662a,1,m2,0.011,MJ
+"fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",6e35fb0f-1b6a-4b2c-92b4-cca7dd2e3eb8,1,m2,0.011,MJ
+"fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",69524a9f-d2e4-4f42-be78-45f54ae599bc,1,m2,0.003,MJ
+"fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",b5207b88-bca8-4958-b32b-e0698a93c284,1,m2,0.023,MJ
+"fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",3c5d3e2c-499d-4dee-8636-8a4a363bcb89,1,m2,0.023,MJ
+"market for fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",7554ddc5-a9fa-4a87-8412-094a5e92b494,1,m2,0.022,MJ
+"fertilising, by broadcaster | fertilising, by broadcaster | EN15804, U",1c634156-1248-4ae6-8d7d-5c5efb517e32,1,m2,0.011,MJ
+"fertilising, by rig fertiliser, sugarcane | fertilising, by rig fertiliser, sugarcane | EN15804, U",1d4a6e70-82b8-4fff-a964-88b3e3a754ba,1,m2,0.047,MJ
+"market for fertilising, by rig fertiliser, sugarcane | fertilising, by rig fertiliser, sugarcane | EN15804, U",b5db4d65-1607-4756-9a39-fae618e79292,1,m2,0.047,MJ
+"fertilising, by rig fertiliser, sugarcane | fertilising, by rig fertiliser, sugarcane | EN15804, U",bcd9ab8d-840f-48af-a306-34dcd1bedb4b,1,m2,0.047,MJ
+"fertilising, by stool splitter, sugarcane | fertilising, by stool splitter, sugarcane | EN15804, U",9f90168b-0214-4634-88c8-adfbafe3752f,1,m2,0.052,MJ
+"fertilising, by stool splitter, sugarcane | fertilising, by stool splitter, sugarcane | EN15804, U",f2cf05ae-db54-4589-88fc-ef3601586e75,1,m2,0.052,MJ
+"market for fertilising, by stool splitter, sugarcane | fertilising, by stool splitter, sugarcane | EN15804, U",b2215ca4-087e-469a-8d50-c73c7461299b,1,m2,0.052,MJ
+"field leveling, sugarcane | field leveling, sugarcane | EN15804, U",712c2d7b-3ca0-4c06-bbcd-2d01be04a0b2,1,m2,0.036,MJ
+"market for field leveling, sugarcane | field leveling, sugarcane | EN15804, U",f8a00207-bad5-43cf-b45a-f57806fc29d9,1,m2,0.036,MJ
+"field leveling, sugarcane | field leveling, sugarcane | EN15804, U",8bd99b7d-cacb-4312-9857-8038b2a6cc0f,1,m2,0.036,MJ
+"market for fodder loading, by self-loading trailer | fodder loading, by self-loading trailer | EN15804, U",2c872df8-1764-40a4-a430-762c5b591e6c,1,m3,4.591,MJ
+"fodder loading, by self-loading trailer | fodder loading, by self-loading trailer | EN15804, U",90bcb1e5-0b14-4b11-aeee-6f1d6a273544,1,m3,4.526,MJ
+"fodder loading, by self-loading trailer | fodder loading, by self-loading trailer | EN15804, U",9aadef6d-16cb-44fc-b95b-ee75d994b67b,1,m3,54.656,MJ
+"fodder loading, by self-loading trailer | fodder loading, by self-loading trailer | EN15804, U",b388a489-ccba-4a90-a4b1-26518b9a1437,1,m3,4.526,MJ
+"furrow covering, for sugarcane | furrow covering, sugarcane | EN15804, U",90b0d2c1-304f-4bfe-9887-e3896c736268,1,m2,0.044,MJ
+"furrow covering, for sugarcane | furrow covering, sugarcane | EN15804, U",06f156bd-d1d5-4315-b549-aa8a66324370,1,m2,0.044,MJ
+"market for furrow covering, sugarcane | furrow covering, sugarcane | EN15804, U",2e38e49d-e5bb-49c7-ad7e-2af74da6a389,1,m2,0.044,MJ
+"furrowing, sugarcane | furrowing, sugarcane | EN15804, U",f017d637-c129-40ca-a303-e1fb6bef440d,1,m2,0.029,MJ
+"market for furrowing, sugarcane | furrowing, sugarcane | EN15804, U",ce774a1a-57fc-4feb-9d24-a2649e041d7f,1,m2,0.029,MJ
+"furrowing, sugarcane | furrowing, sugarcane | EN15804, U",b822018f-dced-4afd-8270-450aa1a6d4fe,1,m2,0.029,MJ
+"market for harvesting, by complete harvester, beets | harvesting, by complete harvester, beets | EN15804, U",9948ff7d-38c7-431a-9bc1-e423c16ec60a,1,m2,0.44,MJ
+"harvesting, by complete harvester, beets | harvesting, by complete harvester, beets | EN15804, U",d24c9bac-e58f-4e6a-ad68-99994e650a6a,1,m2,0.44,MJ
+"harvesting, by complete harvester, beets | harvesting, by complete harvester, beets | EN15804, U",4861c1c1-1c5a-467e-b19b-e0e5afbc7982,1,m2,0.44,MJ
+"harvesting, by complete harvester, ground crops | harvesting, by complete harvester, ground crops | EN15804, U",84252fbd-6963-4c73-9795-9625c7a8521a,1,m2,0.12,MJ
+"market for harvesting, by complete harvester, ground crops | harvesting, by complete harvester, ground crops | EN15804, U",ce8c0824-d483-46c9-bfa3-7d2b93a4c47d,1,m2,0.12,MJ
+"harvesting, by complete harvester, ground crops | harvesting, by complete harvester, ground crops | EN15804, U",0d9803cc-1cdd-434f-bd13-0837d3c4a5e7,1,m2,0.12,MJ
+"harvesting, by complete harvester, ground crops | harvesting, by complete harvester, ground crops | EN15804, U",46960f72-8743-4ef0-bd99-4ded99f82ce0,1,m2,0.097,MJ
+"market for harvesting, sugarcane | harvesting, sugarcane | EN15804, U",94461983-0b55-440f-a529-95e7d36812c7,1,m2,0.282,MJ
+"harvesting, sugarcane | harvesting, sugarcane | EN15804, U",74b45fa1-84e1-422a-8a3a-74d0a9d6c582,1,m2,0.282,MJ
+"harvesting, sugarcane | harvesting, sugarcane | EN15804, U",cd5744cb-9284-4fa7-bb8c-324b53796280,1,m2,0.282,MJ
+"haying, by rotary tedder | haying, by rotary tedder | EN15804, U",227b5ec5-6be3-4c49-b1cd-9ab2c1f3a19f,1,m2,0.008,MJ
+"haying, by rotary tedder | haying, by rotary tedder | EN15804, U",db8132db-1976-46ee-8adc-3a24cd6cbdc1,1,m2,0.008,MJ
+"haying, by rotary tedder | haying, by rotary tedder | EN15804, U",94f1ddae-d56a-4e5f-a83f-7d2d06df0930,1,m2,0.008,MJ
+"market for haying, by rotary tedder | haying, by rotary tedder | EN15804, U",22a8631b-ecf9-416f-9ece-42c5cf36f05d,1,m2,0.008,MJ
+"market for hoeing | hoeing | EN15804, U",7e5ec056-b0a0-4873-9bce-eebde19836c8,1,m2,0.014,MJ
+"hoeing | hoeing | EN15804, U",9911987f-de29-4bd4-aefc-a8c2d40cbf1e,1,m2,0.014,MJ
+"hoeing | hoeing | EN15804, U",1706520d-d5ef-4f39-a2ac-46a7d26a649b,1,m2,0.014,MJ
+"market for limestone and gypsum application, by spreader | limestone and gypsum application, by spreader | EN15804, U",6aa12c51-dc7f-4516-8794-d4009584e437,1,m2,0.005,MJ
+"limestone and gypsum application, by spreader | limestone and gypsum application, by spreader | EN15804, U",0537f1b6-0fc0-4c84-87d7-8377224b2a82,1,m2,0.005,MJ
+"limestone and gypsum application, by spreader | limestone and gypsum application, by spreader | EN15804, U",a759bfcd-8ea8-42e6-aeb4-33623a5311e0,1,m2,0.005,MJ
+"market for liquid manure spreading, by vacuum tanker | liquid manure spreading, by vacuum tanker | EN15804, U",47948716-64d2-4c6f-b817-512c1a55a759,1,m3,9.266,MJ
+"liquid manure spreading, by vacuum tanker | liquid manure spreading, by vacuum tanker | EN15804, U",aea5a4f7-d09e-4f42-9ce5-d5d6e8e1bfbb,1,m3,35.228,MJ
+"liquid manure spreading, by vacuum tanker | liquid manure spreading, by vacuum tanker | EN15804, U",e0fff020-bf07-4cdb-9e24-7a3af5ec6c9e,1,m3,9.266,MJ
+"liquid manure spreading, by vacuum tanker | liquid manure spreading, by vacuum tanker | EN15804, U",27cd515d-d289-47f4-9963-27629f3abc26,1,m3,9.266,MJ
+"market for mowing, by motor mower | mowing, by motor mower | EN15804, U",ff20f520-c8f0-4894-9b9d-5741ca5ffef6,1,m2,0.013,MJ
+"mowing, by motor mower | mowing, by motor mower | EN15804, U",22272708-26d5-43fa-9f0e-34c4c7cef005,1,m2,0.013,MJ
+"mowing, by motor mower | mowing, by motor mower | EN15804, U",58556b60-66a4-4b7a-aac8-51230edf4e6b,1,m2,0.013,MJ
+"mowing, by rotary mower | mowing, by rotary mower | EN15804, U",897e8ccf-6178-4d76-86e9-db2845dbc1ca,1,m2,0.018,MJ
+"market for mowing, by rotary mower | mowing, by rotary mower | EN15804, U",26c4ac24-f28f-4298-a206-e5a3bba5092c,1,m2,0.018,MJ
+"mowing, by rotary mower | mowing, by rotary mower | EN15804, U",78c8a04c-cdf0-4cf8-964b-1bddfb1e8e28,1,m2,0.018,MJ
+"mulching | mulching | EN15804, U",0e1f854d-1418-4a71-81d1-996bc80d4827,1,m2,0.015,MJ
+"mulching | mulching | EN15804, U",c5ebbc3f-ef22-4760-b31a-cecdb23f8632,1,m2,0.015,MJ
+"market for mulching | mulching | EN15804, U",52428a28-4481-48a0-b3aa-b2f5dd918774,1,m2,0.015,MJ
+"market for planting | planting | EN15804, U",5ab9b12a-be28-4e9d-9748-fde887fb83bd,1,m2,0.072,MJ
+"planting | planting | EN15804, U",d2e59abe-46b7-40f3-bef8-4773df4a068a,1,m2,0.072,MJ
+"planting | planting | EN15804, U",4817b1ab-eacc-4f4e-8570-5bf09ea38dd6,1,m2,0.072,MJ
+"market for planting tree | planting tree | EN15804, U",50cb6fa2-98f3-4d65-aa3f-7b37ef7b9ec2,1,Item(s),8.25,MJ
+"planting, tree | planting tree | EN15804, U",e84988eb-f053-4712-a3e7-a01141195bd2,1,Item(s),8.25,MJ
+"planting, tree | planting tree | EN15804, U",614d96a0-c54f-4615-8283-045eb636c0c2,1,Item(s),8.25,MJ
+"planting with starter fertiliser, by no till planter | planting with starter fertiliser, by no till planter | EN15804, U",e40d8e0f-6436-4e83-98b0-3684cadb15ec,1,m2,0.014,MJ
+"planting with starter fertiliser, by no till planter | planting with starter fertiliser, by no till planter | EN15804, U",9de1a84c-ddf5-4ef7-b580-00559bc25570,1,m2,0.014,MJ
+"market for planting with starter fertiliser, by no till planter | planting with starter fertiliser, by no till planter | EN15804, U",13d53f35-a6a1-4e81-8f21-309bde02c4f9,1,m2,0.014,MJ
+"planting, sugarcane | planting, sugarcane | EN15804, U",4afc2735-5f8f-4061-af86-dc0928fc23d4,1,m2,0.041,MJ
+"planting, sugarcane | planting, sugarcane | EN15804, U",37005346-aa51-4ebb-bf47-078cfaa14a22,1,m2,0.041,MJ
+"market for planting, sugarcane | planting, sugarcane | EN15804, U",35d01881-1f4c-4c9f-9ce4-9eaeac69e75b,1,m2,0.041,MJ
+"solid manure loading and spreading, by hydraulic loader and spreader | solid manure loading and spreading, by hydraulic loader and spreader | EN15804, U",2f06693b-f855-4a02-91df-40ca31940b8a,1,kg,0.023,MJ
+"solid manure loading and spreading, by hydraulic loader and spreader | solid manure loading and spreading, by hydraulic loader and spreader | EN15804, U",4c307605-88dd-42e1-8d63-de2991c6db57,1,kg,0.023,MJ
+"market for solid manure loading and spreading, by hydraulic loader and spreader | solid manure loading and spreading, by hydraulic loader and spreader | EN15804, U",4b5b35fe-05e8-4a4b-8247-f6b33cd49dff,1,kg,0.023,MJ
+"solid manure loading and spreading, by hydraulic loader and spreader | solid manure loading and spreading, by hydraulic loader and spreader | EN15804, U",3b2f4fa6-89ba-45e5-8a2e-ac58e982f826,1,kg,0.063,MJ
+"sugarcane loading, by loader | sugarcane loading, by loader | EN15804, U",bf5bacbf-6041-4a51-85b7-ab87b82d17c2,1,m2,0.074,MJ
+"market for sugarcane loading, by loader | sugarcane loading, by loader | EN15804, U",48d9a489-3fc0-4855-9462-03d0808f5695,1,m2,0.074,MJ
+"sugarcane loading, by loader | sugarcane loading, by loader | EN15804, U",526259ec-d674-47d4-8328-bd000f7eb8bf,1,m2,0.074,MJ
+"sugarcane transfer, by dump cart | sugarcane transfer, by dump cart | EN15804, U",244cde9f-bdbb-4b7a-9053-403047648e77,1,m2,0.143,MJ
+"market for sugarcane transfer, by dump cart | sugarcane transfer, by dump cart | EN15804, U",3e95667e-b90a-43a4-8ad5-d2f86b8a3849,1,m2,0.143,MJ
+"sugarcane transfer, by dump cart | sugarcane transfer, by dump cart | EN15804, U",0568bfab-c81e-4447-8cc4-72892bb2b6a3,1,m2,0.143,MJ
+"sugarcane vinasse application, by wheel reel irrigation equipment | sugarcane vinasse application, by wheel reel irrigation | EN15804, U",914da40b-56dd-4fe9-8418-24fa8a6e6c63,1,m2,0.034,MJ
+"sugarcane vinasse application, by wheel reel irrigation equipment | sugarcane vinasse application, by wheel reel irrigation | EN15804, U",dd691357-60a0-4a5a-aafc-789897ba1ae0,1,m2,0.034,MJ
+"market for sugarcane vinasse application, by wheel reel irrigation | sugarcane vinasse application, by wheel reel irrigation | EN15804, U",26f8d258-bae5-4e1b-aad8-31f65c32231f,1,m2,0.034,MJ
+"swath, by rotary windrower | swath, by rotary windrower | EN15804, U",83e2fcef-25d5-4ab0-ba0f-71b8a3d0c59e,1,m2,0.03,MJ
+"market for swath, by rotary windrower | swath, by rotary windrower | EN15804, U",c99ebd7b-e19e-40cb-9246-0acf685281e6,1,m2,0.013,MJ
+"swath, by rotary windrower | swath, by rotary windrower | EN15804, U",f23f6291-8996-4d0a-a6a2-39f1d21840c4,1,m2,0.013,MJ
+"swath, by rotary windrower | swath, by rotary windrower | EN15804, U",53047232-cd5f-4e37-9563-fab07327c009,1,m2,0.013,MJ
+"swath, by rotary windrower | swath, by rotary windrower | EN15804, U",f9d835c5-54ec-4dc2-b5e9-5e459b9562c4,1,m2,0.017,MJ
+"tillage, cultivating, chiselling | tillage, cultivating, chiselling | EN15804, U",ad21baa7-afbd-4b9d-bc73-e570ddf54723,1,m2,0.04,MJ
+"tillage, cultivating, chiselling | tillage, cultivating, chiselling | EN15804, U",009fc542-dfc2-47d4-a8ff-c41b447d1477,1,m2,0.066,MJ
+"tillage, cultivating, chiselling | tillage, cultivating, chiselling | EN15804, U",421dea75-20cc-4921-a290-92afe85854ef,1,m2,0.003,MJ
+"market for tillage, cultivating, chiselling | tillage, cultivating, chiselling | EN15804, U",ff7520c5-6fcc-4eae-9c51-50e2854843eb,1,m2,0.066,MJ
+"tillage, cultivating, chiselling | tillage, cultivating, chiselling | EN15804, U",dcc37ca5-c50b-45ba-8e3b-5bd454bdda96,1,m2,0.066,MJ
+"market for tillage, currying, by weeder | tillage, currying, by weeder | EN15804, U",bb21f8dc-7c9e-498d-96bf-24bb95f93bb9,1,m2,0.007,MJ
+"tillage, currying, by weeder | tillage, currying, by weeder | EN15804, U",320e67ef-5e45-462d-9632-892384ce0ae1,1,m2,0.007,MJ
+"tillage, currying, by weeder | tillage, currying, by weeder | EN15804, U",3246240a-642c-4bf9-9b43-7ecf97680113,1,m2,0.007,MJ
+"tillage, harrowing, by offset disc harrow | tillage, harrowing, by offset disc harrow | EN15804, U",38fb0a09-013a-4a56-b20c-21a8b6fd0bc6,1,m2,0.082,MJ
+"tillage, harrowing, by offset disc harrow | tillage, harrowing, by offset disc harrow | EN15804, U",5c668bcf-7732-4de4-8415-557dc902e046,1,m2,0.082,MJ
+"tillage, harrowing, by offset disc harrow | tillage, harrowing, by offset disc harrow | EN15804, U",d57427dc-b55a-4665-99f6-8cb09474bdae,1,m2,0.005,MJ
+"market for tillage, harrowing, by offset disc harrow | tillage, harrowing, by offset disc harrow | EN15804, U",f83502ee-3142-43f4-bcbc-63e3f9c61da0,1,m2,0.08,MJ
+"tillage, harrowing, by rotary harrow | tillage, harrowing, by rotary harrow | EN15804, U",ad5a1575-6bba-495d-8456-fb71613f1fad,1,m2,0.007,MJ
+"market for tillage, harrowing, by rotary harrow | tillage, harrowing, by rotary harrow | EN15804, U",33f15911-030f-4387-b8b4-589e2f0edd18,1,m2,0.048,MJ
+"tillage, harrowing, by rotary harrow | tillage, harrowing, by rotary harrow | EN15804, U",faddc8bf-79a4-4ebc-9f98-d7d54c9aa8c8,1,m2,0.049,MJ
+"tillage, harrowing, by rotary harrow | tillage, harrowing, by rotary harrow | EN15804, U",5d742935-2c32-46bb-8cb5-d0b5ca75b77e,1,m2,0.049,MJ
+"tillage, harrowing, by offset leveling disc harrow | tillage, harrowing, by offset leveling disc harrow | EN15804, U",d03fc584-3a34-4064-a3b6-4ede251299f1,1,m2,0.02,MJ
+"market for tillage, harrowing, by offset leveling disc harrow | tillage, harrowing, by offset leveling disc harrow | EN15804, U",848ea962-6202-423d-b825-e3b9de86d7e2,1,m2,0.02,MJ
+"tillage, harrowing, by offset leveling disc harrow | tillage, harrowing, by offset leveling disc harrow | EN15804, U",ad7879d5-dd82-4aa2-ac55-7b5c2afd112e,1,m2,0.02,MJ
+"tillage, harrowing, by spring tine harrow | tillage, harrowing, by spring tine harrow | EN15804, U",cffc8583-4e0f-4613-ac0e-91fdeebf20ab,1,m2,0.019,MJ
+"market for tillage, harrowing, by spring tine harrow | tillage, harrowing, by spring tine harrow | EN15804, U",086a6f14-38c4-4a86-8b19-27e284502fe8,1,m2,0.019,MJ
+"tillage, harrowing, by spring tine harrow | tillage, harrowing, by spring tine harrow | EN15804, U",225b8bab-67d9-413d-9a3e-f94b9bce2931,1,m2,0.019,MJ
+"tillage, hoeing and earthing-up, potatoes | tillage, hoeing and earthing-up, potatoes | EN15804, U",dcf8dd91-9416-43a8-aa57-c589e99a433c,1,m2,0.015,MJ
+"tillage, hoeing and earthing-up, potatoes | tillage, hoeing and earthing-up, potatoes | EN15804, U",b18bec5d-6717-4009-8607-dae63399f49b,1,m2,0.015,MJ
+"market for tillage, hoeing and earthing-up, potatoes | tillage, hoeing and earthing-up, potatoes | EN15804, U",fc0da04a-c17d-4c1a-946c-de03327876d4,1,m2,0.015,MJ
+"tillage, hoeing and earthing-up, potatoes | tillage, hoeing and earthing-up, potatoes | EN15804, U",5b09601e-5062-4b93-952e-a92e0bc3d26b,1,m2,0.057,MJ
+"tillage, ploughing | tillage, ploughing | EN15804, U",70dc3a3a-a98e-4455-9874-82a8508edfd1,1,m2,0.111,MJ
+"tillage, ploughing | tillage, ploughing | EN15804, U",1ef1527e-7c12-4e6e-ac13-679407ad5b0a,1,m2,0.094,MJ
+"market for tillage, ploughing | tillage, ploughing | EN15804, U",73dc14a0-0605-4450-995b-76ee8723595b,1,m2,0.111,MJ
+"tillage, ploughing | tillage, ploughing | EN15804, U",f30be522-1c4d-43ae-afa3-b4811297ead7,1,m2,0.111,MJ
+"tillage, ploughing | tillage, ploughing | EN15804, U",27de321b-dbc3-443c-807d-89d391d98959,1,m2,0.092,MJ
+"tillage, rolling | tillage, rolling | EN15804, U",b90bf0e0-2222-405a-be4a-23cea3f826c9,1,m2,0.014,MJ
+"tillage, rolling | tillage, rolling | EN15804, U",405d80c4-b0d2-4dd4-9c93-6754795a4241,1,m2,0.014,MJ
+"market for tillage, rolling | tillage, rolling | EN15804, U",ea99b9ae-8246-412c-9746-0bcedcd2c6e6,1,m2,0.014,MJ
+"tillage, rolling | tillage, rolling | EN15804, U",dd65bd14-b80e-47d7-b058-eb8a515daa1a,1,m2,0.013,MJ
+"tillage, rolling | tillage, rolling | EN15804, U",cc4b0af7-81fc-4654-b09f-5fe4b88938e9,1,m2,0.011,MJ
+"tillage, rotary cultivator | tillage, rotary cultivator | EN15804, U",1d2a70a6-6cd8-4769-af62-46daa89c53ea,1,m2,0.026,MJ
+"tillage, rotary cultivator | tillage, rotary cultivator | EN15804, U",f43e108e-5987-48e1-a466-43080dfc2a2f,1,m2,0.06,MJ
+"tillage, rotary cultivator | tillage, rotary cultivator | EN15804, U",45d65cbf-3746-44d3-8d9e-3c2b6a47b846,1,m2,0.007,MJ
+"tillage, rotary cultivator | tillage, rotary cultivator | EN15804, U",dd51599b-81d0-409e-b15a-c7bafb480b05,1,m2,0.06,MJ
+"market for tillage, rotary cultivator | tillage, rotary cultivator | EN15804, U",ea6d350c-678e-40a5-9ebd-131a08100c04,1,m2,0.059,MJ
+"tillage, rotary cultivator | tillage, rotary cultivator | EN15804, U",85af115a-dc58-4a8d-be91-9ee943798d36,1,m2,0.026,MJ
+"market for tillage, subsoiling, by subsoiler plow | tillage, subsoiling, by subsoiler plow | EN15804, U",f2de7678-6a23-4c27-81a1-09b929c0f211,1,m2,0.07,MJ
+"tillage, subsoiling, by subsoiler plow | tillage, subsoiling, by subsoiler plow | EN15804, U",fd790504-15a5-40ba-a28f-07330f58e1c0,1,m2,0.07,MJ
+"tillage, subsoiling, by subsoiler plow | tillage, subsoiling, by subsoiler plow | EN15804, U",e0a82cfb-409e-4f2a-ab55-7190edb51034,1,m2,0.07,MJ
+"bale loading | bale loading | EN15804, U",9f070d0e-0792-49bf-b833-55ab75706607,1,Item(s),14.091,MJ
+"bale loading | bale loading | EN15804, U",8703aaaf-cf5d-4f4c-ac9a-2b9161cc3eab,1,Item(s),3.463,MJ
+"bale loading | bale loading | EN15804, U",9e194347-855a-4e5b-9378-e35067d6ead4,1,Item(s),3.463,MJ
+"market for bale loading | bale loading | EN15804, U",539ce613-c106-4f8c-8961-36c0a7991bec,1,Item(s),3.463,MJ
+"baling | baling | EN15804, U",983b21b8-5539-4584-b94d-3a1bb1d9028c,1,Item(s),32.025,MJ
+"baling | baling | EN15804, U",a812004c-41ce-4b4a-8789-990b69f26383,1,Item(s),31.726,MJ
+"baling | baling | EN15804, U",72a7f0fa-6e90-45ab-8bf6-fd017eb3687a,1,Item(s),31.726,MJ
+"market for baling | baling | EN15804, U",78d00a23-0c5c-4763-bddb-65767f16871e,1,Item(s),31.726,MJ
+"market for delimbing/sorting, excavator-based processor | delimbing/sorting, excavator-based processor | EN15804, U",7df79a0e-1f21-4576-9b37-3fcaf5fc3b71,1,h,575.232,MJ
+"delimbing, with excavator-based processor | delimbing/sorting, excavator-based processor | EN15804, U",c0d8c7f4-c919-4e10-bd39-87185cc68823,1,h,575.232,MJ
+"delimbing, with excavator-based processor | delimbing/sorting, excavator-based processor | EN15804, U",1343ab6a-bc9c-452d-b774-5609bc0b5737,1,h,575.232,MJ
+"forwarding, forwarder | forwarding, forwarder | EN15804, U",c91e3c17-a730-42ec-ada8-c9b56b3b5507,1,h,395.472,MJ
+"forwarding, forwarder | forwarding, forwarder | EN15804, U",5eef6512-d5cf-4bbb-88be-982f49f39799,1,h,395.472,MJ
+"market for forwarding, forwarder | forwarding, forwarder | EN15804, U",11d35b38-e3be-4547-a4fe-98a44f68b7f0,1,h,395.472,MJ
+"harvesting, forestry harvester | harvesting, forestry harvester | EN15804, U",1d712b77-3d48-41db-a232-f110b7dfb0b3,1,h,460.186,MJ
+"market for harvesting, forestry harvester | harvesting, forestry harvester | EN15804, U",c73ff229-53bb-4423-a086-ab7cae2e0141,1,h,460.186,MJ
+"harvesting, forestry harvester | harvesting, forestry harvester | EN15804, U",d21043b1-81c9-475e-9090-9fda7334aa72,1,h,460.186,MJ
+"harvesting/bundling, energy wood harvester | harvesting/bundling, energy wood harvester | EN15804, U",a6e6f856-0251-42c2-90b4-6e109062b261,1,h,415.246,MJ
+"harvesting/bundling, energy wood harvester | harvesting/bundling, energy wood harvester | EN15804, U",74ee40a1-977b-4d1c-ba52-fbbb07bf7cfb,1,h,415.246,MJ
+"market for harvesting/bundling, energy wood harvester | harvesting/bundling, energy wood harvester | EN15804, U",6fff8f79-66ce-41b5-96f7-5bc7d913d747,1,h,415.246,MJ
+"skidding, skidder | skidding, skidder | EN15804, U",cb3bb9e5-38bf-4062-82e3-a64a2f9bedfe,1,h,467.376,MJ
+"skidding, skidder | skidding, skidder | EN15804, U",17cda053-4642-443b-ab56-196a41ff99c6,1,h,467.376,MJ
+"market for skidding, skidder | skidding, skidder | EN15804, U",7b4b4418-12cf-4e3d-b5d8-d72c8a79df2c,1,h,467.376,MJ
+"wood chipping, mobile chipper, at forest road | wood chipping, chipper, mobile, diesel, at forest road | EN15804, U",adad57ce-37ca-4642-9fef-75b5f9b47f1d,1,h,2516.64,MJ
+"market for wood chipping, chipper, mobile, diesel, at forest road | wood chipping, chipper, mobile, diesel, at forest road | EN15804, U",de732767-b431-48c8-a0ec-6983d913852c,1,h,2516.64,MJ
+"wood chipping, mobile chipper, at forest road | wood chipping, chipper, mobile, diesel, at forest road | EN15804, U",f96ee991-3367-4f18-8f7c-733f94e49b04,1,h,2516.64,MJ
+"wood chipping, terrain chipper, diesel | wood chipping, forwarder with terrain chipper, in forest | EN15804, U",6febfee4-e3d5-41db-bc3c-a988131cba99,1,h,1060.584,MJ
+"market for wood chipping, forwarder with terrain chipper, in forest | wood chipping, forwarder with terrain chipper, in forest | EN15804, U",798169fc-ba00-47cd-ae7d-d1612df0bfac,1,h,1060.584,MJ
+"wood chipping, terrain chipper, diesel | wood chipping, forwarder with terrain chipper, in forest | EN15804, U",89439ced-c274-47c9-8a29-75f14592dd73,1,h,1060.584,MJ
+"market for power sawing, with catalytic converter | power sawing, with catalytic converter | EN15804, U",403c980a-3609-46a2-b5da-2235efec2ec8,1,h,54,MJ
+"power sawing, with catalytic converter | power sawing, with catalytic converter | EN15804, U",e4ee8a1a-d336-4ac7-a07a-f9dc439ab636,1,h,54,MJ
+"power sawing, with catalytic converter | power sawing, with catalytic converter | EN15804, U",18b00cc5-70a0-4bfe-9e04-6908cd347a1f,1,h,54,MJ
+"market for power sawing, without catalytic converter | power sawing, without catalytic converter | EN15804, U",eecfc417-1eef-4b6f-9229-f0abe82aed16,1,h,69.12,MJ
+"power sawing, without catalytic converter | power sawing, without catalytic converter | EN15804, U",db04e6aa-7eba-4837-85ca-4a175f44dee1,1,h,69.12,MJ
+"power sawing, without catalytic converter | power sawing, without catalytic converter | EN15804, U",b156dce8-7e78-4cc6-aaf2-d529826b6c51,1,h,69.12,MJ
+"tempering, flat glass | tempering, flat glass | EN15804, U",1451bb21-8823-4ad8-ac97-14758d425961,1,kg,1.197,MJ
+"market for tempering, flat glass | tempering, flat glass | EN15804, U",5d39cd11-ab51-47b3-bc9a-7d7140a8383b,1,kg,1.197,MJ
+"tempering, flat glass | tempering, flat glass | EN15804, U",bc9e2d54-b269-47e9-9bb7-9f3f901dc841,1,kg,1.197,MJ
+"excavation, hydraulic digger | excavation, hydraulic digger | EN15804, U",7b741bf0-d2dd-41c6-9efb-e90426a3b4ec,1,m3,5.594,MJ
+"excavation, hydraulic digger | excavation, hydraulic digger | EN15804, U",c9a03d2d-c02c-4364-b0a1-b6b64646f0a5,1,m3,5.594,MJ
+"market for excavation, hydraulic digger | excavation, hydraulic digger | EN15804, U",e206b9ca-91d1-4e10-88ee-deabc2580641,1,m3,5.594,MJ
+"excavation, skid-steer loader | excavation, skid-steer loader | EN15804, U",ada06dea-128e-4548-bda1-e1b3d19f4364,1,m3,5.551,MJ
+"market for excavation, skid-steer loader | excavation, skid-steer loader | EN15804, U",58ca8f93-7b87-4837-9a98-8079fafca14e,1,m3,5.551,MJ
+"excavation, skid-steer loader | excavation, skid-steer loader | EN15804, U",284de931-4785-46fb-98c1-c1d8a911964a,1,m3,5.551,MJ
+"market for energy and auxilliary inputs, metal working factory | energy and auxilliary inputs, metal working factory | EN15804, U",656ad66d-5147-4d8d-a5aa-5e7146be035e,1,kg,1.262,MJ
+"market for energy and auxilliary inputs, metal working factory | energy and auxilliary inputs, metal working factory | EN15804, U",952bcf3b-dcae-4c1c-9bec-78bc2da3d13e,1,kg,1.263,MJ
+"energy and auxilliary inputs, metal working factory, with heating from hard coal | energy and auxilliary inputs, metal working factory | EN15804, U",1971864e-675b-4f83-8efa-f41ba4caa0ca,1,kg,1.056,MJ
+"energy and auxilliary inputs, metal working factory, with heating from hard coal | energy and auxilliary inputs, metal working factory | EN15804, U",ace3e1dc-d968-4714-b208-c87ff0d09043,1,kg,1.056,MJ
+"energy and auxilliary inputs, metal working factory, with heating from heavy fuel oil | energy and auxilliary inputs, metal working factory | EN15804, U",7cea893d-56ba-4066-9ee3-59211ec32cb5,1,kg,1.254,MJ
+"energy and auxilliary inputs, metal working factory, with heating from natural gas | energy and auxilliary inputs, metal working factory | EN15804, U",54ed8f97-5ec8-4d77-889d-e01358372280,1,kg,1.267,MJ
+"energy and auxilliary inputs, metal working factory, with heating from natural gas | energy and auxilliary inputs, metal working factory | EN15804, U",0b84e345-7acb-4dca-a2f3-d79674a8b9ee,1,kg,1.267,MJ
+"energy and auxilliary inputs, metal working factory, with heating from light fuel oil | energy and auxilliary inputs, metal working factory | EN15804, U",84657587-f078-4ecc-9d7e-8e23fb8c7fba,1,kg,1.254,MJ
+"energy and auxilliary inputs, metal working factory, with heating from heavy fuel oil | energy and auxilliary inputs, metal working factory | EN15804, U",79f15346-1af0-4fb7-8eb7-8cf8028f6b13,1,kg,1.254,MJ
+"energy and auxilliary inputs, metal working factory, with heating from light fuel oil | energy and auxilliary inputs, metal working factory | EN15804, U",2230e90f-5ff5-49f1-9d7a-290d3d91ac70,1,kg,1.254,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from light fuel oil | energy and auxilliary inputs, metal working machine | EN15804, U",42a7d2b6-1661-4e99-93a7-cf8dc54b505b,1,kg,4.437,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from natural gas | energy and auxilliary inputs, metal working machine | EN15804, U",fac95ee2-0874-46e3-a175-1c3bab400330,1,kg,4.483,MJ
+"market for energy and auxilliary inputs, metal working machine | energy and auxilliary inputs, metal working machine | EN15804, U",0112eaec-e8c5-466c-89a5-6aa131401221,1,kg,4.453,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from light fuel oil | energy and auxilliary inputs, metal working machine | EN15804, U",cfb20e43-dbea-417f-933d-97837121e53e,1,kg,4.437,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from hard coal | energy and auxilliary inputs, metal working machine | EN15804, U",7af36fc5-00a3-4cd2-8601-ff32aaa39773,1,kg,3.736,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from heavy fuel oil | energy and auxilliary inputs, metal working machine | EN15804, U",eabfb600-599b-47a4-86b5-24edf5887e86,1,kg,4.437,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from heavy fuel oil | energy and auxilliary inputs, metal working machine | EN15804, U",5d49891b-348d-4248-a901-1d64d46bd5c9,1,kg,4.437,MJ
+"market for energy and auxilliary inputs, metal working machine | energy and auxilliary inputs, metal working machine | EN15804, U",a06711fc-a541-4bc6-ab29-4a93164352f1,1,kg,4.448,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from hard coal | energy and auxilliary inputs, metal working machine | EN15804, U",6e90c998-fac1-4467-a433-9ee7b3a7c965,1,kg,3.736,MJ
+"energy and auxilliary inputs, metal working machine, with process heat from natural gas | energy and auxilliary inputs, metal working machine | EN15804, U",79a787ea-e3d7-4e2d-927c-3444dda12658,1,kg,4.483,MJ
+"injection moulding | injection moulding | EN15804, U",c818084c-e4ce-4e88-9ec0-850f8af206a8,1,kg,4.439,MJ
+"injection moulding | injection moulding | EN15804, U",054d9745-b737-4d51-a4c4-a62926611d7b,1,kg,4.439,MJ
+"injection moulding | injection moulding | EN15804, U",682d8625-f750-431f-8a9c-4a82c23dd2c1,1,kg,4.439,MJ
+"market for injection moulding | injection moulding | EN15804, U",e2122e77-4a7c-4ead-9d22-83d1c98f209e,1,kg,4.439,MJ
+"polymer foaming | polymer foaming | EN15804, U",512a8005-cbe8-4623-aebc-0792c84159fe,1,kg,2.765,MJ
+"polymer foaming | polymer foaming | EN15804, U",9c204b17-4f9c-4640-812b-42db04fac35d,1,kg,2.765,MJ
+"polymer foaming | polymer foaming | EN15804, U",123f1a58-c21c-487e-9969-bd0924b670d3,1,kg,2.765,MJ
+"market for polymer foaming | polymer foaming | EN15804, U",9b0581e8-9651-4a70-be2d-c59bb73f1350,1,kg,2.765,MJ
+"forging, steel, large open die | forging, steel | EN15804, U",dc924ef6-df6a-49fd-8cce-89e880a87919,1,kg,10.267,MJ
+"market for forging, steel | forging, steel | EN15804, U",1b9fd722-e129-4434-a4a8-4c07b79e3e85,1,kg,10.267,MJ
+"forging, steel, large open die | forging, steel | EN15804, U",5173fb6b-9618-40cb-aadb-e1dd8600ceb3,1,kg,10.267,MJ
+"hot rolling, steel | hot rolling, steel | EN15804, U",37ae7fe8-8bba-4270-8675-60381b2c0b13,1,kg,1.482,MJ
+"hot rolling, steel | hot rolling, steel | EN15804, U",f1366229-8342-466b-9818-62ec5239e06e,1,kg,0.587,MJ
+"market for hot rolling, steel | hot rolling, steel | EN15804, U",61d32166-9cf1-4094-a170-8899d7716561,1,kg,1.482,MJ
+"hot rolling, steel | hot rolling, steel | EN15804, U",76b2a19a-d524-4a63-b03b-ab07cadda764,1,kg,1.482,MJ
+"market for sheet rolling, steel | sheet rolling, steel | EN15804, U",3bb498b9-6d6b-4ee5-9603-0968cb08de26,1,kg,1.069,MJ
+"sheet rolling, steel | sheet rolling, steel | EN15804, U",2102a473-f8c4-4e67-ad37-14fa6a98e63e,1,kg,1.069,MJ
+"sheet rolling, steel | sheet rolling, steel | EN15804, U",a362c2e7-5aba-417d-93fe-a00efc4cf8fb,1,kg,1.069,MJ
+"wire drawing, steel | wire drawing, steel | EN15804, U",9a0d11d6-4fdd-41a7-9479-7dfc6684bf0c,1,kg,0.392,MJ
+"market for wire drawing, steel | wire drawing, steel | EN15804, U",9f3c1b2d-0a60-4935-9e9e-7c0c2972d994,1,kg,0.392,MJ
+"wire drawing, steel | wire drawing, steel | EN15804, U",4aa6de94-8596-4b18-a0c7-13d1ee9ebe28,1,kg,0.392,MJ
+"market for section bar extrusion, aluminium | section bar extrusion, aluminium | EN15804, U",f65e7b67-7928-40db-b31b-7a85264d8c47,1,kg,2.726,MJ
+"section bar extrusion, aluminium | section bar extrusion, aluminium | EN15804, U",1152aef6-26d2-4640-8786-28197fe4adb2,1,kg,2.726,MJ
+"section bar extrusion, aluminium | section bar extrusion, aluminium | EN15804, U",812d94ea-119c-4133-a4a8-c1d0b6656f12,1,kg,2.726,MJ
+"sheet rolling, aluminium | sheet rolling, aluminium | EN15804, U",805c9924-191c-4853-9678-1e49483816d7,1,kg,1.913,MJ
+"sheet rolling, aluminium | sheet rolling, aluminium | EN15804, U",271542bf-03a7-4cb8-9c74-ab1144935a74,1,kg,1.913,MJ
+"market for sheet rolling, aluminium | sheet rolling, aluminium | EN15804, U",2f918355-374f-4d4a-bf3e-33440809ed79,1,kg,1.913,MJ
+"sheet rolling, copper | sheet rolling, copper | EN15804, U",0906219f-6f7d-48c0-b45a-9aff85e5584c,1,kg,1.48,MJ
+"sheet rolling, copper | sheet rolling, copper | EN15804, U",5f95608f-999e-470a-96bc-40271cfd5a1e,1,kg,1.48,MJ
+"market for sheet rolling, copper | sheet rolling, copper | EN15804, U",dac7c2c3-935b-4cd7-ad24-525acd799d16,1,kg,1.48,MJ
+"wire drawing, copper | wire drawing, copper | EN15804, U",a11514bf-bbb1-4cdb-acd0-e4dc89f8798a,1,kg,1.48,MJ
+"wire drawing, copper | wire drawing, copper | EN15804, U",6c0ecc4c-e9cc-4832-a6fc-831f8015e3d7,1,kg,1.48,MJ
+"market for wire drawing, copper | wire drawing, copper | EN15804, U",dddc892a-e79e-4661-a0a8-470deb7705a8,1,kg,1.48,MJ
+"drying of feed grain | drying of feed grain | EN15804, U",50510ac8-52cc-4e2c-be5b-e6f0635fb360,1,m3,4750,MJ
+"drying of feed grain | drying of feed grain | EN15804, U",50b2ad8e-57b3-495b-b60e-322a083477e3,1,m3,4750,MJ
+"market for drying of feed grain | drying of feed grain | EN15804, U",dbbb5b46-8913-4ec7-bfc9-60b991904927,1,m3,4743.635,MJ
+"drying of feed grain | drying of feed grain | EN15804, U",df0beed3-f982-41e0-a111-f6c1428af547,1,m3,545.4,MJ
+"section bar rolling, steel | section bar rolling, steel | EN15804, U",9d359e4a-d7c5-46e5-be7e-23f27c085dc6,1,kg,0.19614339,MJ
+"section bar rolling, steel | section bar rolling, steel | EN15804, U",33136b41-4f85-4472-aeab-85920600d6fe,1,kg,0.19614339,MJ
+"market for section bar rolling, steel | section bar rolling, steel | EN15804, U",1b5f5feb-d7a2-41ce-8924-f1b02ccf5820,1,kg,0.19614339,MJ
+"drawing of pipe, steel | drawing of pipe, steel | EN15804, U",69cc7faf-e7dc-4f71-aee3-0e79b1a870ba,1,kg,0.431515458,MJ
+"drawing of pipe, steel | drawing of pipe, steel | EN15804, U",39a45453-8c06-42a7-b3fa-a0eead68bac9,1,kg,0.431515458,MJ
+"market for drawing of pipe, steel | drawing of pipe, steel | EN15804, U",bd228986-ab76-486e-b6be-c054afa79541,1,kg,0.431515458,MJ
+"market for cable yarding | cable yarding | EN15804, U",ffe50218-bc01-46af-99a9-03723c2df112,1,h,1145.144374,MJ
+"yarding and processing, mobile cable yarder on truck | cable yarding | EN15804, U",163752d0-e494-4cfd-b2bb-61e5a6c7c586,1,h,1269.1056,MJ
+"yarding and processing, mobile cable yarder on truck | cable yarding | EN15804, U",54483eac-83e1-46ef-8431-dd59bec7ef69,1,h,1269.1056,MJ
+"yarding, mobile cable yarder on trailer | cable yarding | EN15804, U",85317e3d-0a04-4dec-9405-4360bac2c9d2,1,h,629.16,MJ
+"yarding, mobile cable yarder on trailer | cable yarding | EN15804, U",e7322d04-166c-489f-b56e-2c48488e64a0,1,h,629.16,MJ
+"yarding, sled yarder | cable yarding | EN15804, U",d6ef57db-75e6-4af6-8946-dd18b1adc725,1,h,197.736,MJ
+"yarding, sled yarder | cable yarding | EN15804, U",a0b146ab-d4e6-419f-9492-0bc1ac18da54,1,h,197.736,MJ

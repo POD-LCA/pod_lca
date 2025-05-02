@@ -88,6 +88,7 @@ class Master:
         item.set_life_cycle_stage(stage)
         item.set_qty(qty)
         item.set_unit(unit)
+        item.impacts = Impacts.from_parent(item)
         item.set_impact_database_entry(impacts_from)
 
         return item
@@ -158,13 +159,13 @@ class Master:
             self.life_cycle_stage = stage
             
             impact_obj = self.get_impacts()
-            parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage]
+            parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage] # FIXME
             for impact in parent_impacts_list:
                 if impact == impact_obj:
-                    parent_impacts_list.remove(impact_obj)
+                    parent_impacts_list.remove(impact_obj) # FIXME
                     break
 
-            self.get_project().get_current_model().impacts[stage].append(impact_obj)
+            self.get_project().get_current_model().impacts[stage].append(impact_obj) # FIXME
 
         return self
 

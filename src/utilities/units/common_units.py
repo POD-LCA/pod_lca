@@ -150,3 +150,13 @@ UNIT_CONVERSIONS['energy'] = {'watt-hour': 1.0,
                               'joule': 3600,
                               'therm': 3600 / 1.054804e+08} 
 # REF [2] pp.55 
+
+# ==================================
+# DISCRETE COUNTING UNITS
+# ==================================
+
+ITEM = Unit.from_basics('item', 'Item(s)', 'count')
+DOZEN = Unit.from_basics('dozen', 'Doz', 'count')
+
+UNIT_CONVERSIONS['count'] = {'item': 12,
+                             'dozen': 1} 

@@ -16,7 +16,7 @@ __version__ = "0.1.0"
 # Smoothie example
 project = Project.new("Smoothie Project")
 
-custom_impact_database = ImpactsDatabase.new("My database")
+custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
 custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
 custom_impact_database.set_data_entry(flow="Electricity_New", qty= 1, unit=KILO * WATT_HOUR, 
                                       impacts={"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})

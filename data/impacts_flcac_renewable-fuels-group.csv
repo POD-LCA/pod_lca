@@ -1,0 +1,31 @@
+Process Name,UUID,Qty,Unit
+"Combustion, dry wood residue, AP-42",6c96a609-cd7e-3f19-a151-27deb823d3e4,1,MJ
+"Combustion, wet wood residue, AP-42",5198d618-7bc8-3639-b4a1-de71d6d5f49a,1,MJ
+"Hog fuel, pur., combusted in industrial boiler, at pulp and paper mill (EXCL.)",b6884185-30b8-391a-9dff-dbded4429a66,1,kg
+"Hog fuel, self-gen., combusted in ind. boiler, at pulp and paper mill (EXCL.)",7906c042-7330-3046-9b9a-92a4af4f2150,1,kg
+"Wood Combusted, at boiler, at cellulosic fiberboard mill",106bcee8-0d5f-30c6-ac98-fa6dab41d4d1,1,kg
+"Wood Combusted, at boiler, at hardboard mill",f3b8fc97-f519-3da0-80de-72a7d5551fda,1,kg
+Wood combusted; at boiler; at lumber mill; NE-NC,ed782cb7-da90-31ec-98eb-2e3b799ab53f,1,kg
+Wood combusted; at boiler; at lumber mill; PNW,c4e70573-ce15-38e5-a2cc-194fc4ffdc2a,1,kg
+Wood combusted; at boiler; at lumber mill; SE,2a4c6940-1929-35bb-9ff2-74f36e9f59f0,1,kg
+Wood combusted; at boiler; at OSB mill; SE,072ba568-a2cd-37d7-815c-626d9aaf3f70,1,kg
+Wood combusted; at boiler; at plywood mill; PNW,e9580794-51ca-3905-9571-4d301498a1b2,1,kg
+Wood combusted; at boiler; at plywood mill; SE,fe056894-7ab3-3235-bf64-4f9e1d57cde0,1,kg
+Wood combusted; at boiler; at glulam mill; PNW,405e920a-02a1-35bc-9e0c-f1ca122140a4,1,kg
+Wood combusted; at boiler; at glulam mill; SE,2a2046a0-b56b-375e-ab07-26fe3ff063e6,1,kg
+Wood combusted; at boiler; at lumber mill; INW,0a5c32df-e88e-3a0d-ac27-e08784b957b1,1,kg
+"Wood fuel, hardwood, gen at lumber mill, combusted in industrial boiler, NE-NC",5b12a6bf-921f-3e80-9bd4-1c250a6696fb,1,kg
+"Wood fuel, hardwood, generated at lumber mill, combusted in industrial boiler, SE",8a62a285-537e-36b0-bdc3-3af4bfd205a3,1,kg
+"Wood fuel, hardwood, generated at mill, combusted in industrial boiler, E",a555a537-a0f1-3e54-9008-1d56c5e342a6,1,kg
+"Wood fuel, hardwood, purchased, combusted in industrial boiler, E",2d43bb55-3817-37dc-a7b4-20c3304f07af,1,kg
+"Wood fuel, hardwood, purchased, combusted in industrial boiler, NE-NC",61d04f2c-c8df-3b9c-8def-60328506efd2,1,kg
+"Wood fuel, hardwood, purchased, combusted in industrial boiler, SE",db291182-7d45-38c4-8529-a9abc78e55e9,1,kg
+"Wood fuel, hardwood,gen at flooring prod plant, combusted in industrial boiler, E",2c6df723-416e-3164-a5f1-bb97081fc64f,1,kg
+"Wood fuel, MDF, generated on-site, combusted in industrial boiler",2fdc10ce-f75d-30d0-b1e7-672af0eb98fe,1,kg
+"Wood fuel, MDF, purchased, combusted in industrial boiler",e389edf2-979a-372c-b6e0-8de8bfd28c93,1,kg
+"Wood fuel, softwood, gen at lumber mill, combusted in industrial boiler, NE-NC",66cf43e1-e3fe-36b4-8653-bb5b739b0f5e,1,kg
+"Wood fuel, softwood, purchased, combusted in industrial boiler, NE-NC",3a98c0e1-2ba4-33f1-8d88-35b7f92af534,1,kg
+"Wood fuel, unspecified",5dd973e3-0fc2-38d8-a25b-51b82ee2c2de,1,kg
+"Wood waste, unspecified, combusted in industrial boiler",3455f918-4a43-3b09-b06e-7402c12b8d45,1,kg
+"Wood, particleboard, generated on-site, combusted in industrial boiler",80fa4691-56d0-3019-a021-30c3b187e63e,1,kg
+"Wood, softwood, INW, generated at lumber mill, combusted in industrial boiler",c7aaeef5-a019-304e-959d-92fdccaf0896,1,kg

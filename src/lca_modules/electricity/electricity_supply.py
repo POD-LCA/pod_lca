@@ -169,7 +169,7 @@ class ElectricitySupply:
 
         # Update consumption mix
         temporal_data = CambiumData.from_regional_resolution(regional_resolution, self.get_location())
-        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES, 'electricity technology'), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_impacts=False)
 
         # Update impacts by technology
@@ -225,7 +225,7 @@ class ElectricitySupply:
 
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
-        energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+        energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES, 'electricity technology'), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_impacts=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
@@ -259,7 +259,7 @@ class ElectricitySupply:
 
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
-        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), scenario)
+        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES, 'electricity technology'), scenario)
         self.set_consumption_mix(energy_mix, update_impacts=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
@@ -507,7 +507,7 @@ class ElectricitySupply:
         electricity_loads = [] 
         for region in regions_list:
             temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
-            energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES), self.get_scenario())
+            energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(ELECTRICITY_TECHNOLOGIES, 'electricity technology'), self.get_scenario())
             electricity_load = temporal_data.get_load(year, self.get_scenario())
             temporal_data.delete_data()
 
