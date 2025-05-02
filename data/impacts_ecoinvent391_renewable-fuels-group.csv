@@ -1,3 +1,4 @@
+Process Name,UUID,Qty,Unit
 "market for synthetic gas | synthetic gas | EN15804, U",11565faf-5638-4e50-8727-5afeca382d8c,1,m3
 "market for synthetic gas | synthetic gas | EN15804, U",f0cf88ac-920f-48c1-82e4-2fbcbee9e923,1,m3
 "synthetic gas production, from wood, at fixed bed gasifier | synthetic gas | EN15804, U",e9463b41-bdb3-4643-8c61-740b84766f32,1,m3
@@ -14,6 +15,50 @@
 "softwood forestry, pine, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",795dfa16-ee80-4860-8fe8-ba53db7073a3,1,kg
 "softwood forestry, spruce, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",2c4f1903-5fcd-420b-b321-330b71ad7682,1,kg
 "softwood forestry, spruce, sustainable forest management | bundle, energy wood, measured as dry mass | EN15804, U",397336d2-7583-4d7a-a2b5-0935c6298efc,1,kg
+"hardwood forestry, beech, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",0aaf3510-6cc6-48c1-9d6c-b4f0892f7595,1,kg
+"hardwood forestry, beech, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",da91174e-c15b-433b-b150-b73bda740dcc,1,kg
+"hardwood forestry, birch, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",a7ba57e2-f2f5-41b2-ac59-7aaf747eaee5,1,kg
+"hardwood forestry, birch, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",36c03b7a-6c31-49b9-855d-29840b298452,1,kg
+"hardwood forestry, mixed species, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",53e4dfce-ea02-46f9-9494-37df2b033127,1,kg
+"hardwood forestry, oak, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",f10124d2-4c41-42fb-8b85-cf80d8838c1e,1,kg
+"hardwood forestry, oak, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",b29273a3-1a56-4bc7-95d1-d7f8f1855121,1,kg
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",7748bb76-59b4-4ced-b29d-9c410cc53278,1,kg
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",0ef419aa-c72d-45f8-bb0f-2236ccf28184,1,kg
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",cca8e902-349f-4980-a1a0-cd72baeb6cfe,1,kg
+"market for wood chips, wet, measured as dry mass | wood chips, wet, measured as dry mass | EN15804, U",c57763a6-671d-41f5-8b87-1b05c2884130,1,kg
+"softwood forestry, mixed species, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",46c3c7c8-dd8e-4123-b988-df3c05638ef1,1,kg
+"softwood forestry, pine, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",efd8f1c9-80c8-42a1-947c-b8d7331fb87f,1,kg
+"softwood forestry, pine, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",238e5b1f-5020-466d-a204-9036319591d8,1,kg
+"softwood forestry, pine, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",991d1d5a-f093-4e80-94d1-9e68b22adf10,1,kg
+"softwood forestry, spruce, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",d1a4dfbf-8ab9-4456-a45b-53f4e7003f43,1,kg
+"softwood forestry, spruce, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",53b4cdaf-531a-4a13-bc3c-9dc15914bb67,1,kg
+"softwood forestry, spruce, sustainable forest management | wood chips, wet, measured as dry mass | EN15804, U",d2821955-fbb3-4ba3-a4e6-67aedfa61892,1,kg
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",158b6acd-617f-4fa4-a8f0-58f662991659,1,kg
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",a7b1985d-39e1-4094-84ac-de1ffd80f90e,1,kg
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",13e45f65-b9d7-4982-a9ed-0ef05d814f36,1,kg
+"wood chips production, hardwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",2ed561dd-1f9a-486c-957a-47fb50da2733,1,kg
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",b4457088-c94f-47f5-a6bd-ba6ac43fa2a6,1,kg
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",c334ea7c-b569-4d51-97af-427c43fd9847,1,kg
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",bdbceb84-2513-4eb4-9df9-92946599d254,1,kg
+"wood chips production, softwood, at sawmill | wood chips, wet, measured as dry mass | EN15804, U",ea8d5f10-6e12-45a8-a6a7-f955fe775169,1,kg
+"cross-laminated timber production | wood chips, dry, measured as dry mass | EN15804, U",a1c68447-50e9-40d9-a124-52c64d6f4228,1,kg
+"cross-laminated timber production | wood chips, dry, measured as dry mass | EN15804, U",b224b594-06ec-4534-afcd-9353467acf76,1,kg
+"furniture production, wooden | wood chips, dry, measured as dry mass | EN15804, U",f02649a7-a779-4561-9516-ab8e0e541dd6,1,kg
+"glued laminated timber production, average glue mix | wood chips, dry, measured as dry mass | EN15804, U",4980d1b9-5d18-41cb-a0de-d446132854d1,1,kg
+"glued laminated timber production, average glue mix | wood chips, dry, measured as dry mass | EN15804, U",a93498ec-1a37-4a40-a7ce-aea5fae06ff2,1,kg
+"glued solid timber production | wood chips, dry, measured as dry mass | EN15804, U",11dc1e4d-12c4-4284-accb-159b78fece93,1,kg
+"glued solid timber production | wood chips, dry, measured as dry mass | EN15804, U",81989569-500d-490d-b3a3-ffbf90fd5f2e,1,kg
+"market for wood chips, dry, measured as dry mass | wood chips, dry, measured as dry mass | EN15804, U",f1884b12-7058-48fc-9af3-1586285b7676,1,kg
+"market for wood chips, dry, measured as dry mass | wood chips, dry, measured as dry mass | EN15804, U",d152f68e-6814-4dd9-bb60-b192084ca305,1,kg
+"plywood production | wood chips, dry, measured as dry mass | EN15804, U",f1272c0a-ff2c-4829-972b-ed2e05216b75,1,kg
+"plywood production | wood chips, dry, measured as dry mass | EN15804, U",2586b380-a76f-4f8c-b9ec-1f34d3b1cef1,1,kg
+"plywood production | wood chips, dry, measured as dry mass | EN15804, U",22d96fe3-62e6-49a9-bd9c-15f3e0fa4d4a,1,kg
+"structural timber production | wood chips, dry, measured as dry mass | EN15804, U",ea4e912e-3f98-4784-b421-4adcf185211c,1,kg
+"structural timber production | wood chips, dry, measured as dry mass | EN15804, U",c5de4877-38d1-4a35-b80e-0f145921e809,1,kg
+"three and five layered board production | wood chips, dry, measured as dry mass | EN15804, U",794cc5d8-1528-47f7-93a8-4865d40594ff,1,kg
+"three and five layered board production | wood chips, dry, measured as dry mass | EN15804, U",7fe25597-9aea-4cf8-894f-777dd2e6b28f,1,kg
+"wood cladding production, softwood | wood chips, dry, measured as dry mass | EN15804, U",47b69701-a80e-4ab7-bc64-f9537e899f7a,1,kg
+"wood cladding production, softwood | wood chips, dry, measured as dry mass | EN15804, U",a080d98a-4c38-4941-9360-06252fd83ea2,1,kg
 "biogas purification to biomethane by amino washing | biomethane, high pressure | EN15804, U",475acd16-ed1d-4af3-aabf-af99ba659468,1,m3
 "biogas purification to biomethane by amino washing | biomethane, high pressure | EN15804, U",25055a72-8e64-42b7-a18c-3a0397f63ca4,1,m3
 "biogas purification to biomethane by membrane technique | biomethane, high pressure | EN15804, U",c2a00b2b-a9d1-4134-9617-937cdcd9f141,1,m3
@@ -75,6 +120,10 @@
 "hardwood forestry, oak, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",44767eee-bdb5-4a9b-bae9-24ac8c96c536,1,kg
 "hardwood forestry, mixed species, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",9b542edf-bd65-4775-9081-f270f18c9a03,1,kg
 "softwood forestry, pine, sustainable forest management | cleft timber, measured as dry mass | EN15804, U",35872c1e-d736-4eff-816f-c47703f08c03,1,kg
+"treatment of waste wood, post-consumer, sorting and shredding | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",58b4c21f-0ec0-4031-a4e6-5f43f57fd234,1,kg
+"treatment of waste wood, post-consumer, sorting and shredding | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",f1eb3d0f-0a5b-46e6-a857-4d6e825bae0f,1,kg
+"market for wood chips, from post-consumer wood, measured as dry mass | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",9837f13b-b525-4441-a630-fa464c078dc9,1,kg
+"market for wood chips, from post-consumer wood, measured as dry mass | wood chips, from post-consumer wood, measured as dry mass | EN15804, U",0a62ae31-fe02-48fb-931f-dbe9157f7a96,1,kg
 "heat production, wood pellet, at furnace 9kW | heat, central or small-scale, other than natural gas | EN15804, U",02a14192-4948-4e42-8cf9-1bf26f9d4c8c,1,MJ
 "heat and power co-generation, biogas, gas engine | heat, central or small-scale, other than natural gas | EN15804, U",225b7117-49ef-4bd1-bf09-b1fbf54670fc,1,MJ
 "heat and power co-generation, biogas, gas engine | heat, central or small-scale, other than natural gas | EN15804, U",7fef5936-27d2-444c-8d79-3c13aed8ca13,1,MJ

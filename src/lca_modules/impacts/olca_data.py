@@ -150,13 +150,15 @@ class openLCA:
 
         return impact_method
 
-    def get_process_list(client):
+    def get_process_list(client, uuids=None):
         """ Get the list of processes from the openLCA server.
         
             Parameters
             ----------
             client : olca_ipc.Client
                 The client object for the openLCA server.
+            uuids : list of str
+                List of UUIDs of the processes to be filtered. If None, all processes are returned.
             
             Returns
             -------
@@ -167,7 +169,16 @@ class openLCA:
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        process_list = client.get_descriptors(schema.Process)
+        if uuids is None:
+            process_list = client.get_descriptors(schema.Process)
+        else:
+            process_list = []
+            for uuid in uuids:
+                if openLCA.is_UUID(uuid):
+                    process_ref = client.get_descriptor(schema.Process, uuid)
+                    process_list.append(process_ref)
+                else:
+                    raise ValueError(f"Invalid UUID: {uuid}")
 
         return process_list
 

@@ -1,3 +1,4 @@
+Process Name,UUID,Qty,Unit
 "electricity, high voltage, import from UZ | electricity, high voltage | EN15804, U",04f25089-7c46-47d2-979d-cb2199c9e30d,1,MJ
 "electricity production, natural gas, combined cycle power plant | electricity, high voltage | EN15804, U",32e0fdf4-1f52-49cf-af5e-b40ed708fe7d,1,MJ
 "electricity production, lignite | electricity, high voltage | EN15804, U",1bee4bd4-91be-4026-9923-69e3a6c8c86f,1,MJ
@@ -2625,7 +2626,7 @@
 "electricity production, photovoltaic, 3kWp slanted-roof installation, multi-Si, panel, mounted | electricity, low voltage | EN15804, U",5b95b035-7df3-41fb-8c95-b12ec76647bb,1,MJ
 "electricity production, photovoltaic, 3kWp slanted-roof installation, a-Si, laminated, integrated | electricity, low voltage | EN15804, U",0da04281-c764-4429-96b4-ac7e5575e297,1,MJ
 "electricity production, photovoltaic, 3kWp slanted-roof installation, multi-Si, panel, mounted | electricity, low voltage | EN15804, U",e6a2f29c-53ba-44ef-ad6d-cd16751d684e,1,MJ
-"sawing and planing, paraná pine, kiln dried | electricity, low voltage | EN15804, U",b57f9360-a674-4a83-b9ee-3b620177b860,1,MJ
+"sawing and planing, paranï¿½ pine, kiln dried | electricity, low voltage | EN15804, U",b57f9360-a674-4a83-b9ee-3b620177b860,1,MJ
 "electricity production, photovoltaic, 3kWp slanted-roof installation, single-Si, panel, mounted | electricity, low voltage | EN15804, U",3ecb2b4a-a618-4d40-99cd-3d99839b8711,1,MJ
 "electricity production, photovoltaic, 570kWp open ground installation, multi-Si | electricity, low voltage | EN15804, U",a3f67b12-2d30-4338-bed1-10dcc8388db8,1,MJ
 "electricity production, photovoltaic, 3kWp slanted-roof installation, single-Si, panel, mounted | electricity, low voltage | EN15804, U",9ca4bd0c-5fd1-4b24-9c91-68b2738c84dc,1,MJ
@@ -3073,7 +3074,7 @@
 "electricity, low voltage, residual mix | electricity, low voltage | EN15804, U",f607e394-ab73-43e7-be0e-de1b763e6edb,1,MJ
 "market group for electricity, low voltage | electricity, low voltage | EN15804, U",0e2cc495-d846-4e50-ac13-54c6ab7dc5b6,1,MJ
 "electricity voltage transformation from medium to low voltage | electricity, low voltage | EN15804, U",84d7a157-b501-421f-b25b-6e1f3121a8a7,1,MJ
-"sawing and planing, paraná pine, kiln dried | electricity, low voltage | EN15804, U",3c5c91f3-acda-4092-ba0f-ae1a12f25fc6,1,MJ
+"sawing and planing, paranï¿½ pine, kiln dried | electricity, low voltage | EN15804, U",3c5c91f3-acda-4092-ba0f-ae1a12f25fc6,1,MJ
 "electricity voltage transformation from medium to low voltage | electricity, low voltage | EN15804, U",6473adbd-f6b0-44a6-9272-feb59383f204,1,MJ
 "electricity production, photovoltaic, 570kWp open ground installation, multi-Si | electricity, low voltage | EN15804, U",9827ece0-dbd9-4093-83c9-53ac3c65aab8,1,MJ
 "electricity production, photovoltaic, 3kWp slanted-roof installation, multi-Si, panel, mounted | electricity, low voltage | EN15804, U",8ca0bda9-dc83-4df6-8f93-b6cded62ec27,1,MJ
