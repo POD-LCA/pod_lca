@@ -5,7 +5,7 @@ from lca_modules.impacts.impacts_database import EOLImpactsDatabase
 from utilities.units.common_units import KILOGRAM
 from lca_modules.impacts.impacts import Impacts
 from utilities.data_imports.data_importer import Data_Importer
-from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.units.units_map import UNITS_MAP
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 from tqdm import tqdm

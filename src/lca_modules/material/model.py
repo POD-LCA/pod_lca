@@ -1,7 +1,7 @@
 
 from lca_modules.material.process import Process, transportationProcess
 from lca_modules.material.product import Emission, Fuel, Product, Waste, Electricity
-from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.units.units_map import UNITS_MAP
 from utilities.units.common_units import WATT_HOUR, KILO 
 
 import csv

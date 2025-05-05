@@ -3,7 +3,7 @@ from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project 
 from utilities.data_imports.data_importer import Data_Importer
-from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.units.units_map import UNITS_MAP
 from tqdm import tqdm
 
 __author__ = ["POD/LCA Team"]

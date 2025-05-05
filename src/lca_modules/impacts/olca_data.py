@@ -1,5 +1,5 @@
 
-from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.units.units_map import UNITS_MAP
 
 from tqdm import tqdm
 import zipfile
@@ -113,18 +113,17 @@ class openLCA:
 
             Returns
             -------
-            schema.ProductSystem
-                Product system object.
+            schema.Ref
+                Reference to the product system object.
         """
 
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        config = schema.LinkingConfig(prefer_unit_processes=True, provider_linking=schema.ProviderLinking.PREFER_DEFAULTS, )
+        config = schema.LinkingConfig(prefer_unit_processes=True, provider_linking=schema.ProviderLinking.PREFER_DEFAULTS)
         product_system_ref = client.create_product_system(process, config)
-        product_system = client.get(schema.ProductSystem, product_system_ref.id)
 
-        return product_system
+        return product_system_ref
     
     # =================================
     # Getters
@@ -643,7 +642,7 @@ class openLCA:
     # =================================
     # Operations
     # =================================
-    def compute_impacts(client, product_system, impact_method_ref , qty=1.0):
+    def compute_impacts(client, product_system_ref, impact_method_ref , qty=1.0):
         """ Compute the impacts of the product system.
         
             Notes
@@ -655,8 +654,8 @@ class openLCA:
             ----------
             client : olca_ipc.Client
                 The client object for the openLCA server.
-            product_system : schema.ProductSystem
-                Product system object.
+            product_system_ref : schema.Ref
+                Reference to the product system object.
             impact_method_ref : schema.Ref
                 Reference to the impact method object.
 
@@ -670,7 +669,7 @@ class openLCA:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
         setup = schema.CalculationSetup(allocation=schema.AllocationType.USE_DEFAULT_ALLOCATION, 
-                                        target=product_system, 
+                                        target=product_system_ref, 
                                         impact_method=impact_method_ref, 
                                         amount=qty)
 
@@ -711,21 +710,34 @@ class openLCA:
         else:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
-        impact_method = openLCA.get_impact_method(client, impact_method_uuid=impact_method)
+        # prerocessing
+        for impact_cat in impact_dict:
+            impact_cat_ref = client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
+            impact_dict[impact_cat]['@ref'] = impact_cat_ref
 
+        for group in group_by:
+            ids = group['ids']
+            if not isinstance(ids, list):
+                ids = [ids]
+            group['is_uuid'] = all([openLCA.is_UUID(item) for item in ids])
+            group['is_isic'] = all([openLCA.is_ISIC(item) for item in ids])
+            group['is_naics'] = all([openLCA.is_NAICS(item) for item in ids])
+
+        # process 
+        impact_method_ref = openLCA.get_impact_method(client, impact_method_uuid=impact_method)
         results = {}
-
         for process in tqdm(process_list):
             process_object = client.get(schema.Process, process.id)
-            # exchanges = process_object.exchanges
+
             if process_object.description is str:
                 process_description = process_object.description.encode("utf-8")
             else:
                 process_description = process_object.description
+
             process_results = {'Category': process.category,'Name': process.name, 'UUID': process.id, 'Location': process.location, 'Process Type': process.process_type.name, 'Description': process_description}
 
-            product_system = openLCA.create_product_system(client, process)
-            result = openLCA.compute_impacts(client, product_system, impact_method)
+            product_system_ref = openLCA.create_product_system(client, process)
+            result = openLCA.compute_impacts(client, product_system_ref, impact_method_ref)
             impact_results = openLCA.get_impacts(client, result, impact_dict)
 
             impact_amounts_list = []
@@ -748,12 +760,10 @@ class openLCA:
                         ids = [ids]
 
                     for impact_cat in impact_dict:
-                        impact_cat_ref = client.get_descriptor(schema.ImpactCategory, impact_dict[impact_cat]['@id'])
-                        
-                        root = utree.of(result, impact_cat_ref)
-                        if all(openLCA.is_UUID(item) for item in ids):
+                        root = utree.of(result, impact_dict[impact_cat]['@ref'] )
+                        if group['is_uuid']:
                             group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1)
-                        elif all([openLCA.is_ISIC(item) or openLCA.is_NAICS(item) for item in ids]):
+                        elif group['is_isic'] or group['is_naics']:
                             group_impact, ref_qty, ref_unit = openLCA.get_category_in_process(ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1)
                         else:
                             raise ValueError("ids should be all NAICS/ISIC ids or all UUIDs.")
@@ -761,13 +771,13 @@ class openLCA:
                         impact_results[name + '_' + impact_cat] = group_impact
 
                     impact_results[name + '_qty'] = ref_qty
-                    impact_results[name + '_unit'] = 'N/A' if ref_unit is None else ref_unit.get_standard_notation() 
+                    impact_results[name + '_unit'] = 'N/A' if ref_unit is None else ref_unit.get_standard_notation()
 
             results[process.id] = process_results | impact_results
 
             result.dispose()
 
-            client.delete(product_system)
+            client.delete(product_system_ref)
 
         return results
 

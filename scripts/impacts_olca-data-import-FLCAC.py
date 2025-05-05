@@ -33,8 +33,8 @@ openLCA_client = openLCA.set_connection()
 
 process_list_all = openLCA.get_process_list(openLCA_client)
 
-impact_categories = Data_Importer.json_to_dict('./data/impact_flcac_categories.json')
-inventories = Data_Importer.json_to_dict('./data/impacts_flcac_inventories.json')
+impact_categories = Data_Importer.json_to_dict('./data/impacts_flcac_categories.json')
+inventories = Data_Importer.json_to_dict('./data/impacts_flcac_emission-inventories.json')
 
 impact_method_uuid = '0ed73bce-2198-4148-8c4d-8b2ce68b6e1a'
 

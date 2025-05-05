@@ -1,5 +1,5 @@
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
-from lca_modules.impacts.units_map import UNITS_MAP
+from utilities.units.units_map import UNITS_MAP
 from utilities.data_imports.data_importer import Data_Importer
 
 from pandas import DataFrame
