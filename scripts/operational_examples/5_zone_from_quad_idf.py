@@ -1,16 +1,16 @@
 import os
-import compas_eplus
-from compas_eplus.building import Building
-from compas_eplus.viewers import BuildingViewer
-from compas_eplus.viewers import ResultsViewer
-from compas_eplus.building import Window
-from compas_eplus.read_write import get_idf_data
+
+from lca_modules.operational.building import Building
+from lca_modules.operational.viewers import BuildingViewer
+from lca_modules.operational.viewers import ResultsViewer
+from lca_modules.operational.building import Window
+from lca_modules.operational.read_write import get_idf_data
 
 
-from compas_eplus.building import EquipmentList
-from compas_eplus.building import EquipmentConnection
-from compas_eplus.building import NodeList
-from compas_eplus.building import IdealAirLoad
+from lca_modules.operational.building import EquipmentList
+from lca_modules.operational.building import EquipmentConnection
+from lca_modules.operational.building import NodeList
+from lca_modules.operational.building import IdealAirLoad
 
 
 for i in range(50): print('')

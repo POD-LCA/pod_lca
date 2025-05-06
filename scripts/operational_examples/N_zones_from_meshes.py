@@ -3,31 +3,31 @@ for i in range(50): print('')
 import os
 import json
 
-import compas_eplus
+import operational
 
-from compas_eplus.building import Building
-from compas_eplus.building import Zone
-from compas_eplus.building import Window
-from compas_eplus.building import Shading
+from lca_modules.operational.building import Building
+from lca_modules.operational.building import Zone
+from lca_modules.operational.building import Window
+from lca_modules.operational.building import Shading
 
-from compas_eplus.viewers import BuildingViewer
-from compas_eplus.viewers import ResultsViewer
+from lca_modules.operational.viewers import BuildingViewer
+from lca_modules.operational.viewers import ResultsViewer
 
 from compas.datastructures import Mesh
-from compas_eplus.read_write import get_idf_data
+from lca_modules.operational.read_write import get_idf_data
 
-data = compas_eplus.DATA
+data = operational.DATA
 
-path = os.path.join(compas_eplus.TEMP)
-wea = compas_eplus.SEATTLE
+path = os.path.join(operational.TEMP)
+wea = operational.SEATTLE
 
 
 
 
 file = 'doe_midrise_apt.idf'
-filepath = os.path.join(compas_eplus.DATA, 'idf_examples', file)
-path = compas_eplus.TEMP
-wea = compas_eplus.SEATTLE
+filepath = os.path.join(operational.DATA, 'idf_examples', file)
+path = operational.TEMP
+wea = operational.SEATTLE
 
 
 w = 20

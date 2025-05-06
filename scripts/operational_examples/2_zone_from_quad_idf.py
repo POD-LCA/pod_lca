@@ -1,10 +1,10 @@
 import os
-import compas_eplus
-from compas_eplus.building import Building
-from compas_eplus.viewers import BuildingViewer
-from compas_eplus.viewers import ResultsViewer
-from compas_eplus.building import Window
-from compas_eplus.read_write import get_idf_data
+
+from lca_modules.operational.building import Building
+from lca_modules.operational.viewers import BuildingViewer
+from lca_modules.operational.viewers import ResultsViewer
+from lca_modules.operational.building import Window
+from lca_modules.operational.read_write import get_idf_data
 
 
 for i in range(50): print('')

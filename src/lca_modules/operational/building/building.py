@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 
 import os
 import json
-import compas_eplus
 import subprocess
 import shutil
 import pickle
@@ -17,45 +16,45 @@ from ast import literal_eval
 
 from math import sin
 
-from compas_eplus.building.construction import Construction
+from lca_modules.operational.building.construction import Construction
 
-from compas_eplus.building.material import Material
-from compas_eplus.building.material import MaterialNoMass
-from compas_eplus.building.material import WindowMaterialGas
-from compas_eplus.building.material import WindowMaterialGlazing
-from compas_eplus.building.material import WindowMaterialGlazingSimple
+from lca_modules.operational.building.material import Material
+from lca_modules.operational.building.material import MaterialNoMass
+from lca_modules.operational.building.material import WindowMaterialGas
+from lca_modules.operational.building.material import WindowMaterialGlazing
+from lca_modules.operational.building.material import WindowMaterialGlazingSimple
 
-from compas_eplus.building.shading import Shading
+from lca_modules.operational.building.shading import Shading
 
-from compas_eplus.building.window import Window
+from lca_modules.operational.building.window import Window
 
-from compas_eplus.building.zone import Zone
-from compas_eplus.building.zone import ZoneSurfaces
+from lca_modules.operational.building.zone import Zone
+from lca_modules.operational.building.zone import ZoneSurfaces
 
-from compas_eplus.building.schedule import Schedule
-from compas_eplus.building.light import Light
-from compas_eplus.building.light import DaylightingReferencePoint
-from compas_eplus.building.light import DaylightingControls
-from compas_eplus.building.people import People
-from compas_eplus.building.electric_eq import ElectricEquipment
-from compas_eplus.building.zone_control_thermostat import ZoneControlThermostat
-from compas_eplus.building.setpoint import DualSetpoint
-from compas_eplus.building.ideal_air_load import IdealAirLoad
-from compas_eplus.building.infiltration import Infiltration
-from compas_eplus.building.equipment import EquipmentList
-from compas_eplus.building.equipment import EquipmentConnection
-from compas_eplus.building.zone_list import ZoneList
-from compas_eplus.building.node_list import NodeList
-from compas_eplus.building.outdoor_air import OutdoorAir
-from compas_eplus.building.space import Space
-from compas_eplus.building.space import SpaceList
+from lca_modules.operational.building.schedule import Schedule
+from lca_modules.operational.building.light import Light
+from lca_modules.operational.building.light import DaylightingReferencePoint
+from lca_modules.operational.building.light import DaylightingControls
+from lca_modules.operational.building.people import People
+from lca_modules.operational.building.electric_eq import ElectricEquipment
+from lca_modules.operational.building.zone_control_thermostat import ZoneControlThermostat
+from lca_modules.operational.building.setpoint import DualSetpoint
+from lca_modules.operational.building.ideal_air_load import IdealAirLoad
+from lca_modules.operational.building.infiltration import Infiltration
+from lca_modules.operational.building.equipment import EquipmentList
+from lca_modules.operational.building.equipment import EquipmentConnection
+from lca_modules.operational.building.zone_list import ZoneList
+from lca_modules.operational.building.node_list import NodeList
+from lca_modules.operational.building.outdoor_air import OutdoorAir
+from lca_modules.operational.building.space import Space
+from lca_modules.operational.building.space import SpaceList
 
-from compas_eplus.read_write import write_idf_from_building
-from compas_eplus.read_write import read_results_file
-from compas_eplus.read_write import read_error_file
-from compas_eplus.read_write import get_idf_data
+from lca_modules.operational.read_write import write_idf_from_building
+from lca_modules.operational.read_write import read_results_file
+from lca_modules.operational.read_write import read_error_file
+from lca_modules.operational.read_write import get_idf_data
 
-from compas_eplus.utilities import make_box_from_quad
+from lca_modules.operational.utilities import make_box_from_quad
 
 from compas.geometry import subtract_vectors
 from compas.geometry import cross_vectors
