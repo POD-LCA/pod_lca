@@ -1,6 +1,7 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
-from utilities.units.units_map import UNITS_MAP
+
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
+from utilities.units.units_map import UNITS_MAP
 
 from pandas import DataFrame
 from pandas import concat
@@ -39,7 +40,7 @@ class ImpactsDatabase:
         self.primary_key = 'Flow'
         self.unit_key = 'Unit'
         self.qty_key = 'Qty'
-        self.data = DataFrame(columns=[self.get_primary_key(), self.get_unit_key()] + list(IMPACT_CATEGOREIS.keys()))
+        self.data = DataFrame(columns=[self.get_primary_key(), self.get_unit_key()] + list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys()))
 
     def __str__(self):
         str = "="*75 + "\n" + f"Impact Database: {self.get_name()}\n" + "="*75 + "\n"
@@ -103,7 +104,7 @@ class ImpactsDatabase:
         """
 
         if impact_headers == None:
-            impact_headers = list(IMPACT_CATEGOREIS.keys())
+            impact_headers = list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys())
         data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] +  impact_headers
         if not (additional_headers ==  None):
             data_headers = data_headers + additional_headers
@@ -176,7 +177,7 @@ class ImpactsDatabase:
         tmp_data[self.get_qty_key()] = qty
         tmp_data[self.get_unit_key()] = unit
 
-        if list(IMPACT_CATEGOREIS.keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] == list(tmp_data.keys()) :
+        if list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] == list(tmp_data.keys()) :
             self.data.loc[len(self.data)] = tmp_data
         else:
             raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {self.get_impact_categories_names()}")
@@ -354,7 +355,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         """
 
         if impact_headers == None:
-            impact_headers = list(IMPACT_CATEGOREIS.keys())
+            impact_headers = list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys())
         data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key(), self.get_life_cycle_stage_key()] +  impact_headers
         if not (additional_headers ==  None):
             data_headers = data_headers + additional_headers
@@ -407,10 +408,10 @@ class EOLImpactsDatabase(ImpactsDatabase):
         tmp_data[self.get_process_key()] = process
         tmp_data[self.get_life_cycle_stage_key()] = lc_stage
 
-        if list(IMPACT_CATEGOREIS.keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key()] == list(tmp_data.keys()) :
+        if list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys()) + [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key()] == list(tmp_data.keys()) :
             self.data.loc[len(self.data)] = tmp_data
         else:
-            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {IMPACT_CATEGOREIS.keys()}")
+            raise KeyError(f"The impact cateogrized provided are incompatible with the database.\n Impact categories in database: {config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}")
 
         # TODO: check if the additional headers exist/ if not create them and add the new data
 

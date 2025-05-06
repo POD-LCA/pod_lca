@@ -1,10 +1,11 @@
 
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project 
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
 from utilities.units.common_units import WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
+
 from tqdm import tqdm
 
 __author__ = ["POD/LCA Team"]
@@ -26,6 +27,8 @@ output_file = "save_files\\electricity_city_values.csv"
 
 my_manufacturing_project = Project()
 output_dict = {}
+
+IMPACT_CATEGORIES = config['setup']['impacts']['IMPACT_CATEGORIES']
 
 sequence_no = 1
 for city in tqdm(city_list):
@@ -50,8 +53,8 @@ for city in tqdm(city_list):
                                                     
             impacts = electricity.get_impacts()
             
-            for impact_cat in IMPACT_CATEGOREIS:
-                output_dict[str(sequence_no)][impact_cat + '(' + IMPACT_CATEGOREIS[impact_cat] + ')'] = impacts.get_impact(impact_cat)
+            for impact_cat in IMPACT_CATEGORIES:
+                output_dict[str(sequence_no)][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')'] = impacts.get_impact(impact_cat)
 
             sequence_no += 1
 

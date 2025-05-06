@@ -16,6 +16,17 @@ setup:
       Landfill: C4
   impacts:
     IMPACT_SOURCE_DATABASE: 'ecoinvent391' # Options: 'FLCAC' or 'ecoinvent391'
+    IMPACT_CATEGORIES:
+      GWP: kg CO2-eq
+      AP: kg SO2-eq
+      EP: kg N-eq
+      ODP: kg CFC-11-eq
+      SFP: kg O3-eq
+    EMISSION_INVENTORIES:
+      CO2: kgCO2
+      CH4: kgCH4
+      N2O: kgN2O
+    PRIMARY_IMPACT_CATEGORY: GWP
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
@@ -36,7 +47,10 @@ file_paths:
     ELECTRICITY_TECHNOLOGIES: data\\electricity_netl_electricity-technologies.csv
   eol:
     EOL_DEFAULT_MIXES: data\eol_podlca_default-mixes.csv
-
+  impacts:
+    IMPACT_NORMALIZATION_FACTORS: data\\impacts_clf_normalization-factors.csv
+    IMPACT_WEIGHTING_FACTOR_EPA: data\\impacts_epa_weighting-factors.csv
+    IMPACT_WEIGHTING_FACTOR_NIST: data\\impacts_nist_weighting-factors.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 

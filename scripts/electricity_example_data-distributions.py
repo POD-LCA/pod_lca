@@ -1,11 +1,11 @@
 from lca_modules.material.project_manager import Project 
 from lca_modules.location.location import Location
+from utilities.settings import config
 from utilities.units.common_units import WATT_HOUR, KILO
 from plotters.plots.box_plot import BoxPlot
 from plotters.plots.histogram import Histogram
 from plotters.plots.violin_plot import ViolinPlot
 from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 
 from numpy import percentile, linspace
 
@@ -36,7 +36,7 @@ impact_distribution = electricity_supplier.get_impact_distribution()
 # distribution of impacts of the electricity product
 distribution_list = electricity.get_data_distribution('impacts')
 
-# [Report] : the data for sense check. What method is preferred--parametric or non-parametric? There is no apparannt pattern so non-parametric is preferred.
+IMPACT_CATEGORIES = config['setup']['impacts']['IMPACT_CATEGORIES']
 plot_type = 'boxplot' # 'boxplot' or 'violinplot'
 for distribution in distribution_list:
     # Parametric Statistics
@@ -49,7 +49,7 @@ for distribution in distribution_list:
     # print(f"Q3: {distribution.percentile(.75)}")
     # print(f"Q4: {distribution.percentile(1.00)}")
     graph = Histogram.from_plotter(MatplotlibPlotter)
-    graph.draw(distribution.get_data(), no_bins=5, title=distribution.get_name(), x_label=IMPACT_CATEGOREIS[distribution.get_name()], y_label='probability density', unitize=True)
+    graph.draw(distribution.get_data(), no_bins=5, title=distribution.get_name(), x_label=IMPACT_CATEGORIES[distribution.get_name()], y_label='probability density', unitize=True)
 
     # x = linspace(distribution.percentile(0), distribution.percentile(.95), 100)
     # p = distribution.get_distribution().pdf(x)
@@ -66,11 +66,11 @@ for distribution in distribution_list:
 
     if plot_type == 'boxplot':
         graph = BoxPlot.from_plotter(MatplotlibPlotter)
-        graph.draw(distribution.get_data(), title=distribution.get_name(), x_label='', y_label=IMPACT_CATEGOREIS[distribution.get_name()])
+        graph.draw(distribution.get_data(), title=distribution.get_name(), x_label='', y_label=IMPACT_CATEGORIES[distribution.get_name()])
         graph.show()
     elif plot_type == 'violinplot':
         graph = ViolinPlot.from_plotter(MatplotlibPlotter)
-        graph.draw(distribution.get_data(), title=distribution.get_name(), x_label='', y_label=IMPACT_CATEGOREIS[distribution.get_name()])
+        graph.draw(distribution.get_data(), title=distribution.get_name(), x_label='', y_label=IMPACT_CATEGORIES[distribution.get_name()])
         graph.show()
     else:
         raise ValueError("Invalid plot type. Choose 'boxplot' or 'violinplot'.")

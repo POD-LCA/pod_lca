@@ -1,10 +1,9 @@
 from lca_modules.material.project_manager import Project
-from lca_modules.material.product import Product, Fuel, Waste
+from lca_modules.material.product import Product, Fuel
 from lca_modules.material.process import Process, transportationProcess
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainty import DATA_QUALITY_INDICATORS, MAX_DQS, MIN_DQS
+from utilities.settings import config
 from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
 
@@ -484,7 +483,7 @@ class GUIInputManager():
     @staticmethod
     def get_impact_categories():
 
-        return IMPACT_CATEGOREIS
+        return config['setup']['impacts']['IMPACT_CATEGORIES']
 
     @staticmethod
     def get_all_units_list(project):
@@ -523,7 +522,7 @@ class GUIInputManager():
     @staticmethod
     def DQA_inidcators(model):
 
-        return DATA_QUALITY_INDICATORS
+        return config['setup']['uncertainty']['DATA_QUALITY_INDICATORS']
     
     @staticmethod
     def get_pedigree_score_objs(project, model_name):
@@ -554,7 +553,7 @@ class GUIInputManager():
     @staticmethod
     def get_DQS_range(project):
 
-        return range(MIN_DQS, MAX_DQS + 1, 1)
+        return range(config['setup']['uncertainty']['MIN_DQS'], config['setup']['uncertainty']['MAX_DQS'] + 1, 1)
     
     @staticmethod
     def calculate_model_DQS(project, model_name):

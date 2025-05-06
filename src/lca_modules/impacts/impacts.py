@@ -1,4 +1,5 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS, IMPACT_WEIGHTING_FACTOR_EPA, IMPACT_WEIGHTING_FACTOR_NIST
+from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -29,7 +30,7 @@ class Impacts:
         else:
             parent_name = self.get_parent().get_name()
         str = "="*50 + "\n" + f"Impacts of {parent_name}\n" + "="*50 + "\n"
-        for impact, unit in IMPACT_CATEGOREIS.items():
+        for impact, unit in config['setup']['impacts']['IMPACT_CATEGORIES'].items():
             str += f"{impact:<20} {getattr(self, impact):<5} {unit:<20}\n"
 
         return str
@@ -40,7 +41,7 @@ class Impacts:
             return NotImplemented
 
         summed_impacts = {attr: getattr(self, attr, 0.0) + getattr(other, attr, 0.0)
-                        for attr in IMPACT_CATEGOREIS.keys()}
+                        for attr in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
         
         new_impact = Impacts()
         new_impact.set_parent(None)
@@ -53,7 +54,7 @@ class Impacts:
         if not isinstance(other, Impacts):
             return NotImplemented
 
-        for attr in IMPACT_CATEGOREIS.keys():
+        for attr in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
             setattr(self, attr, getattr(self, attr, 0) + getattr(other, attr, 0.0))
 
         return self
@@ -64,7 +65,7 @@ class Impacts:
             return NotImplemented
 
         multiplied_impacts = {attr: getattr(self, attr, 0.0) * scalar
-                            for attr in IMPACT_CATEGOREIS.keys()}
+                            for attr in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
         
         new_impact = Impacts()
         new_impact.set_parent(self.parent)
@@ -78,7 +79,7 @@ class Impacts:
         if not isinstance(scalar, (int, float)):
             return NotImplemented
 
-        for attr in IMPACT_CATEGOREIS.keys():
+        for attr in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
             setattr(self, attr, getattr(self, attr, 0) * scalar)
 
         return self
@@ -108,7 +109,7 @@ class Impacts:
         impact_obj = cls()
         impact_obj.set_parent(parent)
 
-        for impact in IMPACT_CATEGOREIS:
+        for impact in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
             setattr(impact_obj, impact, 0.0)
 
         return impact_obj
@@ -182,7 +183,7 @@ class Impacts:
     def clear_impact_qty(self):
         """ Set all impact quantities to zero."""
 
-        for impact in IMPACT_CATEGOREIS:
+        for impact in config['setup']['impacts']['IMPACT_CATEGORIES']:
             setattr(self, impact, 0.0)
 
         return self
@@ -236,12 +237,16 @@ class Impacts:
         """
 
         if method == 'TRACI_EPA':
-            weights = IMPACT_WEIGHTING_FACTOR_EPA
+            weights = Data_Importer.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])
         elif method == 'TRACI_NIST':
-            weights = IMPACT_WEIGHTING_FACTOR_NIST
+            weights = Data_Importer.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_NIST"])
         else:
             raise NotImplementedError
         
+        for impact_cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
+            if impact_cat not in weights:
+                raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
+            
         # TODO: normalise the impacts begore applying weights
         weighted_impact = 0.0
         for (impact_cat, weight) in weights.items():

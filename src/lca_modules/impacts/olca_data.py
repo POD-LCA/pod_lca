@@ -48,7 +48,7 @@ class openLCA:
     # Setters
     # =================================
 
-    # def set_impact_categoreis(client, impact_categories_list):
+    # def set_impact_categories(client, impact_categories_list):
     #     """ Set the impact categories for the openLCA server.
 
     #         Parameters

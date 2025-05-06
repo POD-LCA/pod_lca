@@ -1,8 +1,8 @@
 
 from lca_modules.electricity.electricity_supply import ElectricitySupply
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.material.master import Master
 from lca_modules.uncertainty.datasets import DataDistribution
+from utilities.settings import config
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -266,7 +266,7 @@ class Electricity(Fuel):
 
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
-            impacts = {category: unit_impacts.get_impact(category) * conversion_factor * self.qty for category in IMPACT_CATEGOREIS}
+            impacts = {category: unit_impacts.get_impact(category) * conversion_factor * self.qty for category in config['setup']['impacts']['IMPACT_CATEGORIES']}
             self.impacts.update_impact_qty(impacts)      
 
     def set_supplier(self, supplier):
@@ -374,7 +374,7 @@ class Electricity(Fuel):
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
             impact_distributions = []
-            for category in IMPACT_CATEGOREIS:
+            for category in config['setup']['impacts']['IMPACT_CATEGORIES']:
                 data = []
                 for impact, weight in zip(impact_distribution, weights):
                     data.extend([impact.get_impact(category) * conversion_factor * self.get_qty()] * int(weight))

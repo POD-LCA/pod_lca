@@ -1,5 +1,5 @@
 from lca_modules.impacts.impacts import Impacts
-from lca_modules.impacts.impact_categories  import IMPACT_CATEGOREIS
+from utilities.settings import config
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -218,7 +218,7 @@ class WasteProcess:
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.get_conversion_factor(unit)
 
-        impacts = {key: database_entry[key]*conversion_factor for key in IMPACT_CATEGOREIS}
+        impacts = {key: database_entry[key]*conversion_factor for key in config['setup']['impacts']['IMPACT_CATEGORIES']}
 
         self.get_unit_impacts().update_impact_qty(impacts)
 

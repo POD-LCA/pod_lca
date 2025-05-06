@@ -1,12 +1,13 @@
 from lca_modules.building.building import Building
 from lca_modules.building.components import BuildingComponent
-from lca_modules.location.location import Location
-from lca_modules.impacts.impacts_database import EOLImpactsDatabase
-from utilities.units.common_units import KILOGRAM
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.impacts_database import EOLImpactsDatabase
+from lca_modules.location.location import Location
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
+from utilities.units.common_units import KILOGRAM
 from utilities.units.units_map import UNITS_MAP
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+
 
 from tqdm import tqdm
 
@@ -37,6 +38,7 @@ eol_impact_database.set_data(impact_data_file_path)
 test_building.set_eol_database(eol_impact_database)
 
 tests_dict = Data_Importer.json_to_dict(test_dict_file_path)
+IMPACT_CATEGORIES = config['setup']['impacts']['IMPACT_CATEGORIES']
 output_dict = {}
 for test_name in tqdm(tests_dict):
    parts = tests_dict[test_name]
@@ -59,7 +61,7 @@ for test_name in tqdm(tests_dict):
    output_dict[test_name] = {'test name':test_name}
    test_status = True
    for lc_stage, impact in impact_dict.items():
-      for impact_cat in IMPACT_CATEGOREIS:
+      for impact_cat in IMPACT_CATEGORIES:
          impacts = impact_dict[lc_stage]
          computed = impacts.get_impact(impact_cat)
          reference = float(test_data_dict[test_name][impact_cat + '_' + lc_stage])
@@ -68,15 +70,15 @@ for test_name in tqdm(tests_dict):
          else:
             dif = 0.0
          
-         output_dict[test_name][impact_cat + '(' + IMPACT_CATEGOREIS[impact_cat] + lc_stage + ')' + ' Python tool'] = computed
-         output_dict[test_name][impact_cat + '(' + IMPACT_CATEGOREIS[impact_cat] + lc_stage + ')' + ' Excel tool'] = reference
+         output_dict[test_name][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + lc_stage + ')' + ' Python tool'] = computed
+         output_dict[test_name][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + lc_stage + ')' + ' Excel tool'] = reference
          output_dict[test_name][impact_cat + lc_stage + '_difference (%)'] = dif * 100
 
          if dif * 100 > 0.5:
                test_status = False
                print(f"{test_name} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
-               print(f"computed impact value: {computed} {IMPACT_CATEGOREIS[impact_cat]}")
-               print(f"expected impact value: {reference} {IMPACT_CATEGOREIS[impact_cat]}")
+               print(f"computed impact value: {computed} {IMPACT_CATEGORIES[impact_cat]}")
+               print(f"expected impact value: {reference} {IMPACT_CATEGORIES[impact_cat]}")
 
    output_dict[test_name]['test status'] = 'PASS' if test_status else 'FAIL'
 

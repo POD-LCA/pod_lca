@@ -1,7 +1,6 @@
 
 from lca_modules.electricity.electricity_producer import ElectricityProducer
 from lca_modules.electricity.processs_cambium import CambiumData
-from lca_modules.impacts.impact_categories import PRIMARY_IMPACT_CATEGORY
 from lca_modules.impacts.impacts import Impacts
 from utilities.data_imports.data_importer import Data_Importer
 from utilities.logger import log
@@ -421,7 +420,7 @@ class ElectricitySupply:
     # ================================
     # Methods
     # ================================
-    def pick_region(self, regions, impact_data, impact_category=PRIMARY_IMPACT_CATEGORY):
+    def pick_region(self, regions, impact_data, impact_category=config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']):
         """ Pick the region with the highest impact from a list of regions.
         
             Parameters

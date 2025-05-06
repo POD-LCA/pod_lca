@@ -1,9 +1,10 @@
 
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project 
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
 from utilities.units.units_map import UNITS_MAP
+
 from tqdm import tqdm
 
 __author__ = ["POD/LCA Team"]
@@ -20,7 +21,7 @@ test_dict = Data_Importer.csv_to_dict(test_data, 'test name')
 
 my_manufacturing_project = Project()
 output_dict = {}
-
+IMPACT_CATEGORIES = config['setup']['impacts']['IMPACT_CATEGORIES']
 for test in tqdm(test_dict):
     my_factory_location = Location.from_US_zip(test_dict[test]['Zip Code'])
     my_manufacturing_project.set_location(my_factory_location)
@@ -49,18 +50,18 @@ for test in tqdm(test_dict):
     impacts = electricity.get_impacts()
     test_status = True
        
-    for impact_cat in IMPACT_CATEGOREIS:
+    for impact_cat in IMPACT_CATEGORIES:
         dif = abs(impacts.get_impact(impact_cat) - float(test_dict[test][impact_cat])) / ((impacts.get_impact(impact_cat) + float(test_dict[test][impact_cat])) / 2 )  # symmetric difference
         
-        output_dict[test][impact_cat + '(' + IMPACT_CATEGOREIS[impact_cat] + ')' + ' Python tool'] = impacts.get_impact(impact_cat)
-        output_dict[test][impact_cat + '(' + IMPACT_CATEGOREIS[impact_cat] + ')' + ' Excel tool'] = test_dict[test][impact_cat]
+        output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Python tool'] = impacts.get_impact(impact_cat)
+        output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Excel tool'] = test_dict[test][impact_cat]
         output_dict[test][impact_cat + '_difference (%)'] = dif * 100
 
         if dif * 100 > 0.5:
             test_status = False
             print(f"{test} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
-            print(f"computed impact value: {impacts.get_impact(impact_cat)} {IMPACT_CATEGOREIS[impact_cat]}")
-            print(f"expected impact value: {test_dict[test][impact_cat]} {IMPACT_CATEGOREIS[impact_cat]}")
+            print(f"computed impact value: {impacts.get_impact(impact_cat)} {IMPACT_CATEGORIES[impact_cat]}")
+            print(f"expected impact value: {test_dict[test][impact_cat]} {IMPACT_CATEGORIES[impact_cat]}")
 
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
 

@@ -1,7 +1,7 @@
 
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
-from utilities.objects import array_methods
 from utilities.logger import log
+from utilities.objects import array_methods
+from utilities.settings import config
 
 
 __author__ = ["POD/LCA Team"]
@@ -39,7 +39,7 @@ class HotSpotAnalysis:
                         impact_val = obj.get_impacts().get_weighted_impact()
                     else:
                         impact_val = obj.get_impacts().get_impact(impact_category)
-                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {IMPACT_CATEGOREIS[impact_category]} \n"
+                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category]} \n"
         
         return str
 

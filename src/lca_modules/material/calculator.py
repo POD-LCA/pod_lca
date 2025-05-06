@@ -1,5 +1,5 @@
-from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS, IMPACT_NORMALIZATION_FACTOR
-
+from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -48,7 +48,7 @@ class Calculator():
         for key, lst in impacts_dict.items():
             impacts_lst.extend(lst)
 
-        if impact_cat not in list(IMPACT_CATEGOREIS.keys()) + ['weighted']:
+        if impact_cat not in list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys()) + ['weighted']:
             raise AttributeError(f"{impact_cat} does not exist in the current project.")
         else:
             if impact_cat == 'weighted':
@@ -82,7 +82,7 @@ class Calculator():
 
         impacts_dict = model.get_impacts()
 
-        if impact_category not in IMPACT_CATEGOREIS.keys():
+        if impact_category not in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
             raise AttributeError(f"{impact_category} does not exist in the current project.")
         else:
             data = {}
@@ -110,7 +110,7 @@ class Calculator():
         """
 
         data ={}
-        for impact_category in IMPACT_CATEGOREIS.keys():
+        for impact_category in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
             data[impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values())
         
         return data
@@ -129,9 +129,14 @@ class Calculator():
             dict
                 Impacts dictionary where {impact_category (str): quantity of impact (float)}.
         """
-
+        IMPACT_NORMALIZATION_FACTOR = Data_Importer.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
+        for impact_cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
+            if impact_cat not in IMPACT_NORMALIZATION_FACTOR:
+                raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
+            
+        # normalization as amethod in impacts
         data ={}
-        for impact_category in IMPACT_CATEGOREIS.keys():
+        for impact_category in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
             data[impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values()) / IMPACT_NORMALIZATION_FACTOR[impact_category]
         
         return data
@@ -177,7 +182,7 @@ class Calculator():
         data ={}
         for model in model_lst:
             data[model.get_name()] = {}
-            for impact_category in IMPACT_CATEGOREIS.keys():
+            for impact_category in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
                 data[model.get_name()][impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values())
         
         return data
@@ -196,11 +201,11 @@ class Calculator():
             dict
                 Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
         """
-
+        IMPACT_NORMALIZATION_FACTOR = Data_Importer.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
         data ={}
         for model in model_lst:
             data[model.get_name()] = {}
-            for impact_category in IMPACT_CATEGOREIS.keys():
+            for impact_category in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
                 data[model.get_name()][impact_category] = sum(Calculator.get_impacts_by_LCstages(impact_category, model).values()) * IMPACT_NORMALIZATION_FACTOR[impact_category]
         
         return data
