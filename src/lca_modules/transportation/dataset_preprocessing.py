@@ -146,7 +146,7 @@ if __name__ == "__main__":
     """
 
     input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
-    output_path_faf = r"data\transportation_faf_dataset2.csv"
+    output_path_faf = r"data\transportation_faf_dataset.csv"
 
     # input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
     # output_path_cfs = r"data\transportation_cfs_dataset.csv"
@@ -155,4 +155,4 @@ if __name__ == "__main__":
 
     faf_preprocessing (input_path_faf, output_path_faf)
     # cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
-    cfs_preprocessing (input_path_cfs, output_path_cfs)
+    #cfs_preprocessing (input_path_cfs, output_path_cfs)
