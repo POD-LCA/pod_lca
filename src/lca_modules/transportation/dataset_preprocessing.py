@@ -14,24 +14,14 @@ def faf_preprocessing (input_path_faf, output_path_faf):
     It also merges the cleaned data with the FAF distance band data and calculates average distances.
     """
 
-    dist_fr = pd.read_csv(r"data\transportation_podlca_dist-fr.csv")
     faf_dist_band = pd.read_csv(r"data\transportation_podlca_faf-dist-band.csv")
-
-    dist_fr['fr_inmode'] = pd.to_numeric(dist_fr['fr_inmode'], errors='coerce')
-    dist_fr['fr_orig'] = pd.to_numeric(dist_fr['fr_orig'], errors='coerce')
-
-    dist_fr['fr_inmode'] = dist_fr['fr_inmode'].astype(float)
-    dist_fr['fr_orig'] = dist_fr['fr_orig'].astype(float)
-
     faf = pd.read_csv(input_path_faf)
-    faf = faf[faf['tons_2017'] != 0]
-    faf.dropna(subset=['fr_orig'], inplace=True)
 
-    faf_filtered = faf[faf['trade_type'] == 2]
+    faf = faf[faf['trade_type'] == 2]
 
     #Remove unrelated columns
     columns_to_remove = [
-        "fr_dest", "fr_outmode", "tons_2018", "tons_2019", "tons_2020", "tons_2021", "tons_2022", 
+        "dms_orig","fr_dest", "fr_outmode","tons_2017", "tons_2018", "tons_2019", "tons_2020", "tons_2021", "tons_2022", 
         "tons_2023", "tons_2025", "tons_2030", "tons_2035", "tons_2040", "tons_2045", "tons_2050",
         "value_2017", "value_2018", "value_2019", "value_2020", "value_2021", "value_2022", 
         "value_2023", "value_2025", "value_2030", "value_2035", "value_2040", "value_2045", "value_2050",
@@ -48,8 +38,10 @@ def faf_preprocessing (input_path_faf, output_path_faf):
     faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * 1.60934
     faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * 1.60934
 
+
     faf_merged['avr_dom_dist_km'] = (faf_merged['min_dom_dist_km'] + faf_merged['max_dom_dist_km']) / 2
-    faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km','max_dom_dist_km' ], inplace=True)
+    faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km','max_dom_dist_km','trade_type','dist_band' ], inplace=True)
+
     faf = faf_merged.to_csv(output_path_faf, index=False)
 
     return faf
@@ -135,6 +127,7 @@ def cfs_preprocessing (input_path, output_path):
     
     cfs = cfs[cfs["EXPORT_YN"] == "N"]
     cfs = cfs[cfs["MODE"].isin([3, 4, 5, 6, 7, 8, 9, 10, 101, 11])]
+    cfs ["SHIPMT_DIST_ROUTED"] = cfs ["SHIPMT_DIST_ROUTED"]* 1.60934
 
     cfs.to_csv(output_path, index=False)
     return cfs
@@ -152,6 +145,14 @@ if __name__ == "__main__":
 
     """
 
+    input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
+    output_path_faf = r"data\transportation_faf_dataset2.csv"
+
+    # input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
+    # output_path_cfs = r"data\transportation_cfs_dataset.csv"
+
+
+
     faf_preprocessing (input_path_faf, output_path_faf)
-    cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
+    # cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
     cfs_preprocessing (input_path_cfs, output_path_cfs)

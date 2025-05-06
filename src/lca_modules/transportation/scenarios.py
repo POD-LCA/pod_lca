@@ -3,7 +3,6 @@ from lca_modules.transportation.transport_mode import TransportMode, cfs_mapping
 from geopy.distance import geodesic
 from lca_modules.location import CFS_DATA_PATH, FAF_CITY_REPRESENTATION, FAF_DOMESTIC_REGION
 from lca_modules.location.location import Location
-import json
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -212,8 +211,6 @@ class Scenario:
                     if major_domes in value:
                         major_domes = key
                 self.shipping_dest = Location.from_str(major_domes)
-                faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
-                print (f"destination is the most frequent shipping destination {major_domes}")
 
         except Exception as e:
             print("Error:", e)
@@ -279,6 +276,7 @@ class Scenario:
             print("Error:", e)
             failed = True
 
+
         # Mode
         try:
             if mode is not None:
@@ -297,6 +295,8 @@ class Scenario:
         except Exception as e:
             print("Error:", e)
             failed = True
+        
+        
         # Domestic Mode
         try:
             if domestic_mode is not None:
@@ -338,6 +338,10 @@ class Scenario:
                 marine = marine[marine["Coast"] == destination.us_coast]
                 if marine.empty:
                     raise ValueError("no data for the selected destination in Marine dataset")
+
+            else:
+                pass
+
         except Exception as e:
             print("Error:", e)
             failed = True
@@ -414,13 +418,11 @@ class Scenario:
                         cfs_filtered = cfs[cfs["DEST_STATE"] == closest_state]
                         del sorted_cfs_dist[closest_state]
                         print(f"No location for destination found in cfs, The value shows the closest shipping to the selected destination {closest_state}")
-                
+                        cfs = cfs_filtered
                 else:
                     cfs = cfs_filtered
             else:
-                major_dests = cfs["DEST_STATE"].mode()[0]
-                cfs_filtered = cfs[cfs["DEST_STATE"] == major_dests]
-                cfs = cfs_filtered
+                pass
 
         except Exception as e:
             print("Error:", e)
@@ -460,15 +462,14 @@ class Scenario:
                         cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state]
                         del sorted_cfs_dist[closest_state]
                         print (f"No location for origin found in cfs, The value shows the closest shipping to the selected origin {closest_state}")
-            
+                        cfs = cfs_filtered
                 else:
                     cfs = cfs_filtered
-
         except Exception as e:
             print("Error:", e)
             failed = True
 
-        
+
         # Mode
         try:
             if mode is not None:
