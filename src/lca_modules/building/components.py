@@ -1,8 +1,7 @@
 from lca_modules.eol.waste import Waste
-from lca_modules.eol import EOL_DEFAULT_MIXES
 from utilities.data_imports.data_importer import Data_Importer
 from utilities.logger import log
-from lca_modules.eol import EOL_DEFAULT_KEY
+from utilities.settings import config
 
 import gc
 
@@ -179,13 +178,13 @@ class BuildingComponent:
                 Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
         
         """
-        eol_mix_data = Data_Importer.csv_to_pandas(EOL_DEFAULT_MIXES)
+        eol_mix_data = Data_Importer.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
         
         for key, value in deconstruction_map.items():
             if eol_mix_data['Material'].isin([key]).any():
                 eol_mix = eol_mix_data[eol_mix_data['Material']== key].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
-            elif  eol_mix_data['Material'].isin([EOL_DEFAULT_KEY]).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== EOL_DEFAULT_KEY].drop(labels='Material', axis=1).to_dict(orient='records')[0]
+            elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
+                eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
             else:
                 log("A mix doesnt exist", 0) # TODO: test this sequence / shall a hardcode default set here
 

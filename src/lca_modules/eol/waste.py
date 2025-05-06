@@ -1,8 +1,9 @@
 from lca_modules.material.master import Master
-from lca_modules.eol import WASTE_PROCESS_DICT
 from lca_modules.eol.waste_processing import WasteProcess
 from utilities.objects.array_methods import get_attribute_as_list
-from lca_modules.eol import EOL_DEFAULT_KEY
+from utilities.logger import log
+from utilities.settings import config
+
 
 from math import isnan
 
@@ -121,9 +122,9 @@ class Waste(Master):
         row_id = database.data.index[(database.data[database.get_primary_key()] == database_item)]
         if len(row_id) == 0:
             if self.get_bio_based():
-                database_item = EOL_DEFAULT_KEY + '_BIOBASED'
+                database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_BIOBASED'
             else:
-                database_item = EOL_DEFAULT_KEY + '_OTHER'
+                database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_OTHER'
 
         self.impact_database_entry = database_item
         self.update_impacts()
@@ -139,9 +140,9 @@ class Waste(Master):
                 The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
                 Percentage can be in the form of string with a % sign or decimal value. 
         """
-
+        waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
         if Waste.check_mix_sum(process_mix):
-            for waste_process_name in WASTE_PROCESS_DICT.keys():
+            for waste_process_name in waste_process_dict.keys():
                 process_exist = True
                 mix_percent_input = process_mix[waste_process_name]
                 if isinstance(mix_percent_input, float) or isinstance(mix_percent_input, int):
@@ -162,10 +163,10 @@ class Waste(Master):
                 if process_exist:
                     process_qty = self.get_qty() * mix_percent
 
-                    lc_stage = WASTE_PROCESS_DICT[waste_process_name]
+                    lc_stage = waste_process_dict[waste_process_name]
                     linked_process = False
                     if isinstance(lc_stage, list):
-                        lc_stage = WASTE_PROCESS_DICT[waste_process_name][0]
+                        lc_stage = waste_process_dict[waste_process_name][0]
                         linked_process = True
 
                     waste_process_obj = WasteProcess.new(self, 
@@ -177,7 +178,7 @@ class Waste(Master):
                     self.waste_processes.append(waste_process_obj)
                     
                     if linked_process:
-                        for lc_stage in WASTE_PROCESS_DICT[waste_process_name][1:]:
+                        for lc_stage in waste_process_dict[waste_process_name][1:]:
                             try:
                                 linked_from = waste_process_obj
                                 waste_process_obj = WasteProcess.new(self, 
@@ -189,7 +190,7 @@ class Waste(Master):
 
                                 self.waste_processes.append(waste_process_obj)
                             except ImportError as e:
-                                print(e)
+                                log(e, "Error")
 
             
             self.process_mix = process_mix

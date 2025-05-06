@@ -1,5 +1,7 @@
-from utilities.objects import array_methods
+
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+from utilities.objects import array_methods
+from utilities.logger import log
 
 
 __author__ = ["POD/LCA Team"]
@@ -136,7 +138,7 @@ class HotSpotAnalysis:
         if impact_category in self.hotspots:
             return self.hotspots[impact_category]
         else:
-            print("No hotspots set yet. Run hotspot analysis first.")
+            log("No hotspots set yet. Run hotspot analysis first.", "Warn")
 
     # ================================
     # Methods

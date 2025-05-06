@@ -2,6 +2,7 @@
 from lca_modules.impacts.impacts import Impacts
 from lca_modules.impacts.inventories import CarbonStorage, Emissions
 from lca_modules.impacts.impact_categories import IMPACT_CATEGOREIS
+from utilities.logger import log
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -263,7 +264,7 @@ class Master:
             distribution.set_parent(self)
             distribution.set_attr_name(attr)
         else:
-            print(f"Object {type(self)} does not have an attribute {attr}")
+            log(f"Object {type(self)} does not have an attribute {attr}", "Warn")
 
     def set_pedigree_score(self, pedigree_score):
         """ Set a pedigree score (data quality score) to the Master Obj.

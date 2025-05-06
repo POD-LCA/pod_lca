@@ -1,6 +1,7 @@
 
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.model import Model
+from utilities.logger import log
 
 import pickle
 
@@ -251,11 +252,11 @@ class Project:
                 project = pickle.load(file)
             return project
         except FileNotFoundError:
-            print("File not found.")
+            log("File not found.", "Error")
         except PermissionError:
-            print("Permission denied.")
+            log("Permission denied.", "Error")
         except Exception as e:
-            print("An error occurred:", e)
+            log("An error occurred:" + e, "Error")
 
 
 if __name__ == '__main__':

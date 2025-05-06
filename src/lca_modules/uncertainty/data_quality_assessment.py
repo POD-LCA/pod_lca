@@ -1,5 +1,5 @@
-from lca_modules.uncertainty import DATA_QUALITY_INDICATORS, MAX_DQS, MIN_DQS
-
+from utilities.settings import config
+from utilities.logger import log
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -50,7 +50,7 @@ class PedigreeScore:
         pedigree_score = cls()
         pedigree_score.set_parent(parent)
         if parent is not None:
-            for indicator in DATA_QUALITY_INDICATORS:
+            for indicator in config['setup']['uncertainty']['DATA_QUALITY_INDICATORS']:
                 setattr(pedigree_score, indicator, 5)
 
         parent.set_pedigree_score(pedigree_score)
@@ -128,21 +128,22 @@ class PedigreeScore:
                 If the scores are not within the score ranges specified.
                 If the input are not in expected format.
         """
-
+        max = config['setup']['uncertainty']['MAX_DQS']
+        min = config['setup']['uncertainty']['MIN_DQS']
         if len(args) == 1 and isinstance(args[0], dict):
             for indicator, score in args[0].items():
-                if score >= MIN_DQS and score <= MAX_DQS:
+                if score >= min and score <= max:
                     if hasattr(self, indicator):
                         setattr(self, indicator, score)
                     else:
-                        raise KeyError(f"{indicator} is not an valid indicator. Valid indicators are: {DATA_QUALITY_INDICATORS}")
+                        raise KeyError(f"{indicator} is not an valid indicator. Valid indicators are: {config['setup']['uncertainty']['DATA_QUALITY_INDICATORS']}")
                 else:
-                    raise ValueError(f"Pedigree score should be between {MIN_DQS} and {MAX_DQS}.")
+                    raise ValueError(f"Pedigree score should be between {min} and {max}.")
         elif len(args) == 2:
-            if args[1] >= MIN_DQS and args[1] <= MAX_DQS:
+            if args[1] >= min and args[1] <= max:
                 setattr(self, args[0], args[1])
             else:
-                raise ValueError(f"Pedigree score should be between {MIN_DQS} and {MAX_DQS}.")
+                raise ValueError(f"Pedigree score should be between {min} and {max}.")
         else:
             raise ValueError("Invalid input. Provide a (indicator, score) pair or a dictionary of indicator-score pairs.")
 
@@ -286,11 +287,13 @@ class DataQualityAnalysis:
                 DQS_tmp += obj.get_pedigree_score().get_item_DQS() * impact
                 impact_sum += impact
             else:
-                print(f"{obj.get_name()} has no impacts.")
+                log(f"{obj.get_name()} has no impacts.", "Info")
 
         DQS = DQS_tmp / impact_sum
-        n = len(DATA_QUALITY_INDICATORS)
-        normalized_DQS = 100 * (n * MAX_DQS - DQS)/(n * (MAX_DQS- MIN_DQS))
+        n = len(config['setup']['uncertainty']['DATA_QUALITY_INDICATORS'])
+        max = config['setup']['uncertainty']['MAX_DQS']
+        min = config['setup']['uncertainty']['MIN_DQS']
+        normalized_DQS = 100 * (n * max - DQS)/(n * (max- min))
 
         self.set_model_DQS(DQS)
         self.set_normalised_DQS(normalized_DQS)

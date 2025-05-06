@@ -1,5 +1,6 @@
 
 from utilities.units.units_map import UNITS_MAP
+from utilities.logger import log
 
 from tqdm import tqdm
 import zipfile
@@ -449,8 +450,8 @@ class openLCA:
                     i+=1
             client.put(process) 
 
-        print("Fixed process last_internal_id for:", lastid_count, "processes")
-        print ("Fixed exchange internal_ids for:", exchangeid_count, "processes")
+        log("Fixed process last_internal_id for:" + str(lastid_count) + "processes", "Info")
+        log("Fixed exchange internal_ids for:" + str(exchangeid_count) + "processes", "Info")
 
         return client
 
@@ -529,7 +530,7 @@ class openLCA:
                 #         openLCA.import_from_json(client, file, data, duplicates)
     
 
-        print("database loaded")
+        log("database loaded", "Trace")
         return client
     
     @staticmethod

@@ -1,8 +1,5 @@
-from utilities.maths.funcs import math_funcs
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
-
-from numpy import arange
+from utilities.settings import config
 
 
 __author__ = ["POD/LCA Team"]
@@ -37,14 +34,14 @@ class LinePlot(AbstractPlot):
             y_label : str
                 Y-label of the barchart.
         """
-        
+
         self.get_plot().clear_plot()
 
         if isinstance(data, dict):
             counter = 0
             for label, xy_data in data.items():
                 x_data, y_data = zip(*xy_data)
-                self.get_plot().draw_line(x_data, y_data, label, COLOUR_ORDER_LIST[counter])
+                self.get_plot().draw_line(x_data, y_data, label, config['Preferences']['COLOUR_ORDER_LIST'][counter])
                 counter += 1
                 
         self.get_plot().set_title(title)

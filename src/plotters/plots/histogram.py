@@ -1,5 +1,5 @@
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
+from utilities.settings import config
 
 
 __author__ = ["POD/LCA Team"]
@@ -18,7 +18,7 @@ class Histogram(AbstractPlot):
     # ================================
     # Methods
     # ================================ 
-    def draw(self, data, no_bins, title, x_label, y_label, label='', color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE], unitize=True):
+    def draw(self, data, no_bins, title, x_label, y_label, label='', color=None, unitize=True):
         """ Draw the histogram.
         
             Parameters
@@ -34,6 +34,11 @@ class Histogram(AbstractPlot):
             y_label : str
                 Y-label of the barchart.
         """
+        if color is None:
+            COLOUR_BASE = config['Preferences']['COLOUR_BASE']
+            COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
+            COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
+            color = COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE]
 
         self.get_plot().draw_histogram(data, no_bins, label=label, color=color, unitize=unitize, alpha=0.5)
         

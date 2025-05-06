@@ -1,7 +1,4 @@
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
-
-from numpy import arange
 
 
 __author__ = ["POD/LCA Team"]

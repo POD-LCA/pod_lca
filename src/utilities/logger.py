@@ -6,14 +6,15 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+
 LOG_LEVELS = {
-    "Fatal": 0,
-    "Error": 1,
-    "Warn": 2,
-    "Info": 3,
-    "Debug": 4,
-    "Trace": 5
-}
+                "Fatal": 0,
+                "Error": 1,
+                "Warn": 2,
+                "Info": 3,
+                "Debug": 4,
+                "Trace": 5
+            }
 
 def log(str, level="Info"):
     """ Log messages to the console bvased on the log level set.
@@ -33,6 +34,6 @@ def log(str, level="Info"):
                 5   Trace	A log level describing events showing step by step execution of your code that can be ignored during the standard operation, but may be useful during extended debugging sessions.
     """
 
-    if LOG_LEVELS[config['setup']['utilities']['LOG_LEVEL']] < LOG_LEVELS[level]:
-        tabs = '>' * (level)
+    if LOG_LEVELS[config['setup']['utilities']['LOG_LEVEL']] >= LOG_LEVELS[level]:
+        tabs = '>' * (LOG_LEVELS[level])
         print(f"{tabs}{str}")

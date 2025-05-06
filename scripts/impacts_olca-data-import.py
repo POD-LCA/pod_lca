@@ -1,4 +1,4 @@
-import olca_schema as schema
+
 from utilities.data_imports.data_importer import Data_Importer
 from lca_modules.impacts.olca_data import openLCA
 from utilities.units.common_units import JOULE, KILOGRAM

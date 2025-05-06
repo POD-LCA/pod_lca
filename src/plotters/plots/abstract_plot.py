@@ -1,6 +1,4 @@
 
-from plotters.plotters.abstract_plotter import AbstractPlotter
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"

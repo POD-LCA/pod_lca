@@ -1,6 +1,6 @@
 from utilities.maths.funcs import math_funcs
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
+from utilities.settings import config
 
 from numpy import arange
 
@@ -40,6 +40,10 @@ class BarChart(AbstractPlot):
         """
         
         self.get_plot().clear_plot()
+
+        COLOUR_BASE = config['Preferences']['COLOUR_BASE']
+        COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
+        COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
 
         categories = list(data.keys())
         if not (isinstance(data[categories[0]], float) or isinstance(data[categories[0]], int)):

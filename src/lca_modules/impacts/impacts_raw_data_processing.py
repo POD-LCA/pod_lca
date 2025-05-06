@@ -1,7 +1,7 @@
 
-from lca_modules.impacts import IMPACT_SOURCE_DATABASE
 from lca_modules.impacts.olca_data import openLCA
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
 from utilities.units.common_units import JOULE
 from utilities.units.metric_prefixes import MEGA
 
@@ -31,8 +31,9 @@ __version__ = "0.1.0"
 #       3b. Set Port to 8080 
 #       3c. Click the green arrow
 # 4. Set the IMPACT_SOURCE_DATABASE variable in the config file to 'FLCAC' or 'ecoinvent', as necessary.
-# TODO: set up the config file.
 # 5. Run this script
+
+IMPACT_SOURCE_DATABASE = config['setup']['impacts']['IMPACT_SOURCE_DATABASE']
 
 openLCA_client = openLCA.set_connection()
 

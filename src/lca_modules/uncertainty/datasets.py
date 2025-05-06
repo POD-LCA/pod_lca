@@ -1,4 +1,5 @@
 from lca_modules.uncertainty.utils import UncertainityUtils
+from utilities.logger import log
 
 from collections import Counter
 import numpy as np
@@ -169,7 +170,7 @@ class DataDistribution:
                     else:
                         raise ValueError("A best-fit found could not be found.")
                 except:
-                    print("A valid distribution could not be fitted.")        
+                    log("A valid distribution could not be fitted.", "Warn")        
             else:
                 self.dist = self.generate_discrete_distribution()
                 self.dist_name = self.dist.name

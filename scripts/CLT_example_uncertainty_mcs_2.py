@@ -3,11 +3,11 @@ from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.material.project_manager import Project
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
-from plotters.plots.colour_palettes import COLOUR_ORDER_LIST, COLOUR_PALETTES
 from plotters.plots.histogram import Histogram
 from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 from utilities.units.common_units import CUBIC_METER, KILOGRAM, KILOMETER, WATT_HOUR 
 from utilities.units.metric_prefixes import KILO
+from utilities.settings import config
 
 from math import exp
 from numpy import sqrt, log
@@ -80,6 +80,10 @@ data = ["Electricity_New", "Electricity_NWPP(eGrid)_[USLCI]"]
 data_set = DataDistribution.from_data(data, is_cts=False)
 electricity.set_data_distribution(data_set, 'impact_database_entry')
 
+# set colors for the histogram
+COLOUR_BASE = config['Preferences']['COLOUR_BASE']
+COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
+COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
 # run different cases
 cases = [1, 2]
 graph = Histogram.from_plotter(MatplotlibPlotter)
@@ -107,7 +111,6 @@ for case in cases:
 
     MCS.run()
     print(MCS)
-
     graph.draw(MCS.result.get_data(), no_bins=100, title="Distribution from Monte Carlo Simulation.", x_label='Impact', y_label="count", label='case '+str(case), color=COLOUR_PALETTES[COLOUR_ORDER_LIST[case]][1], unitize=True)
 
 graph.show()

@@ -1,5 +1,5 @@
 from plotters.plotters.abstract_plotter import AbstractPlotter
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
+from utilities.settings import config
 
 from matplotlib.patches import Patch
 import matplotlib.pyplot as plt
@@ -136,7 +136,7 @@ class MatplotlibPlotter(AbstractPlotter):
 
         return self
     
-    def draw_line(self, x_data, y_data, label, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE]):
+    def draw_line(self, x_data, y_data, label, color=None):
         """ Draw a line plot through (x, y) data pairs.
         
             Parameters
@@ -149,8 +149,12 @@ class MatplotlibPlotter(AbstractPlotter):
                 label for the function plotted
             color : str
                 Color of the radar plot as a named or hex string.
-            
         """
+        if color is None:
+            COLOUR_BASE = config['Preferences']['COLOUR_BASE']
+            COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
+            COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
+            color = COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE]
 
         self.ax.plot(x_data, y_data, color=color, linewidth=2, label=label)
 

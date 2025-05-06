@@ -1,5 +1,5 @@
 from plotters.plots.abstract_plot import AbstractPlot
-from plotters.plots.colour_palettes import COLOUR_PALETTES, COLOUR_ORDER_LIST, COLOUR_BASE
+from utilities.settings import config
 
 from numpy import linspace, pi
 
@@ -49,6 +49,9 @@ class RadarChart(AbstractPlot):
         """
         
         self.get_plot().clear_plot()
+        COLOUR_BASE = config['Preferences']['COLOUR_BASE']
+        COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
+        COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
 
         counter = 0
         for key, group in data.items(): 
