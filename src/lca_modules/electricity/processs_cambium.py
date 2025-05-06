@@ -1,7 +1,7 @@
 
-from lca_modules.electricity import DEFAULT_COUNTRY_CODE, CAMBIUM_TECHNOLOGY_MAP, CAMBIUM_LOCAL_DATA, CAMBIUM_REGIONAL_DATA, CAMBIUM_NATIONAL_DATA, CAMBIUM_HEADER_MAP, CAMBIUM_DATA_YEARS
 from lca_modules.location.location import Location
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.settings import config
 
 from pandas import DataFrame, concat
 import bisect
@@ -57,7 +57,7 @@ class CambiumData:
         # get country/region name
         if location is None:
             if regional_resolution== 'National':
-                country_code = DEFAULT_COUNTRY_CODE
+                country_code = config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
             else:
                 raise KeyError("No default location for regional resolution {regional_resolution}.")
         elif isinstance(location, str):
@@ -83,13 +83,13 @@ class CambiumData:
         
         # get cambium data
         if regional_resolution== 'National':
-            df = Data_Importer.csv_to_pandas(CAMBIUM_NATIONAL_DATA)
+            df = Data_Importer.csv_to_pandas(config['file_paths']['electricity']['CAMBIUM_NATIONAL_DATA'])
             cambium_data.data = df[df['country_code'] == country_code]
         elif regional_resolution == 'Regional':
-            df = Data_Importer.csv_to_pandas(CAMBIUM_REGIONAL_DATA)
+            df = Data_Importer.csv_to_pandas(config['file_paths']['electricity']['CAMBIUM_REGIONAL_DATA'])
             cambium_data.data = df[df['gea'] == region]
         elif regional_resolution == 'Local':
-            df = Data_Importer.csv_to_pandas(CAMBIUM_LOCAL_DATA)
+            df = Data_Importer.csv_to_pandas(config['file_paths']['electricity']['CAMBIUM_LOCAL_DATA'])
             cambium_data.data = df[df['r'] == region]
         else:
             raise KeyError(f"Regional resolution {regional_resolution} not recognized. Should be 'National', 'Regional', or 'Local'")
@@ -121,15 +121,16 @@ class CambiumData:
         """
 
         # match year with years available in dataset.
-        idx = bisect.bisect_left(CAMBIUM_DATA_YEARS, year)
+        cambium_yrs = config['setup']['electricity']['CAMBIUM_DATA_YEARS']
+        idx = bisect.bisect_left(cambium_yrs, year)
         if idx == 0:
-            years = [CAMBIUM_DATA_YEARS[0]]
-        elif idx == len(CAMBIUM_DATA_YEARS):
-            years = [CAMBIUM_DATA_YEARS[-1]]
+            years = [cambium_yrs[0]]
+        elif idx == len(cambium_yrs):
+            years = [cambium_yrs[-1]]
         else:
-            years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
+            years = [cambium_yrs[idx - 1], cambium_yrs[idx]]
 
-        mix_names = list(Data_Importer.json_to_dict(CAMBIUM_HEADER_MAP).values())
+        mix_names = list(Data_Importer.json_to_dict(config['file_paths']['electricity']['CAMBIUM_HEADER_MAP']).values())
         mix_set = DataFrame()
         for yr in years:
             data_set_tmp = self.data[self.data['scenario']==scenario]
@@ -159,9 +160,9 @@ class CambiumData:
                 raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
 
         # map
-        technology_map = Data_Importer.json_to_dict(CAMBIUM_TECHNOLOGY_MAP)
+        technology_map = Data_Importer.json_to_dict(config['file_paths']['electricity']['CAMBIUM_TECHNOLOGY_MAP'])
         mix_dict = dict.fromkeys(technologies, 0.0)
-        for technology, header in Data_Importer.json_to_dict(CAMBIUM_HEADER_MAP).items():
+        for technology, header in Data_Importer.json_to_dict(config['file_paths']['electricity']['CAMBIUM_HEADER_MAP']).items():
             technology_mapped = technology_map[technology]
             value = mix[header]
 
@@ -193,13 +194,14 @@ class CambiumData:
         """
 
         # match year with years available in dataset.
-        idx = bisect.bisect_left(CAMBIUM_DATA_YEARS, year)
+        cambium_yrs = config['setup']['electricity']['CAMBIUM_DATA_YEARS']
+        idx = bisect.bisect_left(cambium_yrs, year)
         if idx == 0:
-            years = [CAMBIUM_DATA_YEARS[0]]
-        elif idx == len(CAMBIUM_DATA_YEARS):
-            years = [CAMBIUM_DATA_YEARS[-1]]
+            years = [cambium_yrs[0]]
+        elif idx == len(cambium_yrs):
+            years = [cambium_yrs[-1]]
         else:
-            years = [CAMBIUM_DATA_YEARS[idx - 1], CAMBIUM_DATA_YEARS[idx]]
+            years = [cambium_yrs[idx - 1], cambium_yrs[idx]]
 
         load = DataFrame()
         for yr in years:

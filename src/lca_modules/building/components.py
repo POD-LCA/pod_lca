@@ -1,6 +1,7 @@
 from lca_modules.eol.waste import Waste
 from lca_modules.eol import EOL_DEFAULT_MIXES
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.logger import log
 from lca_modules.eol import EOL_DEFAULT_KEY
 
 import gc
@@ -186,7 +187,7 @@ class BuildingComponent:
             elif  eol_mix_data['Material'].isin([EOL_DEFAULT_KEY]).any():
                 eol_mix = eol_mix_data[eol_mix_data['Material']== EOL_DEFAULT_KEY].drop(labels='Material', axis=1).to_dict(orient='records')[0]
             else:
-                print("A mix doesnt exist") # TODO: test this sequence / shall a hardcode default set here
+                log("A mix doesnt exist", 0) # TODO: test this sequence / shall a hardcode default set here
 
             if 'bio_based' in value.keys():
                 waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix, bio_based=value['bio_based'])
