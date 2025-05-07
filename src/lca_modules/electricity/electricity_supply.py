@@ -2,6 +2,7 @@
 from lca_modules.electricity.electricity_producer import ElectricityProducer
 from lca_modules.electricity.processs_cambium import CambiumData
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.impacts_database import ElectricityImpactsDatabase
 from utilities.data_imports.data_importer import Data_Importer
 from utilities.logger import log
 from utilities.settings import config
@@ -54,6 +55,9 @@ class ElectricitySupply:
         self.scenario = config['setup']['electricity']['DEFAULT_SCENARIO']
         self.impacts = Impacts.from_parent(self)
         self.declared_unit = UNITS_MAP[config['setup']['electricity']['DEFAULT_DECLARED_UNIT']]
+
+        self.impact_database_national = None
+        self.impact_database_regional = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Electricity Supply: {self.get_name()}\n" + "="*75 + "\n"
@@ -284,16 +288,17 @@ class ElectricitySupply:
 
         # Get regionalised impact data
         if (regional_resolution== 'National'):
-            df = Data_Importer.csv_to_pandas(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
-            country = self.get_location().get_country() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY']
-            country_code = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
-            if country_code in df['Country code'].values:
-                impact_data = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns')
-            else:
-                raise KeyError(f"{country} ({country_code}) not in the dataset provided in file: '{config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA']}.'")                
-
+            if self.impact_database_national is None:
+                self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", regional_resolution)
+                self.impact_database_national.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
+            impact_database = self.impact_database_national
+            region = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
+          
         elif (regional_resolution == 'Regional') or (regional_resolution== 'Local'):
-            df = Data_Importer.csv_to_pandas(config['file_paths']['electricity']['ELECTRICITY_IMPACT_REGIONAL_DATA'])
+            if self.impact_database_regional is None:
+                self.impact_database_regional = ElectricityImpactsDatabase.new("Electricity - Regional", regional_resolution)
+                self.impact_database_regional.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_REGIONAL_DATA'])
+            impact_database = self.impact_database_regional
 
             if self.get_location().get_ferc_region() is None:
                 self.get_location().set_ferc_region()
@@ -304,13 +309,7 @@ class ElectricitySupply:
             elif len(region) == 1:
                 region = region[0]
             else:
-                impact_data = df[df['Region'].isin(region)]
-                region =self.pick_region(region, impact_data)
-            
-            if region in df['Region'].values:
-                impact_data = df[df['Region'] == region].drop('Region', axis='columns')
-            else:
-                raise KeyError(f"{region} not in the dataset provided in file: '{config['file_paths']['electricity']['ELECTRICITY_IMPACT_REGIONAL_DATA']}.'")
+                region =self.pick_region(region, impact_database)
             
         else:
             raise ValueError("Regional resolution of electricity supply is not recognized.")
@@ -323,10 +322,13 @@ class ElectricitySupply:
                 producer = ElectricityProducer.from_technology_year(key, self.get_year())
                 self.electricity_producers[key] = producer
 
-            impact_data_dict = impact_data[impact_data['Technology Type'] == key].drop(['Technology Type'], axis='columns').squeeze().to_dict()
+            data_dict = impact_database.get_data_entry(region, key)
              
             impact_obj = Impacts.from_parent(producer)
+            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
             impact_obj.update_impact_qty(impact_data_dict)
+
+            # TODO: set inventory data for each producer
 
             producer.set_impacts(impact_obj)
 
@@ -420,7 +422,7 @@ class ElectricitySupply:
     # ================================
     # Methods
     # ================================
-    def pick_region(self, regions, impact_data, impact_category=config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']):
+    def pick_region(self, regions, impact_database, impact_category=config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']):
         """ Pick the region with the highest impact from a list of regions.
         
             Parameters
@@ -444,7 +446,7 @@ class ElectricitySupply:
         for region in regions:
             impact_dict[region] = 0
             for technology, percentage in consumption_mix.items():
-                impact = impact_data[(impact_data['Region'] == region) & (impact_data['Technology Type'] == technology)][impact_category].values[0]
+                impact = impact_database.get_data_entry(region, technology)[impact_category]
                 impact_dict[region] += impact * percentage
 
         region_selected = max(impact_dict, key=impact_dict.get)
@@ -480,10 +482,11 @@ class ElectricitySupply:
         year = self.get_year()
 
         # impacts by technology
-        df = Data_Importer.csv_to_pandas(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
+        if self.impact_database_national is None:
+            self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", regional_resolution)
+            self.impact_database_national.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
+        impact_database = self.impact_database_national
         country_code = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
-        if country_code in df['Country code'].values:
-            impact_data_by_tech = df[df['Country code'] == country_code].drop(['Country code', 'Country'], axis='columns') 
         
         # set regionality
         regions_map = Data_Importer.json_to_dict(config['file_paths']['electricity']['CAMBIUM_REGIONS_MAP'])
@@ -513,8 +516,9 @@ class ElectricitySupply:
 
             impact_obj = Impacts.from_parent(self)
             for technology, percentage in energy_mix.items():
-                impact_dict = impact_data_by_tech[impact_data_by_tech['Technology Type'] == technology].drop(['Technology Type'], axis='columns').squeeze().to_dict()
-                tmp_impact_obj = Impacts.from_dict(impact_dict) 
+                data_dict = impact_database.get_data_entry(country_code, technology)
+                impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
+                tmp_impact_obj = Impacts.from_dict(impact_data_dict) 
                 impact_obj += tmp_impact_obj * percentage
 
             impact_distribution.append(impact_obj)

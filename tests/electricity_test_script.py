@@ -51,17 +51,18 @@ for test in tqdm(test_dict):
     test_status = True
        
     for impact_cat in IMPACT_CATEGORIES:
-        dif = abs(impacts.get_impact(impact_cat) - float(test_dict[test][impact_cat])) / ((impacts.get_impact(impact_cat) + float(test_dict[test][impact_cat])) / 2 )  # symmetric difference
-        
-        output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Python tool'] = impacts.get_impact(impact_cat)
-        output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Excel tool'] = test_dict[test][impact_cat]
-        output_dict[test][impact_cat + '_difference (%)'] = dif * 100
+        if impact_cat in test_dict[test]:
+            dif = abs(impacts.get_impact(impact_cat) - float(test_dict[test][impact_cat])) / ((impacts.get_impact(impact_cat) + float(test_dict[test][impact_cat])) / 2 )  # symmetric difference
+            
+            output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Python tool'] = impacts.get_impact(impact_cat)
+            output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Excel tool'] = test_dict[test][impact_cat]
+            output_dict[test][impact_cat + '_difference (%)'] = dif * 100
 
-        if dif * 100 > 0.5:
-            test_status = False
-            print(f"{test} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
-            print(f"computed impact value: {impacts.get_impact(impact_cat)} {IMPACT_CATEGORIES[impact_cat]}")
-            print(f"expected impact value: {test_dict[test][impact_cat]} {IMPACT_CATEGORIES[impact_cat]}")
+            if dif * 100 > 0.5:
+                test_status = False
+                print(f"{test} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
+                print(f"computed impact value: {impacts.get_impact(impact_cat)} {IMPACT_CATEGORIES[impact_cat]}")
+                print(f"expected impact value: {test_dict[test][impact_cat]} {IMPACT_CATEGORIES[impact_cat]}")
 
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
 

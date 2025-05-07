@@ -28,13 +28,18 @@ class Data_Importer:
             multipliers : list of float
                 Values of each column of the CSV will be multiplied by these values.
         """
-        
-        data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers)
+        df_headers = read_csv(file_path, nrows=0)
+        if headers is None:
+            headers_present = df_headers.columns.tolist()
+        else:
+            headers_present = [col for col in headers if col in df_headers.columns.tolist()]
+
+        data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers_present)
 
         if not multipliers == None:
             n = len(headers)
             for i in range(n):
-                if multipliers[i] is not None:
+                if multipliers[i] is not None and headers[i] in headers_present:
                     data_frame[headers[i]] *= multipliers[i]
 
         return data_frame

@@ -62,23 +62,24 @@ for test_name in tqdm(tests_dict):
    test_status = True
    for lc_stage, impact in impact_dict.items():
       for impact_cat in IMPACT_CATEGORIES:
-         impacts = impact_dict[lc_stage]
-         computed = impacts.get_impact(impact_cat)
-         reference = float(test_data_dict[test_name][impact_cat + '_' + lc_stage])
-         if reference > 0.0 and computed > 0.0:
-            dif = abs(computed - reference) / ((computed + reference) / 2 )  # symmetric difference
-         else:
-            dif = 0.0
-         
-         output_dict[test_name][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + lc_stage + ')' + ' Python tool'] = computed
-         output_dict[test_name][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + lc_stage + ')' + ' Excel tool'] = reference
-         output_dict[test_name][impact_cat + lc_stage + '_difference (%)'] = dif * 100
+         if impact_cat +'_' +  lc_stage in test_data_dict[test_name]:
+            impacts = impact_dict[lc_stage]
+            computed = impacts.get_impact(impact_cat)
+            reference = float(test_data_dict[test_name][impact_cat + '_' + lc_stage])
+            if reference > 0.0 and computed > 0.0:
+               dif = abs(computed - reference) / ((computed + reference) / 2 )  # symmetric difference
+            else:
+               dif = 0.0
+            
+            output_dict[test_name][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + lc_stage + ')' + ' Python tool'] = computed
+            output_dict[test_name][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + lc_stage + ')' + ' Excel tool'] = reference
+            output_dict[test_name][impact_cat + lc_stage + '_difference (%)'] = dif * 100
 
-         if dif * 100 > 0.5:
-               test_status = False
-               print(f"{test_name} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
-               print(f"computed impact value: {computed} {IMPACT_CATEGORIES[impact_cat]}")
-               print(f"expected impact value: {reference} {IMPACT_CATEGORIES[impact_cat]}")
+            if dif * 100 > 0.5:
+                  test_status = False
+                  print(f"{test_name} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
+                  print(f"computed impact value: {computed} {IMPACT_CATEGORIES[impact_cat]}")
+                  print(f"expected impact value: {reference} {IMPACT_CATEGORIES[impact_cat]}")
 
    output_dict[test_name]['test status'] = 'PASS' if test_status else 'FAIL'
 
