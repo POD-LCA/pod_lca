@@ -266,8 +266,8 @@ class Electricity(Fuel):
 
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
-            impacts = {category: unit_impacts.get_impact(category) * conversion_factor * self.qty for category in config['setup']['impacts']['IMPACT_CATEGORIES']}
-            self.impacts.update_impact_qty(impacts)      
+            impacts = {category: unit_impacts.get_record(category) * conversion_factor * self.qty for category in config['setup']['impacts']['IMPACT_CATEGORIES']}
+            self.impacts.update_qty(impacts)      
 
     def set_supplier(self, supplier):
         """ Set electricity supplier.
@@ -377,7 +377,7 @@ class Electricity(Fuel):
             for category in config['setup']['impacts']['IMPACT_CATEGORIES']:
                 data = []
                 for impact, weight in zip(impact_distribution, weights):
-                    data.extend([impact.get_impact(category) * conversion_factor * self.get_qty()] * int(weight))
+                    data.extend([impact.get_record(category) * conversion_factor * self.get_qty()] * int(weight))
 
                 impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category, set_dist=False))
 

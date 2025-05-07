@@ -220,7 +220,7 @@ class WasteProcess:
 
         impacts = {key: database_entry[key]*conversion_factor for key in config['setup']['impacts']['IMPACT_CATEGORIES']}
 
-        self.get_unit_impacts().update_impact_qty(impacts)
+        self.get_unit_impacts().update_qty(impacts)
 
     def set_location(self, location):
         """ Set location of the waste process facility.

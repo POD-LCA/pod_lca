@@ -281,7 +281,7 @@ class DataQualityAnalysis:
         DQS_tmp = 0.0
         impact_sum = 0.0
         for obj in self.model.get_all_items():
-            impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_impact(impact_cat) 
+            impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_record(impact_cat) 
             if impact is not None:
                 obj.get_pedigree_score().set_item_DQS()
                 DQS_tmp += obj.get_pedigree_score().get_item_DQS() * impact

@@ -326,7 +326,7 @@ class ElectricitySupply:
              
             impact_obj = Impacts.from_parent(producer)
             impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
-            impact_obj.update_impact_qty(impact_data_dict)
+            impact_obj.update_qty(impact_data_dict)
 
             # TODO: set inventory data for each producer
 
@@ -461,7 +461,7 @@ class ElectricitySupply:
         """
 
         impact_obj = self.get_impacts()
-        impact_obj.clear_impact_qty()
+        impact_obj.clear_qty()
         for technology, percentage in self.get_consumption_mix().items():
             if technology in self.electricity_producers:
                 impact_obj += self.electricity_producers[technology].get_impacts() * percentage

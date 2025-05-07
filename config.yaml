@@ -16,6 +16,7 @@ setup:
       Landfill: C4
   impacts:
     IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391'
+    PRIMARY_IMPACT_CATEGORY: GWP
     IMPACT_CATEGORIES:
       GWP: kg CO2 eq # IPCC AR5, 2013, 100-yr, w/o climate carbon feedback
       GWP_fossil: kg CO2 eq
@@ -29,13 +30,15 @@ setup:
       CO2: kg
       CH4: kg
       N2O: kg
-    PRIMARY_IMPACT_CATEGORY: GWP
+    CARBON_STORAGE:
+      Biogenic: kg
+      Mineral: kg
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
     MIN_DQS: 1
   utilities:
-    LOG_LEVEL: Info # Options: Fatal, Error, Warn, Info, Debug, Trace
+    LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
 
 file_paths:
   electricity:

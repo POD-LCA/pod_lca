@@ -1,6 +1,7 @@
 
 from lca_modules.impacts.impacts import Impacts
-from lca_modules.impacts.inventories import CarbonStorage, Emissions
+from lca_modules.impacts.emission_inventories import Emissions
+from lca_modules.impacts.carbon_storage import CarbonStorage
 from utilities.logger import log
 from utilities.settings import config
 
@@ -446,7 +447,7 @@ class Master:
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['impacts']['IMPACT_CATEGORIES']}
-            self.impacts.update_impact_qty(impacts)
+            self.impacts.update_qty(impacts)
 
 
 if __name__ == '__main__':

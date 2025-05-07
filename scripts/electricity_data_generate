@@ -54,7 +54,7 @@ for city in tqdm(city_list):
             impacts = electricity.get_impacts()
             
             for impact_cat in IMPACT_CATEGORIES:
-                output_dict[str(sequence_no)][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')'] = impacts.get_impact(impact_cat)
+                output_dict[str(sequence_no)][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')'] = impacts.get_record(impact_cat)
 
             sequence_no += 1
 

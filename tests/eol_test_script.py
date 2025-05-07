@@ -64,7 +64,7 @@ for test_name in tqdm(tests_dict):
       for impact_cat in IMPACT_CATEGORIES:
          if impact_cat +'_' +  lc_stage in test_data_dict[test_name]:
             impacts = impact_dict[lc_stage]
-            computed = impacts.get_impact(impact_cat)
+            computed = impacts.get_record(impact_cat)
             reference = float(test_data_dict[test_name][impact_cat + '_' + lc_stage])
             if reference > 0.0 and computed > 0.0:
                dif = abs(computed - reference) / ((computed + reference) / 2 )  # symmetric difference

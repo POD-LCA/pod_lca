@@ -347,7 +347,7 @@ class GUIInputManager():
     @staticmethod
     def get_impact_val(obj, impact_cat):
 
-        return obj.get_impacts().get_impact(impact_cat)
+        return obj.get_impacts().get_record(impact_cat)
     
     @staticmethod
     def get_weighted_impact(obj):

@@ -38,7 +38,7 @@ class HotSpotAnalysis:
                     if impact_category == 'weighted':
                         impact_val = obj.get_impacts().get_weighted_impact()
                     else:
-                        impact_val = obj.get_impacts().get_impact(impact_category)
+                        impact_val = obj.get_impacts().get_record(impact_category)
                     str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category]} \n"
         
         return str
@@ -171,7 +171,7 @@ class HotSpotAnalysis:
             if impact_category == 'weighted':
                 val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
             else:
-                val_lst = [impact.get_impact(impact_category) for impact in impacts_lst]
+                val_lst = [impact.get_record(impact_category) for impact in impacts_lst]
             total_impact = sum(val_lst)
             no_contributors = len(val_lst)
 

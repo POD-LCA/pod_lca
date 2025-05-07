@@ -30,7 +30,7 @@ for scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'Deca
 
         impacts = electricity.get_impacts()
         for category in IMPACT_CATEGORIES:
-            data_dict[category][scenario].append((y, impacts.get_impact(category)))
+            data_dict[category][scenario].append((y, impacts.get_record(category)))
 
 for category in IMPACT_CATEGORIES:
     graph = LinePlot.from_plotter(MatplotlibPlotter)

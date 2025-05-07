@@ -54,7 +54,7 @@ class Calculator():
             if impact_cat == 'weighted':
                 val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
             else:
-                val_lst = [impact.get_impact(impact_cat) for impact in impacts_lst]
+                val_lst = [impact.get_record(impact_cat) for impact in impacts_lst]
 
             return sum(val_lst)
         
@@ -90,7 +90,7 @@ class Calculator():
                 impact_lst = impacts_dict[stage]
                 data[stage] = 0.0
                 for impact in impact_lst:
-                    data[stage] += impact.get_impact(impact_category)
+                    data[stage] += impact.get_record(impact_category)
 
             return data
 
@@ -237,7 +237,7 @@ class Calculator():
                 stage_data = {}
                 impact_lst = impacts_dict[stage]
                 for impact in impact_lst:
-                    stage_data[impact.get_parent().get_name()] = impact.get_impact(impact_category)
+                    stage_data[impact.get_parent().get_name()] = impact.get_record(impact_category)
                 model_data[stage] = stage_data
             data[model.get_name()] = model_data
 
