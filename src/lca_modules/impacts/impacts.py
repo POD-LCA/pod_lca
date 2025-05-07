@@ -198,6 +198,10 @@ class Impacts:
         """
 
         for key, value in impacts.items():
+            if key not in config['setup']['impacts']['IMPACT_CATEGORIES']:
+                raise KeyError(f"Impact category '{key}' not found in the impact categories.")
+            if not isinstance(value, (int, float)):
+                raise TypeError(f"Impact quantity '{value}' is not a number.")
             setattr(self, key, value)
 
         return self

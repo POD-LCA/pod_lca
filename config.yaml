@@ -15,17 +15,20 @@ setup:
       Incinerate: C4
       Landfill: C4
   impacts:
-    IMPACT_SOURCE_DATABASE: 'ecoinvent391' # Options: 'FLCAC' or 'ecoinvent391'
+    IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391'
     IMPACT_CATEGORIES:
-      GWP: kg CO2-eq
-      AP: kg SO2-eq
-      EP: kg N-eq
-      ODP: kg CFC-11-eq
-      SFP: kg O3-eq
+      GWP: kg CO2 eq # IPCC AR5, 2013, 100-yr, w/o climate carbon feedback
+      GWP_fossil: kg CO2 eq
+      GWP_biogenic: kg CO2 eq
+      GWP_luluc: kg CO2 eq
+      AP: kg SO2 eq
+      EP: kg N eq
+      ODP: kg CFC-11 eq
+      POCP: kg O3 eq
     EMISSION_INVENTORIES:
-      CO2: kgCO2
-      CH4: kgCH4
-      N2O: kgN2O
+      CO2: kg
+      CH4: kg
+      N2O: kg
     PRIMARY_IMPACT_CATEGORY: GWP
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]

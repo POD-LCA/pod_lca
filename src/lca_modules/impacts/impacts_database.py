@@ -1,5 +1,6 @@
 
 from utilities.data_imports.data_importer import Data_Importer
+from utilities.logger import log
 from utilities.settings import config
 from utilities.units.units_map import UNITS_MAP
 
@@ -88,23 +89,31 @@ class ImpactsDatabase:
 
         return self
 
-    def set_data(self, file_path, impact_headers=None, additional_headers=None, multipliers=None):
+    def set_data(self, file_path, impact_headers_map=None, additional_headers=None, multipliers=None):
         """ Set the database data.
         
         Parameters
         ----------
         file_path : str
             Location of the CSV file
-        impact_headers : list of str
-            The headers of the CSV file as they would be mapped to the impacts in the database.
+        impact_headers_dict : dict
+            The headers of the CSV file as they would be mapped to the impacts in the database: {header (str): impact category (str)}.
         additional_headers : list of str
             Headers of the columns to be imported, other than name, unit, and impact categories.
         multipliers : list of float
             Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.
         """
 
-        if impact_headers == None:
-            impact_headers = list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys())
+        IMPACT_CATEGORIES = list(config['setup']['impacts']['IMPACT_CATEGORIES'].keys())
+        if impact_headers_map == None:
+            impact_headers = IMPACT_CATEGORIES
+        else:
+            impact_categories_in_map = list(impact_headers_map.values())
+            for cat in impact_categories_in_map:
+                if cat not in IMPACT_CATEGORIES:
+                    raise KeyError(f"Impact category {cat} not recognized. Recognized categories are: {config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}")
+            impact_headers = list(impact_headers_map.keys())
+
         data_headers = [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()] +  impact_headers
         if not (additional_headers ==  None):
             data_headers = data_headers + additional_headers
@@ -119,38 +128,19 @@ class ImpactsDatabase:
         data = Data_Importer.csv_to_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
+        if impact_headers_map != None:
+            data.rename(columns=impact_headers_map, inplace=True)
+
+        for cat in IMPACT_CATEGORIES:
+            if cat not in data.columns:
+                data[cat] = 0.0
+                log(f"Impact category {cat} not found in the data. Setting to 0.0.", level="Warn")
 
         # loading data to existing dataset
         if self.get_data_all().empty:
             self.data = data
         else:
             self.data = concat([self.get_data_all(), data], ignore_index=True)
-
-        return self
-    
-    def set_impact_categories(self, impact_categories):
-        """ Set the impact categories.
-        
-        Parameters
-        ----------
-        impact_categories : list
-            List of impact categories.
-        """
-
-        self.impact_ceteogries = impact_categories
-
-        return self
-    
-    def set_impact_categories(self, impact_categories):
-        """ Set the impact categories.
-        
-        Parameters
-        ----------
-        impact_categories : list
-            List of impact categories.
-        """
-
-        self.impact_ceteogries = impact_categories
 
         return self
 
@@ -236,17 +226,6 @@ class ImpactsDatabase:
 
         return self.name
     
-    def get_impact_categories_names(self):
-        """ Get the impact categories.
-        
-            Returns
-            -------
-            list of str
-                List of impact categories.
-        """
-
-        return list(self.impact_ceteogries.keys())
-    
     def get_impact_category_units(self):
         """ Get the units of the impact categories.
         
@@ -257,7 +236,7 @@ class ImpactsDatabase:
         """
 
         units = []
-        for key, value in self.impact_ceteogries.items():
+        for key, value in config['setup']['impacts']['IMPACT_CATEGORIES'].items():
             units.append(value['refUnit'])
 
         return units

@@ -3,9 +3,10 @@ from utilities.units.units_map import UNITS_MAP
 from utilities.logger import log
 
 from tqdm import tqdm
-import zipfile
+
 import io
 import json
+import zipfile
 
 try:
     import olca_ipc as ipc

@@ -19,8 +19,13 @@ project = Project()
 factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
+impacts_header_map = {"GWP":"GWP",
+                      "AP":"AP",
+                      "EP":"EP",
+                      "ODP":"ODP",
+                      "SFP":"POCP"}
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impact_data.csv', impact_headers_map=impacts_header_map)
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")

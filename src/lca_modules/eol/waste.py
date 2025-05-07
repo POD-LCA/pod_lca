@@ -4,7 +4,6 @@ from utilities.objects.array_methods import get_attribute_as_list
 from utilities.logger import log
 from utilities.settings import config
 
-
 from math import isnan
 
 

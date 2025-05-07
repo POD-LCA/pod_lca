@@ -45,10 +45,23 @@ elif IMPACT_SOURCE_DATABASE == 'ecoinvent391':
     filter_by = ['01', '02', '13', '16', '17', '19', '20', '22', '23', '24', '25', '27', '35', '36', '38', 'F', 'H', '8292']
     process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 
-# inventories
+# inventories (impacts and emissions)
 impact_categories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_categories.json')
-emission_inventories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_emission-inventories.json')
+for impact_category in impact_categories.keys():
+    if impact_category not in config['setup']['impacts']['IMPACT_CATEGORIES']:
+        raise ValueError(f"Impact category '{impact_category}' not recognized. Impact category keys recognized: {config['setup']['impacts']['IMPACT_CATEGORIES']}.")
+    else:
+        if config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category] != impact_categories[impact_category]['refUnit']:
+            raise ValueError(f"Impact category '{impact_category}' unit mismatch. Expected: {config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category]}, Found: {impact_categories[impact_category]['refUnit']}")
 
+emission_inventories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_emission-inventories.json')
+for emission in emission_inventories.keys():
+    if emission not in config['setup']['impacts']['EMISSION_INVENTORIES']:
+        raise ValueError(f"Impact category '{emission}' not recognized. Impact category keys recognized: {config['setup']['impacts']['EMISSION_INVENTORIES']}.")
+    else:
+        if config['setup']['impacts']['EMISSION_INVENTORIES'][emission] != emission_inventories[emission]['refUnit']:
+            raise ValueError(f"Emission inventory '{emission}' unit mismatch. Expected: {config['setup']['impacts']['EMISSION_INVENTORIES'][emission]}, Found: {emission_inventories[emission]['refUnit']}")
+        
 # impact method
 if IMPACT_SOURCE_DATABASE == 'FLCAC':
     impact_method_uuid = '0ed73bce-2198-4148-8c4d-8b2ce68b6e1a'
@@ -72,7 +85,7 @@ elif IMPACT_SOURCE_DATABASE == 'ecoinvent391':
                 {'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
 
 
-results = openLCA.generate_impacts_dir( openLCA_client, process_list[0:10], 
+results = openLCA.generate_impacts_dir( openLCA_client, process_list, 
                                         impact_categories | emission_inventories, 
                                         impact_method_uuid, 
                                         group_by)
@@ -87,7 +100,7 @@ if IMPACT_SOURCE_DATABASE == 'ecoinvent391':
 
     group_by = [{'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
     
-    results_with_wood_chips = openLCA.generate_impacts_dir( openLCA_client, process_list[0:10], 
+    results_with_wood_chips = openLCA.generate_impacts_dir( openLCA_client, process_list, 
                                                             impact_categories | emission_inventories, 
                                                             impact_method_uuid, 
                                                             group_by)
