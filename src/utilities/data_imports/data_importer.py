@@ -152,6 +152,7 @@ class Data_Importer:
         with open(file_path, "w") as file:
             json.dump(input_dict, file)
 
+    @staticmethod
     def json_to_dict(file_path):
         """ Import data to dictionary from a JSON file.
         
@@ -172,4 +173,8 @@ class Data_Importer:
         return data
         
 if __name__ == '__main__':
-    pass
+
+    # Example usage
+    file_path = "data/transportation_dataset/transportation_faf_domestic-region.json"
+    data = Data_Importer.json_to_dict(file_path)
+    print(data)

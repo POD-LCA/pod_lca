@@ -1,20 +1,17 @@
-import os
-import pandas as pd
 from lca_modules.transportation.logistics_link import Link
 from lca_modules.transportation.scenarios import Scenario
 from lca_modules.location.location import Location
-
+from lca_modules.impacts.impacts import Impacts
+import gc
 
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
-
 class ProjectLogisticManager:
-
     """
     ProjectLogisticManager class which maintains the links of transportation.
 
@@ -24,103 +21,98 @@ class ProjectLogisticManager:
         name of the project.
     shipping_dest : str.
         neme of the shipping destination location.
-    data_folder : str.
-        path to the data folder.
     shipping_org : str.
         name of the shipping origin location.
     links : list.
         list of links.
-    impact : dict.
-        dictionary of impacts.
+    impact : obj.
+        impact object.
     subdataset : dict.
         dictionary of subdatasets.
     """
-
-    def __init__(self, name, shipping_dest, data_folder, shipping_org):
-
+    def __init__(self, name, shipping_dest, shipping_org):
         self.name = name
-        self.shipping_dest = None if shipping_dest is None else Location(shipping_dest)
-        self.data_folder = data_folder
-        self.shipping_org = None if shipping_org is None else Location(shipping_org)
+        self.shipping_dest = None if shipping_dest is None else Location.from_str (shipping_dest)
+        self.shipping_org = None if shipping_org is None else Location.from_str (shipping_org)
         self.links = []
-        self.impact = {"GWP": 0.0, "AP": 0.0, "EP": 0.0, "ODP": 0.0, "SFP": 0.0}
-        self.subdataset = {}
+        self.impacts = Impacts.from_parent(self)
 
-
-    def sub_dataset(self):
-        """
-        Read the subdatasets from the data folder.
-
-        """
-        for file in os.listdir(self.data_folder):
-            file_path = os.path.join(self.data_folder, file)
-            if file.endswith(".csv"):
-                try:
-                    df = pd.read_csv(file_path)
-                    dataset_name = os.path.splitext(file)[0]
-                    self.subdataset[dataset_name] = df
-                except Exception as e:
-                    print(f"Error reading {file_path}: {e}")
-            elif file.endswith((".xlsx", ".xls")):
-                try:
-                    df = pd.ExcelFile(file_path)
-                    dataset_name = os.path.splitext(file)[0]
-                    self.subdataset[dataset_name] = df
-                except Exception as e:
-                    print(f"Error reading {file_path}: {e}")
-
-    def get_subdataset(self, sub_dataset):
-        """
-        Retrieve the subdataset.
-        """
-
-        if not self.subdataset:
-            self.sub_dataset()
-        return self.subdataset.get(sub_dataset)
-
-    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms):
+        # TODO: create constructor method
+        # TODO: create setters
+        # TODO: create __str__ method
+    
+    #TODO: this to move as a constructor method in Link class
+    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms):
         """
         Create a link of transportation for the project.
         """
-        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, mode_dms_name, efficiency, efficiency_dms)
+        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms)
         self.links.append(link)
-        self.impact = self.merge_impacts(self.impact, link.compute_impact())
+
+        link.compute_impact()
         
-
-    @staticmethod
-    def merge_impacts(impact1, impact2):
+    # TODO: Is get_total_impacts() a more appropriate method name?
+    def get_links_impacts(self):
         """
-        Merge the impacts of the links.
-        """
-        for key in impact1:
-            impact1[key] += impact2.get(key, 0)
-        return impact1
-
-    def get_impact(self):
-        """
-        Retrieve the impact of the project.
+        Retrieve the impacts of the links.
         """
 
-        return self.impact
+        new_impact = Impacts.from_parent(self)
+        for link in self.links:
+            new_impact += link.get_impact()
+        
+        self.impacts.update_qty(new_impact.get_impact_dict())
+
+        del new_impact
+        gc.collect()
+
+        return self.impacts 
+
+    # ========================
+    # Getters
+    # ========================
+    def get_name(self):
+        """ Retrieve the name of the project.
+
+            Returns
+            -------
+            str
+                Name of the project.
+        """
+        return self.name
+
+
+    def get_impacts(self):
+        """ Retrieve the impacts of the Transportation.
+
+            Returns
+            -------
+            Impacts Obj.
+                Impacts of the Transportation.
+
+        """
+        return self.impacts
 
     def get_links (self):
-        """
-        Retrieve the links of the project.
+        """ Retrieve the links of the project.
+
+            Returns
+            -------
+            list
+                List of transportation links of the project
         """
         return self.links
 
     def get_shipping_dest (self):
-        """
-        Retrieve the shipping destination of the project.
+        """ Retrieve the shipping destination of the project.
         """
         return self.shipping_dest
 
     def get_shipping_org (self):
+        """ Retrieve the shipping origin of the project.
         """
-        Retrieve the shipping origin of the project.
-        """
-
         return self.shipping_org
 
 
-
+if __name__ == '__main__':
+    pass
