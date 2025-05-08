@@ -471,7 +471,7 @@ class GUIInputManager():
     def set_database(file_path, project, headers=None, multipliers=None):
 
         project_impact_database = ImpactsDatabase.new("Project database")
-        project_impact_database.set_data(file_path, headers, multipliers)
+        project_impact_database.set_data(file_path, impact_headers_map=headers, multipliers=multipliers)
 
         project.set_database(project_impact_database)
 
@@ -483,7 +483,7 @@ class GUIInputManager():
     @staticmethod
     def get_impact_categories():
 
-        return config['setup']['impacts']['IMPACT_CATEGORIES']
+        return config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
 
     @staticmethod
     def get_all_units_list(project):

@@ -48,19 +48,19 @@ elif IMPACT_SOURCE_DATABASE == 'ecoinvent391':
 # inventories (impacts and emissions)
 impact_categories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_categories.json')
 for impact_category in impact_categories.keys():
-    if impact_category not in config['setup']['impacts']['IMPACT_CATEGORIES']:
-        raise ValueError(f"Impact category '{impact_category}' not recognized. Impact category keys recognized: {config['setup']['impacts']['IMPACT_CATEGORIES']}.")
+    if impact_category not in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
+        raise ValueError(f"Impact category '{impact_category}' not recognized. Impact category keys recognized: {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}.")
     else:
-        if config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category] != impact_categories[impact_category]['refUnit']:
-            raise ValueError(f"Impact category '{impact_category}' unit mismatch. Expected: {config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category]}, Found: {impact_categories[impact_category]['refUnit']}")
+        if config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category] != impact_categories[impact_category]['refUnit']:
+            raise ValueError(f"Impact category '{impact_category}' unit mismatch. Expected: {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category]}, Found: {impact_categories[impact_category]['refUnit']}")
 
 emission_inventories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_emission-inventories.json')
 for emission in emission_inventories.keys():
-    if emission not in config['setup']['impacts']['EMISSION_INVENTORIES']:
-        raise ValueError(f"Impact category '{emission}' not recognized. Impact category keys recognized: {config['setup']['impacts']['EMISSION_INVENTORIES']}.")
+    if emission not in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']:
+        raise ValueError(f"Impact category '{emission}' not recognized. Impact category keys recognized: {config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}.")
     else:
-        if config['setup']['impacts']['EMISSION_INVENTORIES'][emission] != emission_inventories[emission]['refUnit']:
-            raise ValueError(f"Emission inventory '{emission}' unit mismatch. Expected: {config['setup']['impacts']['EMISSION_INVENTORIES'][emission]}, Found: {emission_inventories[emission]['refUnit']}")
+        if config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'][emission] != emission_inventories[emission]['refUnit']:
+            raise ValueError(f"Emission inventory '{emission}' unit mismatch. Expected: {config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'][emission]}, Found: {emission_inventories[emission]['refUnit']}")
         
 # impact method
 if IMPACT_SOURCE_DATABASE == 'FLCAC':

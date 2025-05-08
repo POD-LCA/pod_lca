@@ -5,7 +5,9 @@ from utilities.units.units_map import UNITS_MAP
 from utilities.units.common_units import WATT_HOUR, KILO 
 
 import csv
+import gc
 import os
+
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -40,6 +42,8 @@ class Model:
         self.processes = []
         self.products = []
         self.impacts = {'A1':[], 'A2':[], 'A3':[]}
+        self.emissions = {'A1':[], 'A2':[], 'A3':[]}
+        self.carbon_storage = {'A1':[], 'A2':[], 'A3':[]}
 
     def __str__(self):
         str = "="*75 + "\n" + f"Product/Process List of {self.get_name()}\n" + "="*75 + "\n"
@@ -262,6 +266,28 @@ class Model:
         """
 
         return self.impacts
+    
+    def get_emissions(self):
+        """ Retrieve all the emissions in the model categorized by life cycle stage.
+
+            Returns
+            -------
+            dict.
+                Emission objects categorized by life cycle stage {life cycle stage (str): list of Emissions Obj.}
+        """
+
+        return self.emissions
+    
+    def get_carbon_storage(self):
+        """ Retrieve all the carbon storage in the model categorized by life cycle stage.
+
+            Returns
+            -------
+            dict.
+                Carbon storage objects categorized by life cycle stage {life cycle stage (str): list of Carbon Storage Obj.}
+        """
+
+        return self.carbon_storage
             
     # ================================
     # Methods to add items to the model
@@ -293,10 +319,9 @@ class Model:
 
         process.set_qty(qty)
         process.set_unit(unit)
-
+        
         self.processes.append(process)
-        self.impacts[stage].append(process.get_impacts())
-
+        
         return process
     
     def add_transportation_process(self, name, stage, transported_distance, unit, impacts_from):
@@ -325,8 +350,7 @@ class Model:
         process = transportationProcess.new(n, name, self, stage, transported_distance, unit, impacts_from)
 
         self.processes.append(process)
-        self.impacts[stage].append(process.get_impacts())
-
+        
         return process
     
     def add_product(self, name, stage, qty, unit, impacts_from):
@@ -353,10 +377,9 @@ class Model:
         """
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
-        
-        self.products.append(product)
-        self.impacts[stage].append(product.get_impacts())
 
+        self.products.append(product)
+        
         return product
     
     def add_energy(self, name, stage, qty, unit, impacts_from):
@@ -385,8 +408,7 @@ class Model:
         energy = Fuel.new(n, name, self, stage, qty, unit, impacts_from)
 
         self.products.append(energy)
-        self.impacts[stage].append(energy.get_impacts())
-
+        
         return energy
     
     def add_electricity(self, name, stage, qty, unit=KILO * WATT_HOUR):
@@ -410,10 +432,9 @@ class Model:
         """
         n = len(self.get_products())
         electricity = Electricity.new(n, name, self, stage, qty, unit)
-
+        
         self.products.append(electricity)
-        self.impacts[stage].append(electricity.get_impacts())
-
+        
         return electricity
     
     def add_emission(self, name, stage, qty, unit, impacts_from):
@@ -442,8 +463,7 @@ class Model:
         emission = Emission.new(n, name, self, stage, qty, unit, impacts_from)
 
         self.products.append(emission)
-        self.impacts[stage].append(emission.get_impacts())
-
+        
         return emission
 
     def add_waste(self, name, stage, qty, unit, impacts_from):
@@ -472,7 +492,6 @@ class Model:
         waste = Waste.new(n, name, self, stage, qty, unit, impacts_from)
 
         self.products.append(waste)
-        self.impacts[stage].append(waste.get_impacts())
 
         return waste   
 
@@ -512,8 +531,6 @@ class Model:
 
         """
 
-        impact = obj.get_impacts()
-
         if type(obj) == Product:
             self.get_products().remove(obj)
             for process in self.get_processes():
@@ -523,12 +540,12 @@ class Model:
                         process.set_transported_weight()
         elif type(obj) == Process:
             self.get_processes().remove(obj)
+            
+        obj.remove_inventory_records_from_model(obj.get_life_cycle_stage())
 
-        impacts = self.get_impacts()
-        for stage in impacts:
-            if impact in impacts[stage]:
-                self.get_impacts()[stage].remove(impact)
-                break
+        del obj
+
+        gc.collect()
 
 if __name__ == '__main__':
     pass

@@ -1,9 +1,10 @@
 from lca_modules.building.building import Building
 from lca_modules.building.components import BuildingComponent
 from lca_modules.location.location import Location
-from lca_modules.impacts.impacts_database import EOLImpactsDatabase
+from lca_modules.impacts.eol_impacts_database import EOLImpactsDatabase
 from utilities.units.common_units import KILOGRAM
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.emission_inventories import Emissions
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -45,21 +46,27 @@ my_timber_window.deconstruct(deconstruction_map)
 #          for impact in impacts_lst:
 #             print(impact) 
 
-# impacts by cycle stage
+# impacts by life cycle stage
 impact_dict = {'C3':Impacts.from_parent(my_timber_window), 
                'C4':Impacts.from_parent(my_timber_window), 
                'D':Impacts.from_parent(my_timber_window)}
+emission_dict = {'C3':Emissions.from_parent(my_timber_window), 
+                'C4':Emissions.from_parent(my_timber_window), 
+                'D':Emissions.from_parent(my_timber_window)}
 for waste in my_timber_window.get_waste_products():
    for lc_stage, impacts_lst in waste.get_impacts().items():
       if impacts_lst:
          for impact in impacts_lst:
             impact_dict[lc_stage] += impact
+   for lc_stage, emissions_lst in waste.get_emissions().items():
+      if emissions_lst:
+         for emission in emissions_lst:
+            emission_dict[lc_stage] += emission
 
-for lc_stage, impact in impact_dict.items():
+for lc_stage in impact_dict.keys():
    print(f"Life cycle stage: {lc_stage}")
-   print(impact)       
-
-
+   print(impact_dict[lc_stage])       
+   print(emission_dict[lc_stage])
 
 # TODO: code and test transportation links
 # TODO: C1 impact dummies

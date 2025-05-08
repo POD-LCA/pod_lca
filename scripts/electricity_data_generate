@@ -28,7 +28,8 @@ output_file = "save_files\\electricity_city_values.csv"
 my_manufacturing_project = Project()
 output_dict = {}
 
-IMPACT_CATEGORIES = config['setup']['impacts']['IMPACT_CATEGORIES']
+impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
+emission_inventories = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
 
 sequence_no = 1
 for city in tqdm(city_list):
@@ -52,10 +53,12 @@ for city in tqdm(city_list):
                                                 'unit': unit.get_standard_notation()}
                                                     
             impacts = electricity.get_impacts()
+            emissions = electricity.get_emissions()
             
-            for impact_cat in IMPACT_CATEGORIES:
-                output_dict[str(sequence_no)][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')'] = impacts.get_record(impact_cat)
-
+            for impact_cat in impact_categories:
+                output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + ')'] = impacts.get_record(impact_cat)
+            for emission in emission_inventories:
+                output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + ')'] = emissions.get_record(emission)
             sequence_no += 1
 
 Data_Importer.dict_to_csv(output_dict, output_file)

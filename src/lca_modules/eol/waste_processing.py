@@ -1,4 +1,5 @@
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.emission_inventories import Emissions
 from utilities.settings import config
 
 __author__ = ["POD/LCA Team"]
@@ -43,6 +44,7 @@ class WasteProcess:
         self.unit = None
         self.life_cycle_stage = None
         self.unit_impacts = Impacts.from_parent(self)
+        self.unit_emissions = Emissions.from_parent(self)
         self.location = None
         self.transportation_link = None
         self.linked_to = None
@@ -112,7 +114,7 @@ class WasteProcess:
         """
         self.process_name = name
 
-        self.set_unit_impacts()
+        self.set_unit_inventories()
         
         return self
     
@@ -171,7 +173,7 @@ class WasteProcess:
             if conversion_factor is not None:
                 self.unit = unit
                 self.set_qty(value_in * conversion_factor)
-                self.set_unit_impacts()
+                self.set_unit_inventories()
             else:
                 raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 
@@ -203,7 +205,7 @@ class WasteProcess:
 
         return self
 
-    def set_unit_impacts(self):
+    def set_unit_inventories(self):
         """ Set unit impacts of the waste process.
         """
 
@@ -218,9 +220,11 @@ class WasteProcess:
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.get_conversion_factor(unit)
 
-        impacts = {key: database_entry[key]*conversion_factor for key in config['setup']['impacts']['IMPACT_CATEGORIES']}
-
+        impacts = {key: database_entry[key]*conversion_factor for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+        emissions = {key: database_entry[key]*conversion_factor for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+        
         self.get_unit_impacts().update_qty(impacts)
+        self.get_unit_emissions().update_qty(emissions)
 
     def set_location(self, location):
         """ Set location of the waste process facility.
@@ -322,6 +326,16 @@ class WasteProcess:
                 Unit impacts of the process.
         """
         return self.unit_impacts
+    
+    def get_unit_emissions(self):
+        """ Get unit emissions of the waste process.
+
+            Returns
+            -------
+            Emission Obj.
+                Unit emissions of the process.
+        """
+        return self.unit_emissions
 
     def get_linked_process(self, to=True):
         """ Get the linked process to the current process.

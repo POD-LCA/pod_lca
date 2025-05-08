@@ -21,7 +21,9 @@ test_dict = Data_Importer.csv_to_dict(test_data, 'test name')
 
 my_manufacturing_project = Project()
 output_dict = {}
-IMPACT_CATEGORIES = config['setup']['impacts']['IMPACT_CATEGORIES']
+impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
+emission_inventories = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
+inventories = impact_categories | emission_inventories
 for test in tqdm(test_dict):
     my_factory_location = Location.from_US_zip(test_dict[test]['Zip Code'])
     my_manufacturing_project.set_location(my_factory_location)
@@ -48,21 +50,27 @@ for test in tqdm(test_dict):
                           'unit': test_dict[test]['unit']}
                                                
     impacts = electricity.get_impacts()
+    emissions = electricity.get_emissions()
     test_status = True
-       
-    for impact_cat in IMPACT_CATEGORIES:
-        if impact_cat in test_dict[test]:
-            dif = abs(impacts.get_record(impact_cat) - float(test_dict[test][impact_cat])) / ((impacts.get_record(impact_cat) + float(test_dict[test][impact_cat])) / 2 )  # symmetric difference
+    for inventory in inventories:
+        if inventory in impact_categories:
+            records = impacts
+        elif inventory in emission_inventories:
+            records = emissions
+        else:
+            raise KeyError(f"Inventory '{inventory}' not found in IMPACT_CATEGORIES or EMISSION_INVENTORIES.")
+        if inventory in test_dict[test]:
+            dif = abs(records.get_record(inventory) - float(test_dict[test][inventory])) / ((records.get_record(inventory) + float(test_dict[test][inventory])) / 2 )  # symmetric difference
             
-            output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Python tool'] = impacts.get_record(impact_cat)
-            output_dict[test][impact_cat + '(' + IMPACT_CATEGORIES[impact_cat] + ')' + ' Excel tool'] = test_dict[test][impact_cat]
-            output_dict[test][impact_cat + '_difference (%)'] = dif * 100
+            output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = records.get_record(inventory)
+            output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Excel tool'] = test_dict[test][inventory]
+            output_dict[test][inventory + '_difference (%)'] = dif * 100
 
             if dif * 100 > 0.5:
                 test_status = False
-                print(f"{test} failed on {impact_cat} with a difference of {dif * 100:.2f}%")
-                print(f"computed impact value: {impacts.get_record(impact_cat)} {IMPACT_CATEGORIES[impact_cat]}")
-                print(f"expected impact value: {test_dict[test][impact_cat]} {IMPACT_CATEGORIES[impact_cat]}")
+                print(f"{test} failed on {inventory} with a difference of {dif * 100:.2f}%")
+                print(f"computed impact value: {records.get_record(inventory)} {inventories[inventory]}")
+                print(f"expected impact value: {test_dict[test][inventory]} {inventories[inventory]}")
 
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
 

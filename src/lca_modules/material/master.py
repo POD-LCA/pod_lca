@@ -47,9 +47,9 @@ class Master:
         self.model = None
         self.name = None
         self.life_cycle_stage = None
-        self.impacts = Impacts.from_parent(self)
-        self.carbon_stroage = CarbonStorage.from_parent(self)
-        self.emissions = Emissions.from_parent(self)
+        self.impacts = None
+        self.carbon_stroage = None
+        self.emissions = None
         self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
@@ -91,6 +91,9 @@ class Master:
         item.set_qty(qty)
         item.set_unit(unit)
         item.impacts = Impacts.from_parent(item)
+        item.emissions = Emissions.from_parent(item)
+        item.carbon_stroage = CarbonStorage.from_parent(item)
+        item.add_inventory_records_to_model()
         item.set_impact_database_entry(impacts_from)
 
         return item
@@ -158,16 +161,10 @@ class Master:
             self.life_cycle_stage = stage
         else:
             previous_stage = self.get_life_cycle_stage()
-            self.life_cycle_stage = stage
-            
-            impact_obj = self.get_impacts()
-            parent_impacts_list = self.get_project().get_current_model().impacts[previous_stage] # FIXME
-            for impact in parent_impacts_list:
-                if impact == impact_obj:
-                    parent_impacts_list.remove(impact_obj) # FIXME
-                    break
+            self.remove_inventory_records_from_model(stage=previous_stage)
 
-            self.get_project().get_current_model().impacts[stage].append(impact_obj) # FIXME
+            self.life_cycle_stage = stage              
+            self.add_inventory_records_to_model()
 
         return self
 
@@ -197,7 +194,7 @@ class Master:
         original_database_item = self.get_impact_database_entry()
         try:
             self.impact_database_entry = database_item
-            self.update_impacts()
+            self.update_inventory_records()
         except ImportError as e:
             self.impact_database_entry = original_database_item
             raise e
@@ -220,7 +217,7 @@ class Master:
     
         self.qty = qty
         
-        self.update_impacts()
+        self.update_inventory_records()
 
         return self
 
@@ -375,6 +372,30 @@ class Master:
         """
 
         return self.impacts
+    
+    def get_emissions(self):
+        """ Retrieve the emissions of the product/process.
+
+            Returns
+            -------
+            Emissions Obj.
+                Emissions of the product/process.
+
+        """
+
+        return self.emissions
+    
+    def get_carbon_storage(self):
+        """ Retrieve the carbon storage of the product/process.
+
+            Returns
+            -------
+            CarbonStorage Obj.
+                Carbon storage of the product/process.
+
+        """
+
+        return self.carbon_stroage
 
     def get_data_distributions(self):
         """ Get data_distribution objects of the Master obj.
@@ -429,8 +450,8 @@ class Master:
     # ================================
     # Methods
     # ================================
-    def update_impacts(self):
-        """ Sets impacts quantities, based on database item asigned to the product/process 
+    def update_inventory_records(self):
+        """ Sets inventory quantities, based on database item asigned to the product/process 
             and the product/process quantity.
             If no database entry is asigned, impacts are not updated.
 
@@ -446,9 +467,82 @@ class Master:
             if conversion_factor is None:
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
-            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['impacts']['IMPACT_CATEGORIES']}
-            self.impacts.update_qty(impacts)
+            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+            self.get_impacts().update_qty(impacts)
 
+            emissions = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+            self.get_emissions().update_qty(emissions)
+
+            carbon_storage = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+            self.get_carbon_storage().update_qty(carbon_storage)
+
+    def remove_inventory_records_from_model(self, stage=None):
+        """ Remove all inventory records from the product/process.
+
+            Parameters
+            ----------
+            stage : str
+                Life cycle stage of the product/process.
+                If None, all stages are checked to find the product/process.
+        """
+
+        impact_obj = self.get_impacts()
+        emission_obj = self.get_emissions()
+        carbon_storage_obj = self.get_carbon_storage()
+        
+        model_impacts = self.get_model().get_impacts()
+        model_emissions = self.get_model().get_emissions()
+        model_carbon_storages = self.get_model().get_carbon_storage()
+
+        if stage is None:
+            for stage in model_impacts:
+                if impact_obj in model_impacts[stage]:
+                    model_impacts[stage].remove(impact_obj)
+                    break
+            
+            for stage in model_emissions:
+                if emission_obj in model_emissions[stage]:
+                    model_emissions[stage].remove(emission_obj)
+                    break
+            
+            for stage in model_carbon_storages:
+                if carbon_storage_obj in model_carbon_storages[stage]:
+                    model_carbon_storages[stage].remove(carbon_storage_obj)
+                    break
+        else:
+            if impact_obj in model_impacts:
+                model_impacts.remove(impact_obj)
+  
+            if emission_obj in model_emissions:
+                model_emissions.remove(emission_obj)
+
+            if carbon_storage_obj in model_carbon_storages:
+                model_carbon_storages.remove(carbon_storage_obj)
+
+        return self
+    
+    def add_inventory_records_to_model(self):
+        """ Add all inventory records to the product/process, if it is not already in the model."""
+
+        model_impacts = self.get_model().get_impacts()
+        model_emissions = self.get_model().get_emissions()
+        model_carbon_storages = self.get_model().get_carbon_storage()
+
+        impact_obj = self.get_impacts()
+        emission_obj = self.get_emissions()
+        carbon_storage_obj = self.get_carbon_storage()
+
+        if self.get_life_cycle_stage() is not None:
+            if impact_obj not in model_impacts[self.get_life_cycle_stage()]:
+                model_impacts[self.get_life_cycle_stage()].append(impact_obj)
+            if emission_obj not in model_emissions[self.get_life_cycle_stage()]:
+                model_emissions[self.get_life_cycle_stage()].append(emission_obj)
+            if carbon_storage_obj not in model_carbon_storages[self.get_life_cycle_stage()]:
+                model_carbon_storages[self.get_life_cycle_stage()].append(carbon_storage_obj)
+        else:
+            log(f"Product {self.get_name()} does not have a life cycle stage. Cannot add inventory records to the model.", "Warn")
+
+        return self
 
 if __name__ == '__main__':
     pass

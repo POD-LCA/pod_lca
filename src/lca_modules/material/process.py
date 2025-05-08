@@ -1,5 +1,9 @@
 
 from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.emission_inventories import Emissions
+from lca_modules.impacts.carbon_storage import CarbonStorage
+from lca_modules.impacts.emission_inventories import Emissions
+from lca_modules.impacts.carbon_storage import CarbonStorage
 from lca_modules.material.master import Master
 from utilities.units.common_units import KILOGRAM
 
@@ -54,6 +58,7 @@ class transportationProcess(Process):
         self.transported_distance_unit = None
         self.transported_weight_unit = KILOGRAM  # default unit
         self.transported_products = []
+        
 
     def __str__(self):
             return f"Transpportation Process(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -92,6 +97,9 @@ class transportationProcess(Process):
         item.set_transported_distance(transported_distance)
         item.set_transported_distance_unit(unit)
         item.impacts = Impacts.from_parent(item)
+        item.emissions = Emissions.from_parent(item)
+        item.carbon_stroage = CarbonStorage.from_parent(item)
+        item.add_inventory_records_to_model()
         item.set_impact_database_entry(impacts_from)
 
         return item
@@ -239,7 +247,6 @@ class transportationProcess(Process):
                 Weight transported in the transportation process.
 
         """
-
 
         return self.transported_weight
     

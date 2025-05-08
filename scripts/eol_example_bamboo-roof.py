@@ -1,7 +1,7 @@
 from lca_modules.building.building import Building
 from lca_modules.building.components import BuildingComponent
 from lca_modules.location.location import Location
-from lca_modules.impacts.impacts_database import EOLImpactsDatabase
+from lca_modules.impacts.eol_impacts_database import EOLImpactsDatabase
 from utilities.units.common_units import KILOGRAM
 from lca_modules.impacts.impacts import Impacts
 

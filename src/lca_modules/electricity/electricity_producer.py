@@ -13,6 +13,7 @@ class ElectricityProducer:
         self.energy_source = None
         self.year = None
         self.impacts = None
+        self.emissions = None
 
     @classmethod
     def from_technology_year(cls, technology, year):
@@ -35,7 +36,7 @@ class ElectricityProducer:
 
         elec_producer.set_energy_source(technology)
         elec_producer.set_year(year)
-        elec_producer.set_impacts()
+        elec_producer.set_invetories()
 
         return elec_producer
     
@@ -78,7 +79,7 @@ class ElectricityProducer:
         """
 
         self.year = year
-        self.set_impacts()
+        self.set_invetories()
 
         return self
     
@@ -95,6 +96,31 @@ class ElectricityProducer:
             impacts = {}
         else:
             self.impacts = impacts
+
+        return self
+    
+    def set_emissions(self, emissions=None):
+        """ Set the emissions of the electricity producer.
+        
+            Parameters
+            ----------
+            emissions : dict
+                The emissions of the electricity producer.
+        """
+
+        if emissions is None:
+            emissions = {}
+        else:
+            self.emissions = emissions
+
+        return self
+    
+    def set_invetories(self):
+        """ Set the impacts and emissions inventories of the electricity producer.
+        """
+
+        self.set_impacts()
+        self.set_emissions()
 
         return self
     
@@ -144,6 +170,17 @@ class ElectricityProducer:
         """
 
         return self.impacts
+    
+    def get_emissions(self):
+        """ Get the emissions of the electricity producer.
+        
+            Returns
+            -------
+            dict
+                The emissions of the electricity producer.
+        """
+
+        return self.emissions
     
 if __name__ == '__main__':
     pass

@@ -38,6 +38,7 @@ class Waste(Master):
         self.waste_processes = []
         self.process_mix = {}
         self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.emissions = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
         self.bio_based = True
 
     def __str__(self):
@@ -85,11 +86,10 @@ class Waste(Master):
         waste_item.set_impact_database_entry(database_item)
         waste_item.set_qty(qty)
         waste_item.set_unit(unit)
-        
 
         waste_item.set_waste_processess(process_mix)
 
-        waste_item.update_impacts()
+        waste_item.update_inventory_records()
 
         return waste_item
 
@@ -126,7 +126,7 @@ class Waste(Master):
                 database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_OTHER'
 
         self.impact_database_entry = database_item
-        self.update_impacts()
+        self.update_inventory_records()
 
         return self
         
@@ -259,7 +259,7 @@ class Waste(Master):
     # ================================
     # Methods
     # ================================
-    def update_impacts(self):
+    def update_inventory_records(self):
         """ Update the transportation and processing impacts of the waste (C2-C4).
         """
 
@@ -269,9 +269,15 @@ class Waste(Master):
             for key in impacts.keys():
                 impacts[key] = []
 
+            emissions = self.get_emissions()
+            for key in emissions.keys():
+                emissions[key] = []
+
             for process in self.get_waste_processes():
                 process_impact = process.get_unit_impacts() * process.get_qty()
+                process_emission = process.get_unit_emissions() * process.get_qty()
                 impacts[process.get_life_cycle_stage()].append(process_impact)
+                emissions[process.get_life_cycle_stage()].append(process_emission)
 
             # TODO: updating transportation ("C2" impacts)
 
@@ -307,7 +313,7 @@ class Waste(Master):
 
             # TODO: update transportation links
 
-            self.update_impacts()
+            self.update_inventory_records()
 
             return self
     

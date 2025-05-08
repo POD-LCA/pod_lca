@@ -20,8 +20,8 @@ class Emissions(Records):
         Emission names are dynamically set based on the class variable 'record_attr_dict'.
         Currently, this is set to the EMISSION_INVENTORIES in the config file.
     """
-    record_type = "Impacts"
-    record_attr_dict = config['setup']['impacts']['CARBON_STORAGE']
+    record_type = "Emissions"
+    record_attr_dict = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
 
     def __init__(self):
         super().__init__()

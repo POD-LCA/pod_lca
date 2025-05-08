@@ -22,7 +22,7 @@ class Impacts(Records):
         Currently, this is set to the IMPACT_CATEGORIES in the config file.
     """
     record_type = "Impacts"
-    record_attr_dict = config['setup']['impacts']['IMPACT_CATEGORIES']
+    record_attr_dict = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
 
     def __init__(self):
         super().__init__()
@@ -55,7 +55,7 @@ class Impacts(Records):
         else:
             raise NotImplementedError
         
-        for impact_cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys():
+        for impact_cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
             if impact_cat not in weights:
                 raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
             

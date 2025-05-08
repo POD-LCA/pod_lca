@@ -20,8 +20,8 @@ class CarbonStorage(Records):
         Carbon storage categories are dynamically set based on the class variable 'record_attr_dict'.
         Currently, this is set to the CARBON_STORAGE in the config file.
     """
-    record_type = "Impacts"
-    record_attr_dict = config['setup']['impacts']['CARBON_STORAGE']
+    record_type = "Carbon Storage"
+    record_attr_dict = config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']
 
     def __init__(self):
         super().__init__()

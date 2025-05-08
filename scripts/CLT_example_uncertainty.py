@@ -23,9 +23,13 @@ factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impact_data.csv', impact_headers_map={'GWP':'GWP',
+                                                                             'AP': 'AP',
+                                                                             'EP':'EP',
+                                                                             'ODP':'ODP',
+                                                                             'SFP': 'POCP'})
 custom_impact_database.set_data_entry("Electricity_New", 1.0, KILO * WATT_HOUR, 
-                                      {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
+                                      impacts={"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "POCP":3.37e-2})
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")

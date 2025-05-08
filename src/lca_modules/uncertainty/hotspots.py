@@ -39,7 +39,7 @@ class HotSpotAnalysis:
                         impact_val = obj.get_impacts().get_weighted_impact()
                     else:
                         impact_val = obj.get_impacts().get_record(impact_category)
-                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {config['setup']['impacts']['IMPACT_CATEGORIES'][impact_category]} \n"
+                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category]} \n"
         
         return str
 

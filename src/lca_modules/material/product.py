@@ -1,6 +1,9 @@
 
 from lca_modules.electricity.electricity_supply import ElectricitySupply
 from lca_modules.material.master import Master
+from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.emission_inventories import Emissions
+from lca_modules.impacts.carbon_storage import CarbonStorage
 from lca_modules.uncertainty.datasets import DataDistribution
 from utilities.settings import config
 
@@ -70,7 +73,7 @@ class Product(Master):
             transporter = self.get_transporter()
             transporter.set_transported_weight()
 
-        self.update_impacts()
+        self.update_inventory_records()
 
         return self
 
@@ -242,13 +245,17 @@ class Electricity(Fuel):
         item.set_life_cycle_stage(stage)
         item.set_qty(qty)
         item.set_unit(unit)
+        item.set_weight_unit(unit)
+        item.impacts = Impacts.from_parent(item)
+        item.emissions = Emissions.from_parent(item)
+        item.carbon_stroage = CarbonStorage.from_parent(item)
 
         electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
         item.set_supplier(electricity_supplier)
 
         return item
 
-    def update_impacts(self):
+    def update_inventory_records(self):
         """ Sets impacts quantities, based on database item asigned to the product/process 
             and the product/process quantity.
             If no database entry is asigned, impacts are not updated.
@@ -263,12 +270,16 @@ class Electricity(Fuel):
             
             declared_unit = supplier.get_unit()
             unit_impacts = supplier.get_impacts()
+            unit_emissions = supplier.get_emissions()
 
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
-            impacts = {category: unit_impacts.get_record(category) * conversion_factor * self.qty for category in config['setup']['impacts']['IMPACT_CATEGORIES']}
-            self.impacts.update_qty(impacts)      
+            impacts = {category: unit_impacts.get_record(category) * conversion_factor * self.qty for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+            self.get_impacts().update_qty(impacts)
 
+            emissions = {category: unit_emissions.get_record(category) * conversion_factor * self.qty for category in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+            self.get_emissions().update_qty(emissions)
+                 
     def set_supplier(self, supplier):
         """ Set electricity supplier.
         
@@ -279,7 +290,7 @@ class Electricity(Fuel):
         """
 
         self.electricity_supplier = supplier
-        self.update_impacts()
+        self.update_inventory_records()
 
         return self
 
@@ -293,7 +304,7 @@ class Electricity(Fuel):
         """
 
         self.get_supplier().set_year(year)
-        self.update_impacts()
+        self.update_inventory_records()
 
         self.year = year
 
@@ -309,7 +320,7 @@ class Electricity(Fuel):
         """
 
         self.get_supplier().set_spatial_resolution(spatial_resolution)
-        self.update_impacts()
+        self.update_inventory_records()
 
         return self
     
@@ -323,7 +334,7 @@ class Electricity(Fuel):
         """
         if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
             self.get_supplier().set_scenario(scenario)
-            self.update_impacts()
+            self.update_inventory_records()
         else:
             raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")
 
@@ -374,7 +385,7 @@ class Electricity(Fuel):
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
             impact_distributions = []
-            for category in config['setup']['impacts']['IMPACT_CATEGORIES']:
+            for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
                 data = []
                 for impact, weight in zip(impact_distribution, weights):
                     data.extend([impact.get_record(category) * conversion_factor * self.get_qty()] * int(weight))

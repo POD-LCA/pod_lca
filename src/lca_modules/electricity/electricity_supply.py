@@ -2,7 +2,8 @@
 from lca_modules.electricity.electricity_producer import ElectricityProducer
 from lca_modules.electricity.processs_cambium import CambiumData
 from lca_modules.impacts.impacts import Impacts
-from lca_modules.impacts.impacts_database import ElectricityImpactsDatabase
+from lca_modules.impacts.emission_inventories import Emissions
+from lca_modules.impacts.electricity_impacts_database import ElectricityImpactsDatabase
 from utilities.data_imports.data_importer import Data_Importer
 from utilities.logger import log
 from utilities.settings import config
@@ -54,6 +55,7 @@ class ElectricitySupply:
         self.year = None
         self.scenario = config['setup']['electricity']['DEFAULT_SCENARIO']
         self.impacts = Impacts.from_parent(self)
+        self.emissions = Emissions.from_parent(self)
         self.declared_unit = UNITS_MAP[config['setup']['electricity']['DEFAULT_DECLARED_UNIT']]
 
         self.impact_database_national = None
@@ -174,12 +176,12 @@ class ElectricitySupply:
         # Update consumption mix
         temporal_data = CambiumData.from_regional_resolution(regional_resolution, self.get_location())
         energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
-        self.set_consumption_mix(energy_mix, update_impacts=False)
+        self.set_consumption_mix(energy_mix, update_inventories=False)
 
         # Update impacts by technology
         self.set_electricity_producers(regional_resolution)
 
-        self.update_impacts()
+        self.update_inventory_records()
 
         temporal_data.delete_data()
 
@@ -198,20 +200,20 @@ class ElectricitySupply:
 
         return self
     
-    def set_consumption_mix(self, consumption_mix, update_impacts=True):
+    def set_consumption_mix(self, consumption_mix, update_inventories=True):
         """ Set the consumption mix of the electricity supply authority.
         
             Parameters
             ----------
             consumption_mix : dict
                 The consumption mix of the electricity supply authority.
-            update_impact : bool
-                Update impacts if true.
+            update_inventories : bool
+                Update inventories of impacts and emissions if true.
         """
         self.consumption_mix = consumption_mix
 
-        if update_impacts:
-            self.update_impacts()
+        if update_inventories:
+            self.update_inventory_records()
 
         return self
     
@@ -230,10 +232,10 @@ class ElectricitySupply:
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
         energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
-        self.set_consumption_mix(energy_mix, update_impacts=False)
+        self.set_consumption_mix(energy_mix, update_inventories=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
-        self.update_impacts()
+        self.update_inventory_records()
 
         temporal_data.delete_data()
 
@@ -264,10 +266,10 @@ class ElectricitySupply:
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
         energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), scenario)
-        self.set_consumption_mix(energy_mix, update_impacts=False)
+        self.set_consumption_mix(energy_mix, update_inventories=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
-        self.update_impacts()
+        self.update_inventory_records()
 
         temporal_data.delete_data()
         self.scenario = scenario
@@ -314,7 +316,7 @@ class ElectricitySupply:
         else:
             raise ValueError("Regional resolution of electricity supply is not recognized.")
 
-        # set producesrs and impacts
+        # set producesrs and inventories
         for key in self.get_consumption_mix().keys():
             if key in self.electricity_producers:
                 producer = self.electricity_producers[key]
@@ -325,12 +327,14 @@ class ElectricitySupply:
             data_dict = impact_database.get_data_entry(region, key)
              
             impact_obj = Impacts.from_parent(producer)
-            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
+            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
             impact_obj.update_qty(impact_data_dict)
-
-            # TODO: set inventory data for each producer
-
             producer.set_impacts(impact_obj)
+
+            emissions_obj = Emissions.from_parent(producer)
+            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'].keys()}
+            emissions_obj.update_qty(emissions_data_dict)
+            producer.set_emissions(emissions_obj)
 
         return self
     
@@ -403,6 +407,17 @@ class ElectricitySupply:
 
         return self.impacts
     
+    def get_emissions(self):
+        """ Get the emissions of the electricity supply authority.
+        
+            Returns
+            -------
+            Emissions Obj.
+                The emissions of the electricity supply authority.
+        """
+
+        return self.emissions
+    
     def get_scenario(self):
         """ Get the elecetricity consumption scenario."""
 
@@ -456,15 +471,20 @@ class ElectricitySupply:
         return region_selected
 
 
-    def update_impacts(self):
+    def update_inventory_records(self):
         """ Set the impacts of the electricity supply authority.
         """
 
         impact_obj = self.get_impacts()
         impact_obj.clear_qty()
+
+        emision_object = self.get_emissions()
+        emision_object.clear_qty()
+
         for technology, percentage in self.get_consumption_mix().items():
             if technology in self.electricity_producers:
                 impact_obj += self.electricity_producers[technology].get_impacts() * percentage
+                emision_object += self.electricity_producers[technology].get_emissions() * percentage
 
         return self
     

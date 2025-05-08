@@ -207,7 +207,7 @@ class SensitivityAnalysis:
                             ref_impact = impact_tmp
 
                     method(selected_option)
-                    obj.update_impacts()
+                    obj.update_inventory_records()
 
                     if objective == 'min':
                         group['min_option'] = selected_option
