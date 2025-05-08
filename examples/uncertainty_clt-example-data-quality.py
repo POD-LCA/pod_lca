@@ -1,9 +1,8 @@
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
+from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO
@@ -23,13 +22,7 @@ factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv', impact_headers_map={'GWP':'GWP',
-                                                                             'AP': 'AP',
-                                                                             'EP':'EP',
-                                                                             'ODP':'ODP',
-                                                                             'SFP': 'POCP'})
-custom_impact_database.set_data_entry("Electricity_New", 1.0, KILO * WATT_HOUR, 
-                                      impacts={"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "POCP":3.37e-2})
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
@@ -65,17 +58,3 @@ lumber.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completene
 lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, 'completeness': 3, 'temporal correlation': 4, 'geographical correlation': 3, 'technological representativeness': 3})
 DQS, nDQS = data_quality_assessment.calculate_model_DQS('GWP')
 data_quality_assessment.print_results()
-
-# # Sensitivity Analysis
-result_range = SensitivityAnalysis.compute_sensitivity_of_param(electricity, 'impact_database_entry',
-                                                                 impact_cat='GWP', 
-                                                                 options=['Electricity_NWPP(eGrid)_[USLCI]', 'Electricity_UnknownHigh_[USLCI]', 'Electricity_UnknownLow_[USLCI]'])
-result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber,  'qty', 
-                                                                 impact_cat='GWP', 
-                                                                 range=(506.48, 619.03))
-result_range = SensitivityAnalysis.compute_sensitivity_of_params(CLT_model, 
-                                                                  [{'obj': lumber_by_truck,  'param': 'transported_distance', 'range': (226.57, 453.13)},
-                                                                   {'obj': PUR1_by_truck,  'param': 'transported_distance', 'range': (1620, 3240)},
-                                                                   {'obj': PUR2_by_truck,  'param': 'transported_distance', 'range': (48600, 97200)}],
-                                                                   impact_cat='GWP')
-

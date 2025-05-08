@@ -4,6 +4,7 @@ from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO
+from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
 
 
 __author__ = ["POD/LCA Team"]
@@ -19,13 +20,8 @@ project = Project()
 factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
-impacts_header_map = {"GWP":"GWP",
-                      "AP":"AP",
-                      "EP":"EP",
-                      "ODP":"ODP",
-                      "SFP":"POCP"}
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv', impact_headers_map=impacts_header_map)
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")

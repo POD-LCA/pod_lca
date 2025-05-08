@@ -1,15 +1,16 @@
 from lca_modules.location.location import Location
-from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
+from lca_modules.material.project_manager import Project
 from lca_modules.uncertainty.datasets import DataDistribution
 from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
-from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 from plotters.plots.histogram import Histogram
-from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
+from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+from utilities.units.common_units import CUBIC_METER, KILOGRAM, KILOMETER, WATT_HOUR 
 from utilities.units.metric_prefixes import KILO
+from utilities.settings import config
 
 from math import exp
-from numpy import linspace, sqrt, log
+from numpy import sqrt, log
 from scipy import stats
 
 
@@ -27,7 +28,7 @@ factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
@@ -53,6 +54,9 @@ PUR2_by_truck.set_transported_product(dummy_PUR_2)
 print(CLT_model)
 print(project)
 
+MCS = MonteCarloSimulator.from_model(CLT_model, no_iter=10000, impact_cat='GWP')
+
+# uncertainty of lumber quantity
 mean_val, sdev_val = 562.750, 1.5
 sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
 mu = log(mean_val) - 0.5 * sigma**2
@@ -62,17 +66,51 @@ dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
 data_set = DataDistribution.from_distributions(dist, is_cts=True)
 lumber.set_data_distribution(data_set, 'qty')
 
-MCS = MonteCarloSimulator.from_model(CLT_model, no_iter=10000, impact_cat='GWP')
-MCS.run()
-print(MCS)
+# uncertainity of resin quantity
+data = [3.78191187, 2.75914279, 1.95508751, 2.96100281, 1.8551113 ,2.62276916, 2.38929469, 3.34390811, 2.11003882, 0.58102906,3.28672522, 2.30193206, 3.45025548, 4.92072669, 2.99540316,
+        1.76820646, 2.93650962, 6.24726201, 3.668859  , 1.06279295, 4.87829566, 4.22748717, 2.5929637 , 2.13076645, 3.98635723, 3.71329549, 2.95218779, 3.86155413, 2.52430829, 3.98351926,
+        3.75261862, 4.32160263, 0.84863997, 2.4135882 , 6.53763601]
 
+data_set = DataDistribution.from_data(data, is_cts=True)
+meth_diphenyl_d.set_data_distribution(data_set, 'qty')
+
+# uncertainty of electricity source
+data = ["Electricity_New", "Electricity_NWPP(eGrid)_[USLCI]"]
+
+data_set = DataDistribution.from_data(data, is_cts=False)
+electricity.set_data_distribution(data_set, 'impact_database_entry')
+
+# set colors for the histogram
+COLOUR_BASE = config['Preferences']['COLOUR_BASE']
+COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
+COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
+# run different cases
+cases = [1, 2]
 graph = Histogram.from_plotter(MatplotlibPlotter)
-graph.draw(MCS.result.get_data(), no_bins=50, title="Distribution from Monte Carlo Simulation.", x_label='Impact', y_label="probability density", unitize=True)
+for case in cases:
+    if case ==1: 
+        MCS.set_var_params([lumber.get_data_distribution(attr='qty')])
+    elif case ==2: 
+        MCS.set_var_params([meth_diphenyl_d.get_data_distribution(attr='qty')])
+    elif case == 3: 
+        MCS.set_var_params([electricity.get_data_distribution(attr='impact_database_entry')])
+    elif case == 4: # uncertainty of electricity source, with known likelyhoods
+        xk = ["Electricity_New", "Electricity_NWPP(eGrid)_[USLCI]"]
+        pk = [0.7, 0.3]
 
-MCS.result.set_distribution()
-results_data = MCS.result.get_data()
-x = linspace(min(results_data), max(results_data), 100)
-p = MCS.result.get_distribution().pdf(x)
-graph.draw_pdf(x, p, label="fitted distribution")
+        dist = stats.rv_discrete(name='custm', values=(xk, pk))
+
+        data_set = DataDistribution.from_distributions(dist, is_cts=False)
+        electricity.set_data_distribution(data_set, 'impact_database_entry')
+
+        MCS.set_var_params([electricity.get_data_distribution(attr='impact_database_entry')])
+    elif case == 5:
+        MCS.set_var_params([lumber.get_data_distribution(attr='qty'), meth_diphenyl_d.get_data_distribution(attr='qty')])
+    else:
+        MCS.set_var_params()
+
+    MCS.run()
+    print(MCS)
+    graph.draw(MCS.result.get_data(), no_bins=100, title="Distribution from Monte Carlo Simulation.", x_label='Impact', y_label="count", label='case '+str(case), color=COLOUR_PALETTES[COLOUR_ORDER_LIST[case]][1], unitize=True)
 
 graph.show()

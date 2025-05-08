@@ -2,6 +2,7 @@ from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.sensitivity_analysis import SensitivityAnalysis
 from utilities.units.common_units import KILOGRAM, WATT_HOUR, KILO
 
 
@@ -15,11 +16,11 @@ __version__ = "0.1.0"
 
 project = Project()
 
-concrete_yard = Location.from_str("98126, Seattle")
+concrete_yard = Location.from_str("98126, seattle")
 project.set_location(concrete_yard)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
 concrete_model = project.add_model("concrete_01")
@@ -38,13 +39,20 @@ plasticizers_superplasticizers = concrete_model.add_product(name="Plasticizers a
 set_accelerators = concrete_model.add_product(name="Set accelerators", stage="A1", qty=0.369, unit=KILOGRAM, impacts_from="Set accelerators_[EFCA]")
 
 electricity = concrete_model.add_electricity(name="Electricity", stage="A3", qty=4.72, unit=KILO * WATT_HOUR)
-# TODO: Add transportation processes
 
 print(concrete_model)
 print(project)
-print(electricity)
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
 print(hotspot_analysis)
+
+# uncertainty
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(portland_cement,  'qty', 
+                                                                 impact_cat='GWP', 
+                                                                 range=(367.410*.9, 367.410*1.1))
+
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(natural_coarse_aggregate,  'qty', 
+                                                                 impact_cat='GWP', 
+                                                                 range=(900.381*.9, 900.381*1.1))

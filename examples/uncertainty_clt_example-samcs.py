@@ -1,10 +1,17 @@
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.uncertainty.hotspots import HotSpotAnalysis
+from lca_modules.uncertainty.datasets import DataDistribution
+from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
+from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+from plotters.plots.histogram import Histogram
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO
-from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
+
+from math import exp
+from scipy import stats
+from numpy import linspace, sqrt, log
+import time
 
 
 __author__ = ["POD/LCA Team"]
@@ -21,7 +28,7 @@ factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
@@ -45,9 +52,34 @@ PUR2_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation
 PUR2_by_truck.set_transported_product(dummy_PUR_2)
 
 print(CLT_model)
-print(project)
 
-# Hotspot analysis
-hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
-hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
-print(hotspot_analysis)
+mean_val, sdev_val = 562.750, 0.729
+sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
+mu = log(mean_val) - 0.5 * sigma**2
+
+dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
+data_set = DataDistribution.from_distributions(dist, is_cts=True)
+lumber.set_data_distribution(data_set, 'qty')
+
+MCS = MonteCarloSimulator.from_model(CLT_model)
+MCS.set_iterations(1000)
+start = time.time()
+MCS.run()
+elapsed = time.time() - start
+print("elapsed time", elapsed)
+print(MCS)
+
+graph = Histogram.from_plotter(MatplotlibPlotter)
+graph.draw(MCS.result.get_data(), no_bins=25, title="Distribution from Monte Carlo Simulation.", x_label='qty', y_label="probability density")
+
+MCS.result.set_distribution()
+results_data = MCS.result.get_data()
+x = linspace(min(results_data), max(results_data), 100)
+p = MCS.result.get_distribution().pdf(x)
+
+graph.draw_pdf(x, p, label="fitted distribution")
+graph.show()
+
+# MCS.set_scenario({lumber: 'low'})
+# MCS.run()
+# MCS.plot_hist(bin_size=25)

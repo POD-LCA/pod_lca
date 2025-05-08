@@ -1,11 +1,16 @@
 from lca_modules.location.location import Location
 from lca_modules.material.project_manager import Project
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
-from lca_modules.uncertainty.hotspots import HotSpotAnalysis
-
+from lca_modules.uncertainty.datasets import DataDistribution
+from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
+from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+from plotters.plots.histogram import Histogram
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
 from utilities.units.metric_prefixes import KILO
+
+from math import exp
+from numpy import linspace, sqrt, log
+from scipy import stats
 
 
 __author__ = ["POD/LCA Team"]
@@ -22,7 +27,7 @@ factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
@@ -39,22 +44,35 @@ natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, uni
 lumber_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=302, unit=KILOMETER, impacts_from="Transportation_combination_truck_short-haul_diesel_NW_[USLCI]")
 lumber_by_truck.set_transported_product(lumber)
 
-PUR1_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=2160, unit=KILOMETER, impacts_from="Transportation_combination_truck_diesel_US_[USLCI]")
+PUR1_by_truck = CLT_model.add_transportation_process(name="PUR1 Transportation", stage="A2", transported_distance=2160, unit=KILOMETER, impacts_from="Transportation_combination_truck_diesel_US_[USLCI]")
 PUR1_by_truck.set_transported_product(dummy_PUR_1)
 
-PUR2_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=64800, unit=KILOMETER, impacts_from="Transportation_freight_train_diesel_US_[ecoinvent]")
+PUR2_by_truck = CLT_model.add_transportation_process(name="PUR2 Transportation", stage="A2", transported_distance=64800, unit=KILOMETER, impacts_from="Transportation_freight_train_diesel_US_[ecoinvent]")
 PUR2_by_truck.set_transported_product(dummy_PUR_2)
 
-# Hotspot analysis
-hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
-hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
-print(hotspot_analysis)
+print(CLT_model)
+print(project)
 
-# Data Quality Assessment
-data_quality_assessment = DataQualityAnalysis.from_model(CLT_model)
-print(electricity.get_pedigree_score())
-electricity.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 1,'temporal correlation': 4,'geographical correlation': 1,'technological representativeness': 3})
-lumber.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 2, 'temporal correlation': 2, 'geographical correlation': 2, 'technological representativeness': 4})
-lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, 'completeness': 3, 'temporal correlation': 4, 'geographical correlation': 3, 'technological representativeness': 3})
-DQS, nDQS = data_quality_assessment.calculate_model_DQS('GWP')
-data_quality_assessment.print_results()
+mean_val, sdev_val = 562.750, 1.5
+sigma = sqrt(log(1 + (sdev_val**2 / mean_val**2)))
+mu = log(mean_val) - 0.5 * sigma**2
+
+dist = stats.lognorm(s=sigma, loc=0, scale=exp(mu))
+
+data_set = DataDistribution.from_distributions(dist, is_cts=True)
+lumber.set_data_distribution(data_set, 'qty')
+
+MCS = MonteCarloSimulator.from_model(CLT_model, no_iter=10000, impact_cat='GWP')
+MCS.run()
+print(MCS)
+
+graph = Histogram.from_plotter(MatplotlibPlotter)
+graph.draw(MCS.result.get_data(), no_bins=50, title="Distribution from Monte Carlo Simulation.", x_label='Impact', y_label="probability density", unitize=True)
+
+MCS.result.set_distribution()
+results_data = MCS.result.get_data()
+x = linspace(min(results_data), max(results_data), 100)
+p = MCS.result.get_distribution().pdf(x)
+graph.draw_pdf(x, p, label="fitted distribution")
+
+graph.show()
