@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 
 import os
 import json
-import compas_eplus
 import subprocess
 import shutil
 import pickle
@@ -17,64 +16,63 @@ from ast import literal_eval
 
 from math import sin
 
-from compas_eplus.building.construction import Construction
+# from compas_eplus.building.construction import Construction
 
-from compas_eplus.building.material import Material
-from compas_eplus.building.material import MaterialNoMass
-from compas_eplus.building.material import WindowMaterialGas
-from compas_eplus.building.material import WindowMaterialGlazing
-from compas_eplus.building.material import WindowMaterialGlazingSimple
+# from compas_eplus.building.material import Material
+# from compas_eplus.building.material import MaterialNoMass
+# from compas_eplus.building.material import WindowMaterialGas
+# from compas_eplus.building.material import WindowMaterialGlazing
+# from compas_eplus.building.material import WindowMaterialGlazingSimple
 
-from compas_eplus.building.shading import Shading
+# from compas_eplus.building.shading import Shading
 
-from compas_eplus.building.window import Window
+# from compas_eplus.building.window import Window
 
-from compas_eplus.building.zone import Zone
-from compas_eplus.building.zone import ZoneSurfaces
+# from compas_eplus.building.zone import Zone
+# from compas_eplus.building.zone import ZoneSurfaces
 
-from compas_eplus.building.schedule import Schedule
-from compas_eplus.building.light import Light
-from compas_eplus.building.light import DaylightingReferencePoint
-from compas_eplus.building.light import DaylightingControls
-from compas_eplus.building.people import People
-from compas_eplus.building.electric_eq import ElectricEquipment
-from compas_eplus.building.zone_control_thermostat import ZoneControlThermostat
-from compas_eplus.building.setpoint import DualSetpoint
-from compas_eplus.building.ideal_air_load import IdealAirLoad
-from compas_eplus.building.infiltration import Infiltration
-from compas_eplus.building.equipment import EquipmentList
-from compas_eplus.building.equipment import EquipmentConnection
-from compas_eplus.building.zone_list import ZoneList
-from compas_eplus.building.node_list import NodeList
-from compas_eplus.building.outdoor_air import OutdoorAir
-from compas_eplus.building.space import Space
-from compas_eplus.building.space import SpaceList
+# from compas_eplus.building.schedule import Schedule
+# from compas_eplus.building.light import Light
+# from compas_eplus.building.light import DaylightingReferencePoint
+# from compas_eplus.building.light import DaylightingControls
+# from compas_eplus.building.people import People
+# from compas_eplus.building.electric_eq import ElectricEquipment
+# from compas_eplus.building.zone_control_thermostat import ZoneControlThermostat
+# from compas_eplus.building.setpoint import DualSetpoint
+# from compas_eplus.building.ideal_air_load import IdealAirLoad
+# from compas_eplus.building.infiltration import Infiltration
+# from compas_eplus.building.equipment import EquipmentList
+# from compas_eplus.building.equipment import EquipmentConnection
+# from compas_eplus.building.zone_list import ZoneList
+# from compas_eplus.building.node_list import NodeList
+# from compas_eplus.building.outdoor_air import OutdoorAir
+# from compas_eplus.building.space import Space
+# from compas_eplus.building.space import SpaceList
 
-from compas_eplus.read_write import write_idf_from_building
-from compas_eplus.read_write import read_results_file
-from compas_eplus.read_write import read_error_file
-from compas_eplus.read_write import get_idf_data
+# from compas_eplus.read_write import write_idf_from_building
+# from compas_eplus.read_write import read_results_file
+# from compas_eplus.read_write import read_error_file
+# from compas_eplus.read_write import get_idf_data
 
-from compas_eplus.utilities import make_box_from_quad
+# from compas_eplus.utilities import make_box_from_quad
 
-from compas.geometry import subtract_vectors
-from compas.geometry import cross_vectors
-from compas.geometry import intersection_line_line_xy
-from compas.geometry import add_vectors
-from compas.geometry import normalize_vector
-from compas.geometry import scale_vector
-from compas.geometry import midpoint_point_point
+# from compas.geometry import subtract_vectors
+# from compas.geometry import cross_vectors
+# from compas.geometry import intersection_line_line_xy
+# from compas.geometry import add_vectors
+# from compas.geometry import normalize_vector
+# from compas.geometry import scale_vector
+# from compas.geometry import midpoint_point_point
 
-from compas.utilities import geometric_key
-
-from compas.datastructures import Mesh
+from pod_lca.utilities import geometric_key
+from pod_lca.utilities import Mesh
 
 
 #TODO: update to/from JSON eventually, or give a OBJ pickle option
 
 
 
-class Building(object):
+class OperationalBuilding(object):
     """
     Base building datastructure for building energy and thermal analysis.
 
@@ -637,12 +635,13 @@ class Building(object):
         zk =  len(self.zones)
         self.zones[zk] = zone
         mesh = self.zones[zk].surfaces
-        for fk in mesh.faces():
+        for fk in mesh.faces:
             cpt =mesh.face_centroid(fk)
             gk = geometric_key(cpt)
-            out_cond = mesh.face_attribute(fk, 'outside_boundary_condition')
-            srft = mesh.face_attribute(fk, 'surface_type')
-            fn = mesh.face_attribute(fk, 'name')
+            out_cond = mesh.get_face_attribute(fk, 'outside_boundary_condition')
+            print(out_cond)
+            srft = mesh.get_face_attribute(fk, 'surface_type')
+            fn = mesh.get_face_attribute(fk, 'name')
             
             if out_cond == None or out_cond == 'Surface':
                 out_cond = 'Surface'

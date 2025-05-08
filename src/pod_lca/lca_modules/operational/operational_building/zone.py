@@ -7,8 +7,10 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 import json
-from compas.datastructures import Mesh
+from pod_lca.utilities import Mesh
 
+
+Figure out how to add the default face attributes below, whenever the faces are made. 
 
 
 class Zone(object):
@@ -168,13 +170,15 @@ class ZoneSurfaces(Mesh):
         representing surface constructions, and boundary conditions. 
 
         """
-        super(Mesh, self).__init__()
-        self.default_face_attributes.update({'name': None,
-                                             'construction':None,
-                                             'surface_type': None,
-                                             'outside_boundary_condition': None,
-                                             'outside_boundary_condition_object': None,
-                                             })
+        super().__init__()
+        for fk in self.faces:
+            print
+            self.face_attributes[fk]['name'] = None
+            self.face_attributes[fk]['construction'] = None
+            self.face_attributes[fk]['surface_type'] = None
+            self.face_attributes[fk]['outside_boundary_condition'] = None
+            self.face_attributes[fk]['outside_boundary_condition_object'] = None
+
     
     def __str__(self):
         return 'compas_energyplus Zone Surfaces - {}'.format(self.name)
@@ -193,16 +197,18 @@ class ZoneSurfaces(Mesh):
         
     #     """
 
-        self.face_attribute(0, 'name', '{}_floor'.format(zname))
-        self.face_attribute(0, 'surface_type', 'Floor')
+        self.set_face_attribute(0, 'name', '{}_floor'.format(zname))
+        self.set_face_attribute(0, 'surface_type', 'Floor')
 
-        self.face_attribute(1, 'name', '{}_ceiling'.format(zname))
-        self.face_attribute(1, 'surface_type', 'Roof')
+        self.set_face_attribute(1, 'name', '{}_ceiling'.format(zname))
+        self.set_face_attribute(1, 'surface_type', 'Roof')
 
         for i in range(2, self.number_of_faces()):
-            self.face_attribute(i, 'name', '{}_wall_{}'.format(zname, i))
-            self.face_attribute(i, 'surface_type', 'Wall')
+            self.set_face_attribute(i, 'name', '{}_wall_{}'.format(zname, i))
+            self.set_face_attribute(i, 'surface_type', 'Wall')
 
 
 if __name__ == '__main__':
-    pass
+    for i in range(50): print('')
+    zs = ZoneSurfaces()
+    print(zs.face_attributes)

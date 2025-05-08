@@ -1,19 +1,26 @@
 for i in range(50): print('')
 
 import os
-import compas_eplus
+import pod_lca
 
-from compas.datastructures import Mesh
+from pod_lca.utilities import Mesh
 
-from compas_eplus.building import Building
-from compas_eplus.building import Zone
-from compas_eplus.building import Window
-from compas_eplus.building import Shading
+from pod_lca.lca_modules.operational import OperationalBuilding
+from pod_lca.lca_modules.operational import Zone
+from pod_lca.lca_modules.operational import Window
+from pod_lca.lca_modules.operational import Shading
 
-from compas_eplus.read_write import get_idf_data
+from pod_lca.lca_modules.operational.read_write import get_idf_data
 
-from compas_eplus.viewers import BuildingViewer
-from compas_eplus.viewers import ResultsViewer
+from pod_lca.lca_modules.operational.viewers import BuildingViewer
+from pod_lca.lca_modules.operational.viewers import ResultsViewer
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
 
 # making a mesh for the zone - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -44,10 +51,10 @@ mesh = Mesh.from_vertices_and_faces(vertices, faces)
 
 # making a building - - - - - - - - - - - - - - - - - - - - - - - - - - - -- - 
 
-path = compas_eplus.TEMP
-wea = compas_eplus.SEATTLE
+path = pod_lca.TEMP
+wea = pod_lca.SEATTLE
 
-b = Building(path, wea)
+b = OperationalBuilding(path, wea)
 
 # adding zone from mesh to building - - - -  - - - - - - - - - - - - - - - - - -
 

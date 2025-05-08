@@ -10,7 +10,7 @@ import plotly
 import plotly.graph_objects as go
 import plotly.express as px
 
-from compas.datastructures import Mesh
+from pod_lca.utilities import Mesh
 
 
 class BuildingViewer(object):

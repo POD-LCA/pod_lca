@@ -8,14 +8,14 @@ __version__ = "0.1.0"
 
 import json
 
-from compas.geometry import subtract_vectors
-from compas.geometry import scale_vector
-from compas.geometry import add_vectors
-from compas.geometry import normalize_vector
-from compas.geometry import distance_point_point
-from compas.geometry import centroid_points
-from compas.geometry import is_point_on_plane
-from compas.geometry import area_polygon
+# from compas.geometry import subtract_vectors
+# from compas.geometry import scale_vector
+# from compas.geometry import add_vectors
+# from compas.geometry import normalize_vector
+# from compas.geometry import distance_point_point
+# from compas.geometry import centroid_points
+# from compas.geometry import is_point_on_plane
+# from compas.geometry import area_polygon
 
 class Window(object):
     """
