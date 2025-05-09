@@ -6,7 +6,7 @@ This folder contains example files for the POD|LCA Python framework.
 
 The following file naming convention is used:
 
-> \<pod_lca module\>_<example descriptor>
+> \<pod_lca module\>_\<example descriptor\>\.\<file extension\>
 
 ## Examples record
 
