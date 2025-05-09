@@ -5,6 +5,8 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.utilities.geometry import centroid
+from pod_lca.utilities.geometry import normal_polygon
+from pod_lca.utilities.geometry import area_polygon
 
 class Mesh(object):
     def __init__(self):
@@ -17,7 +19,9 @@ class Mesh(object):
     def from_vertices_and_faces(cls, vertices, faces):
         mesh = cls()
         mesh.vertices = {i: {'x': v[0], 'y': v[1], 'z':v[2]} for i, v in enumerate(vertices)}
-        mesh.faces = {i: v for i, v in enumerate(faces)}
+        # mesh.faces = {i: v for i, v in enumerate(faces)}
+        for face in faces:
+            mesh.add_face(face)
         return mesh
 
     @classmethod
@@ -40,6 +44,12 @@ class Mesh(object):
         self.faces                      = data.get('faces') or {}
         self.default_face_attributes    = data.get('default_face_attributes') or {}
 
+    def add_face(self, face):
+        key = self.number_of_faces()
+        self.faces[key] = face
+        for attr in self.default_face_attributes:
+            self.face_attributes[key] = {attr: self.default_face_attributes[attr]}
+
     def set_face_attribute(self, key, attr, value):
         self.face_attributes[key] = {attr: value}
 
@@ -61,7 +71,17 @@ class Mesh(object):
         points = [self.vertex_xyz(vk) for vk in self.face_vertices(key)]
         return centroid(points)
 
+    def face_normal(self, key, unitized=True):
+        return normal_polygon(self.face_coordinates(key), unitized=unitized)
 
+    def face_coordinates(self, key):
+        return [self.vertex_xyz(vk) for vk in self.faces[key]]
+
+    def face_area(self, key):
+        return area_polygon(self.face_coordinates(key))
+
+    def face_keys(self):
+        return self.faces.keys()
 
 if __name__ == '__main__':
     

@@ -16,56 +16,51 @@ from ast import literal_eval
 
 from math import sin
 
-# from compas_eplus.building.construction import Construction
+from pod_lca.lca_modules.operational.operational_building.construction import Construction
+from pod_lca.lca_modules.operational.operational_building.material import Material
+from pod_lca.lca_modules.operational.operational_building.material import MaterialNoMass
+from pod_lca.lca_modules.operational.operational_building.material import WindowMaterialGas
+from pod_lca.lca_modules.operational.operational_building.material import WindowMaterialGlazing
+from pod_lca.lca_modules.operational.operational_building.material import WindowMaterialGlazingSimple
+from pod_lca.lca_modules.operational.operational_building.shading import Shading
+from pod_lca.lca_modules.operational.operational_building.window import Window
+from pod_lca.lca_modules.operational.operational_building.zone import Zone
+from pod_lca.lca_modules.operational.operational_building.zone import ZoneSurfaces
+from pod_lca.lca_modules.operational.operational_building.schedule import Schedule
+from pod_lca.lca_modules.operational.operational_building.light import Light
+from pod_lca.lca_modules.operational.operational_building.light import DaylightingReferencePoint
+from pod_lca.lca_modules.operational.operational_building.light import DaylightingControls
+from pod_lca.lca_modules.operational.operational_building.people import People
+from pod_lca.lca_modules.operational.operational_building.electric_eq import ElectricEquipment
+from pod_lca.lca_modules.operational.operational_building.zone_control_thermostat import ZoneControlThermostat
+from pod_lca.lca_modules.operational.operational_building.setpoint import DualSetpoint
+from pod_lca.lca_modules.operational.operational_building.ideal_air_load import IdealAirLoad
+from pod_lca.lca_modules.operational.operational_building.infiltration import Infiltration
+from pod_lca.lca_modules.operational.operational_building.equipment import EquipmentList
+from pod_lca.lca_modules.operational.operational_building.equipment import EquipmentConnection
+from pod_lca.lca_modules.operational.operational_building.zone_list import ZoneList
+from pod_lca.lca_modules.operational.operational_building.node_list import NodeList
+from pod_lca.lca_modules.operational.operational_building.outdoor_air import OutdoorAir
+from pod_lca.lca_modules.operational.operational_building.space import Space
+from pod_lca.lca_modules.operational.operational_building.space import SpaceList
 
-# from compas_eplus.building.material import Material
-# from compas_eplus.building.material import MaterialNoMass
-# from compas_eplus.building.material import WindowMaterialGas
-# from compas_eplus.building.material import WindowMaterialGlazing
-# from compas_eplus.building.material import WindowMaterialGlazingSimple
-
-# from compas_eplus.building.shading import Shading
-
-# from compas_eplus.building.window import Window
-
-# from compas_eplus.building.zone import Zone
-# from compas_eplus.building.zone import ZoneSurfaces
-
-# from compas_eplus.building.schedule import Schedule
-# from compas_eplus.building.light import Light
-# from compas_eplus.building.light import DaylightingReferencePoint
-# from compas_eplus.building.light import DaylightingControls
-# from compas_eplus.building.people import People
-# from compas_eplus.building.electric_eq import ElectricEquipment
-# from compas_eplus.building.zone_control_thermostat import ZoneControlThermostat
-# from compas_eplus.building.setpoint import DualSetpoint
-# from compas_eplus.building.ideal_air_load import IdealAirLoad
-# from compas_eplus.building.infiltration import Infiltration
-# from compas_eplus.building.equipment import EquipmentList
-# from compas_eplus.building.equipment import EquipmentConnection
-# from compas_eplus.building.zone_list import ZoneList
-# from compas_eplus.building.node_list import NodeList
-# from compas_eplus.building.outdoor_air import OutdoorAir
-# from compas_eplus.building.space import Space
-# from compas_eplus.building.space import SpaceList
-
-# from compas_eplus.read_write import write_idf_from_building
-# from compas_eplus.read_write import read_results_file
-# from compas_eplus.read_write import read_error_file
-# from compas_eplus.read_write import get_idf_data
+from pod_lca.lca_modules.operational.read_write import write_idf_from_building
+from pod_lca.lca_modules.operational.read_write import read_results_file
+from pod_lca.lca_modules.operational.read_write import read_error_file
+from pod_lca.lca_modules.operational.read_write import get_idf_data
 
 # from compas_eplus.utilities import make_box_from_quad
 
-# from compas.geometry import subtract_vectors
-# from compas.geometry import cross_vectors
-# from compas.geometry import intersection_line_line_xy
-# from compas.geometry import add_vectors
-# from compas.geometry import normalize_vector
-# from compas.geometry import scale_vector
-# from compas.geometry import midpoint_point_point
+from pod_lca.utilities.geometry import subtract_vectors
+from pod_lca.utilities.geometry import cross_vectors
+# from pod_lca.utilities.geometry import intersection_line_line_xy
+from pod_lca.utilities.geometry import add_vectors
+from pod_lca.utilities.geometry import normalize_vector
+from pod_lca.utilities.geometry import scale_vector
+# from pod_lca.utilities.geometry import midpoint_point_point
+from pod_lca.utilities.geometry import geometric_key
 
-from pod_lca.utilities import geometric_key
-from pod_lca.utilities import Mesh
+from pod_lca.utilities.mesh import Mesh
 
 
 #TODO: update to/from JSON eventually, or give a OBJ pickle option
@@ -639,7 +634,6 @@ class OperationalBuilding(object):
             cpt =mesh.face_centroid(fk)
             gk = geometric_key(cpt)
             out_cond = mesh.get_face_attribute(fk, 'outside_boundary_condition')
-            print(out_cond)
             srft = mesh.get_face_attribute(fk, 'surface_type')
             fn = mesh.get_face_attribute(fk, 'name')
             
@@ -649,14 +643,14 @@ class OperationalBuilding(object):
                     
                     zk_ = self.srf_cpt_dict[gk]['zone']
                     fk_ = self.srf_cpt_dict[gk]['surface']
-                    fn_ = self.zones[zk_].surfaces.face_attribute(fk_, 'name')
-                    mesh.face_attribute(fk, 'outside_boundary_condition', out_cond)
-                    self.zones[zk_].surfaces.face_attribute(fk_,'outside_boundary_condition', out_cond)  
+                    fn_ = self.zones[zk_].surfaces.get_face_attribute(fk_, 'name')
+                    mesh.set_face_attribute(fk, 'outside_boundary_condition', out_cond)
+                    self.zones[zk_].set_surfaces.face_attribute(fk_,'outside_boundary_condition', out_cond)  
 
                     mesh.face_attribute(fk, 'outside_boundary_condition_object', fn_)
-                    self.zones[zk_].surfaces.face_attribute(fk_,'outside_boundary_condition_object', fn)
+                    self.zones[zk_].set_surfaces.face_attribute(fk_,'outside_boundary_condition_object', fn)
                 else:
-                    mesh.face_attribute(fk, 'outside_boundary_condition', out_dict[srft])
+                    mesh.set_face_attribute(fk, 'outside_boundary_condition', out_dict[srft])
                     self.srf_cpt_dict[gk] = {'zone': zk, 'surface': fk}
     
     def add_window(self, window):
@@ -1137,12 +1131,12 @@ class OperationalBuilding(object):
         """
         for zk in self.zones:
             mesh = self.zones[zk].surfaces
-            sks = mesh.faces()
+            sks = mesh.face_keys()
             for sk in sks:
-                name = mesh.face_attribute(sk, 'surface_type')
-                # print(name)
-                # print(rules[name])
-                mesh.face_attribute(sk, 'construction', rules[name])
+                name = mesh.get_face_attribute(sk, 'surface_type')
+                print(name)
+                print(rules[name])
+                mesh.set_face_attribute(sk, 'construction', rules[name])
 
         for wk in self.windows:
             self.windows[wk].construction = rules['Window']

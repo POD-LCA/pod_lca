@@ -10,8 +10,6 @@ import json
 from pod_lca.utilities import Mesh
 
 
-Figure out how to add the default face attributes below, whenever the faces are made. 
-
 
 class Zone(object):
     """
@@ -171,14 +169,12 @@ class ZoneSurfaces(Mesh):
 
         """
         super().__init__()
-        for fk in self.faces:
-            print
-            self.face_attributes[fk]['name'] = None
-            self.face_attributes[fk]['construction'] = None
-            self.face_attributes[fk]['surface_type'] = None
-            self.face_attributes[fk]['outside_boundary_condition'] = None
-            self.face_attributes[fk]['outside_boundary_condition_object'] = None
-
+        self.default_face_attributes.update({'name': None,
+                                             'construction':None,
+                                             'surface_type': None,
+                                             'outside_boundary_condition': None,
+                                             'outside_boundary_condition_object': None,
+                                             })
     
     def __str__(self):
         return 'compas_energyplus Zone Surfaces - {}'.format(self.name)
