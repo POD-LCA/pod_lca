@@ -6,7 +6,7 @@ This folder contains data files (CSV and JSON) required by the POD|LCA Python fr
 
 The following file naming convention is used:
 
-> \<pod_lca module\>_\<data source abbrevation\>_\<data descriptor>
+> \<pod lca module name\>\_\<data source abbrevation\>\_\<data descriptor>\.\<file extension\>
 
 ## Data record
 
@@ -50,14 +50,14 @@ The following file naming convention is used:
 | 36 | impacts_flcac_heating-values.csv| impacts |  |  |
 | 37 | impacts_flcac_nonrenewable-fuels-group.csv| impacts |  |  |
 | 38 | impacts_flcac_renewable-fuels-group.csv| impacts |  |  |
-| 39 | electricity_netl_electricity-technologies.csv| electricity |  |  |
-| 40 | electricity_cambium_consumption-local.csv| electricity |  |  |
-| 41 | electricity_cambium_consumption-national.csv| electricity |  |  |
-| 42 | electricity_cambium_consumption-regional.csv| electricity |  |  |
-| 43 | electricity_cambium_regions-map.json| electricity |  |  |
-| 44 | electricity_cambium_technology-headers.json| electricity |  |  |
-| 45 | electricity_cambium_technology-map.json| electricity |  |  |
-| 46 | eol_podlca_default-mixes.csv| end-of-life |  |  |
-| 47 | impacts_uslci_electricity.csv| impacts |  |  |
+| 39 | electricity_netl_electricity-technologies.csv| electricity | list of electricity technologies classification categories used by NETL |  |
+| 40 | electricity_cambium_consumption-local.csv| electricity | electricity consumption predictions for USA, by ReEDS Balancing Areas | https://scenarioviewer.nrel.gov/|
+| 41 | electricity_cambium_consumption-national.csv| electricity | electricity consumption predictions for USA | https://scenarioviewer.nrel.gov/ |
+| 42 | electricity_cambium_consumption-regional.csv| electricity | electricity consumption predictions for USA, by GEA regions | https://scenarioviewer.nrel.gov/ |
+| 43 | electricity_cambium_regions-map.json| electricity | mapping of ReEDS Balancing Areas to GEA regions |  |
+| 44 | electricity_cambium_technology-headers.json| electricity | mapping of electricity technologies from Cambium to the headers in Cambium electricity consumption predictions |  |
+| 45 | electricity_cambium_technology-map.json| electricity | mapping of electricity technologies from Cambium to NETL |  |
+| 46 | eol_podlca_default-mixes.csv| end-of-life | default end-of-life fate mixes for materials |  |
+| 47 | impacts_uslci_electricity.csv| impacts | impact and emission data for electricity | https://www.lcacommons.gov/lca-collaboration/Federal_LCA_Commons/US_electricity_baseline/datasets |
 | 48 | location_cambium_gea-reeds-zip-mapping.csv| location |  |  |
 | 49 | location_doe_ba-zip-mapping.csv| location |  |  |
