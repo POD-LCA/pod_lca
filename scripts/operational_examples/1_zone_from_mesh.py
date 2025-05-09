@@ -92,22 +92,24 @@ data = get_idf_data(filepath)
 b.add_data_from_idf(data)
 
 
-rules = {'Wall': 'Typical Insulated Steel Framed Exterior Wall-R16',
-         'Window': 'Generic Double Pane',
-         'Floor': 'Generic Interior Floor',
-         'Roof': 'Generic Roof'}
+print(b.zones[0].surfaces.face_attributes)
 
-b.assign_constructions_from_rules(rules)
+# rules = {'Wall': 'Typical Insulated Steel Framed Exterior Wall-R16',
+#          'Window': 'Generic Double Pane',
+#          'Floor': 'Generic Interior Floor',
+#          'Roof': 'Generic Roof'}
 
-b.set_zone_systems()
+# b.assign_constructions_from_rules(rules)
+
+# b.set_zone_systems()
 
 # v = BuildingViewer(b)
 # v.show()
 
-b.write_idf()
-b.analyze(exe='C:\EnergyPlusV25-1-0\energyplus.exe')
-b.load_results()
+# b.write_idf()
+# b.analyze(exe='C:\EnergyPlusV25-1-0\energyplus.exe')
+# b.load_results()
 
-v = ResultsViewer(b)
-v.show('total')
+# v = ResultsViewer(b)
+# v.show('total')
 

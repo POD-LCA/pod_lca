@@ -177,7 +177,7 @@ class ZoneSurfaces(Mesh):
                                              })
     
     def __str__(self):
-        return 'compas_energyplus Zone Surfaces - {}'.format(self.name)
+        return 'pod_lca Zone Surfaces - {}'.format(self.name)
 
     def assign_zone_surface_attributes(self, zname):
     #     """
@@ -206,5 +206,30 @@ class ZoneSurfaces(Mesh):
 
 if __name__ == '__main__':
     for i in range(50): print('')
-    zs = ZoneSurfaces()
-    print(zs.face_attributes)
+    for i in range(50): print('')
+
+    w = 10
+    l = 20
+    h = 10
+
+    v0 = [0, 0, 0]
+    v1 = [w, 0, 0]
+    v2 = [w, l, 0]
+    v3 = [0 ,l, 0]
+    v4 = [0, 0, h]
+    v5 = [w, 0, h]
+    v6 = [w, l, h]
+    v7 = [0 ,l, h]
+
+    f0 = [0, 3, 2, 1]
+    f1 = [4, 5, 6, 7]
+    f2 = [0, 1, 5, 4]
+    f3 = [1, 2, 6, 5]
+    f4 = [2, 3, 7, 6]
+    f5 = [0, 4, 7, 3]
+
+    vertices = [v0, v1, v2, v3, v4, v5, v6, v7]
+    faces = [f0, f1, f2, f3, f4, f5]
+
+    mesh = ZoneSurfaces.from_vertices_and_faces(vertices, faces)
+    print(mesh.face_attributes[0])

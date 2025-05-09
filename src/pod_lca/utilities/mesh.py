@@ -47,8 +47,9 @@ class Mesh(object):
     def add_face(self, face):
         key = self.number_of_faces()
         self.faces[key] = face
+        self.face_attributes[key] = {}
         for attr in self.default_face_attributes:
-            self.face_attributes[key] = {attr: self.default_face_attributes[attr]}
+            self.face_attributes[key][attr] =  self.default_face_attributes[attr]
 
     def set_face_attribute(self, key, attr, value):
         self.face_attributes[key] = {attr: value}
