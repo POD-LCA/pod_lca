@@ -1134,8 +1134,6 @@ class OperationalBuilding(object):
             sks = mesh.face_keys()
             for sk in sks:
                 name = mesh.get_face_attribute(sk, 'surface_type')
-                print(name)
-                print(rules[name])
                 mesh.set_face_attribute(sk, 'construction', rules[name])
 
         for wk in self.windows:

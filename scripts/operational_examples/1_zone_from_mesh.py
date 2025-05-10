@@ -91,25 +91,24 @@ filepath = os.path.join(pod_lca.DATA, 'operation_dataset', 'idf_examples', file)
 data = get_idf_data(filepath)
 b.add_data_from_idf(data)
 
+# print(b.zones[0].surfaces.face_attributes[0])
 
-print(b.zones[0].surfaces.face_attributes)
+rules = {'Wall': 'Typical Insulated Steel Framed Exterior Wall-R16',
+         'Window': 'Generic Double Pane',
+         'Floor': 'Generic Interior Floor',
+         'Roof': 'Generic Roof'}
 
-# rules = {'Wall': 'Typical Insulated Steel Framed Exterior Wall-R16',
-#          'Window': 'Generic Double Pane',
-#          'Floor': 'Generic Interior Floor',
-#          'Roof': 'Generic Roof'}
+b.assign_constructions_from_rules(rules)
 
-# b.assign_constructions_from_rules(rules)
+b.set_zone_systems()
 
-# b.set_zone_systems()
+v = BuildingViewer(b)
+v.show()
 
-# v = BuildingViewer(b)
-# v.show()
+b.write_idf()
+b.analyze(exe='C:\EnergyPlusV25-1-0\energyplus.exe')
+b.load_results()
 
-# b.write_idf()
-# b.analyze(exe='C:\EnergyPlusV25-1-0\energyplus.exe')
-# b.load_results()
-
-# v = ResultsViewer(b)
-# v.show('total')
+v = ResultsViewer(b)
+v.show('total')
 

@@ -52,7 +52,10 @@ class Mesh(object):
             self.face_attributes[key][attr] =  self.default_face_attributes[attr]
 
     def set_face_attribute(self, key, attr, value):
-        self.face_attributes[key] = {attr: value}
+        if key in self.face_attributes:
+            self.face_attributes[key].update({attr: value})
+        else:
+            self.face_attributes[key] = {attr: value}
 
     def get_face_attribute(self, key, attr):
         if attr in self.face_attributes[key]:
