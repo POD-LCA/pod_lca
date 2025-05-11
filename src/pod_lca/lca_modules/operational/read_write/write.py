@@ -430,7 +430,7 @@ def write_zone_surfaces(building, zone):
     None
     """
     fh = open(building.idf_filepath, 'a')
-    for fk in zone.surfaces.faces():
+    for fk in zone.surfaces.faces:
         write_building_surface(building, zone, fk)
     fh.close()
 
@@ -451,10 +451,10 @@ def write_building_surface(building, zone, fk):
     -------
     None
     """
-    st = zone.surfaces.face_attribute(fk, 'surface_type')
-    ct = zone.surfaces.face_attribute(fk, 'construction')
-    ob = zone.surfaces.face_attribute(fk, 'outside_boundary_condition')
-    obo = zone.surfaces.face_attribute(fk, 'outside_boundary_condition_object')
+    st  = zone.surfaces.get_face_attribute(fk, 'surface_type')
+    ct  = zone.surfaces.get_face_attribute(fk, 'construction')
+    ob  = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition')
+    obo = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition_object')
 
     if ob =='Adiabatic' or ob == 'Surface' or ob  == 'Ground':
         se = 'NoSun'
@@ -468,7 +468,7 @@ def write_building_surface(building, zone, fk):
     
     num_vert = len(zone.surfaces.face_vertices(fk))
 
-    sname = zone.surfaces.face_attribute(fk, 'name')
+    sname = zone.surfaces.get_face_attribute(fk, 'name')
 
     fh = open(building.idf_filepath, 'a')
     fh.write('\n')
@@ -487,7 +487,7 @@ def write_building_surface(building, zone, fk):
     fh.write('  {},                       !- Number of Vertices\n'.format(num_vert))
 
     for i, vk in enumerate(zone.surfaces.face_vertices(fk)):
-        x, y, z = zone.surfaces.vertex_coordinates(vk)
+        x, y, z = zone.surfaces.vertex_xyz(vk)
         if i == num_vert - 1:
             sep = ';'
         else:
@@ -610,7 +610,7 @@ def write_shading(building, shading):
     fh.write('\n')
     sname = shading.name
     mesh = shading.mesh
-    for fk in mesh.faces():
+    for fk in mesh.faces:
         fh.write('Shading:Building:Detailed,\n')
         fh.write('  Shading {}-{}, !- Detached Shading\n'.format(sname, fk))
         fh.write('  , !- Shadowing Transmittance & Schedule\n')
@@ -621,7 +621,7 @@ def write_shading(building, shading):
                 sep = ';'
             else:
                 sep = ','
-            x, y, z = mesh.vertex_coordinates(vk)
+            x, y, z = mesh.vertex_xyz(vk)
             fh.write('  {}, {}, {}{} ! Vertex {}\n'.format(x, y, z, sep, i))
         fh.write('\n')
     fh.write('\n')

@@ -9,6 +9,7 @@ from pod_lca.utilities.geometry import normal_polygon
 from pod_lca.utilities.geometry import area_polygon
 
 class Mesh(object):
+
     def __init__(self):
         self.vertices   = {}
         self.faces      = {}
@@ -43,6 +44,25 @@ class Mesh(object):
         self.vertices                   = data.get('vertices') or {}
         self.faces                      = data.get('faces') or {}
         self.default_face_attributes    = data.get('default_face_attributes') or {}
+
+    def edges(self):
+        edges = []
+        for fk in self.faces:
+            vks = self.face_vertices(fk)
+            for i in range(len(vks)):
+                if i < len(vks) - 1:
+                    edge = vks[i], vks[i + 1]
+                else:
+                    edge = vks[i], vks[0]
+                if edge not in edges and (edge[1], edge[0] not in edges):
+                    edges.append(edge)
+        return edges
+
+
+    def to_vertices_and_faces(self):
+        vertices = [self.vertex_xyz(vk) for vk in sorted(self.vertices.keys())]
+        faces = [self.face_vertices(fk) for fk in sorted(self.faces.keys())]
+        return vertices, faces
 
     def add_face(self, face):
         key = self.number_of_faces()

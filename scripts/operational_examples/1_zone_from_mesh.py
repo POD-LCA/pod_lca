@@ -106,7 +106,7 @@ v = BuildingViewer(b)
 v.show()
 
 b.write_idf()
-b.analyze(exe='C:\EnergyPlusV25-1-0\energyplus.exe')
+b.analyze(exe='/Applications/EnergyPlus-25-1-0/energyplus')
 b.load_results()
 
 v = ResultsViewer(b)
