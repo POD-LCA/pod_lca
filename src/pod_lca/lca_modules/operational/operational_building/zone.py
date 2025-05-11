@@ -49,8 +49,8 @@ class Zone(object):
 
     @property
     def area(self):
-        for fk in self.surfaces.faces():
-            st = self.surfaces.face_attribute(fk, 'surface_type')
+        for fk in self.surfaces.faces:
+            st = self.surfaces.get_face_attribute(fk, 'surface_type')
             if st == 'Floor':
                 return self.surfaces.face_area(fk)
 

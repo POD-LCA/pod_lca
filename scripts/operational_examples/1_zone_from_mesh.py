@@ -86,7 +86,7 @@ b.add_shading(sh)
 # adding all other data from IDF file - - - - - - - - - - - - - - - - - - - - 
 
 file = 'doe_midrise_apt.idf'
-filepath = os.path.join(pod_lca.DATA, 'operation_dataset', 'idf_examples', file)
+filepath = os.path.join(pod_lca.DATA, 'operational_dataset', 'idf_examples', file)
 
 data = get_idf_data(filepath)
 b.add_data_from_idf(data)
