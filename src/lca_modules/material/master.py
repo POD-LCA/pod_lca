@@ -28,6 +28,10 @@ class Master:
         Life cycle stage corresponding to the product/process.
     impacts : Impacts Obj.
         Impacts object corresponding to the product/process.
+    emissions : EmissionsInventory Obj.
+        Emissions Inventory object corresponding to the product/process.
+    carbon_storage : Carbon Storage Obj
+        Carbon storage corresponding to the product/process.
     impact_database_entry : str
         Flow name corresponding to the database entry which gives the unit impact of the product.
     qty : float

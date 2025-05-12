@@ -30,8 +30,8 @@ The following file naming convention is used:
 | 16 | transportation_podlca_sensitive-material.csv | transportation |  |  |
 | 17 | transportation_podlca_us-coast.json | transportation |  |  |
 | 18 | impacts_podlca_eol-impacts.csv | impacts |  |  |
-| 19 | electricity_netl_national-consumption-impacts-by-technology.csv | electricity |  |  |
-| 20 | electricity_netl_regional-consumption-impacts-by-technology.csv | electricity |  |  |
+| 19 | electricity_netl_national-consumption-impacts-by-technology.csv | electricity | impacts of electricity generation by technology type - US average |  |
+| 20 | electricity_netl_regional-consumption-impacts-by-technology.csv | electricity | impacts of electricity generation by technology type and FERC region |  |
 | 21 | impacts_flcac_categorized-data.csv | impacts |  |  |
 | 22 | impacts_flcac_categories.json | impacts |  |  |
 | 23 | impacts_nist_weighting-factors.json | impacts |  |  |
@@ -59,5 +59,5 @@ The following file naming convention is used:
 | 45 | electricity_cambium_technology-map.json| electricity | mapping of electricity technologies from Cambium to NETL |  |
 | 46 | eol_podlca_default-mixes.csv| end-of-life | default end-of-life fate mixes for materials |  |
 | 47 | impacts_uslci_electricity.csv| impacts | impact and emission data for electricity | https://www.lcacommons.gov/lca-collaboration/Federal_LCA_Commons/US_electricity_baseline/datasets |
-| 48 | location_cambium_gea-reeds-zip-mapping.csv| location |  |  |
-| 49 | location_doe_ba-zip-mapping.csv| location |  |  |
+| 48 | location_cambium_gea-reeds-zip-mapping.csv| location | mapping of US zip codes to GEA regions and ReEDS balancing areas | https://catalog.data.gov/dataset/long-run-marginal-co2-emission-rates-workbooks-for-2020-standard-scenarios-cambium-data-24bbb/resource/12cee2ee-a20e-415c-9de8-4d6ac8ea8064 |
+| 49 | location_doe_ba-zip-mapping.csv| location | mapping of US zip codes to balancing area | https://www.energy.gov/femp/balancing-authority-lookup-tool |

@@ -225,7 +225,6 @@ class Fuel(Product):
         super().__init__()
         self.is_material = True
         self.is_energy = True
-        self.electricity_supplier = None
 
     def __str__(self):
         return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -233,7 +232,25 @@ class Fuel(Product):
 class Electricity(Fuel):
     """
     Electricity product object, inheriting from the Fuel object.
+
+    Attributes
+    ----------
+    electricity_supplier: ElectricitySupply Obj
+        Electricity supplier
+    year : int
+        Year of electricity consumption
+    spatial_resolution: str
+        Spatial resolution considered for electricity data: 'National'. 'Regional', 'Local'
+    scenario: str
+        Cambium scenario for prediction of electricity technology futures.
     """
+    def __init__(self):
+        super().__init__()
+        self.electricity_supplier = None
+        self.year = None
+        self.spatial_resolution = None
+        self.scenario = None
+
     @classmethod
     def new(cls, id, name, model, stage, qty, unit):
         
@@ -322,6 +339,8 @@ class Electricity(Fuel):
         self.get_supplier().set_spatial_resolution(spatial_resolution)
         self.update_inventory_records()
 
+        self.spatial_resolution = spatial_resolution
+
         return self
     
     def set_scenario(self, scenario):
@@ -335,6 +354,7 @@ class Electricity(Fuel):
         if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
             self.get_supplier().set_scenario(scenario)
             self.update_inventory_records()
+            self.scenario = scenario
         else:
             raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")
 
@@ -361,6 +381,28 @@ class Electricity(Fuel):
         """
 
         return self.year
+    
+    def get_spatial_resolution(self):
+        """ Get the spatial resolution of the electricity supply.
+        
+            Parameters
+            ----------
+            str
+                Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
+        """
+
+        return self.spatial_resolution
+
+    def get_scenario(self):
+        """ Get scenario name. This will what used with cambium data.
+        
+            Parameters
+            ----------
+            str
+                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        """
+
+        return self.scenario
 
     def get_data_distribution(self, attr):
         """ Get data_distribution object corresponding to the given attribute.
