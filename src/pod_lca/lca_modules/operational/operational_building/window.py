@@ -8,14 +8,14 @@ __version__ = "0.1.0"
 
 import json
 
-from compas.geometry import subtract_vectors
-from compas.geometry import scale_vector
-from compas.geometry import add_vectors
-from compas.geometry import normalize_vector
-from compas.geometry import distance_point_point
-from compas.geometry import centroid_points
-from compas.geometry import is_point_on_plane
-from compas.geometry import area_polygon
+from pod_lca.utilities.geometry import centroid
+from pod_lca.utilities.geometry import subtract_vectors
+from pod_lca.utilities.geometry import scale_vector
+from pod_lca.utilities.geometry import add_vectors
+from pod_lca.utilities.geometry import normalize_vector
+from pod_lca.utilities.geometry import distance_point_point
+from pod_lca.utilities.geometry import is_point_on_plane
+from pod_lca.utilities.geometry import area_polygon
 
 class Window(object):
     """
@@ -64,7 +64,7 @@ class Window(object):
         if wwr > .95:
             wwr = .95
         nks = zone.surfaces.face_vertices(wall_key)
-        pts = [zone.surfaces.vertex_coordinates(nk) for nk in nks]
+        pts = [zone.surfaces.vertex_xyz(nk) for nk in nks]
         cpt = zone.surfaces.face_centroid(wall_key)
         a = zone.surfaces.face_area(wall_key) * wwr
         lx = distance_point_point(pts[0], pts[1]) - .1
@@ -171,9 +171,9 @@ class Window(object):
 
     @classmethod
     def from_points_and_zone(cls, points, zone):
-        cpt = centroid_points(points)
+        cpt = centroid(points)
         mesh = zone.surfaces
-        for fk in mesh.faces():
+        for fk in mesh.faces:
             # pl = [mesh.vertex_coordinates(vk) for vk in mesh.face_vertices(fk)]
             normal = mesh.face_normal(fk)
             fcpt = mesh.face_centroid(fk)

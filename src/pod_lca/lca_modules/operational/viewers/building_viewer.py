@@ -10,7 +10,7 @@ import plotly
 import plotly.graph_objects as go
 import plotly.express as px
 
-from compas.datastructures import Mesh
+from pod_lca.utilities import Mesh
 
 
 class BuildingViewer(object):
@@ -157,7 +157,7 @@ class BuildingViewer(object):
         """
         mesh = self.building.shadings[key].mesh
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_coordinates(u), mesh.vertex_coordinates(v)] for u,v in mesh.edges()]
+        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
         line_marker = dict(color='rgb(0,0,0)', width=1.5)
         lines = []
         x, y, z = [], [],  []
@@ -234,7 +234,7 @@ class BuildingViewer(object):
         faces = [[0, 1, 2, 3]]
         mesh = Mesh.from_vertices_and_faces(vertices, faces)
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_coordinates(u), mesh.vertex_coordinates(v)] for u,v in mesh.edges()]
+        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
         line_marker = dict(color='rgb(0,0,0)', width=1.5)
         lines = []
         x, y, z = [], [],  []
@@ -269,7 +269,7 @@ class BuildingViewer(object):
 
         text = []
         intensity = []
-        for fk in mesh.faces():
+        for fk in mesh.faces:
             ck = self.building.windows[key].construction
             if ck in self.building.construction_key_dict:
                 con = self.building.constructions[self.building.construction_key_dict[ck]]
@@ -330,7 +330,7 @@ class BuildingViewer(object):
         """
         mesh = self.building.zones[key].surfaces
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_coordinates(u), mesh.vertex_coordinates(v)] for u,v in mesh.edges()]
+        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
         line_marker = dict(color='rgb(0,0,0)', width=1.5)
         lines = []
         x, y, z = [], [],  []
@@ -368,9 +368,9 @@ class BuildingViewer(object):
         attrs = ['name', 'surface_type', 'outside_boundary_condition', 'construction']
         text = []
         intensity = []
-        for fk in mesh.faces():
-            faceatts = mesh.face_attributes(fk)
-            ck = mesh.face_attribute(fk, 'construction')
+        for fk in mesh.faces:
+            faceatts = mesh.face_attributes[fk]
+            ck = mesh.get_face_attribute(fk, 'construction')
             if ck:
                 con = self.building.constructions[self.building.construction_key_dict[ck]]
                 layers = [con.layers[lk]['name'] for lk in con.layers] 
@@ -417,10 +417,10 @@ class BuildingViewer(object):
         y = []
         z = []
         for zk in self.building.zones:
-            vs = list(self.building.zones[zk].surfaces.vertices())
-            x_ = [self.building.zones[zk].surfaces.vertex_coordinates(v)[0] for v in vs]
-            y_ = [self.building.zones[zk].surfaces.vertex_coordinates(v)[1] for v in vs]
-            z_ = [self.building.zones[zk].surfaces.vertex_coordinates(v)[2] for v in vs]
+            vs = list(self.building.zones[zk].surfaces.vertices)
+            x_ = [self.building.zones[zk].surfaces.vertex_xyz(v)[0] for v in vs]
+            y_ = [self.building.zones[zk].surfaces.vertex_xyz(v)[1] for v in vs]
+            z_ = [self.building.zones[zk].surfaces.vertex_xyz(v)[2] for v in vs]
             x.extend(x_)
             y.extend(y_)
             z.extend(z_)

@@ -8,12 +8,12 @@ __version__ = "0.1.0"
 
 
 import json
-from compas.datastructures import Mesh
-from compas.geometry import subtract_vectors
-from compas.geometry import cross_vectors
-from compas.geometry import scale_vector
-from compas.geometry import normalize_vector
-from compas.geometry import add_vectors
+from pod_lca.utilities.mesh import Mesh
+from pod_lca.utilities.geometry import subtract_vectors
+from pod_lca.utilities.geometry import cross_vectors
+from pod_lca.utilities.geometry import scale_vector
+from pod_lca.utilities.geometry import normalize_vector
+from pod_lca.utilities.geometry import add_vectors
 
 
 class Shading(object):

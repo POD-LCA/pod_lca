@@ -4,4 +4,5 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from .building import *
+from .mesh import *
+from .geometry import *

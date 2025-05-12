@@ -54,7 +54,7 @@ setup(
     keywords=[],
     project_urls={},
     packages=["pod_lca"],
-    package_dir={"": "../"},
+    package_dir={"": "src"},
     package_data={},
     data_files=[],
     include_package_data=True,
