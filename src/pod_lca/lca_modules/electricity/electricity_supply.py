@@ -1,0 +1,552 @@
+
+from lca_modules.electricity.electricity_producer import ElectricityProducer
+from lca_modules.electricity.processs_cambium import CambiumData
+from lca_modules.impacts.impacts import Impacts
+from lca_modules.impacts.emission_inventories import Emissions
+from lca_modules.impacts.electricity_impacts_database import ElectricityImpactsDatabase
+from utilities.data_imports.data_importer import Data_Importer
+from utilities.logger import log
+from utilities.settings import config
+from utilities.units.units_map import UNITS_MAP
+
+from numpy import round as np_round
+
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
+
+class ElectricitySupply:
+    """ A class to represent an electricity supply authority.
+    
+        Attributes
+        ----------
+        name : str
+            The name of the electricity supply authority.
+        spatial_resolution : str
+            Spatial resolution fo the electricity supply.
+                'National': US average
+                'Regional': FERC region
+                'Local': Balancing Authority.
+        location : Location Obj.
+            The location of the electricity supply authority.
+        consumption_mix : dict
+            The consumption mix of the electricity supply authority.
+        year : int
+            The year of the electricity supply authority.
+        impacts : Impacts Obj.
+            The impacts of the electricity supply authority.
+
+        NOTES
+        -----
+        1. Location, regionality, and year determines the consumption mix.
+        2. location and regionality determines the impact by technology.
+    """
+
+    def __init__(self):
+        self.name = None
+        self.spatial_resolution = config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
+        self.location = None
+        self.consumption_mix = None
+        self.electricity_producers = {}
+        self.year = None
+        self.scenario = config['setup']['electricity']['DEFAULT_SCENARIO']
+        self.impacts = Impacts.from_parent(self)
+        self.emissions = Emissions.from_parent(self)
+        self.declared_unit = UNITS_MAP[config['setup']['electricity']['DEFAULT_DECLARED_UNIT']]
+
+        self.impact_database_national = None
+        self.impact_database_regional = None
+
+    def __str__(self):
+        str = "="*75 + "\n" + f"Electricity Supply: {self.get_name()}\n" + "="*75 + "\n"
+        str += f"Year: {self.get_year()}\n"
+        str += f"Spatial resolution: {self.get_spatial_resolution()}\n"
+
+        str += "-"*75 + "\n" + "Tecnology Mix:\n" 
+        str += f"Scenario (cambium): {self.get_scenario()}\n"
+        
+        if self.get_spatial_resolution() == 'National':
+            if self.get_location() is None:
+                str += f"Country: {config['setup']['electricity']['DEFAULT_COUNTRY']}\n"
+            else:
+                str += f"Country: {self.get_location().get_country()}\n"
+        elif self.get_spatial_resolution() == 'Regional':
+            if self.get_location().get_cambium_gea_region() is not None:
+                str += f"GEA Region: {self.get_location().get_cambium_gea_region()[0]}\n"
+            else:
+                str += f"GEA Region: {self.get_location().get_cambium_gea_region()}\n"
+        elif self.get_spatial_resolution() == 'Local':
+            if self.get_location().get_reeds_balancing_area() is not None:
+                str += f"ReEDS BA: {self.get_location().get_reeds_balancing_area()[0]}\n"
+            else:
+                str += f"ReEDS BA: {self.get_location().get_reeds_balancing_area()}\n"
+
+        str += "-"*75 + "\n" + "Impacts per technology:\n" 
+        if self.get_spatial_resolution() == 'National':
+            if self.get_location() is None:
+                str += f"Country: {config['setup']['electricity']['DEFAULT_COUNTRY']}\n"
+            else:
+                str += f"Country: {self.get_location().get_country()}\n"
+        elif self.get_spatial_resolution() == 'Regional':
+            if self.get_location().get_ferc_region() is not None:
+                str += f"FERC Region: {self.get_location().get_ferc_region()[0]}\n"
+            else:
+                str += f"FERC Region: {self.get_location().get_ferc_region()}\n"
+        elif self.get_spatial_resolution() == 'Local':
+            if self.get_location().get_ferc_region() is not None:
+                str += f"FERC Region: {self.get_location().get_ferc_region()[0]}\n"
+            else:
+                str += f"FERC Region: {self.get_location().get_ferc_region()}\n"
+
+        return str
+
+    # ========================
+    # Constructors
+    # ========================
+    @classmethod
+    def from_location(cls, location, year=None):
+        """ Create a new ElectricitySupplyAuthority object with the given location 
+        
+            Parameters
+            ----------
+            location : Location Obj.
+                The location of the electricity supply authority.
+            year : int
+                Year of electricity consumption.
+        
+            Returns
+            -------
+            ElectricitySupplyAuthority
+                A new ElectricitySupplyAuthority object with the given location.
+        """
+
+        elec_supp_authority = cls()
+
+        elec_supp_authority.set_location(location)
+        if year is None:
+            elec_supp_authority.set_year(config['setup']['electricity']['DEFAULT_YEAR'])
+        else: 
+            elec_supp_authority.set_year(year)
+
+        if location is None:
+            elec_supp_authority.set_spatial_resolution(config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION'])
+        else:
+            elec_supp_authority.set_spatial_resolution(location.get_regionality())
+        
+        return elec_supp_authority
+    
+    # ================================
+    # Setters
+    # ================================
+    def set_name(self, name):
+        """ Set the name of the electricity supply authority.
+        
+            Parameters
+            ----------
+            name : str
+                The name of the electricity supply authority.
+        """
+
+        self.name = name
+
+        return self
+    
+    def set_spatial_resolution(self, regional_resolution):
+        """ Set the set_regional resolution of the electricity supply authority.
+        
+            Parameters
+            ----------
+            regional_resolution : str
+                Regional resolution fo the electricity supply.
+                    'National': US average
+                    'Regional': FERC region
+                    'Local': Balancing Authority.
+        """
+        location_resolution = self.get_location().get_regionality() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
+        if ((location_resolution == 'National') and (regional_resolution == 'Local' or regional_resolution == 'Regional')) or ((location_resolution == 'Regional') and (regional_resolution == 'Local')):
+            log("Spatial resolution of electricity supply cannot be finer than that of location.", "Warn")
+            return self
+
+        self.spatial_resolution = regional_resolution
+
+        # Update consumption mix
+        temporal_data = CambiumData.from_regional_resolution(regional_resolution, self.get_location())
+        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
+        self.set_consumption_mix(energy_mix, update_inventories=False)
+
+        # Update impacts by technology
+        self.set_electricity_producers(regional_resolution)
+
+        self.update_inventory_records()
+
+        temporal_data.delete_data()
+
+        return self
+    
+    def set_location(self, location):
+        """ Set the location of the electricity supply authority.
+        
+            Parameters
+            ----------
+            location : Location Obj.
+                The location of the electricity supply authority.
+        """
+
+        self.location = location
+
+        return self
+    
+    def set_consumption_mix(self, consumption_mix, update_inventories=True):
+        """ Set the consumption mix of the electricity supply authority.
+        
+            Parameters
+            ----------
+            consumption_mix : dict
+                The consumption mix of the electricity supply authority.
+            update_inventories : bool
+                Update inventories of impacts and emissions if true.
+        """
+        self.consumption_mix = consumption_mix
+
+        if update_inventories:
+            self.update_inventory_records()
+
+        return self
+    
+    def set_year(self, year):
+        """ Set the year of the electricity supply authority.
+            Changing the year changes the consumption mix based on Cambium data.
+        
+            Parameters
+            ----------
+            year : int
+                The year of the electricity supply authority.
+        """
+
+        self.year = year
+
+        temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
+
+        energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
+        self.set_consumption_mix(energy_mix, update_inventories=False)
+        self.set_electricity_producers(self.get_spatial_resolution())
+
+        self.update_inventory_records()
+
+        temporal_data.delete_data()
+
+        return self
+    
+    def set_unit(self, unit):
+        """ Set the declared unit of impacts.
+        
+            Parameters
+            ----------
+            unit : Unit Obj.
+                Declared unit.
+        """
+
+        self.declared_unit = unit
+
+        return self
+    
+    def set_scenario(self, scenario):
+        """ Set scenario name. This will be used with cambium data.
+        
+            Parameters
+            ----------
+            scenario : str
+                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        """
+
+        temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
+
+        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), scenario)
+        self.set_consumption_mix(energy_mix, update_inventories=False)
+        self.set_electricity_producers(self.get_spatial_resolution())
+
+        self.update_inventory_records()
+
+        temporal_data.delete_data()
+        self.scenario = scenario
+
+        return self    
+
+    def set_electricity_producers(self, regional_resolution):
+        """ Set the electricity producers for a given technology mix and corresponding impact data.
+        
+            Parameters
+            ----------
+            regional_resolution : str
+                Regional resolution fo the electricity supply.
+                    'National': US average
+                    'Regional': FERC region
+                    'Local': Balancing Authority.        
+        """
+
+        # Get regionalised impact data
+        if (regional_resolution== 'National'):
+            if self.impact_database_national is None:
+                self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", regional_resolution)
+                self.impact_database_national.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
+            impact_database = self.impact_database_national
+            region = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
+          
+        elif (regional_resolution == 'Regional') or (regional_resolution== 'Local'):
+            if self.impact_database_regional is None:
+                self.impact_database_regional = ElectricityImpactsDatabase.new("Electricity - Regional", regional_resolution)
+                self.impact_database_regional.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_REGIONAL_DATA'])
+            impact_database = self.impact_database_regional
+
+            if self.get_location().get_ferc_region() is None:
+                self.get_location().set_ferc_region()
+
+            region = self.get_location().get_ferc_region()
+            if len(region) == 0:
+                raise KeyError(f"FERC region not found for location: {self.get_location().get_zip()}.")
+            elif len(region) == 1:
+                region = region[0]
+            else:
+                region =self.pick_region(region, impact_database)
+            
+        else:
+            raise ValueError("Regional resolution of electricity supply is not recognized.")
+
+        # set producesrs and inventories
+        for key in self.get_consumption_mix().keys():
+            if key in self.electricity_producers:
+                producer = self.electricity_producers[key]
+            else:
+                producer = ElectricityProducer.from_technology_year(key, self.get_year())
+                self.electricity_producers[key] = producer
+
+            data_dict = impact_database.get_data_entry(region, key)
+             
+            impact_obj = Impacts.from_parent(producer)
+            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
+            impact_obj.update_qty(impact_data_dict)
+            producer.set_impacts(impact_obj)
+
+            emissions_obj = Emissions.from_parent(producer)
+            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'].keys()}
+            emissions_obj.update_qty(emissions_data_dict)
+            producer.set_emissions(emissions_obj)
+
+        return self
+    
+    # ================================
+    # Getters
+    # ================================
+    def get_name(self):
+        """ Get the name of the electricity supply authority.
+        
+            Returns
+            -------
+            str
+                The name of the electricity supply authority.
+        """
+
+        return self.name
+    
+    def get_spatial_resolution(self):
+        """ Get the set regional resolution of the electricity supply authority.
+        
+            Returns
+            -------
+            str
+                The set_regional_resolution of the electricity supply.
+        """
+
+        return self.spatial_resolution
+
+    def get_location(self):
+        """ Get the location of the electricity supply authority.
+        
+            Returns
+            -------
+            Location Obj.
+                The location of the electricity supply authority.
+        """
+
+        return self.location
+    
+    def get_consumption_mix(self):
+        """ Get the consumption mix of the electricity supply authority.
+        
+            Returns
+            -------
+            dict
+                The consumption mix of the electricity supply authority.
+        """
+
+        return self.consumption_mix
+    
+    def get_year(self):
+        """ Get the year of the electricity supply authority.
+        
+            Returns
+            -------
+            int
+                The year of the electricity supply authority.
+        """
+
+        return self.year
+    
+    def get_impacts(self):
+        """ Get the impacts of the electricity supply authority.
+        
+            Returns
+            -------
+            Impacts Obj.
+                The impacts of the electricity supply authority.
+        """
+
+        return self.impacts
+    
+    def get_emissions(self):
+        """ Get the emissions of the electricity supply authority.
+        
+            Returns
+            -------
+            Emissions Obj.
+                The emissions of the electricity supply authority.
+        """
+
+        return self.emissions
+    
+    def get_scenario(self):
+        """ Get the elecetricity consumption scenario."""
+
+        return self.scenario
+    
+    def get_unit(self):
+        """ Get the declared unit of the impacts.
+        
+            Returns
+            -------
+            Unit Obj.
+                Declared unit
+        """
+
+        return self.declared_unit
+    
+    # ================================
+    # Methods
+    # ================================
+    def pick_region(self, regions, impact_database, impact_category=config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']):
+        """ Pick the region with the highest impact from a list of regions.
+        
+            Parameters
+            ----------
+            regions : list of str
+                List of regions to choose from.
+            impact_data : DataFrame
+                DataFrame containing impact data for the regions.
+            impact_category : str
+                The impact category to consider for the selection.
+            
+            Returns
+            -------
+            str
+                The region with the highest impact.
+        """
+
+        consumption_mix = self.get_consumption_mix()
+        
+        impact_dict = {}
+        for region in regions:
+            impact_dict[region] = 0
+            for technology, percentage in consumption_mix.items():
+                impact = impact_database.get_data_entry(region, technology)[impact_category]
+                impact_dict[region] += impact * percentage
+
+        region_selected = max(impact_dict, key=impact_dict.get)
+
+        log(f"Of {regions} considered, {region_selected} is picked as the most conservative, considering {impact_category} impact.", "Info")
+
+        return region_selected
+
+
+    def update_inventory_records(self):
+        """ Set the impacts of the electricity supply authority.
+        """
+
+        impact_obj = self.get_impacts()
+        impact_obj.clear_qty()
+
+        emision_object = self.get_emissions()
+        emision_object.clear_qty()
+
+        for technology, percentage in self.get_consumption_mix().items():
+            if technology in self.electricity_producers:
+                impact_obj += self.electricity_producers[technology].get_impacts() * percentage
+                emision_object += self.electricity_producers[technology].get_emissions() * percentage
+
+        return self
+    
+    def get_impact_distribution(self):
+        """ Get the distribution of the electricity supply authority.
+        
+            Returns
+            -------
+            list of Impact Obj.
+                Impact objects representing the distribution of the impacts.
+            list of int
+                List of weights for each impact object in the distribution.
+        """
+
+        year = self.get_year()
+
+        # impacts by technology
+        if self.impact_database_national is None:
+            self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", regional_resolution)
+            self.impact_database_national.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
+        impact_database = self.impact_database_national
+        country_code = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
+        
+        # set regionality
+        regions_map = Data_Importer.json_to_dict(config['file_paths']['electricity']['CAMBIUM_REGIONS_MAP'])
+        if self.get_spatial_resolution() == 'National':
+            regional_resolution = 'Regional'
+            regions_list = list(regions_map[country_code].keys())
+
+        elif self.get_spatial_resolution() == 'Regional':
+            regional_resolution = 'Local' 
+            region = self.get_location().get_cambium_gea_region() if self.get_location() is not None else None
+            regions_list = regions_map[country_code][region]
+
+        elif self.get_spatial_resolution() == 'Local':
+            log("Data on impact data variability available at local level.", "info")
+            return [self.get_impacts()]
+        else:
+            raise ValueError("Regional resolution of electricity supply is not recognized.")
+
+        # create data points
+        impact_distribution = []
+        electricity_loads = [] 
+        for region in regions_list:
+            temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
+            energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
+            electricity_load = temporal_data.get_load(year, self.get_scenario())
+            temporal_data.delete_data()
+
+            impact_obj = Impacts.from_parent(self)
+            for technology, percentage in energy_mix.items():
+                data_dict = impact_database.get_data_entry(country_code, technology)
+                impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
+                tmp_impact_obj = Impacts.from_dict(impact_data_dict) 
+                impact_obj += tmp_impact_obj * percentage
+
+            impact_distribution.append(impact_obj)
+            electricity_loads.append(electricity_load)
+
+        weights = np_round((electricity_loads / sum(electricity_loads)) * 100)
+
+        return impact_distribution, weights   
+
+if __name__ == '__main__':
+    pass

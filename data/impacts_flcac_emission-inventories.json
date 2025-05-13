@@ -1,0 +1,15 @@
+{
+    "CO2": {
+        "@id":"4a838ff0-c4bd-489a-ba23-b5d4e7a3f8f3",
+        "name":"CO2",
+        "refUnit":"kg"
+    }, 
+    "CH4": {
+        "@id":"e8089ff2-02fd-4ac4-a6d9-c1eb02fd683f",
+        "name":"CH4",
+        "refUnit":"kg"},
+    "N2O": {
+        "@id":"9ddc09c6-f21b-453a-a44a-11ec32002876",
+        "name":"N2O",
+        "refUnit":"kg"}  
+}

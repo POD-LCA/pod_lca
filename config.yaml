@@ -1,0 +1,74 @@
+setup:
+  INVENTORY_ITEMS:
+    IMPACT_CATEGORIES:
+      GWP: kg CO2 eq # IPCC AR5, 2013, 100-yr, w/o climate carbon feedback
+      GWP_fossil: kg CO2 eq
+      GWP_biogenic: kg CO2 eq
+      GWP_luluc: kg CO2 eq
+      AP: kg SO2 eq
+      EP: kg N eq
+      ODP: kg CFC-11 eq
+      POCP: kg O3 eq
+    EMISSION_INVENTORIES:
+      CO2: kg
+      CH4: kg
+      N2O: kg
+    CARBON_STORAGE:
+      Biogenic C: kg
+      Mineral C: kg
+  electricity:
+    DEFAULT_REIGIONAL_RESOLUTION: National # Options: National, Regional, Local
+    DEFAULT_COUNTRY: USA
+    DEFAULT_COUNTRY_CODE: US
+    DEFAULT_YEAR: 2025
+    DEFAULT_SCENARIO: MidCase
+    DEFAULT_DECLARED_UNIT: MWh
+    CAMBIUM_DATA_YEARS: [2025, 2030, 2035, 2040, 2045, 2050]
+  eol:
+    EOL_DEFAULT_KEY: DEFAULT
+    WASTE_PROCESS_STAGES:
+      Recycle: [C3, D] 
+      Compost: [C3, D]
+      Incinerate: C4
+      Landfill: C4
+  impacts:
+    IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391'
+    PRIMARY_IMPACT_CATEGORY: GWP
+  uncertainty:
+    DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
+    MAX_DQS: 5
+    MIN_DQS: 1
+  utilities:
+    LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
+
+file_paths:
+  electricity:
+    CAMBIUM_NATIONAL_DATA: data\\electricity_cambium_consumption-national.csv
+    CAMBIUM_REGIONAL_DATA: data\\electricity_cambium_consumption-regional.csv
+    CAMBIUM_LOCAL_DATA: data\\electricity_cambium_consumption-local.csv
+    CAMBIUM_HEADER_MAP: data\\electricity_cambium_technology-headers.json
+    CAMBIUM_TECHNOLOGY_MAP: data\\electricity_cambium_technology-map.json
+    CAMBIUM_REGIONS_MAP: data\\electricity_cambium_regions-map.json
+    ELECTRICITY_IMPACT_NATIONAL_DATA: data\\electricity_netl_national-consumption-impacts-by-technology.csv
+    ELECTRICITY_IMPACT_REGIONAL_DATA: data\\electricity_netl_regional-consumption-impacts-by-technology.csv
+    ELECTRICITY_TECHNOLOGIES: data\\electricity_netl_electricity-technologies.csv
+  eol:
+    EOL_DEFAULT_MIXES: data\eol_podlca_default-mixes.csv
+  impacts:
+    IMPACT_NORMALIZATION_FACTORS: data\\impacts_clf_normalization-factors.csv
+    IMPACT_WEIGHTING_FACTOR_EPA: data\\impacts_epa_weighting-factors.csv
+    IMPACT_WEIGHTING_FACTOR_NIST: data\\impacts_nist_weighting-factors.csv
+Keys and Credentials:
+  material screening tool: cG9kbGNhbWF0bWFzdGVy
+
+Preferences:
+  COLOUR_PALETTES:
+    blue: ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3']
+    orange: ['#7F1C00', '#9C2B00', '#ED7D31', '#F4B183', '#FCE4D6']
+    grey: ['#3F3F3F', '#595959', '#A5A5A5', '#D9D9D9', '#F2F2F2']
+    yellow: ['#7F6000', '#9F7700', '#FFC000', '#FFD966', '#FFF2CC']
+    green: ['#1F4D1F', '#2D6A2D', '#70AD47', '#A9D08E', '#E2EFDA']
+    red: ['#7F0000', '#9C0000', '#C00000', '#E26B6B', '#F4CCCC']
+    purple: ['#3F1C59', '#5B2A8F', '#7030A0', '#B4A7D6', '#EAD1DC']
+  COLOUR_ORDER_LIST: [blue, green, grey, yellow, orange, red, purple]
+  COLOUR_BASE: 2   

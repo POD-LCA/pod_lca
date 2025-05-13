@@ -7,9 +7,8 @@
 # calculator
 
 from lca_modules.material.project_manager import Project
-from lca_modules.material.calculator import Calculator
 from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.material.model import Model, Product, Process, transportationProcess, Emission, Waste, Fuel
+from lca_modules.material.model import Model, Product, transportationProcess, Emission, Waste, Fuel
 
 from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR
 from utilities.units.metric_prefixes import KILO
@@ -65,7 +64,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
 
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(database_path)
         project.set_database(custom_impact_database)
 
@@ -80,7 +79,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project.new()
 
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(database_path)
         project.set_database(custom_impact_database)
 
@@ -95,7 +94,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
 
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                             {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
@@ -114,7 +113,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
                                             {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
@@ -140,7 +139,7 @@ class TestBuilder(unittest.TestCase):
 
         project = Project()
 
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
@@ -163,7 +162,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
@@ -190,7 +189,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
@@ -212,7 +211,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 
@@ -238,7 +237,7 @@ class TestBuilder(unittest.TestCase):
         file_path = r'save_files/test.pkl'
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database")
+        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
         custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
         project.set_database(custom_impact_database)
 

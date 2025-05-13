@@ -1,4 +1,4 @@
-﻿mode_name,eff,feul,Units,GWP,AP,EP,ODP,SFP
+﻿mode_name,eff,feul,Units,GWP,AP,EP,ODP,POCP
 Truck,1,Regular,tkm,4.21E-04,7.30E-05,0.09552,2.46E-10,0.01454
 Truck,2,Regular,tkm,8.86E-04,1.15E-04,0.10802,3.06E-10,0.031
 Truck,3,Regular,tkm,9.57E-04,1.23E-04,0.12367,3.75E-10,0.03348
