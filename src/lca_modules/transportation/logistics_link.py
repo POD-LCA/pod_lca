@@ -53,9 +53,9 @@ class Link:
         """
         self.project = project  
         self.material = material
-        self.qty = qty
+        self.qty = 0.0
         self.travel_dist = travel_dist
-        self.return_trip_factor = return_trip_factor
+        self.return_trip_factor = None
         self.dist_unit = dist_unit
         self.efficiency = efficiency
         self.efficiency_dms = efficiency_dms
@@ -64,6 +64,72 @@ class Link:
         self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
         self.link_distances = {"Domestic": 0, "Foreign": 0}
         self.impact = None
+
+
+
+    # ================================
+    # Setters
+    # ================================
+
+    def set_qty (self, qty:float):
+        """ Set the quantity of the transportation link.
+
+            Parameters
+            ----------
+            qty : float
+                quantity of the transportation link.
+        """
+
+        self.qty = qty
+
+    def set_material (self, material:str):
+        """ Set the material name of the transportation link.
+
+            Parameters
+            ----------
+            material : str
+                material name of the transportation link.
+        """
+
+        self.material = material
+    
+    def set_travel_dist (self, travel_dist):
+        """ Set the travel distance of the transportation link.
+
+            Parameters
+            ----------
+            travel_dist : float or str
+                travel distance of the transportation link.
+        """
+
+        self.travel_dist = travel_dist
+
+    def set_return_trip_factor (self, return_trip_factor:float):
+        """ Set the return trip factor of the transportation link.
+
+            Parameters
+            ----------
+            return_trip_factor : float
+                return trip factor of the transportation link.
+        """
+
+        self.return_trip_factor = return_trip_factor
+
+    def set_mode (self, mode:str):
+        """ Set the transportation mode of the transportation link.
+
+            Parameters
+            ----------
+            mode : str
+                transportation mode of the transportation link.
+        """
+
+
+
+        self.mode = mode
+        
+
+
 
 
     def compute_impact(self):
