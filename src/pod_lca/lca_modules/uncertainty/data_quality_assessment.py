@@ -1,5 +1,3 @@
-from utilities.settings import config
-from utilities.logger import log
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -7,10 +5,12 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ...utilities import config
+from ...utilities import log
+
 
 class PedigreeScore:
-    """
-    PedigreeScore object contains background data for data quality scores.
+    """ PedigreeScore object contains background data for data quality scores.
 
     Attributes
     ----------
@@ -34,6 +34,7 @@ class PedigreeScore:
                 string += f"\n{attr}: {getattr(self, attr)}"
 
         return string
+    
     # ================================
     # Constructors
     # ================================
@@ -41,12 +42,11 @@ class PedigreeScore:
     def from_parent(cls, parent):
         """ Create pedigree score object from parent. 
         
-            Parameters
-            ----------
-            obj.
-                Parent object.
+        Parameters
+        ----------
+        obj.
+            Parent object.
         """
-        
         pedigree_score = cls()
         pedigree_score.set_parent(parent)
         if parent is not None:
@@ -63,12 +63,11 @@ class PedigreeScore:
     def set_parent(self, obj):
         """ Set parent of the pedigree score.
 
-            Parameters
-            ----------
-            obj : Master Obj.
-                Object to which the pedigree score correspond.
+        Parameters
+        ----------
+        obj : Master Obj.
+            Object to which the pedigree score correspond.
         """ 
-
         self.parent = obj
         
         return self
@@ -76,12 +75,11 @@ class PedigreeScore:
     def set_item_DQS(self):
         """ Calculate and set the Data Quality Score of the pedigree score object.
 
-            Returns
-            -------
-            int
-                Data Quality Score.
+        Returns
+        -------
+        int
+            Data Quality Score.
         """
-
         DQS = 0.0
         ignore_list = ['parent', 'DQS']
         for attr in vars(self):
@@ -95,38 +93,36 @@ class PedigreeScore:
     def get_parent(self):
         """ Get parent of the pedigree score.
 
-            Returns
-            ----------
-            Master Obj.
-                Object to which the pedigree score correspond.
+        Returns
+        ----------
+        Master Obj.
+            Object to which the pedigree score correspond.
         """ 
-       
         return self.parent
 
     def get_item_DQS(self):
         """ Get the Data Quality Score of the object.
         
-            Returns
-            ----------
-            float
-                Data quality score of the object.
+        Returns
+        ----------
+        float
+            Data quality score of the object.
         """
-
         return self.DQS
 
     def update_pedigree_scores(self, *args):
         """ Update the pedigree score.
 
-            Parameters
-            ----------
-            *args : tuple or dict
-                An (indicator, score) pair or a dictionary of indicator-score pairs.
+        Parameters
+        ----------
+        *args : tuple or dict
+            An (indicator, score) pair or a dictionary of indicator-score pairs.
 
-            Raises
-            ------
-            ValueError
-                If the scores are not within the score ranges specified.
-                If the input are not in expected format.
+        Raises
+        ------
+        ValueError
+            If the scores are not within the score ranges specified.
+            If the input are not in expected format.
         """
         max = config['setup']['uncertainty']['MAX_DQS']
         min = config['setup']['uncertainty']['MIN_DQS']
@@ -151,8 +147,7 @@ class PedigreeScore:
     
 
 class DataQualityAnalysis:
-    """
-    DataQualityAnalysis object carries out data quality analysis and stores pedigree data.
+    """ DataQualityAnalysis object carries out data quality analysis and stores pedigree data.
 
     Attributes
     ----------
@@ -163,6 +158,7 @@ class DataQualityAnalysis:
     normalised_DQS : float
         Normalised Data Quality Score of the model
     """
+
     def __init__(self):
         self.model = None
         self.DQS = None
@@ -170,7 +166,6 @@ class DataQualityAnalysis:
         
     @classmethod
     def from_model(cls, model):
-
         data_quality_analysis = cls()
         data_quality_analysis.set_model(model)
         
@@ -183,74 +178,66 @@ class DataQualityAnalysis:
     def set_model(self, model):
         """ Set a model to the Analyser.
         
-            Attributes
-            ----------
-            model : Model Obj.
-                Model on which the Data Quality Analysis is performed.        
-        
+        Attributes
+        ----------
+        model : Model Obj.
+            Model on which the Data Quality Analysis is performed.        
         """
-
         self.model = model
 
     def set_model_DQS(self, DQS):
         """ Set Data Quality Score of the model.
         
-            Parameters
-            ----------
-            DQS : float
-                Data Quality Score.
+        Parameters
+        ----------
+        DQS : float
+            Data Quality Score.
         """
-
         self.DQS = DQS
 
     def set_normalised_DQS(self, nDQS):
         """ Set normalised Data Quality Score of the model.
         
-            Parameters
-            ----------
-            nDQS : float
-                Normalised Data Quality Score.
+        Parameters
+        ----------
+        nDQS : float
+            Normalised Data Quality Score.
         """
-
         self.normalised_DQS = nDQS        
 
     def get_model(self):
         """ Get the model for which the analysis will be run.
         
-            Returns
-            ----------
-            Model Obj.
-                Model on which the Data Quality Analysis is performed.        
-        
+        Returns
+        ----------
+        Model Obj.
+            Model on which the Data Quality Analysis is performed.        
         """
         return self.model
 
     def get_model_DQS(self):
         """ Get Data Quality Score of the model.
         
-            Returns
-            -------
-            float
-                Data Quality Score.
+        Returns
+        -------
+        float
+            Data Quality Score.
         """
-
         return self.DQS
 
     def get_normalised_DQS(self):
         """ Get the normalised Data Quality Score of the model.
         
-            Returns
-            -------
-            float
-                Normalised Data Quality Score.
+        Returns
+        -------
+        float
+            Normalised Data Quality Score.
         """
-
         return self.normalised_DQS
 
     def setPedigreeScores(self):
         """ Set pedigree scores for all products/processes in a model.
         """
-
         for obj in self.model.get_all_items():
             PedigreeScore.from_parent(obj)
         
@@ -272,12 +259,11 @@ class DataQualityAnalysis:
     def calculate_model_DQS(self, impact_cat='GWP'):
         """ Calculate the Data Quality Score.
 
-            Parameters
-            ----------
-            impact_cat : str
-                Impact category considered for weighing individual pedigree scores.
+        Parameters
+        ----------
+        impact_cat : str
+            Impact category considered for weighing individual pedigree scores.
         """
-
         DQS_tmp = 0.0
         impact_sum = 0.0
         for obj in self.model.get_all_items():
@@ -301,11 +287,12 @@ class DataQualityAnalysis:
         return DQS, normalized_DQS
     
     def print_results(self):
-        """ Print results of the hotspot analysis."""
-
+        """ Print results of the hotspot analysis.
+        """
         print("*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50)
         print(f"Data Quality Score: {self.get_model_DQS():.2f}")
         print(f"Normalised Data Quality Score (0-100 scale): {self.get_normalised_DQS():.0f}")
+
 
 if __name__ == '__main__':
     pass

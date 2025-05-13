@@ -1,14 +1,3 @@
-from lca_modules.building.building import Building
-from lca_modules.building.components import BuildingComponent
-from lca_modules.impacts.impacts import Impacts
-from lca_modules.impacts.eol_impacts_database import EOLImpactsDatabase
-from lca_modules.location.location import Location
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.settings import config
-from utilities.units.units_map import UNITS_MAP
-
-
-from tqdm import tqdm
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -16,12 +5,23 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from tqdm import tqdm
+
+from pod_lca.building import Building
+from pod_lca.building import BuildingComponent
+from pod_lca.impacts import EOLImpactsDatabase
+from pod_lca.impacts import Impacts
+from pod_lca.location import Location
+from pod_lca.units import UNITS_MAP
+from pod_lca.utilities import DataImporter
+from pod_lca.utilities import config
+
 impact_data_file_path = r'data/impacts_podlca_eol-impacts.csv'
 test_dict_file_path = r'tests/eol_test_test-cases.json'
 
 test_data = r'tests/eol_test_test-values.csv'
 output_file = r'tests/eol_test_report.csv'
-test_data_dict = Data_Importer.csv_to_dict(test_data, 'test name')
+test_data_dict = DataImporter.csv_to_dict(test_data, 'test name')
 
 # create building
 my_land_plot = Location.from_str("98126, Seattle")
@@ -36,7 +36,7 @@ eol_impact_database.set_data(impact_data_file_path)
 
 test_building.set_eol_database(eol_impact_database)
 
-tests_dict = Data_Importer.json_to_dict(test_dict_file_path)
+tests_dict = DataImporter.json_to_dict(test_dict_file_path)
 impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
 output_dict = {}
 for test_name in tqdm(tests_dict):
@@ -83,4 +83,4 @@ for test_name in tqdm(tests_dict):
    output_dict[test_name]['test status'] = 'PASS' if test_status else 'FAIL'
 
 
-Data_Importer.dict_to_csv(output_dict, output_file) 
+DataImporter.dict_to_csv(output_dict, output_file) 

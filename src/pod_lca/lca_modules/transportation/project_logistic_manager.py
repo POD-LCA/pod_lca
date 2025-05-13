@@ -1,14 +1,15 @@
-from lca_modules.transportation.logistics_link import Link
-from lca_modules.transportation.scenarios import Scenario
-from lca_modules.location.location import Location
-from lca_modules.impacts.impacts import Impacts
-import gc
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
+import gc
+
+from ..impacts import Impacts
+from ..location import Location
+from ..transportation import Link
 
 
 class ProjectLogisticManager:

@@ -1,49 +1,48 @@
 
-from lca_modules.electricity.electricity_producer import ElectricityProducer
-from lca_modules.electricity.processs_cambium import CambiumData
-from lca_modules.impacts.impacts import Impacts
-from lca_modules.impacts.emission_inventories import Emissions
-from lca_modules.impacts.electricity_impacts_database import ElectricityImpactsDatabase
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.logger import log
-from utilities.settings import config
-from utilities.units.units_map import UNITS_MAP
-
-from numpy import round as np_round
-
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import round as np_round
+
+from . import CambiumData
+from . import ElectricityProducer
+from ..impacts import ElectricityImpactsDatabase
+from ..impacts import Emissions
+from ..impacts import Impacts
+from ...units import UNITS_MAP
+from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import log
+
 
 class ElectricitySupply:
     """ A class to represent an electricity supply authority.
     
-        Attributes
-        ----------
-        name : str
-            The name of the electricity supply authority.
-        spatial_resolution : str
-            Spatial resolution fo the electricity supply.
-                'National': US average
-                'Regional': FERC region
-                'Local': Balancing Authority.
-        location : Location Obj.
-            The location of the electricity supply authority.
-        consumption_mix : dict
-            The consumption mix of the electricity supply authority.
-        year : int
-            The year of the electricity supply authority.
-        impacts : Impacts Obj.
-            The impacts of the electricity supply authority.
+    Attributes
+    ----------
+    name : str
+        The name of the electricity supply authority.
+    spatial_resolution : str
+        Spatial resolution fo the electricity supply.
+            'National': US average
+            'Regional': FERC region
+            'Local': Balancing Authority.
+    location : Location Obj.
+        The location of the electricity supply authority.
+    consumption_mix : dict
+        The consumption mix of the electricity supply authority.
+    year : int
+        The year of the electricity supply authority.
+    impacts : Impacts Obj.
+        The impacts of the electricity supply authority.
 
-        NOTES
-        -----
-        1. Location, regionality, and year determines the consumption mix.
-        2. location and regionality determines the impact by technology.
+    Notes
+    -----
+    1. Location, regionality, and year determines the consumption mix.
+    2. location and regionality determines the impact by technology.
     """
 
     def __init__(self):
@@ -111,19 +110,18 @@ class ElectricitySupply:
     def from_location(cls, location, year=None):
         """ Create a new ElectricitySupplyAuthority object with the given location 
         
-            Parameters
-            ----------
-            location : Location Obj.
-                The location of the electricity supply authority.
-            year : int
-                Year of electricity consumption.
-        
-            Returns
-            -------
-            ElectricitySupplyAuthority
-                A new ElectricitySupplyAuthority object with the given location.
+        Parameters
+        ----------
+        location : Location Obj.
+            The location of the electricity supply authority.
+        year : int
+            Year of electricity consumption.
+    
+        Returns
+        -------
+        ElectricitySupplyAuthority
+            A new ElectricitySupplyAuthority object with the given location.
         """
-
         elec_supp_authority = cls()
 
         elec_supp_authority.set_location(location)
@@ -145,12 +143,11 @@ class ElectricitySupply:
     def set_name(self, name):
         """ Set the name of the electricity supply authority.
         
-            Parameters
-            ----------
-            name : str
-                The name of the electricity supply authority.
+        Parameters
+        ----------
+        name : str
+            The name of the electricity supply authority.
         """
-
         self.name = name
 
         return self
@@ -158,13 +155,13 @@ class ElectricitySupply:
     def set_spatial_resolution(self, regional_resolution):
         """ Set the set_regional resolution of the electricity supply authority.
         
-            Parameters
-            ----------
-            regional_resolution : str
-                Regional resolution fo the electricity supply.
-                    'National': US average
-                    'Regional': FERC region
-                    'Local': Balancing Authority.
+        Parameters
+        ----------
+        regional_resolution : str
+            Regional resolution fo the electricity supply.
+                'National': US average
+                'Regional': FERC region
+                'Local': Balancing Authority.
         """
         location_resolution = self.get_location().get_regionality() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
         if ((location_resolution == 'National') and (regional_resolution == 'Local' or regional_resolution == 'Regional')) or ((location_resolution == 'Regional') and (regional_resolution == 'Local')):
@@ -175,7 +172,7 @@ class ElectricitySupply:
 
         # Update consumption mix
         temporal_data = CambiumData.from_regional_resolution(regional_resolution, self.get_location())
-        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
+        energy_mix = temporal_data.get_mix(self.get_year(), DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_inventories=False)
 
         # Update impacts by technology
@@ -190,12 +187,11 @@ class ElectricitySupply:
     def set_location(self, location):
         """ Set the location of the electricity supply authority.
         
-            Parameters
-            ----------
-            location : Location Obj.
-                The location of the electricity supply authority.
+        Parameters
+        ----------
+        location : Location Obj.
+            The location of the electricity supply authority.
         """
-
         self.location = location
 
         return self
@@ -203,12 +199,12 @@ class ElectricitySupply:
     def set_consumption_mix(self, consumption_mix, update_inventories=True):
         """ Set the consumption mix of the electricity supply authority.
         
-            Parameters
-            ----------
-            consumption_mix : dict
-                The consumption mix of the electricity supply authority.
-            update_inventories : bool
-                Update inventories of impacts and emissions if true.
+        Parameters
+        ----------
+        consumption_mix : dict
+            The consumption mix of the electricity supply authority.
+        update_inventories : bool
+            Update inventories of impacts and emissions if true.
         """
         self.consumption_mix = consumption_mix
 
@@ -221,17 +217,16 @@ class ElectricitySupply:
         """ Set the year of the electricity supply authority.
             Changing the year changes the consumption mix based on Cambium data.
         
-            Parameters
-            ----------
-            year : int
-                The year of the electricity supply authority.
+        Parameters
+        ----------
+        year : int
+            The year of the electricity supply authority.
         """
-
         self.year = year
 
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
-        energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
+        energy_mix = temporal_data.get_mix(year, DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_inventories=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
@@ -243,29 +238,27 @@ class ElectricitySupply:
     
     def set_unit(self, unit):
         """ Set the declared unit of impacts.
-        
-            Parameters
-            ----------
-            unit : Unit Obj.
-                Declared unit.
+    
+        Parameters
+        ----------
+        unit : Unit Obj.
+            Declared unit.
         """
-
         self.declared_unit = unit
 
         return self
     
     def set_scenario(self, scenario):
         """ Set scenario name. This will be used with cambium data.
-        
-            Parameters
-            ----------
-            scenario : str
-                Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+    
+        Parameters
+        ----------
+        scenario : str
+            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
         """
-
         temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
 
-        energy_mix = temporal_data.get_mix(self.get_year(), Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), scenario)
+        energy_mix = temporal_data.get_mix(self.get_year(), DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), scenario)
         self.set_consumption_mix(energy_mix, update_inventories=False)
         self.set_electricity_producers(self.get_spatial_resolution())
 
@@ -279,15 +272,14 @@ class ElectricitySupply:
     def set_electricity_producers(self, regional_resolution):
         """ Set the electricity producers for a given technology mix and corresponding impact data.
         
-            Parameters
-            ----------
-            regional_resolution : str
-                Regional resolution fo the electricity supply.
-                    'National': US average
-                    'Regional': FERC region
-                    'Local': Balancing Authority.        
+        Parameters
+        ----------
+        regional_resolution : str
+            Regional resolution fo the electricity supply.
+                'National': US average
+                'Regional': FERC region
+                'Local': Balancing Authority.        
         """
-
         # Get regionalised impact data
         if (regional_resolution== 'National'):
             if self.impact_database_national is None:
@@ -344,94 +336,86 @@ class ElectricitySupply:
     def get_name(self):
         """ Get the name of the electricity supply authority.
         
-            Returns
-            -------
-            str
-                The name of the electricity supply authority.
+        Returns
+        -------
+        str
+            The name of the electricity supply authority.
         """
-
         return self.name
     
     def get_spatial_resolution(self):
         """ Get the set regional resolution of the electricity supply authority.
         
-            Returns
-            -------
-            str
-                The set_regional_resolution of the electricity supply.
+        Returns
+        -------
+        str
+            The set_regional_resolution of the electricity supply.
         """
-
         return self.spatial_resolution
 
     def get_location(self):
         """ Get the location of the electricity supply authority.
         
-            Returns
-            -------
-            Location Obj.
-                The location of the electricity supply authority.
+        Returns
+        -------
+        Location Obj.
+            The location of the electricity supply authority.
         """
-
         return self.location
     
     def get_consumption_mix(self):
         """ Get the consumption mix of the electricity supply authority.
         
-            Returns
-            -------
-            dict
-                The consumption mix of the electricity supply authority.
+        Returns
+        -------
+        dict
+            The consumption mix of the electricity supply authority.
         """
-
         return self.consumption_mix
     
     def get_year(self):
         """ Get the year of the electricity supply authority.
         
-            Returns
-            -------
-            int
-                The year of the electricity supply authority.
+        Returns
+        -------
+        int
+            The year of the electricity supply authority.
         """
-
         return self.year
     
     def get_impacts(self):
         """ Get the impacts of the electricity supply authority.
         
-            Returns
-            -------
-            Impacts Obj.
-                The impacts of the electricity supply authority.
+        Returns
+        -------
+        Impacts Obj.
+            The impacts of the electricity supply authority.
         """
-
         return self.impacts
     
     def get_emissions(self):
         """ Get the emissions of the electricity supply authority.
         
-            Returns
-            -------
-            Emissions Obj.
-                The emissions of the electricity supply authority.
+        Returns
+        -------
+        Emissions Obj.
+            The emissions of the electricity supply authority.
         """
-
         return self.emissions
     
     def get_scenario(self):
-        """ Get the elecetricity consumption scenario."""
-
+        """ Get the elecetricity consumption scenario.
+        """
         return self.scenario
     
     def get_unit(self):
         """ Get the declared unit of the impacts.
         
-            Returns
-            -------
-            Unit Obj.
-                Declared unit
+        Returns
+        -------
+        Unit Obj.
+            Declared unit
         """
-
         return self.declared_unit
     
     # ================================
@@ -440,21 +424,20 @@ class ElectricitySupply:
     def pick_region(self, regions, impact_database, impact_category=config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']):
         """ Pick the region with the highest impact from a list of regions.
         
-            Parameters
-            ----------
-            regions : list of str
-                List of regions to choose from.
-            impact_data : DataFrame
-                DataFrame containing impact data for the regions.
-            impact_category : str
-                The impact category to consider for the selection.
-            
-            Returns
-            -------
-            str
-                The region with the highest impact.
+        Parameters
+        ----------
+        regions : list of str
+            List of regions to choose from.
+        impact_data : DataFrame
+            DataFrame containing impact data for the regions.
+        impact_category : str
+            The impact category to consider for the selection.
+        
+        Returns
+        -------
+        str
+            The region with the highest impact.
         """
-
         consumption_mix = self.get_consumption_mix()
         
         impact_dict = {}
@@ -474,7 +457,6 @@ class ElectricitySupply:
     def update_inventory_records(self):
         """ Set the impacts of the electricity supply authority.
         """
-
         impact_obj = self.get_impacts()
         impact_obj.clear_qty()
 
@@ -491,14 +473,13 @@ class ElectricitySupply:
     def get_impact_distribution(self):
         """ Get the distribution of the electricity supply authority.
         
-            Returns
-            -------
-            list of Impact Obj.
-                Impact objects representing the distribution of the impacts.
-            list of int
-                List of weights for each impact object in the distribution.
+        Returns
+        -------
+        list of Impact Obj.
+            Impact objects representing the distribution of the impacts.
+        list of int
+            List of weights for each impact object in the distribution.
         """
-
         year = self.get_year()
 
         # impacts by technology
@@ -509,7 +490,7 @@ class ElectricitySupply:
         country_code = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
         
         # set regionality
-        regions_map = Data_Importer.json_to_dict(config['file_paths']['electricity']['CAMBIUM_REGIONS_MAP'])
+        regions_map = DataImporter.json_to_dict(config['file_paths']['electricity']['CAMBIUM_REGIONS_MAP'])
         if self.get_spatial_resolution() == 'National':
             regional_resolution = 'Regional'
             regions_list = list(regions_map[country_code].keys())
@@ -530,14 +511,14 @@ class ElectricitySupply:
         electricity_loads = [] 
         for region in regions_list:
             temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
-            energy_mix = temporal_data.get_mix(year, Data_Importer.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
+            energy_mix = temporal_data.get_mix(year, DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
             electricity_load = temporal_data.get_load(year, self.get_scenario())
             temporal_data.delete_data()
 
             impact_obj = Impacts.from_parent(self)
             for technology, percentage in energy_mix.items():
                 data_dict = impact_database.get_data_entry(country_code, technology)
-                impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['impacts']['IMPACT_CATEGORIES'].keys()}
+                impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
                 tmp_impact_obj = Impacts.from_dict(impact_data_dict) 
                 impact_obj += tmp_impact_obj * percentage
 
@@ -547,6 +528,7 @@ class ElectricitySupply:
         weights = np_round((electricity_loads / sum(electricity_loads)) * 100)
 
         return impact_distribution, weights   
+
 
 if __name__ == '__main__':
     pass

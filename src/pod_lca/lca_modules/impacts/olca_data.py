@@ -1,12 +1,18 @@
 
-from utilities.units.units_map import UNITS_MAP
-from utilities.logger import log
-
-from tqdm import tqdm
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "etel5501@uw.edu; kiun@uw.edu"
+__version__ = "0.1.0"
 
 import io
 import json
 import zipfile
+
+from tqdm import tqdm
+
+from ...utilities import log
+from ...units import UNITS_MAP
 
 try:
     import olca_ipc as ipc
@@ -17,13 +23,6 @@ except ImportError:
     OLCA_IMPORTED = False
 
 
-__author__ = ["POD/LCA Team"]
-__copyright__ = "University of Washington"
-__license__ = "MIT License"
-__email__ = "etel5501@uw.edu; kiun@uw.edu"
-__version__ = "0.1.0"
-
-
 class openLCA:
 
     # =================================
@@ -32,12 +31,11 @@ class openLCA:
     def set_connection():
         """ Connect to the openLCA server.
          
-            Returns
-            -------
-            olca_ipc.Client
-                The client object for the openLCA server.
+        Returns
+        -------
+        olca_ipc.Client
+            The client object for the openLCA server.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -106,19 +104,18 @@ class openLCA:
     def create_product_system(client, process):
         """ Set the product system for the process.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            process : Schema.Process or schema.Ref 
-                Process object or reference to the process object.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        process : Schema.Process or schema.Ref 
+            Process object or reference to the process object.
 
-            Returns
-            -------
-            schema.Ref
-                Reference to the product system object.
+        Returns
+        -------
+        schema.Ref
+            Reference to the product system object.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -133,17 +130,16 @@ class openLCA:
     def get_impact_method(client, impact_method_uuid):
         """ Get the impact method from the openLCA server.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
 
-            Returns
-            -------
-            schema.ImpactMethod
-                The impact method object.
+        Returns
+        -------
+        schema.ImpactMethod
+            The impact method object.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -154,19 +150,18 @@ class openLCA:
     def get_process_list(client, uuids=None):
         """ Get the list of processes from the openLCA server.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            uuids : list of str
-                List of UUIDs of the processes to be filtered. If None, all processes are returned.
-            
-            Returns
-            -------
-            list
-                List of processes reference objects from the openLCA server.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        uuids : list of str
+            List of UUIDs of the processes to be filtered. If None, all processes are returned.
+        
+        Returns
+        -------
+        list
+            List of processes reference objects from the openLCA server.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -186,21 +181,20 @@ class openLCA:
     def get_impacts(client, result, impact_dict):
         """ Get the impact results of the product system.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            result : olca_ipc.Result
-                The result of the calculation.
-            impact_dict : dict
-                Dictionary of impact categories.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        result : olca_ipc.Result
+            The result of the calculation.
+        impact_dict : dict
+            Dictionary of impact categories.
 
-            Returns
-            -------
-            dict
-                Dictionary of impact results.
+        Returns
+        -------
+        dict
+            Dictionary of impact results.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -220,34 +214,33 @@ class openLCA:
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
-            Parameters
-            ----------
-            categories : list or int.
-                IDs of categories to be identified. 
-                Category IDs from the North American Industry Classification System (NAICS) or International Standard Industrial Classification (ISIC).
-            node : utree.Node
-                The node object.
-            level : int
-                The level of the node in the tree.
-            impact : float
-                The impact from the category.
-            qty : float
-                The declared quantity of the category.
-            unit : Unit Obj.
-                The declared unit of the category.
-            max_levels : int
-                The maximum number of levels to expand the tree.
+        Parameters
+        ----------
+        categories : list or int.
+            IDs of categories to be identified. 
+            Category IDs from the North American Industry Classification System (NAICS) or International Standard Industrial Classification (ISIC).
+        node : utree.Node
+            The node object.
+        level : int
+            The level of the node in the tree.
+        impact : float
+            The impact from the category.
+        qty : float
+            The declared quantity of the category.
+        unit : Unit Obj.
+            The declared unit of the category.
+        max_levels : int
+            The maximum number of levels to expand the tree.
 
-            Returns
-            -------
-            float
-                The electricity impact.
-            float   
-                The electricity required sum.
-            Unit Obj.
-                The declared unit of the category.
+        Returns
+        -------
+        float
+            The electricity impact.
+        float   
+            The electricity required sum.
+        Unit Obj.
+            The declared unit of the category.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
         
@@ -285,40 +278,39 @@ class openLCA:
         """ This function recursively expands an upstream tree.
             The maximum number of levels and maximum number of child nodes are defined with the constants above.
         
-            Parameters
-            ----------
-            processes : list or str.
-                UUIDs of processess to be identified.
-            node : utree.Node
-                The node object.
-            level : int
-                The level of the node in the tree.
-            impact : float
-                The impact from the category.
-            qty : float
-                The declared quantity of the category.
-            unit : Unit Obj.
-                The declared unit of the category.
-            max_levels : int
-                The maximum number of levels to expand the tree.
-            conversion_map: dict
-                A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
-                {uuid (str): {'name' : name of the process (str), 
-                              'declared_qty': declared quantity of the process (str or float),
-                              'declared_unit': standard notation of the declared units of the process (str),
-                              'conversion_factor': conversion factor (str or float),
-                              'converted_unit': standard notation of the unit to which the process quantity is converted (str)}}
+        Parameters
+        ----------
+        processes : list or str.
+            UUIDs of processess to be identified.
+        node : utree.Node
+            The node object.
+        level : int
+            The level of the node in the tree.
+        impact : float
+            The impact from the category.
+        qty : float
+            The declared quantity of the category.
+        unit : Unit Obj.
+            The declared unit of the category.
+        max_levels : int
+            The maximum number of levels to expand the tree.
+        conversion_map: dict
+            A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
+            {uuid (str): {'name' : name of the process (str), 
+                            'declared_qty': declared quantity of the process (str or float),
+                            'declared_unit': standard notation of the declared units of the process (str),
+                            'conversion_factor': conversion factor (str or float),
+                            'converted_unit': standard notation of the unit to which the process quantity is converted (str)}}
 
-            Returns
-            -------
-            float
-                The electricity impact.
-            float   
-                The electricity required sum.
-            Unit Obj.
-                The declared unit of the category.
+        Returns
+        -------
+        float
+            The electricity impact.
+        float   
+            The electricity required sum.
+        Unit Obj.
+            The declared unit of the category.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
         
@@ -362,15 +354,15 @@ class openLCA:
     def is_UUID(uuid):
         """ Check if the input is a valid UUID.
 
-            Parameters
-            ----------
-            uuid : str or int
-                The input to be checked.
-            
-            Returns
-            -------
-            bool
-                True if the input is a valid UUID, False otherwise.
+        Parameters
+        ----------
+        uuid : str or int
+            The input to be checked.
+        
+        Returns
+        -------
+        bool
+            True if the input is a valid UUID, False otherwise.
         """
         try:
             uuid = uuid.replace('-', '')
@@ -385,15 +377,15 @@ class openLCA:
     def is_NAICS(naics):
         """ Check if the input is a valid North American Industry Classification System (NAICS) code.
 
-            Parameters
-            ----------
-            naics : int
-                The input integer to be checked.
-            
-            Returns
-            -------
-            bool
-                True if the input is a valid NAICS code, False otherwise.
+        Parameters
+        ----------
+        naics : int
+            The input integer to be checked.
+        
+        Returns
+        -------
+        bool
+            True if the input is a valid NAICS code, False otherwise.
         """
         return len(str(naics)) >= 2 and len(str(naics)) <= 6
 
@@ -401,15 +393,15 @@ class openLCA:
     def is_ISIC(isic):
         """ Check if the input is a valid International Standard Industrial Classification (ISIC) code.
 
-            Parameters
-            ----------
-            isic : int
-                The input integer to be checked.
-            
-            Returns
-            -------
-            bool
-                True if the input is a valid ISIC code, False otherwise.
+        Parameters
+        ----------
+        isic : int
+            The input integer to be checked.
+        
+        Returns
+        -------
+        bool
+            True if the input is a valid ISIC code, False otherwise.
         """ 
         if isinstance(isic, int):
             return len(str(isic)) >= 2 and len(str(isic)) <= 4
@@ -423,12 +415,12 @@ class openLCA:
     def fix_last_internal_ids(client, process_list):
         """ Finds any processes in process_list for which last_internal_id < len(exchanges), and fixes by setting last_internal_id = len(exchanges).
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            process_list : list
-                List of UUIDs of the processess to be tested
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        process_list : list
+            List of UUIDs of the processess to be tested
         """
         if OLCA_IMPORTED:
             import olca_ipc.utree as utree
@@ -460,19 +452,18 @@ class openLCA:
     def filter_processes_by(process_list, filter_by):
         """ Filters the process list by the category given by NAICS or ISIC ids.
         
-            Parameters
-            ----------
-            process_list : list of Schema.Process Obj
-                List of processes.
-            filter_by : str, int, or list of str, int
-                NAICS or ISIC ids of Categories to be filter by.
+        Parameters
+        ----------
+        process_list : list of Schema.Process Obj
+            List of processes.
+        filter_by : str, int, or list of str, int
+            NAICS or ISIC ids of Categories to be filter by.
 
-            Returns
-            -------
-            list of Schema.Process Obj.
-                List of processess.
+        Returns
+        -------
+        list of Schema.Process Obj.
+            List of processess.
         """
-
         if not isinstance(filter_by, list):
             filter_by = [filter_by] 
 
@@ -500,16 +491,15 @@ class openLCA:
     def import_from_zip(client, path, duplicates='overwrite'):
         """ Import a database from a zip file. Handle only the first level of nested zip files.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            path : str
-                The path to the zip file.
-            duplicates : str
-                The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        path : str
+            The path to the zip file.
+        duplicates : str
+            The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
         """
-        
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -554,18 +544,17 @@ class openLCA:
     def import_from_json(client, file_name, data, duplicates):
         """ Import a database item from a json file.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            file_name : str
-                The name of the file.
-            data : ZipExtFile
-                The data from the file.
-            duplicates : str
-                The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        file_name : str
+            The name of the file.
+        data : ZipExtFile
+            The data from the file.
+        duplicates : str
+            The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
         """
-
         if file_name.startswith('actors/'):         
             obj = schema.Actor()
             model_type = 'Actor'
@@ -647,26 +636,25 @@ class openLCA:
     def compute_impacts(client, product_system_ref, impact_method_ref , qty=1.0):
         """ Compute the impacts of the product system.
         
-            Notes
-            -----
-            1. Allocation method set to 'As Defined in Processes' by default (same as openLCA GUI default). For other allocation method names see https://greendelta.github.io/olca-schema/enums/AllocationType.html.
-            2. The calculation of the impact method does not occur asynchronously, therefore the wait_until_ready() method called after the results object is created.
-        
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            product_system_ref : schema.Ref
-                Reference to the product system object.
-            impact_method_ref : schema.Ref
-                Reference to the impact method object.
+        Notes
+        -----
+        1. Allocation method set to 'As Defined in Processes' by default (same as openLCA GUI default). For other allocation method names see https://greendelta.github.io/olca-schema/enums/AllocationType.html.
+        2. The calculation of the impact method does not occur asynchronously, therefore the wait_until_ready() method called after the results object is created.
+    
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        product_system_ref : schema.Ref
+            Reference to the product system object.
+        impact_method_ref : schema.Ref
+            Reference to the impact method object.
 
-            Returns
-            -------
-            olca_ipc.Result
-                The result of the calculation.
+        Returns
+        -------
+        olca_ipc.Result
+            The result of the calculation.
         """
-
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -683,29 +671,29 @@ class openLCA:
     def generate_impacts_dir(client, process_list, impact_dict, impact_method, group_by=None):
         """ Generate the impacts of the processes in the openLCA server.
         
-            Parameters
-            ----------
-            client : olca_ipc.Client
-                The client object for the openLCA server.
-            process_list : list
-                List of UUIDs of the processess to be tested
-            impact_dict : dict
-                Dictionary of impact categories.
-            impact_method : str
-                UUID of the impact method.
-            group_by : dict or list of dict
-                Dictionary of group categorization: {'name' : category name (str),
-                                                     'ids' : [category id (int) or product uuid (str)], 
-                                                     'unit': unit to be reported - optional (Unit Obj), 
-                                                     'conversion_map': conversion map - optional (dict)}
-                Category IDs are from the North American Industry Classification System (NAICS).
-                When unit is not given the default unit of the first item in the group is used.
-                Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.
-            
-            Returns
-            -------
-            dict
-                Dictionary of impact results.
+        Parameters
+        ----------
+        client : olca_ipc.Client
+            The client object for the openLCA server.
+        process_list : list
+            List of UUIDs of the processess to be tested
+        impact_dict : dict
+            Dictionary of impact categories.
+        impact_method : str
+            UUID of the impact method.
+        group_by : dict or list of dict
+            Dictionary of group categorization: {'name' : category name (str),
+                                                    'ids' : [category id (int) or product uuid (str)], 
+                                                    'unit': unit to be reported - optional (Unit Obj), 
+                                                    'conversion_map': conversion map - optional (dict)}
+            Category IDs are from the North American Industry Classification System (NAICS).
+            When unit is not given the default unit of the first item in the group is used.
+            Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.
+        
+        Returns
+        -------
+        dict
+            Dictionary of impact results.
         """
         if OLCA_IMPORTED:
             import olca_ipc.utree as utree
@@ -783,7 +771,6 @@ class openLCA:
 
         return results
 
- 
 
 if __name__ == '__main__':
     pass

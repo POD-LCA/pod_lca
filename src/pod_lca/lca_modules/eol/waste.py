@@ -1,11 +1,3 @@
-from lca_modules.material.master import Master
-from lca_modules.eol.waste_processing import WasteProcess
-from utilities.objects.array_methods import get_attribute_as_list
-from utilities.logger import log
-from utilities.settings import config
-
-from math import isnan
-
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -13,24 +5,33 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from math import isnan
+
+from . import WasteProcess
+from ..material_screening import Master
+from ...utilities import ArrayMethods
+from ...utilities import config
+from ...utilities import log
+
 
 class Waste(Master):
     """ Waste product handling the end-of-life or product. This inherit from the material.Master object.
     
-        Attributes
-        ----------
-        parent : BuildingComponent Obj. or Master Obj.
-            The thing that which was converted to waste.
-        waste_processes : list of WasteProcess Obj.
-            List of processes the waste will be subjected to. These processes are in parallel.
-        process_mix : dict
-            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-            Percentage can be in the form of string with a % sign or decimal value.              
-        impacts : dict.
-            Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
-        bio_based : bool
-            True if the material is bio-based.          
+    Attributes
+    ----------
+    parent : BuildingComponent Obj. or Master Obj.
+        The thing that which was converted to waste.
+    waste_processes : list of WasteProcess Obj.
+        List of processes the waste will be subjected to. These processes are in parallel.
+    process_mix : dict
+        The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+        Percentage can be in the form of string with a % sign or decimal value.              
+    impacts : dict.
+        Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+    bio_based : bool
+        True if the material is bio-based.          
     """
+
     def __init__(self):
         super().__init__()
         self.parent = None
@@ -61,23 +62,22 @@ class Waste(Master):
     def new(cls, parent, database_item, qty, unit, process_mix, bio_based=None):
         """ Create new waste product.
         
-            Parameters
-            ----------
-            parent : BuildingComponent Obj. or Master Obj.
-                The thing that which was converted to waste.
-            database_item : str
-                Material name corresponding to the database entry which gives the unit impact of the product.
-            qty : float
-                Quantity of the product/process.
-            unit : Unit Obj
-                Unit of measurement corresponding to the quantity of the product/process.
-            process_mix : dict
-                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-                Percentage can be in the form of string with a % sign or decimal value.
-            bio_based : bool
-                True if the material is bio-based.       
+        Parameters
+        ----------
+        parent : BuildingComponent Obj. or Master Obj.
+            The thing that which was converted to waste.
+        database_item : str
+            Material name corresponding to the database entry which gives the unit impact of the product.
+        qty : float
+            Quantity of the product/process.
+        unit : Unit Obj
+            Unit of measurement corresponding to the quantity of the product/process.
+        process_mix : dict
+            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            Percentage can be in the form of string with a % sign or decimal value.
+        bio_based : bool
+            True if the material is bio-based.       
         """
-
         waste_item = cls()
 
         waste_item.set_parent(parent)
@@ -99,10 +99,10 @@ class Waste(Master):
     def set_parent(self, parent):
         """ Set parent of the waste product.
         
-            Parameters
-            ----------
-            parent : BuildingComponent Obj. or Master Obj.
-                The thing that which was converted to waste.
+        Parameters
+        ----------
+        parent : BuildingComponent Obj. or Master Obj.
+            The thing that which was converted to waste.
         """
         self.parent = parent
 
@@ -112,10 +112,10 @@ class Waste(Master):
         """ Sets the database (impacts) entry corresponding to the item.
             This method will also update the corresponding impact quanitities.
         
-            Parameters
-            ----------
-            database_item : str.
-                The name of the database item which gives the item impacts.
+        Parameters
+        ----------
+        database_item : str.
+            The name of the database item which gives the item impacts.
         """
         database = self.get_parent().get_building().get_eol_database()
         row_id = database.data.index[(database.data[database.get_primary_key()] == database_item)]
@@ -133,11 +133,11 @@ class Waste(Master):
     def set_waste_processess(self, process_mix=None):
         """ Set waste processe for the waste product. Also sets the process mix.
 
-            Parameters
-            ----------
-            process_mix : dict
-                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-                Percentage can be in the form of string with a % sign or decimal value. 
+        Parameters
+        ----------
+        process_mix : dict
+            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            Percentage can be in the form of string with a % sign or decimal value. 
         """
         waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
         if Waste.check_mix_sum(process_mix):
@@ -199,10 +199,10 @@ class Waste(Master):
     def set_bio_based(self, is_bio_based):
         """ Set the bio-based nature of the material.
         
-            Parameters
-            ----------
-            is_bio_based : bool
-                True, if the material is bio-based.
+        Parameters
+        ----------
+        is_bio_based : bool
+            True, if the material is bio-based.
         """
         if is_bio_based is None:
             self.bio_based = False
@@ -216,43 +216,42 @@ class Waste(Master):
     # ================================
     def get_parent(self):
         """ Get parent of the waste product.
-        
-            Returns
-            -------
-            BuildingComponent Obj. or Master Obj.
-                The thing that which was converted to waste.
+    
+        Returns
+        -------
+        BuildingComponent Obj. or Master Obj.
+            The thing that which was converted to waste.
         """
         return self.parent
     
     def get_waste_processes(self):
         """ Get waste processe for the waste product.
 
-            Returns
-            -------
-            waste_processes : list of WasteProcess Obj.
-                List of processes the waste will be subjected to. These processes are in parallel.
+        Returns
+        -------
+        waste_processes : list of WasteProcess Obj.
+            List of processes the waste will be subjected to. These processes are in parallel.
         """
-
         return self.waste_processes
     
     def get_process_mix(self):
         """ Get the mix of process the waste product is subjected to.
         
-            Returns
-            -------
-            process_mix : dict
-                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-                Percentage can be in the form of string with a % sign or decimal value.       
+        Returns
+        -------
+        process_mix : dict
+            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            Percentage can be in the form of string with a % sign or decimal value.       
         """
         return self.process_mix
 
     def get_bio_based(self):
         """ Get the bio-based nature of the material.
         
-            Returns
-            -------
-            bool
-                True, if the material is bio-based.
+        Returns
+        -------
+        bool
+            True, if the material is bio-based.
         """
         return self.bio_based
 
@@ -262,7 +261,6 @@ class Waste(Master):
     def update_inventory_records(self):
         """ Update the transportation and processing impacts of the waste (C2-C4).
         """
-
         if self.get_waste_processes():
 
             impacts = self.get_impacts()
@@ -286,19 +284,18 @@ class Waste(Master):
     def update_process_mix(self, process_mix, overide=False):
         """ Update the waste process mix.
         
-            Parameters
-            ----------
-            process_mix : dict
-                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-                Percentage can be in the form of string with a % sign or decimal value.
-            overide : bool
-                If true, allows any process to be added, if not only processes created in default are allowed.            
-        
+        Parameters
+        ----------
+        process_mix : dict
+            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            Percentage can be in the form of string with a % sign or decimal value.
+        overide : bool
+            If true, allows any process to be added, if not only processes created in default are allowed.            
         """
         if Waste.check_mix_sum(process_mix):
             # check if unavailable proceses are in the mix.
             if not overide:
-                available_processes = get_attribute_as_list(self.get_waste_processes(), 'process_name')
+                available_processes = ArrayMethods.get_attribute_as_list(self.get_waste_processes(), 'process_name')
                 for key, value in process_mix.items():
                     if not (key in available_processes): # add only allowable processes.
                         raise KeyError(f"Waste process of {key} is not available for {self.get_name()}")
@@ -321,20 +318,19 @@ class Waste(Master):
     def check_mix_sum(process_mix, tol=0.00001):
         """ check if the process mix adds up to 100%.
         
-            Parameters
-            ----------
-            process_mix : dict
-                The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-                Percentage can be in the form of string with a % sign or decimal value.  
-            tol : float
-                Tolerence checked against
+        Parameters
+        ----------
+        process_mix : dict
+            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            Percentage can be in the form of string with a % sign or decimal value.  
+        tol : float
+            Tolerence checked against
 
-            Returns
-            -------
-            bool
-                True if the sum of the mix percentages adds upto a 100%, within tolerence.
+        Returns
+        -------
+        bool
+            True if the sum of the mix percentages adds upto a 100%, within tolerence.
         """
-
         sum = 0.0
         for key, value in process_mix.items():
             if isinstance(value, str):
@@ -348,6 +344,7 @@ class Waste(Master):
             return True
         else:
             raise ValueError(f"Total of mix does not add upp to 100%. Value reached {sum*100}\%.")
+        
         
 if __name__ == '__main__':
     pass

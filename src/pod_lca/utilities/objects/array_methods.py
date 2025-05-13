@@ -4,9 +4,13 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-def get_attribute_as_list(objects, attr_name):
-    """ Get a specified attribute from objects in a list, and returns the attribute entries in a list.
-        
+
+class ArrayMethods:
+
+    @staticmethod
+    def get_attribute_as_list(objects, attr_name):
+        """ Get a specified attribute from objects in a list, and returns the attribute entries in a list.
+            
         Parameters
         ----------
         objects : List of Obj.
@@ -18,14 +22,13 @@ def get_attribute_as_list(objects, attr_name):
         -------
         list
             List of the attribute entries
-    """
-    
-    return [getattr(obj, attr_name) for obj in objects]
+        """
+        return [getattr(obj, attr_name) for obj in objects]
 
-
-def sort_by_attribute(objects, attr_name, descending=True):
-    """ Sort a list of objects by a specified attribute value.
-        
+    @staticmethod
+    def sort_by_attribute(objects, attr_name, descending=True):
+        """ Sort a list of objects by a specified attribute value.
+            
         Parameters
         ----------
         objects : List of Obj.
@@ -39,12 +42,13 @@ def sort_by_attribute(objects, attr_name, descending=True):
         -------
         list
             List of the attribute entries
-    """
-    return sorted(objects, key=lambda obj: getattr(obj, attr_name), reverse=descending)
+        """
+        return sorted(objects, key=lambda obj: getattr(obj, attr_name), reverse=descending)
 
-def set_value(objects, attr_name, value):
-    """ Sort a list of objects by a specified attribute value.
-        
+    @staticmethod
+    def set_value(objects, attr_name, value):
+        """ Sort a list of objects by a specified attribute value.
+            
         Parameters
         ----------
         objects : List of Obj.
@@ -53,7 +57,10 @@ def set_value(objects, attr_name, value):
             Attribute to be retrieved in a list.
         value : str/int/float/bool
             Value to be given to the attribute.
-    """
+        """
+        for obj in objects:
+            setattr(obj, attr_name, value)
 
-    for obj in objects:
-        setattr(obj, attr_name, value)
+
+if __name__ == '__main__':
+    pass

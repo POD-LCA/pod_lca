@@ -1,7 +1,3 @@
-from geopy.geocoders import Nominatim
-from lca_modules.location import CFS_DATA_PATH, FAF_FOREIGN_REGION, FAF_DOMESTIC_REGION, FAF_FOREIGN_REGION_COUNTRY, US_COAST, FERC_ZIPCODE_MAP_PATH, FERC_BA_ZIPCODE_MAP_PATH, GEA_ZIPCODE_MAP_PATH, REEDS_BA_ZIPCODE_MAP_PATH
-from utilities.data_imports.data_importer import Data_Importer
-
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -9,11 +5,15 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
+from geopy.geocoders import Nominatim
+
+from ...utilities import config
+from ...utilities import DataImporter
+
 
 class Location:
-    """
-    Location object updates the location into subcategores.
-    The geocoding is done using Nominatim (https://nominatim.org/release-docs/develop/) which looks up OpenStreetMap (https://www.openstreetmap.org/)
+    """ Location object updates the location into subcategores.
+        The geocoding is done using Nominatim (https://nominatim.org/release-docs/develop/) which looks up OpenStreetMap (https://www.openstreetmap.org/)
 
     Attributes
     ----------
@@ -34,6 +34,7 @@ class Location:
     country_code : str
         Country code from ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country code
     """
+
     def __init__(self):
         self.location_name = None
         self.regionality = None
@@ -63,12 +64,11 @@ class Location:
         """ Create location from name.
             The location data populated based on the centroid of the location prescribed.
         
-            Parameters
-            ----------
-            string : str
-                Free-form textual description or address (or part thereof) of the location.
+        Parameters
+        ----------
+        string : str
+            Free-form textual description or address (or part thereof) of the location.
         """
-
         location = cls()
 
         try:
@@ -101,10 +101,10 @@ class Location:
         """ Create location from US zipcode.
             The location data populated based on the centroid of the area represented by the zipcode.
         
-            Parameters
-            ----------
-            zipcode : str
-                Zipcode of the location.
+        Parameters
+        ----------
+        zipcode : str
+            Zipcode of the location.
         """
         location = cls()
 
@@ -140,11 +140,10 @@ class Location:
     def set_name(self, name):
         """ Set name of the location.
         
-            Parameters
-            ----------
-            location_name : str
-                Name of the location
-        
+        Parameters
+        ----------
+        location_name : str
+            Name of the location
         """
         self.location_name = name
 
@@ -153,10 +152,10 @@ class Location:
     def set_regionality(self, geopy_location_nominatim):
         """ Set the regionality of the location.
 
-            Parameters
-            ----------
-            geopy_location_nominatim : <class 'geopy.location.Location'>
-                Geopy location object from Nominatim
+        Parameters
+        ----------
+        geopy_location_nominatim : <class 'geopy.location.Location'>
+            Geopy location object from Nominatim
         """
         local_type = ['postcode', 'county', 'municipality', 'city', 'town', 'village', 'city_district', 'district', 'borough', 'suburb', 'subdivision', 'hamlet', 'croft', 'neighbourhood', 'allotments', 'quarter']
         regional_type = ['region', 'state', 'province', 'state_district']
@@ -176,10 +175,10 @@ class Location:
     def set_cordinates(self, geopy_location_nominatim):
         """ Set the coordinates of the location.
 
-            Parameters
-            ----------
-            geopy_location_nominatim : <class 'geopy.location.Location'>
-                Geopy location object from Nominatim
+        Parameters
+        ----------
+        geopy_location_nominatim : <class 'geopy.location.Location'>
+            Geopy location object from Nominatim
         """
         self.coords = geopy_location_nominatim.latitude, geopy_location_nominatim.longitude
 
@@ -188,10 +187,10 @@ class Location:
     def set_zip(self, geopy_location):
         """ Set the zipcode of the location.
 
-            Parameters
-            ----------
-            geopy_location : <class 'geopy.location.Location'>
-                Geopy location object.
+        Parameters
+        ----------
+        geopy_location : <class 'geopy.location.Location'>
+            Geopy location object.
         """
         try:
             if 'postcode' in geopy_location.raw['address']:
@@ -206,10 +205,10 @@ class Location:
     def set_city(self, geopy_location):
         """ Set the city of the location.
 
-            Parameters
-            ----------
-            geopy_location : <class 'geopy.location.Location'>
-                Geopy location object.
+        Parameters
+        ----------
+        geopy_location : <class 'geopy.location.Location'>
+            Geopy location object.
         """
         try:
             self.city = geopy_location.raw['address']['city']
@@ -221,10 +220,10 @@ class Location:
     def set_state(self, geopy_location):
         """ Set the state of the location.
 
-            Parameters
-            ----------
-            geopy_location : <class 'geopy.location.Location'>
-                Geopy location object.
+        Parameters
+        ----------
+        geopy_location : <class 'geopy.location.Location'>
+            Geopy location object.
         """
         try:
             self.state = geopy_location.raw['address']['state']
@@ -236,10 +235,10 @@ class Location:
     def set_country(self, geopy_location_photon):
         """ Set the country of the location.
 
-            Parameters
-            ----------
-            geopy_location_photon : <class 'geopy.location.Location'>
-                Geopy location object from Photon
+        Parameters
+        ----------
+        geopy_location_photon : <class 'geopy.location.Location'>
+            Geopy location object from Photon
         """
         try:
             self.country = geopy_location_photon.raw['address']['country']
@@ -251,10 +250,10 @@ class Location:
     def set_country_code(self, geopy_location_photon):
         """ Set the country code of the location.
 
-            Parameters
-            ----------
-            geopy_location_photon : <class 'geopy.location.Location'>
-                Geopy location object from Photon
+        Parameters
+        ----------
+        geopy_location_photon : <class 'geopy.location.Location'>
+            Geopy location object from Photon
         """
         try:
             self.country_code = geopy_location_photon.raw['address']['country_code'].upper()
@@ -268,7 +267,7 @@ class Location:
         """    
         try:
 
-            cfs_area = Data_Importer.csv_to_pandas(CFS_DATA_PATH)
+            cfs_area = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
             state = self.get_state()
 
             if state:
@@ -291,10 +290,11 @@ class Location:
         return self
 
     def set_faf_foreign_region(self):
-        """Set the FAF region (foreign) of the location."""
+        """Set the FAF region (foreign) of the location.
+        """
         try:
             country = self.get_country()
-            faf_foreign_region = Data_Importer.json_to_dict(FAF_FOREIGN_REGION_COUNTRY)
+            faf_foreign_region = DataImporter.json_to_dict(config['file_paths']['location']['CFS_DATA_PATH'])
 
             for key, value in faf_foreign_region.items():
                 if country in value:
@@ -314,7 +314,7 @@ class Location:
         """ Set the FAF region (domestic) of the location.
         """
         try:
-            faf_domestic_region = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)
+            faf_domestic_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
             state = self.get_state()
 
             for key,value in faf_domestic_region.items():
@@ -330,9 +330,9 @@ class Location:
         
     
     def set_ferc_region(self):
-        """ Set the Federal Energy Regulatory Commission (FERC) Region."""
-
-        df = Data_Importer.csv_to_pandas(FERC_ZIPCODE_MAP_PATH)
+        """ Set the Federal Energy Regulatory Commission (FERC) Region.
+        """
+        df = DataImporter.csv_to_pandas(config['file_paths']['location']['FERC_ZIPCODE_MAP_PATH'])
         balancing_authority = self.get_balancing_authority()
         if balancing_authority is None:
             self.set_balancing_authority()
@@ -345,9 +345,9 @@ class Location:
         return self
     
     def set_balancing_authority(self):
-        """ Set the Balancing Authority."""
-
-        df = Data_Importer.csv_to_pandas(FERC_BA_ZIPCODE_MAP_PATH)
+        """ Set the Balancing Authority.
+        """
+        df = DataImporter.csv_to_pandas(config['file_paths']['location']['FERC_BA_ZIPCODE_MAP_PATH'])
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -364,9 +364,9 @@ class Location:
         return self
     
     def set_cambium_gea_region(self):
-        """ Set the Cambium Generation and Emissions Assessment (GEA) region."""
-
-        df = Data_Importer.csv_to_pandas(GEA_ZIPCODE_MAP_PATH)
+        """ Set the Cambium Generation and Emissions Assessment (GEA) region.
+        """
+        df = DataImporter.csv_to_pandas(config['file_paths']['location']['GEA_ZIPCODE_MAP_PATH'])
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -383,9 +383,9 @@ class Location:
         return self
     
     def set_reeds_balancing_area(self):
-        """ Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS)."""
-
-        df = Data_Importer.csv_to_pandas(REEDS_BA_ZIPCODE_MAP_PATH)
+        """ Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS).
+        """
+        df = DataImporter.csv_to_pandas(config['file_paths']['location']['REEDS_BA_ZIPCODE_MAP_PATH'])
         zipcode = self.get_zip()
         if df['zip_code'].dtype == 'int64':
             zipcode = int(zipcode)
@@ -406,8 +406,8 @@ class Location:
         """
         try:
             country = self.get_country()
-            faf_region_countries = Data_Importer.json_to_dict(FAF_FOREIGN_REGION_COUNTRY)
-            faf_region = Data_Importer.json_to_dict(FAF_FOREIGN_REGION)
+            faf_region_countries = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION_COUNTRY'])
+            faf_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
 
             for key, value in faf_region_countries.items():
                 if country in value:
@@ -427,7 +427,7 @@ class Location:
         """
 
         try:
-            us_coast = Data_Importer.json_to_dict(US_COAST)
+            us_coast = DataImporter.json_to_dict(config['file_paths']['location']['US_COAST'])
             state = self.get_state()
 
             for key, value in us_coast.items():
@@ -447,20 +447,20 @@ class Location:
     def get_location_name(self):
         """ Retrieve the location name.
 
-            Returns
-            -------
-            str
-                Name of the location.
+        Returns
+        -------
+        str
+            Name of the location.
         """
         return self.location_name
     
     def get_regionality(self):
         """ Retrieve the regionality of the location.
 
-            Returns
-            -------
-            str
-                Regionality of the location.
+        Returns
+        -------
+        str
+            Regionality of the location.
         """
 
         return self.regionality
@@ -468,60 +468,60 @@ class Location:
     def get_cordinates(self):
         """ Retrieve the coordinates of the location.
 
-            Returns
-            -------
-            tuple
-                 (latitude, longitude).
+        Returns
+        -------
+        tuple
+                (latitude, longitude).
         """
         return self.coords
     
     def get_zip(self):
         """ Retrieve the zipcode of the location.
 
-            Returns
-            -------
-            str
-                Name of the zipcode.
+        Returns
+        -------
+        str
+            Name of the zipcode.
         """
         return self.zipcode
     
     def get_city(self):
         """ Retrieve the city of the location.
 
-            Returns
-            -------
-            str
-                Name of the city.
+        Returns
+        -------
+        str
+            Name of the city.
         """
         return self.city
      
     def get_state(self):
         """ Retrieve the state of the location.
 
-            Returns
-            -------
-            str
-                Name of the state.
+        Returns
+        -------
+        str
+            Name of the state.
         """
         return self.state
 
     def get_country(self):
         """ Retrieve the country of the location.
 
-            Returns
-            -------
-            str
-                Name of the country.
+        Returns
+        -------
+        str
+            Name of the country.
         """
         return self.country
 
     def get_country_code(self):
         """ Retrieve the country code of the location.
 
-            Returns
-            -------
-            str
-                Country code from IS) 3166-1.
+        Returns
+        -------
+        str
+            Country code from IS) 3166-1.
         """
         return self.country_code
     
@@ -533,10 +533,10 @@ class Location:
     def get_cfs_area(self):
         """ Get the Comodity Flow Survey (CFS) area of the location.
 
-            Returns
-            -------
-            str
-                Name of the Comodity Flow Survey (CFS) area.        
+        Returns
+        -------
+        str
+            Name of the Comodity Flow Survey (CFS) area.        
         """          
         return self.cfs_area
 
@@ -581,14 +581,14 @@ class Location:
     def get_closest_zip(geopy_location, max_attempts=10, step=1):
         """ Get the zipcode of the location.
 
-            Parameters
-            ----------
-            geopy_location : <class 'geopy.location.Location'>
-                Geopy location object.
-            max_attempts: int
-                Maximum number of attempts to find the closest zip code
-            step : float
-                Step size in km (approx.)
+        Parameters
+        ----------
+        geopy_location : <class 'geopy.location.Location'>
+            Geopy location object.
+        max_attempts: int
+            Maximum number of attempts to find the closest zip code
+        step : float
+            Step size in km (approx.)
         """
         geolocator = Nominatim(user_agent="pod_lca")
 
@@ -613,7 +613,8 @@ class Location:
                 return geopy_location.raw['address']['postcode']
         
         return "ZIP code not found within search range"
-    
+
+
 if __name__ == '__main__':
 
 
@@ -631,4 +632,3 @@ if __name__ == '__main__':
     print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
     print (f"Marine Region: {location_obj.get_marine_region()}")
     print (f"US Coast: {location_obj.us_coast}")
-

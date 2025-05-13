@@ -1,6 +1,6 @@
 from lca_modules.material.project_manager import Project
 from lca_modules.material.product import Product, Fuel
-from lca_modules.material.process import Process, transportationProcess
+from lca_modules.material.process import Process, TransportationProcess
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
 from utilities.settings import config
@@ -288,7 +288,7 @@ class GUIInputManager():
     @staticmethod
     def is_transport(obj):
 
-        return isinstance(obj, transportationProcess)
+        return isinstance(obj, TransportationProcess)
     
     @staticmethod
     def is_fuel(obj):

@@ -1,10 +1,4 @@
-CFS_DATA_PATH = "data\\transportation_cfs_state-code.csv" 
-FAF_DOMESTIC_REGION = "data\\transportation_faf_domestic-region.json"
-FAF_FOREIGN_REGION = "data\\transportation_faf_foreign-region.json"
-FAF_CITY_REPRESENTATION = "data\\transportation_podlca_faf-city-representation.json"
-US_COAST = "data\\transportation_podlca_us-coast.json"
-FAF_FOREIGN_REGION_COUNTRY = "data\\transportation_faf_foreign-region-countries.json"
-FERC_ZIPCODE_MAP_PATH = "data\\location_netl_ferc-ba-mapping.csv"
-FERC_BA_ZIPCODE_MAP_PATH = "data\\location_doe_ba-zip-mapping.csv"
-GEA_ZIPCODE_MAP_PATH = "data\\location_cambium_gea-reeds-zip-mapping.csv"
-REEDS_BA_ZIPCODE_MAP_PATH = "data\\location_cambium_gea-reeds-zip-mapping.csv"
+
+from .location import Location
+
+__all__ = ["Location"]

@@ -1,5 +1,3 @@
-from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
-import pandas as pd
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -7,6 +5,9 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
+import pandas as pd
+
+from pod_lca.transportation import ProjectLogisticManager
 
 def clean(value):
     return None if pd.isna(value) else value

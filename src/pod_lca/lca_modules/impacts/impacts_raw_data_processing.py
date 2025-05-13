@@ -1,17 +1,15 @@
 
-from lca_modules.impacts.olca_data import openLCA
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.settings import config
-from utilities.units.common_units import JOULE
-from utilities.units.metric_prefixes import MEGA
-
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
 __email__ = "etel5501@uw.edu;kiun@uw.edu"
 __version__ = "0.1.0"
 
+from . import openLCA
+from ...units import JOULE
+from ...units import MEGA
+from ...utilities import config
+from ...utilities import Data_Importer
 
 # ================================================
 # IMPACTS AND EMISSIONS SOURCE DATA

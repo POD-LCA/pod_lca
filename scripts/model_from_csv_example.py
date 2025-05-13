@@ -1,11 +1,11 @@
-from lca_modules.location.location import Location
-from lca_modules.material.project_manager import Project
-from lca_modules.material.model import Model
-from lca_modules.material.calculator import Calculator
-from lca_modules.impacts.impacts_database import ImpactsDatabase
-from plotters.plots.bar_chart import BarChart
-from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 
+from pod_lca.impacts import ImpactsDatabase
+from pod_lca.location import Location
+from pod_lca.material_screening import Project
+from pod_lca.material_screening import Model
+from pod_lca.material_screening import Calculator
+from pod_lca.visualizer import BarChart
+from pod_lca.visualizer import MatplotlibPlotter
 
 project = Project()
 
@@ -13,10 +13,10 @@ concrete_yard = Location.from_str("98126, seattle")
 project.set_location(concrete_yard)
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impact_data.csv')
+custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
 project.set_database(custom_impact_database)
 
-file_path = 'data\concrete_example.csv'
+file_path = 'scripts\concrete_example.csv'
 model_0 = Model.from_CSV(file_path, project, 'concrete')
 
 print(model_0)

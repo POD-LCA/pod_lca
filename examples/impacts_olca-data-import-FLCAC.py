@@ -1,14 +1,14 @@
 
-from lca_modules.impacts.olca_data import openLCA
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.units.common_units import JOULE
-from utilities.units.metric_prefixes import MEGA
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "etel5501@uw.edu, kiun@uw.edu"
 __version__ = "0.1.0"
+
+from pod_lca.impacts.olca_data import openLCA
+from pod_lca.utilities import DataImporter
+from pod_lca.units import JOULE
+from pod_lca.units import MEGA
 
 # ================================================
 # INSTRUCTIONS
@@ -33,14 +33,14 @@ openLCA_client = openLCA.set_connection()
 
 process_list_all = openLCA.get_process_list(openLCA_client)
 
-impact_categories = Data_Importer.json_to_dict('./data/impacts_flcac_categories.json')
-inventories = Data_Importer.json_to_dict('./data/impacts_flcac_emission-inventories.json')
+impact_categories = DataImporter.json_to_dict('./data/impacts_flcac_categories.json')
+inventories = DataImporter.json_to_dict('./data/impacts_flcac_emission-inventories.json')
 
 impact_method_uuid = '0ed73bce-2198-4148-8c4d-8b2ce68b6e1a'
 
-renewable_fuels_process_list = Data_Importer.csv_to_list('./data/impacts_flcac_renewable-fuels-group.csv', column_header='UUID')
-nonrenewable_fuels_process_list = Data_Importer.csv_to_list('./data/impacts_flcac_nonrenewable-fuels-group.csv', column_header='UUID')
-heating_values = Data_Importer.csv_to_dict('./data/impacts_flcac_heating-values.csv', 'UUID')
+renewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_flcac_renewable-fuels-group.csv', column_header='UUID')
+nonrenewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_flcac_nonrenewable-fuels-group.csv', column_header='UUID')
+heating_values = DataImporter.csv_to_dict('./data/impacts_flcac_heating-values.csv', 'UUID')
 
 group_by = [{
                 'name':'electricity',
@@ -65,4 +65,4 @@ results = openLCA.generate_impacts_dir( openLCA_client, process_list_all,
                                         group_by)
 
 save_path = './data/impacts_flcac_categorized-data.csv'
-Data_Importer.dict_to_csv(results, save_path) 
+DataImporter.dict_to_csv(results, save_path) 

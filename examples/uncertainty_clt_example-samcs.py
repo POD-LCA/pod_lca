@@ -1,18 +1,5 @@
-from lca_modules.location.location import Location
-from lca_modules.material.project_manager import Project
-from lca_modules.impacts.impacts_database import ImpactsDatabase
-from lca_modules.uncertainty.datasets import DataDistribution
-from lca_modules.uncertainty.monte_carlo_simulation import MonteCarloSimulator
-from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
-from plotters.plots.histogram import Histogram
-from utilities.units.common_units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
-from utilities.units.metric_prefixes import KILO
 
-from math import exp
-from scipy import stats
-from numpy import linspace, sqrt, log
-import time
-
+# CLT model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -20,7 +7,25 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-# CLT model from M2.2 Go/No-Go: Material LCA Framework Prototype (https://drive.google.com/file/d/1bh152x9gXN1INkqn-unv-IDL5lAz41lw/view?usp=drive_link)
+from math import exp
+from numpy import linspace
+from numpy import log
+from numpy import sqrt
+from scipy import stats
+import time
+
+from pod_lca.impacts import ImpactsDatabase
+from pod_lca.location import Location
+from pod_lca.material_screening import Project
+from pod_lca.uncertainty import DataDistribution
+from pod_lca.uncertainty import MonteCarloSimulator
+from pod_lca.units import CUBIC_METER
+from pod_lca.units import KILO
+from pod_lca.units import KILOGRAM
+from pod_lca.units import KILOMETER
+from pod_lca.units import WATT_HOUR
+from pod_lca.visualizer import Histogram
+from pod_lca.visualizer import MatplotlibPlotter
 
 project = Project()
 

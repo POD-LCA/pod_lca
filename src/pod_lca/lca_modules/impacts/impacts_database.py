@@ -1,22 +1,20 @@
 
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.logger import log
-from utilities.settings import config
-from utilities.units.units_map import UNITS_MAP
-
-from pandas import concat
-
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pandas import concat
+
+from ...units import UNITS_MAP
+from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import log
+
 
 class ImpactsDatabase:
-    """
-    Database manager maintains the impact database.
+    """ Database manager maintains the impact database.
 
     Attributes
     ----------
@@ -35,6 +33,7 @@ class ImpactsDatabase:
             unit_key (str) : the unit of measure
             impact catergory (float) : quantity of impact
     """
+
     DATA_IMPORTS = {    
                         'impacts': config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'],
                         'emissions': config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'],
@@ -73,7 +72,6 @@ class ImpactsDatabase:
         ImpactsDatabase Obj.
             Database created.
         """
-
         new_db = cls()
         new_db.set_name(name)
         new_db.set_primary_key('Flow')
@@ -93,7 +91,6 @@ class ImpactsDatabase:
         name : str
             Name of the database.
         """
-
         self.name = name
 
         return self
@@ -140,7 +137,7 @@ class ImpactsDatabase:
         multipliers = [None] * len(self.get_required_headers()) + multipliers + [None] * (no_headers - 3 - len(multipliers))
 
         # import data
-        data = Data_Importer.csv_to_pandas(file_path, data_headers, multipliers)
+        data = DataImporter.csv_to_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
 
@@ -168,24 +165,23 @@ class ImpactsDatabase:
     def set_data_entry(self, flow, qty, unit, **kwargs):
         """ Add a custom entry the database.
 
-            Parameters
-            ----------
-            flow : str
-                Name of the impact.
-            qty : float
-                Quantity of the flow.
-            unit : str
-                Unit of measurement for which the impacts are applied.
-            **kwargs
-                impacts : dict
-                    Dictionary of impacts {impact catergory (str): impact (float)}
-                emissions : dict
-                    Dictionary of emissions {emission inventory (str): emission (float)}
-                carbon_storage : dict
-                    Dictionary of carbon storage {carbon storage (str): carbon quantity (float)}
-                additional_data : dict
-                    Dictionary of additional data {header (str): value (str / float/ int)}
-
+        Parameters
+        ----------
+        flow : str
+            Name of the impact.
+        qty : float
+            Quantity of the flow.
+        unit : str
+            Unit of measurement for which the impacts are applied.
+        **kwargs
+            impacts : dict
+                Dictionary of impacts {impact catergory (str): impact (float)}
+            emissions : dict
+                Dictionary of emissions {emission inventory (str): emission (float)}
+            carbon_storage : dict
+                Dictionary of carbon storage {carbon storage (str): carbon quantity (float)}
+            additional_data : dict
+                Dictionary of additional data {header (str): value (str / float/ int)}
         """
         # check input data
         if flow in self.data[self.get_primary_key()].tolist():
@@ -223,10 +219,10 @@ class ImpactsDatabase:
     def set_primary_key(self, key):
         """ Set primary key of the database.
         
-            Parameters
-            ----------
-            key : str
-                Primary key organizing the database.
+        Parameters
+        ----------
+        key : str
+            Primary key organizing the database.
         """
         self.primary_key = key
 
@@ -235,10 +231,10 @@ class ImpactsDatabase:
     def set_unit_key(self, key):
         """ Set unit key of the database.
         
-            Parameters
-            ----------
-            key : str
-                Data header corresponding to the units of the database entries.
+        Parameters
+        ----------
+        key : str
+            Data header corresponding to the units of the database entries.
         """
         self.unit_key = key
 
@@ -247,10 +243,10 @@ class ImpactsDatabase:
     def set_qty_key(self, key):
         """ Set quantity key of the database.
         
-            Parameters
-            ----------
-            key : str
-                Data header corresponding to the quantity of the database entries.
+        Parameters
+        ----------
+        key : str
+            Data header corresponding to the quantity of the database entries.
         """
         self.qty_key = key
 
@@ -261,11 +257,11 @@ class ImpactsDatabase:
     # =================================    
     def get_name(self):
         """ Get the name of the database.
-        
-            Returns
-            -------
-            str
-                Name of the database.
+    
+        Returns
+        -------
+        str
+            Name of the database.
         """
 
         return self.name
@@ -273,10 +269,10 @@ class ImpactsDatabase:
     def get_impact_category_units(self):
         """ Get the units of the impact categories.
         
-            Returns
-            -------
-            list of str
-                List of units of the impact categories.
+        Returns
+        -------
+        list of str
+            List of units of the impact categories.
         """
 
         units = []
@@ -288,10 +284,10 @@ class ImpactsDatabase:
     def get_data_all(self):
         """ Retrieve impact data in the database.
         
-            Returns
-            -------
-            Pandas DataFrame Obj.
-                Impact data.
+        Returns
+        -------
+        Pandas DataFrame Obj.
+            Impact data.
         """
 
         return self.data
@@ -299,15 +295,15 @@ class ImpactsDatabase:
     def get_data_entry(self, flow_name):
         """ Retrieve impacts for given flow.
         
-            Parameters
-            ----------
-            flow_name : str
-                Name of the flow
-            
-            Returns
-            -------
-            Pandas Series
-                Databse entry corresponding to the flow.
+        Parameters
+        ----------
+        flow_name : str
+            Name of the flow
+        
+        Returns
+        -------
+        Pandas Series
+            Databse entry corresponding to the flow.
         """
 
         if self.data is not None:
@@ -320,42 +316,43 @@ class ImpactsDatabase:
     def get_primary_key(self):
         """ Get primary key of the database.
         
-            Returns
-            -------
-            str
-                Primary key organizing the database.
+        Returns
+        -------
+        str
+            Primary key organizing the database.
         """
         return self.primary_key
     
     def get_unit_key(self):
         """ Get unit key of the database.
         
-            Returns
-            -------
-            str
-                Data header corresponding to the units of the database entries.
+        Returns
+        -------
+        str
+            Data header corresponding to the units of the database entries.
         """
         return self.unit_key
     
     def get_qty_key(self):
         """ Get quantity key of the database.
         
-            Returns
-            -------
-            str
-                Data header corresponding to the quantity of the database entries.
+        Returns
+        -------
+        str
+            Data header corresponding to the quantity of the database entries.
         """
         return self.qty_key
     
     def get_required_headers(self):
         """ Get the required headers of the database.
         
-            Returns
-            -------
-            list of str
-                Headers of the columns to be imported, other than name, unit, and impact categories.
+        Returns
+        -------
+        list of str
+            Headers of the columns to be imported, other than name, unit, and impact categories.
         """
         return [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()]
-    
+
+
 if __name__ == '__main__':
     pass

@@ -1,11 +1,12 @@
-from lca_modules.impacts.impacts import Impacts
-from utilities.data_imports.data_importer import Data_Importer
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
+from ..impacts import Impacts
+from ...utilities import DataImporter
 
 # TODO: Make this mappings JSON and set the file paths in config
 cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [7, 8, 9, 10, 101 ], "Air": [11]}
@@ -48,7 +49,7 @@ class TransportMode:
         """ Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
         # TODO: For consistancy, consider importing via an ImpactDatabase object
-        emission_data = Data_Importer.csv_to_pandas(r"data\transportation_podlca_emission.csv")
+        emission_data = DataImporter.csv_to_pandas(r"data\transportation_podlca_emission.csv")
 
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
                                        (emission_data["eff"] == self.efficiency) & (emission_data["feul"] == self.feul_type) ]

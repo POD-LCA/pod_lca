@@ -1,11 +1,11 @@
 
-from lca_modules.material.calculator import Calculator
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
+
+from ..material_screening import Calculator
 
 
 class SensitivityAnalysis:
@@ -13,38 +13,36 @@ class SensitivityAnalysis:
     def compute_sensitivity_of_param(obj, param, impact_cat='weighted', sensitivity_type='relative', printout=True, **kwargs):
         """ Compute the sensitivity of a parameter of an object.
 
-            Parameters
-            ----------
-            obj : Master Obj
-                Entry on which the sensitivity is tested.
-            param : str
-                Parameter varied.
-                This must be an attribute of the object.
-            impact_cat : str
-                Impact category considered.
-                Weighted impact, if 'weighted'
-            sensitivity_type : str
-                Type of sensitivity analysis.
-                'relative' - relative percentage change of impact.  (default)
-                'symmetric' - symmetric percentage change of impact.
-            printout : bool
-                Printout results if true.
-                Default - True
-            **kwargs
-                range : tuple
-                    Minimum and maximum value for the parameter.
-                    e.g., qty of a product or process.
-                options : list of str.
-                    A range of options given as strings for the parameter.
-                    e.g., database_item name (i.e., to change the impact value)
+        Parameters
+        ----------
+        obj : Master Obj
+            Entry on which the sensitivity is tested.
+        param : str
+            Parameter varied.
+            This must be an attribute of the object.
+        impact_cat : str
+            Impact category considered.
+            Weighted impact, if 'weighted'
+        sensitivity_type : str
+            Type of sensitivity analysis.
+            'relative' - relative percentage change of impact.  (default)
+            'symmetric' - symmetric percentage change of impact.
+        printout : bool
+            Printout results if true.
+            Default - True
+        **kwargs
+            range : tuple
+                Minimum and maximum value for the parameter.
+                e.g., qty of a product or process.
+            options : list of str.
+                A range of options given as strings for the parameter.
+                e.g., database_item name (i.e., to change the impact value)
 
-
-            Returns
-            -------
-            tuple
-                Minimum and maximum percentage change of impact.
+        Returns
+        -------
+        tuple
+            Minimum and maximum percentage change of impact.
         """
-
         model = obj.get_model()
 
         base_impact = Calculator.get_total_impact(model, impact_cat)
@@ -137,34 +135,33 @@ class SensitivityAnalysis:
         """ Compute the sensitivity of a parameters of multiple objects.
             Sensitivity is computed with all effects in combination.
 
-            Parameters
-            ----------
-            model : Model Obj.
-                Model in which the sensitivity is considered.
-            groups : List of dict
-                [{'obj': Master Obj, 'param': str, 'range': tuple}, 
-                {'obj': Master Obj, 'param': str, 'options': list of str},
-                ...
-                ]
-                where;
-                    obj : Master Obj
-                        Entry on which the sensitivity is tested.
-                    param : str
-                        Parameter varied.
-                        This must be an attribute of the object.
-                    range : tuple
-                        Minimum and maximum value for the parameter, in that order.
-                        e.g., qty of a product or process.
-                    options : list of str.
-                        A range of options given as strings for the parameter.
-                        e.g., database_item name (i.e., to change the impact value)
+        Parameters
+        ----------
+        model : Model Obj.
+            Model in which the sensitivity is considered.
+        groups : List of dict
+            [{'obj': Master Obj, 'param': str, 'range': tuple}, 
+            {'obj': Master Obj, 'param': str, 'options': list of str},
+            ...
+            ]
+            where;
+                obj : Master Obj
+                    Entry on which the sensitivity is tested.
+                param : str
+                    Parameter varied.
+                    This must be an attribute of the object.
+                range : tuple
+                    Minimum and maximum value for the parameter, in that order.
+                    e.g., qty of a product or process.
+                options : list of str.
+                    A range of options given as strings for the parameter.
+                    e.g., database_item name (i.e., to change the impact value)
 
-            Returns
-            -------
-            tuple
-                Minimum and maximum percentage change of impact.
+        Returns
+        -------
+        tuple
+            Minimum and maximum percentage change of impact.
         """
-
         project =  model.get_project()
 
         base_impact = Calculator.get_total_impact(model, impact_cat)
@@ -248,6 +245,7 @@ class SensitivityAnalysis:
                 print("(Sensitivity as symmetric percentage change)")
 
         return [results['min'], results['max']]
+
 
 if __name__ == '__main__':
     pass

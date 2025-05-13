@@ -1,13 +1,21 @@
-from lca_modules.material.project_manager import Project 
-from lca_modules.location.location import Location
-from utilities.settings import config
-from utilities.units.common_units import WATT_HOUR, KILO
-from plotters.plots.box_plot import BoxPlot
-from plotters.plots.histogram import Histogram
-from plotters.plots.violin_plot import ViolinPlot
-from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
 
 from numpy import percentile, linspace
+
+from pod_lca.material_screening import Project 
+from pod_lca.location import Location
+from pod_lca.units import KILO
+from pod_lca.units import WATT_HOUR
+from pod_lca.utilities import config
+from pod_lca.visualizer import BoxPlot
+from pod_lca.visualizer import Histogram
+from pod_lca.visualizer import MatplotlibPlotter
+from pod_lca.visualizer import ViolinPlot
 
 my_manufacturing_project = Project()
 

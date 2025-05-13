@@ -1,14 +1,16 @@
-from utilities.data_imports.data_importer import Data_Importer
-from lca_modules.transportation.transport_mode import TransportMode, cfs_mapping
-from geopy.distance import geodesic
-from lca_modules.location import CFS_DATA_PATH, FAF_CITY_REPRESENTATION, FAF_DOMESTIC_REGION
-from lca_modules.location.location import Location
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
+from geopy.distance import geodesic
+
+from ..location.location import Location
+from ..transportation import TransportMode
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class Scenario:
@@ -71,7 +73,7 @@ class Scenario:
                 The SCTG code of the material. 
         """
         # TODO: Set the path with a variable in config and refer
-        data_material = Data_Importer.csv_to_pandas(r"data\transportation_podlca_material.csv")
+        data_material = DataImporter.csv_to_pandas(r"data\transportation_podlca_material.csv")
         try:
             if material not in data_material["material"].values:
                 raise ValueError("material not found in the dataset")
@@ -99,8 +101,8 @@ class Scenario:
             int
                 the CFS area code.
         """
-        cfs_state_code = Data_Importer.csv_to_pandas(CFS_DATA_PATH)
-        faf_domestic_data = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)
+        cfs_state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
+        faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
 
         for key, value in faf_domestic_data.items():
             if region in value:
@@ -125,8 +127,8 @@ class Scenario:
         - str, the FAF region.
         """
 
-        cfs_state_code = Data_Importer.csv_to_pandas(CFS_DATA_PATH)
-        faf_domestic_data = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)
+        cfs_state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
+        faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
 
         state_row = cfs_state_code[cfs_state_code["Code"] == area]
         if state_row.empty:
@@ -144,9 +146,9 @@ class Scenario:
 
     def filter_faf(self, sctg=None, destination=None, origin=None, mode=None, domestic_mode=None, scenario=None):
 
-        cfs_state_code = Data_Importer.csv_to_pandas(CFS_DATA_PATH)
-        faf  = Data_Importer.csv_to_pandas(r"data\transportation_faf_dataset.csv")
-        Faf_city_representation = Data_Importer.json_to_dict(FAF_CITY_REPRESENTATION)
+        cfs_state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
+        faf  = DataImporter.csv_to_pandas(r"data\transportation_faf_dataset.csv")
+        Faf_city_representation = DataImporter.json_to_dict(config['file_paths']['location']['FAF_CITY_REPRESENTATION'])
         failed = False
         
         # SCTG
@@ -207,7 +209,7 @@ class Scenario:
             else:
                 major_domes = faf["dms_dest"].mode()[0]
 
-                faf_domestic_data = Data_Importer.json_to_dict(FAF_DOMESTIC_REGION)     
+                faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])     
                 for key, value in faf_domestic_data.items():
                     if major_domes in value:
                         major_domes = key
@@ -318,7 +320,7 @@ class Scenario:
 
     def filter_cfaf(self, sctg=None):
 
-        cfaf = Data_Importer.csv_to_pandas(r"data\transportation_cfaf_dataset.csv")
+        cfaf = DataImporter.csv_to_pandas(r"data\transportation_cfaf_dataset.csv")
         try:
             if sctg is not None:
                 cfaf = cfaf[cfaf["SCTG_2digits"] == sctg]
@@ -331,7 +333,7 @@ class Scenario:
 
     def filter_marine(self, destination=None, origin=None, scenario=None):
         
-        marine = Data_Importer.csv_to_pandas(r"data\transportation_podlca_marine.csv")
+        marine = DataImporter.csv_to_pandas(r"data\transportation_podlca_marine.csv")
         failed = False
         # Destination
         try:
@@ -369,8 +371,8 @@ class Scenario:
 
     def filter_cfs(self, sctg=None, destination=None, origin=None, mode=None):
 
-        cfs = Data_Importer.csv_to_pandas(r"data\transportation_cfs_dataset.csv")  
-        cfs_state_code = Data_Importer.csv_to_pandas(CFS_DATA_PATH)  
+        cfs = DataImporter.csv_to_pandas(r"data\transportation_cfs_dataset.csv")  
+        cfs_state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])  
 
         failed = False
 

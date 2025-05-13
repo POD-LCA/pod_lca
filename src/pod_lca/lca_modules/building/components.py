@@ -1,9 +1,3 @@
-from lca_modules.eol.waste import Waste
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.logger import log
-from utilities.settings import config
-
-import gc
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -11,10 +5,16 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import gc
+
+from ..eol.waste import Waste
+from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import log
+
 
 class BuildingComponent:
-    """
-    Building object to keep track of the building materials flow (i.e., embodied energy component).
+    """ Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
     ----------
@@ -27,6 +27,7 @@ class BuildingComponent:
     deconstructed_to : list of Waste Obj.
         Waste objects to which the component converted to at deconstruction and/or demolition.
     """
+
     def __init__(self):
         self.name = None
         self.building = None
@@ -40,19 +41,18 @@ class BuildingComponent:
     def create(cls, name, materials):
         """ Create a building component from its constituent materials.
         
-            Parameters
-            ----------
-            name : str
-                Name of the component.
-            materials : list of material.Model Objs. or Product Objs
-                Materials making up the component.
+        Parameters
+        ----------
+        name : str
+            Name of the component.
+        materials : list of material.Model Objs. or Product Objs
+            Materials making up the component.
 
-            Returns
-            -------
-            BuildingComponent Obj.
-                Building component created.
+        Returns
+        -------
+        BuildingComponent Obj.
+            Building component created.
         """
-
         component = cls()
 
         component.set_name(name)
@@ -66,10 +66,10 @@ class BuildingComponent:
     def set_name(self, name):
         """ Set the name of the building component.
 
-            Parameters
-            ----------
-            name : str
-                Name of the building component.
+        Parameters
+        ----------
+        name : str
+            Name of the building component.
         """
         self.name = name
 
@@ -78,10 +78,10 @@ class BuildingComponent:
     def set_building(self, building):
         """ Set the building of the component.
         
-            Parameters
-            ----------
-            building : Building Obj.
-                Building to which the component belong.
+        Parameters
+        ----------
+        building : Building Obj.
+            Building to which the component belong.
         """
         self.building = building
 
@@ -90,12 +90,11 @@ class BuildingComponent:
     def set_materials(self, materials):
         """ Set the materials constituiting the building component.
         
-            Parameters
-            ----------
-            materials : list of material.Model Objs. or Product Objs
-                Materials making up the component.
+        Parameters
+        ----------
+        materials : list of material.Model Objs. or Product Objs
+            Materials making up the component.
         """
-
         for material in materials:
             self.add_material(material)
         return self
@@ -106,37 +105,36 @@ class BuildingComponent:
     def get_name(self):
         """ Get the name of the building component.
 
-            Returns
-            -------
-            str
-                Name of the building component.
+        Returns
+        -------
+        str
+            Name of the building component.
         """
         return self.name
 
     def get_building(self):
         """ Get the building of the component.
         
-            Returns
-            -------
-            Building Obj.
-                Building to which the component belong.
+        Returns
+        -------
+        Building Obj.
+            Building to which the component belong.
         """
         return self.building
 
     def get_materials(self):
         """ Get the materials constituiting the building component.
         
-            Returns
-            -------
-            list of material.Model Objs. or Product Objs
-                Materials making up the component.
+        Returns
+        -------
+        list of material.Model Objs. or Product Objs
+            Materials making up the component.
         """
         return self.materials
     
     def get_waste_products(self):
         """ Get the waste products the component was deconstructed/demolished to.
         """
-
         if self.deconstructed_to:
             return self.deconstructed_to
         else:
@@ -172,13 +170,13 @@ class BuildingComponent:
     def deconstruct(self, deconstruction_map):
         """ Deconstruct the building component to waste products as specified in the deconstruction map.
         
-            Parameters
-            ----------
-            deconstruction_map : dict
-                Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
+        Parameters
+        ----------
+        deconstruction_map : dict
+            Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
         
         """
-        eol_mix_data = Data_Importer.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
+        eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
         
         for key, value in deconstruction_map.items():
             if eol_mix_data['Material'].isin([key]).any():
@@ -199,6 +197,7 @@ class BuildingComponent:
         gc.collect()
 
         return self
+
 
 if __name__ == '__main__':
     pass

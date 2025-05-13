@@ -1,4 +1,3 @@
-import os
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -6,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import os
 
 HERE = os.path.dirname(__file__)
 
@@ -17,3 +17,27 @@ TEMP = os.path.abspath(os.path.join(HOME, "temp"))
 
 seattle = 'USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw'
 SEATTLE = os.path.abspath(os.path.join(DATA, 'operational_dataset', 'weather_files', seattle))
+
+from . import units
+from . import visualizer
+from . import utilities
+from .lca_modules import location
+from .lca_modules import impacts
+from .lca_modules import uncertainty
+from .lca_modules import electricity
+from .lca_modules import material_screening
+from .lca_modules import building
+from .lca_modules import eol
+from .lca_modules import transportation
+
+import sys
+sys.modules['pod_lca.location'] = location
+sys.modules['pod_lca.impacts'] = impacts
+sys.modules['pod_lca.uncertainty'] = uncertainty
+sys.modules['pod_lca.electricity'] = electricity
+sys.modules['pod_lca.material_screening'] = material_screening
+sys.modules['pod_lca.building'] = building
+sys.modules['pod_lca.eol'] = eol
+sys.modules['pod_lca.transportation'] = transportation
+
+__all__ = [ "building", "electricity", "eol", "impacts", "location", "material_screening", "transportation",  "uncertainty", "units", "utilities", "visualizer"]

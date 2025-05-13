@@ -1,17 +1,16 @@
 
-import csv
-import json
-from pandas import read_csv
-
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu; mhtaba@uw.edu"
 __version__ = "0.1.0"
 
+import csv
+import json
+from pandas import read_csv
 
-class Data_Importer:
+
+class DataImporter:
   
     # ========================
     # CSV
@@ -19,14 +18,14 @@ class Data_Importer:
     def csv_to_pandas(file_path, headers=None, multipliers=None):
         """ Import data to database from a CSV file.
         
-            Parameters
-            ----------
-            file_path : str
-                Location of the CSV file
-            headers : list of str
-                The headers of the CSV file as they would be mapped to the dataset.
-            multipliers : list of float
-                Values of each column of the CSV will be multiplied by these values.
+        Parameters
+        ----------
+        file_path : str
+            Location of the CSV file
+        headers : list of str
+            The headers of the CSV file as they would be mapped to the dataset.
+        multipliers : list of float
+            Values of each column of the CSV will be multiplied by these values.
         """
         df_headers = read_csv(file_path, nrows=0)
         if headers is None:
@@ -47,19 +46,18 @@ class Data_Importer:
     def csv_to_dict(file_path, primary_key):
         """ Import data to dictionary from a CSV file.
         
-            Parameters
-            ----------
-            file_path : str
-                Location of the CSV
-            primary_key : str
-                The column name that will be used as the primary key in the dictionary.
-            
-            Returns
-            -------
-            dict
-                A dictionary with the UUID as the key and the row as the
+        Parameters
+        ----------
+        file_path : str
+            Location of the CSV
+        primary_key : str
+            The column name that will be used as the primary key in the dictionary.
+        
+        Returns
+        -------
+        dict
+            A dictionary with the UUID as the key and the row as the
         """
-
         data = {}
         with open(file_path, mode='r', encoding="utf-8-sig") as file:
             reader = csv.DictReader(file)
@@ -72,19 +70,18 @@ class Data_Importer:
     def csv_to_list(file_path, column_header=None):
         """ Import data to list from a CSV file. The first row of the CSV file is used as the header. Only one column identified by the column header is imported. If the column header is not provided, the first column of the CSV file is imported.
         
-            Parameters
-            ----------
-            file_path : str
-                Location of the CSV file.
-            column_header : str
-                Header of the column from where the data to be read to the list, when the file has headers.
-            
-            Returns
-            -------
-            list 
-                A list of data.
+        Parameters
+        ----------
+        file_path : str
+            Location of the CSV file.
+        column_header : str
+            Header of the column from where the data to be read to the list, when the file has headers.
+        
+        Returns
+        -------
+        list 
+            A list of data.
         """
-
         data = []
         column_index = 0 if column_header is None else None
         current_row = 0
@@ -103,14 +100,13 @@ class Data_Importer:
     def dict_to_csv(input_dict, file_path):
         """ Transfer data from a dictionary to a CSV file.
         
-            Parameters
-            ----------
-            input_dict : dict
-                A dictionary with the UUID as the key and the row as the value.
-            file_path : str
-                Location of the CSV file.
+        Parameters
+        ----------
+        input_dict : dict
+            A dictionary with the UUID as the key and the row as the value.
+        file_path : str
+            Location of the CSV file.
         """
-
         fieldnames = list(next(iter(input_dict.values())).keys())
 
         with open(file_path, "w", newline="", encoding="utf-8") as file:
@@ -122,15 +118,14 @@ class Data_Importer:
     def list_to_csv(input_list, file_path):
         """ Write data to a CSV file from a list of lists.
         
-            Parameters
-            ----------
-            input_list : list of str
-                List of strings to be written to the CSV file. 
-            
-            file_path : str
-                Location of the CSV file.
-        """
+        Parameters
+        ----------
+        input_list : list of str
+            List of strings to be written to the CSV file. 
         
+        file_path : str
+            Location of the CSV file.
+        """
         with open(file_path, "w", newline = "") as file:
             writer = csv.writer(file)
             writer.writerows(input_list)
@@ -141,14 +136,13 @@ class Data_Importer:
     def dict_to_json(input_dict, file_path):
         """ Transfer data from a dictionary to a JSON file.
         
-            Parameters
-            ----------
-            input_dict : dict
-                A dictionary with the UUID as the key and the row as the value.
-            file_path : str
-                Location of the JSON file.
+        Parameters
+        ----------
+        input_dict : dict
+            A dictionary with the UUID as the key and the row as the value.
+        file_path : str
+            Location of the JSON file.
         """
-
         with open(file_path, "w") as file:
             json.dump(input_dict, file)
 
@@ -156,25 +150,25 @@ class Data_Importer:
     def json_to_dict(file_path):
         """ Import data to dictionary from a JSON file.
         
-            Parameters
-            ----------
-            file_path : str
-                Location of the JSON file.
-            
-            Returns
-            -------
-            dict
-                A dictionary with the UUID as the key and the row as the value.
+        Parameters
+        ----------
+        file_path : str
+            Location of the JSON file.
+        
+        Returns
+        -------
+        dict
+            A dictionary with the UUID as the key and the row as the value.
         """
-
         with open(file_path, "r") as file:
             data = json.load(file)
 
         return data
-        
+
+
 if __name__ == '__main__':
 
     # Example usage
     file_path = "data/transportation_dataset/transportation_faf_domestic-region.json"
-    data = Data_Importer.json_to_dict(file_path)
+    data = DataImporter.json_to_dict(file_path)
     print(data)

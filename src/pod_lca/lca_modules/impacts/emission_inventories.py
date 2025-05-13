@@ -1,5 +1,3 @@
-from lca_modules.impacts.records import Records
-from utilities.settings import config
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -7,10 +5,12 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from . import Records
+from ...utilities import config
+
     
 class Emissions(Records):
-    """
-    Emissions object keep record of the emissions created by a product or a process.
+    """ Emissions object keep record of the emissions created by a product or a process.
 
     Attributes
     ----------

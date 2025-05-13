@@ -1,9 +1,3 @@
-from lca_modules.building.building import Building
-from lca_modules.building.components import BuildingComponent
-from lca_modules.location.location import Location
-from lca_modules.impacts.eol_impacts_database import EOLImpactsDatabase
-from utilities.units.common_units import KILOGRAM
-from lca_modules.impacts.impacts import Impacts
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -11,6 +5,12 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pod_lca.building import Building
+from pod_lca.building import BuildingComponent
+from pod_lca.impacts import EOLImpactsDatabase
+from pod_lca.impacts import Impacts
+from pod_lca.location import Location
+from pod_lca.units import KILOGRAM
 
 # create building
 my_land_plot = Location.from_str("98126, Seattle")

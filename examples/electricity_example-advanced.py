@@ -1,7 +1,14 @@
-from lca_modules.material.project_manager import Project 
-from lca_modules.location.location import Location
-from utilities.units.common_units import WATT_HOUR
-from utilities.units.metric_prefixes import MEGA, KILO
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
+from pod_lca.material_screening import Project 
+from pod_lca.location import Location
+from pod_lca.units import MEGA
+from pod_lca.units import WATT_HOUR
 
 my_manufacturing_project = Project()
 

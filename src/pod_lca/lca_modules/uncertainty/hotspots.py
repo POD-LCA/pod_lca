@@ -1,19 +1,17 @@
 
-from utilities.logger import log
-from utilities.objects import array_methods
-from utilities.settings import config
-
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pod_lca.utilities import ArrayMethods
+from pod_lca.utilities import config
+from pod_lca.utilities import log
+
 
 class HotSpotAnalysis:
-    """
-    HotSpotAnalysis object carries out hotspot analysis and stores data.
+    """ HotSpotAnalysis object carries out hotspot analysis and stores data.
 
     Attributes
     ----------
@@ -50,13 +48,11 @@ class HotSpotAnalysis:
     def from_model(cls, model):
         """ Create a hotspot analyis from a a model.
         
-            Attributes
-            ----------
-            model : Model Obj.
-                Model on which the hotspot analysis is performed.
-            
+        Attributes
+        ----------
+        model : Model Obj.
+            Model on which the hotspot analysis is performed.
         """
-
         hotspot_analysis = cls()
         hotspot_analysis.set_model(model)
 
@@ -70,51 +66,47 @@ class HotSpotAnalysis:
     def set_model(self, model):
         """ Set a model to the analyser.
         
-            Attributes
-            ----------
-            model : Model Obj.
-                Model on which the hotspot analysis is performed.        
-        
+        Attributes
+        ----------
+        model : Model Obj.
+            Model on which the hotspot analysis is performed.        
         """
-
         self.model = model
 
     def set_hotspots(self, hotspots, impact_category):
         """ Set attribute in hotspots to identify as hotspots.
 
-            Parameters
-            ----------
-            hotspots : list of Master Objs.
-                List of hotspot object of the model.
-            impact_category : str
-                Impact category for which the hotspot analysis was run.
+        Parameters
+        ----------
+        hotspots : list of Master Objs.
+            List of hotspot object of the model.
+        impact_category : str
+            Impact category for which the hotspot analysis was run.
         """
         self.hotspots[impact_category] = hotspots
 
         all_items = self.model.get_all_items()
 
-        array_methods.set_value(all_items, 'is_hotspot', False)
-        array_methods.set_value(hotspots, 'is_hotspot', True)
+        ArrayMethods.set_value(all_items, 'is_hotspot', False)
+        ArrayMethods.set_value(hotspots, 'is_hotspot', True)
 
     def get_model(self):
         """ Get the model for which the analsysis will be run.
-        
-            Returns
-            ----------
-            Model Obj.
-                Model on which the hotspot analysis is performed.        
-        
+    
+        Returns
+        ----------
+        Model Obj.
+            Model on which the hotspot analysis is performed.        
         """
         return self.model
     
     def get_hotspots(self):
         """ Get hotspots of the model.
 
-            Returns
-            ----------
-            dict.
-                {impact_category (str): list (Master Obj)} .
-
+        Returns
+        ----------
+        dict.
+            {impact_category (str): list (Master Obj)} .
         """
 
         return self.hotspots
@@ -122,19 +114,17 @@ class HotSpotAnalysis:
     def get_hotspots_by_impact_category(self, impact_category):
         """ Get hotspots of the model, by the impact category.
 
-            Parameters
-            ----------
-            impact_category : str
-                Impact category.
+        Parameters
+        ----------
+        impact_category : str
+            Impact category.
 
-            Returns
-            ----------
-            list of Master Objs.
-                List of hotspot object of the model.
-                None if hotspots are not set.
-
+        Returns
+        ----------
+        list of Master Objs.
+            List of hotspot object of the model.
+            None if hotspots are not set.
         """
-
         if impact_category in self.hotspots:
             return self.hotspots[impact_category]
         else:
@@ -148,19 +138,18 @@ class HotSpotAnalysis:
             The hotspots are the largest group out of (a) top 20% contributors to the impact or 
             (b) the smallest group of contributors to the 80% (or more) of the impact category specified.
 
-            Parameters
-            ----------
-            model : str
-                Name of the model considered.
-            impact_category : str
-                Impact category considered.
-            
-            Retrurn
-            -------
-            List of Master Obj.
-                Hotspot objects.
+        Parameters
+        ----------
+        model : str
+            Name of the model considered.
+        impact_category : str
+            Impact category considered.
+        
+        Retrurn
+        -------
+        List of Master Obj.
+            Hotspot objects.
         """
-
         impacts = self.model.get_impacts()
 
         impacts_lst = []

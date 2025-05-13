@@ -7,9 +7,9 @@ __version__ = "0.1.0"
 
 
 class Records:
-    """
-    Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.
-    The inventory recorded by the class is in the class variable 'record_type'.
+    """ Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.
+        The inventory recorded by the class is in the class variable 'record_type'.
+
     Attributes
     ----------
     parent : Master Obj.
@@ -105,7 +105,6 @@ class Records:
         Record Obj.
             Record object created.
         """
-
         record_obj = cls()
         record_obj.set_parent(parent)
 
@@ -128,7 +127,6 @@ class Records:
         Records Obj.
             Records object created.
         """
-
         record_obj = cls()
         record_obj.set_parent(None)
         record_obj.update_qty(record_dict)
@@ -139,12 +137,11 @@ class Records:
     def copy(cls, record_obj):
         """ Make a copy of the record object.
 
-            Returns
-            -------
-            Impacts Obj.
-                Copy of the object.
+        Returns
+        -------
+        Impacts Obj.
+            Copy of the object.
         """
-
         new_obj = cls()
         new_obj.__dict__.update(record_obj.__dict__)
 
@@ -161,7 +158,6 @@ class Records:
         parent : Master Obj.
             The product or process object to which this record belong.
         """
-
         self.parent = parent
 
         return self
@@ -174,15 +170,14 @@ class Records:
         Master Obj.
             Product or process object to which this record belong.
         """
-
         return self.parent
     
     # ========================
     # Methods
     # ========================
     def clear_qty(self):
-        """ Set all record quantities to zero."""
-
+        """ Set all record quantities to zero.
+        """
         for attr in self.__class__.record_attr_dict.keys():
             setattr(self, attr, 0.0)
 
@@ -196,7 +191,6 @@ class Records:
         records : dict
             Dictionary of records {record catergory (str): record quantity (float)}
         """
-
         for key, value in records.items():
             if key not in self.__class__.record_attr_dict.keys():
                 raise KeyError(f"{self.__class__.record_type} category '{key}' not found in the record categories.")
@@ -219,8 +213,8 @@ class Records:
         float
             Quantity of the record attribute.
         """
-
         return getattr(self, attr, None)
+
 
 if __name__ == '__main__':
     pass
