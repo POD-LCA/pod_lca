@@ -1,0 +1,16 @@
+{
+    "CO2": 1.37e-5,
+    "CH4": 3.63e-4,
+    "N2O": 3.00e-3,
+    "CFC-11": 0.26,
+    "CFC-12": 0.32,
+    "CFC-13": 0.25,
+    "_ref_unit": "Wm-2ppb-1",
+    "_ref": {
+                "authors": "Myhre, G., D. Shindell, F.-M. Bréon, W. Collins, J. Fuglestvedt, J. Huang, D. Koch, J.-F. Lamarque, D. Lee, B. Mendoza, T. Nakajima, A. Robock, G. Stephens, T. Takemura and H. Zhang",
+                "year": 2013,
+                "title": "Anthropogenic and Natural Radiative Forcing. In: Climate Change 2013: The Physical Science Basis. Contribution of Working Group I to the Fifth Assessment ix 8A in Report of the Intergovernmental Panel on Climate Change",
+                "eds": "Stocker, T.F., D. Qin, G.-K. Plattner, M. Tignor, S.K. Allen,J. Boschung, A. Nauels, Y. Xia, V. Bex and P.M. Midgley",
+                "publisher": "Cambridge University Press, Cambridge, United Kingdom and New York, NY, USA."
+            }
+}

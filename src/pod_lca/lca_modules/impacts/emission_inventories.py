@@ -25,6 +25,29 @@ class Emissions(Records):
 
     def __init__(self):
         super().__init__()
+        self.year = None
+
+    def set_year(self, year):
+        """ Set year of the emission.
+        
+        Parameters
+        ----------
+        year : int
+            Year of the emission occuring.
+        """
+        self.year = year
+
+        return self
+    
+    def get_year(self):
+        """ Set year of the emission.
+        
+        Returns
+        -------
+        int
+            Year of the emission occuring.
+        """
+        return self.year
 
 
 if __name__ == '__main__':
