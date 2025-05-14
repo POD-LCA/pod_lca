@@ -14,7 +14,6 @@ DATA = os.path.abspath(os.path.join(HOME, "data"))
 DOCS = os.path.abspath(os.path.join(HOME, "docs"))
 TEMP = os.path.abspath(os.path.join(HOME, "temp"))
 
-
 seattle = 'USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw'
 SEATTLE = os.path.abspath(os.path.join(DATA, 'operational_dataset', 'weather_files', seattle))
 
