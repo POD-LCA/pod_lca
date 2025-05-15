@@ -43,7 +43,7 @@ class DynamicRadiativeForcing:
                 if ref_unit == 'Wm-2kg-1' and radiative_efficiency_dict['_ref_unit'] == 'Wm-2ppb-1':
                     return radiative_efficiency * (molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total)
                 elif ref_unit == 'Wm-2ppb-1' and radiative_efficiency_dict["_ref_unit"] == 'Wm-2kg-1':
-                    return radiative_efficiency / ((molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total))
+                    return radiative_efficiency * (molecular_weight/molecular_weight_air_mean) * (mass_atmosphere_total/ (10 ** 9))
                 else:
                     raise ValueError(f"Reference unit {ref_unit} not recognized.")
         else:
@@ -88,7 +88,7 @@ class DynamicRadiativeForcing:
         pass
         # NOTE: takes start_year from self
 
-    def get_instantaneous_radiative_forcing(greenhouse_gas, year):
+    def get_instantaneous_radiative_forcing(self, greenhouse_gas, year):
         """ Get the radiative forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
@@ -104,6 +104,7 @@ class DynamicRadiativeForcing:
             radiative forcing, in W/m2.       
         """
         pass
+        # NOTE: takes start_year from self
 
     def get_cumulative_radiative_forcing(self, greenhouse_gas, year):
         """ Get the cumalative radiative_forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
@@ -153,7 +154,7 @@ class DynamicRadiativeForcing:
             Cumulative radiative forcing if true, else instantaneous values.       
         """
         pass
-        # NOTE: this will take all the emissions from the emissions, and there corresponding emission years (see impacts.emission_invetories inheriting from impacts.records)
+        # NOTE: this will take all the emissions from the emissions, and their corresponding emission years (see impacts.emission_invetories inheriting from impacts.records)
         # NOTE: takes start_year from self
 
 if __name__ == '__main__':
