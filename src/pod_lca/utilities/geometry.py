@@ -10,6 +10,25 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 
+def intersection_line_line_xy(l1, l2, tol=None):
+
+    a, b = l1
+    c, d = l2
+
+    x1, y1 = a[0], a[1]
+    x2, y2 = b[0], b[1]
+    x3, y3 = c[0], c[1]
+    x4, y4 = d[0], d[1]
+
+    d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+
+    a = x1 * y2 - y1 * x2
+    b = x3 * y4 - y3 * x4
+    x = (a * (x3 - x4) - (x1 - x2) * b) / d
+    y = (a * (y3 - y4) - (y1 - y2) * b) / d
+
+    return [x, y, 0.0]
+
 
 def midpoint_point_point(a, b):
     return [0.5 * (a[0] + b[0]), 0.5 * (a[1] + b[1]), 0.5 * (a[2] + b[2])]

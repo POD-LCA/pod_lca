@@ -1,24 +1,24 @@
 import os
-import compas_eplus
-from compas_eplus.building import Building
-from compas_eplus.viewers import BuildingViewer
-from compas_eplus.viewers import ResultsViewer
-from compas_eplus.building import Window
-from compas_eplus.read_write import get_idf_data
+import pod_lca
 
+from pod_lca.lca_modules.operational.viewers import BuildingViewer
+from pod_lca.lca_modules.operational.viewers import ResultsViewer
+from pod_lca.lca_modules.operational.read_write import get_idf_data
 
-from compas_eplus.building import EquipmentList
-from compas_eplus.building import EquipmentConnection
-from compas_eplus.building import NodeList
-from compas_eplus.building import IdealAirLoad
+from pod_lca.lca_modules.operational.operational_building import OperationalBuilding
+from pod_lca.lca_modules.operational.operational_building import Window
+from pod_lca.lca_modules.operational.operational_building import EquipmentList
+from pod_lca.lca_modules.operational.operational_building import EquipmentConnection
+from pod_lca.lca_modules.operational.operational_building import NodeList
+from pod_lca.lca_modules.operational.operational_building import IdealAirLoad
 
 
 for i in range(50): print('')
 
 file = 'doe_midrise_apt.idf'
-filepath = os.path.join(compas_eplus.DATA, 'idf_examples', file)
-path = compas_eplus.TEMP
-wea = compas_eplus.SEATTLE
+filepath = os.path.join(pod_lca.DATA, 'operational_dataset', 'idf_examples', file)
+path = pod_lca.TEMP
+wea = pod_lca.SEATTLE
 
 width = 20
 depth = 10
@@ -27,7 +27,7 @@ height = 3
 quad = [[0, 0, 0], [width, 0, 0],[width, depth, 0],[0, depth, 0]]
 
 
-b = Building.from_quad_5zone(path, wea, quad, height=height, zone_depth=depth/4.)
+b = OperationalBuilding.from_quad_5zone(path, wea, quad, height=height, zone_depth=depth/4.)
 data = get_idf_data(filepath)
 b.add_data_from_idf(data)
 
@@ -99,7 +99,7 @@ v = BuildingViewer(b)
 v.show()
 
 b.write_idf()
-b.analyze(exe='C:\EnergyPlusV25-1-0\energyplus.exe')
+b.analyze(exe='/Applications/EnergyPlus-25-1-0/energyplus')
 b.load_results()
 
 v = ResultsViewer(b)

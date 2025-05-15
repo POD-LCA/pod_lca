@@ -53,7 +53,7 @@ from pod_lca.lca_modules.operational.read_write import get_idf_data
 
 from pod_lca.utilities.geometry import subtract_vectors
 from pod_lca.utilities.geometry import cross_vectors
-# from pod_lca.utilities.geometry import intersection_line_line_xy
+from pod_lca.utilities.geometry import intersection_line_line_xy
 from pod_lca.utilities.geometry import add_vectors
 from pod_lca.utilities.geometry import normalize_vector
 from pod_lca.utilities.geometry import scale_vector
@@ -62,7 +62,7 @@ from pod_lca.utilities.geometry import geometric_key
 from pod_lca.utilities.geometry import make_box_from_quad
 
 
-from pod_lca.utilities.mesh import Mesh
+from pod_lca.utilities.geometry import Mesh
 
 
 #TODO: update to/from JSON eventually, or give a OBJ pickle option
