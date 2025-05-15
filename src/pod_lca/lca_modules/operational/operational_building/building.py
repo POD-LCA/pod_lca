@@ -57,8 +57,10 @@ from pod_lca.utilities.geometry import cross_vectors
 from pod_lca.utilities.geometry import add_vectors
 from pod_lca.utilities.geometry import normalize_vector
 from pod_lca.utilities.geometry import scale_vector
-# from pod_lca.utilities.geometry import midpoint_point_point
+from pod_lca.utilities.geometry import midpoint_point_point
 from pod_lca.utilities.geometry import geometric_key
+from pod_lca.utilities.geometry import make_box_from_quad
+
 
 from pod_lca.utilities.mesh import Mesh
 
@@ -645,10 +647,10 @@ class OperationalBuilding(object):
                     fk_ = self.srf_cpt_dict[gk]['surface']
                     fn_ = self.zones[zk_].surfaces.get_face_attribute(fk_, 'name')
                     mesh.set_face_attribute(fk, 'outside_boundary_condition', out_cond)
-                    self.zones[zk_].set_surfaces.face_attribute(fk_,'outside_boundary_condition', out_cond)  
+                    self.zones[zk_].surfaces.set_face_attribute(fk_,'outside_boundary_condition', out_cond)  
 
-                    mesh.face_attribute(fk, 'outside_boundary_condition_object', fn_)
-                    self.zones[zk_].set_surfaces.face_attribute(fk_,'outside_boundary_condition_object', fn)
+                    mesh.set_face_attribute(fk, 'outside_boundary_condition_object', fn_)
+                    self.zones[zk_].surfaces.set_face_attribute(fk_,'outside_boundary_condition_object', fn)
                 else:
                     mesh.set_face_attribute(fk, 'outside_boundary_condition', out_dict[srft])
                     self.srf_cpt_dict[gk] = {'zone': zk, 'surface': fk}

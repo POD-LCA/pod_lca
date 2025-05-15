@@ -7,7 +7,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 import json
-from pod_lca.utilities import Mesh
+from pod_lca.utilities.geometry import Mesh
 
 
 
