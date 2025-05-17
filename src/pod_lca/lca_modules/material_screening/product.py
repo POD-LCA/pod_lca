@@ -35,6 +35,8 @@ class Product(Master):
 
     def __init__(self):
         super().__init__()
+        self.production_year = None
+        self.electricity = {'from_database': None, 'by_location': None, '_current': None}
         self.weight = 0.0
         self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
@@ -44,6 +46,7 @@ class Product(Master):
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
+    # TODO: create constructor with setting electricity
     # ================================
     # Setters
     # ================================
@@ -89,6 +92,21 @@ class Product(Master):
 
         return self
 
+    # TODO: create set_impact_database_entry() method
+    # TODO: set self.electricity['from_database'] and set _current to 'from_database'
+
+    def set_production_year(self, year):
+        """ Set the year of production for the item.
+        
+        Parameters
+        ----------
+        year : int
+            Year of production.
+        """
+        self.production_year = year
+
+        return self
+    
     def set_weight_unit(self, unit):
         """ Set unit of measurement for the mass of the product.
 
@@ -144,9 +162,47 @@ class Product(Master):
 
         return self
 
+    def set_electricity(self, to='from_database'):
+
+        pass
+        # TODO: add method to new, after database entry setting
+        # TODO: update inventory items --- changes will be in that method
+        # TODO: allow creating electricity without location data... set to none
+
     # ================================
     # Getters
     # ================================      
+    def get_production_year(self):
+        """ Get the year of production for the item.
+        
+        Returns
+        -------
+        year : int
+            Year of production.
+        """
+        return self.production_yea
+
+    
+    def get_electricity(self):
+        """ Get the electricity product of the item.
+        
+        Returns
+        -------
+        Electricity Obj.
+            Electricity used in the production of the item.
+        """
+        return self.electricity[self.get_electricity_source()]
+    
+    def get_electricity_source(self):
+        """ Get the source of electricity inventories.
+        
+        Returns
+        -------
+        str
+            Source of electricity inventories data.
+        """
+        return self.electricity["_current"]
+
     def get_weight(self):
         """ Retrieve the mass of the product.
         
