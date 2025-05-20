@@ -5,7 +5,11 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import isnan
+
 from . import Records
+from ...units import KG_CARBON_DIOXIDE
+from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
 
@@ -31,7 +35,7 @@ class Impacts(Records):
     # Impact Methods
     # ========================
     def get_weighted_impact(self, method='TRACI_EPA'):
-        """ Get a weighted value for impacts.
+        """ Get a normalized and weighted value for impacts.
             Ref: [1] The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
                      DOI: http://hdl.handle.net/1773/41885
         
@@ -54,31 +58,50 @@ class Impacts(Records):
         else:
             raise NotImplementedError
         
-        for impact_cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+        normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTORS"])
+        
+        for impact_cat in self.record_attr_dict:
             if impact_cat not in weights:
                 raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
-            
-        # TODO: normalise the impacts begore applying weights
+            if impact_cat not in normalisation_factors:
+                raise KeyError(f"Impact category '{impact_cat}' not found in normalization factors.")
+                        
         weighted_impact = 0.0
-        for (impact_cat, weight) in weights.items():
+        for impact_cat in self.record_attr_dict:
             impact = getattr(self, impact_cat, None)
+            weight = weights[impact_cat]
+            norm_factor = normalisation_factors[impact_cat]
             if impact is not None:
-                weighted_impact += impact * weight
+                weighted_impact += (impact / norm_factor) * weight
             else:
                 return None
         
         return weighted_impact
+    
+    def get_adjusted_GWP(self):
+        """ Get GWP values adjusted for biogenic and accelerated carbonation effects.
 
-    def get_impact_dict(self):
-        """ Get the impact dictionary.
-        
         Returns
         -------
-        dict
-            Dictionary of impacts {impact catergory (str): impact quantity (float)}
+        float
+            Adjusted GWP value
         """
-        impacts = {impact: getattr(self, impact, 0.0) for impact in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
-        return impacts
+        key = 'GWP'
+        if 'GWP' in self.record_attr_dict:
+            gwp_qty = self.get_record(key)
+            carbon_storage_record = self.get_parent().get_carbon_storage()
+            if carbon_storage_record is not None:
+                for record, unit in carbon_storage_record.record_attr_dict.items():
+                    input_unit = UNITS_MAP[unit]
+                    conversion_factor = input_unit.get_conversion_factor(KG_CARBON_DIOXIDE)
+
+                    qty = carbon_storage_record.get_record(record)
+
+                    if isinstance(qty, (float, int)):
+                        if not isnan(qty):
+                            gwp_qty  = gwp_qty - qty * conversion_factor
+
+            return gwp_qty
 
         
 if __name__ == '__main__':

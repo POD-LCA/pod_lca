@@ -62,7 +62,7 @@ class ProjectLogisticManager:
         for link in self.links:
             new_impact += link.get_impact()
         
-        self.impacts.update_qty(new_impact.get_impact_dict())
+        self.impacts.update_qty(new_impact.get_record_dict())
 
         del new_impact
         gc.collect()

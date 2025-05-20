@@ -4,10 +4,10 @@ from .master import Master
 from .process import Process
 from .process import TransportationProcess
 from .product import Product
-from .product import Fuel
-from .product import Electricity
 from .product import Waste
 from .product import Emission
+from .fuel import Fuel
+from .fuel import Electricity
 from .model import Model
 from .project_manager import Project
 

@@ -215,6 +215,18 @@ class Records:
         """
         return getattr(self, attr, None)
 
+    def get_record_dict(self):
+        """ Get the record as a dictionary.
+        
+        Returns
+        -------
+        dict
+            Dictionary of impacts {impact catergory (str): impact quantity (float)}
+        """
+        record = {record: getattr(self, record, 0.0) for record in self.__class__.record_attr_dict.keys()}
+
+        return record
+
 
 if __name__ == '__main__':
     pass

@@ -5,9 +5,23 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..units import CUBIC_FEET
+from ..units import CUBIC_METER
+from ..units import HOUR
+from ..units import ITEM
+from ..units import JOULE
+from ..units import KG_CARBON
+from ..units import KG_CARBON_DIOXIDE
+from ..units import KILO
+from ..units import KILOGRAM
+from ..units import KILOMETER
+from ..units import LITER
+from ..units import MEGA
+from ..units import SQUARE_METER
+from ..units import TON_KILOMETER
 from ..units import UNITS_MAP
-from ..units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, TON_KILOMETER, CUBIC_METER, LITER, HOUR, SQUARE_METER, ITEM, CUBIC_FEET, US_GALLON
-from ..units import KILO, MEGA
+from ..units import US_GALLON
+from ..units import WATT_HOUR
 
 # This file contains a mapping of strings to their corresponding unit objects.
 # This is to be used for conversions strings in import files (CSV, JSON, etc.) to their corresponding unit objects in the code.
@@ -28,5 +42,7 @@ UNITS_MAP.update({
                     'MJ': MEGA * JOULE, 
                     'kWh': KILO * WATT_HOUR,
                     'MWh': MEGA * WATT_HOUR,
-                    'Item(s)': ITEM
+                    'Item(s)': ITEM,
+                    'kg C': KG_CARBON,
+                    'kg CO2': KG_CARBON_DIOXIDE
                 })

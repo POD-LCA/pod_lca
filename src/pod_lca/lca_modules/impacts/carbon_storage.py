@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from . import Records
+from ...units import UNITS_MAP
 from ...utilities import config
 
 
@@ -26,6 +27,29 @@ class CarbonStorage(Records):
 
     def __init__(self):
         super().__init__()
+
+    # ========================
+    # Carbon Storage Methods
+    # ========================
+    def set_mineral_carbon(self, qty, unit='kg CO2'):
+        """ Set accelerated carbonation uptake to the 'Mineral C' entry.
+        
+        Parameters
+        ----------
+        qty : float
+            Quantity of accelerated carbonation uptake.
+        unit : str
+            Unit of accelerated carbonation uptake.
+        """
+        key = 'Mineral C'
+        if key in self.record_attr_dict:
+            mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+            input_unit = UNITS_MAP[unit]
+            conversion_factor = input_unit.get_conversion_factor(mineral_carbon_unit)
+            
+            setattr(self, key, qty * conversion_factor)
+
+        return self
 
 
 if __name__ == '__main__':

@@ -144,7 +144,7 @@ class Waste(Master):
             for waste_process_name in waste_process_dict.keys():
                 process_exist = True
                 mix_percent_input = process_mix[waste_process_name]
-                if isinstance(mix_percent_input, float) or isinstance(mix_percent_input, int):
+                if isinstance(mix_percent_input, (float, int)):
                     if isnan(mix_percent_input):
                         process_exist = False
                     else:

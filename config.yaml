@@ -14,8 +14,8 @@ setup:
       CH4: kg
       N2O: kg
     CARBON_STORAGE:
-      Biogenic C: kg
-      Mineral C: kg
+      Biogenic C: kg C
+      Mineral C: kg CO2 # accelerated carbonation uptake
   electricity:
     DEFAULT_REIGIONAL_RESOLUTION: National # Options: National, Regional, Local
     DEFAULT_COUNTRY: USA
