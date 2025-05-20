@@ -51,7 +51,7 @@ class Master:
         self.name = None
         self.life_cycle_stage = None
         self.impacts = None
-        self.carbon_stroage = None
+        self.carbon_storage = None
         self.emissions = None
         self.impact_database_entry = None
         self.qty = 0.0
@@ -94,7 +94,7 @@ class Master:
         item.set_unit(unit)
         item.impacts = Impacts.from_parent(item)
         item.emissions = Emissions.from_parent(item)
-        item.carbon_stroage = CarbonStorage.from_parent(item)
+        item.carbon_storage = CarbonStorage.from_parent(item)
         item.add_inventory_records_to_model()
         item.set_impact_database_entry(impacts_from)
 
@@ -186,13 +186,7 @@ class Master:
         database_item : str.
             The name of the database item which gives the item impacts.
         """
-        original_database_item = self.get_impact_database_entry()
-        try:
-            self.impact_database_entry = database_item
-            self.update_inventory_records()
-        except ImportError as e:
-            self.impact_database_entry = original_database_item
-            raise e
+        self.impact_database_entry = database_item
         
     def set_qty(self, qty:float):
         """ Update the qty of the item.
@@ -210,8 +204,6 @@ class Master:
                 raise TypeError("Qunatity should be a number.")
     
         self.qty = qty
-        
-        self.update_inventory_records()
 
         return self
 
@@ -347,6 +339,8 @@ class Master:
         Impacts Obj.
             Impacts of the product/process.
         """
+        self.update_inventory_records()
+
         return self.impacts
     
     def get_emissions(self):
@@ -357,6 +351,8 @@ class Master:
         Emissions Obj.
             Emissions of the product/process.
         """
+        self.update_inventory_records()
+
         return self.emissions
     
     def get_carbon_storage(self):
@@ -367,7 +363,9 @@ class Master:
         CarbonStorage Obj.
             Carbon storage of the product/process.
         """
-        return self.carbon_stroage
+        self.update_inventory_records()
+
+        return self.carbon_storage
 
     def get_data_distributions(self):
         """ Get data_distribution objects of the Master obj.
@@ -434,13 +432,13 @@ class Master:
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
-            self.get_impacts().update_qty(impacts)
+            self.impacts.update_qty(impacts)
 
             emissions = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
-            self.get_emissions().update_qty(emissions)
+            self.emissions.update_qty(emissions)
 
             carbon_storage = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
-            self.get_carbon_storage().update_qty(carbon_storage)
+            self.carbon_storage.update_qty(carbon_storage)
 
     def remove_inventory_records_from_model(self, stage=None):
         """ Remove all inventory records from the product/process.

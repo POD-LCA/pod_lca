@@ -89,8 +89,6 @@ class Waste(Master):
 
         waste_item.set_waste_processess(process_mix)
 
-        waste_item.update_inventory_records()
-
         return waste_item
 
     # ================================
@@ -126,7 +124,6 @@ class Waste(Master):
                 database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_OTHER'
 
         self.impact_database_entry = database_item
-        self.update_inventory_records()
 
         return self
         
@@ -263,11 +260,11 @@ class Waste(Master):
         """
         if self.get_waste_processes():
 
-            impacts = self.get_impacts()
+            impacts = self.impacts
             for key in impacts.keys():
                 impacts[key] = []
 
-            emissions = self.get_emissions()
+            emissions = self.emissions
             for key in emissions.keys():
                 emissions[key] = []
 
@@ -309,8 +306,6 @@ class Waste(Master):
                 process.set_qty(new_qty)
 
             # TODO: update transportation links
-
-            self.update_inventory_records()
 
             return self
     

@@ -78,8 +78,6 @@ class Product(Master):
             transporter = self.get_transporter()
             transporter.set_transported_weight()
 
-        self.update_inventory_records()
-
         return self
 
     def set_unit(self, unit):
@@ -387,7 +385,7 @@ class Product(Master):
             if self.get_electricity_source() is None:
                 self.electricity["_current"] = 'from_database'
             elif self.get_electricity_source() == 'by_location':
-                product_impact = self.get_impacts()
+                product_impact = self.impacts
                 product_impact -= self.electricity['from_database'].get_impacts()
                 product_impact += self.electricity['by_location'].get_impacts()
         
@@ -448,7 +446,7 @@ class Electricity(Fuel):
         item.set_weight_unit(unit)
         item.impacts = Impacts.from_parent(item)
         item.emissions = Emissions.from_parent(item)
-        item.carbon_stroage = CarbonStorage.from_parent(item)
+        item.carbon_storage = CarbonStorage.from_parent(item)
 
         electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
         item.set_supplier(electricity_supplier)
@@ -482,7 +480,7 @@ class Electricity(Fuel):
         item.set_weight_unit(unit)
         item.impacts = impacts
         item.emissions = emissions
-        item.carbon_stroage = carbon_storage
+        item.carbon_storage = carbon_storage
 
         return item
     
@@ -505,10 +503,10 @@ class Electricity(Fuel):
             conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
 
             impacts = {category: (unit_impacts.get_record(category) / conversion_factor) * self.qty for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
-            self.get_impacts().update_qty(impacts)
+            self.impacts.update_qty(impacts)
 
             emissions = {category: (unit_emissions.get_record(category) / conversion_factor) * self.qty for category in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
-            self.get_emissions().update_qty(emissions)
+            self.emissions.update_qty(emissions)
                  
     def set_supplier(self, supplier):
         """ Set electricity supplier.
@@ -519,7 +517,6 @@ class Electricity(Fuel):
             Electricity supply
         """
         self.electricity_supplier = supplier
-        self.update_inventory_records()
 
         return self
 
@@ -535,7 +532,6 @@ class Electricity(Fuel):
 
         if self.get_supplier() is not None:
             self.get_supplier().set_year(year)
-            self.update_inventory_records()
 
         return self
     
@@ -551,7 +547,6 @@ class Electricity(Fuel):
 
         if self.get_supplier() is not None:
             self.get_supplier().set_spatial_resolution(spatial_resolution)
-            self.update_inventory_records()
 
         return self
     
@@ -568,7 +563,6 @@ class Electricity(Fuel):
         if self.get_supplier() is not None:
             if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
                 self.get_supplier().set_scenario(scenario)
-                self.update_inventory_records()
                 
             else:
                 raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")

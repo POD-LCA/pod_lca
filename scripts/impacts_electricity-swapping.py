@@ -43,5 +43,4 @@ epoxy.set_qty(200)
 print(epoxy.get_impacts())
 
 epoxy.get_electricity().set_spatial_resolution("National")
-epoxy.update_inventory_records()
 print(epoxy.get_impacts())

@@ -91,7 +91,7 @@ class TransportationProcess(Process):
         item.set_transported_distance_unit(unit)
         item.impacts = Impacts.from_parent(item)
         item.emissions = Emissions.from_parent(item)
-        item.carbon_stroage = CarbonStorage.from_parent(item)
+        item.carbon_storage = CarbonStorage.from_parent(item)
         item.add_inventory_records_to_model()
         item.set_impact_database_entry(impacts_from)
 
