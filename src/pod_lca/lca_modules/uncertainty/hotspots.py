@@ -149,10 +149,7 @@ class HotSpotAnalysis:
         -------
         List of Master Obj.
             Hotspot objects.
-        """
-        for item in self.model.get_all_items():
-            item.update_inventory_records()
-            
+        """           
         impacts = self.model.get_impacts()
 
         impacts_lst = []

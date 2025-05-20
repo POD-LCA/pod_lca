@@ -257,6 +257,9 @@ class Model:
             dict.
                 Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
         """
+        for item in self.get_all_items():
+            item.update_inventory_records()
+
         return self.impacts
     
     def get_emissions(self):
