@@ -58,7 +58,7 @@ def run_test_files(test_file_path, output_csv_path):
             )
 
             # Collect outputs
-            impact_dict = project.get_links()[0].get_impact().get_impact_dict()
+            impact_dict = project.get_links()[0].get_impact().get_record_dict()
             distances = project.get_links()[0].get_travel_dist()
 
             # Combine input and output into one row

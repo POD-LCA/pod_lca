@@ -109,6 +109,8 @@ class ImpactsDatabase:
                 The headers of the CSV file as they would be mapped to the emission inventories in the database: {header (str): inventory (str)}.
             carbon_storage_headers_map : dict
                 The headers of the CSV file as they would be mapped to the carbon storage in the database: {header (str): carbon storage (str)}.
+            grouped_data : str
+                Prefix used in the grouped data.
             additional_headers : list of str
                 Headers of the columns to be imported, other than name, unit, and impact categories.
             multipliers : list of float
@@ -129,7 +131,17 @@ class ImpactsDatabase:
         data_headers = self.get_required_headers() + mapped_headers
         if 'additional_headers' in kwargs:
             data_headers = data_headers + kwargs['additional_headers']
-        
+        if 'grouped_data' in kwargs:
+            new_headers = []
+            for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
+                for cat in DATA_HEADERS_DICT:
+                    new_headers.append(kwargs['grouped_data'] + '_' + cat)
+                
+            new_headers.append(kwargs['grouped_data'] + '_' + self.get_qty_key())
+            new_headers.append(kwargs['grouped_data'] + '_' + self.get_unit_key())
+            
+            data_headers = data_headers + new_headers
+
         # multipliers
         no_headers = len(data_headers)
         if 'multipliers' not in kwargs:

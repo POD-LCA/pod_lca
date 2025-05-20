@@ -59,6 +59,30 @@ class Records:
 
         return self
     
+    def __sub__(self, other):
+        """ Subtraction of two records."""
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        difference_records = {attr: getattr(self, attr, 0.0) - getattr(other, attr, 0.0)
+                                for attr in self.__class__.record_attr_dict.keys()}
+        
+        new_record = self.__class__()
+        new_record.set_parent(None)
+        new_record.update_qty(difference_records)
+
+        return new_record
+
+    def __isub__(self, other):
+        """ In-place subtraction of two records."""
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        for attr in self.__class__.record_attr_dict.keys():
+            setattr(self, attr, getattr(self, attr, 0) - getattr(other, attr, 0.0))
+
+        return self
+    
     def __mul__(self, scalar):
         """ Multiplication of a record by a scalar."""
         if not isinstance(scalar, (int, float)):
@@ -214,6 +238,18 @@ class Records:
             Quantity of the record attribute.
         """
         return getattr(self, attr, None)
+    
+    def get_record_dict(self):
+        """ Get the record as a dictionary.
+        
+        Returns
+        -------
+        dict
+            Dictionary of impacts {impact catergory (str): impact quantity (float)}
+        """
+        record = {record: getattr(self, record, 0.0) for record in self.__class__.record_attr_dict.keys()}
+
+        return record
 
 
 if __name__ == '__main__':
