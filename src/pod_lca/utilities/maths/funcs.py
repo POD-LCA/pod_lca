@@ -7,9 +7,11 @@ __version__ = "0.1.0"
 
 from math import exp
 from numpy import atleast_1d
+from numpy import exp as np_exp
 from numpy import floor
 from numpy import isfinite
 from numpy import log10
+from numpy import ndarray
 
 
 class MathFuncs:
@@ -34,7 +36,10 @@ class MathFuncs:
         coeff, pow_coeff : float
             Coeffecient on the exponent and its power.
         """
-        return (coeff / pow_coeff) * (exp(b * pow_coeff) - exp(a * pow_coeff))
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)):
+            return (coeff / pow_coeff) * (exp(b * pow_coeff) - exp(a * pow_coeff))
+        elif isinstance(a, ndarray) or  isinstance(b, ndarray):
+            return (coeff / pow_coeff) * (np_exp(b * pow_coeff) - np_exp(a * pow_coeff))
 
 
 if __name__ == '__main__':
