@@ -24,10 +24,11 @@ class LinePlot(AbstractPlot):
         
         Parameters
         ----------
-        data : dict
+        data : dict or list
             Data to be plotted, given in one of the following dictionaries:
             standard line plot - [(x_value (float), y_value (float))];
             multiple line plot - {category (str) : [(x_value (float), y_value (float))]};
+            if list, [[x_values (float)], [y_values (float)]]
         title : str
             Title of the barchart.
         x_label : str
@@ -43,6 +44,8 @@ class LinePlot(AbstractPlot):
                 x_data, y_data = zip(*xy_data)
                 self.get_plot().draw_line(x_data, y_data, label, config['Preferences']['COLOUR_ORDER_LIST'][counter])
                 counter += 1
+        elif isinstance(data, list):
+            self.get_plot().draw_line(data[0], data[1], None, config['Preferences']['COLOUR_ORDER_LIST'][0])
                 
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)

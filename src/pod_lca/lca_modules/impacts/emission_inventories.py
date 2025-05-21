@@ -19,15 +19,26 @@ class Emissions(Records):
     <emission_name> : float
         Emission names are dynamically set based on the class variable 'record_attr_dict'.
         Currently, this is set to the EMISSION_INVENTORIES in the config file.
+    year : int
+        The year of the emission(s).
+    function : 
+        Function describing the dynamic emission.
+    duration : float
+        Duration of emission, in years.
+    methane_bio_oxidation : float
+        Percentage of biogenic methane oxidating to CO2.
     """
     record_type = "Emissions"
     record_attr_dict = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
 
     def __init__(self):
         super().__init__()
-        self.year = None
+        self.start_year = None
+        self.function = None
+        self.duration = None
+        self.methane_bio_oxidation = 1.0
 
-    def set_year(self, year):
+    def set_start_year(self, year):
         """ Set year of the emission.
         
         Parameters
@@ -36,6 +47,23 @@ class Emissions(Records):
             Year of the emission occuring.
         """
         self.year = year
+
+        return self
+    
+    def set_function(self, func):
+        """ Set the dyanamic emissions function.
+        """
+        pass
+
+    def set_duration(self, duration):
+        """ Set the duration of emissions.
+        
+        Parameters
+        ----------
+        duration : float
+            Duration of emission, in years.
+        """
+        self.duration = duration
 
         return self
     
@@ -49,6 +77,21 @@ class Emissions(Records):
         """
         return self.year
 
+    def get_function(self):
+        """ Get the dyanamic emissions function.
+        """
+        return self.function
+
+    def get_duration(self):
+        """ Get the duration of emissions.
+        
+        Returns
+        -------
+        float
+            Duration of emission, in years.
+        """
+        return self.duration
+    
 
 if __name__ == '__main__':
     pass

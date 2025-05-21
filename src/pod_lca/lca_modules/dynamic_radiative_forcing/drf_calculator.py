@@ -1,11 +1,23 @@
 
-from pod_lca.utilities import config
-from pod_lca.utilities import DataImporter
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "; mhtaba@uw.edu"
+__version__ = "0.1.0"
+
+from numpy import exp as np_exp
+from numpy import arange as np_arange
+
+from math import exp
+
+from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import MathFuncs
 
 class DynamicRadiativeForcing:
 
     def __init__(self):
-        self.start_year = None
         self.emissions = []
 
     @staticmethod
@@ -66,47 +78,55 @@ class DynamicRadiativeForcing:
         pertubation_lifetimes_dict = DataImporter.json_to_dict(config['file_paths']['drf']['PERTUBATION_LIFETIMES'])
         if greenhouse_gas in pertubation_lifetimes_dict:
             return pertubation_lifetimes_dict[greenhouse_gas]
-            # NOTE: [Q-EE] CO2 values from Table 8.SM.10. Can these be called pertubation lifetimes
         else:
             return None
     
-    def get_instantaneous_concentration(self, greenhouse_gas, year):
-        """ Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start year.
+    @staticmethod
+    def get_instantaneous_concentration(greenhouse_gas, at_year):
+        """ Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.
+
+        Notes
+        -----
+        1. For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825
         
         Parameters
         ----------
         greenhouse_gas: str
             Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
-        year : int
-            Year at which concentration computed.
+        at_year : int
+            Year at which concentration computed, given that a 1kg of gas emitted on start of year 0.
 
         Returns
         -------
         float
             Concentration of the greenhouse gas, in kg.       
         """
-        pass
-        # NOTE: takes start_year from self
+        if greenhouse_gas == 'CO2':
+            return 0.2173 + (0.2240 * exp(-1 * at_year / 394.4)) + (0.2824 * exp(-1 * at_year / 36.54)) + (0.2763 * exp(-1 * at_year / 4.304))
+        else:
+            life_time = DynamicRadiativeForcing.get_pertubation_lifetime(greenhouse_gas)
+            return exp(-1 * at_year / life_time)
 
-    def get_instantaneous_radiative_forcing(self, greenhouse_gas, year):
+    @staticmethod
+    def get_instantaneous_radiative_forcing(greenhouse_gas, at_year):
         """ Get the radiative forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
         ----------
         greenhouse_gas: str
             Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
-        year : int
-            Year at which concentration computed.
+        at_year : int
+            Year at which concentration computed, given that a 1kg of gas emitted on start of year 0.
 
         Returns
         -------
         float
             radiative forcing, in W/m2.       
         """
-        pass
-        # NOTE: takes start_year from self
+        return DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1") * DynamicRadiativeForcing.get_instantaneous_concentration(greenhouse_gas, at_year)
 
-    def get_cumulative_radiative_forcing(self, greenhouse_gas, year):
+    @staticmethod
+    def get_cumulative_radiative_forcing(greenhouse_gas, at_year):
         """ Get the cumalative radiative_forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
@@ -121,9 +141,15 @@ class DynamicRadiativeForcing:
         float
             Concentration of the greenhouse gas, in kg.       
         """
-        pass
-        # NOTE: takes start_year from self
-        # NOTE: integration methods in utilities.maths
+        if greenhouse_gas == 'CO2':
+            term_1 = 0.2173 *  at_year
+            term_2 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2240, pow_coeff=-1 / 394.4)
+            term_3 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2824, pow_coeff=-1 / 36.54)
+            term_4 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2763, pow_coeff=-1 / 4.304)
+            return DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1") * (term_1 + term_2 + term_3 + term_4)
+        else:
+            life_time = DynamicRadiativeForcing.get_pertubation_lifetime(greenhouse_gas)
+            return DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1") *  MathFuncs.integrate_exp(a=0, b=at_year, coeff=1.0, pow_coeff=-1 / life_time)
 
     @staticmethod
     def get_GWP(greenhouse_gas, time_horizon):
@@ -136,9 +162,10 @@ class DynamicRadiativeForcing:
         time_horizon : int
             Time horizon in years.        
         """
-        pass
+        pass # TODO
 
-    def get_radiative_forcing_time_series(self, time_horizon, time_step, cumulative=True):
+    @staticmethod
+    def get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative=True):
         """ Get the daynamic radiative forcing values as a time-series.
             Considers all emissions, with their corresponding emission years.
 
@@ -153,9 +180,22 @@ class DynamicRadiativeForcing:
         cumulative : bool
             Cumulative radiative forcing if true, else instantaneous values.       
         """
-        pass
-        # NOTE: this will take all the emissions from the emissions, and their corresponding emission years (see impacts.emission_invetories inheriting from impacts.records)
-        # NOTE: takes start_year from self
+        life_time = DynamicRadiativeForcing.get_pertubation_lifetime(greenhouse_gas)
+        radiative_efficiency = DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1")
+
+        data_x = np_arange(0, time_horizon, time_step)
+
+        if cumulative:
+            pass # TODO
+        else:
+            if greenhouse_gas == 'CO2':
+                data_y = radiative_efficiency * (0.2173 + (0.2240 * np_exp(-1 * data_x / 394.4)) + (0.2824 * np_exp(-1 * data_x / 36.54)) + (0.2763 * np_exp(-1 * data_x / 4.304)))
+            else:
+                data_y = radiative_efficiency * np_exp(-1 * data_x / life_time)
+
+            return data_x, data_y
+
+    # TODO convolution
 
 if __name__ == '__main__':
     pass
