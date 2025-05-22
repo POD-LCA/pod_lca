@@ -14,6 +14,7 @@ from pod_lca.material_screening import Project
 from pod_lca.units import KILOGRAM
 from pod_lca.units import UNITS_MAP
 from pod_lca.utilities import DataImporter
+from pod_lca.utilities import config
 
 test_data = "tests\\carbon-storage_test_test-values.csv"
 output_file = "tests\\carbon-storage_test_report.csv"
@@ -26,6 +27,8 @@ custom_impact_database.set_data(r'data/impacts_podlca_data.csv', additional_head
 project.set_database(custom_impact_database)
 
 my_model = project.add_model("Test")
+GWP_tag = config['setup']['impacts']['CARBONATION_EFFECTS_IMPACT_CATEGORY']
+GWP_unit_tag = '(' + config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][GWP_tag] + ')'
 
 output_dict = {}
 for test in tqdm(test_dict):
@@ -58,16 +61,16 @@ for test in tqdm(test_dict):
     GWP_Excel_tool = float(test_dict[test]['GWP'])
     dif_GWP = 2 * abs(GWP_Python - GWP_Excel_tool) / abs(GWP_Python + GWP_Excel_tool)
     
-    output_dict[test]['GWP_Python tool'] = GWP_Python
-    output_dict[test]['GWP_Excel tool'] = GWP_Excel_tool
+    output_dict[test]['GWP_Python tool_' + GWP_unit_tag] = GWP_Python
+    output_dict[test]['GWP_Excel tool_' + GWP_unit_tag] = GWP_Excel_tool
     output_dict[test]['GWP_difference (%)'] = dif_GWP * 100
 
     GWP_adjusted_Python = product.get_impacts().get_adjusted_GWP()
     GWP_adjusted_Excel_tool = float(test_dict[test]['GWP_adjusted'])
     dif_adjusted_GWP = 2 * abs(GWP_adjusted_Python - GWP_adjusted_Excel_tool) / abs(GWP_adjusted_Python + GWP_adjusted_Excel_tool)
     
-    output_dict[test]['GWP_adjusted_Python tool'] = GWP_adjusted_Python
-    output_dict[test]['GWP_adjusted_Excel tool'] = GWP_adjusted_Excel_tool
+    output_dict[test]['GWP_adjusted_Python tool_' + GWP_unit_tag] = GWP_adjusted_Python
+    output_dict[test]['GWP_adjusted_Excel tool_' + GWP_unit_tag] = GWP_adjusted_Excel_tool
     output_dict[test]['GWP_adjusted_difference (%)'] = dif_adjusted_GWP * 100 
 
     if (dif_GWP * 100 < 0.5) and (dif_adjusted_GWP * 100 < 0.5):
