@@ -24,7 +24,8 @@ class Product(Master):
         The year the product was produced.
     electricity : dict
         Dictionary containing A3 electricity impacts of the production of the material. 
-        'from_database' contains electricity impacts from database, 'by_location' contains corresponding electricity impacts by location data. 
+        'from_database' contains unit electricity impacts retrieved from the database; 
+        'by_location' contains corresponding electricity impacts by location, retrieved from electricity sub-package. 
         '_current' indicates which of the above is in use for impacts.
     weight : float
         Mass of the product.
@@ -65,13 +66,8 @@ class Product(Master):
         qty : float
             Product quantity.
         """
-        if isinstance(qty, str):
-            try:
-                qty = float(qty)
-            except:
-                raise TypeError("Quantity should be a numeric entry.")
-            
-        self.qty = qty
+        super().set_qty(qty)
+
         self.weight = self.qty * self.density
 
         if self.get_transporter() is not None:
@@ -89,7 +85,8 @@ class Product(Master):
         unit : Unit Obj.
             Unit of measurement.
         """
-        self.unit = unit
+        super().set_unit(unit)
+
         if unit.get_qty_measured() == 'mass':
             self.set_weight_unit(unit)
             self.density = 1.0
@@ -175,20 +172,10 @@ class Product(Master):
             Source of electricity inventories data.
         """
         if source in [key for key in self.electricity if not key.startswith('_')]:
-            current_source = self.get_electricity_source()
             self.electricity["_current"] = source
-
-            if current_source is not None:
-                product_impact = self.get_impacts()
-
-                product_impact -= self.electricity[current_source].get_impacts()
-                product_impact += self.electricity[source].get_impacts()
-
-                return self
         else:
             raise KeyError(f"Source of electricty ({source} not recognized.)")
 
- 
     def set_electricity_database_tag(self):
         """ Find the tag used to identify electricity data in the database.
         """
@@ -266,7 +253,7 @@ class Product(Master):
         declared_qty = database.get_data_entry(self.get_impact_database_entry())[database.get_qty_key()]
         conversion_factor = self.get_unit().get_conversion_factor(declared_unit)
 
-        return qty * (self.get_qty()/ (declared_qty * conversion_factor))
+        return qty * (self.get_qty() * conversion_factor / declared_qty)
     
     def get_weight(self):
         """ Retrieve the mass of the product.
@@ -333,7 +320,8 @@ class Product(Master):
             The electricity data in the database should be prefixed with one of 'Electricity_', 'electricity_', 'elec_', or 'Elec_'.
         """
         if self.get_impact_database_entry() is not None:
-            self.set_electricity_database_tag()
+            if self.get_electricity_database_tag() is None:
+                self.set_electricity_database_tag()
             
             database = self.get_project().get_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
@@ -359,34 +347,38 @@ class Product(Master):
                     self.electricity['by_location'].set_unit(electricity_unit)
                 
                 # electricity from database
-                for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
-                    record_dict = {}
-                    for cat in DATA_HEADERS_DICT:
-                        if electricity_tag + '_' + cat in data_set:
-                            record_dict[cat] = data_set[electricity_tag + '_' + cat]
+                if self.electricity['from_database'] is None:
+                    # record inventories per unit of electricity
+                    for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
+                        record_dict = {}
+                        for cat in DATA_HEADERS_DICT:
+                            if electricity_tag + cat in list(data_set.index):
+                                record_dict[cat] = data_set[electricity_tag + cat] / electricity_qty
+                            else:
+                                record_dict[cat] = 0.0
 
-                    if data_type == 'impacts':
-                        impacts = Impacts.from_dict(record_dict)
-                    elif data_type == 'emissions':
-                        emissons = Emissions.from_dict(record_dict)
-                    elif data_type == 'carbon_storage':
-                        carbon_storage = CarbonStorage.from_dict(record_dict)
-                    else: 
-                        raise KeyError(f"Record type {data_type} not recognized.")
+                        if data_type == 'impacts':
+                            impacts = Impacts.from_dict(record_dict)
+                        elif data_type == 'emissions':
+                            emissons = Emissions.from_dict(record_dict)
+                        elif data_type == 'carbon_storage':
+                            carbon_storage = CarbonStorage.from_dict(record_dict)
+                        else: 
+                            raise KeyError(f"Record type {data_type} not recognized.")
 
-                electiricity_from_data = Electricity.from_inventories(name=self.get_name() + '_electricity', 
-                                                                    qty=electricity_qty, 
-                                                                    unit=electricity_unit, 
-                                                                    impacts=impacts,
-                                                                    emissions=emissons,
-                                                                    carbon_storage=carbon_storage)
-                self.electricity['from_database'] = electiricity_from_data
+                    electiricity_from_data = Electricity.from_inventories(name=self.get_name() + '_electricity', 
+                                                                            qty=1.0, 
+                                                                            unit=electricity_unit, 
+                                                                            impacts=impacts,
+                                                                            emissions=emissons,
+                                                                            carbon_storage=carbon_storage)
+                    self.electricity['from_database'] = electiricity_from_data
 
             if self.get_electricity_source() is None:
                 self.electricity["_current"] = 'from_database'
             elif self.get_electricity_source() == 'by_location':
                 product_impact = self.impacts
-                product_impact -= self.electricity['from_database'].get_impacts()
+                product_impact -= self.electricity['from_database'].get_impacts() * electricity_qty
                 product_impact += self.electricity['by_location'].get_impacts()
         
         return self
