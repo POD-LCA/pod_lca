@@ -23,7 +23,7 @@ test_dict = DataImporter.csv_to_dict(test_data, 'test_name')
 my_manufacturing_project = Project()
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impacts_podlca_data_TEMP.csv', grouped_data='Elec')
+custom_impact_database.set_data(r'data/impacts_podlca_data.csv', grouped_data='Electricity')
 my_manufacturing_project.set_database(custom_impact_database)
 
 output_dict = {}

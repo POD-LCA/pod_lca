@@ -24,9 +24,10 @@ class Product(Master):
         The year the product was produced.
     electricity : dict
         Dictionary containing A3 electricity impacts of the production of the material. 
-        'from_database' contains unit electricity impacts retrieved from the database; 
-        'by_location' contains corresponding electricity impacts by location, retrieved from electricity sub-package. 
-        '_current' indicates which of the above is in use for impacts.
+            'from_database' contains unit electricity impacts retrieved from the database; 
+            'by_location' contains corresponding electricity impacts by location, retrieved from electricity sub-package. 
+            '_current' indicates which of the above is in use for impacts.
+            '_tag' prefix used in the database to identify grouped impacts of electricity.
     weight : float
         Mass of the product.
     weight_unit : str
@@ -44,7 +45,10 @@ class Product(Master):
     def __init__(self):
         super().__init__()
         self.production_year = None
-        self.electricity = {'from_database': None, 'by_location': None, '_current': None, '_tag':None}
+        self.electricity = {'from_database': None, 
+                            'by_location': None, 
+                            '_current': None, 
+                            '_tag':None}
         self.weight = 0.0
         self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
@@ -329,9 +333,12 @@ class Product(Master):
             electricity_tag = self.get_electricity_database_tag()
 
             if electricity_tag is not None:
-                # electricity quantity
+                # electricity quantity and unit
                 electricity_qty = self.get_electricity_qty()
-                electricity_unit = UNITS_MAP[data_set[electricity_tag + database.get_unit_key()]]
+                if electricity_qty > 0.0:
+                    electricity_unit = UNITS_MAP[data_set[electricity_tag + database.get_unit_key()]]
+                else:
+                    electricity_unit = UNITS_MAP[config['setup']['electricity']['DEFAULT_DECLARED_UNIT']]
                 
                 # electricity by location
                 if self.electricity['by_location'] is None:
