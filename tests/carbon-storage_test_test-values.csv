@@ -1,0 +1,31 @@
+﻿test name,Material,Qty,Unit,set_mineral_carbon,mineral_C_Qty,mineral_C_Unit,GWP,GWP_adjusted
+test_01,"Switchgrass, production, US, 2022",1,kg,NO,0,kg CO2,0,0
+test_02,"Conditioned log, hardwood, green, at veneer mill, E",5.25,m3,NO,0,kg CO2,0,0
+test_03,Plywood; softwood; packaged; at plywood mill; PNW,25,m3,NO,0,kg CO2,0,0
+test_04,"Pulpwood, hardwood, average, at forest road, NE-NC",13,m3,NO,0,kg CO2,0,0
+test_05,"Containerboard, 100% recycled, at mill",2,kg,NO,0,kg CO2,0,0
+test_06,Sawlog; softwood; ground based harvest; at roadside; PNW,15,m3,NO,0,kg CO2,0,0
+test_07,"Wheat straw, at conversion plant, 2022",22,kg,NO,0,kg CO2,0,0
+test_08,"Roundwood, hardwood, green, at mill, NE-NC",7,m3,NO,0,kg CO2,0,0
+test_09,"Ethanol, denatured, corn dry mill",4.35,kg,NO,0,kg CO2,0,0
+test_10,Finger-jointed lumber; at I-joist plant; PNW,18.2,kg,NO,0,kg CO2,0,0
+test_11,Sawn lumber; softwood; rough; kiln dried; at kiln; NE-NC,0.001,m3,NO,0,kg CO2,0,0
+test_12,"Sawn lumber, softwood, planed, kiln dried, at planer, NE-NC",0.01,m3,NO,0,kg CO2,0,0
+test_13,"Whole tree chips production; softwood; at sawmill, INW",10,kg,NO,0,kg CO2,0,0
+test_14,Cardboard; AWC,1000,kg,NO,0,kg CO2,0,0
+test_15,"Bark, softwood, average, state or private moist cold forest, at forest road, INW",12,kg,NO,0,kg CO2,0,0
+test_16,"Bark, hardwood, average, at forest road,  NE-NC",20,kg,NO,0,kg CO2,0,0
+test_17,"Lumber, softwood, ACQ treated, SE",8,m3,NO,0,kg CO2,0,0
+test_18,Roundwood; softwood; national forest; steep slope; at forest road; INW,4,m3,NO,0,kg CO2,0,0
+test_19,"Engineered flooring, hardwood, unfinished, E",25,m3,NO,0,kg CO2,0,0
+test_20,"Bucked and debarked log, hardwood, green, at veneer mill, E",12,m3,NO,0,kg CO2,0,0
+test_21,"Automotive painting, top coat, per vehicle",15,Item(s),NO,0,kg CO2,0,0
+test_22,"Transport, refuse truck, diesel powered, Southeast",325,t*km,NO,0,kg CO2,0,0
+test_23,"Skidding, aerial cable yarder, medium",2,d,NO,0,kg CO2,0,0
+test_24,"Electricity, at eGrid, AKMS, 2010",3589,MJ,NO,0,kg CO2,0,0
+test_25,"Coal conveyor system; Manufacture; For surface mine, at point-of-sale; 1.83 m belt width",5.7,Item(s),NO,0,kg CO2,0,0
+test_26,Production of Aggregate,1.6,t,YES,0.25,kg CO2,0,0
+test_27,Cement; national average technology mix; at plant,1528.2,kg,YES,5,kg CO2,0,0
+test_28,Cement; dry process with precalciner; at plant,1,t,YES,0.0002,kg CO2,0,0
+test_29,"Lime, agricultural, corn production",0.005,m2,YES,0.0000001,kg CO2,0,0
+test_30,Portland Cement Concrete; Advance Ready Mix,2.5,m3,YES,0,kg CO2,0,0

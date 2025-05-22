@@ -99,7 +99,7 @@ class Impacts(Records):
 
                     if isinstance(qty, (float, int)):
                         if not isnan(qty):
-                            gwp_qty  = gwp_qty - qty * conversion_factor
+                            gwp_qty  = gwp_qty - (qty * conversion_factor)
 
             return gwp_qty
 

@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
+from ..units import DAY
 from ..units import HOUR
 from ..units import ITEM
 from ..units import JOULE
@@ -18,6 +19,7 @@ from ..units import KILOMETER
 from ..units import LITER
 from ..units import MEGA
 from ..units import SQUARE_METER
+from ..units import M_TON
 from ..units import TON_KILOMETER
 from ..units import UNITS_MAP
 from ..units import US_GALLON
@@ -28,9 +30,11 @@ from ..units import WATT_HOUR
 # The mapping is not exhaustive and can be extended as needed.
 
 UNITS_MAP.update({
+                    'd': DAY,
                     'h': HOUR,
                     'kg': KILOGRAM,
                     'km': KILOMETER,
+                    't': M_TON,
                     'tkm': TON_KILOMETER,
                     't*km': TON_KILOMETER,
                     'kgkm': KILOGRAM * KILOMETER,

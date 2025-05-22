@@ -46,10 +46,12 @@ from ..units.units import Unit
 SECOND = Unit.from_basics('second', 'sec', 'time')
 MINUTE = Unit.from_basics('minute', 'min', 'time')
 HOUR = Unit.from_basics('hour', 'hr', 'time')
+DAY = Unit.from_basics('day', 'd', 'time')
 
 UNIT_CONVERSIONS['time'] = {'second': 3600, 
                             'minute': 60, 
-                            'hour': 1}
+                            'hour': 1,
+                            'day': 1 / 24}
 
 # ==================================
 # MASS UNITS
