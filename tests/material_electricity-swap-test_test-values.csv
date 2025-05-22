@@ -1,0 +1,27 @@
+﻿test_name,material,qty,unit,production year,electricity_source,zip code,regionality,cambium scenario,GWP,AP,EP,POCP,ODP,CO2,N2O,CH4
+test_01,"Aluminum, primary, ingot, at plant, 1998",1,kg,2025,from_database,21136,National,MidCase,0,0,0,0,0,0,0,0
+test_02,"Butadiene, at plant",1.25,kg,2028,by_location,2453,Regional,HighDemandGrowth,0,0,0,0,0,0,0,0
+test_03,"Calcium carbonate, ground, screened grade, at plant",5,kg,2030,by_location,15701,Local,LowNGPrice,0,0,0,0,0,0,0,0
+test_04,"Combustion, dry wood residue, AP-42",1000,MJ,2032,by_location,24073,National,HighNGPrice,0,0,0,0,0,0,0,0
+test_05,"Enzyme, Cellulase, Novozyme Celluclast",7,kg,2035,by_location,38632,Regional,Decarb95by2050,0,0,0,0,0,0,0,0
+test_06,"Enzyme, Glucoamylase, Novozyme Spirizyme",12,kg,2037,by_location,60156,Local,Decarb100by2035,0,0,0,0,0,0,0,0
+test_07,"Enzyme, Glucoamylase, Novozyme Spirizyme",0.001,kg,2040,from_database,6410,National,LowRECost,0,0,0,0,0,0,0,0
+test_08,"Heat, onsite boiler, hardwood mill, average, SE",25,MJ,2042,by_location,8060,Regional,HighRECost,0,0,0,0,0,0,0,0
+test_09,"Hydrogen, chlor-alkali average, membrane cell; at plant",38,kg,2045,by_location,22003,Local,MidCase,0,0,0,0,0,0,0,0
+test_10,"Metal composite material (MCM) sheet, at plant",24,m2,2047,by_location,33139,National,HighDemandGrowth,0,0,0,0,0,0,0,0
+test_11,"Palm kernels, at plant",85,kg,2050,by_location,21136,Regional,LowNGPrice,0,0,0,0,0,0,0,0
+test_12,"Particleboard, average, softwood, particleboard mill",65.21,m3,2025,by_location,2453,Local,HighNGPrice,0,0,0,0,0,0,0,0
+test_13,petroleum extraction and processing - DFO PADD 1,75.1,MJ,2027,by_location,15701,National,Decarb95by2050,0,0,0,0,0,0,0,0
+test_14,"Petroleum refined, for material use, at plant",225,kg,2030,by_location,24073,Regional,Decarb100by2035,0,0,0,0,0,0,0,0
+test_15,"Polyethylene, linear low-density, LLDPE, virgin resin, at plant",2.1,kg,2033,by_location,38632,Local,LowRECost,0,0,0,0,0,0,0,0
+test_16,"Post, softwood, CCA treated, SE",500,ft3,2035,by_location,60156,National,HighRECost,0,0,0,0,0,0,0,0
+test_17,"Recycled postconsumer polyethylene teraphthalate, PET, pellet",0.28,t,2038,by_location,6410,Regional,MidCase,0,0,0,0,0,0,0,0
+test_18,"Zinc, sheet",2.89,kg,2040,by_location,8060,Local,HighDemandGrowth,0,0,0,0,0,0,0,0
+test_19,"Roundwood, hardwood, green, at logyard, SE",1000,m3,2043,from_database,22003,National,LowNGPrice,0,0,0,0,0,0,0,0
+test_20,"Roundwood, hardwood, green, at logyard, SE",125,m3,2045,by_location,33139,Regional,HighNGPrice,0,0,0,0,0,0,0,0
+test_21,"Sawn lumber, hardwood, rough, green, at sawmill, NE-NC",25,kg,2048,by_location,21136,Local,Decarb95by2050,0,0,0,0,0,0,0,0
+test_22,"Single-ply, white, polyester reinforced PVC roofing membrane, 60 mils - 1.524 mm",68.4,m2,2050,by_location,2453,National,Decarb100by2035,0,0,0,0,0,0,0,0
+test_23,"Sodium hydroxide; chlor-alkali average, membrane cell; at plant; 50% solution state",11,kg,2026,by_location,15701,Regional,LowRECost,0,0,0,0,0,0,0,0
+test_24,"Soybean grains, at field",1,t,2029,by_location,24073,Local,HighRECost,0,0,0,0,0,0,0,0
+test_25,"Steel; plate, at plant",1.25,t,2031,by_location,38632,National,MidCase,0,0,0,0,0,0,0,0
+test_26,"Wood fuel, hardwood, gen at lumber mill, combusted in industrial boiler, NE-NC",25,kg,2034,by_location,60156,Regional,HighDemandGrowth,0,0,0,0,0,0,0,0

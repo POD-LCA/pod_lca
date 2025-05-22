@@ -27,7 +27,7 @@ generation_mix = electricitylci.get_generation_mix_process_df(regions='BA')
 output_file = r'save_files\impacts_uslci_electricity_output'
 
 impact_data_file = r'data\impacts_uslci_electricity.csv'
-impact_data_headers = ['GWP (AR5) [kg CO2 eq]','AP [kg SO2 eq]','EP [kg N eq]','ODP [kg CFC-11 eq]','POCP [kg O3 eq]','CO2 [kg]','CH4 [kg]','N20 [kg]']
+impact_data_headers = ['GWP (AR5) [kg CO2 eq]','AP [kg SO2 eq]','EP [kg N eq]','ODP [kg CFC-11 eq]','POCP [kg O3 eq]','CO2 [kg]','CH4 [kg]','N2O [kg]']
 
 ferc_regions = ['CAISO', 'ERCOT', 'ISO-NE', 'MISO', 'NW', 'NYISO', 'PJM', 'SE', 'SW', 'SPP']
 technologies = ['BIOMASS', 'COAL', 'GAS', 'GEOTHERMAL', 'HYDRO', 'MIXED', 'NUCLEAR', 'OFSL', 'OIL', 'OTHF', 'SOLAR', 'SOLARTHERMAL', 'WIND']

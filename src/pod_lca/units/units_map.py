@@ -6,7 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..units import UNITS_MAP
-from ..units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, TON_KILOMETER, CUBIC_METER, LITER, HOUR, SQUARE_METER, ITEM, CUBIC_FEET, US_GALLON
+from ..units import KILOGRAM, JOULE, KILOMETER, WATT_HOUR, TON_KILOMETER, CUBIC_METER, LITER, HOUR, SQUARE_METER, ITEM, CUBIC_FEET, US_GALLON, M_TON
 from ..units import KILO, MEGA
 
 # This file contains a mapping of strings to their corresponding unit objects.
@@ -16,6 +16,7 @@ from ..units import KILO, MEGA
 UNITS_MAP.update({
                     'h': HOUR,
                     'kg': KILOGRAM,
+                    't': M_TON,
                     'km': KILOMETER,
                     'tkm': TON_KILOMETER,
                     't*km': TON_KILOMETER,

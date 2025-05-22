@@ -1,4 +1,4 @@
-﻿Name,Amount,Unit,UUID,GWP (AR5) [kg CO2 eq],AP [kg SO2 eq],EP [kg N eq],ODP [kg CFC-11 eq],POCP [kg O3 eq],CO2 [kg],CH4 [kg],N20 [kg]
+﻿Name,Amount,Unit,UUID,GWP (AR5) [kg CO2 eq],AP [kg SO2 eq],EP [kg N eq],ODP [kg CFC-11 eq],POCP [kg O3 eq],CO2 [kg],CH4 [kg],N2O [kg]
 Electricity - ALL - B.C. Hydro & Power Authority,1,MJ,25afca4e-ecc1-3b02-8054-b7a2311e3484,0.019890379,5.99E-05,9.09E-06,7.48E-10,0.001705275,0.018381747,5.18E-05,1.32E-07
 Electricity - ALL - Hydro-Quebec TransEnergie,1,MJ,d41b1948-c4eb-3a6c-94cb-03552af64b0b,0.003405797,5.74E-06,1.32E-05,3.01E-10,5.62E-05,0.003058015,1.16E-05,9.58E-09
 Electricity - ALL - Manitoba Hydro,1,MJ,34e96a45-3ff2-3d0f-83d7-5cd0505a0d47,0.003061348,5.60E-06,1.28E-05,1.46E-10,1.54E-05,0.002719639,1.14E-05,5.36E-10

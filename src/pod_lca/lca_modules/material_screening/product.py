@@ -352,7 +352,7 @@ class Product(Master):
                     for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
                         record_dict = {}
                         for cat in DATA_HEADERS_DICT:
-                            if electricity_tag + cat in list(data_set.index):
+                            if (electricity_qty > 0.0) and (electricity_tag + cat in list(data_set.index)):
                                 record_dict[cat] = data_set[electricity_tag + cat] / electricity_qty
                             else:
                                 record_dict[cat] = 0.0
