@@ -22,13 +22,14 @@ test_dict = DataImporter.csv_to_dict(test_data, 'test name')
 project = Project()
 
 custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impacts_podlca_data.csv')
+custom_impact_database.set_data(r'data/impacts_podlca_data.csv', additional_headers='Mineral Carbonation Potential')
 project.set_database(custom_impact_database)
 
 my_model = project.add_model("Test")
 
 output_dict = {}
 for test in tqdm(test_dict):
+    output_dict[test] = {'notes':''}
     qty = test_dict[test]['Qty']
     if isinstance(qty, str):
         qty = float(qty.replace(',', ''))
@@ -40,16 +41,18 @@ for test in tqdm(test_dict):
                                    impacts_from=test_dict[test]['Material'])
     
     if test_dict[test]['set_mineral_carbon'] == "YES":
-        product.get_carbon_storage().set_mineral_carbon(qty=float(test_dict[test]['mineral_C_Qty']), 
-                                                        unit=UNITS_MAP[test_dict[test]['mineral_C_Unit']])
+        try:
+            product.get_carbon_storage().set_mineral_carbon(qty=float(test_dict[test]['mineral_C_Qty']), 
+                                                            unit=UNITS_MAP[test_dict[test]['mineral_C_Unit']])
+        except Warning as w:
+            output_dict[test]['notes'] = w
 
-    output_dict[test] = { 'test name':test,
-                          'Qty': qty, 
-                          'Unit': test_dict[test]['Unit'],
-                          'set_mineral_carbon': test_dict[test]['set_mineral_carbon'],
-                          'mineral_C_Qty': test_dict[test]['mineral_C_Qty'],
-                          'mineral_C_Unit': test_dict[test]['mineral_C_Unit']
-                          }
+    output_dict[test]['test name'] = test
+    output_dict[test]['Qty'] = qty
+    output_dict[test]['Unit'] = test_dict[test]['Unit']
+    output_dict[test]['set_mineral_carbon'] = test_dict[test]['set_mineral_carbon']
+    output_dict[test]['mineral_C_Qty'] = test_dict[test]['mineral_C_Qty']
+    output_dict[test]['mineral_C_Unit'] = test_dict[test]['mineral_C_Unit']
                                                
     GWP_Python = product.get_impacts().get_record('GWP')
     GWP_Excel_tool = float(test_dict[test]['GWP'])

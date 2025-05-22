@@ -427,11 +427,11 @@ class Master:
         ImportError : Incompatible units of Master object and database entry.
         """
         if self.impact_database_entry:
-            unit_impacts = self.get_project().get_database().get_data_entry(self.impact_database_entry)
+            unit_impacts = self.get_project().get_database().get_data_entry(self.get_impact_database_entry())
             conversion_factor = self.get_unit().get_conversion_factor(unit_impacts["Unit"])
 
             if conversion_factor is None:
-                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
+                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit_impacts['Unit']}) are of incompatible units.")
             
             impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
             self.get_impacts().update_qty(impacts)
@@ -441,6 +441,8 @@ class Master:
 
             carbon_storage = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
             self.get_carbon_storage().update_qty(carbon_storage)
+
+            return unit_impacts
 
     def remove_inventory_records_from_model(self, stage=None):
         """ Remove all inventory records from the product/process.

@@ -34,6 +34,9 @@ setup:
   impacts:
     IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391'
     PRIMARY_IMPACT_CATEGORY: GWP
+    CARBONATION_EFFECTS_IMPACT_CATEGORY: GWP
+    ACCELERATED_CARBONATION_INVENTORY: Mineral C
+    ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5

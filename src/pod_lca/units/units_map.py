@@ -48,5 +48,6 @@ UNITS_MAP.update({
                     'MWh': MEGA * WATT_HOUR,
                     'Item(s)': ITEM,
                     'kg C': KG_CARBON,
-                    'kg CO2': KG_CARBON_DIOXIDE
+                    'kg CO2': KG_CARBON_DIOXIDE,
+                    'kg CO2 eq': KG_CARBON_DIOXIDE
                 })

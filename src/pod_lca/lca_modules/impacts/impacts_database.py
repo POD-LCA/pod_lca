@@ -128,7 +128,10 @@ class ImpactsDatabase:
 
         data_headers = self.get_required_headers() + mapped_headers
         if 'additional_headers' in kwargs:
-            data_headers = data_headers + kwargs['additional_headers']
+            if isinstance(kwargs['additional_headers'], list):
+                data_headers = data_headers + kwargs['additional_headers']
+            elif isinstance(kwargs['additional_headers'], str):
+                data_headers = data_headers + [kwargs['additional_headers']]
         
         # multipliers
         no_headers = len(data_headers)

@@ -86,8 +86,17 @@ class Impacts(Records):
         float
             Adjusted GWP value
         """
-        key = 'GWP'
-        if 'GWP' in self.record_attr_dict:
+        key = config['setup']['impacts']['CARBONATION_EFFECTS_IMPACT_CATEGORY']
+
+        # check key
+        if key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
+            if not UNITS_MAP[config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][key]].get_qty_measured() == KG_CARBON_DIOXIDE.get_qty_measured():
+                raise KeyError(f"Impact category {key} incompatible to account for carbonation effects.")
+        else:
+            raise KeyError(f"{key} not in impact categories of config.")
+
+        # adjust GWP
+        if key in self.record_attr_dict:
             gwp_qty = self.get_record(key)
             carbon_storage_record = self.get_parent().get_carbon_storage()
             if carbon_storage_record is not None:

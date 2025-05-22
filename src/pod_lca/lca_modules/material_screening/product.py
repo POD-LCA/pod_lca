@@ -5,7 +5,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import bool_ as np_bool
+
 from . import Master
+from ...utilities import config
 
 
 class Product(Master):
@@ -21,6 +24,8 @@ class Product(Master):
         The mass of product in weight units per unit of product's unit of measurement.
     trnasporter : TransportationProcess Obj.
         Transportation process, if the product is being transported, else None.
+    mineral_carbonation_potential : bool
+        Mineral carbonation potential of the product.
     is_material : bool
         True, if the product is a material.
     is_fuel : bool
@@ -33,6 +38,7 @@ class Product(Master):
         self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
+        self.mineral_carbonation_potential = None
         self.is_material = True
 
     def __str__(self):
@@ -62,8 +68,6 @@ class Product(Master):
         if self.get_transporter() is not None:
             transporter = self.get_transporter()
             transporter.set_transported_weight()
-
-        self.update_inventory_records()
 
         return self
 
@@ -138,6 +142,21 @@ class Product(Master):
 
         return self
 
+    def set_mineral_carbonation_potential(self, potential):
+        """ Set mineral carbonation potential of the product.
+        
+        Parameters
+        ----------
+        potential : bool
+            Mineral carbonation potential of the product.
+        """
+        if isinstance(potential, (bool, np_bool)):
+            self.mineral_carbonation_potential = potential
+        else:
+            raise ValueError("Mineral carbonation potential needs to be a boolean.")
+
+        return self
+    
     # ================================
     # Getters
     # ================================      
@@ -184,6 +203,49 @@ class Product(Master):
         """
         return self.transporter
 
+    def get_mineral_carbonation_potential(self):
+        """ Set mineral carbonation potential of the product.
+        
+        Returns
+        -------
+        bool
+            Mineral carbonation potential of the product.
+        """
+        return self.mineral_carbonation_potential
+
+    # ================================
+    # Methods
+    # ================================    
+    def update_inventory_records(self):
+        """ Sets inventory quantities, based on database item asigned to the product/process 
+            and the product/process quantity.
+            If no database entry is asigned, impacts are not updated.
+
+        Raises
+        ------
+        ImportError : Incompatible units of Master object and database entry.
+        """
+        super().update_inventory_records()
+
+        if self.get_mineral_carbonation_potential() is None:
+            data_entry = self.get_project().get_database().get_data_entry(self.get_impact_database_entry())
+            key = config['setup']['impacts']['ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER']
+            if key in data_entry.index:
+                if isinstance(data_entry[key], (bool, np_bool)):
+                    potential = data_entry[key]
+                elif isinstance(data_entry[key], str):
+                    if data_entry[key].lower() in ['yes', 'true']:
+                        potential = True
+                    elif data_entry[key].lower() in ['no', 'false']:
+                        potential = False
+                    else:
+                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+                else:
+                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+
+                self.set_mineral_carbonation_potential(potential)
+
+        return self
     
 class Emission(Product):
     """ Emission product object, inheriting from the product object.

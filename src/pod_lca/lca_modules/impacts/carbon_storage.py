@@ -42,13 +42,16 @@ class CarbonStorage(Records):
         unit : Unit Obj
             Unit of accelerated carbonation uptake.
         """
-        key = 'Mineral C'
+        key = config['setup']['impacts']['ACCELERATED_CARBONATION_INVENTORY']
         if key in self.record_attr_dict:
-            mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
-            input_unit = unit
-            conversion_factor = input_unit.get_conversion_factor(mineral_carbon_unit)
-            
-            setattr(self, key, qty * conversion_factor)
+            if self.get_parent().get_mineral_carbonation_potential():
+                mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+                input_unit = unit
+                conversion_factor = input_unit.get_conversion_factor(mineral_carbon_unit)
+                
+                setattr(self, key, qty * conversion_factor)
+            else:
+                raise Warning(f"Product {self.get_parent().get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override.")
 
         return self
 

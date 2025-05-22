@@ -22,7 +22,7 @@ test_20,"Bucked and debarked log, hardwood, green, at veneer mill, E",12,m3,NO,0
 test_21,"Automotive painting, top coat, per vehicle",15,Item(s),NO,0,kg CO2,0,0
 test_22,"Transport, refuse truck, diesel powered, Southeast",325,t*km,NO,0,kg CO2,0,0
 test_23,"Skidding, aerial cable yarder, medium",2,d,NO,0,kg CO2,0,0
-test_24,"Electricity, at eGrid, AKMS, 2010",3589,MJ,NO,0,kg CO2,0,0
+test_24,"Electricity, at eGrid, AKMS, 2010",3589,MJ,YES,0.5,kg CO2,0,0
 test_25,"Coal conveyor system; Manufacture; For surface mine, at point-of-sale; 1.83 m belt width",5.7,Item(s),NO,0,kg CO2,0,0
 test_26,Production of Aggregate,1.6,t,YES,0.25,kg CO2,0,0
 test_27,Cement; national average technology mix; at plant,1528.2,kg,YES,5,kg CO2,0,0
