@@ -28,9 +28,6 @@ print(epoxy.get_impacts())
 epoxy.set_electricity_source(source='by_location')
 print(epoxy.get_impacts())
 
-# epoxy.set_electricity_source(source='by_location')
-# print(epoxy.get_impacts())
-
 epoxy.set_qty(200)
 epoxy.set_unit(POUND)
 print(epoxy.get_impacts())
@@ -38,5 +35,9 @@ print(epoxy.get_impacts())
 epoxy.get_electricity().set_spatial_resolution("Local")
 print(epoxy.get_impacts())
 
-# epoxy.set_electricity_source(source='from_database')
-# print(epoxy.get_impacts())
+epoxy.set_production_year(2025)
+print(epoxy.get_impacts())
+# print(epoxy.electricity['by_location'].year)
+
+epoxy.set_electricity_source(source='from_database')
+print(epoxy.get_impacts())
