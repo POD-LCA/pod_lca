@@ -5,6 +5,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..impacts import Emissions
+from ..impacts import Impacts
+
 
 class ElectricityProducer:
 
@@ -36,6 +39,9 @@ class ElectricityProducer:
         elec_producer.set_energy_source(technology)
         elec_producer.set_year(year)
         elec_producer.set_invetories()
+
+        elec_producer.impacts = Impacts.from_parent(elec_producer)
+        elec_producer.emissions = Emissions.from_parent(elec_producer)
 
         return elec_producer
     
@@ -87,10 +93,7 @@ class ElectricityProducer:
         impacts : dict
             The impacts of the electricity producer.
         """
-        if impacts is None:
-            impacts = {}
-        else:
-            self.impacts = impacts
+        self.impacts = impacts
 
         return self
     

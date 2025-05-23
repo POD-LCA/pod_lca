@@ -1,0 +1,275 @@
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "Univrsity of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
+from . import Master
+from ..electricity import ElectricitySupply
+from ..impacts import CarbonStorage
+from ..impacts import Emissions
+from ..impacts import Impacts
+from ..uncertainty import DataDistribution
+from ...utilities import config
+
+
+class Electricity(Master):
+    """ Electricity product object, inheriting from the Fuel object.
+
+    Attributes
+    ----------
+    electricity_supplier: ElectricitySupply Obj
+        Electricity supplier
+    year : int
+        Year of electricity consumption
+    spatial_resolution: str
+        Spatial resolution considered for electricity data: 'National'. 'Regional', 'Local'
+    scenario: str
+        Cambium scenario for prediction of electricity technology futures.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.electricity_supplier = None
+        self.year = None
+        self.spatial_resolution = None
+        self.scenario = None
+
+    # ================================
+    # Constructors
+    # ================================
+    @classmethod
+    def new(cls, id, name, model, stage, qty, unit):
+        item = cls()
+
+        item.set_id(id)
+        item.set_name(name)
+        item.set_model(model)
+        item.set_life_cycle_stage(stage)
+        item.set_qty(qty)
+        item.set_unit(unit)
+        item.impacts = Impacts.from_parent(item)
+        item.emissions = Emissions.from_parent(item)
+        item.carbon_storage = CarbonStorage.from_parent(item)
+
+        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
+        item.set_supplier(electricity_supplier)
+
+        return item
+    
+    @classmethod
+    def from_unit_inventories(cls, name, qty, unit, impacts, emissions, carbon_storage):
+        """ Create an electricity impact from given impacts. This is primarily for seperating electricity component of products.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the electricity.
+        qty : float
+            Quantity of elctricity consumption.
+        unit : Unit Obj.
+            Unit of electricity consumption.
+        impacts : Impacts Obj.
+            Impacts corresponding to electricity consumption.
+        emissions : Emissions Obj.
+            Emissions corresponding to electricity consumption.
+        carbon_storage : CarbonStorage Obj.
+            Carbon storage corresponding to electricity consumption.
+        """
+        item = cls()
+
+        item.set_name(name)
+        item.set_qty(qty)
+        item.set_unit(unit)
+        item.impacts = Impacts.from_parent(item)
+        item.emissions = Emissions.from_parent(item)
+        item.carbon_storage = CarbonStorage.from_parent(item)
+        
+        item.unit_impacts = impacts
+        item.unit_emissions = emissions
+        item.unit_carbon_storage = carbon_storage
+
+        item.inventories_declared_unit = unit
+        item.inventories_declared_qty = 1.0
+
+        return item
+
+    # ================================
+    # Setters
+    # ================================
+    def set_impact_database_entry(self, database_item:str):
+        """ Electricity does not directly read from database.
+        """
+        pass
+
+    def set_supplier(self, supplier):
+        """ Set electricity supplier.
+        
+        Parameters
+        ----------
+        supplier : ElectricitySupply Obj.
+            Electricity supply
+        """
+        self.electricity_supplier = supplier
+
+        self.unit_impacts = supplier.get_impacts()
+        self.unit_emissions = supplier.get_emissions()
+        self.unit_carbon_storage = CarbonStorage.from_parent(supplier) # ElectricitySupply does not have CarbonStorage record
+
+        self.inventories_declared_qty = 1.0 # ElectricitySupply computes impact per one unit
+        self.inventories_declared_unit = supplier.get_unit()
+
+        return self
+
+    def set_year(self, year):
+        """ Set the year of electricity consumption.
+        
+        Parameters
+        ----------
+        year : int
+            Year of electricity consumption.
+        """
+        self.year = year
+
+        if self.get_supplier() is not None:
+            self.get_supplier().set_year(year)
+
+        return self
+    
+    def set_spatial_resolution(self, spatial_resolution):
+        """ Set the spatial resolution of the electricity supply.
+        
+        Parameters
+        ----------
+        spatial_resolution : str
+            Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
+        """
+        self.spatial_resolution = spatial_resolution
+
+        if self.get_supplier() is not None:
+            self.get_supplier().set_spatial_resolution(spatial_resolution)
+
+        return self
+    
+    def set_scenario(self, scenario):
+        """ Set scenario name. This will be used with cambium data.
+        
+        Parameters
+        ----------
+        scenario : str
+            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        """
+        self.scenario = scenario
+
+        if self.get_supplier() is not None:
+            if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
+                self.get_supplier().set_scenario(scenario)
+            else:
+                raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")
+
+        return self
+
+    # ================================
+    # Getters
+    # ================================
+    def get_impact_database_entry(self):
+        """ Electricity does not directly read from database.
+        """
+        pass
+
+    def get_supplier(self):
+        """ Get the electricity supplier.
+        
+        Returns
+        -------
+        ElectricitySupply Obj.
+            Electricity supplier.
+        """
+        return self.electricity_supplier
+    
+    def get_year(self):
+        """ Get the year of electricity consumption.
+        
+        Returns
+        -------
+        int
+            Year of electricity consumption.
+        """
+        return self.year
+    
+    def get_spatial_resolution(self):
+        """ Get the spatial resolution of the electricity supply.
+    
+        Parameters
+        ----------
+        str
+            Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
+        """
+        return self.spatial_resolution
+
+    def get_scenario(self):
+        """ Get scenario name. This will what used with cambium data.
+        
+        Parameters
+        ----------
+        str
+            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        """
+        return self.scenario
+
+    def get_data_distribution(self, attr):
+        """ Get data_distribution object corresponding to the given attribute.
+
+        Parameters
+        ----------
+        attr : str.
+            Attribute to which the distribution correspond.
+
+        Returns
+        -------
+        DataDistribution Obj.
+            Data distribution.        
+        """ 
+        if (attr == 'impacts') and (self.get_supplier() is not None):
+            supplier = self.get_supplier()
+            impact_distribution, weights = supplier.get_impact_distribution() # this is a sampling of unit impacts
+
+            declared_unit = supplier.get_unit()
+            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
+
+            impact_distributions = []
+            for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
+                data = []
+                for impact, weight in zip(impact_distribution, weights):
+                    data.extend([impact.get_record(category) * conversion_factor * self.get_qty()] * int(weight))
+
+                impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category, set_dist=False))
+
+            return impact_distributions
+        else:
+            return self.data_distributions[attr]
+
+    # ================================
+    # Methods
+    # ================================
+    def update_inventory_records(self):
+        """ Sets impacts quantities, based on database item asigned to the product/process 
+            and the product/process quantity.
+            If no database entry is asigned, impacts are not updated.
+
+        Raises
+        ------
+        ImportError : Incompatible units of Master object and database entry.
+        """
+        if not self.get_supplier() is None:
+            supplier = self.get_supplier()
+            supplier.update_inventory_records()
+
+        super().update_inventory_records()
+
+        return self
+
+
+if __name__ == '__main__':
+    pass

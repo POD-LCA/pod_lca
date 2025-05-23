@@ -92,8 +92,11 @@ class TransportationProcess(Process):
         item.impacts = Impacts.from_parent(item)
         item.emissions = Emissions.from_parent(item)
         item.carbon_storage = CarbonStorage.from_parent(item)
-        item.add_inventory_records_to_model()
+        item.unit_impacts = Impacts.from_parent(item)
+        item.unit_emissions = Emissions.from_parent(item)
+        item.unit_carbon_storage = CarbonStorage.from_parent(item)
         item.set_impact_database_entry(impacts_from)
+        item.add_inventory_records_to_model()
 
         return item
     

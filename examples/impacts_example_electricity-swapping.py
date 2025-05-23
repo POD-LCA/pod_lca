@@ -35,7 +35,7 @@ print(epoxy.get_impacts())
 epoxy.get_electricity().set_spatial_resolution("Local")
 print(epoxy.get_impacts())
 
-epoxy.set_production_year(2025)
+epoxy.set_production_year(2035)
 print(epoxy.get_impacts())
 # print(epoxy.electricity['by_location'].year)
 

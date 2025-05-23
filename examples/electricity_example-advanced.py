@@ -51,13 +51,16 @@ print(impacts)
 # changing the electricity supplier year would only change the unit impacts
 # and not the electricity product impacts
 electricity_supplier.set_year(2037)
+
+unit_impacts = electricity_supplier.get_impacts()
+impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
 
 # to change the electricity product impacts, we need to set the year on the electricity product
 # this will automatically update the supplier year as well
 electricity.set_year(2045)
-print(impacts)
+print(electricity.get_impacts())
 
 # =================================
 # Change electricity spatial resolution
@@ -65,12 +68,18 @@ print(impacts)
 # changing the electricity supplier spatial resolution would only change the unit impacts
 # and not the electricity product impacts
 electricity_supplier.set_spatial_resolution('Regional')
+
+unit_impacts = electricity_supplier.get_impacts()
+impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
 
 # to change the electricity product impacts, we need to set the spatial resolution on the electricity product
 # this will automatically update the supplier year as well
 electricity.set_spatial_resolution('Regional')
+
+unit_impacts = electricity_supplier.get_impacts()
+impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
 
@@ -80,11 +89,17 @@ print(impacts)
 # changing the electricity supplier scenario would only change the unit impacts
 # and not the electricity product impacts
 electricity_supplier.set_scenario('Decarb95by2050')
+
+unit_impacts = electricity_supplier.get_impacts()
+impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
 
 # to change the electricity product impacts, we need to set the scenario on the electricity product
 # this will automatically update the supplier year as well
 electricity.set_scenario('Decarb95by2050')
+
+unit_impacts = electricity_supplier.get_impacts()
+impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)

@@ -5,12 +5,15 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import bool_ as np_bool
+
 from . import Master
-from ..electricity import ElectricitySupply
+from . import Electricity
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..uncertainty import DataDistribution
+from ...units import KG_CARBON_DIOXIDE
+from ...units import Unit
 from ...units import UNITS_MAP
 from ...utilities import config
 
@@ -36,6 +39,8 @@ class Product(Master):
         The mass of product in weight units per unit of product's unit of measurement.
     trnasporter : TransportationProcess Obj.
         Transportation process, if the product is being transported, else None.
+    mineral_carbonation_potential : bool
+        Mineral carbonation potential of the product.
     is_material : bool
         True, if the product is a material.
     is_fuel : bool
@@ -53,6 +58,7 @@ class Product(Master):
         self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
         self.transporter = None
+        self.mineral_carbonation_potential = None
         self.is_material = True
 
     def __str__(self):
@@ -195,6 +201,58 @@ class Product(Master):
                     break
         
         return self
+
+    def set_mineral_carbonation_potential(self, potential):
+        """ Set mineral carbonation potential of the product.
+        
+        Parameters
+        ----------
+        potential : bool
+            Mineral carbonation potential of the product.
+        """
+        if isinstance(potential, (bool, np_bool)):
+            self.mineral_carbonation_potential = potential
+        else:
+            raise ValueError("Mineral carbonation potential needs to be a boolean.")
+
+        return self
+    
+    def set_mineral_carbon_intensity(self, qty, unit=KG_CARBON_DIOXIDE, per=None):
+        """ Set accelerated carbonation uptake to the 'Mineral C' entry.
+        
+        Parameters
+        ----------
+        qty : float
+            Quantity of accelerated carbonation uptake.
+        unit : Unit Obj
+            Unit of accelerated carbonation uptake.
+        per : dict or Unit Obj
+            Parent quantity for which the mineral carbon intensity is declared.
+            If dict, {'per': {'qty': (int or float), 'unit': (Unit Obj.)}}
+            If Unit object only, the quantity is taken as 1.0; 
+            If None, taken as per unit of parent objects declared unit.
+        """
+        key = config['setup']['impacts']['ACCELERATED_CARBONATION_INVENTORY']
+        if key in self.unit_carbon_storage.record_attr_dict:
+            if self.get_mineral_carbonation_potential():
+                mineral_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
+                input_unit = unit
+                conversion_factor_1 = input_unit.get_conversion_factor(mineral_carbon_unit)
+                
+                if per is None:
+                    conversion_factor_2  = 1.0 * self.inventories_declared_qty
+                elif isinstance(per, Unit):
+                    conversion_factor_2 = per.get_conversion_factor(self.inventories_declared_unit) * self.inventories_declared_qty
+                elif isinstance(per, dict):
+                    conversion_factor_2 = per['unit'].get_conversion_factor(self.inventories_declared_unit) * self.inventories_declared_qty / per['qty']
+                else:
+                    raise TypeError
+
+                setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
+            else:
+                raise Warning(f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override.")
+
+        return self
     
     # ================================
     # Getters
@@ -302,9 +360,19 @@ class Product(Master):
         """
         return self.transporter
 
+    def get_mineral_carbonation_potential(self):
+        """ Set mineral carbonation potential of the product.
+        
+        Returns
+        -------
+        bool
+            Mineral carbonation potential of the product.
+        """
+        return self.mineral_carbonation_potential
+
     # ================================
     # Methods
-    # ================================
+    # ================================    
     def update_inventory_records(self):
         """ Sets inventory quantities, based on database item asigned to the product/process 
             and the product/process quantity.
@@ -317,8 +385,26 @@ class Product(Master):
         super().update_inventory_records()
         self.update_electricity_records()
 
-        return self
+        if self.get_mineral_carbonation_potential() is None and self.get_impact_database_entry() is not None:
+            data_entry = self.get_project().get_database().get_data_entry(self.get_impact_database_entry())
+            key = config['setup']['impacts']['ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER']
+            if key in data_entry.index:
+                if isinstance(data_entry[key], (bool, np_bool)):
+                    potential = data_entry[key]
+                elif isinstance(data_entry[key], str):
+                    if data_entry[key].lower() in ['yes', 'true']:
+                        potential = True
+                    elif data_entry[key].lower() in ['no', 'false']:
+                        potential = False
+                    else:
+                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+                else:
+                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
 
+                self.set_mineral_carbonation_potential(potential)
+
+        return self
+    
     def update_electricity_records(self):
         """ Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories).
             The electricity data in the database should be prefixed with one of 'Electricity_', 'electricity_', 'elec_', or 'Elec_'.
@@ -355,7 +441,6 @@ class Product(Master):
                 
                 # electricity from database
                 if self.electricity['from_database'] is None:
-                    # record inventories per unit of electricity
                     for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
                         record_dict = {}
                         for cat in DATA_HEADERS_DICT:
@@ -373,19 +458,19 @@ class Product(Master):
                         else: 
                             raise KeyError(f"Record type {data_type} not recognized.")
 
-                    electiricity_from_data = Electricity.from_inventories(name=self.get_name() + '_electricity', 
-                                                                            qty=1.0, 
-                                                                            unit=electricity_unit, 
-                                                                            impacts=impacts,
-                                                                            emissions=emissons,
-                                                                            carbon_storage=carbon_storage)
+                    electiricity_from_data = Electricity.from_unit_inventories(name=self.get_name() + '_electricity', 
+                                                                                qty=electricity_qty, 
+                                                                                unit=electricity_unit, 
+                                                                                impacts=impacts,
+                                                                                emissions=emissons,
+                                                                                carbon_storage=carbon_storage)
                     self.electricity['from_database'] = electiricity_from_data
 
             if self.get_electricity_source() is None:
                 self.electricity["_current"] = 'from_database'
             elif self.get_electricity_source() == 'by_location':
                 product_impact = self.impacts
-                product_impact -= self.electricity['from_database'].get_impacts() * electricity_qty
+                product_impact -= self.electricity['from_database'].get_impacts()
                 product_impact += self.electricity['by_location'].get_impacts()
         
         return self
@@ -410,239 +495,7 @@ class Fuel(Product):
     def __str__(self):
         return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
-class Electricity(Fuel):
-    """ Electricity product object, inheriting from the Fuel object.
 
-    Attributes
-    ----------
-    electricity_supplier: ElectricitySupply Obj
-        Electricity supplier
-    year : int
-        Year of electricity consumption
-    spatial_resolution: str
-        Spatial resolution considered for electricity data: 'National'. 'Regional', 'Local'
-    scenario: str
-        Cambium scenario for prediction of electricity technology futures.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.electricity_supplier = None
-        self.year = None
-        self.spatial_resolution = None
-        self.scenario = None
-
-    @classmethod
-    def new(cls, id, name, model, stage, qty, unit):
-        item = cls()
-
-        item.set_id(id)
-        item.set_name(name)
-        item.set_model(model)
-        item.set_life_cycle_stage(stage)
-        item.set_qty(qty)
-        item.set_unit(unit)
-        item.set_weight_unit(unit)
-        item.impacts = Impacts.from_parent(item)
-        item.emissions = Emissions.from_parent(item)
-        item.carbon_storage = CarbonStorage.from_parent(item)
-
-        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
-        item.set_supplier(electricity_supplier)
-
-        return item
-    
-    @classmethod
-    def from_inventories(cls, name, qty, unit, impacts, emissions, carbon_storage):
-        """ Create an electricity impact from given impacts. This is primarily for seperating electricity component of products.
-        
-        Parameters
-        ----------
-        name : str
-            Name of the electricity.
-        qty : float
-            Quantity of elctricity consumption.
-        unit : Unit Obj.
-            Unit of electricity consumption.
-        impacts : Impacts Obj.
-            Impacts corresponding to electricity consumption.
-        emissions : Emissions Obj.
-            Emissions corresponding to electricity consumption.
-        carbon_storage : CarbonStorage Obj.
-            Carbon storage corresponding to electricity consumption.
-        """
-        item = cls()
-
-        item.set_name(name)
-        item.set_qty(qty)
-        item.set_unit(unit)
-        item.set_weight_unit(unit)
-        item.impacts = impacts
-        item.emissions = emissions
-        item.carbon_storage = carbon_storage
-
-        return item
-    
-    def update_inventory_records(self):
-        """ Sets impacts quantities, based on database item asigned to the product/process 
-            and the product/process quantity.
-            If no database entry is asigned, impacts are not updated.
-
-        Raises
-        ------
-        ImportError : Incompatible units of Master object and database entry.
-        """
-        if not self.get_supplier() is None:
-            supplier = self.get_supplier()
-            
-            declared_unit = supplier.get_unit()
-            unit_impacts = supplier.get_impacts()
-            unit_emissions = supplier.get_emissions()
-
-            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
-
-            impacts = {category: (unit_impacts.get_record(category) / conversion_factor) * self.qty for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
-            self.impacts.update_qty(impacts)
-
-            emissions = {category: (unit_emissions.get_record(category) / conversion_factor) * self.qty for category in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
-            self.emissions.update_qty(emissions)
-                 
-    def set_supplier(self, supplier):
-        """ Set electricity supplier.
-        
-        Parameters
-        ----------
-        supplier : ElectricitySupply Obj.
-            Electricity supply
-        """
-        self.electricity_supplier = supplier
-
-        return self
-
-    def set_year(self, year):
-        """ Set the year of electricity consumption.
-        
-        Parameters
-        ----------
-        year : int
-            Year of electricity consumption.
-        """
-        self.year = year
-
-        if self.get_supplier() is not None:
-            self.get_supplier().set_year(year)
-
-        return self
-    
-    def set_spatial_resolution(self, spatial_resolution):
-        """ Set the spatial resolution of the electricity supply.
-        
-        Parameters
-        ----------
-        spatial_resolution : str
-            Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
-        """
-        self.spatial_resolution = spatial_resolution
-
-        if self.get_supplier() is not None:
-            self.get_supplier().set_spatial_resolution(spatial_resolution)
-
-        return self
-    
-    def set_scenario(self, scenario):
-        """ Set scenario name. This will be used with cambium data.
-        
-        Parameters
-        ----------
-        scenario : str
-            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
-        """
-        self.scenario = scenario
-
-        if self.get_supplier() is not None:
-            if scenario in ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']:
-                self.get_supplier().set_scenario(scenario)
-                
-            else:
-                raise ValueError(f"Scenario {scenario} is not a valid scenario. Valid scenarios are: 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.")
-
-        return self
-    
-    def get_supplier(self):
-        """ Get the electricity supplier.
-        
-        Returns
-        -------
-        ElectricitySupply Obj.
-            Electricity supplier.
-        """
-        return self.electricity_supplier
-    
-    def get_year(self):
-        """ Get the year of electricity consumption.
-        
-        Returns
-        -------
-        int
-            Year of electricity consumption.
-        """
-        return self.year
-    
-    def get_spatial_resolution(self):
-        """ Get the spatial resolution of the electricity supply.
-    
-        Parameters
-        ----------
-        str
-            Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
-        """
-        return self.spatial_resolution
-
-    def get_scenario(self):
-        """ Get scenario name. This will what used with cambium data.
-        
-        Parameters
-        ----------
-        str
-            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
-        """
-        return self.scenario
-
-    def get_data_distribution(self, attr):
-        """ Get data_distribution object corresponding to the given attribute.
-
-        Parameters
-        ----------
-        attr : str.
-            Attribute to which the distribution correspond.
-
-        Returns
-        -------
-        DataDistribution Obj.
-            Data distribution.        
-        """ 
-        if self.get_supplier() is not None:
-            if attr == 'impacts':
-
-                supplier = self.get_supplier()
-                impact_distribution, weights = supplier.get_impact_distribution() # this is a sampling of unit impacts
-
-                declared_unit = supplier.get_unit()
-                conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
-
-                impact_distributions = []
-                for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
-                    data = []
-                    for impact, weight in zip(impact_distribution, weights):
-                        data.extend([impact.get_record(category) * conversion_factor * self.get_qty()] * int(weight))
-
-                    impact_distributions.append(DataDistribution.from_data(data, is_cts=True, name=category, set_dist=False))
-
-                return impact_distributions
-
-            else:
-                return self.data_distributions[attr]
-    
 class Emission(Product):
     """ Emission product object, inheriting from the product object.
 
@@ -658,6 +511,7 @@ class Emission(Product):
 
     def __str__(self):
         return f"Emission(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
+
 
 class Waste(Product):
     """ Waste product object, inheriting from the product object.

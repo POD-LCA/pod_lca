@@ -6,5 +6,6 @@ from .carbon_storage import CarbonStorage
 from .impacts_database import ImpactsDatabase
 from .electricity_impacts_database import ElectricityImpactsDatabase
 from .eol_impacts_database import EOLImpactsDatabase
+from .olca_data import openLCA
 
-__all__ = ["CarbonStorage", "ElectricityImpactsDatabase", "Emissions", "Impacts", "ImpactsDatabase",  "EOLImpactsDatabase", "Records"]
+__all__ = ["CarbonStorage", "ElectricityImpactsDatabase", "Emissions", "Impacts", "ImpactsDatabase",  "EOLImpactsDatabase", "openLCA", "Records"]

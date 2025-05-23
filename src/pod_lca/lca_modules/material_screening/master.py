@@ -50,12 +50,22 @@ class Master:
         self.model = None
         self.name = None
         self.life_cycle_stage = None
-        self.impacts = None
-        self.carbon_storage = None
-        self.emissions = None
         self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
+
+        # total inventories
+        self.impacts = None
+        self.carbon_storage = None
+        self.emissions = None
+
+        # unit inventories
+        self.unit_impacts = None
+        self.unit_carbon_storage = None
+        self.unit_emissions = None
+        self.inventories_declared_unit = None
+        self.inventories_declared_qty = None
+
         self.is_hotspot = False
         self.data_distributions = {}
         self.pedigree_score = None
@@ -95,8 +105,11 @@ class Master:
         item.impacts = Impacts.from_parent(item)
         item.emissions = Emissions.from_parent(item)
         item.carbon_storage = CarbonStorage.from_parent(item)
-        item.add_inventory_records_to_model()
+        item.unit_impacts = Impacts.from_parent(item)
+        item.unit_emissions = Emissions.from_parent(item)
+        item.unit_carbon_storage = CarbonStorage.from_parent(item)
         item.set_impact_database_entry(impacts_from)
+        item.add_inventory_records_to_model()
 
         return item
 
@@ -187,6 +200,38 @@ class Master:
             The name of the database item which gives the item impacts.
         """
         self.impact_database_entry = database_item
+
+        database = self.get_project().get_database()
+
+        if database_item is None:
+            self.inventories_declared_unit = self.get_unit()
+            self.inventories_declared_qty = 1.0
+
+            impacts = {key: 0.0 for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+            self.unit_impacts.update_qty(impacts)
+
+            emissions = {key: 0.0 for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+            self.unit_emissions.update_qty(emissions)
+
+            carbon_storage = {key: 0.0 for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+            self.unit_carbon_storage.update_qty(carbon_storage)            
+
+            log(f'Impacts not assigned for the item {self.get_name()}.', 'Warn')
+        else:
+            unit_inventories = database.get_data_entry(self.get_impact_database_entry())
+            self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
+            self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
+
+            impacts = {key: unit_inventories[key] for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+            self.unit_impacts.update_qty(impacts)
+
+            emissions = {key: unit_inventories[key] for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+            self.unit_emissions.update_qty(emissions)
+
+            carbon_storage = {key: unit_inventories[key] for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+            self.unit_carbon_storage.update_qty(carbon_storage)
+
+        return self
         
     def set_qty(self, qty:float):
         """ Update the qty of the item.
@@ -424,21 +469,21 @@ class Master:
         ------
         ImportError : Incompatible units of Master object and database entry.
         """
-        if self.impact_database_entry:
-            unit_impacts = self.get_project().get_database().get_data_entry(self.impact_database_entry)
-            conversion_factor = self.get_unit().get_conversion_factor(unit_impacts["Unit"])
+        conversion_factor = self.get_unit().get_conversion_factor(self.inventories_declared_unit)
 
-            if conversion_factor is None:
-                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.impact_database_entry} of units {unit_impacts['Unit']}) are of incompatible units.")
-            
-            impacts = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
-            self.impacts.update_qty(impacts)
+        if conversion_factor is None:
+            raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
+        
+        impacts = {key: self.unit_impacts.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+        self.impacts.update_qty(impacts)
 
-            emissions = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
-            self.emissions.update_qty(emissions)
+        emissions = {key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+        self.emissions.update_qty(emissions)
 
-            carbon_storage = {key: unit_impacts[key] * conversion_factor * self.qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
-            self.carbon_storage.update_qty(carbon_storage)
+        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+        self.carbon_storage.update_qty(carbon_storage)
+
+        return self
 
     def remove_inventory_records_from_model(self, stage=None):
         """ Remove all inventory records from the product/process.

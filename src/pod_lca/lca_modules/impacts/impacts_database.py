@@ -130,7 +130,11 @@ class ImpactsDatabase:
 
         data_headers = self.get_required_headers() + mapped_headers
         if 'additional_headers' in kwargs:
-            data_headers = data_headers + kwargs['additional_headers']
+            if isinstance(kwargs['additional_headers'], list):
+                data_headers = data_headers + kwargs['additional_headers']
+            elif isinstance(kwargs['additional_headers'], str):
+                data_headers = data_headers + [kwargs['additional_headers']]
+                
         if 'grouped_data' in kwargs:
             new_headers = []
             for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():

@@ -158,7 +158,7 @@ class Link:
                 A dictionary of impacts for each category. 
         """
 
-        if isinstance(self.travel_dist, float) or isinstance(self.travel_dist, int): 
+        if isinstance(self.travel_dist, (float, int)): 
             
             if self.return_trip_factor is None:
                 dist = self.travel_dist
