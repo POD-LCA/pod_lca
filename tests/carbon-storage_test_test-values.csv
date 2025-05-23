@@ -12,7 +12,7 @@ test_10,Finger-jointed lumber; at I-joist plant; PNW,18.2,kg,NO,0,kg CO2,0,0
 test_11,Sawn lumber; softwood; rough; kiln dried; at kiln; NE-NC,0.001,m3,NO,0,kg CO2,0,0
 test_12,"Sawn lumber, softwood, planed, kiln dried, at planer, NE-NC",0.01,m3,NO,0,kg CO2,0,0
 test_13,"Whole tree chips production; softwood; at sawmill, INW",10,kg,NO,0,kg CO2,0,0
-test_14,Cardboard; AWC,1000,kg,NO,0,kg CO2,0,0
+test_14,Cardboard; AWC,1000,kg,Yes,0.2,kg CO2,0,0
 test_15,"Bark, softwood, average, state or private moist cold forest, at forest road, INW",12,kg,NO,0,kg CO2,0,0
 test_16,"Bark, hardwood, average, at forest road,  NE-NC",20,kg,NO,0,kg CO2,0,0
 test_17,"Lumber, softwood, ACQ treated, SE",8,m3,NO,0,kg CO2,0,0

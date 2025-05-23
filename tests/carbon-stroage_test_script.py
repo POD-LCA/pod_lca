@@ -43,7 +43,7 @@ for test in tqdm(test_dict):
                                    unit=UNITS_MAP[test_dict[test]['Unit']], 
                                    impacts_from=test_dict[test]['Material'])
     
-    if test_dict[test]['set_mineral_carbon'] == "YES":
+    if test_dict[test]['set_mineral_carbon'].lower() == "yes":
         try:
             product.get_carbon_storage().set_mineral_carbon(qty=float(test_dict[test]['mineral_C_Qty']), 
                                                             unit=UNITS_MAP[test_dict[test]['mineral_C_Unit']])
