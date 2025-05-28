@@ -1,4 +1,4 @@
-material,travel_dist_scenario,origin,destination,mode,efficiency,feul,domestic_mode,efficiency_dms,unit,qty,return_trip_factor
+material,travel_dist_scenario,origin,destination,mode,efficiency,fuel,domestic_mode,efficiency_dms,unit,qty,return_trip_factor
 Steel,None,,,,2,Regular,,1,km,1,
 Elevators,None,,,Truck,1,Regular,,1,km,1,
 Elevators,None,,,,1,Regular,,1,km,1,

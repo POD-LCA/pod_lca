@@ -1,4 +1,4 @@
-material,travel_dist_scenario,origin,destination,mode,efficiency,feul,domestic_mode,efficiency_dms,unit,qty,return_trip_factor,GWP,AP,EP,ODP,SFP,Domestic_distance_km,Foreign_distance_km
+material,travel_dist_scenario,origin,destination,mode,efficiency,fuel,domestic_mode,efficiency_dms,unit,qty,return_trip_factor,GWP,AP,EP,ODP,SFP,Domestic_distance_km,Foreign_distance_km
 Steel,,,,,2,Regular,,1,km,1,,0.6566084178312428,0.08522569757403264,80.05286827780006,2.2677446484916512e-07,22.97388369386967,494.0620149219284,0.0
 Elevators,,,,Truck,1,Regular,,1,km,1,,0.3502218343210983,0.06072730143810019,79.46125799133328,2.0464268703798145e-07,12.09554743712297,554.5872277452072,0.0
 Elevators,,,,,1,Regular,,1,km,1,,0.3502218343210983,0.06072730143810019,79.46125799133328,2.0464268703798145e-07,12.09554743712297,554.5872277452072,0.0

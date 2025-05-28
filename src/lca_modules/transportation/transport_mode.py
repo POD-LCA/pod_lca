@@ -11,39 +11,143 @@ cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [7, 8, 9, 10, 101 ], "
 faf_mapping = {"Truck": 1 , "Rail": 2, "Barge": 3, "Ocean": 3, "Air": 4}
 
 class TransportMode:
-    def __init__(self, mode_name, efficiency, project, feul_type = "Regular"):
-        """
-        Initialize the TransportMode object.
 
-        Parameters:
-        - name: str, the name of the transportation mode (e.g., 'Truck', 'Rail').
-        - efficiency: int, the efficiency level (e.g., 1, 2, 3).
-        - project: an object representing the project.
-        - impacts: dict, a dictionary containing the environmental impacts of the transportation mode.
-        - limitations: list, a list of limitations for the transportation mode.
-        - faf_mode: int, the FAF mode code for the transportation mode.
-        - set_impact: method, a method to retrieve and update the environmental impacts for the given transportation mode and efficiency.
+    """
+    Initialize the TransportMode object.
 
-        """
-        self.mode_name = mode_name
-        self.efficiency = efficiency
-        self.project = project
-        self.feul_type = feul_type
-        self.impacts = Impacts.from_parent(self)
+    Parameters:
+    - name: str, the name of the transportation mode (e.g., 'Truck', 'Rail').
+    - efficiency: int, the efficiency level (e.g., 1, 2, 3).
+    - project: an object representing the project.
+    - impacts: dict, a dictionary containing the environmental impacts of the transportation mode.
+    - limitations: list, a list of limitations for the transportation mode.
+    - faf_mode: int, the FAF mode code for the transportation mode.
+    - set_impact: method, a method to retrieve and update the environmental impacts for the given transportation mode and efficiency.
+
+    """
+
+    def __init__(self):
+
+        self.mode_name = None
+        self.efficiency = None
+        self.fuel_type = None
+        self.impact = None
         self.limitations = []
         self.faf_mode = None
         self.cfs_mode = None
-        self.set_impact()
+
+
+    def __str__(self):
+        """
+        String representation of the TransportMode object.
+        """
+
+        str = "="*75 + "\n" + f"Transportation Mode: {self.get_name()}\n" + "="*75 + "\n"
+
+        return str
+
+
+    # ================================
+    # Constructors
+    # ================================
+
+
+    @classmethod
+    def new(cls, mode_name, efficiency, fuel_type = "Regular"):
+        
+        """ Create a new transportation mode.
+
+        Parameters:
+        - mode_name: str, the name of the transportation mode (e.g., 'Truck', 'Rail').
+        - efficiency: int, the efficiency level (e.g., 1, 2, 3).
+        - project: an object representing the project.
+        - fuel_type: str, the type of fuel used (default is "Regular").
+
+        Returns:
+        - TransportMode object.
+        """
+        
+        mode = cls()
+        mode.set_name(mode_name)
+        mode.set_efficiency(efficiency)
+        mode.set_fuel_type(fuel_type)
+        mode.set_impact()
+        mode.set_faf_mode()
+        mode.set_cfs_mode()
+
+        return mode
+
+
+    # ================================
+    # Setters
+    # ================================
+
+    def set_name(self, mode_name:(str)):
+        """
+        Set the name of the transportation mode.
+
+        Parameters:
+        - mode_name: str, the name of the transportation mode.
+        """
+        self.mode_name = mode_name
+
+        return self
+
+    def set_efficiency(self, efficiency:(str)):
+        """
+        Set the efficiency of the transportation mode.
+
+        Parameters:
+        - efficiency: str, the efficiency level (e.g., 'Low', 'Medium', 'High').
+        """
+        self.efficiency = efficiency
+
+        return self
+
+    def set_fuel_type(self, fuel_type:(str)):
+        """
+        Set the fuel type of the transportation mode.
+
+        Parameters:
+        - fuel_type: str, the type of fuel used (e.g., 'Regular', 'Premium').
+        """
+        self.fuel_type = fuel_type
+
+        return self
+
+    def set_faf_mode(self):
+        """
+        Set the FAF mode code for the transportation mode.
+        """
+        if self.mode_name in faf_mapping:
+            self.faf_mode = faf_mapping[self.mode_name]
+        else:
+            print(f"Warning: FAF mode mapping not found for {self.mode_name}.")
+
+        return self
+
+    def set_cfs_mode(self):
+        """
+        Set the CFS mode code for the transportation mode.
+        """
+        if self.mode_name in cfs_mapping:
+            self.cfs_mode = cfs_mapping[self.mode_name]
+        else:
+            print(f"Warning: CFS mode mapping not found for {self.mode_name}.")
+
+        return self
 
     def set_impact(self):
         """
         Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
-
+        #TODO: create transprtation database
         emission_data = Data_Importer.import_as_pandas(r"data\transportation_podlca_emission.csv")
 
+        self.impact = Impacts.from_parent(self)
+
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
-                                       (emission_data["eff"] == self.efficiency) & (emission_data["feul"] == self.feul_type) ]
+                                       (emission_data["eff"] == self.efficiency) & (emission_data["fuel"] == self.fuel_type) ]
 
         # If data is found, update the impacts
         if not filtered_data.empty:
@@ -56,9 +160,14 @@ class TransportMode:
                 "SFP": row["SFP"]
             }
 
-            self.impacts.update_impact_qty(impacts)
+            self.impact.update_impact_qty(impacts)
         else:
             print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
+
+    # ================================
+    # Getters
+    # ================================
+
 
     def get_name (self):
         """
@@ -72,20 +181,16 @@ class TransportMode:
         """
         return self.efficiency
 
-    def get_impacts (self):
+    def get_impact (self):
         """
         Retrieve the impacts of the transportation mode.
         """
-        return self.impacts
+        return self.impact
 
     def get_faf_mode (self):
         """
         Retrieve the FAF mode code of the transportation mode.
         """
-
-        faf_mapping = {"Truck": 1 , "Rail": 2, "Barge": 3, "Ocean": 3, "Air": 4}
-        if self.mode_name in faf_mapping:
-            self.faf_mode = faf_mapping[self.mode_name]
 
         return self.faf_mode
 
@@ -94,17 +199,13 @@ class TransportMode:
         Retrieve the CFS mode code of the transportation mode.
         """
 
-        cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [7, 8, 9, 10, 101 ], "Air": [11]}
-        if self.mode_name in cfs_mapping:
-            self.cfs_mode = cfs_mapping[self.mode_name]
-
         return self.cfs_mode
 
-    def get_feul_type (self):
+    def get_fuel_type (self):
         """
         Retrieve the fuel type of the transportation mode.
         """
-        return self.feul_type
+        return self.fuel_type
 
 
 if __name__ == '__main__':

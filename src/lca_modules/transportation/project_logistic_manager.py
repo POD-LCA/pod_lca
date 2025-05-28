@@ -1,6 +1,6 @@
 from lca_modules.transportation.logistics_link import Link
 from lca_modules.transportation.scenarios import Scenario
-from lca_modules.location.location import Location
+
 from lca_modules.impacts.impacts import Impacts
 import gc
 
@@ -13,30 +13,27 @@ __version__ = "0.1.0"
 
 
 class ProjectLogisticManager:
+    """
+    ProjectLogisticManager class which maintains the links of transportation.
+
+    Attributes
+    ----------
+    name : str
+        name of the project.
+    shipping_dest : str.
+        neme of the shipping destination location.
+    shipping_org : str.
+        name of the shipping origin location.
+    links : list.
+        list of links.
+    impact : obj.
+        impact object.
+    """
 
     def __init__(self):
 
-        """
-        ProjectLogisticManager class which maintains the links of transportation.
-
-        Attributes
-        ----------
-        name : str
-            name of the project.
-        shipping_dest : str.
-            neme of the shipping destination location.
-        shipping_org : str.
-            name of the shipping origin location.
-        links : list.
-            list of links.
-        impact : obj.
-            impact object.
-        """
-
         self.name = None
-        self.shipping_dest = None 
-        self.shipping_org = None 
-        self.links = []
+        self.links = {}
         self.impacts = Impacts.from_parent(self)
 
 
@@ -94,33 +91,6 @@ class ProjectLogisticManager:
         return self
 
 
-    def set_shipping_dest(self, shipping_dest:(str)):
-        """ Set the shipping destination of the project.
-
-        Parameters
-        ----------
-        shipping_dest : str
-            Name of the shipping destination location.
-        """
-
-        self.shipping_dest = Location.from_str (shipping_dest)
-
-        return self
-
-
-    def set_shipping_org(self, shipping_org:(str)):
-        """ Set the shipping origin of the project.
-
-        Parameters
-        ----------
-        shipping_org : str
-            Name of the shipping origin location.
-        """
-
-        self.shipping_org = Location.from_str (shipping_org)
-
-        return self
-
     #TO DO: Add the method to update the destination and origin location in the links.
 
     def get_name(self):
@@ -134,27 +104,6 @@ class ProjectLogisticManager:
         """
         return self.name
 
-    def get_shipping_dest(self):
-        """
-        Retrieve the shipping destination of the project.
-
-        Returns
-        -------
-        str
-            Name of the shipping destination location.
-        """
-        return self.shipping_dest
-
-    def get_shipping_org(self):
-        """
-        Retrieve the shipping origin of the project.
-
-        Returns
-        -------
-        str
-            Name of the shipping origin location.
-        """
-        return self.shipping_org
 
     def get_links(self):
         """
@@ -177,21 +126,130 @@ class ProjectLogisticManager:
             Impacts of the project.
         """
         return self.impacts
+
+    def get_link(self, link_name:(str)):
+        """
+        Retrieve a link from the project.
+
+        Parameters
+        ----------
+        link_name : str
+            Name of the link to be retrieved.
+
+        Returns
+        -------
+        Link Obj.
+            The link object if found, else None.
+        """
+
+        if link_name in self.links:
+            return self.links[link_name]
+        else:
+            raise ValueError(f"Link '{link_name}' not found in the project.")
+
+    def get_link_names(self):
+        """
+        Retrieve the names of all the links in the project.
+
+        Returns
+        -------
+        list
+            List of link names.
+        """
+
+        return list(self.links.keys())
     
     # ================================
     # Model Methods
     # ================================
 
+    def add_link(self, link_name:(str), shipping_dest:(str) = None, shipping_org:(str) = None ):
 
-    def create_link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms):
         """
-        Create a link of transportation for the project.
-        """
-        link = Link(self, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms)
-        self.links.append(link)
+        Add a link to the project.
 
-        link.compute_impact()
+        Parameters
+        ----------
+        link_name : str
+            Name of the link to be added.
+        """
+
+        link = Link.in_project (self, link_name)
+        link.set_name(link_name)
+        link.set_shipping_dest(shipping_dest)
+        link.set_shipping_org(shipping_org)
+    
+        self.links[link_name] = link
+
+        return link
+
+
+    # ================================
+    # Project Methods
+    # ================================
+
+
+    def clear_project(self, links=True, impacts=True):  
+        """
+        Clear the project by removing all links and impacts.
+
+        Parameters
+        ----------
+        links : bool, optional
+            If True, clear all links. Default is True.
+        impacts : bool, optional
+            If True, clear all impacts. Default is True.
+        """
+
+        if links:
+            self.links = {}
+
+        if impacts:
+            self.impacts = None
+
+
+    def save(self, file_path:(str)):
+        """ Save as a *.pkl file.
+
+        Parameters
+        ----------
+        file_path : str
+            Location (including the name) where the data be saved.
+        """
         
+        with open(file_path, "wb") as file:
+            pickle.dump(self, file)
+
+
+    @staticmethod
+    def load(file_path:(str)):
+        """ Load a project from a pickled file.
+
+        Parameters
+        ----------
+        file_path : str
+            Location (including the name) where the data be loaded from.
+
+        Raises
+        ------
+        FileNotFoundError
+            File not found.
+        PermissionError
+            Permission denied to access file.
+        """
+
+        try:
+            with open(file_path, 'rb') as file:
+                project = pickle.load(file)
+            return project
+        except FileNotFoundError:
+            print("File not found.")
+        except PermissionError:
+            print("Permission denied.")
+        except Exception as e:
+            print("An error occurred:", e)
+
+
     def get_links_impacts(self):
 
         """

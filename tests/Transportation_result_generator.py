@@ -30,7 +30,7 @@ def run_test_files(test_file_path, output_csv_path):
             return_trip_factor = clean(row["return_trip_factor"])
             dist_unit = clean(row["unit"])
             mode_name = clean(row["mode"])
-            feul_type = clean(row["feul"])
+            fuel_type = clean(row["fuel"])
             mode_dms_name = clean(row["domestic_mode"])
             efficiency = clean(row["efficiency"])
             efficiency_dms = clean(row["efficiency_dms"])
@@ -50,7 +50,7 @@ def run_test_files(test_file_path, output_csv_path):
                 return_trip_factor=return_trip_factor,
                 dist_unit=dist_unit,
                 mode_name=mode_name,
-                feul_type=feul_type,
+                fuel_type=fuel_type,
                 mode_dms_name=mode_dms_name,
                 efficiency=efficiency,
                 efficiency_dms=efficiency_dms

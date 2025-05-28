@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from lca_modules.transportation.scenarios import Scenario
 from lca_modules.transportation.transport_mode import TransportMode
+from lca_modules.location.location import Location
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -13,123 +14,398 @@ __version__ = "0.1.0"
 
 class Link:
     
-    def __init__(self, project, material, qty, travel_dist, return_trip_factor, dist_unit, mode_name, feul_type, mode_dms_name, efficiency, efficiency_dms):
-        """
-        Link object create a link of transportation for each material.
+    """
+    Link object create a link of transportation for each material.
 
-        Attributes
-        ----------
-        project : Project obj.
-            Refers to the main project.
+    Attributes
+    ----------
+    project : Project obj.
+        Refers to the main project.
 
-        material : str.
-            name of the material.
+    material : str.
+        name of the material.
 
-        qty : str.
-            quantity of the of the material.
+    qty : str.
+        quantity of the of the material.
 
-        travel_dist : float or str.
-            transportation distance.
-            transportaion scenario.
+    travel_dist : float or str.
+        transportation distance.
+        transportaion scenario.
 
-        return_trip_factor : float.
-            transportation return trip factor.
+    return_trip_factor : float.
+        transportation return trip factor.
 
-        dist_unit : str.
-            transportation distance unit.
+    dist_unit : str.
+        transportation distance unit.
 
-        mode_name : str.
-            transportation mode (ex: truck, rail).
+    mode_foreign : str.
+        transportation mode (ex: truck, rail).
 
-        mode_dms_name : str.
-            transportation domestic mode (ex: truck, rail).
+    mode_domestic : str.
+        transportation domestic mode (ex: truck, rail).
 
-        efficiency : int.
-            transportation mode efficiency (ex: (1)high, (2)medium, (3)low).
 
-        efficiency_dms : int.
-            Domestic transportation mode efficiency (ex: (1)high, (2)medium, (3)low).
+    """
 
-        """
-        self.project = project  
-        self.material = material
+    def __init__(self):
+
+        self.project = None
+        self.name = None
+        self.material = None
         self.qty = 0.0
-        self.travel_dist = travel_dist
+        self.qty_unit = "tonne" 
+        self.travel_dist = None
         self.return_trip_factor = None
-        self.dist_unit = dist_unit
-        self.efficiency = efficiency
-        self.efficiency_dms = efficiency_dms
-        self.mode = None if mode_name is None else TransportMode(mode_name, efficiency, project, feul_type)
-        self.mode_domestic = None if mode_dms_name is None else TransportMode(mode_dms_name, efficiency_dms, project, feul_type)
-        self.unit_conversion = {"km": 1, "mi": 0.621371}[dist_unit]
+        self.travel_dist_unit = "km"
+        self.mode_foreign = None
+        self.mode_domestic = None 
+        self.shipping_dest = None
+        self.shipping_org = None
+        self.unit_conversion = {"km": 1, "mi": 0.621371}[self.travel_dist_unit]
         self.link_distances = {"Domestic": 0, "Foreign": 0}
-        self.impact = None
+        self.impact_foreign = None
+        self.impact_domestic = None
+        self.impact_total = self.impact_foreign + self.impact_domestic
 
+
+    def __str__(self):
+        """ String representation of the Link object.
+
+            Returns
+            -------
+            str
+                String representation of the Link object.
+        """
+        str = "="*75 + "\n" + f"Material: {self.get_material()} | Quantity: {self.get_qty()} | Travel distance: {self.get_travel_dist()}\n"
+
+        return str
+
+
+    # ================================
+    # Constructors
+    # ================================
+
+    @classmethod
+    def in_project(cls, project, name=None):
+        """ Create a new transportation link in the project.
+
+            Parameters
+            ----------
+            project : Project obj.
+                The project to which the transportation link belongs.
+            name : str, optional
+                Name of the transportation link (default is None).
+
+            Returns
+            -------
+            Link obj.
+                Transportation link created in the project.
+        """
+
+        link = cls()
+        link.set_project(project)
+        if name is not None:
+            link.set_name(name)
+        else:
+            link.set_name(f"Link_{len(project.links)}")
+
+        return link
 
 
     # ================================
     # Setters
     # ================================
 
-    def set_qty (self, qty:float):
+    def set_project (self, project):
+        """ Set the project of the transportation link.
+            Parameters
+            ----------
+            project : Project obj.
+                The project of the transportation link.
+        """
+        self.project = project
+
+        return self
+
+    def set_name (self, name:(str)):
+        """ Set the name of the transportation link.
+            Parameters
+            ----------
+            name : str
+                Name of the transportation link.
+        """
+        self.name = name
+
+        return self
+
+
+    def set_material (self, material:(str), qty:(float), qty_unit:(str) = "tonne"):
         """ Set the quantity of the transportation link.
 
             Parameters
             ----------
+            material : str
+                Material name of the transportation link.
             qty : float
                 quantity of the transportation link.
+            qty_unit : str, optional
         """
-
+        self.material = material    
         self.qty = qty
+        self.qty_unit = qty_unit
 
-    def set_material (self, material:str):
-        """ Set the material name of the transportation link.
-
-            Parameters
-            ----------
-            material : str
-                material name of the transportation link.
-        """
-
-        self.material = material
     
-    def set_travel_dist (self, travel_dist):
+    def set_travel_dist (self, travel_dist, travel_dist_unit:(str) = "km", return_trip_factor:(float) = None):
         """ Set the travel distance of the transportation link.
 
             Parameters
             ----------
             travel_dist : float or str
                 travel distance of the transportation link.
+            travel_dist_unit : str, optional
+                Distance unit of the travel distance (default is "km").
+            return_trip_factor : float, optional
+                Return trip factor of the transportation link (default is None).
         """
 
         self.travel_dist = travel_dist
-
-    def set_return_trip_factor (self, return_trip_factor:float):
-        """ Set the return trip factor of the transportation link.
-
-            Parameters
-            ----------
-            return_trip_factor : float
-                return trip factor of the transportation link.
-        """
-
+        self.travel_dist_unit = travel_dist_unit
         self.return_trip_factor = return_trip_factor
 
-    def set_mode (self, mode:str):
+
+    def set_mode_domestic (self, mode:(str) , fuel_type:(str) = "Regular", efficiency:(str) = "medium"):
         """ Set the transportation mode of the transportation link.
 
             Parameters
             ----------
             mode : str
                 transportation mode of the transportation link.
+            fuel_type : str, optional
+                type of fuel used in the transportation mode (default is "Regular").
+            efficiency : str, optional
+                efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
 
-
-
-        self.mode = mode
+        self.mode_domestic = TransportMode.new (mode, efficiency, fuel_type)
+        self.impact_domestic = self.mode_domestic.get_impact()
         
+    def set_mode_foreign (self, mode:(str) , fuel_type:(str) = "Regular", efficiency:(str) = "medium"):
+        """ Set the transportation foreign mode of the transportation link.
+
+            Parameters
+            ----------
+            mode : str
+                transportation foreign mode of the transportation link.
+            fuel_type : str, optional
+                type of fuel used in the transportation mode (default is "Regular").
+            efficiency : str, optional
+                efficiency of the transportation mode "low, medium, high" (default is "medium").
+        """
+
+        self.mode_foreign = TransportMode.new (mode, efficiency, fuel_type)
+        self.impact_foreign = self.mode_foreign.get_impact()
+
+    def set_shipping_dest(self, shipping_dest:(str)):
+        """ Set the shipping destination of the project.
+
+        Parameters
+        ----------
+        shipping_dest : str
+            Name of the shipping destination location.
+        """
+
+        self.shipping_dest = Location.from_str (shipping_dest)
+
+        return self
 
 
+    def set_shipping_org(self, shipping_org:(str)):
+        """ Set the shipping origin of the project.
+
+        Parameters
+        ----------
+        shipping_org : str
+            Name of the shipping origin location.
+        """
+
+        self.shipping_org = Location.from_str (shipping_org)
+
+        return self
+
+
+    # ================================
+    # Getters
+    # ================================
+
+    def get_project(self):
+        """ Retrieve the project of the transportation link.
+
+            Returns
+            -------
+            Project obj.
+                The project of the transportation link.
+        """
+
+        return self.project 
+
+    def get_name(self):
+        """ Retrieve the name of the transportation link.
+
+            Returns
+            -------
+            str
+                The name of the transportation link.
+        """
+
+        return self.name
+
+    def get_material(self):
+        """ Retrieve the material of the transportation link.
+
+            Returns
+            -------
+            str
+                The material of the transportation link.
+        """
+
+        return self.material
+
+    def get_qty(self):
+        """ Retrieve the quantity of the transportation link.
+
+            Returns
+            -------
+            float
+                The quantity of the transportation link.
+        """
+
+        return self.qty
+    
+    def get_mode_domestic(self):
+        """ Retrieve the domestic transportation mode of the transportation link.
+
+            Returns
+            -------
+            TransportMode obj.
+                The domestic transportation mode of the transportation link.
+        """
+
+        return self.mode_domestic   
+    
+    def get_mode_foreign(self):
+        """ Retrieve the foreign transportation mode of the transportation link.
+
+            Returns
+            -------
+            TransportMode obj.
+                The foreign transportation mode of the transportation link.
+        """
+
+        return self.mode_foreign
+
+    def get_shipping_dest(self):
+        """
+        Retrieve the shipping destination of the project.
+
+        Returns
+        -------
+        str
+            Name of the shipping destination location.
+        """
+        return self.shipping_dest
+
+    def get_shipping_org(self):
+        """
+        Retrieve the shipping origin of the project.
+
+        Returns
+        -------
+        str
+            Name of the shipping origin location.
+        """
+        return self.shipping_org
+    
+    def get_dist_unit(self):
+        """ Retrieve the distance unit of the transportation link.
+
+            Returns
+            -------
+            str
+                The distance unit of the transportation link.
+        """
+
+        return self.dist_unit
+
+    def get_return_trip_factor(self):   
+        """ Retrieve the return trip factor of the transportation link.
+
+            Returns
+            -------
+            float
+                The return trip factor of the transportation link.
+        """
+
+        return self.return_trip_factor
+    
+    def get_travel_dist(self):
+        """ Retrieve the travel distance of the transportation link.
+
+            Returns
+            -------
+            float or str
+                The travel distance of the transportation link.
+        """
+
+        return self.travel_dist
+    
+    def get_link_distances(self):
+        """ Retrieve the link distances of the transportation link.
+
+            Returns
+            -------
+            dict
+                A dictionary containing the domestic and foreign distances.
+        """
+
+        return self.link_distances
+
+    def get_impact_domestic(self):
+        """ Retrieve the domestic impact of the transportation link.
+
+            Returns
+            -------
+            Impacts obj.
+                The domestic impact of the transportation link.
+        """
+
+        return self.impact_domestic
+
+    def get_impact_foreign(self):
+        """ Retrieve the foreign impact of the transportation link.
+
+            Returns
+            -------
+            Impacts obj.
+                The foreign impact of the transportation link.
+        """
+
+        return self.impact_foreign
+
+    def get_impact_total(self):
+        """ Retrieve the total impact of the transportation link.
+
+            Returns
+            -------
+            Impacts obj.
+                The total impact of the transportation link.
+        """
+
+        return self.impact_total  
+
+
+    # ================================
+    # Model Methods
+    # ================================
 
 
     def compute_impact(self):
@@ -149,6 +425,14 @@ class Link:
                     self.return_trip_factor = 1.5 if dist < 500 else 1
                 elif self.dist_unit == "km":
                     self.return_trip_factor = 1.5 if dist < 805 else 1
+
+            domestic_impact = self.mode_domestic.get_impact()
+            foreign_impact = self.mode_foreign.get_impact()
+
+            
+
+
+
 
             impact = self.mode.get_impacts()
             impact = impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
@@ -174,91 +458,4 @@ class Link:
             impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
             self.impact = impact
 
-
-    def get_qty (self):
-        """ Retrieve the quantity of the transportation link.
-
-            Returns
-            -------
-            float
-                quantity of the transportation link.
-        """
-        return self.qty
-
-    def get_material (self):
-        """ Retrieve the material name of the transportation link.
-
-            Returns
-            -------
-            str
-                material name of the transportation link.
-        """
-
-        return self.material
-
-    def get_mode (self):
-        """ Retrieve the transportation mode of the transportation link.
-
-            Returns
-            -------
-            str
-                transportation mode of the transportation link.
-        """
-
-        return self.mode
-
-    def get_efficiency (self):
-        """ Retrieve the transportation efficiency of the transportation link.
-
-            Returns
-            -------
-            int
-                transportation efficiency of the transportation link.
-        """
-
-        return self.efficiency
-
-    def get_efficiency_dms (self):
-        """ Retrieve the transportation domestic efficiency of the transportation link.
-
-            Returns
-            -------
-            int
-                transportation domestic efficiency of the transportation link.
-        """
-
-        return self.efficiency_dms
-
-    def get_return_trip_factor (self):
-        """ Retrieve the return trip factor of the transportation link.
-
-            Returns
-            -------
-            float
-                return trip factor of the transportation link.
-        """
-
-        return self.return_trip_factor
-
-    def get_travel_dist (self):
-        """ Retrieve the travel distance of the transportation link.
-
-            Returns
-            -------
-            float
-                travel distance of the transportation link.
-        """
-
-        return self.link_distances
-    
-    def get_impact (self):
-        """ Retrieve the impact of the transportation link.
-
-            Returns
-            -------
-            object
-                impact of the transportation link.
-        """
-
-        return self.impact
 
