@@ -14,55 +14,150 @@ __version__ = "0.1.0"
 
 class Scenario:
     
-    def __init__(self, project ,scenario, material, mode, mode_domestic):
+    """
+    Scenario object compute the impact of transportation based on different scenarios.
 
-        """
-        Scenario object compute the impact of transportation based on different scenarios.
+    Attributes
+    ----------
 
-        Attributes
-        ----------
+    scenario : str.
+        name of the transportation scenario.
+        - Scenario can be Local, Regional, Regional_c, National, NA, Global.
+        - Local, Regional, Regional_c, National are for US scenarios.
+        - NA is for North America scenario.
+        - Global is for Global scenario.
 
-        project : obj.
-            Refers to the main project.
+        **None** is for the default scenario and shows the average impact of the transportation in the US.
 
-        scenario : str.
-            name of the transportation scenario.
-            - Scenario can be Local, Regional, Regional_c, National, NA, Global.
-            - Local, Regional, Regional_c, National are for US scenarios.
-            - NA is for North America scenario.
-            - Global is for Global scenario.
+    material : str.
+        name of the material.
 
-            **None** is for the default scenario and shows the average impact of the transportation in the US.
+    mode : obj.
+        Refers to the TransportMode object.
 
-        material : str.
-            name of the material.
+    mode_domestic : obj.
+        Refers to the TransportMode object.
 
-        mode : obj.
-            Refers to the TransportMode object.
+    """
 
-        mode_domestic : obj.
-            Refers to the TransportMode object.
+    def __init__(self):
 
-        """
-
-        self.scenario = scenario
-        self.project = project
-        self.material = material
+        self.scenario = None
+        self.material = None
         self.sctg = None
         self.foreign_dis = 0
         self.domestic_dis = 0
-        self.mode = mode
-        self.mode_domestic = mode_domestic
-        self.shipping_dest = project.get_shipping_dest()
-        self.shipping_org = project.get_shipping_org()
-        self.scenario_impact = None
+        self.mode_foreign = None
+        self.mode_domestic = None
+        self.shipping_dest = None
+        self.shipping_org = None
+        self.impact_foreign = None
+        self.impact_domestic = None
 
-        self.set_sctg(material)
+    def __str__(self):
 
-        if self.scenario in ["Local", "Regional", "Regional_c", "National", "None", "Known_us"]:
-            self.pre_us_processing()
-        elif self.scenario in ["NA", "Global", "Known"]:
-            self.pre_global_processing()
+        str = "="*50 + "\n" + f"Scenario: {self.scenario}\n" + "="*50 + "\n"
+        str += f"Material: {self.material}\n"
+        str += f"SCTG Code: {self.sctg}\n"
+        str += f"Shipping Destination: {self.shipping_dest}\n"
+        str += f"Shipping Origin: {self.shipping_org}\n"
+        str += f"Mode Foreign: {self.mode_foreign}\n"
+        str += f"Mode Domestic: {self.mode_domestic}\n"
+        str += f"Domestic Distance: {self.domestic_dis} km\n"
+        str += f"Foreign Distance: {self.foreign_dis} km\n"
+        str += f"Scenario Impact: {self.scenario_impact}\n"
+
+        return str
+
+    # ================================
+    # Constructors
+    # ================================
+
+
+    @classmethod
+    def new(cls ,scenario, material, mode_foreign=None, mode_domestic=None, shipping_dest=None, shipping_org=None):
+        """
+        Create a new Scenario object.
+
+        Parameters
+        ----------
+
+        scenario : str.
+            Name of the transportation scenario.
+
+        material : str.
+            Name of the material.
+
+        mode : obj, optional.
+            Refers to the TransportMode object for foreign transportation.
+
+        mode_domestic : obj, optional.
+            Refers to the TransportMode object for domestic transportation.
+
+        Returns
+        -------
+        Scenario Obj.
+            Scenario object created.
+        """
+        
+        new_scenario = cls()
+        new_scenario.set_scenario(scenario)
+        new_scenario.set_material(material)
+        new_scenario.set_sctg(material)
+        new_scenario.set_mode_domestic(mode_domestic)
+        new_scenario.set_mode_foreign(mode_foreign)
+        new_scenario.set_shipping_dest(shipping_dest)
+        new_scenario.set_shipping_org(shipping_org)
+
+        if scenario in ["Local", "Regional", "Regional_c", "National", "None", "Known_us"]:
+            new_scenario.pre_us_processing()
+        elif scenario in ["NA", "Global", "Known"]:
+            new_scenario.pre_global_processing()
+
+        return new_scenario
+
+
+    # ================================
+    # Setters
+    # ================================
+
+
+    def set_scenario(self, scenario):
+        """
+        Set the scenario for the transportation.
+
+        Parameters
+        ----------
+        scenario : str.
+            Name of the transportation scenario.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+
+        self.scenario = scenario
+        return self
+
+
+    def  set_material(self, material):
+        """
+        Set the material for the transportation.
+
+        Parameters
+        ----------
+        material : str.
+            Name of the material.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+
+        self.material = material
+        return self
 
     def set_sctg(self, material ,digit=2):
         """
@@ -85,7 +180,86 @@ class Scenario:
             print("Error:", e)
 
         self.sctg = sctg
+
         return self
+
+    def set_mode_foreign(self, mode_foreign):
+        """
+        Set the foreign mode of transportation.
+
+        Parameters
+        ----------
+        mode_foreign : obj.
+            Refers to the TransportMode object for foreign transportation.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+        
+        self.mode_foreign = mode_foreign
+        return self
+
+    def set_mode_domestic(self, mode_domestic):
+        """
+        Set the domestic mode of transportation.
+
+        Parameters
+        ----------
+        mode_domestic : obj.
+            Refers to the TransportMode object for domestic transportation.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+
+        self.mode_domestic = mode_domestic
+        return self
+
+    def set_shipping_dest(self, shipping_dest):
+        """
+        Set the shipping destination for the transportation.
+
+        Parameters
+        ----------
+        shipping_dest : obj.
+            Refers to the Location object for the shipping destination.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+
+        self.shipping_dest = shipping_dest
+
+        return self
+
+    def set_shipping_org(self, shipping_org):
+        """
+        Set the shipping origin for the transportation.
+
+        Parameters
+        ----------
+        shipping_org : obj.
+            Refers to the Location object for the shipping origin.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+
+        self.shipping_org = shipping_org
+
+        return self 
+
+    # ================================
+    # Model Methods
+    # ================================
 
     @staticmethod
     def faf_region_to_cfs_area_mapping(region):
@@ -141,7 +315,7 @@ class Scenario:
 
         return region
 
-    def filter_faf(self, sctg=None, destination=None, origin=None, mode=None, domestic_mode=None, scenario=None):
+    def filter_faf(self, sctg=None, destination=None, origin=None, foreign_mode=None, domestic_mode=None, scenario=None):
 
         cfs_state_code = Data_Importer.import_as_pandas(CFS_DATA_PATH)
         faf  = Data_Importer.import_as_pandas(r"data\transportation_faf_dataset.csv")
@@ -279,16 +453,16 @@ class Scenario:
 
         # Mode
         try:
-            if mode is not None:
-                faf = faf[faf["fr_inmode"] == mode.get_faf_mode()]
+            if foreign_mode is not None:
+                faf = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
                 if faf.empty:
-                    self.mode = TransportMode("Barge", self.project.get_links()[0].get_efficiency(), self.project)
-                    faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+                    self.mode_foreign = TransportMode.new("Barge")
+                    faf = faf[faf["fr_inmode"] == self.mode_foreign.get_faf_mode()]
                     print ("No datapoint for selected mode of transportation.Using Barge as the default mode of transportation instead.")
             else:
 
-                self.mode = TransportMode("Barge", self.project.get_links()[0].get_efficiency(), self.project)
-                faf = faf[faf["fr_inmode"] == self.mode.get_faf_mode()]
+                self.mode_foreign = TransportMode.new("Barge")
+                faf = faf[faf["fr_inmode"] == self.mode_foreign.get_faf_mode()]
                 if faf.empty:
                     raise ValueError("no data for Barge as a mode in FAF561 dataset")
 
@@ -304,7 +478,7 @@ class Scenario:
                 if faf.empty:
                     raise ValueError("no data for the selected domestic mode in FAF561 dataset")
             else:
-                self.mode_domestic = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
+                self.mode_domestic = TransportMode.new("Truck")
                 faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
                 if faf.empty:
                     raise ValueError("no data for Truck as a domestic mode in FAF561 dataset")
@@ -428,7 +602,6 @@ class Scenario:
             print("Error:", e)
             failed = True
 
-        
         # Origin
         try:
             if origin is not None:
@@ -472,20 +645,21 @@ class Scenario:
 
         # Mode
         try:
-            if mode is not None:
+            if self.mode_domestic is not None:
                 cfs_filtered = cfs[cfs["MODE"].isin(mode.get_cfs_mode())]
                 
                 if cfs_filtered.empty:
-                    self.mode = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
-                    cfs_filtered = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode())]
+                    self.mode_domestic = TransportMode.new("Truck")
+                    cfs_filtered = cfs[cfs["MODE"].isin(self.mode_domestic.get_cfs_mode())]
                     cfs = cfs_filtered
                     print ("Using Truck as the default mode of transportation instead.")
 
                 else:
                     cfs = cfs_filtered  
             else:
-                self.mode = TransportMode("Truck", self.project.get_links()[0].get_efficiency(), self.project)
-                cfs_filtered = cfs[cfs["MODE"].isin(self.mode.get_cfs_mode())]
+
+                self.mode_domestic = TransportMode.new("Truck")
+                cfs_filtered = cfs[cfs["MODE"].isin(self.mode_domestic.get_cfs_mode())]
                 cfs = cfs_filtered
                 print ("Using Truck as the default mode of transportation instead.")       
         except Exception as e:
@@ -516,53 +690,53 @@ class Scenario:
 
         """
 
+        cfs = self.filter_cfs(self.sctg, self.shipping_dest, self.shipping_org, self.mode_domestic)
         
-        cfs = self.filter_cfs(self.sctg, self.shipping_dest, self.shipping_org, self.mode)
         if cfs[1] == True:
-            print (" An error occurred while filtering the data, please check the data and try again.")
-            self.scenario_impact = 0* self.mode.get_impacts()
-
+            print (" An error occurred while filtering the CFS data, please check the data and try again.")
+            self.impact_domestic = 0* self.mode_domestic.get_impact()
         else:
             cfs = cfs[0]
+        
+            quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
+            def assign_quartile(x, q1, q2, q3):
+                if x <= q1:
+                    return 'Q1'
+                elif x <= q2:
+                    return 'Q2'
+                elif x <= q3:
+                    return 'Q3'
+                else:
+                    return 'Q4'
+            cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
+            
+            impact = self.mode_domestic.get_impact()
+            
 
-            try:
-                quartiles = cfs["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
-                def assign_quartile(x, q1, q2, q3):
-                    if x <= q1:
-                        return 'Q1'
-                    elif x <= q2:
-                        return 'Q2'
-                    elif x <= q3:
-                        return 'Q3'
-                    else:
-                        return 'Q4'
-                cfs['quartile'] = cfs["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
-                
-                impact = self.mode.get_impacts()
+            if self.scenario == "Local":
+                self.domestic_dis = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
+                self.impact_domestic = self.domestic_dis * impact
+
+            elif self.scenario == "Regional":
+                self.domestic_dis = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
+                self.impact_domestic = self.domestic_dis * impact
+            
+            elif self.scenario == "Regional_c":
+                self.domestic_dis = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+                self.impact_domestic = self.domestic_dis * impact
+            
+            elif self.scenario == "National":
+                self.domestic_dis = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
+                self.impact_domestic = self.domestic_dis * impact
+            
+            elif self.scenario == "None" or self.scenario == "Known_us":
+                self.domestic_dis = cfs["SHIPMT_DIST_ROUTED"].mean()
+                self.impact_domestic = self.domestic_dis * impact
+
+            
+        #self.impact_foreign = 0* self.mode_foreign.get_impact()
 
 
-                if self.scenario == "Local":
-                    self.domestic_dis = cfs[cfs["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
-                    self.scenario_impact = self.domestic_dis * impact
-
-                elif self.scenario == "Regional":
-                    self.domestic_dis = cfs[cfs["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
-                    self.scenario_impact = self.domestic_dis * impact
-                
-                elif self.scenario == "Regional_c":
-                    self.domestic_dis = cfs[cfs["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
-                    self.scenario_impact = self.domestic_dis * impact
-                
-                elif self.scenario == "National":
-                    self.domestic_dis = cfs[cfs["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
-                    self.scenario_impact = self.domestic_dis * impact
-                
-                elif self.scenario == "None" or self.scenario == "Known_us":
-                    self.domestic_dis = cfs["SHIPMT_DIST_ROUTED"].mean()
-                    self.scenario_impact = self.domestic_dis * impact
-            except:
-                self.scenario_impact = 0* self.mode.get_impacts()
-                
     def pre_global_processing (self):
         """
         process the data for the North America and Global scenarios.
@@ -582,13 +756,14 @@ class Scenario:
             - if the mode is not defined it will select Truck as the domestic mode of transportation.
             
         """
-        faf = self.filter_faf(self.sctg, self.shipping_dest, self.shipping_org, self.mode, self.mode_domestic, self.scenario)
+        faf = self.filter_faf(self.sctg, self.shipping_dest, self.shipping_org, self.mode_foreign, self.mode_domestic, self.scenario)
         marine = self.filter_marine(self.shipping_dest, self.shipping_org, self.scenario)
         cfaf = self.filter_cfaf(self.sctg)
 
         if faf[1] == True:
             print (" An error occurred while filtering the FAF data, please check the data and try again.")
-            self.scenario_impact = 0* self.mode.get_impacts()
+            self.impact_domestic = 0* self.mode_domestic.get_impact()
+            self.impact_foreign = 0* self.mode_foreign.get_impact()
         else:
             faf = faf[0]
 
@@ -598,41 +773,52 @@ class Scenario:
             marine = marine[0]
 
         try:
-            if self.mode.get_name() == "Truck":
+            if self.mode_foreign.get_name() == "Truck":
                 self.domestic_dis = faf["avr_dom_dist_km"].mean()
                 self.foreign_dis = 200
-                domestic_dis = self.domestic_dis + self.foreign_dis
-                self.scenario_impact = domestic_dis * self.mode.get_impacts()
-            
-            elif self.mode.get_name() == "Rail":
-                self.foreign_dis = cfaf["Average_Distance_per_Shipment"].mean()
-                self.scenario_impact = self.foreign_dis * self.mode.get_impacts()
+                self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
+                self.impact_domestic = self.domestic_dis * self.mode_domestic.get_impact()
 
-            elif self.mode.get_name() in ("Barge", "Ocean"):
+            
+            elif self.mode_foreign.get_name() == "Rail":
+                self.foreign_dis = cfaf["Average_Distance_per_Shipment"].mean()
+                self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
+                self.impact_domestic = self.domestic_dis * self.mode_domestic.get_impact()
+
+            elif self.mode_foreign.get_name() in ("Barge", "Ocean"):
                 self.domestic_dis = faf["avr_dom_dist_km"].mean()
                 self.foreign_dis = marine["Distance_km"].mean()
-                domestic_dis = self.domestic_dis + self.foreign_dis
-                self.scenario_impact = domestic_dis * self.mode.get_impacts()
+                self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
+                self.impact_domestic = self.domestic_dis * self.mode_domestic.get_impact()
             
-            elif self.mode.get_name() == "Air":
+            elif self.mode_foreign.get_name() == "Air":
 
                 dms_coordinates = self.shipping_dest.get_cordinates()
                 fr_coordinates = self.shipping_org.get_cordinates()
                 self.foreign_dis = geodesic(dms_coordinates, fr_coordinates).km
-                self.scenario_impact = self.foreign_dis * self.mode.get_impacts()
+                self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
+                self.impact_domestic = self.domestic_dis * self.mode_domestic.get_impact()
         except:
 
             self.foreign_dis = 0
             self.domestic_dis = 0
-            self.scenario_impact = 0* self.mode.get_impacts()
+            self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
+            self.impact_domestic = self.domestic_dis * self.mode_domestic.get_impact()
 
-    def get_scenario_impact (self):
+    def get_impact_domestic (self):
 
         """
-        return the impact of the transportation based on the scenario.
+        return the impact of the domestic transportation based on the scenario.
         
         """
-        return self.scenario_impact
+        return self.impact_domestic
+
+    def get_foreign_impact (self):
+        """
+        return the impact of the foreign transportation based on the scenario.
+        
+        """
+        return self.impact_foreign
 
     def get_distances (self):
 

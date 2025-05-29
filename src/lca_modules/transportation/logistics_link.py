@@ -65,7 +65,6 @@ class Link:
         self.link_distances = {"Domestic": 0, "Foreign": 0}
         self.impact_foreign = None
         self.impact_domestic = None
-        self.impact_total = self.impact_foreign + self.impact_domestic
 
 
     def __str__(self):
@@ -214,7 +213,10 @@ class Link:
             Name of the shipping destination location.
         """
 
-        self.shipping_dest = Location.from_str (shipping_dest)
+        if shipping_dest is None:
+            self.shipping_dest = None
+        else:
+            self.shipping_dest = Location.from_str (shipping_dest)
 
         return self
 
@@ -227,8 +229,10 @@ class Link:
         shipping_org : str
             Name of the shipping origin location.
         """
-
-        self.shipping_org = Location.from_str (shipping_org)
+        if shipping_org is None:
+            self.shipping_org = None
+        else:
+            self.shipping_org = Location.from_str (shipping_org)
 
         return self
 
@@ -421,41 +425,44 @@ class Link:
             
             if self.return_trip_factor is None:
                 dist = self.travel_dist
-                if self.dist_unit == "mi":
+                if self.travel_dist_unit == "mi":
                     self.return_trip_factor = 1.5 if dist < 500 else 1
-                elif self.dist_unit == "km":
+                elif self.travel_dist_unit == "km":
                     self.return_trip_factor = 1.5 if dist < 805 else 1
 
-            domestic_impact = self.mode_domestic.get_impact()
-            foreign_impact = self.mode_foreign.get_impact()
-
+            if self.mode_domestic is not None:
+                domestic_impact = self.mode_domestic.get_impact()
+                self.impact_domestic = domestic_impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
+                self.link_distances ["Domestic"] = self.travel_dist
             
-
-
-
-
-            impact = self.mode.get_impacts()
-            impact = impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
-            self.link_distances ["Domestic"] = self.travel_dist
-            self.impact = impact
-
+            if self.mode_foreign is not None:
+                foreign_impact = self.mode_foreign.get_impact()
+                self.impact_foreign = foreign_impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
+                self.link_distances ["Foreign"] = self.travel_dist
 
         else:
 
-            Scenario_link = Scenario(self.project, self.travel_dist, self.material, self.mode, self.mode_domestic)
+            Scenario_link = Scenario.new( self.travel_dist, self.material, self.mode_foreign, self.mode_domestic, self.shipping_dest, self.shipping_org)
             self.link_distances["Domestic"],self.link_distances["Foreign"]  = Scenario_link.get_distances()
 
             if self.return_trip_factor is None:
 
                 dist = self.link_distances["Domestic"] + self.link_distances["Foreign"]
 
-                if self.dist_unit == "mi":
+                if self.travel_dist_unit == "mi":
                     self.return_trip_factor = 1.5 if dist < 500 else 1
-                elif self.dist_unit == "km":
+                elif self.travel_dist_unit == "km":
                     self.return_trip_factor = 1.5 if dist < 805 else 1
 
-            impact = Scenario_link.get_scenario_impact() 
-            impact = impact * self.qty * self.return_trip_factor * self.unit_conversion
-            self.impact = impact
+            try:
+                self.impact_domestic = Scenario_link.get_impact_domestic()
+                self.impact_domestic = self.impact_domestic * self.qty * self.return_trip_factor * self.unit_conversion
+            except:
+                self.impact_domestic = None
 
+            try:
+                self.impact_foreign = Scenario_link.get_foreign_impact()
+                self.impact_foreign = self.impact_foreign * self.qty * self.return_trip_factor * self.unit_conversion
+            except:
+                self.impact_foreign = None
 

@@ -53,7 +53,7 @@ class TransportMode:
 
 
     @classmethod
-    def new(cls, mode_name, efficiency, fuel_type = "Regular"):
+    def new(cls, mode_name, efficiency = "Median", fuel_type = "Regular"):
         
         """ Create a new transportation mode.
 
@@ -143,26 +143,34 @@ class TransportMode:
         """
         #TODO: create transprtation database
         emission_data = Data_Importer.import_as_pandas(r"data\transportation_podlca_emission.csv")
-
-        self.impact = Impacts.from_parent(self)
-
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
-                                       (emission_data["eff"] == self.efficiency) & (emission_data["fuel"] == self.fuel_type) ]
+            (emission_data["eff"] == self.efficiency) & (emission_data["fuel"] == self.fuel_type) ]
 
-        # If data is found, update the impacts
-        if not filtered_data.empty:
-            row = filtered_data.iloc[0]  # Get the first (and only) matching row
-            impacts = {
-                "GWP": row["GWP"],
-                "AP": row["AP"],
-                "EP": row["EP"],
-                "ODP": row["ODP"],
-                "SFP": row["SFP"]
-            }
 
-            self.impact.update_impact_qty(impacts)
+        if self.fuel_type == "Electric":
+            
+        #TODO: create transprtation impact for electric modes
+            row = filtered_data.iloc[0]
+            impact = {"Kwh/km*tonne": row["Electricity consumtion (kWh)"]}
+            self.impact = Impacts.from_dict(impact)
+
         else:
-            print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
+            self.impact = Impacts.from_parent(self)
+
+            # If data is found, update the impacts
+            if not filtered_data.empty:
+                row = filtered_data.iloc[0]  # Get the first (and only) matching row
+                impacts = {
+                    "GWP": row["GWP"],
+                    "AP": row["AP"],
+                    "EP": row["EP"],
+                    "ODP": row["ODP"],
+                    "SFP": row["SFP"]
+                }
+
+                self.impact.update_impact_qty(impacts)
+            else:
+                print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
 
     # ================================
     # Getters
