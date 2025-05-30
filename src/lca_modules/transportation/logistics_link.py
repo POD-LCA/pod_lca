@@ -61,10 +61,10 @@ class Link:
         self.mode_domestic_obj = None 
         self.mode_foreign_name = None
         self.mode_domestic_name = None
-        self.mode_domestic_fuel_type = None
-        self.mode_domestic_efficiency = None
-        self.mode_foreign_fuel_type = None
-        self.mode_foreign_efficiency = None
+        self.mode_domestic_fuel_type = "Regular"
+        self.mode_domestic_efficiency = "Median"
+        self.mode_foreign_fuel_type = "Regular"
+        self.mode_foreign_efficiency = "Median"
         self.shipping_dest = None
         self.shipping_org = None
         self.unit_conversion = {"km": 1, "mi": 0.621371}[self.travel_dist_unit]
@@ -178,7 +178,7 @@ class Link:
         self.return_trip_factor = return_trip_factor
 
 
-    def set_mode_domestic (self, mode:(str) , fuel_type:(str) = None, efficiency:(str) = None):
+    def set_mode_domestic (self, mode:(str) , fuel_type:(str) , efficiency:(str) ):
         """ Set the transportation mode of the transportation link.
 
             Parameters
@@ -191,18 +191,20 @@ class Link:
                 efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
 
-        self.mode_domestic_name = mode
-        self.mode_domestic_fuel_type = fuel_type
-        self.mode_domestic_efficiency = efficiency
+        if fuel_type is not None:
+            self.mode_domestic_fuel_type = fuel_type
+        
+        if efficiency is not None:
+            self.mode_domestic_efficiency = efficiency
 
         if mode is not None:
-            self.mode_domestic_obj = TransportMode.new (mode, efficiency, fuel_type)
+            self.mode_domestic_name = mode
+            self.mode_domestic_obj = TransportMode.new (mode, self.mode_domestic_efficiency, self.mode_domestic_fuel_type)
             self.impact_domestic = self.mode_domestic_obj.get_impact()
-        else:
-            self.mode_domestic_obj = None
-            self.impact_domestic = None
+
         
-    def set_mode_foreign (self, mode:(str) , fuel_type:(str) = None, efficiency:(str) = None):
+        
+    def set_mode_foreign (self, mode:(str) , fuel_type:(str) , efficiency:(str) ):
         """ Set the transportation foreign mode of the transportation link.
 
             Parameters
@@ -215,16 +217,17 @@ class Link:
                 efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
 
-        self.mode_foreign_name = mode
-        self.mode_foreign_fuel_type = fuel_type
-        self.mode_foreign_efficiency = efficiency
+        if fuel_type is not None:
+            self.mode_foreign_fuel_type = fuel_type
+
+        if efficiency is not None:
+            self.mode_foreign_efficiency = efficiency
 
         if mode is not None:
-            self.mode_foreign_obj = TransportMode.new (mode, efficiency, fuel_type)
+            self.mode_foreign_name = mode
+            self.mode_foreign_obj = TransportMode.new (mode, self.mode_foreign_efficiency, self.mode_foreign_fuel_type)
             self.impact_foreign = self.mode_foreign_obj.get_impact()
-        else:
-            self.mode_foreign_obj = None
-            self.impact_foreign = None
+
 
     def set_shipping_dest(self, shipping_dest:(str)):
         """ Set the shipping destination of the project.
@@ -530,7 +533,6 @@ class Link:
                 self.link_distances ["Foreign"] = self.travel_dist
 
         else:
-
             Scenario_link = Scenario.new( self ,self.travel_dist, self.material, self.mode_foreign_obj, self.mode_domestic_obj, self.shipping_dest, self.shipping_org)
             self.link_distances["Domestic"],self.link_distances["Foreign"]  = Scenario_link.get_distances()
             

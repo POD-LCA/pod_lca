@@ -170,6 +170,7 @@ class TransportMode:
 
                 self.impact.update_impact_qty(impacts)
             else:
+
                 print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
 
     # ================================

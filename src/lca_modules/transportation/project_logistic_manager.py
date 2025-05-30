@@ -186,7 +186,8 @@ class ProjectLogisticManager:
         link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
         link.set_mode_domestic(mode_domestic, mode_domestic_fuel_type, mode_domestic_efficiency)
         link.set_mode_foreign(mode_foreign, mode_foreign_fuel_type, mode_foreign_efficiency)
-    
+
+
         self.links[link_name] = link
 
         return link

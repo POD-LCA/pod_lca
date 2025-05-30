@@ -498,7 +498,7 @@ class Scenario:
                 if faf.empty:
                     raise ValueError("no data for the selected domestic mode in FAF561 dataset")
             else:
-                self.mode_domestic = TransportMode.new("Truck")
+                self.mode_domestic = TransportMode.new("Truck",self.link.get_mode_domestic_efficiency(), self.link.get_mode_domestic_fuel_type())
                 faf = faf[faf["dms_mode"] == self.mode_domestic.get_faf_mode()]
                 if faf.empty:
                     raise ValueError("no data for Truck as a domestic mode in FAF561 dataset")
