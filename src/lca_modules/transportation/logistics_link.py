@@ -57,8 +57,14 @@ class Link:
         self.travel_dist = None
         self.return_trip_factor = None
         self.travel_dist_unit = "km"
-        self.mode_foreign = None
-        self.mode_domestic = None 
+        self.mode_foreign_obj = None
+        self.mode_domestic_obj = None 
+        self.mode_foreign_name = None
+        self.mode_domestic_name = None
+        self.mode_domestic_fuel_type = None
+        self.mode_domestic_efficiency = None
+        self.mode_foreign_fuel_type = None
+        self.mode_foreign_efficiency = None
         self.shipping_dest = None
         self.shipping_org = None
         self.unit_conversion = {"km": 1, "mi": 0.621371}[self.travel_dist_unit]
@@ -75,7 +81,7 @@ class Link:
             str
                 String representation of the Link object.
         """
-        str = "="*75 + "\n" + f"Material: {self.get_material()} | Quantity: {self.get_qty()} | Travel distance: {self.get_travel_dist()}\n"
+        str = "="*75 + "\n" + f"Material: {self.get_material()} | Quantity: {self.get_qty()} | Travel distance: {self.get_travel_dist() } | Mode_domestic: {self.get_mode_domestic()}\n"
 
         return str
 
@@ -172,7 +178,7 @@ class Link:
         self.return_trip_factor = return_trip_factor
 
 
-    def set_mode_domestic (self, mode:(str) , fuel_type:(str) = "Regular", efficiency:(str) = "medium"):
+    def set_mode_domestic (self, mode:(str) , fuel_type:(str) = None, efficiency:(str) = None):
         """ Set the transportation mode of the transportation link.
 
             Parameters
@@ -185,10 +191,18 @@ class Link:
                 efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
 
-        self.mode_domestic = TransportMode.new (mode, efficiency, fuel_type)
-        self.impact_domestic = self.mode_domestic.get_impact()
+        self.mode_domestic_name = mode
+        self.mode_domestic_fuel_type = fuel_type
+        self.mode_domestic_efficiency = efficiency
+
+        if mode is not None:
+            self.mode_domestic_obj = TransportMode.new (mode, efficiency, fuel_type)
+            self.impact_domestic = self.mode_domestic_obj.get_impact()
+        else:
+            self.mode_domestic_obj = None
+            self.impact_domestic = None
         
-    def set_mode_foreign (self, mode:(str) , fuel_type:(str) = "Regular", efficiency:(str) = "medium"):
+    def set_mode_foreign (self, mode:(str) , fuel_type:(str) = None, efficiency:(str) = None):
         """ Set the transportation foreign mode of the transportation link.
 
             Parameters
@@ -201,8 +215,16 @@ class Link:
                 efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
 
-        self.mode_foreign = TransportMode.new (mode, efficiency, fuel_type)
-        self.impact_foreign = self.mode_foreign.get_impact()
+        self.mode_foreign_name = mode
+        self.mode_foreign_fuel_type = fuel_type
+        self.mode_foreign_efficiency = efficiency
+
+        if mode is not None:
+            self.mode_foreign_obj = TransportMode.new (mode, efficiency, fuel_type)
+            self.impact_foreign = self.mode_foreign_obj.get_impact()
+        else:
+            self.mode_foreign_obj = None
+            self.impact_foreign = None
 
     def set_shipping_dest(self, shipping_dest:(str)):
         """ Set the shipping destination of the project.
@@ -294,7 +316,7 @@ class Link:
                 The domestic transportation mode of the transportation link.
         """
 
-        return self.mode_domestic   
+        return self.mode_domestic_obj   
     
     def get_mode_foreign(self):
         """ Retrieve the foreign transportation mode of the transportation link.
@@ -305,7 +327,7 @@ class Link:
                 The foreign transportation mode of the transportation link.
         """
 
-        return self.mode_foreign
+        return self.mode_foreign_obj
 
     def get_shipping_dest(self):
         """
@@ -407,6 +429,73 @@ class Link:
         return self.impact_total  
 
 
+    def get_mode_domestic_name(self):
+        """ Retrieve the name of the domestic transportation mode.
+
+            Returns
+            -------
+            str
+                The name of the domestic transportation mode.
+        """
+
+        return self.mode_domestic_name
+    
+    def get_mode_foreign_name(self):
+        """ Retrieve the name of the foreign transportation mode.
+
+            Returns
+            -------
+            str
+                The name of the foreign transportation mode.
+        """
+
+        return self.mode_foreign_name
+
+    def get_mode_domestic_fuel_type(self):
+        """ Retrieve the fuel type of the domestic transportation mode.
+
+            Returns
+            -------
+            str
+                The fuel type of the domestic transportation mode.
+        """
+
+        return self.mode_domestic_fuel_type
+
+    def get_mode_domestic_efficiency(self):
+        """ Retrieve the efficiency of the domestic transportation mode.
+
+            Returns
+            -------
+            str
+                The efficiency of the domestic transportation mode.
+        """
+
+        return self.mode_domestic_efficiency
+
+    def get_mode_foreign_fuel_type(self):   
+        """ Retrieve the fuel type of the foreign transportation mode.
+
+            Returns
+            -------
+            str
+                The fuel type of the foreign transportation mode.
+        """
+
+        return self.mode_foreign_fuel_type
+    
+    def get_mode_foreign_efficiency(self):
+        """ Retrieve the efficiency of the foreign transportation mode.
+
+            Returns
+            -------
+            str
+                The efficiency of the foreign transportation mode.
+        """
+
+        return self.mode_foreign_efficiency
+
+
     # ================================
     # Model Methods
     # ================================
@@ -442,9 +531,10 @@ class Link:
 
         else:
 
-            Scenario_link = Scenario.new( self.travel_dist, self.material, self.mode_foreign, self.mode_domestic, self.shipping_dest, self.shipping_org)
+            Scenario_link = Scenario.new( self ,self.travel_dist, self.material, self.mode_foreign_obj, self.mode_domestic_obj, self.shipping_dest, self.shipping_org)
             self.link_distances["Domestic"],self.link_distances["Foreign"]  = Scenario_link.get_distances()
-
+            
+            
             if self.return_trip_factor is None:
 
                 dist = self.link_distances["Domestic"] + self.link_distances["Foreign"]

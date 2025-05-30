@@ -42,6 +42,7 @@ class Scenario:
 
     def __init__(self):
 
+        self.link = None
         self.scenario = None
         self.material = None
         self.sctg = None
@@ -75,7 +76,7 @@ class Scenario:
 
 
     @classmethod
-    def new(cls ,scenario, material, mode_foreign=None, mode_domestic=None, shipping_dest=None, shipping_org=None):
+    def new(cls ,link ,scenario, material, mode_foreign=None, mode_domestic=None, shipping_dest=None, shipping_org=None):
         """
         Create a new Scenario object.
 
@@ -101,6 +102,7 @@ class Scenario:
         """
         
         new_scenario = cls()
+        new_scenario.set_link(link)
         new_scenario.set_scenario(scenario)
         new_scenario.set_material(material)
         new_scenario.set_sctg(material)
@@ -138,6 +140,24 @@ class Scenario:
         """
 
         self.scenario = scenario
+        return self
+
+    def set_link(self, link):
+        """
+        Set the link for the transportation.
+
+        Parameters
+        ----------
+        link : obj.
+            Refers to the Link object.
+
+        Returns
+        -------
+        Scenario Obj.
+            The updated Scenario object.
+        """
+
+        self.link = link
         return self
 
 
@@ -456,12 +476,12 @@ class Scenario:
             if foreign_mode is not None:
                 faf = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
                 if faf.empty:
-                    self.mode_foreign = TransportMode.new("Barge")
+                    self.mode_foreign = TransportMode.new("Barge", self.link.get_mode_foreign_efficiency(), self.link.get_mode_foreign_fuel_type())
                     faf = faf[faf["fr_inmode"] == self.mode_foreign.get_faf_mode()]
                     print ("No datapoint for selected mode of transportation.Using Barge as the default mode of transportation instead.")
             else:
 
-                self.mode_foreign = TransportMode.new("Barge")
+                self.mode_foreign = TransportMode.new("Barge", self.link.get_mode_foreign_efficiency(), self.link.get_mode_foreign_fuel_type())
                 faf = faf[faf["fr_inmode"] == self.mode_foreign.get_faf_mode()]
                 if faf.empty:
                     raise ValueError("no data for Barge as a mode in FAF561 dataset")
@@ -649,7 +669,7 @@ class Scenario:
                 cfs_filtered = cfs[cfs["MODE"].isin(mode.get_cfs_mode())]
                 
                 if cfs_filtered.empty:
-                    self.mode_domestic = TransportMode.new("Truck")
+                    self.mode_domestic = TransportMode.new("Truck",self.link.get_mode_domestic_efficiency(), self.link.get_mode_domestic_fuel_type())
                     cfs_filtered = cfs[cfs["MODE"].isin(self.mode_domestic.get_cfs_mode())]
                     cfs = cfs_filtered
                     print ("Using Truck as the default mode of transportation instead.")
@@ -658,7 +678,7 @@ class Scenario:
                     cfs = cfs_filtered  
             else:
 
-                self.mode_domestic = TransportMode.new("Truck")
+                self.mode_domestic = TransportMode.new("Truck",self.link.get_mode_domestic_efficiency(), self.link.get_mode_domestic_fuel_type())
                 cfs_filtered = cfs[cfs["MODE"].isin(self.mode_domestic.get_cfs_mode())]
                 cfs = cfs_filtered
                 print ("Using Truck as the default mode of transportation instead.")       

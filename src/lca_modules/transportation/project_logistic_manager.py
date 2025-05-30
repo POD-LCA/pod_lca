@@ -163,7 +163,11 @@ class ProjectLogisticManager:
     # Model Methods
     # ================================
 
-    def add_link(self, link_name:(str), shipping_dest:(str) = None, shipping_org:(str) = None ):
+    def add_link(self, link_name:(str), shipping_dest:(str) = None, shipping_org:(str) = None,
+                material:(str) = None, qty:(float) = None, qty_unit:(str) = "tonne", travel_dist = None,
+                travel_dist_unit:(str) = "km", return_trip_factor:(float) = None, mode_domestic:(str) = None,
+                mode_domestic_fuel_type:(str) = "Regular", mode_domestic_efficiency:(str) = "Median",
+                mode_foreign:(str) = None, mode_foreign_fuel_type:(str) = "Regular", mode_foreign_efficiency:(str) = "Median"):
 
         """
         Add a link to the project.
@@ -178,6 +182,10 @@ class ProjectLogisticManager:
         link.set_name(link_name)
         link.set_shipping_dest(shipping_dest)
         link.set_shipping_org(shipping_org)
+        link.set_material(material, qty, qty_unit)
+        link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
+        link.set_mode_domestic(mode_domestic, mode_domestic_fuel_type, mode_domestic_efficiency)
+        link.set_mode_foreign(mode_foreign, mode_foreign_fuel_type, mode_foreign_efficiency)
     
         self.links[link_name] = link
 
