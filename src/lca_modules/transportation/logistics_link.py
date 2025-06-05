@@ -529,7 +529,7 @@ class Link:
             
             if self.mode_foreign is not None:
                 foreign_impact = self.mode_foreign.get_impact()
-                self.impact_foreign = foreign_impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
+                self.impact_foreign = foreign_impact * self.qty * self.travel_dist *  self.unit_conversion
                 self.link_distances ["Foreign"] = self.travel_dist
 
         else:
@@ -554,7 +554,7 @@ class Link:
 
             try:
                 self.impact_foreign = Scenario_link.get_foreign_impact()
-                self.impact_foreign = self.impact_foreign * self.qty * self.return_trip_factor * self.unit_conversion
+                self.impact_foreign = self.impact_foreign * self.qty * self.unit_conversion
             except:
                 self.impact_foreign = None
 

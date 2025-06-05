@@ -476,15 +476,15 @@ class Scenario:
             if foreign_mode is not None:
                 faf = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
                 if faf.empty:
-                    self.mode_foreign = TransportMode.new("Barge", self.link.get_mode_foreign_efficiency(), self.link.get_mode_foreign_fuel_type())
+                    self.mode_foreign = TransportMode.new("Ocean", self.link.get_mode_foreign_efficiency(), self.link.get_mode_foreign_fuel_type())
                     faf = faf[faf["fr_inmode"] == self.mode_foreign.get_faf_mode()]
-                    print ("No datapoint for selected mode of transportation.Using Barge as the default mode of transportation instead.")
+                    print ("No datapoint for selected mode of transportation.Using Ocean as the default mode of transportation instead.")
             else:
 
-                self.mode_foreign = TransportMode.new("Barge", self.link.get_mode_foreign_efficiency(), self.link.get_mode_foreign_fuel_type())
+                self.mode_foreign = TransportMode.new("Ocean", self.link.get_mode_foreign_efficiency(), self.link.get_mode_foreign_fuel_type())
                 faf = faf[faf["fr_inmode"] == self.mode_foreign.get_faf_mode()]
                 if faf.empty:
-                    raise ValueError("no data for Barge as a mode in FAF561 dataset")
+                    raise ValueError("no data for Ocean as a mode in FAF561 dataset")
 
         except Exception as e:
             print("Error:", e)
@@ -770,7 +770,7 @@ class Scenario:
         2. it filters the data based on the shipping origin.
 
         3. it filters the data based on the mode of transportation.
-            - if the mode is not defined it will select Barge as the mode of transportation.
+            - if the mode is not defined it will select Ocean as the mode of transportation.
 
         4. it filters the data based on the domestic mode of transportation.
             - if the mode is not defined it will select Truck as the domestic mode of transportation.
@@ -805,7 +805,7 @@ class Scenario:
                 self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
                 self.impact_domestic = self.domestic_dis * self.mode_domestic.get_impact()
 
-            elif self.mode_foreign.get_name() in ("Barge", "Ocean"):
+            elif self.mode_foreign.get_name() in ("Ocean", "Ocean"):
                 self.domestic_dis = faf["avr_dom_dist_km"].mean()
                 self.foreign_dis = marine["Distance_km"].mean()
                 self.impact_foreign = self.foreign_dis * self.mode_foreign.get_impact()
