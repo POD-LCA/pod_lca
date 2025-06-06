@@ -849,6 +849,23 @@ class Scenario:
         if self.scenario in ["Local", "Regional", "Regional_c", "National", "None", "NA", "Global", "Known", "Known_us"]:
             return self.domestic_dis, self.foreign_dis
 
+    
+
+    def get_mode_domestic(self):
+        """
+        return the domestic mode of transportation.
+        
+        """
+        return self.mode_domestic
+
+    def get_mode_foreign(self):
+        """
+        return the foreign mode of transportation.
+        
+        """
+        return self.mode_foreign
+
+
 
 
 if __name__ == '__main__':

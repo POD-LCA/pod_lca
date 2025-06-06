@@ -71,6 +71,7 @@ class Link:
         self.link_distances = {"Domestic": 0, "Foreign": 0}
         self.impact_foreign = None
         self.impact_domestic = None
+        self.electricity_consumption = None
 
 
     def __str__(self):
@@ -498,6 +499,16 @@ class Link:
 
         return self.mode_foreign_efficiency
 
+    def get_electricity_consumption(self):
+        """ Retrieve the electricity consumption of the transportation link.
+
+            Returns
+            -------
+            float
+                The electricity consumption of the transportation link.
+        """
+
+        return self.electricity_consumption
 
     # ================================
     # Model Methods
@@ -522,13 +533,13 @@ class Link:
                 elif self.travel_dist_unit == "km":
                     self.return_trip_factor = 1.5 if dist < 805 else 1
 
-            if self.mode_domestic is not None:
-                domestic_impact = self.mode_domestic.get_impact()
+            if self.mode_domestic_obj is not None:
+                domestic_impact = self.mode_domestic_obj.get_impact()
                 self.impact_domestic = domestic_impact * self.qty * self.travel_dist * self.return_trip_factor * self.unit_conversion
                 self.link_distances ["Domestic"] = self.travel_dist
             
-            if self.mode_foreign is not None:
-                foreign_impact = self.mode_foreign.get_impact()
+            if self.mode_foreign_obj is not None:
+                foreign_impact = self.mode_foreign_obj.get_impact()
                 self.impact_foreign = foreign_impact * self.qty * self.travel_dist *  self.unit_conversion
                 self.link_distances ["Foreign"] = self.travel_dist
 
@@ -536,10 +547,17 @@ class Link:
             Scenario_link = Scenario.new( self ,self.travel_dist, self.material, self.mode_foreign_obj, self.mode_domestic_obj, self.shipping_dest, self.shipping_org)
             self.link_distances["Domestic"],self.link_distances["Foreign"]  = Scenario_link.get_distances()
             
+            self.mode_domestic_obj = Scenario_link.get_mode_domestic()
+            self.mode_foreign_obj = Scenario_link.get_mode_foreign()
             
+
+            self.electricity_consumption = self.mode_domestic_obj.get_electricity_consumption()* self.link_distances["Domestic"]
+            #self.electricity_consumption = self.mode_foreign_obj.get_electricity_consumption()* self.link_distances["Foreign"]
+
+
             if self.return_trip_factor is None:
 
-                dist = self.link_distances["Domestic"] + self.link_distances["Foreign"]
+                dist = self.link_distances["Domestic"]
 
                 if self.travel_dist_unit == "mi":
                     self.return_trip_factor = 1.5 if dist < 500 else 1
@@ -550,11 +568,11 @@ class Link:
                 self.impact_domestic = Scenario_link.get_impact_domestic()
                 self.impact_domestic = self.impact_domestic * self.qty * self.return_trip_factor * self.unit_conversion
             except:
-                self.impact_domestic = None
+                self.impact_domestic = self.mode_foreign_obj.get_impact() * 0
 
             try:
                 self.impact_foreign = Scenario_link.get_foreign_impact()
                 self.impact_foreign = self.impact_foreign * self.qty * self.unit_conversion
             except:
-                self.impact_foreign = None
+                self.impact_foreign = self.mode_domestic_obj.get_impact() * 0
 

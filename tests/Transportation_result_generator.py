@@ -23,50 +23,48 @@ def run_test_files(test_file_path, output_csv_path):
             # Clean all required inputs
             shipping_dest = clean(row["destination"])
             shipping_org = clean(row["origin"])
-
             material = clean(row["material"])
             qty = clean(row["qty"])
-            travel_dist = string (row["travel_dist_scenario"])
+            qty_unit = clean(row["qty_unit"])
+            travel_dist = string (row["travel_dist"])
+            travel_dist_unit = clean(row["travel_dist_unit"])
             return_trip_factor = clean(row["return_trip_factor"])
-            dist_unit = clean(row["unit"])
-            mode_name = clean(row["mode"])
-            fuel_type = clean(row["fuel"])
-            mode_dms_name = clean(row["domestic_mode"])
-            efficiency = clean(row["efficiency"])
-            efficiency_dms = clean(row["efficiency_dms"])
+            mode_domestic = clean(row["mode_domestic"])
+            mode_domestic_fuel_type = clean(row["mode_domestic_fuel_type"])
+            mode_domestic_efficiency = clean(row["mode_domestic_efficiency"])
+            mode_foreign = clean(row["mode_foreign"])
+            mode_foreign_fuel_type = clean(row["mode_foreign_fuel_type"])
+            mode_foreign_efficiency = clean(row["mode_foreign_efficiency"])
 
+            project = ProjectLogisticManager.new("Building A")
             # Build project
-            project = ProjectLogisticManager(
-                name="Building A",
-                shipping_dest=shipping_dest,
-                shipping_org=shipping_org
-            )
+            truck_1 = project.add_link (link_name = "QC_Impact", shipping_dest = shipping_dest, shipping_org = shipping_org,
+                                        material = material, qty = qty, qty_unit = qty_unit, travel_dist = travel_dist,
+                                        travel_dist_unit = travel_dist_unit , return_trip_factor = return_trip_factor, mode_domestic = mode_domestic,
+                                        mode_domestic_fuel_type = mode_domestic_fuel_type, mode_domestic_efficiency= mode_domestic_efficiency,
+                                        mode_foreign= mode_foreign, mode_foreign_fuel_type = mode_foreign_fuel_type, mode_foreign_efficiency = mode_foreign_efficiency)
 
-            # Create link
-            project.create_link(
-                material=material,
-                qty=qty,
-                travel_dist=travel_dist,
-                return_trip_factor=return_trip_factor,
-                dist_unit=dist_unit,
-                mode_name=mode_name,
-                fuel_type=fuel_type,
-                mode_dms_name=mode_dms_name,
-                efficiency=efficiency,
-                efficiency_dms=efficiency_dms
-            )
+            truck_1.compute_impact()
+            domestic_impact = truck_1.get_impact_domestic().get_impact_dict()
+            foreign_impact = truck_1.get_impact_foreign().get_impact_dict()
+            distances = truck_1.get_link_distances()
+            return_trip_factor = truck_1.get_return_trip_factor()
+            electricity = truck_1.get_electricity_consumption()
 
-            # Collect outputs
-            impact_dict = project.get_links()[0].get_impact().get_impact_dict()
-            distances = project.get_links()[0].get_travel_dist()
 
             # Combine input and output into one row
             result_row = row.to_dict()
-            result_row.update(impact_dict)
+            domestic_impact_prefixed = {f"Domestic_{k}": v for k, v in domestic_impact.items()}
+            foreign_impact_prefixed = {f"Foreign_{k}": v for k, v in foreign_impact.items()}
+
+            result_row.update(domestic_impact_prefixed)
+            result_row.update(foreign_impact_prefixed)
             result_row.update({
                 "Domestic_distance_km": distances.get("Domestic", None),
                 "Foreign_distance_km": distances.get("Foreign", None)
             })
+            result_row.update({"Return_trip_factor": return_trip_factor})
+            result_row.update({"Electricity": electricity })
 
             all_results.append(result_row)
 

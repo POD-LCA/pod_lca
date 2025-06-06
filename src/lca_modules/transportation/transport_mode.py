@@ -32,6 +32,7 @@ class TransportMode:
         self.efficiency = None
         self.fuel_type = None
         self.impact = None
+        self.electricity_consumption = None
         self.limitations = []
         self.faf_mode = None
         self.cfs_mode = None
@@ -146,32 +147,25 @@ class TransportMode:
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
             (emission_data["eff"] == self.efficiency) & (emission_data["fuel"] == self.fuel_type) ]
 
+        self.impact = Impacts.from_parent(self)
+        # If data is found, update the impacts
+        if not filtered_data.empty:
+            row = filtered_data.iloc[0]  # Get the first (and only) matching row
 
-        if self.fuel_type == "Electric":
-            
-        #TODO: create transprtation impact for electric modes
-            row = filtered_data.iloc[0]
-            impact = {"Kwh/km*tonne": row["Electricity consumtion (kWh)"]}
-            self.impact = Impacts.from_dict(impact)
+            self.electricity_consumption = row["Electricity consumtion (kWh)"]
 
+            impacts = {
+                "GWP": row["GWP"],
+                "AP": row["AP"],
+                "EP": row["EP"],
+                "ODP": row["ODP"],
+                "SFP": row["SFP"]
+            }
+
+            self.impact.update_impact_qty(impacts)
         else:
-            self.impact = Impacts.from_parent(self)
 
-            # If data is found, update the impacts
-            if not filtered_data.empty:
-                row = filtered_data.iloc[0]  # Get the first (and only) matching row
-                impacts = {
-                    "GWP": row["GWP"],
-                    "AP": row["AP"],
-                    "EP": row["EP"],
-                    "ODP": row["ODP"],
-                    "SFP": row["SFP"]
-                }
-
-                self.impact.update_impact_qty(impacts)
-            else:
-
-                print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
+            print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
 
     # ================================
     # Getters
@@ -216,6 +210,11 @@ class TransportMode:
         """
         return self.fuel_type
 
+    def get_electricity_consumption (self):
+        """
+        Retrieve the electricity consumption of the transportation mode.
+        """
+        return self.electricity_consumption
 
 if __name__ == '__main__':
 
