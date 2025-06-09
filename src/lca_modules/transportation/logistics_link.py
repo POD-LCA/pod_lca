@@ -549,10 +549,6 @@ class Link:
             
             self.mode_domestic_obj = Scenario_link.get_mode_domestic()
             self.mode_foreign_obj = Scenario_link.get_mode_foreign()
-            
-
-            self.electricity_consumption = self.mode_domestic_obj.get_electricity_consumption()* self.link_distances["Domestic"]
-            #self.electricity_consumption = self.mode_foreign_obj.get_electricity_consumption()* self.link_distances["Foreign"]
 
 
             if self.return_trip_factor is None:
@@ -576,3 +572,5 @@ class Link:
             except:
                 self.impact_foreign = self.mode_domestic_obj.get_impact() * 0
 
+
+            self.electricity_consumption = self.mode_domestic_obj.get_electricity_consumption()* self.link_distances["Domestic"]* self.return_trip_factor
