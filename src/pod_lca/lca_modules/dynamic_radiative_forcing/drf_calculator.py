@@ -5,19 +5,21 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from numpy import exp as np_exp
 from numpy import arange as np_arange
-
-from math import exp
+from numpy import cumsum
+from numpy import exp as np_exp
+from numpy import convolve
+from numpy import flip
 
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import MathFuncs
 
+
 class DynamicRadiativeForcing:
 
     @staticmethod
-    def get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2ppb-1"):
+    def get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2ppb-1", adjust_for_indirect_effects=True):
         """ Get the radiative efficiency of given greenhouse_gas.
          
         Parameters
@@ -26,22 +28,25 @@ class DynamicRadiativeForcing:
             Name of the gas: e.g.,'CO2', 'CH4'. 'N2O'
         ref_unit: str
             Output unit: 'Wm-2ppb-1', 'Wm-2kg-1'
+        adjust_for_indirect_effects: bool
+            Adjust radiative efficiency to account for indirect effects
         
         Returns
         -------
         float
             Radiative efficiency, in reference unit
         """
-        mass_atmosphere_total = 5.1352 * 10**18 # in kg
+        mass_atmosphere_total = 5.1352 * 10 ** 18 # in kg
         molecular_weight_air_mean = 28.97 # in g mol−1
+
+        f1 = 0.5 # increased effect due to ozone
+        f2 = 0.15 # increased effect due to stratospheric H2O 
 
         radiative_efficiency_dict = DataImporter.json_to_dict(config['file_paths']['drf']['RADIATIVE_EFFICIENCY'])
         
         if greenhouse_gas in radiative_efficiency_dict:
             radiative_efficiency = radiative_efficiency_dict[greenhouse_gas]
-            if radiative_efficiency_dict['_ref_unit'] == ref_unit:
-                return radiative_efficiency
-            else:
+            if radiative_efficiency_dict['_ref_unit'] != ref_unit:
                 molecular_weight_dict = DataImporter.json_to_dict(config['file_paths']['drf']['MOLECULER_WEIGHT'])
                 if molecular_weight_dict['_ref_unit'] in ['gmol-1', 'kg kmol-1', 'amu']:
                     molecular_weight = molecular_weight_dict[greenhouse_gas]
@@ -49,11 +54,19 @@ class DynamicRadiativeForcing:
                     raise ValueError(f"Reference unit {molecular_weight_dict['_ref_unit']} not recognized.")
                 
                 if ref_unit == 'Wm-2kg-1' and radiative_efficiency_dict['_ref_unit'] == 'Wm-2ppb-1':
-                    return radiative_efficiency * (molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total)
+                    radiative_efficiency *=  (molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total)
                 elif ref_unit == 'Wm-2ppb-1' and radiative_efficiency_dict["_ref_unit"] == 'Wm-2kg-1':
-                    return radiative_efficiency * (molecular_weight/molecular_weight_air_mean) * (mass_atmosphere_total/ (10 ** 9))
+                    radiative_efficiency *= (molecular_weight/molecular_weight_air_mean) * (mass_atmosphere_total/ (10 ** 9))
                 else:
                     raise ValueError(f"Reference unit {ref_unit} not recognized.")
+            
+            if adjust_for_indirect_effects:
+                if greenhouse_gas == 'CH4':
+                    radiative_efficiency *= (1 + f1 + f2)
+                elif greenhouse_gas == 'N2O':
+                    radiative_efficiency *= (1 - 0.36 * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / DynamicRadiativeForcing.get_radiative_efficiency('N2O', 'Wm-2ppb-1', adjust_for_indirect_effects=False))
+        
+            return radiative_efficiency
         else:
             return None
 
@@ -92,14 +105,14 @@ class DynamicRadiativeForcing:
         at_year : int or array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
-            Cumulative values if true, else instantaneous values.   
+            Cumulative values if true, else instantaneous values.  
 
         Returns
         -------
         float
-            Concentration of the greenhouse gas, in kg.       
+            Concentration of the greenhouse gas, in kg.   # TODO: double check the units    
         """
-        if cumulative: # TODO: Double check integration functions
+        if cumulative:
             if greenhouse_gas == 'CO2':
                 term_1 = 0.2173 *  at_year
                 term_2 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2240, pow_coeff=-1 / 394.4)
@@ -109,6 +122,7 @@ class DynamicRadiativeForcing:
             else:
                 life_time = DynamicRadiativeForcing.get_pertubation_lifetime(greenhouse_gas)
                 return MathFuncs.integrate_exp(a=0, b=at_year, coeff=1.0, pow_coeff=-1 / life_time)
+            
         else:
             if greenhouse_gas == 'CO2':
                 term_1 = 0.2173
@@ -116,12 +130,13 @@ class DynamicRadiativeForcing:
                 term_3 = 0.2824 * np_exp(-1 * at_year / 36.54)
                 term_4 = 0.2763 * np_exp(-1 * at_year / 4.304)
                 return (term_1 + term_2 + term_3 + term_4)
+            
             else:
                 life_time = DynamicRadiativeForcing.get_pertubation_lifetime(greenhouse_gas)
                 return np_exp(-1 * at_year / life_time)
 
     @staticmethod
-    def get_radiative_forcing(greenhouse_gas, at_year, cumulative=False):
+    def get_radiative_forcing(greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5):
         """ Get the radiative forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
@@ -131,14 +146,52 @@ class DynamicRadiativeForcing:
         at_year : int or array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
-            Cumulative values if true, else instantaneous values.  
+            Cumulative values if true, else instantaneous values.
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2
+        alpha : float
+            Fraction of CH4 oxidized: 0.5-1.0
 
         Returns
         -------
         float
             radiative forcing, in W/m2.       
         """
-        return DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1") * DynamicRadiativeForcing.get_atmospheric_concentration(greenhouse_gas, at_year, cumulative)
+        if greenhouse_gas == 'CH4':
+            molecular_weight_dict = DataImporter.json_to_dict(config['file_paths']['drf']['MOLECULER_WEIGHT'])
+            if molecular_weight_dict['_ref_unit'] in ['gmol-1', 'kg kmol-1', 'amu']:
+                molecular_weight_CH4 = molecular_weight_dict['CH4']
+                molecular_weight_CO2 = molecular_weight_dict['CO2']
+            else:
+                raise ValueError(f"Reference unit {molecular_weight_dict['_ref_unit']} not recognized.")
+        
+            RF_CH4 = DynamicRadiativeForcing.get_radiative_efficiency('CH4', ref_unit="Wm-2kg-1") * DynamicRadiativeForcing.get_atmospheric_concentration('CH4', at_year, cumulative)
+            if CH4_oxidation:
+                time_step = 1.0
+                pertubation_life_time_CH4 = DynamicRadiativeForcing.get_pertubation_lifetime('CH4')
+                if cumulative:
+                    time_steps = int(at_year / time_step + 1)
+                    
+                    _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', at_year, time_step, cumulative)
+                    _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', at_year, time_step, cumulative)
+                    CO2_concentration_from_CH4 = sum(convolve(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse, CH4_concentration)[:time_steps])
+
+                    return RF_CH4 + DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
+                else:
+                    years = np_arange(0, at_year + time_step, time_step)
+                    CH4_concentration = DynamicRadiativeForcing.get_atmospheric_concentration('CH4', years, cumulative=False)
+                    CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_atmospheric_concentration('CO2', years, cumulative=False)
+                    CO2_concentration_from_CH4 = sum(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse * flip(CH4_concentration))
+
+                    return RF_CH4 + DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
+
+            return RF_CH4
+        else:
+            return DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1") * DynamicRadiativeForcing.get_atmospheric_concentration(greenhouse_gas, at_year, cumulative)
+
+    @staticmethod
+    def get_dynamic_characterization_factor(greenhouse_gas, time_horizon, cumulative=False):
+        pass
 
     @staticmethod
     def get_concentration_time_series(greenhouse_gas, time_horizon, time_step, cumulative=False):
@@ -153,14 +206,21 @@ class DynamicRadiativeForcing:
         time_step : float
             Time step in years.
         cumulative : bool
-            Cumulative radiative forcing if true, else instantaneous values.       
+            Cumulative radiative forcing if true, else instantaneous values.
+
+        Returns
+        -------
+        numpy.array
+            years of the time series
+        numpy.array
+            concentration values at the end of the year #TODO: double check this    
         """
-        years = np_arange(0, time_horizon, time_step)
-        concentrations = DynamicRadiativeForcing.get_atmospheric_concentration(greenhouse_gas, years + time_step, cumulative) # TODO: check the at_years variable
+        years = np_arange(0, time_horizon + time_step, time_step)
+        concentrations = DynamicRadiativeForcing.get_atmospheric_concentration(greenhouse_gas, years, cumulative) # TODO: check the at_years variable
         return years, concentrations
         
     @staticmethod
-    def get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative=True):
+    def get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=False, alpha=0.5):
         """ Get the daynamic radiative forcing values as a time-series.
 
         Parameters
@@ -172,11 +232,52 @@ class DynamicRadiativeForcing:
         time_step : float
             Time step in years.
         cumulative : bool
-            Cumulative radiative forcing if true, else instantaneous values.       
+            Cumulative radiative forcing if true, else instantaneous values.
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2
+        alpha : float
+            Fraction of CH4 oxidized: 0.5-1.0
+
+        Returns
+        -------
+        numpy.array
+            Years of the time series
+        numpy.array
+            Atmospheric concentration values at the end of the year #TODO: double check this 
+        numpy.array
+            Radiative forcing values at the end of the year
         """
         radiative_efficiency = DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1")
         years, concentrations = DynamicRadiativeForcing.get_concentration_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
-        return years, radiative_efficiency * concentrations
+
+        if greenhouse_gas == 'CH4':
+            molecular_weight_dict = DataImporter.json_to_dict(config['file_paths']['drf']['MOLECULER_WEIGHT'])
+            if molecular_weight_dict['_ref_unit'] in ['gmol-1', 'kg kmol-1', 'amu']:
+                molecular_weight_CH4 = molecular_weight_dict['CH4']
+                molecular_weight_CO2 = molecular_weight_dict['CO2']
+            else:
+                raise ValueError(f"Reference unit {molecular_weight_dict['_ref_unit']} not recognized.")
+        
+            RF_CH4 = radiative_efficiency * concentrations
+            if CH4_oxidation:
+                time_steps = int(time_horizon / time_step + 1)
+                pertubation_life_time_CH4 = DynamicRadiativeForcing.get_pertubation_lifetime('CH4')
+
+                _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', time_horizon, time_step, cumulative=False)
+                _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', time_horizon, time_step, cumulative=False)
+                CO2_concentration_from_CH4 = convolve(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse, CH4_concentration)[:time_steps]
+                
+                if cumulative:
+                    CO2_concentration_from_CH4_cumulative = cumsum(CO2_concentration_from_CH4)
+                    RF_CO2 = DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4_cumulative
+                else:
+                    RF_CO2 = DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
+
+                return years, concentrations, RF_CH4 + RF_CO2
+
+            return years, concentrations, RF_CH4
+        else:
+            return years, concentrations, radiative_efficiency * concentrations
 
     @staticmethod
     def get_GWP(greenhouse_gas, time_horizon):

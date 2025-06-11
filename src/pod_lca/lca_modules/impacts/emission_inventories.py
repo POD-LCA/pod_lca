@@ -34,9 +34,9 @@ class Emissions(Records):
     def __init__(self):
         super().__init__()
         self.start_year = None
-        self.function = None
+        self.function = 'pulse'
         self.duration = None
-        self.methane_bio_oxidation = 1.0
+        self.methane_bio_oxidation = 0.5
 
     def set_start_year(self, year):
         """ Set year of the emission.

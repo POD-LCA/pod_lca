@@ -103,7 +103,7 @@ class DataImporter:
         Parameters
         ----------
         input_dict : dict
-            A dictionary with the UUID as the key and the row as the value.
+            A dictionary with the row as the value.
         file_path : str
             Location of the CSV file.
         """
