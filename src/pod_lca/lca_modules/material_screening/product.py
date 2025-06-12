@@ -305,7 +305,6 @@ class Product(Master):
         float
             Quantity of the electricity
         """
-        
         database = self.get_project().get_database()
         data_set = database.get_data_entry(self.get_impact_database_entry())
 
@@ -441,11 +440,12 @@ class Product(Master):
                 
                 # electricity from database
                 if self.electricity['from_database'] is None:
+                    database_electricity_qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
                     for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
                         record_dict = {}
                         for cat in DATA_HEADERS_DICT:
-                            if (electricity_qty > 0.0) and (electricity_tag + cat in list(data_set.index)):
-                                record_dict[cat] = data_set[electricity_tag + cat] / electricity_qty
+                            if (database_electricity_qty > 0.0) and (electricity_tag + cat in list(data_set.index)):
+                                record_dict[cat] = data_set[electricity_tag + cat] / database_electricity_qty
                             else:
                                 record_dict[cat] = 0.0
 
@@ -465,13 +465,18 @@ class Product(Master):
                                                                                 emissions=emissons,
                                                                                 carbon_storage=carbon_storage)
                     self.electricity['from_database'] = electiricity_from_data
+                else:
+                    self.electricity['from_database'].set_qty(electricity_qty)
+                    self.electricity['from_database'].set_unit(electricity_unit)
 
             if self.get_electricity_source() is None:
                 self.electricity["_current"] = 'from_database'
             elif self.get_electricity_source() == 'by_location':
-                product_impact = self.impacts
-                product_impact -= self.electricity['from_database'].get_impacts()
-                product_impact += self.electricity['by_location'].get_impacts()
+                for record_type in database.__class__.DATA_IMPORTS:
+                    method_name = 'get_' + str(record_type)
+                    product_impact = getattr(self, record_type)
+                    product_impact -= getattr(self.electricity['from_database'], method_name)()
+                    product_impact += getattr(self.electricity['by_location'], method_name)()
         
         return self
 

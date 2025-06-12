@@ -77,10 +77,14 @@ for test in tqdm(test_dict):
         else:
             raise KeyError(f"Inventory '{inventory}' not found in IMPACT_CATEGORIES or EMISSION_INVENTORIES.")
         if inventory in test_dict[test]:
-            dif = abs(records.get_record(inventory) - float(test_dict[test][inventory])) / ((records.get_record(inventory) + float(test_dict[test][inventory])) / 2 )  # symmetric difference
-            
             output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = records.get_record(inventory)
             output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Excel tool'] = test_dict[test][inventory]
+
+            if (records.get_record(inventory) == 0.0) and (float(test_dict[test][inventory]) == 0):
+                dif = 0
+            else:
+                dif = abs(records.get_record(inventory) - float(test_dict[test][inventory])) / ((records.get_record(inventory) + float(test_dict[test][inventory])) / 2 )  # symmetric difference
+                
             output_dict[test][inventory + '_difference (%)'] = dif * 100
 
             if dif * 100 > 0.5:
