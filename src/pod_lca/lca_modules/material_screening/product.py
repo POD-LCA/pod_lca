@@ -474,9 +474,9 @@ class Product(Master):
             elif self.get_electricity_source() == 'by_location':
                 for record_type in database.__class__.DATA_IMPORTS:
                     method_name = 'get_' + str(record_type)
-                    product_impact = getattr(self, record_type)
-                    product_impact -= getattr(self.electricity['from_database'], method_name)()
-                    product_impact += getattr(self.electricity['by_location'], method_name)()
+                    product_record = getattr(self, record_type)
+                    product_record -= getattr(self.electricity['from_database'], method_name)()
+                    product_record += getattr(self.electricity['by_location'], method_name)()
         
         return self
 
