@@ -17,7 +17,7 @@ from pod_lca.utilities import DataImporter
 from pod_lca.utilities import config
 
 test_data = "tests\\material_electricity-swap-test_test-values.csv"
-output_file = "tests\\material_electricity-swap-test_test_report.csv"
+output_file = "tests\\material_electricity-swap-test_report.csv"
 test_dict = DataImporter.csv_to_dict(test_data, 'test_name')
 
 my_manufacturing_project = Project()
