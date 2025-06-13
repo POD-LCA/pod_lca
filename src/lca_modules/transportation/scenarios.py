@@ -113,7 +113,7 @@ class Scenario:
 
         if scenario in ["Local", "Regional", "Regional_c", "National", "None", "Known_us"]:
             new_scenario.pre_us_processing()
-        elif scenario in ["NA", "Global", "Known"]:
+        elif scenario in ["North_america", "Global", "Known"]:
             new_scenario.pre_global_processing()
 
         return new_scenario
@@ -457,7 +457,7 @@ class Scenario:
                                 self.shipping_dest = Location.from_str(closest_state)
             else:
                 
-                if scenario == "NA":
+                if scenario == "North_america":
                     faf = faf[faf["fr_orig"].isin([801, 802])]
                     faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
                     self.shipping_org = Location.from_str(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
@@ -548,7 +548,7 @@ class Scenario:
                     raise ValueError("no data for the selected origin in Marine dataset")
                 
             else:
-                if scenario == "NA":
+                if scenario == "North_america":
                     marine = marine[marine["Region"].isin(["Canada", "Mexico"])]
                     marine = marine[marine["Region"] == origin.get_marine_region()]
 
@@ -846,7 +846,7 @@ class Scenario:
         return the distances of the transportation based on the scenario.
         
         """
-        if self.scenario in ["Local", "Regional", "Regional_c", "National", "None", "NA", "Global", "Known", "Known_us"]:
+        if self.scenario in ["Local", "Regional", "Regional_c", "National", "None", "North_america", "Global", "Known", "Known_us"]:
             return self.domestic_dis, self.foreign_dis
 
     
@@ -864,6 +864,20 @@ class Scenario:
         
         """
         return self.mode_foreign
+
+    def get_shipping_dest(self):
+        """
+        return the shipping destination.
+        
+        """
+        return self.shipping_dest
+    
+    def get_shipping_org(self):
+        """
+        return the shipping origin.
+        
+        """
+        return self.shipping_org
 
 
 

@@ -549,6 +549,8 @@ class Link:
             
             self.mode_domestic_obj = Scenario_link.get_mode_domestic()
             self.mode_foreign_obj = Scenario_link.get_mode_foreign()
+            self.shipping_dest = Scenario_link.get_shipping_dest()
+            self.shipping_org = Scenario_link.get_shipping_org()
 
 
             if self.return_trip_factor is None:

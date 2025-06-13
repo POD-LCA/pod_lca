@@ -17,8 +17,13 @@ def string (value):
 def run_test_files(test_file_path, output_csv_path):
     test_inputs = pd.read_csv(test_file_path)
     all_results = []
+    rows_count = len(test_inputs)
 
     for _, row in test_inputs.iterrows():
+
+        # Print progress
+        progress = (_ + 1) / rows_count * 100
+        print(f"Processing row {_ + 1}/{rows_count} - Progress: {progress:.2f}%")
         try:
             # Clean all required inputs
             shipping_dest = clean(row["destination"])
@@ -38,24 +43,67 @@ def run_test_files(test_file_path, output_csv_path):
 
             project = ProjectLogisticManager.new("Building A")
             # Build project
-            truck_1 = project.add_link (link_name = "QC_Impact", shipping_dest = shipping_dest, shipping_org = shipping_org,
+            truck_1 = project.add_link (link_name = "Local_impact", shipping_dest = shipping_dest, shipping_org = shipping_org,
                                         material = material, qty = qty, qty_unit = qty_unit, travel_dist = travel_dist,
                                         travel_dist_unit = travel_dist_unit , return_trip_factor = return_trip_factor, mode_domestic = mode_domestic,
                                         mode_domestic_fuel_type = mode_domestic_fuel_type, mode_domestic_efficiency= mode_domestic_efficiency,
                                         mode_foreign= mode_foreign, mode_foreign_fuel_type = mode_foreign_fuel_type, mode_foreign_efficiency = mode_foreign_efficiency)
 
             truck_1.compute_impact()
-            domestic_impact = truck_1.get_impact_domestic().get_impact_dict()
-            foreign_impact = truck_1.get_impact_foreign().get_impact_dict()
-            distances = truck_1.get_link_distances()
-            return_trip_factor = truck_1.get_return_trip_factor()
-            electricity = truck_1.get_electricity_consumption()
+            try:
+                domestic_impact = truck_1.get_impact_domestic().get_impact_dict()
+            except Exception:
+                domestic_impact = None
+
+            try:
+                domestic_mode_impact = truck_1.get_mode_domestic().get_impact().get_impact_dict()
+            except Exception:
+                domestic_mode_impact = None
+
+            try:
+                foreign_impact = truck_1.get_impact_foreign().get_impact_dict()
+            except Exception:
+                foreign_impact = None
+
+            try:
+                foreign_mode_impact = truck_1.get_mode_foreign().get_impact().get_impact_dict()
+            except Exception:
+                foreign_mode_impact = None
+
+            try:
+                distances = truck_1.get_link_distances()
+            except Exception:
+                distances = None
+
+            try:
+                new_domestic_mode = truck_1.get_mode_domestic().get_name()
+            except Exception:
+                new_domestic_mode = None
+
+            try:
+                new_foreign_mode = truck_1.get_mode_foreign().get_name()
+            except Exception:
+                new_foreign_mode = None
+
+            try:
+                return_trip_factor = truck_1.get_return_trip_factor()
+            except Exception:
+                return_trip_factor = None
+
+            try:
+                electricity = truck_1.get_electricity_consumption()
+            except Exception:
+                electricity = None
+
 
 
             # Combine input and output into one row
             result_row = row.to_dict()
             domestic_impact_prefixed = {f"Domestic_{k}": v for k, v in domestic_impact.items()}
             foreign_impact_prefixed = {f"Foreign_{k}": v for k, v in foreign_impact.items()}
+
+            domestic_mode_impact_prefixed = {f"Domestic_mode_{k}": v for k, v in domestic_mode_impact.items()} if domestic_mode_impact else {f"Domestic_mode_{k}": None for k, v in foreign_mode_impact.items()}
+            foreign_mode_prefixed = {f"Foreign_mode_{k}": v for k, v in foreign_mode_impact.items()} if foreign_mode_impact else {f"Foreign_mode_{k}": None for k, v in domestic_mode_impact.items()}
 
             result_row.update(domestic_impact_prefixed)
             result_row.update(foreign_impact_prefixed)
@@ -65,6 +113,10 @@ def run_test_files(test_file_path, output_csv_path):
             })
             result_row.update({"Return_trip_factor": return_trip_factor})
             result_row.update({"Electricity": electricity })
+            result_row.update({"New_domestic_mode": new_domestic_mode})
+            result_row.update({"New_foreign_mode": new_foreign_mode})
+            result_row.update(domestic_mode_impact_prefixed)
+            result_row.update(foreign_mode_prefixed)
 
             all_results.append(result_row)
 
@@ -84,6 +136,6 @@ if __name__ == "__main__":
     the input files should be in the form of a CSV file.
     """
     
-    test_file_path = r"tests\transportation_QC_5nd.csv"
-    output_csv_path = r"tests\transportation_QC_5nd_result.csv"
+    test_file_path = r"C:\Users\mhtaba\Desktop\transportatio_data_generation\brute_force_dataset_test.csv"
+    output_csv_path = r"C:\Users\mhtaba\Desktop\transportatio_data_generation\brute_force_dataset_result.csv"
     run_test_files(test_file_path, output_csv_path)
