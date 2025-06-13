@@ -15,21 +15,28 @@ from pod_lca.visualizer import LinePlot
 from pod_lca.visualizer import MatplotlibPlotter
 from pod_lca.utilities import DataImporter
 
-time_horizon = 500
-time_step = 1
+time_horizon = 100
+time_step = 1/120
 greenhouse_gases = ["CO2", "N2O", "CH4", "CH4_fossil"]
 plot = False
 save_file = "save_files\\DRF_timeseries.csv"
 
 data = []
 years = arange(0, time_horizon + time_step, time_step)
+if years[-1] > time_horizon:
+    years = years[:-1]
 data = vstack((array(['year']), years.reshape((-1, 1))))
 for cumulative in [True, False]:
     for greenhouse_gas in greenhouse_gases:
         if greenhouse_gas == 'CH4_fossil':
-            _, _, y_data = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', time_horizon, time_step, cumulative, CH4_oxidation=True, alpha=0.5)
+            _, concentrations, y_data = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', time_horizon, time_step, cumulative, CH4_oxidation=True, alpha=1.0)
         else:
-            _, _, y_data = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
+            _, concentrations, y_data = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
+
+        if not cumulative:
+            series_name = greenhouse_gas + '_concentration in atm'
+            data_tmp = vstack((array([series_name]), concentrations.reshape((-1, 1))))
+            data = hstack((data, data_tmp ))      
 
         series_name = greenhouse_gas + '_cumulative' if cumulative else greenhouse_gas + '_instantaneous'
         data_tmp = vstack((array([series_name]), y_data.reshape((-1, 1))))

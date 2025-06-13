@@ -110,7 +110,7 @@ class DynamicRadiativeForcing:
         Returns
         -------
         float
-            Concentration of the greenhouse gas, in kg.   # TODO: double check the units    
+            Concentration of the greenhouse gas, in kg (if not cumulative) or in kg-yrs (if cumulative). 
         """
         if cumulative:
             if greenhouse_gas == 'CO2':
@@ -136,7 +136,7 @@ class DynamicRadiativeForcing:
                 return np_exp(-1 * at_year / life_time)
 
     @staticmethod
-    def get_radiative_forcing(greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5):
+    def get_radiative_forcing(greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5, convolution_time_step = 0.01):
         """ Get the radiative forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
@@ -151,6 +151,8 @@ class DynamicRadiativeForcing:
             If true, account for oxidation of CH4 to CO2
         alpha : float
             Fraction of CH4 oxidized: 0.5-1.0
+        convolution_time_step : float
+            Time step for CH4 oxidation.    
 
         Returns
         -------
@@ -166,24 +168,15 @@ class DynamicRadiativeForcing:
                 raise ValueError(f"Reference unit {molecular_weight_dict['_ref_unit']} not recognized.")
         
             RF_CH4 = DynamicRadiativeForcing.get_radiative_efficiency('CH4', ref_unit="Wm-2kg-1") * DynamicRadiativeForcing.get_atmospheric_concentration('CH4', at_year, cumulative)
+            
             if CH4_oxidation:
-                time_step = 1.0
                 pertubation_life_time_CH4 = DynamicRadiativeForcing.get_pertubation_lifetime('CH4')
-                if cumulative:
-                    time_steps = int(at_year / time_step + 1)
-                    
-                    _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', at_year, time_step, cumulative)
-                    _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', at_year, time_step, cumulative)
-                    CO2_concentration_from_CH4 = sum(convolve(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse, CH4_concentration)[:time_steps])
 
-                    return RF_CH4 + DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
-                else:
-                    years = np_arange(0, at_year + time_step, time_step)
-                    CH4_concentration = DynamicRadiativeForcing.get_atmospheric_concentration('CH4', years, cumulative=False)
-                    CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_atmospheric_concentration('CO2', years, cumulative=False)
-                    CO2_concentration_from_CH4 = sum(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse * flip(CH4_concentration))
+                _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', at_year, convolution_time_step, cumulative=False)
+                _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', at_year, convolution_time_step, cumulative)
+                CO2_concentration_from_CH4 = sum(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse * flip(CH4_concentration)) * convolution_time_step
 
-                    return RF_CH4 + DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
+                return RF_CH4 + DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
 
             return RF_CH4
         else:
@@ -196,6 +189,10 @@ class DynamicRadiativeForcing:
     @staticmethod
     def get_concentration_time_series(greenhouse_gas, time_horizon, time_step, cumulative=False):
         """ Get the concentration of the greenhouse gas in the atmosphere as a time-series.
+
+        Note
+        ----
+        1. Noting the behaviour of numpy.arange with floats, the end value of years is checked against time horizon. 
 
         Parameters
         ----------
@@ -216,6 +213,8 @@ class DynamicRadiativeForcing:
             concentration values at the end of the year #TODO: double check this    
         """
         years = np_arange(0, time_horizon + time_step, time_step)
+        if years[-1] > time_horizon:
+            years = years[:-1]
         concentrations = DynamicRadiativeForcing.get_atmospheric_concentration(greenhouse_gas, years, cumulative) # TODO: check the at_years variable
         return years, concentrations
         
@@ -260,18 +259,14 @@ class DynamicRadiativeForcing:
         
             RF_CH4 = radiative_efficiency * concentrations
             if CH4_oxidation:
-                time_steps = int(time_horizon / time_step + 1)
+                # TODO: seperate time step for convolution and recording
                 pertubation_life_time_CH4 = DynamicRadiativeForcing.get_pertubation_lifetime('CH4')
 
                 _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', time_horizon, time_step, cumulative=False)
-                _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', time_horizon, time_step, cumulative=False)
-                CO2_concentration_from_CH4 = convolve(alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * CO2_concentration_unit_pulse, CH4_concentration)[:time_steps]
+                _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', time_horizon, time_step, cumulative)
+                CO2_concentration_from_CH4 = alpha * (molecular_weight_CO2/ molecular_weight_CH4) * (1 / pertubation_life_time_CH4) * convolve(CO2_concentration_unit_pulse, CH4_concentration)[:len(years)] * time_step
                 
-                if cumulative:
-                    CO2_concentration_from_CH4_cumulative = cumsum(CO2_concentration_from_CH4)
-                    RF_CO2 = DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4_cumulative
-                else:
-                    RF_CO2 = DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
+                RF_CO2 = DynamicRadiativeForcing.get_radiative_efficiency('CO2', ref_unit="Wm-2kg-1") * CO2_concentration_from_CH4
 
                 return years, concentrations, RF_CH4 + RF_CO2
 
@@ -291,7 +286,6 @@ class DynamicRadiativeForcing:
             Time horizon in years.        
         """
         pass # TODO
-    # TODO convolution
 
 
 if __name__ == '__main__':
