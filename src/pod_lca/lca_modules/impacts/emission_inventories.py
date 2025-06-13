@@ -53,7 +53,8 @@ class Emissions(Records):
     def set_function(self, func):
         """ Set the dyanamic emissions function.
         """
-        pass
+        self.function = func
+        # TODO: add setting scipy functions
 
     def set_duration(self, duration):
         """ Set the duration of emissions.
