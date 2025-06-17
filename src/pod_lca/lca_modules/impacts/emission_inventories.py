@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from . import Records
+from ..uncertainty import DataDistribution
 from ...utilities import config
 
     
@@ -19,12 +20,8 @@ class Emissions(Records):
     <emission_name> : float
         Emission names are dynamically set based on the class variable 'record_attr_dict'.
         Currently, this is set to the EMISSION_INVENTORIES in the config file.
-    year : int
-        The year of the emission(s).
-    function : 
-        Function describing the dynamic emission.
-    duration : float
-        Duration of emission, in years.
+    temporal_emission_profile : DataDistribution Object
+        Function describing the dynamic emission profile.
     methane_bio_oxidation : float
         Percentage of biogenic methane oxidating to CO2.
     """
@@ -33,42 +30,81 @@ class Emissions(Records):
 
     def __init__(self):
         super().__init__()
-        self.start_year = None
-        self.function = 'pulse'
-        self.duration = None
+        self.temporal_emission_profile = None
         self.methane_bio_oxidation = 0.5
 
-    def set_start_year(self, year):
-        """ Set year of the emission.
+    # ========================
+    # Constructors
+    # ========================
+    @classmethod
+    def from_parent(cls, parent):
+        """ Create an record object from a parent object.
         
         Parameters
         ----------
-        year : int
-            Year of the emission occuring.
+        parent : Master Obj.
+            The product or process object to which this record belong.
+        
+        Returns
+        -------
+        Record Obj.
+            Record object created.
         """
-        self.year = year
+        record_obj = super().from_parent(parent)
+        record_obj.set_temporal_emission_profile('pulse')
 
-        return self
+        return record_obj
     
-    def set_function(self, func):
+    @classmethod
+    def from_dict(cls, record_dict):
+        """ Create an record object from a dictionary.
+        
+        Parameters
+        ----------
+        record_dict : dict
+            Dictionary of records {record catergory (str): record quantity (float)}
+        
+        Returns
+        -------
+        Records Obj.
+            Records object created.
+        """
+        record_obj = super().from_dict(record_dict)
+
+        return record_obj
+
+    # ========================
+    # Setters
+    # ========================    
+    def set_temporal_emission_profile(self, time_profile):
         """ Set the dyanamic emissions function.
-        """
-        self.function = func
-        # TODO: add setting scipy functions
-
-    def set_duration(self, duration):
-        """ Set the duration of emissions.
         
         Parameters
         ----------
-        duration : float
-            Duration of emission, in years.
+        time_profile : DataDistribution Object
+            Function describing the dynamic emission profile.
         """
-        self.duration = duration
+        if isinstance(time_profile, DataDistribution):
+            self.temporal_emission_profile = time_profile
+        else:
+            raise not NotImplementedError
 
         return self
+
+    # ========================
+    # Getters
+    # ========================    
+    def get_temporal_emission_profile(self):
+        """ Get the dyanamic emissions function.
+
+        Returns
+        -------
+        DataDistribution Object
+            Function describing the dynamic emission profile.
+        """
+        return self.temporal_emission_profile
     
-    def get_year(self):
+    def get_start_year(self):
         """ Set year of the emission.
         
         Returns
@@ -76,14 +112,9 @@ class Emissions(Records):
         int
             Year of the emission occuring.
         """
-        return self.year
-
-    def get_function(self):
-        """ Get the dyanamic emissions function.
-        """
-        return self.function
-
-    def get_duration(self):
+        return self.get_temporal_emission_profile().get_start()
+    
+    def get_emission_duration(self):
         """ Get the duration of emissions.
         
         Returns
@@ -91,8 +122,8 @@ class Emissions(Records):
         float
             Duration of emission, in years.
         """
-        return self.duration
-    
+        return self.get_temporal_emission_profile().get_duration()
+
 
 if __name__ == '__main__':
     pass

@@ -5,8 +5,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ..material_screening import Calculator
-
 
 class SensitivityAnalysis:
 
@@ -45,7 +43,7 @@ class SensitivityAnalysis:
         """
         model = obj.get_model()
 
-        base_impact = Calculator.get_total_impact(model, impact_cat)
+        base_impact = model.get_total_impact(impact_cat)
         base_val = getattr(obj, param)
 
         method_name = 'set_'+ param
@@ -61,7 +59,7 @@ class SensitivityAnalysis:
             
             for i in [0,1]:
                 method(range_lst[i])
-                impact_new = Calculator.get_total_impact(model, impact_cat)
+                impact_new = model.get_total_impact(impact_cat)
                 relative_percentage_change = 100 * (impact_new - base_impact) / base_impact # TODO: make a choice (also Lines 70 and 178)
                 symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
@@ -80,7 +78,7 @@ class SensitivityAnalysis:
             results, impacts = [], []
             for option in kwargs['options']:
                 method(option)
-                impact_new = Calculator.get_total_impact(model, impact_cat)
+                impact_new = model.get_total_impact(impact_cat)
                 relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
                 symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
@@ -164,7 +162,7 @@ class SensitivityAnalysis:
         """
         project =  model.get_project()
 
-        base_impact = Calculator.get_total_impact(model, impact_cat)
+        base_impact = model.get_total_impact(impact_cat)
 
         for group in groups:
             obj = group['obj']
@@ -198,7 +196,7 @@ class SensitivityAnalysis:
                     ref_impact = base_impact
                     for option in group['options']:
                         method(option)
-                        impact_tmp = Calculator.get_total_impact(model, impact_cat)
+                        impact_tmp = model.get_total_impact(impact_cat)
                         if (objective == 'min' and impact_tmp <= ref_impact) or (objective == 'max' and impact_tmp >= ref_impact):
                             selected_option = option
                             ref_impact = impact_tmp
@@ -214,7 +212,7 @@ class SensitivityAnalysis:
                 else:
                     raise KeyError(f"Either the range or option data not provided or key used is invalid.")
                 
-            impact_new = Calculator.get_total_impact(model, impact_cat)
+            impact_new = model.get_total_impact(impact_cat)
             relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
             symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 

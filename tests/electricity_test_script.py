@@ -74,5 +74,4 @@ for test in tqdm(test_dict):
 
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
 
-
 DataImporter.dict_to_csv(output_dict, output_file)

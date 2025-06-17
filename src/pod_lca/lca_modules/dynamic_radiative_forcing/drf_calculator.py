@@ -259,7 +259,6 @@ class DynamicRadiativeForcing:
         
             RF_CH4 = radiative_efficiency * concentrations
             if CH4_oxidation:
-                # TODO: seperate time step for convolution and recording
                 pertubation_life_time_CH4 = DynamicRadiativeForcing.get_pertubation_lifetime('CH4')
 
                 _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', time_horizon, time_step, cumulative=False)
@@ -275,8 +274,12 @@ class DynamicRadiativeForcing:
             return years, concentrations, radiative_efficiency * concentrations
 
     @staticmethod
-    def get_GWP(greenhouse_gas, time_horizon):
-        """ Get the Global Warming Potential of a greenhouse gas, for the given time_horizon.
+    def get_AGWP(greenhouse_gas, time_horizon):
+        """ Get the Absolute Global Warming Potential (AGWP) of a greenhouse gas, for the given time_horizon.
+
+        Note
+        ----
+        1. For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
         
         Parameters
         ----------
@@ -285,7 +288,32 @@ class DynamicRadiativeForcing:
         time_horizon : int
             Time horizon in years.        
         """
-        pass # TODO
+        if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
+            agwp = DynamicRadiativeForcing.get_radiative_forcing('CH4', time_horizon, cumulative=True, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01)
+        else:
+            agwp = DynamicRadiativeForcing.get_radiative_forcing(greenhouse_gas, time_horizon, cumulative=True)
+        
+        return agwp
+    
+    @staticmethod
+    def get_GWP(greenhouse_gas, time_horizon):
+        """ Get the Global Warming Potential (GWP) of a greenhouse gas, for the given time_horizon.
+
+        Note
+        ----
+        1. For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
+        
+        Parameters
+        ----------
+        greenhouse_gas: str
+            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        time_horizon : int
+            Time horizon in years.        
+        """
+        agwp_CO2 = DynamicRadiativeForcing.get_AGWP('CO2', time_horizon)
+        agwp_gas = DynamicRadiativeForcing.get_AGWP(greenhouse_gas, time_horizon)
+        
+        return agwp_gas / agwp_CO2
 
 
 if __name__ == '__main__':

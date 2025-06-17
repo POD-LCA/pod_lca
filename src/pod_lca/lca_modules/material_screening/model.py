@@ -16,9 +16,11 @@ from . import Process
 from . import Product
 from . import TransportationProcess
 from . import Waste
-from pod_lca.units import UNITS_MAP
-from pod_lca.units import KILO 
-from pod_lca.units import WATT_HOUR 
+from ...units import UNITS_MAP
+from ...units import KILO 
+from ...units import WATT_HOUR 
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class Model:
@@ -109,6 +111,7 @@ class Model:
         model = cls()
 
         model.set_project(project)
+        project.models[name] = model
 
         if name is not None:
             model.set_name(name)
@@ -480,7 +483,7 @@ class Model:
         return waste   
 
     # ================================
-    # Methods to interact with items
+    # Find/Delete items
     # ================================
     def find_item(self, name):
         """ Find an item (product/process) in the model, given a name string.
@@ -526,6 +529,107 @@ class Model:
         del obj
 
         gc.collect()
+
+    # ================================
+    # Clculator Methods
+    # ================================
+    def get_total_impact(self, impact_cat):
+        """ Calculate the total impact of the products and processes in the model.
+        
+        Parameters
+        ----------
+        impact_cat : str
+            Impact category considered, including 'weighted'.
+
+        Returns
+        -------
+        float
+            Total impact value.
+        """
+        impacts_dict = self.get_impacts()
+        impacts_lst = []
+        for key, lst in impacts_dict.items():
+            impacts_lst.extend(lst)
+
+        if impact_cat not in list(config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()) + ['weighted']:
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            if impact_cat == 'weighted':
+                val_lst = [impact.get_weighted_impact() for impact in impacts_lst]
+            else:
+                val_lst = [impact.get_record(impact_cat) for impact in impacts_lst]
+
+            return sum(val_lst)
+        
+    def get_impacts_by_LCstages(self, impact_cat):
+        """ Returns impact data by life cycle stage for given model and impact category.
+
+        Parameters
+        ----------
+        impact_cat : str
+            Name of impact category.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {Life Cycle stage (str) : quantity of impact (float)}.
+
+        Raises
+        ------
+            AttributeError : impact category doe not exist in the current project
+        """
+        impacts_dict = self.get_impacts()
+
+        if impact_cat not in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            data = {}
+            for stage in impacts_dict.keys():
+                impact_lst = impacts_dict[stage]
+                data[stage] = 0.0
+                for impact in impact_lst:
+                    data[stage] += impact.get_record(impact_cat)
+
+            return data
+
+    def get_impacts_by_category(self):
+        """ Returns impact data by impact category for given model.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {impact_category (str): quantity of impact (float)}.
+        """
+        data ={}
+        for impact_category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+            data[impact_category] = sum(self.get_impacts_by_LCstages(impact_category).values())
+        
+        return data
+    
+    def get_normalized_impacts_by_category(self):
+        """ Returns impact data by impact category for given model.
+            
+        Parameters
+        ----------
+        model : Model Obj
+            The model considered.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {impact_category (str): quantity of impact (float)}.
+        """
+        IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
+        for impact_cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+            if impact_cat not in IMPACT_NORMALIZATION_FACTOR:
+                raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
+            
+        # normalization as a method in impacts
+        data ={}
+        for impact_category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+            data[impact_category] = sum(self.get_impacts_by_LCstages(impact_category).values()) / IMPACT_NORMALIZATION_FACTOR[impact_category]
+        
+        return data
 
 
 if __name__ == '__main__':

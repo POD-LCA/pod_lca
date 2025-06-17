@@ -7,12 +7,14 @@ __version__ = "0.1.0"
 
 from numpy import arange as np_arange
 from numpy import concatenate
+from numpy import convolve
 from numpy import int16
 from numpy import where
 from numpy import zeros
 
 from . import DynamicRadiativeForcing
 from ..impacts import Emissions
+from ..uncertainty import Uniform
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
 from ...utilities import log
@@ -29,10 +31,16 @@ class DynamicRadiativeForcingRecord:
         Time horizon in years.
     emissions_lst : list of Emissions Obj.
         List of emissions considered in the record.
-    data_years : numpy.array of int
+    data_years : numpy.array of int or float
         Years in the record.
-    data_rf : list of float
-        Radiative forcing values at the time steps.
+    data_emission_intensity : dict
+        Emission intensity in kg/dt; {greenhous gas (str): [emission intensity (float)]}.
+    data_concentrations : dict
+        Atmospheric concentration in kg; {greenhous gas (str): [atmospheric concenration (float)]}.
+    data_irf : dict
+        Instantaneous radiative forcing values at the time steps; {greenhous gas (str): [irf (float)]}.
+    data_crf : dict
+        Cumulative radiative forcing values at the time steps; {greenhous gas (str): [crf (float)]}.
     """
 
     def __init__(self):
@@ -41,16 +49,29 @@ class DynamicRadiativeForcingRecord:
         self.emissions_lst = []
         self.time_step = None
         self.data_years = None
+        self.data_emission_intensity = None
+        self.data_concentrations = None
         self.data_irf = None
         self.data_crf = None
-        self.data_concentrations = None
     
     # ========================
     # Constructors
     # ========================
     @classmethod
     def from_emissions(cls, emissions, start_year=2025, time_horizon=100, time_step=1/12):
-
+        """ Create a dynamic radiative forcing (DRF) record from emissions.
+        
+        Parameters
+        ----------
+        emissions : list of Emissions Obj. or str
+            Emissions in the record.
+        start_year : int
+            Start year of the record.
+        time_horizon : int or float
+            Time horizon of the record, in years.
+        time_step : int or float
+            Time step of the record, in years.
+        """
         record = cls()
 
         record.set_start_year(start_year)
@@ -61,8 +82,23 @@ class DynamicRadiativeForcingRecord:
         return record
     
     @classmethod
-    def from_products():
-        pass # TODO create
+    def from_products(cls, products, start_year=2025, time_horizon=100, time_step=1/12):
+        """ Create a dynamic radiative forcing (DRF) record from products, inheriting from Master Obj.
+        
+        Parameters
+        ----------
+        products : list of Master Obj. or str
+            Products in the record.
+        start_year : int
+            Start year of the record.
+        time_horizon : int or float
+            Time horizon of the record, in years.
+        time_step : int or float
+            Time step of the record, in years.
+        """
+        emissions_lst = [item.get_emissions() for item in products]
+
+        return cls.from_emissions(emissions_lst, start_year, time_horizon, time_step)
 
     # ========================
     # Setters
@@ -123,48 +159,56 @@ class DynamicRadiativeForcingRecord:
         if self.data_years[-1] > record_time_horizon:
             self.data_years = self.data_years[:-1]
 
+        self.data_emission_intensity = {}
         self.data_concentrations = {}
         self.data_irf = {}
         self.data_crf = {}
         for greenhouse_gas in Emissions.record_attr_dict:
+            self.data_emission_intensity[greenhouse_gas] = zeros(len(self.data_years))
             self.data_concentrations[greenhouse_gas] = zeros(len(self.data_years))
             self.data_irf[greenhouse_gas] = zeros(len(self.data_years))
             self.data_crf[greenhouse_gas] = zeros(len(self.data_years))
                     
         # set data
         for emission in self.get_emissions_list():
-            if emission.get_function() == 'pulse':
-                emission_year = emission.get_year()
-                time_horizon = record_start_year + self.get_time_horizon() - emission_year
-                for greenhouse_gas in emission.record_attr_dict:
-                    greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0)
-                    if greenhouse_gas_emission_qty > 0:
-                        # get unit emission records
-                        if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
-                            years, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', time_horizon, time_step, cumulative=False, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
-                            _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
-                        else:
-                            years, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative=False)
-                            _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative=True)
-                        
-                        years = emission_year + years
-                        if emission_year <= record_start_year:
-                            id = where(years == record_start_year)[0][0]
-                            year_matched_concentrations = concentrations[id:] * greenhouse_gas_emission_qty
-                            year_matched_irf = irf[id:] * greenhouse_gas_emission_qty
-                            year_matched_crf = crf[id:] * greenhouse_gas_emission_qty
-                        else:
-                            zero_time_steps = max(where(self.data_years < emission_year)[0])
-                            year_matched_concentrations = concatenate((zeros(zero_time_steps), concentrations)) * greenhouse_gas_emission_qty
-                            year_matched_irf = concatenate((zeros(zero_time_steps), irf)) * greenhouse_gas_emission_qty
-                            year_matched_crf = concatenate((zeros(zero_time_steps), crf)) * greenhouse_gas_emission_qty
+            # emission time profile
+            time_profile = emission.get_temporal_emission_profile()
+            if time_profile.get_dist_name() == 'pulse':
+                pulse = Uniform.from_params(start=emission.get_start_year(), step=time_step)
+                pulse.dist_name = 'pulse'
+                emission.set_temporal_emission_profile(pulse)
+                time_profile = emission.get_temporal_emission_profile()
+            emission_start_year = emission.get_start_year()
+            emission_time_horizon = record_start_year + record_time_horizon - emission_start_year
+            _, unit_emission_intensity = time_profile.discrete_from_continous(record_start_year, record_time_horizon, time_step, integrate_point='left')
 
-                        self.data_concentrations[greenhouse_gas] += year_matched_concentrations
-                        self.data_irf[greenhouse_gas] += year_matched_irf
-                        self.data_crf[greenhouse_gas] += year_matched_crf
-            else:
-                pass
-                #TODO: ame for other emission distributions
+            for greenhouse_gas in emission.record_attr_dict:
+                greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0)
+                if greenhouse_gas_emission_qty > 0:
+                    # get emission records for unit pulse
+                    if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
+                        _, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=False, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
+                        _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
+                    else:
+                        _, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=False)
+                        _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=True)
+                
+                    # convolve with emission temporal profile
+                    emission_intensity =  unit_emission_intensity * greenhouse_gas_emission_qty
+                    concentrations = convolve(emission_intensity, concentrations)[:len(self.data_years)]
+                    irf = convolve(emission_intensity, irf)[:len(self.data_years)]
+                    crf = convolve(emission_intensity, crf)[:len(self.data_years)]
+                    
+                    # TODO: add and test (/exponent)
+
+                    # add to data record
+                    self.data_emission_intensity[greenhouse_gas] += emission_intensity
+                    self.data_concentrations[greenhouse_gas] += concentrations
+                    self.data_irf[greenhouse_gas] += irf
+                    self.data_crf[greenhouse_gas] += crf
+                    
+        return self    
+                
     # ========================
     # Getters
     # ========================    
@@ -221,8 +265,8 @@ class DynamicRadiativeForcingRecord:
         if self.data_years is None:
             self.set_data()
 
-        if data_category == 'emission':
-            pass # TODO: add plotting of the emission
+        if data_category == 'emission intensity':
+            data_y = self.data_emission_intensity
         elif data_category == 'atmospheric concentration':
             data_y = self.data_concentrations
         elif data_category == 'instantaneous radiative forcing':
@@ -267,18 +311,19 @@ class DynamicRadiativeForcingRecord:
         ----------
         to_plot : str
             Parameter to be ploted: 'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record'.        
-        
+        plot_type : str
+            Type of the plot: 'line', 'stacked'.
         """
-        if plot_type == 'Line':
+        if plot_type == 'line':
             graph = LinePlot.from_plotter(MatplotlibPlotter)
         elif plot_type == 'stacked':
             pass # TODO: add plot type
         else:
             raise ValueError("Plot type is not recognized.")
 
-        if to_plot == 'emission':
+        if to_plot == 'emission intensity':
             title = "Greenhouse Gas Emission Record"
-            y_label = "greenhouse gas emitted (kg)"
+            y_label = "greenhouse gas emission intensity (kg/dt)"
         elif to_plot == 'atmospheric concentration':
             title = "Atmospheric Greenhouse Gas Record"
             y_label = "greenhouse gas in atmosphere (kg)"
@@ -296,5 +341,14 @@ class DynamicRadiativeForcingRecord:
 
         graph.show()
 
+    def save(self, file_path, file_type='csv'):
+        """ Write the data to a file.
+        
+        """
+        data = self.data_years
+        pass
+        # TODO
+
+        
 if __name__ == '__main__':
     pass

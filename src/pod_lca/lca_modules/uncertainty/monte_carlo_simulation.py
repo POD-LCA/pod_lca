@@ -9,7 +9,6 @@ import time
 
 from .datasets import DataDistribution
 from .utils import UncertainityUtils
-from ..material_screening import Calculator
 
 
 class MonteCarloSimulator:
@@ -260,7 +259,7 @@ class MonteCarloSimulator:
                 for distribution in var_params:        
                     methods_list[distribution](var_values[distribution][iter])
 
-                total_impact = Calculator.get_total_impact(self.model, self.impact_cat)
+                total_impact = self.model.get_total_impact(self.impact_cat)
                 result.append(total_impact)
                 iter +=1
 

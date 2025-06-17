@@ -23,6 +23,9 @@ print("Cumulative radiative forcing of CO2, after 12 years of emitting 1 kg (in 
 print("Cumulative radiative forcing of CH4, after 12 years of emitting 1 kg (in W/m2):", DynamicRadiativeForcing.get_radiative_forcing("CH4", at_year=12, cumulative=True, CH4_oxidation=False))
 print("Cumulative radiative forcing of CH4 fossil, after 12 years of emitting 1 kg (in W/m2):", DynamicRadiativeForcing.get_radiative_forcing("CH4", at_year=25, cumulative=False, CH4_oxidation=True, alpha=1.0))
 
+print("GWP - 20yr - CO2: {:.0f}".format(DynamicRadiativeForcing.get_GWP('CO2', 20)))
+print("GWP - 100yr - CH4 fossil: {:.0f}".format(DynamicRadiativeForcing.get_GWP('CH4 fossil', 20)))
+
 x_data_CH4, _, y_data_CH4 = DynamicRadiativeForcing.get_radiative_forcing_time_series("CH4", time_horizon=500, time_step=1.0, cumulative=True, CH4_oxidation=False)
 x_data_CH4fossil, _, y_data_CH4fossil = DynamicRadiativeForcing.get_radiative_forcing_time_series("CH4", time_horizon=500, time_step=1.0, cumulative=True, CH4_oxidation=True, alpha=1.0)
 

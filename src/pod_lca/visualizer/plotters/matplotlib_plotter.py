@@ -252,6 +252,20 @@ class MatplotlibPlotter(AbstractPlotter):
 
         return self
 
+    def set_xlim(self, min, max):
+        """Set limits of the x-axis of the plot.
+        
+        Parameters
+        ----------
+        min : float
+            Minimum value on x-axis.
+        max : float
+            Maximum value on x-axis.
+        """
+        self.ax.set_xlim([min, max])
+
+        return self
+    
     def set_ylim(self, min, max):
         """Set limits of the y-axis of the plot.
         
