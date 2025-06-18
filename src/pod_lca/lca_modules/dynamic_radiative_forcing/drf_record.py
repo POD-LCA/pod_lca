@@ -13,11 +13,13 @@ from numpy import where
 from numpy import zeros
 
 from . import DynamicRadiativeForcing
+from . import UniformEmissionProfile
 from ..impacts import Emissions
-from ..uncertainty import Uniform
+from ...units import KILOGRAM
+from ...units import UNITS_MAP
+from ...utilities import DataImporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
-from ...utilities import log
 
 
 class DynamicRadiativeForcingRecord:
@@ -34,13 +36,13 @@ class DynamicRadiativeForcingRecord:
     data_years : numpy.array of int or float
         Years in the record.
     data_emission_intensity : dict
-        Emission intensity in kg/dt; {greenhous gas (str): [emission intensity (float)]}.
+        Emission intensity (in kg/yr); {greenhous gas (str): [emission intensity (float)]}.
     data_concentrations : dict
-        Atmospheric concentration in kg; {greenhous gas (str): [atmospheric concenration (float)]}.
+        Atmospheric concentration (in kg); {greenhous gas (str): [atmospheric concenration (float)]}.
     data_irf : dict
-        Instantaneous radiative forcing values at the time steps; {greenhous gas (str): [irf (float)]}.
+        Instantaneous radiative forcing values at the time steps (in W/m^2); {greenhous gas (str): [irf (float)]}.
     data_crf : dict
-        Cumulative radiative forcing values at the time steps; {greenhous gas (str): [crf (float)]}.
+        Cumulative radiative forcing values at the time steps (in W/m^2); {greenhous gas (str): [crf (float)]}.
     """
 
     def __init__(self):
@@ -53,7 +55,7 @@ class DynamicRadiativeForcingRecord:
         self.data_concentrations = None
         self.data_irf = None
         self.data_crf = None
-    
+        # TODO: unit management
     # ========================
     # Constructors
     # ========================
@@ -174,16 +176,17 @@ class DynamicRadiativeForcingRecord:
             # emission time profile
             time_profile = emission.get_temporal_emission_profile()
             if time_profile.get_dist_name() == 'pulse':
-                pulse = Uniform.from_params(start=emission.get_start_year(), step=time_step)
+                pulse = UniformEmissionProfile.from_params(start=emission.get_start_year(), step=time_step)                
                 pulse.dist_name = 'pulse'
                 emission.set_temporal_emission_profile(pulse)
                 time_profile = emission.get_temporal_emission_profile()
             emission_start_year = emission.get_start_year()
             emission_time_horizon = record_start_year + record_time_horizon - emission_start_year
-            _, unit_emission_intensity = time_profile.discrete_from_continous(record_start_year, record_time_horizon, time_step, integrate_point='left')
-
+            _, unit_emission_profile = time_profile.discrete_from_continous(record_start_year, record_time_horizon, time_step, integrate_point='left')
+            
             for greenhouse_gas in emission.record_attr_dict:
-                greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0)
+                conversion_factor = UNITS_MAP[emission.record_attr_dict[greenhouse_gas]].get_conversion_factor(KILOGRAM)
+                greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0) * conversion_factor
                 if greenhouse_gas_emission_qty > 0:
                     # get emission records for unit pulse
                     if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
@@ -194,15 +197,13 @@ class DynamicRadiativeForcingRecord:
                         _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=True)
                 
                     # convolve with emission temporal profile
-                    emission_intensity =  unit_emission_intensity * greenhouse_gas_emission_qty
-                    concentrations = convolve(emission_intensity, concentrations)[:len(self.data_years)]
-                    irf = convolve(emission_intensity, irf)[:len(self.data_years)]
-                    crf = convolve(emission_intensity, crf)[:len(self.data_years)]
-                    
-                    # TODO: add and test (/exponent)
+                    emission_profile =  unit_emission_profile * greenhouse_gas_emission_qty
+                    concentrations = convolve(emission_profile, concentrations)[:len(self.data_years)]
+                    irf = convolve(emission_profile, irf)[:len(self.data_years)]
+                    crf = convolve(emission_profile, crf)[:len(self.data_years)]
 
                     # add to data record
-                    self.data_emission_intensity[greenhouse_gas] += emission_intensity
+                    self.data_emission_intensity[greenhouse_gas] += (emission_profile / self.get_time_step())
                     self.data_concentrations[greenhouse_gas] += concentrations
                     self.data_irf[greenhouse_gas] += irf
                     self.data_crf[greenhouse_gas] += crf
@@ -323,16 +324,16 @@ class DynamicRadiativeForcingRecord:
 
         if to_plot == 'emission intensity':
             title = "Greenhouse Gas Emission Record"
-            y_label = "greenhouse gas emission intensity (kg/dt)"
+            y_label = "greenhouse gas emission intensity (kg/yr)"
         elif to_plot == 'atmospheric concentration':
             title = "Atmospheric Greenhouse Gas Record"
             y_label = "greenhouse gas in atmosphere (kg)"
         elif to_plot == 'instantaneous radiative forcing':
             title = "Instantaneous Dynamic Radiative Forcing Record"
-            y_label = "dynamic radiative forcing (Wm-2)"
+            y_label = "dynamic radiative forcing (W/m^2)"
         elif to_plot == 'cumulative radiative forcing':
             title = "Cumulative Dynamic Radiative Forcing Record"
-            y_label = "dynamic radiative forcing (Wm-2)"
+            y_label = "dynamic radiative forcing (W/m^2)"
         else:
             raise ValueError("Parameter to be plotted is not recognized.")
 
@@ -341,13 +342,46 @@ class DynamicRadiativeForcingRecord:
 
         graph.show()
 
-    def save(self, file_path, file_type='csv'):
+    def save(self, file_path, emission_intensity=True, concentration=True, irf=True, crf=True):
         """ Write the data to a file.
-        
+
+        Parameters
+        ----------
+        file_path : str
+            Location of the save file.
+        emission_intensity : bool
+            If true, save emission intensity values of greenhouse gases.
+        concentration : bool
+            if true, save atmospheric concentration of greenhouse gases.
+        irf : bool
+            If true, save the Instantaneous Radiative Forcing (IRF) values of greenhouse gases.
+        crf : bool
+            If true, save the Cumulative Radiative Forcing (IRF) values of greenhouse gases.        
         """
-        data = self.data_years
-        pass
-        # TODO
+        lists_to_write = [self.data_years.tolist()]
+        headers = ['year']
+
+        if emission_intensity:
+            for greenhouse_gas, data_array in self.data_emission_intensity.items():
+                headers.append(f'{greenhouse_gas} emission intensity (kg/yr)')
+                lists_to_write.append(data_array.tolist())
+
+        if concentration:
+            for greenhouse_gas, data_array in self.data_concentrations.items():
+                headers.append(f'atmospheric {greenhouse_gas} (in kg)')
+                lists_to_write.append(data_array.tolist())
+
+        if irf:
+            for greenhouse_gas, data_array in self.data_irf.items():
+                headers.append(f'{greenhouse_gas} irf (in W/m^2)')
+                lists_to_write.append(data_array.tolist())
+
+        if crf:
+            for greenhouse_gas, data_array in self.data_crf.items():
+                headers.append(f'{greenhouse_gas} crf (in W/m^2)')
+                lists_to_write.append(data_array.tolist())
+
+        return DataImporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)
 
         
 if __name__ == '__main__':

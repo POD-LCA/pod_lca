@@ -112,13 +112,14 @@ class TemporalEmissionProfiles(DataDistribution):
         """
         t, record = super().discrete_from_continous(start, range, step, integrate_point)
 
-        if cutoff and self.get_start() is not None and self.get_duration() is not None:
-            before_ids = where(t < self.get_start())[0]
-            after_ids = where(t > (self.get_start() + self.get_duration()))[0]
-            
-            record[before_ids] = 0.0
-            record[after_ids] = 0.0
-            
+        if cutoff:
+            if self.get_start() is not None:
+                before_ids = where(t < self.get_start() - step/2)[0]
+                record[before_ids] = 0.0
+            if self.get_duration() is not None:
+                after_ids = where(t > (self.get_start() + self.get_duration() + step/2))[0]
+                record[after_ids] = 0.0
+
         return t, record
         
         
@@ -126,6 +127,26 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
     """ A uniform data distribution.
     """
     
+    @classmethod
+    def from_params(cls, start, step, name='unspecified'):
+        """ Create a uniform distribution from parameters specified.
+        
+        Parameters
+        ----------
+        start : int or float
+            Starting point of uniform distribution.
+        step : int or float
+            Width of the distributions (distribution ends at start + step).
+        name : str
+            Name of the data distribution.
+        """
+        uniform = super().from_params(start, step, name)
+
+        uniform.set_start(start)
+        uniform.set_duration(step)
+
+        return uniform
+
     @classmethod
     def unit_pulse(cls, at, name='unspecified'):
         """ Create unit pulse at specified point.

@@ -137,7 +137,7 @@ class DynamicRadiativeForcing:
 
     @staticmethod
     def get_radiative_forcing(greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5, convolution_time_step = 0.01):
-        """ Get the radiative forcing of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
+        """ Get the radiative forcing (in W/m^2) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
         ----------
@@ -220,7 +220,7 @@ class DynamicRadiativeForcing:
         
     @staticmethod
     def get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=False, alpha=0.5):
-        """ Get the daynamic radiative forcing values as a time-series.
+        """ Get the daynamic radiative forcing values (in W/m^2) as a time-series, given that a 1kg of gas emitted on start year.
 
         Parameters
         ----------

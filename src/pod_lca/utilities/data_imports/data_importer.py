@@ -116,19 +116,40 @@ class DataImporter:
                 writer.writerow(data)
 
     def list_to_csv(input_list, file_path):
-        """ Write data to a CSV file from a list of lists.
+        """ Write data to a CSV file from a list of str.
         
         Parameters
         ----------
         input_list : list of str
             List of strings to be written to the CSV file. 
-        
         file_path : str
             Location of the CSV file.
         """
         with open(file_path, "w", newline = "") as file:
             writer = csv.writer(file)
             writer.writerows(input_list)
+
+    def lists_to_csv(input_lists, file_path, as_columns=False, headers=None):
+        """ Write data to a CSV file from a list of str.
+        
+        Parameters
+        ----------
+        input_list : list of lists
+            Lists to be written to the CSV file.
+        file_path : str
+            Location of the CSV file.
+        as_columns : bool
+            If true, each list will be written as a column.
+        headers : list
+            Data headers.
+        """
+        rows = list(zip(*input_lists)) if as_columns else input_lists
+
+        with open(file_path, "w", newline = "") as file:
+            writer = csv.writer(file)
+            if headers is not None:
+                writer.writerow(headers)
+            writer.writerows(rows)
 
     # ========================
     # JSON

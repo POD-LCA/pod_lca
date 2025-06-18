@@ -29,7 +29,7 @@ expon = ExponentDecayEmissionProfile.from_params(start=2085, decay_rate=10)
 # expon = ExponentDecay.from_range(start=2085, range=10)
 emission_05.set_temporal_emission_profile(expon)
 
-drf_record = DynamicRadiativeForcingRecord.from_emissions([emission_03], start_year=2025, time_horizon=100, time_step=1/12)
+drf_record = DynamicRadiativeForcingRecord.from_emissions([emission_02, emission_03, emission_04, emission_05], start_year=2025, time_horizon=100, time_step=1/12)
 
 drf_record.set_data()
 
@@ -37,7 +37,6 @@ drf_record.plot('emission intensity') # 'emission intensity', 'atmospheric conce
 # TODO: add plot types
 # TODO: limit plot extends to the time horizon
 
-# TODO: (1) write to file drf record
-output_file = 'save/drf_record.csv'
-DynamicRadiativeForcingRecord.save(output_file, file_type='csv')
+output_file = "save_files\\drf_record_temp.csv"
+drf_record.save(output_file)
 
