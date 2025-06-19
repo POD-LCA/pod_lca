@@ -12,8 +12,9 @@ import subprocess
 import shutil
 import pickle
 
-from ast import literal_eval
 
+from ast import literal_eval
+from copy import deepcopy
 from math import sin
 
 from pod_lca.lca_modules.operational.operational_building.construction import Construction
@@ -118,7 +119,7 @@ class OperationalBuilding(object):
         self.weather = weather
         self.program = program
 
-        self.ep_version = '22.2.0'
+        self.ep_version = '25.1.0'
         self.num_timesteps = 1
         self.terrain = 'City'
         self.solar_distribution = 'FullExteriorWithReflections'
@@ -416,7 +417,7 @@ class OperationalBuilding(object):
         if output:
             print('***** Building saved to: {0} *****\n'.format(filename))
 
-    def add_data_from_idf(self, data):
+    def add_data_from_idf(self, data, apply_to_all_zones=True):
         zones = data['zones']
         for zone in zones:
             zname = zones[zone]['name']
@@ -426,12 +427,12 @@ class OperationalBuilding(object):
                 srf = zones[zone]['surfaces'][srf]
                 face_v = srf['surface_points']
                 vertices.extend(face_v)
-            faces = [[0,1,2,3],
-                     [4,5,6,7],
-                     [8,9,10, 11],
+            faces = [[0, 1, 2, 3],
+                     [4, 5, 6, 7],
+                     [8, 9, 10, 11],
                      [12, 13, 14, 15],
-                     [16,17,18,19],
-                     [20,21,22,23]
+                     [16, 17, 18, 19],
+                     [20, 21, 22, 23]
                      ]
             mesh = Mesh.from_vertices_and_faces(vertices, faces)
             z = Zone.from_mesh(mesh, zname)
@@ -544,15 +545,18 @@ class OperationalBuilding(object):
             oa_ = OutdoorAir.from_data(oa[oak])
             self.add_outdoor_air(oa_, oak)
 
-        dp = data['daylighting:referencepoint']
-        for ptk in dp:
-            pt = DaylightingReferencePoint.from_data(dp[ptk])
-            self.add_daylighting_reference_point(pt, ptk)
-
         dc = data['daylighting_controls']
         for dck in dc:
             d = DaylightingControls.from_data(dc[dck])
-            self.add_daylighting_controls(d, dck)
+            self.add_daylighting_controls(d, dck, apply_to_all_zones)
+
+        dp = data['daylighting:referencepoint']
+        for ptk in dp:
+            ptname = dp[ptk]['name']
+            dp[ptk]['fraction'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['ref_pt_fraction']
+            dp[ptk]['illuminance_set_point'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['illuminance_setpt']
+            pt = DaylightingReferencePoint.from_data(dp[ptk])
+            self.add_daylighting_reference_point(pt, ptk, apply_to_all_zones)
 
         sp = data['spaces']
         for spk in sp:
@@ -782,7 +786,7 @@ class OperationalBuilding(object):
         """
         self.schedules[sk] = schedule
 
-    def add_daylighting_reference_point(self, drpt, ptk):
+    def add_daylighting_reference_point(self, drpt, ptk, apply_to_all_zones):
         """
         Adds a daylight reference point object to the building datastructure.
 
@@ -796,9 +800,24 @@ class OperationalBuilding(object):
         None
         
         """
-        self.daylighting_reference_points[ptk] = drpt
+        if apply_to_all_zones:
+            for zk in self.zones:
+                zone_name = self.zones[zk].name
+                drpt_ = deepcopy(drpt)
+                drpt_.name = '{}_daylight-reference-point'.format(zone_name)
+                drpt_.zone_name = zone_name
+                x, y, z = self.zones[zk].surfaces.face_centroid(0)
+                drpt_.x = x
+                drpt_.y = y
+                drpt_.z = z + 1.2
+                ptk = '{}_daylight-reference-point'.format(zone_name)
 
-    def add_daylighting_controls(self, dc, dck):
+                self.daylighting_reference_points[ptk] = drpt_
+
+        else:
+            self.daylighting_reference_points[ptk] = drpt
+
+    def add_daylighting_controls(self, dc, dck, apply_to_all_zones):
         """
         Adds a daylight controls object to the building datastructure.
 
@@ -812,7 +831,22 @@ class OperationalBuilding(object):
         None
         
         """
-        self.daylighting_controls[dck] = dc
+        if apply_to_all_zones:
+            for zk in self.zones:
+                dc_ = deepcopy(dc)
+                zone_name = self.zones[zk].name
+
+                dc_.name = '{}_daylighting-controls'.format(zone_name)
+                dc_.zone_name = zone_name
+                dc_.glare_reference_point = '{}_daylight-reference-point'.format(zone_name)
+                dc_.reference_points = ['{}_daylight-reference-point'.format(zone_name)]
+
+
+                dck_ = '{}_daylighting-controls'.format(zone_name)
+                self.daylighting_controls[dck_] = dc_
+
+        else:
+            self.daylighting_controls[dck] = dc
 
     def add_light(self, light, lk):
         """

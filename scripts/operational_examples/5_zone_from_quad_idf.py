@@ -29,7 +29,7 @@ quad = [[0, 0, 0], [width, 0, 0],[width, depth, 0],[0, depth, 0]]
 
 b = OperationalBuilding.from_quad_5zone(path, wea, quad, height=height, zone_depth=depth/4.)
 data = get_idf_data(filepath)
-b.add_data_from_idf(data)
+b.add_data_from_idf(data, apply_to_all_zones=True)
 
 
 zone = b.zones[0]
@@ -95,14 +95,14 @@ del b.node_lists['doe_midrise_apt_exhaust_node_list']
 del b.ideal_air_loads['doe_midrise_apt_ideal_loads']
 
 
-v = BuildingViewer(b)
-v.show()
+# v = BuildingViewer(b)
+# v.show()
 
 b.write_idf()
 b.analyze(exe='/Applications/EnergyPlus-25-1-0/energyplus')
 b.load_results()
 
-v = ResultsViewer(b)
-v.show('total')
+# v = ResultsViewer(b)
+# v.show('total')
 
 #TODO: why is the deep copy needed!!!!
