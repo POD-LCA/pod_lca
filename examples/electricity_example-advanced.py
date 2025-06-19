@@ -64,13 +64,13 @@ print(impacts)
 # =================================
 # changing the electricity supplier spatial resolution would only change the unit impacts
 # and not the electricity product impacts
-electricity_supplier.set_spatial_resolution('Regional')
+electricity_supplier.set_geographical_scope('Regional')
 print(unit_impacts)
 print(impacts)
 
 # to change the electricity product impacts, we need to set the spatial resolution on the electricity product
 # this will automatically update the supplier year as well
-electricity.set_spatial_resolution('Regional')
+electricity.set_geographical_scope('Regional')
 print(unit_impacts)
 print(impacts)
 

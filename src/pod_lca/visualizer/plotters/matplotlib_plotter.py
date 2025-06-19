@@ -155,6 +155,22 @@ class MatplotlibPlotter(AbstractPlotter):
 
         self.ax.plot(x_data, y_data, color=color, linewidth=2, label=label)
 
+    def draw_stackplot(self, x_data, y_data, labels, colors=None):
+        """ Draw a stackplot.
+
+        Parameters
+        ----------
+        x_data : array-like
+            X data; shape (N,)
+        y_data : array-like
+            Y data; shape(M, N)
+        labels : list of str
+            Labels for y data series.
+        colors : list of str or tuples
+            Colors of named, hex string, or RGB tuples.
+        """
+        self.ax.stackplot( x_data, *y_data, labels=labels, colors=colors)
+
     def draw_boxplot(self, data):
         """ Draw a boxplot.
     
@@ -238,17 +254,19 @@ class MatplotlibPlotter(AbstractPlotter):
             else:
                 raise IndexError("Number of colors and labels should match")
 
-    def set_xticks(self, tick, labels):
+    def set_xticks(self, ticks, labels=None):
         """Set and label ticks along the x-axis of the plot.
         
         Parameters
         ----------
-        tick : 1D array-like
+        ticks : 1D array-like
             List of x values where ticks to be added.
         labels : list
             List of labels for the ticks.
         """
-        self.ax.set_xticks(tick, labels)
+        if labels is None:
+            labels = ticks
+        self.ax.set_xticks(ticks, labels)
 
         return self
 

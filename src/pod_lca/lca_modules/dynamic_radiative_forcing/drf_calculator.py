@@ -45,17 +45,18 @@ class DynamicRadiativeForcing:
         radiative_efficiency_dict = DataImporter.json_to_dict(config['file_paths']['drf']['RADIATIVE_EFFICIENCY'])
         
         if greenhouse_gas in radiative_efficiency_dict:
-            radiative_efficiency = radiative_efficiency_dict[greenhouse_gas]
-            if radiative_efficiency_dict['_ref_unit'] != ref_unit:
+            radiative_efficiency = radiative_efficiency_dict[greenhouse_gas]['val']
+            RE_unit = radiative_efficiency_dict[greenhouse_gas]['unit']
+            if RE_unit != ref_unit:
                 molecular_weight_dict = DataImporter.json_to_dict(config['file_paths']['drf']['MOLECULER_WEIGHT'])
                 if molecular_weight_dict['_ref_unit'] in ['gmol-1', 'kg kmol-1', 'amu']:
                     molecular_weight = molecular_weight_dict[greenhouse_gas]
                 else:
                     raise ValueError(f"Reference unit {molecular_weight_dict['_ref_unit']} not recognized.")
                 
-                if ref_unit == 'Wm-2kg-1' and radiative_efficiency_dict['_ref_unit'] == 'Wm-2ppb-1':
+                if ref_unit == 'Wm-2kg-1' and RE_unit == 'Wm-2ppb-1':
                     radiative_efficiency *=  (molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total)
-                elif ref_unit == 'Wm-2ppb-1' and radiative_efficiency_dict["_ref_unit"] == 'Wm-2kg-1':
+                elif ref_unit == 'Wm-2ppb-1' and RE_unit == 'Wm-2kg-1':
                     radiative_efficiency *= (molecular_weight/molecular_weight_air_mean) * (mass_atmosphere_total/ (10 ** 9))
                 else:
                     raise ValueError(f"Reference unit {ref_unit} not recognized.")

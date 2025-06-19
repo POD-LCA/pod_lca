@@ -229,7 +229,7 @@ class Electricity(Fuel):
         super().__init__()
         self.electricity_supplier = None
         self.year = None
-        self.spatial_resolution = None
+        self.geographical_scope = None
         self.scenario = None
 
     @classmethod
@@ -304,7 +304,7 @@ class Electricity(Fuel):
 
         return self
     
-    def set_spatial_resolution(self, spatial_resolution):
+    def set_geographical_scope(self, geographical_scope):
         """ Set the spatial resolution of the electricity supply.
         
         Parameters
@@ -312,10 +312,10 @@ class Electricity(Fuel):
         spatial_resolution : str
             Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
         """
-        self.get_supplier().set_spatial_resolution(spatial_resolution)
+        self.get_supplier().set_geographical_scope(geographical_scope)
         self.update_inventory_records()
 
-        self.spatial_resolution = spatial_resolution
+        self.geographical_scope = geographical_scope
 
         return self
     
@@ -356,7 +356,7 @@ class Electricity(Fuel):
         """
         return self.year
     
-    def get_spatial_resolution(self):
+    def get_geographical_scope(self):
         """ Get the spatial resolution of the electricity supply.
     
         Parameters
@@ -364,7 +364,7 @@ class Electricity(Fuel):
         str
             Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
         """
-        return self.spatial_resolution
+        return self.geographical_scope
 
     def get_scenario(self):
         """ Get scenario name. This will what used with cambium data.

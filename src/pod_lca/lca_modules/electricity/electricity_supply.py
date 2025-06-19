@@ -25,8 +25,8 @@ class ElectricitySupply:
     ----------
     name : str
         The name of the electricity supply authority.
-    spatial_resolution : str
-        Spatial resolution fo the electricity supply.
+    geographical_scope : str
+        Geographical scope of the electricity supply.
             'National': US average
             'Regional': FERC region
             'Local': Balancing Authority.
@@ -47,7 +47,7 @@ class ElectricitySupply:
 
     def __init__(self):
         self.name = None
-        self.spatial_resolution = config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
+        self.geographical_scope = config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
         self.location = None
         self.consumption_mix = None
         self.electricity_producers = {}
@@ -63,39 +63,39 @@ class ElectricitySupply:
     def __str__(self):
         str = "="*75 + "\n" + f"Electricity Supply: {self.get_name()}\n" + "="*75 + "\n"
         str += f"Year: {self.get_year()}\n"
-        str += f"Spatial resolution: {self.get_spatial_resolution()}\n"
+        str += f"Gographical scope: {self.get_geographical_scope()}\n"
 
         str += "-"*75 + "\n" + "Tecnology Mix:\n" 
         str += f"Scenario (cambium): {self.get_scenario()}\n"
         
-        if self.get_spatial_resolution() == 'National':
+        if self.get_geographical_scope() == 'National':
             if self.get_location() is None:
                 str += f"Country: {config['setup']['electricity']['DEFAULT_COUNTRY']}\n"
             else:
                 str += f"Country: {self.get_location().get_country()}\n"
-        elif self.get_spatial_resolution() == 'Regional':
+        elif self.get_geographical_scope() == 'Regional':
             if self.get_location().get_cambium_gea_region() is not None:
                 str += f"GEA Region: {self.get_location().get_cambium_gea_region()[0]}\n"
             else:
                 str += f"GEA Region: {self.get_location().get_cambium_gea_region()}\n"
-        elif self.get_spatial_resolution() == 'Local':
+        elif self.get_geographical_scope() == 'Local':
             if self.get_location().get_reeds_balancing_area() is not None:
                 str += f"ReEDS BA: {self.get_location().get_reeds_balancing_area()[0]}\n"
             else:
                 str += f"ReEDS BA: {self.get_location().get_reeds_balancing_area()}\n"
 
         str += "-"*75 + "\n" + "Impacts per technology:\n" 
-        if self.get_spatial_resolution() == 'National':
+        if self.get_geographical_scope() == 'National':
             if self.get_location() is None:
                 str += f"Country: {config['setup']['electricity']['DEFAULT_COUNTRY']}\n"
             else:
                 str += f"Country: {self.get_location().get_country()}\n"
-        elif self.get_spatial_resolution() == 'Regional':
+        elif self.get_geographical_scope() == 'Regional':
             if self.get_location().get_ferc_region() is not None:
                 str += f"FERC Region: {self.get_location().get_ferc_region()[0]}\n"
             else:
                 str += f"FERC Region: {self.get_location().get_ferc_region()}\n"
-        elif self.get_spatial_resolution() == 'Local':
+        elif self.get_geographical_scope() == 'Local':
             if self.get_location().get_ferc_region() is not None:
                 str += f"FERC Region: {self.get_location().get_ferc_region()[0]}\n"
             else:
@@ -131,9 +131,9 @@ class ElectricitySupply:
             elec_supp_authority.set_year(year)
 
         if location is None:
-            elec_supp_authority.set_spatial_resolution(config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION'])
+            elec_supp_authority.set_geographical_scope(config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION'])
         else:
-            elec_supp_authority.set_spatial_resolution(location.get_regionality())
+            elec_supp_authority.set_geographical_scope(location.get_regionality())
         
         return elec_supp_authority
     
@@ -152,31 +152,31 @@ class ElectricitySupply:
 
         return self
     
-    def set_spatial_resolution(self, regional_resolution):
-        """ Set the set_regional resolution of the electricity supply authority.
+    def set_geographical_scope(self, geographical_scope):
+        """ Set the geographical cope of the electricity supply authority.
         
         Parameters
         ----------
-        regional_resolution : str
-            Regional resolution fo the electricity supply.
+        geographical_scope : str
+            Geographical scope of the electricity supply.
                 'National': US average
                 'Regional': FERC region
                 'Local': Balancing Authority.
         """
         location_resolution = self.get_location().get_regionality() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
-        if ((location_resolution == 'National') and (regional_resolution == 'Local' or regional_resolution == 'Regional')) or ((location_resolution == 'Regional') and (regional_resolution == 'Local')):
+        if ((location_resolution == 'National') and (geographical_scope == 'Local' or geographical_scope == 'Regional')) or ((location_resolution == 'Regional') and (geographical_scope == 'Local')):
             log("Spatial resolution of electricity supply cannot be finer than that of location.", "Warn")
             return self
 
-        self.spatial_resolution = regional_resolution
+        self.geographical_scope = geographical_scope
 
         # Update consumption mix
-        temporal_data = CambiumData.from_regional_resolution(regional_resolution, self.get_location())
+        temporal_data = CambiumData.from_geographical_scope(geographical_scope, self.get_location())
         energy_mix = temporal_data.get_mix(self.get_year(), DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_inventories=False)
 
         # Update impacts by technology
-        self.set_electricity_producers(regional_resolution)
+        self.set_electricity_producers(geographical_scope)
 
         self.update_inventory_records()
 
@@ -224,11 +224,11 @@ class ElectricitySupply:
         """
         self.year = year
 
-        temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
+        temporal_data = CambiumData.from_geographical_scope(self.get_geographical_scope(), self.get_location())
 
         energy_mix = temporal_data.get_mix(year, DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
         self.set_consumption_mix(energy_mix, update_inventories=False)
-        self.set_electricity_producers(self.get_spatial_resolution())
+        self.set_electricity_producers(self.get_geographical_scope())
 
         self.update_inventory_records()
 
@@ -256,11 +256,11 @@ class ElectricitySupply:
         scenario : str
             Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
         """
-        temporal_data = CambiumData.from_regional_resolution(self.get_spatial_resolution(), self.get_location())
+        temporal_data = CambiumData.from_geographical_scope(self.get_geographical_scope(), self.get_location())
 
         energy_mix = temporal_data.get_mix(self.get_year(), DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), scenario)
         self.set_consumption_mix(energy_mix, update_inventories=False)
-        self.set_electricity_producers(self.get_spatial_resolution())
+        self.set_electricity_producers(self.get_geographical_scope())
 
         self.update_inventory_records()
 
@@ -269,28 +269,28 @@ class ElectricitySupply:
 
         return self    
 
-    def set_electricity_producers(self, regional_resolution):
+    def set_electricity_producers(self, geographical_scope):
         """ Set the electricity producers for a given technology mix and corresponding impact data.
         
         Parameters
         ----------
-        regional_resolution : str
-            Regional resolution fo the electricity supply.
+        geographical_scope : str
+            Geographical scope of the electricity supply.
                 'National': US average
                 'Regional': FERC region
                 'Local': Balancing Authority.        
         """
         # Get regionalised impact data
-        if (regional_resolution== 'National'):
+        if (geographical_scope== 'National'):
             if self.impact_database_national is None:
-                self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", regional_resolution)
+                self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", geographical_scope)
                 self.impact_database_national.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
             impact_database = self.impact_database_national
             region = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
           
-        elif (regional_resolution == 'Regional') or (regional_resolution== 'Local'):
+        elif (geographical_scope == 'Regional') or (geographical_scope== 'Local'):
             if self.impact_database_regional is None:
-                self.impact_database_regional = ElectricityImpactsDatabase.new("Electricity - Regional", regional_resolution)
+                self.impact_database_regional = ElectricityImpactsDatabase.new("Electricity - Regional", geographical_scope)
                 self.impact_database_regional.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_REGIONAL_DATA'])
             impact_database = self.impact_database_regional
 
@@ -306,7 +306,7 @@ class ElectricitySupply:
                 region =self.pick_region(region, impact_database)
             
         else:
-            raise ValueError("Regional resolution of electricity supply is not recognized.")
+            raise ValueError("Geographical scope of electricity supply is not recognized.")
 
         # set producesrs and inventories
         for key in self.get_consumption_mix().keys():
@@ -343,15 +343,15 @@ class ElectricitySupply:
         """
         return self.name
     
-    def get_spatial_resolution(self):
-        """ Get the set regional resolution of the electricity supply authority.
+    def get_geographical_scope(self):
+        """ Get the set geographical scope of the electricity supply authority.
         
         Returns
         -------
         str
-            The set_regional_resolution of the electricity supply.
+            The geographical scope of the electricity supply.
         """
-        return self.spatial_resolution
+        return self.geographical_scope
 
     def get_location(self):
         """ Get the location of the electricity supply authority.
@@ -484,33 +484,33 @@ class ElectricitySupply:
 
         # impacts by technology
         if self.impact_database_national is None:
-            self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", regional_resolution)
+            self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", geographical_scope)
             self.impact_database_national.set_data(config['file_paths']['electricity']['ELECTRICITY_IMPACT_NATIONAL_DATA'])
         impact_database = self.impact_database_national
         country_code = self.get_location().get_country_code() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
         
         # set regionality
         regions_map = DataImporter.json_to_dict(config['file_paths']['electricity']['CAMBIUM_REGIONS_MAP'])
-        if self.get_spatial_resolution() == 'National':
-            regional_resolution = 'Regional'
+        if self.get_geographical_scope() == 'National':
+            geographical_scope = 'Regional'
             regions_list = list(regions_map[country_code].keys())
 
-        elif self.get_spatial_resolution() == 'Regional':
-            regional_resolution = 'Local' 
+        elif self.get_geographical_scope() == 'Regional':
+            geographical_scope = 'Local' 
             region = self.get_location().get_cambium_gea_region() if self.get_location() is not None else None
             regions_list = regions_map[country_code][region]
 
-        elif self.get_spatial_resolution() == 'Local':
+        elif self.get_geographical_scope() == 'Local':
             log("Data on impact data variability available at local level.", "info")
             return [self.get_impacts()]
         else:
-            raise ValueError("Regional resolution of electricity supply is not recognized.")
+            raise ValueError("Geographical scope of electricity supply is not recognized.")
 
         # create data points
         impact_distribution = []
         electricity_loads = [] 
         for region in regions_list:
-            temporal_data = CambiumData.from_regional_resolution(regional_resolution, region)
+            temporal_data = CambiumData.from_geographical_scope(geographical_scope, region)
             energy_mix = temporal_data.get_mix(year, DataImporter.csv_to_list(config['file_paths']['electricity']['ELECTRICITY_TECHNOLOGIES'], 'electricity technology'), self.get_scenario())
             electricity_load = temporal_data.get_load(year, self.get_scenario())
             temporal_data.delete_data()

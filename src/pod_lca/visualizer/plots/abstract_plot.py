@@ -106,8 +106,6 @@ class AbstractPlot():
         """ Display the barchart.
         """
         self.get_plot().show()
-        
-#TODO allow setting further properties with **kwargs
 
 
 if __name__ == '__main__':

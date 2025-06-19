@@ -51,7 +51,6 @@ class Emissions(Records):
             Record object created.
         """
         record_obj = super().from_parent(parent)
-        record_obj.set_temporal_emission_profile('pulse')
 
         return record_obj
     

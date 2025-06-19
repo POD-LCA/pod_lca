@@ -19,7 +19,7 @@ class LinePlot(AbstractPlot):
     # ================================
     # Methods
     # ================================ 
-    def draw(self, data, title, x_label, y_label):
+    def draw(self, data, title, x_label, y_label, colors=None):
         """ Draw the bar chart.
         
         Parameters
@@ -35,17 +35,24 @@ class LinePlot(AbstractPlot):
             X-label of the barchart.
         y_label : str
             Y-label of the barchart.
+        colors : str or list of str
+            Colors of the line plots.
         """
         self.get_plot().clear_plot()
 
         if isinstance(data, dict):
+            if colors is None:
+                colors = config['Preferences']['COLOUR_ORDER_LIST']
             counter = 0
             for label, xy_data in data.items():
                 x_data, y_data = zip(*xy_data)
-                self.get_plot().draw_line(x_data, y_data, label, config['Preferences']['COLOUR_ORDER_LIST'][counter])
+                colors = config['Preferences']['COLOUR_ORDER_LIST']
+                self.get_plot().draw_line(x_data, y_data, label, colors[counter])
                 counter += 1
         elif isinstance(data, list):
-            self.get_plot().draw_line(data[0], data[1], None, config['Preferences']['COLOUR_ORDER_LIST'][0])
+            if colors is None:
+                colors = config['Preferences']['COLOUR_ORDER_LIST'][0]
+            self.get_plot().draw_line(data[0], data[1], None, colors)
                 
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)

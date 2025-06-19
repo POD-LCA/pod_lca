@@ -24,7 +24,7 @@ class Location:
     coords : tuple
         Location coordinate using WGS-84 coordinate system.
     zipcode : str
-        Zipcode of the location (in the corresponding local system).
+        ZIP code of the location (in the corresponding local system).
     city : str
         Name of the city the location is in.
     state : str

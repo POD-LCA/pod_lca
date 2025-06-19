@@ -40,7 +40,7 @@ for test in tqdm(test_dict):
     electricity = model_one.add_electricity(name="Electricity", stage="A3", qty=qty, unit=UNITS_MAP[test_dict[test]['unit']])
     electricity.set_year(year)
     electricity.set_scenario(test_dict[test]['cambium_scenario'])
-    electricity.set_spatial_resolution(test_dict[test]['spatial resolution'])
+    electricity.set_geographical_scope(test_dict[test]['spatial resolution'])
     output_dict[test] = { 'test name':test,
                           'Zip Code': my_factory_location.get_zip(), 
                           'spatial resolution': test_dict[test]['spatial resolution'], 

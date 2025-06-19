@@ -20,6 +20,7 @@ from ...units import UNITS_MAP
 from ...utilities import DataImporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
+from ...visualizer import Stackplot
 
 
 class DynamicRadiativeForcingRecord:
@@ -31,6 +32,8 @@ class DynamicRadiativeForcingRecord:
         Start year of the emissions record.
     time_horizon : int
         Time horizon in years.
+    time_step : int or float
+        Time step of the record. The same time step is used for both for integration and for reporting.
     emissions_lst : list of Emissions Obj.
         List of emissions considered in the record.
     data_years : numpy.array of int or float
@@ -48,14 +51,14 @@ class DynamicRadiativeForcingRecord:
     def __init__(self):
         self.time_horizon = None
         self.start_year = None
-        self.emissions_lst = []
         self.time_step = None
+        self.emissions_lst = []
         self.data_years = None
         self.data_emission_intensity = None
         self.data_concentrations = None
         self.data_irf = None
         self.data_crf = None
-        # TODO: unit management
+
     # ========================
     # Constructors
     # ========================
@@ -253,15 +256,15 @@ class DynamicRadiativeForcingRecord:
         """
         return self.time_step
 
-    def get_data(self, data_category='radiative forcing'):
+    def get_data(self, data_category='radiative forcing', xy_pairs=True):
         """ Get the dynamic radiative forcing data.
 
-        Retruns
-        -------
-        list of int
-            Time steps in the record.
-        list of float
-            Radiative forcing values at the time steps.
+        Parameters
+        ----------
+        data_category : str
+            Category of data to be reported; 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'
+        xy_pairs : bool
+            If true, provide data as xy pairs, else as sperate lists.
         """
         if self.data_years is None:
             self.set_data()
@@ -277,12 +280,15 @@ class DynamicRadiativeForcingRecord:
         else:
             raise ValueError("Data category is not recognized.")
 
-        output_dict = {}
-        data_x = self.data_years
-        for item in data_y:
-            output_dict[item] = list(zip(data_x, data_y[item]))
+        if xy_pairs:
+            output_dict = {}
+            data_x = self.data_years
+            for item in data_y:
+                output_dict[item] = list(zip(data_x, data_y[item]))
 
-        return output_dict
+            return output_dict
+        else:
+            return self.data_years, data_y
     
     # ========================
     # Methods
@@ -305,7 +311,11 @@ class DynamicRadiativeForcingRecord:
     # ========================
     # Plot
     # ========================
-    def plot(self, to_plot='atmospheric concentration', plot_type='line'):
+    def plot(self, 
+             to_plot='atmospheric concentration', 
+             plot_type='lineplot',
+             plot_time_step=10, 
+             colors=None):
         """ Plot the dynamic radiative forcing record.
 
         Parameters
@@ -313,15 +323,12 @@ class DynamicRadiativeForcingRecord:
         to_plot : str
             Parameter to be ploted: 'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record'.        
         plot_type : str
-            Type of the plot: 'line', 'stacked'.
+            Type of the plot: 'lineplot', 'stackplot'.
+        plot_time_step : int or float   
+            Time step for ticks along x axis.
+        colors : list of str
+            Colors of each line or stack.
         """
-        if plot_type == 'line':
-            graph = LinePlot.from_plotter(MatplotlibPlotter)
-        elif plot_type == 'stacked':
-            pass # TODO: add plot type
-        else:
-            raise ValueError("Plot type is not recognized.")
-
         if to_plot == 'emission intensity':
             title = "Greenhouse Gas Emission Record"
             y_label = "greenhouse gas emission intensity (kg/yr)"
@@ -337,9 +344,19 @@ class DynamicRadiativeForcingRecord:
         else:
             raise ValueError("Parameter to be plotted is not recognized.")
 
-        graph.draw(self.get_data(to_plot), title, "Year", y_label)
-        # TODO: limit x axis to the time horizon
-
+        if plot_type == 'lineplot':
+            graph = LinePlot.from_plotter(MatplotlibPlotter)
+            graph.draw(self.get_data(to_plot), title, "Year", y_label, colors)
+        elif plot_type == 'stackplot':
+            graph = Stackplot.from_plotter(MatplotlibPlotter)
+            graph.draw(*self.get_data(to_plot, xy_pairs=False), title, "Year", y_label, colors)
+        else:
+            raise ValueError("Plot type is not recognized.")
+    
+        x_start = self.get_start_year()
+        x_end = x_start + self.get_time_horizon()
+        graph.get_plot().set_xlim(x_start, x_end)
+        graph.get_plot().set_xticks(range(x_start, x_end, plot_time_step))
         graph.show()
 
     def save(self, file_path, emission_intensity=True, concentration=True, irf=True, crf=True):
@@ -358,6 +375,9 @@ class DynamicRadiativeForcingRecord:
         crf : bool
             If true, save the Cumulative Radiative Forcing (IRF) values of greenhouse gases.        
         """
+        if self.data_years is None:
+            self.set_data()
+        
         lists_to_write = [self.data_years.tolist()]
         headers = ['year']
 

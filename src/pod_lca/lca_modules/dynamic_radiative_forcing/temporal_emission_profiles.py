@@ -7,9 +7,6 @@ __version__ = "0.1.0"
 
 from math import exp
 
-from numpy import arange
-from numpy import asarray
-from numpy import delete
 from numpy import log
 from numpy import where
 from scipy import stats
@@ -285,6 +282,6 @@ class ExponentDecayEmissionProfile(TemporalEmissionProfiles, ExponentDecay):
         else:
             raise RuntimeError("Parameter could not be determined")
 
+
 if __name__ == '__main__':
     pass
-

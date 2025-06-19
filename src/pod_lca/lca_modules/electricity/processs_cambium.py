@@ -41,13 +41,13 @@ class CambiumData:
         self.data = None
 
     @classmethod
-    def from_regional_resolution(cls, regional_resolution, location):
+    def from_geographical_scope(cls, geographical_scope, location):
         """ Create cambium data object from regionalised data.
         
         Parameters
         ----------
-        regional_resolution : str
-            Level of regionality of data: e.g., 'National', 'Regional', 'Local'.
+        geographical_scope : str
+            Geographical scope of data: e.g., 'National', 'Regional', 'Local'.
         location : Location Obj. or str
             Location of electricity supply.
             If a string is provided, it should be the country code for national level data,
@@ -57,25 +57,25 @@ class CambiumData:
         
         # get country/region name
         if location is None:
-            if regional_resolution== 'National':
+            if geographical_scope== 'National':
                 country_code = config['setup']['electricity']['DEFAULT_COUNTRY_CODE']
             else:
-                raise KeyError("No default location for regional resolution {regional_resolution}.")
+                raise KeyError(f"No default location for geographical scope {geographical_scope}.")
         elif isinstance(location, str):
-            if regional_resolution== 'National':
+            if geographical_scope== 'National':
                 country_code = location
-            elif regional_resolution == 'Regional':
+            elif geographical_scope == 'Regional':
                 region = location
-            elif regional_resolution == 'Local':
+            elif geographical_scope == 'Local':
                 region = location
         elif isinstance(location, Location):
-            if regional_resolution== 'National':
+            if geographical_scope== 'National':
                 country_code = location.get_country_code()
-            elif regional_resolution == 'Regional':
+            elif geographical_scope == 'Regional':
                 if location.get_cambium_gea_region() is None:
                     location.set_cambium_gea_region()
                 region = location.get_cambium_gea_region()
-            elif regional_resolution == 'Local':
+            elif geographical_scope == 'Local':
                 if location.get_reeds_balancing_area() is None:
                     location.set_reeds_balancing_area()
                 region = location.get_reeds_balancing_area()
@@ -83,17 +83,17 @@ class CambiumData:
             raise TypeError("Location should be a string or Location object.")
         
         # get cambium data
-        if regional_resolution== 'National':
+        if geographical_scope== 'National':
             df = DataImporter.csv_to_pandas(config['file_paths']['electricity']['CAMBIUM_NATIONAL_DATA'])
             cambium_data.data = df[df['country_code'] == country_code]
-        elif regional_resolution == 'Regional':
+        elif geographical_scope == 'Regional':
             df = DataImporter.csv_to_pandas(config['file_paths']['electricity']['CAMBIUM_REGIONAL_DATA'])
             cambium_data.data = df[df['gea'] == region]
-        elif regional_resolution == 'Local':
+        elif geographical_scope == 'Local':
             df = DataImporter.csv_to_pandas(config['file_paths']['electricity']['CAMBIUM_LOCAL_DATA'])
             cambium_data.data = df[df['r'] == region]
         else:
-            raise KeyError(f"Regional resolution {regional_resolution} not recognized. Should be 'National', 'Regional', or 'Local'")
+            raise KeyError(f"Geographical scope {geographical_scope} not recognized. Should be 'National', 'Regional', or 'Local'")
 
         return cambium_data
 
