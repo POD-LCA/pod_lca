@@ -46,7 +46,7 @@ for city in tqdm(city_list):
             output_dict[str(sequence_no)] = { 
                                                 'city': city,
                                                 'Zip Code': my_factory_location.get_zip(), 
-                                                'spatial resolution': electricity.get_supplier().get_spatial_resolution(), 
+                                                'spatial resolution': electricity.get_supplier().get_geographical_scope(), 
                                                 'year': year, 
                                                 'cambium_scenario': scenario,
                                                 'qty': qty, 

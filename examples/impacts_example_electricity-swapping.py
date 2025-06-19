@@ -32,7 +32,7 @@ epoxy.set_qty(200)
 epoxy.set_unit(POUND)
 print(epoxy.get_impacts())
 
-epoxy.get_electricity().set_spatial_resolution("Local")
+epoxy.get_electricity().set_geographical_scope("Local")
 print(epoxy.get_impacts())
 
 epoxy.set_production_year(2035)

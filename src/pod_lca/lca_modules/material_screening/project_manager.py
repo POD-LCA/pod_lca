@@ -10,6 +10,8 @@ import pickle
 from . import Model
 from ..impacts import ImpactsDatabase
 from ...utilities import log
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class Project:
@@ -146,12 +148,10 @@ class Project:
         """
         if file_path is None:
             model = Model.in_project(self, model_name)
+            self.models[model_name] = model
         else:
-            model = Model.from_CSV(file_path)
-            model.set_parent(self)
+            model = Model.from_CSV(file_path, self, model_name)
 
-        self.models[model_name] = model
-        
         return model
     
     def get_model(self, model_name:(str)):
@@ -244,6 +244,150 @@ class Project:
         except Exception as e:
             log("An error occurred:" + e, "Error")
 
+
+    # ================================
+    # Calcualotror Methods
+    # ================================
+    def get_impacts_by_LCstages_models(self, impact_category, model_lst=None):
+        """ Returns impact data by life cycle stage for given multiple model and impact category.
+            
+        Parameters
+        ----------
+        impact_category : str
+            Name of the Impact category.
+        model_lst : List of str.
+            List of the names of models.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {model_name (str): { stage (str): quantity of impact (float)}}.
+        """
+        if model_lst is None:
+            model_lst = self.get_model_names()
+
+        data ={}
+        for model_name in model_lst:
+            model = self.get_model(model_name)
+            data[model.get_name()] = model.get_impacts_by_LCstages(impact_category)
+        
+        return data
+
+    def get_impacts_by_category_models(self, model_lst=None):
+        """ Returns impact data by impact category for given multiple models.
+            
+        Parameters
+        ----------
+        model_lst : List of str.
+            List of the names of models.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
+        """
+        if model_lst is None:
+            model_lst = self.get_model_names()
+        
+        data ={}
+        for model_name in model_lst:
+            model = self.get_model(model_name)
+            data[model_name] = {}
+            for impact_category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+                data[model_name][impact_category] = sum(model.get_impacts_by_LCstages(impact_category).values())
+        
+        return data
+
+    def get_normalized_impacts_by_category_models(self, model_lst=None):
+        """ Returns impact data by impact category for given multiple models.
+            
+        Parameters
+        ----------
+        model_lst : List of str.
+            List of the names of models.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
+        """
+        if model_lst is None:
+            model_lst = self.get_model_names()
+
+        IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
+        data ={}
+        for model_name in model_lst:
+            model = self.get_model(model_name)
+            data[model_name] = {}
+            for impact_category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
+                data[model_name][impact_category] = sum(model.get_impacts_by_LCstages(impact_category).values()) * IMPACT_NORMALIZATION_FACTOR[impact_category]
+        
+        return data
+
+    def get_impacts_by_LCstages_models_items(self, impact_category, model_lst=None):
+        """ Returns impact data by life cycle stage for given multiple model and impact category, with impacts 
+            identifieable by individaul item.
+            
+        Parameters
+        ----------
+        impact_category : str
+            Name of the Impact category.
+        model_lst : List of str.
+            List of the names of models.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {model_name (str): {stage (str): {item_name (str): quantity of impact (float)}}.
+        """
+        if model_lst is None:
+            model_lst = self.get_model_names()
+
+        data ={}
+        for model_name in model_lst:
+            model = self.get_model(model_name)
+            model_data = {}
+            impacts_dict = model.get_impacts()
+            for stage in impacts_dict.keys():
+                stage_data = {}
+                impact_lst = impacts_dict[stage]
+                for impact in impact_lst:
+                    stage_data[impact.get_parent().get_name()] = impact.get_record(impact_category)
+                model_data[stage] = stage_data
+            data[model_name] = model_data
+
+        return data
+
+    def get_impacts_by_LCstages_models_hotspots(self, impact_category, model_lst=None):
+
+        pass # TODO implement
+    
+    def get_impacts_by_impactcategorys_models_LCstage(self, impact_categories,  model_lst=None):
+        """ Returns data for a barchart.
+            
+        Parameters
+        ----------
+        impact_categories : List of str
+            List of impact categories.
+        model_lst : List of str.
+            List of the names of models.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {model_name (str): {impact_category (str): {stage (str): quantity of impact (float)}}.
+        """
+        if model_lst is None:
+            model_lst = self.get_model_names()
+
+        data = {model_name: {} for model_name in model_lst}
+        for impact_category in impact_categories:
+            for model_name in model_lst:
+                model = self.get_model(model_name)
+                data[model_name][impact_category] = model.get_impacts_by_LCstages(impact_category)
+        
+        return data
+    
 
 if __name__ == '__main__':
     pass

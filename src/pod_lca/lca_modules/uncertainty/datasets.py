@@ -469,7 +469,45 @@ class DataDistribution:
             return self.dist.ppf(p)
         else:
             return self.dist.ppf(p)
-    
+        
+    def discrete_from_continous(self, start, range, step, integrate_point='left'):
+        """ Create a discrete data set from the continous distribution.
+
+        Parameters
+        ----------
+        start : float
+            Starting value of the discrete data set.
+        range : float
+            Range of the data set.
+        step : float
+            Step of the discrete data series.
+        integrate_point : str
+            Point to which the data is grouped: 'left', 'middle', 'right'
+
+        Returns
+        -------
+        numpy.ndarray
+            Discrete sequence of data.
+        """
+        t = np.arange(start, start + range + step, step)
+        if t[-1] > start + range:
+            t = np.delete(t, -1)
+        if integrate_point == 'left':
+            interval_starts = t 
+            interval_ends = t + step
+        elif integrate_point == 'middle':
+            interval_starts = t - step / 2
+            interval_ends = t + step / 2
+        elif integrate_point == 'right':
+            interval_starts = t - step
+            interval_ends = t
+        else:
+            raise ValueError("Integrate point not recognized")
+
+        if self.is_cts:
+            return t, np.asarray(self.dist.cdf(interval_ends) - self.dist.cdf(interval_starts))
+
+        
 
 if __name__ == '__main__':
     pass

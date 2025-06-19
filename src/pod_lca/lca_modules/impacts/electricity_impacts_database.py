@@ -28,7 +28,7 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
     # Constructors
     # =================================
     @classmethod
-    def new(cls, name, spatial_resolution=None):
+    def new(cls, name, geographical_scope=None):
         """ Create a new database.
         
         Parameters
@@ -37,8 +37,8 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
             Name of the database.
         file_path : str
             Location of the impact categories json file.
-        spatial_resolution : str
-            Spatial resolution of the database. Recognized values are 'National' and 'Regional'.
+        geographical_scope : str
+            Geographical scope of the database. Recognized values are 'National' and 'Regional'.
         
         Returns
         -------
@@ -50,12 +50,12 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         new_db.set_unit_key('Unit') 
         new_db.set_qty_key('Qty')
 
-        if spatial_resolution == 'National':
+        if geographical_scope == 'National':
             new_db.set_region_key('Country code')
-        elif spatial_resolution == 'Regional' or spatial_resolution == 'Local':
+        elif geographical_scope == 'Regional' or geographical_scope == 'Local':
             new_db.set_region_key('Region')
         else:
-            raise ValueError(f"Spatial resolution {spatial_resolution} not recognized. Recognized spatial resolutions are: 'National' and 'Regional'.")
+            raise ValueError(f"Geographical scope {geographical_scope} not recognized. Recognized spatial resolutions are: 'National' and 'Regional'.")
 
         new_db.set_technology_key('Technology Type')
 

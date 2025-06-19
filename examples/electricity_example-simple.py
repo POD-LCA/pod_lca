@@ -20,7 +20,7 @@ model_one = my_manufacturing_project.add_model("model_01")
 electricity = model_one.add_electricity(name="Electricity", stage="A3", qty=1, unit=MEGA * WATT_HOUR)
 electricity.set_year(2040) # repick region after setting year
 electricity.set_scenario('HighDemandGrowth') # repick region after setting scenario
-electricity.set_spatial_resolution("Regional")
+electricity.set_geographical_scope("Regional")
 
 impacts = electricity.get_impacts()
 print(impacts)

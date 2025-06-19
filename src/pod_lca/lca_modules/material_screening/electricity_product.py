@@ -23,8 +23,8 @@ class Electricity(Master):
         Electricity supplier
     year : int
         Year of electricity consumption
-    spatial_resolution: str
-        Spatial resolution considered for electricity data: 'National'. 'Regional', 'Local'
+    geographical_scope: str
+        Geographical scope considered for electricity data: 'National'. 'Regional', 'Local'
     scenario: str
         Cambium scenario for prediction of electricity technology futures.
     """
@@ -33,7 +33,7 @@ class Electricity(Master):
         super().__init__()
         self.electricity_supplier = None
         self.year = None
-        self.spatial_resolution = None
+        self.geographical_scope = None
         self.scenario = None
 
     # ================================
@@ -137,18 +137,18 @@ class Electricity(Master):
 
         return self
     
-    def set_spatial_resolution(self, spatial_resolution):
+    def set_geographical_scope(self, geographical_scope):
         """ Set the spatial resolution of the electricity supply.
         
         Parameters
         ----------
-        spatial_resolution : str
-            Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
+        geographical_scope : str
+            Geographical scope of the electricity supply: 'National', 'Regional', 'Local'.
         """
-        self.spatial_resolution = spatial_resolution
+        self.geographical_scope = geographical_scope
 
         if self.get_supplier() is not None:
-            self.get_supplier().set_spatial_resolution(spatial_resolution)
+            self.get_supplier().set_geographical_scope(geographical_scope)
 
         return self
     
@@ -198,7 +198,7 @@ class Electricity(Master):
         """
         return self.year
     
-    def get_spatial_resolution(self):
+    def get_geographical_scope(self):
         """ Get the spatial resolution of the electricity supply.
     
         Parameters
@@ -206,7 +206,7 @@ class Electricity(Master):
         str
             Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
         """
-        return self.spatial_resolution
+        return self.geographical_scope
 
     def get_scenario(self):
         """ Get scenario name. This will what used with cambium data.

@@ -53,7 +53,7 @@ for test in tqdm(test_dict):
     product.set_electricity_source(source=test_dict[test]['electricity_source'])
     if product.electricity['by_location'] is not None:
         product.electricity['by_location'].get_supplier().set_scenario(test_dict[test]['cambium scenario'])
-        product.electricity['by_location'].get_supplier().set_spatial_resolution(test_dict[test]['regionality'])
+        product.electricity['by_location'].get_supplier().set_geographical_scope(test_dict[test]['regionality'])
 
     output_dict[test] = { 'test name':test,
                           'material':test_dict[test]['material'],
