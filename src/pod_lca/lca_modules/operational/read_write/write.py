@@ -957,9 +957,11 @@ def write_hvac(building):
                 
         # fh.write('  LimitFlowRate,     !- Cooling Limit\n')  # pod_lca
         fh.write('  LimitFlowRateAndCapacity,     !- Cooling Limit\n')  # Teresa HB
+        # fh.write('  NoLimit,     !- Cooling Limit\n')  # new
 
-        fh.write('  ,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # compas_eplis
+        # fh.write('  ,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # pod_lca
         # fh.write('  Autosize,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # Teresa HB
+        fh.write('  1,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # pod_lca
         
         fh.write('  ,       !- Maximum Total Cooling Capacity [W]\n')
         # fh.write('  Autosize,       !- Maximum Total Cooling Capacity [W]\n')
@@ -974,8 +976,8 @@ def write_hvac(building):
         fh.write('  {},     !- Outdoor Air Inlet Node Name\n'.format(i.outdoor_inlet_node_name))
         fh.write('  {},     !- Demand Controlled Ventilation Type\n'.format(i.demand_controlled_ventilation_type))
         
-        fh.write('  NoEconomizer,     !- Outdoor Air Economizer Type\n')
-        # fh.write('  DifferentialDryBulb,     !- Outdoor Air Economizer Type\n')
+        # fh.write('  NoEconomizer,     !- Outdoor Air Economizer Type\n')
+        fh.write('  DifferentialDryBulb,     !- Outdoor Air Economizer Type\n')
                 
         # fh.write('  Enthalpy,     !- Heat Recovery Type\n')  # pod_lca
         fh.write('  ,     !- Heat Recovery Type\n')  # Teresa HB
@@ -1021,34 +1023,6 @@ def write_hvac(building):
         fh.write('  \n')
         fh.write('  \n')
         fh.close()
-
-
-# Sizing:Zone ,
-#     SPACE5 -1, !- Name of a zone
-#     14., !- Zone cooling design supply air temperature {C}
-#     50., !- Zone heating design supply air temperature {C}
-#     0.009 , !- Zone cooling design supply air humidity ratio {kg -H2O/kg -air}
-#     0.004 , !- Zone heating design supply air humidity ratio {kg -H2O/kg -air}
-#     DSOA1 , !- Design Specification Outdoor Air Object Name
-#     0.0, !- zone heating sizing factor
-#     0.0, !- zone cooling sizing factor
-#     designdaywithlimit , !- Cooling Design Air Flow Method
-#     , !- cooling design air flow rate {m3/s}
-#     , !- Cooling Minimum Air Flow per zone area {m3/s-m2}
-#     , !- Cooling Minimum Air Flow {m3/s}
-#     , !- fraction of the cooling design air flow rate
-#     designday , !- Heating Design Air Flow Method
-#     , !- heating design air flow rate {m3/s}
-#     , !- heating max air flow per zone area {m3/s-m2}
-#     , !- heating max air flow {m3/s}
-#     , !- fraction of the cooling design air flow rate
-#     DSZADO1 , !- Design Specification Zone Air Distribution Object Name
-#     Yes , !- Account for Dedicated Outside Air System
-#     ColdSupplyAir , !- Dedicated Outside Air System Control Strategy
-#     12.2 , !- Dedicated Outside Air Low Setpoint for Design
-#     14.4 , !- Dedicated Outside Air High Setpoint for Design
-#     Sensible And Latent Load , !- Zone Load Sizing Method
-#     HumidityRatioDifference , !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
 
 
 def write_node_lists(building):

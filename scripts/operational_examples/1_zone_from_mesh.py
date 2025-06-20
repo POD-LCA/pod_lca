@@ -111,4 +111,3 @@ b.load_results()
 
 v = ResultsViewer(b)
 v.show('total')
-

@@ -417,7 +417,7 @@ class OperationalBuilding(object):
         if output:
             print('***** Building saved to: {0} *****\n'.format(filename))
 
-    def add_data_from_idf(self, data, apply_to_all_zones=True):
+    def add_data_from_idf(self, data):
         zones = data['zones']
         for zone in zones:
             zname = zones[zone]['name']
@@ -443,10 +443,10 @@ class OperationalBuilding(object):
             for i, srf in enumerate(surfaces):
                 srf = zones[zone]['surfaces'][srf]
                 # print(srf['name'])
-                z.surfaces.face_attribute(i, 'name', srf['name'])
-                z.surfaces.face_attribute(i, 'construction', srf['construction'])
-                z.surfaces.face_attribute(i, 'surface_type', srf['surface_type'])
-                z.surfaces.face_attribute(i, 'outside_boundary_condition', srf['outside_condition'])
+                z.surfaces.set_face_attribute(i, 'name', srf['name'])
+                z.surfaces.set_face_attribute(i, 'construction', srf['construction'])
+                z.surfaces.set_face_attribute(i, 'surface_type', srf['surface_type'])
+                z.surfaces.set_face_attribute(i, 'outside_boundary_condition', srf['outside_condition'])
                 # print(srf['outside_condition'])
             self.add_zone(z)
         
@@ -548,7 +548,7 @@ class OperationalBuilding(object):
         dc = data['daylighting_controls']
         for dck in dc:
             d = DaylightingControls.from_data(dc[dck])
-            self.add_daylighting_controls(d, dck, apply_to_all_zones)
+            self.add_daylighting_controls(d, dck)
 
         dp = data['daylighting:referencepoint']
         for ptk in dp:
@@ -556,7 +556,7 @@ class OperationalBuilding(object):
             dp[ptk]['fraction'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['ref_pt_fraction']
             dp[ptk]['illuminance_set_point'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['illuminance_setpt']
             pt = DaylightingReferencePoint.from_data(dp[ptk])
-            self.add_daylighting_reference_point(pt, ptk, apply_to_all_zones)
+            self.add_daylighting_reference_point(pt, ptk)
 
         sp = data['spaces']
         for spk in sp:
@@ -786,7 +786,7 @@ class OperationalBuilding(object):
         """
         self.schedules[sk] = schedule
 
-    def add_daylighting_reference_point(self, drpt, ptk, apply_to_all_zones):
+    def add_daylighting_reference_point(self, drpt, ptk):
         """
         Adds a daylight reference point object to the building datastructure.
 
@@ -800,24 +800,10 @@ class OperationalBuilding(object):
         None
         
         """
-        if apply_to_all_zones:
-            for zk in self.zones:
-                zone_name = self.zones[zk].name
-                drpt_ = deepcopy(drpt)
-                drpt_.name = '{}_daylight-reference-point'.format(zone_name)
-                drpt_.zone_name = zone_name
-                x, y, z = self.zones[zk].surfaces.face_centroid(0)
-                drpt_.x = x
-                drpt_.y = y
-                drpt_.z = z + 1.2
-                ptk = '{}_daylight-reference-point'.format(zone_name)
 
-                self.daylighting_reference_points[ptk] = drpt_
+        self.daylighting_reference_points[ptk] = drpt
 
-        else:
-            self.daylighting_reference_points[ptk] = drpt
-
-    def add_daylighting_controls(self, dc, dck, apply_to_all_zones):
+    def add_daylighting_controls(self, dc, dck):
         """
         Adds a daylight controls object to the building datastructure.
 
@@ -831,22 +817,7 @@ class OperationalBuilding(object):
         None
         
         """
-        if apply_to_all_zones:
-            for zk in self.zones:
-                dc_ = deepcopy(dc)
-                zone_name = self.zones[zk].name
-
-                dc_.name = '{}_daylighting-controls'.format(zone_name)
-                dc_.zone_name = zone_name
-                dc_.glare_reference_point = '{}_daylight-reference-point'.format(zone_name)
-                dc_.reference_points = ['{}_daylight-reference-point'.format(zone_name)]
-
-
-                dck_ = '{}_daylighting-controls'.format(zone_name)
-                self.daylighting_controls[dck_] = dc_
-
-        else:
-            self.daylighting_controls[dck] = dc
+        self.daylighting_controls[dck] = dc
 
     def add_light(self, light, lk):
         """
@@ -1288,7 +1259,7 @@ class OperationalBuilding(object):
         enl = self.node_lists[enl_key]
         ial = self.ideal_air_loads[ial_key]
         dlc = self.daylighting_controls[dlc_key]
-        # dlr = self.daylighting_reference_points[dlr_key]
+        dlr = self.daylighting_reference_points[dlr_key]
 
         for zk in self.zones:
             zname = self.zones[zk].name
@@ -1328,14 +1299,18 @@ class OperationalBuilding(object):
             self.daylighting_controls[zk].name = dc_name
             self.daylighting_controls[zk].zone_name = zname
             self.daylighting_controls[zk].glare_reference_point = dc_ref_pt_name
-            self.daylighting_controls[zk].reference_points = {0: self.daylighting_controls[zk].reference_points[0]}
-            self.daylighting_controls[zk].reference_points[0]['ref_pt_name'] = dc_ref_pt_name
+            ref_pt_key = list(self.daylighting_controls[zk].reference_points.keys())[0]
+            self.daylighting_controls[zk].reference_points = {dc_ref_pt_name: self.daylighting_controls[zk].reference_points[ref_pt_key]}
+            self.daylighting_controls[zk].reference_points[dc_ref_pt_name]['ref_pt_name'] = dc_ref_pt_name
+
             dl_rpt = DaylightingReferencePoint.from_data({'name': dc_ref_pt_name,
-                                                                 'zone_name': zname,
-                                                                 'x': x,
-                                                                 'y': y,
-                                                                 'z': self.daylighting_controls_height,
-                                                                 })
+                                                          'zone_name': zname,
+                                                          'x': x,
+                                                          'y': y,
+                                                          'z': self.daylighting_controls_height,
+                                                          'fraction': dlr.fraction,
+                                                          'illuminance_set_point': dlr.illuminance_set_point,
+                                                          })
             self.daylighting_reference_points[dc_ref_pt_name] = dl_rpt
 
 
