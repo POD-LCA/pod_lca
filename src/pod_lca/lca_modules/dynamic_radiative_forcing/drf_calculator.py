@@ -17,6 +17,8 @@ from ...utilities import MathFuncs
 
 
 class DynamicRadiativeForcing:
+    """ Computation methods related to dynamic radiative forcing methods.
+    """
 
     @staticmethod
     def get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2ppb-1", adjust_for_indirect_effects=True):

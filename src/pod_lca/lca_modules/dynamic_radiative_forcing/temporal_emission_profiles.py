@@ -86,7 +86,7 @@ class TemporalEmissionProfiles(DataDistribution):
     # ================================
     # Methods on distributions
     # ================================
-    def discrete_from_continous(self, start, range, step, integrate_point='left', cutoff=True):
+    def discrete_from_continous(self, start, range, step, integrate_point='left', cutoff=True, unitize=True):
         """ Create a discrete data set from the continous distribution.
 
         Parameters
@@ -116,6 +116,9 @@ class TemporalEmissionProfiles(DataDistribution):
             if self.get_duration() is not None:
                 after_ids = where(t > (self.get_start() + self.get_duration() + step/2))[0]
                 record[after_ids] = 0.0
+
+        if unitize:
+            pass
 
         return t, record
         
