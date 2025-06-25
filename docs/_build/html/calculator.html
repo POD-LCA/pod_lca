@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Calculator &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,14 +110,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
@@ -153,145 +152,7 @@
           <div class="body" role="main">
             
   <section id="calculator">
-<h1>Calculator<a class="headerlink" href="#calculator" title="Permalink to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lca_modules.material.calculator.</span></span><span class="sig-name descname"><span class="pre">Calculator</span></span><a class="headerlink" href="#lca_modules.material.calculator.Calculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculator object carries out varies calculations on the project data.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.get_barchart2_data">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_barchart2_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.get_barchart2_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns data for a barchart.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>impact_category</strong> (<em>str</em>) -- Name of the Impact category.</p></li>
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>list</em> -- List of names of items.</p></li>
-<li><p><em>list</em> -- List of qtys.</p></li>
-<li><p><em>list</em> -- List of ints (no of items).</p></li>
-<li><p><em>dict</em> -- #TODO: update.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.get_barchart3_data">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_barchart3_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Model_0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.get_barchart3_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns data for a barchart.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>impact_category</strong> (<em>str</em>) -- Name of the Impact category.</p></li>
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- The model considered.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>#TODO: update.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.get_barchart_data">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_barchart_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Model_0']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.get_barchart_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns data for a barchart.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>impact_category</strong> (<em>str</em>) -- Name of the Impact category.</p></li>
-<li><p><strong>model_lst</strong> (<em>List</em><em> of </em><em>Model Obj.</em>) -- List of the models.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>dict_keys</em> -- x-labels.</p></li>
-<li><p><em>dict</em> -- Heights of bars: { model_name (str): { stage (str): height (float)}}.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.get_data_by_LCstage">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_data_by_LCstage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.get_data_by_LCstage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns impact data by life cycle stage for given model and impact category.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>impact_category</strong> (<em>str</em>) -- Name of impact category.</p></li>
-<li><p><strong>model</strong> (<em>Model Obj</em>) -- The model considered.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts dictionary where {Life Cycle stage (str) : quantity of impact (float)}.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-<p>:raises AttributeError : impact category doe not exist in the current project:</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.get_spider_chart_data">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_spider_chart_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['Model_0']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.get_spider_chart_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns data for a barchart.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>impact_category</strong> (<em>List</em>) -- List of impact categories.</p></li>
-<li><p><strong>model_lst</strong> (<em>List</em><em> of </em><em>Model Obj.</em>) -- List of the models.</p></li>
-<li><p><strong>stage</strong> (<em>str</em>) -- Life Cycle Stage considered.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>#TODO: update.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.get_total_impact">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_total_impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.get_total_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the total impact of the products and processes in the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the impacts are calculated.</p></li>
-<li><p><strong>impact_cat</strong> (<em>str</em>) -- Impact category considered, including 'weighted'.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Total impact value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.material.calculator.Calculator.new">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.material.calculator.Calculator.new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create new calculator.</p>
-</dd></dl>
-
-</dd></dl>
-
+<h1>Calculator<a class="headerlink" href="#calculator" title="Link to this heading">¶</a></h1>
 </section>
 
 
@@ -299,32 +160,6 @@
           </div>
         </div>
       </div>
-    
-        <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
-        </div>
-
-        <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
-            <div class="page_toc">
-                <ul>
-<li><a class="reference internal" href="#">Calculator</a><ul>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator"><code class="docutils literal notranslate"><span class="pre">Calculator</span></code></a><ul>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.get_barchart2_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_barchart2_data()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.get_barchart3_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_barchart3_data()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.get_barchart_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_barchart_data()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.get_data_by_LCstage"><code class="docutils literal notranslate"><span class="pre">Calculator.get_data_by_LCstage()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.get_spider_chart_data"><code class="docutils literal notranslate"><span class="pre">Calculator.get_spider_chart_data()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.get_total_impact"><code class="docutils literal notranslate"><span class="pre">Calculator.get_total_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.material.calculator.Calculator.new"><code class="docutils literal notranslate"><span class="pre">Calculator.new()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-            </div>
-        </div>
     
 
       <div class="clearer"></div>
@@ -348,8 +183,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

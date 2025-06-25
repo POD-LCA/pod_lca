@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Transportation Scenarios &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,14 +110,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
@@ -152,76 +151,7 @@
           <div class="body" role="main">
             
   <section id="transportation-scenarios">
-<h1>Transportation Scenarios<a class="headerlink" href="#transportation-scenarios" title="Permalink to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lca_modules.transportation.scenarios.</span></span><span class="sig-name descname"><span class="pre">Scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_domestic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_global_impact">
-<span class="sig-name descname"><span class="pre">get_global_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_global_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the global scenario.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_local_impact">
-<span class="sig-name descname"><span class="pre">get_local_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_local_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the local scenario.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_na_impact">
-<span class="sig-name descname"><span class="pre">get_na_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_na_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the north america scenario.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_national_impact">
-<span class="sig-name descname"><span class="pre">get_national_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_national_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the national scenario.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_regional_c_impact">
-<span class="sig-name descname"><span class="pre">get_regional_c_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_regional_c_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the regional_c scenario.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_regional_impact">
-<span class="sig-name descname"><span class="pre">get_regional_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_regional_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the regional scenario.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.get_sctg">
-<span class="sig-name descname"><span class="pre">get_sctg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">digit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.get_sctg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the SCTG code based on the material category.</p>
-<p>Parameters:
-- digit: int, the digit of the SCTG code to retrieve.</p>
-<p>Returns:
-- int, the SCTG code.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.pre_global_processing">
-<span class="sig-name descname"><span class="pre">pre_global_processing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.pre_global_processing" title="Permalink to this definition">¶</a></dt>
-<dd><p>process the data for the North America and Global scenarios.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.pre_us_processing">
-<span class="sig-name descname"><span class="pre">pre_us_processing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.pre_us_processing" title="Permalink to this definition">¶</a></dt>
-<dd><p>process the data for the US scenarios.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.scenarios.Scenario.scenario_impact">
-<span class="sig-name descname"><span class="pre">scenario_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.scenarios.Scenario.scenario_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the impact of the transportation based on the scenario.</p>
-</dd></dl>
-
-</dd></dl>
-
+<h1>Transportation Scenarios<a class="headerlink" href="#transportation-scenarios" title="Link to this heading">¶</a></h1>
 </section>
 
 
@@ -229,35 +159,6 @@
           </div>
         </div>
       </div>
-    
-        <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
-        </div>
-
-        <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
-            <div class="page_toc">
-                <ul>
-<li><a class="reference internal" href="#">Transportation Scenarios</a><ul>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_global_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.get_global_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_local_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.get_local_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_na_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.get_na_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_national_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.get_national_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_regional_c_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.get_regional_c_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_regional_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.get_regional_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.get_sctg"><code class="docutils literal notranslate"><span class="pre">Scenario.get_sctg()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.pre_global_processing"><code class="docutils literal notranslate"><span class="pre">Scenario.pre_global_processing()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.pre_us_processing"><code class="docutils literal notranslate"><span class="pre">Scenario.pre_us_processing()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.scenarios.Scenario.scenario_impact"><code class="docutils literal notranslate"><span class="pre">Scenario.scenario_impact()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-            </div>
-        </div>
     
 
       <div class="clearer"></div>
@@ -281,8 +182,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

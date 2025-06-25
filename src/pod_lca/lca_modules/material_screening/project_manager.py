@@ -169,7 +169,8 @@ class Project:
 
         Raises
         ------
-            KeyError : A model by such name does not exist in the current project.
+        KeyError
+            A model by such name does not exist in the current project.
         """
         if model_name in self.models:
             return self.models[model_name]

@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Plotters &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,14 +110,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
@@ -151,91 +150,7 @@
           <div class="body" role="main">
             
   <section id="plotters">
-<h1>Plotters<a class="headerlink" href="#plotters" title="Permalink to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">plotters.matplotlib_plotter.</span></span><span class="sig-name descname"><span class="pre">Plotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">palette</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Plotter provides a prototype to generate various data visualizations.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.calculator">
-<span class="sig-name descname"><span class="pre">calculator</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.calculator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculator from which the plotter obtains data to be visualized.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Calculator object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.active_models">
-<span class="sig-name descname"><span class="pre">active_models</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.active_models" title="Permalink to this definition">¶</a></dt>
-<dd><p>Models considered for data visualization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Model Obj. or list of Model Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.impact_category">
-<span class="sig-name descname"><span class="pre">impact_category</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.impact_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Name(s) of the impact categories considered for data visualization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list or str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.lca_stage">
-<span class="sig-name descname"><span class="pre">lca_stage</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.lca_stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>LCA stage(s) considered for data visualization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list or str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.fig">
-<span class="sig-name descname"><span class="pre">fig</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.fig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Figure being plotted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>matplotlib.figure.Figure</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.ax">
-<span class="sig-name descname"><span class="pre">ax</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.ax" title="Permalink to this definition">¶</a></dt>
-<dd><p>Axes of the figure being plotted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>matplotlib.axes.Axes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="plotters.matplotlib_plotter.Plotter.plot_colors">
-<span class="sig-name descname"><span class="pre">plot_colors</span></span><a class="headerlink" href="#plotters.matplotlib_plotter.Plotter.plot_colors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Colors for the plots, customizable for all derived classes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of str</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<h1>Plotters<a class="headerlink" href="#plotters" title="Link to this heading">¶</a></h1>
 </section>
 
 
@@ -243,32 +158,6 @@
           </div>
         </div>
       </div>
-    
-        <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
-        </div>
-
-        <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
-            <div class="page_toc">
-                <ul>
-<li><a class="reference internal" href="#">Plotters</a><ul>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a><ul>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.calculator"><code class="docutils literal notranslate"><span class="pre">Plotter.calculator</span></code></a></li>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.active_models"><code class="docutils literal notranslate"><span class="pre">Plotter.active_models</span></code></a></li>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.impact_category"><code class="docutils literal notranslate"><span class="pre">Plotter.impact_category</span></code></a></li>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.lca_stage"><code class="docutils literal notranslate"><span class="pre">Plotter.lca_stage</span></code></a></li>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.fig"><code class="docutils literal notranslate"><span class="pre">Plotter.fig</span></code></a></li>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.ax"><code class="docutils literal notranslate"><span class="pre">Plotter.ax</span></code></a></li>
-<li><a class="reference internal" href="#plotters.matplotlib_plotter.Plotter.plot_colors"><code class="docutils literal notranslate"><span class="pre">Plotter.plot_colors</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-            </div>
-        </div>
     
 
       <div class="clearer"></div>
@@ -292,8 +181,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

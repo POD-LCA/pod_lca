@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Units &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,14 +110,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
@@ -151,383 +150,7 @@
           <div class="body" role="main">
             
   <section id="units">
-<h1>Units<a class="headerlink" href="#units" title="Permalink to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="utilities.units.units.Unit">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utilities.units.units.</span></span><span class="sig-name descname"><span class="pre">Unit</span></span><a class="headerlink" href="#utilities.units.units.Unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unit object from which units are created.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#utilities.units.units.Unit.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Common name of the unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.standard_notation">
-<span class="sig-name descname"><span class="pre">standard_notation</span></span><a class="headerlink" href="#utilities.units.units.Unit.standard_notation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard notation of the unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.qty_measured">
-<span class="sig-name descname"><span class="pre">qty_measured</span></span><a class="headerlink" href="#utilities.units.units.Unit.qty_measured" title="Permalink to this definition">¶</a></dt>
-<dd><p>The quantity measured by the unit---e.g., 'length', 'mass', 'time'.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.base_unit">
-<span class="sig-name descname"><span class="pre">base_unit</span></span><a class="headerlink" href="#utilities.units.units.Unit.base_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base unit of the Obj. None if itself a base unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Unit Obj</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.prefix">
-<span class="sig-name descname"><span class="pre">prefix</span></span><a class="headerlink" href="#utilities.units.units.Unit.prefix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Metric prefix. None if a base unit or non-metric.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>MetricPrefix Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.convert_compound">
-<span class="sig-name descname"><span class="pre">convert_compound</span></span><a class="headerlink" href="#utilities.units.units.Unit.convert_compound" title="Permalink to this definition">¶</a></dt>
-<dd><p>If True, unit conversion assuming the unit to be a compound unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.components">
-<span class="sig-name descname"><span class="pre">components</span></span><a class="headerlink" href="#utilities.units.units.Unit.components" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of components the unit is made up of. None if not a compound unit</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of Unit Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.compute_conversion_factor">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_conversion_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty_measured</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.compute_conversion_factor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and
-(b) they are not compound units.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>unit_in</strong> (<em>Unit Obj.</em>) -- Unit of measurement from which the value will be converted.</p></li>
-<li><p><strong>unit_out</strong> (<em>Unit Obj.</em>) -- Unit of measurement to which the value will be converted.</p></li>
-<li><p><strong>qty_measured</strong> (<em>str</em>) -- Quantity measured by the units of measruements considered.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Conversion factor to be applied on the value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.from_basics">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_basics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standard_notation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty_measured</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.from_basics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a unit from basic data.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Common name of the unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">standard_notation</span></span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard notation of the unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">qty_measured</span></span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
-<dd><p>The quantity measured by the unit---e.g., 'length', 'mass', 'time'.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_base">
-<span class="sig-name descname"><span class="pre">get_base</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_base" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the base unit of the unit of measurement, if exist.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Base unit of measurement, or None if itself a base unit of measurement.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Unit Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_components">
-<span class="sig-name descname"><span class="pre">get_components</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_components" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve components of the unit of measurement, if a compound unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of component units, or None if not a compound unit.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of Unit Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_conversion_factor">
-<span class="sig-name descname"><span class="pre">get_conversion_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_conversion_factor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns conversion factor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>to_unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement to which the value will be converted to (from the current unit of measuremnt).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Conversion factor to be applied on the value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_name">
-<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the name of the unit of measurement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Name of the unit of measurement.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_prefix">
-<span class="sig-name descname"><span class="pre">get_prefix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_prefix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the metric prefix of the unit of measurement, if exist.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Metric prefix of the unit of measurement, or None if no prefix.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>MetricPrefix Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_qty_measured">
-<span class="sig-name descname"><span class="pre">get_qty_measured</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_qty_measured" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the quantity measured by the unit of measurement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Quantity measured by the unit of measurement.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.get_standard_notation">
-<span class="sig-name descname"><span class="pre">get_standard_notation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.get_standard_notation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the standard notation of the unit of measurement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Standard notation of the unit of measurement.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.set_name">
-<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.set_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the name of the unit of measurement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- Name of the unit of measurement.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.set_qty_measured">
-<span class="sig-name descname"><span class="pre">set_qty_measured</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty_measured</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.set_qty_measured" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the quantity measured by the unit of measurement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qty_measured</strong> (<em>str</em>) -- Quantity measured by the unit of measurement.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.Unit.set_standard_notation">
-<span class="sig-name descname"><span class="pre">set_standard_notation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">standard_notatoion</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.Unit.set_standard_notation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the standard notation of the unit of measurement.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>standard_notatoion</strong> (<em>str</em>) -- Standard notation of the unit of measurement.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utilities.units.units.</span></span><span class="sig-name descname"><span class="pre">MetricPrefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.MetricPrefix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unit object from which units are created.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#utilities.units.units.MetricPrefix.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard name of the prefix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.symbol">
-<span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#utilities.units.units.MetricPrefix.symbol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Standard symbol of the unit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.power">
-<span class="sig-name descname"><span class="pre">power</span></span><a class="headerlink" href="#utilities.units.units.MetricPrefix.power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Power to the ten corresponding to the prefix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.get_conversion_factor">
-<span class="sig-name descname"><span class="pre">get_conversion_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_prefix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.MetricPrefix.get_conversion_factor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute conversion factor for converting preixes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>to_prefix</strong> (<em>MetricPrefix Obj.</em>) -- Metric prefix to which the value will be converted to (from the current metric prefix).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Conversion factor to be applied on the value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.get_name">
-<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.MetricPrefix.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the name of the prefix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Standard name of the prefix.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.get_power">
-<span class="sig-name descname"><span class="pre">get_power</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.MetricPrefix.get_power" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the power to the ten corresponding to the prefix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Power to the ten corresponding to the prefix.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="utilities.units.units.MetricPrefix.get_symbol">
-<span class="sig-name descname"><span class="pre">get_symbol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utilities.units.units.MetricPrefix.get_symbol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the symbol of the prefix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Symbol of the prefix.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+<h1>Units<a class="headerlink" href="#units" title="Link to this heading">¶</a></h1>
 </section>
 
 
@@ -535,57 +158,6 @@
           </div>
         </div>
       </div>
-    
-        <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
-        </div>
-
-        <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
-            <div class="page_toc">
-                <ul>
-<li><a class="reference internal" href="#">Units</a><ul>
-<li><a class="reference internal" href="#utilities.units.units.Unit"><code class="docutils literal notranslate"><span class="pre">Unit</span></code></a><ul>
-<li><a class="reference internal" href="#utilities.units.units.Unit.name"><code class="docutils literal notranslate"><span class="pre">Unit.name</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.standard_notation"><code class="docutils literal notranslate"><span class="pre">Unit.standard_notation</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.qty_measured"><code class="docutils literal notranslate"><span class="pre">Unit.qty_measured</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.base_unit"><code class="docutils literal notranslate"><span class="pre">Unit.base_unit</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.prefix"><code class="docutils literal notranslate"><span class="pre">Unit.prefix</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.convert_compound"><code class="docutils literal notranslate"><span class="pre">Unit.convert_compound</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.components"><code class="docutils literal notranslate"><span class="pre">Unit.components</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.compute_conversion_factor"><code class="docutils literal notranslate"><span class="pre">Unit.compute_conversion_factor()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.from_basics"><code class="docutils literal notranslate"><span class="pre">Unit.from_basics()</span></code></a></li>
-<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Unit.name</span></code></a></li>
-<li><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">Unit.standard_notation</span></code></a></li>
-<li><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Unit.qty_measured</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_base"><code class="docutils literal notranslate"><span class="pre">Unit.get_base()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_components"><code class="docutils literal notranslate"><span class="pre">Unit.get_components()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_conversion_factor"><code class="docutils literal notranslate"><span class="pre">Unit.get_conversion_factor()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_name"><code class="docutils literal notranslate"><span class="pre">Unit.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_prefix"><code class="docutils literal notranslate"><span class="pre">Unit.get_prefix()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_qty_measured"><code class="docutils literal notranslate"><span class="pre">Unit.get_qty_measured()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.get_standard_notation"><code class="docutils literal notranslate"><span class="pre">Unit.get_standard_notation()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.set_name"><code class="docutils literal notranslate"><span class="pre">Unit.set_name()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.set_qty_measured"><code class="docutils literal notranslate"><span class="pre">Unit.set_qty_measured()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.Unit.set_standard_notation"><code class="docutils literal notranslate"><span class="pre">Unit.set_standard_notation()</span></code></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a><ul>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.name</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.symbol</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.power</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.get_conversion_factor"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_conversion_factor()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.get_name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.get_power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_power()</span></code></a></li>
-<li><a class="reference internal" href="#utilities.units.units.MetricPrefix.get_symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_symbol()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-            </div>
-        </div>
     
 
       <div class="clearer"></div>
@@ -609,8 +181,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

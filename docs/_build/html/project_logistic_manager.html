@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Project Logistics Manager &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,14 +110,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
@@ -152,138 +151,7 @@
           <div class="body" role="main">
             
   <section id="project-logistics-manager">
-<h1>Project Logistics Manager<a class="headerlink" href="#project-logistics-manager" title="Permalink to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lca_modules.transportation.project_logistic_manager.</span></span><span class="sig-name descname"><span class="pre">ProjectLogisticManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shipping_dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shipping_org</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>ProjectLogisticManager class which maintains the links of transportation.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>name of the project.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.shipping_dest">
-<span class="sig-name descname"><span class="pre">shipping_dest</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.shipping_dest" title="Permalink to this definition">¶</a></dt>
-<dd><p>neme of the shipping destination location.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.data_folder">
-<span class="sig-name descname"><span class="pre">data_folder</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.data_folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>path to the data folder.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.shipping_org">
-<span class="sig-name descname"><span class="pre">shipping_org</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.shipping_org" title="Permalink to this definition">¶</a></dt>
-<dd><p>name of the shipping origin location.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.links">
-<span class="sig-name descname"><span class="pre">links</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.links" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of links.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.impact">
-<span class="sig-name descname"><span class="pre">impact</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>dictionary of impacts.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.subdataset">
-<span class="sig-name descname"><span class="pre">subdataset</span></span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.subdataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>dictionary of subdatasets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.create_link">
-<span class="sig-name descname"><span class="pre">create_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">travel_dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_trip_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_dms_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency_dms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.create_link" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a link of transportation for the project.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_impact">
-<span class="sig-name descname"><span class="pre">get_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the impact of the project.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_links">
-<span class="sig-name descname"><span class="pre">get_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the links of the project.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_shipping_dest">
-<span class="sig-name descname"><span class="pre">get_shipping_dest</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_shipping_dest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the shipping destination of the project.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_shipping_org">
-<span class="sig-name descname"><span class="pre">get_shipping_org</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_shipping_org" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the shipping origin of the project.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_subdataset">
-<span class="sig-name descname"><span class="pre">get_subdataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub_dataset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_subdataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the subdataset.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.merge_impacts">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">merge_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.merge_impacts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge the impacts of the links.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.sub_dataset">
-<span class="sig-name descname"><span class="pre">sub_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.sub_dataset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the subdatasets from the data folder.</p>
-</dd></dl>
-
-</dd></dl>
-
+<h1>Project Logistics Manager<a class="headerlink" href="#project-logistics-manager" title="Link to this heading">¶</a></h1>
 </section>
 
 
@@ -291,40 +159,6 @@
           </div>
         </div>
       </div>
-    
-        <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
-        </div>
-
-        <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
-            <div class="page_toc">
-                <ul>
-<li><a class="reference internal" href="#">Project Logistics Manager</a><ul>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager</span></code></a><ul>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.name"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.name</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.shipping_dest"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.shipping_dest</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.data_folder"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.data_folder</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.shipping_org"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.shipping_org</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.links"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.links</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.impact"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.impact</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.subdataset"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.subdataset</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.create_link"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.create_link()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_impact"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.get_impact()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_links"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.get_links()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_shipping_dest"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.get_shipping_dest()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_shipping_org"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.get_shipping_org()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.get_subdataset"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.get_subdataset()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.merge_impacts"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.merge_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager.sub_dataset"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager.sub_dataset()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-            </div>
-        </div>
     
 
       <div class="clearer"></div>
@@ -348,8 +182,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

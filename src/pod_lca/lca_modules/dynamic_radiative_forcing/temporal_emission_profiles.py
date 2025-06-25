@@ -118,7 +118,7 @@ class TemporalEmissionProfiles(DataDistribution):
                 record[after_ids] = 0.0
 
         if unitize:
-            pass
+            record /=sum(record)
 
         return t, record
         
