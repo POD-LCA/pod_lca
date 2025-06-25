@@ -947,19 +947,21 @@ def write_hvac(building):
         fh.write('  {},     !- Maximum Heating Supply Air Humidity Ratio [kgWater/kgDryAir]\n'.format(i.max_heating_supply_humidity_ratio))
         fh.write('  {},     !- Minimum Cooling Supply Air Humidity Ratio [kgWater/kgDryAir]\n'.format(i.min_cooling_supply_humidity_ratio))
         
-        # fh.write('  NoLimit,     !- Heating Limit\n')  # compas_eplus
+        # fh.write('  NoLimit,     !- Heating Limit\n')  # pod_lca
         fh.write('  LimitCapacity,     !- Heating Limit\n')  # Teresa HB
         
         fh.write('  {},     !- Maximum Heating Air Flow Rate [m3/s]\n'.format(i.max_heating_air_flow_rate))
         
-        fh.write('  ,       !- Maximum Sensible Heating Capacity [W]\n')  # compas_eplus
+        fh.write('  ,       !- Maximum Sensible Heating Capacity [W]\n')  # pod_lca
         # fh.write('  Autosize,       !- Maximum Sensible Heating Capacity [W]\n')  # Teresa HB
                 
-        # fh.write('  LimitFlowRate,     !- Cooling Limit\n')  # compas_eplus
+        # fh.write('  LimitFlowRate,     !- Cooling Limit\n')  # pod_lca
         fh.write('  LimitFlowRateAndCapacity,     !- Cooling Limit\n')  # Teresa HB
+        # fh.write('  NoLimit,     !- Cooling Limit\n')  # new
 
-        fh.write('  ,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # compas_eplis
+        # fh.write('  ,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # pod_lca
         # fh.write('  Autosize,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # Teresa HB
+        fh.write('  1,       !- Maximum Cooling Air Flow Rate [m3/s]\n')  # pod_lca
         
         fh.write('  ,       !- Maximum Total Cooling Capacity [W]\n')
         # fh.write('  Autosize,       !- Maximum Total Cooling Capacity [W]\n')
@@ -977,13 +979,13 @@ def write_hvac(building):
         # fh.write('  NoEconomizer,     !- Outdoor Air Economizer Type\n')
         fh.write('  DifferentialDryBulb,     !- Outdoor Air Economizer Type\n')
                 
-        # fh.write('  Enthalpy,     !- Heat Recovery Type\n')  # compas_eplus
+        # fh.write('  Enthalpy,     !- Heat Recovery Type\n')  # pod_lca
         fh.write('  ,     !- Heat Recovery Type\n')  # Teresa HB
 
-        fh.write('  0.7,     !- Sensible Heat Recovery Effectiveness\n')  # compas_eplus
+        fh.write('  0.7,     !- Sensible Heat Recovery Effectiveness\n')  # pod_lca
         # fh.write('  0,     !- Sensible Heat Recovery Effectiveness\n')  # Teresa HB
 
-        fh.write('  0.7;     !- Latent Heat Recovery Effectiveness\n')  # compas_eplus
+        fh.write('  0.7;     !- Latent Heat Recovery Effectiveness\n')  # pod_lca
         # fh.write('  0;     !- Latent Heat Recovery Effectiveness\n')  # Teresa HB
         
         
@@ -1074,16 +1076,17 @@ def write_daylight(building):
         fh.write('  {},     !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis [deg]\n'.format(dc.glare_azimut_angle))
         fh.write('  {},     !- Maximum Allowable Discomfort Glare Index\n'.format(dc.max_allowable_discomfort_glare_index))
         fh.write('  {},     !- DElight Gridding Resolution [m2]\n'.format(dc.delight_gridding_resolution))
-        for rpk in building.daylighting_controls[dck].reference_points:
-            rpt = building.daylighting_controls[dck].reference_points[rpk]
-            rpt_name = rpt['ref_pt_name']
-            rpt_frac = rpt['ref_pt_fraction']
-            rpt_illm = rpt['illuminance_setpt']
+
+        for i, rpk in enumerate(building.daylighting_controls[dck].reference_points):
+            rpt = building.daylighting_reference_points[rpk]
+            rpt_name = rpt.name #
+            rpt_frac = rpt.fraction
+            rpt_illm = rpt.illuminance_set_point
             sep = ';'
             # print(rpt_name)
-            fh.write('  {}, !- Daylighting Reference Point Name {}\n'.format(rpt_name, rpk + 1))
-            fh.write('  {},  !- Fraction of Lights Controlled by Reference Point {}\n'.format(rpt_frac, rpk + 1))
-            fh.write('  {}{}  !- Illuminance Setpoint at Reference Point {} [lux]\n'.format(rpt_illm, sep, rpk + 1))
+            fh.write('  {}, !- Daylighting Reference Point Name {}\n'.format(rpt_name, i + 1))
+            fh.write('  {},  !- Fraction of Lights Controlled by Reference Point {}\n'.format(rpt_frac, i + 1))
+            fh.write('  {}{}  !- Illuminance Setpoint at Reference Point {} [lux]\n'.format(rpt_illm, sep, i + 1))
         fh.write('\n')
 
     for drpk in building.daylighting_reference_points:
@@ -1096,6 +1099,7 @@ def write_daylight(building):
         fh.write('  {};           !- Z-Coordinate of Reference Point [m]\n'.format(rpt.z))
         fh.write('\n')
     fh.close()
+
 
 def write_spaces(building):
     fh = open(building.idf_filepath, 'a')
@@ -1111,6 +1115,7 @@ def write_spaces(building):
         fh.write('\n')
     fh.write('\n')
     fh.close()
+
 
 def write_space_lists(building):
     fh = open(building.idf_filepath, 'a')

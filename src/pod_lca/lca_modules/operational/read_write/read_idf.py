@@ -552,13 +552,13 @@ def find_daylight_controls(filepath, data):
                 dcpt = lines[i + 14 + j].split(',')[0].strip()
                 frpt = lines[i + 15 + j].split(',')[0].strip()
                 ispt = lines[i + 16 + j].split(';')[0].strip()
-                ref_pts[j] = {'ref_pt_name': dcpt, 'ref_pt_fraction': frpt, 'illuminance_setpt': ispt}
+                ref_pts[dcpt] = {'ref_pt_name': dcpt, 'ref_pt_fraction': frpt, 'illuminance_setpt': ispt}
                 break
             else:
                 dcpt = lines[i + 14 + j].split(',')[0].strip()
                 frpt = lines[i + 15 + j].split(',')[0].strip()
                 ispt = lines[i + 16 + j].split(',')[0].strip()
-                ref_pts[j] = {'ref_pt_name': dcpt, 'ref_pt_fraction': frpt, 'illuminance_setpt': ispt}
+                ref_pts[dcpt] = {'ref_pt_name': dcpt, 'ref_pt_fraction': frpt, 'illuminance_setpt': ispt}
 
         data['daylighting_controls'][name] = {'name':name,
                                               'zone_name': znam,

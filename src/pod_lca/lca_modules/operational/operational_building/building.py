@@ -12,8 +12,9 @@ import subprocess
 import shutil
 import pickle
 
-from ast import literal_eval
 
+from ast import literal_eval
+from copy import deepcopy
 from math import sin
 
 from pod_lca.lca_modules.operational.operational_building.construction import Construction
@@ -53,14 +54,16 @@ from pod_lca.lca_modules.operational.read_write import get_idf_data
 
 from pod_lca.utilities.geometry import subtract_vectors
 from pod_lca.utilities.geometry import cross_vectors
-# from pod_lca.utilities.geometry import intersection_line_line_xy
+from pod_lca.utilities.geometry import intersection_line_line_xy
 from pod_lca.utilities.geometry import add_vectors
 from pod_lca.utilities.geometry import normalize_vector
 from pod_lca.utilities.geometry import scale_vector
-# from pod_lca.utilities.geometry import midpoint_point_point
+from pod_lca.utilities.geometry import midpoint_point_point
 from pod_lca.utilities.geometry import geometric_key
+from pod_lca.utilities.geometry import make_box_from_quad
 
-from pod_lca.utilities.mesh import Mesh
+
+from pod_lca.utilities.geometry import Mesh
 
 
 #TODO: update to/from JSON eventually, or give a OBJ pickle option
@@ -116,7 +119,7 @@ class OperationalBuilding(object):
         self.weather = weather
         self.program = program
 
-        self.ep_version = '22.2.0'
+        self.ep_version = '25.1.0'
         self.num_timesteps = 1
         self.terrain = 'City'
         self.solar_distribution = 'FullExteriorWithReflections'
@@ -424,12 +427,12 @@ class OperationalBuilding(object):
                 srf = zones[zone]['surfaces'][srf]
                 face_v = srf['surface_points']
                 vertices.extend(face_v)
-            faces = [[0,1,2,3],
-                     [4,5,6,7],
-                     [8,9,10, 11],
+            faces = [[0, 1, 2, 3],
+                     [4, 5, 6, 7],
+                     [8, 9, 10, 11],
                      [12, 13, 14, 15],
-                     [16,17,18,19],
-                     [20,21,22,23]
+                     [16, 17, 18, 19],
+                     [20, 21, 22, 23]
                      ]
             mesh = Mesh.from_vertices_and_faces(vertices, faces)
             z = Zone.from_mesh(mesh, zname)
@@ -440,10 +443,10 @@ class OperationalBuilding(object):
             for i, srf in enumerate(surfaces):
                 srf = zones[zone]['surfaces'][srf]
                 # print(srf['name'])
-                z.surfaces.face_attribute(i, 'name', srf['name'])
-                z.surfaces.face_attribute(i, 'construction', srf['construction'])
-                z.surfaces.face_attribute(i, 'surface_type', srf['surface_type'])
-                z.surfaces.face_attribute(i, 'outside_boundary_condition', srf['outside_condition'])
+                z.surfaces.set_face_attribute(i, 'name', srf['name'])
+                z.surfaces.set_face_attribute(i, 'construction', srf['construction'])
+                z.surfaces.set_face_attribute(i, 'surface_type', srf['surface_type'])
+                z.surfaces.set_face_attribute(i, 'outside_boundary_condition', srf['outside_condition'])
                 # print(srf['outside_condition'])
             self.add_zone(z)
         
@@ -542,15 +545,18 @@ class OperationalBuilding(object):
             oa_ = OutdoorAir.from_data(oa[oak])
             self.add_outdoor_air(oa_, oak)
 
-        dp = data['daylighting:referencepoint']
-        for ptk in dp:
-            pt = DaylightingReferencePoint.from_data(dp[ptk])
-            self.add_daylighting_reference_point(pt, ptk)
-
         dc = data['daylighting_controls']
         for dck in dc:
             d = DaylightingControls.from_data(dc[dck])
             self.add_daylighting_controls(d, dck)
+
+        dp = data['daylighting:referencepoint']
+        for ptk in dp:
+            ptname = dp[ptk]['name']
+            dp[ptk]['fraction'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['ref_pt_fraction']
+            dp[ptk]['illuminance_set_point'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['illuminance_setpt']
+            pt = DaylightingReferencePoint.from_data(dp[ptk])
+            self.add_daylighting_reference_point(pt, ptk)
 
         sp = data['spaces']
         for spk in sp:
@@ -645,10 +651,10 @@ class OperationalBuilding(object):
                     fk_ = self.srf_cpt_dict[gk]['surface']
                     fn_ = self.zones[zk_].surfaces.get_face_attribute(fk_, 'name')
                     mesh.set_face_attribute(fk, 'outside_boundary_condition', out_cond)
-                    self.zones[zk_].set_surfaces.face_attribute(fk_,'outside_boundary_condition', out_cond)  
+                    self.zones[zk_].surfaces.set_face_attribute(fk_,'outside_boundary_condition', out_cond)  
 
-                    mesh.face_attribute(fk, 'outside_boundary_condition_object', fn_)
-                    self.zones[zk_].set_surfaces.face_attribute(fk_,'outside_boundary_condition_object', fn)
+                    mesh.set_face_attribute(fk, 'outside_boundary_condition_object', fn_)
+                    self.zones[zk_].surfaces.set_face_attribute(fk_,'outside_boundary_condition_object', fn)
                 else:
                     mesh.set_face_attribute(fk, 'outside_boundary_condition', out_dict[srft])
                     self.srf_cpt_dict[gk] = {'zone': zk, 'surface': fk}
@@ -794,6 +800,7 @@ class OperationalBuilding(object):
         None
         
         """
+
         self.daylighting_reference_points[ptk] = drpt
 
     def add_daylighting_controls(self, dc, dck):
@@ -1252,7 +1259,7 @@ class OperationalBuilding(object):
         enl = self.node_lists[enl_key]
         ial = self.ideal_air_loads[ial_key]
         dlc = self.daylighting_controls[dlc_key]
-        # dlr = self.daylighting_reference_points[dlr_key]
+        dlr = self.daylighting_reference_points[dlr_key]
 
         for zk in self.zones:
             zname = self.zones[zk].name
@@ -1292,14 +1299,18 @@ class OperationalBuilding(object):
             self.daylighting_controls[zk].name = dc_name
             self.daylighting_controls[zk].zone_name = zname
             self.daylighting_controls[zk].glare_reference_point = dc_ref_pt_name
-            self.daylighting_controls[zk].reference_points = {0: self.daylighting_controls[zk].reference_points[0]}
-            self.daylighting_controls[zk].reference_points[0]['ref_pt_name'] = dc_ref_pt_name
+            ref_pt_key = list(self.daylighting_controls[zk].reference_points.keys())[0]
+            self.daylighting_controls[zk].reference_points = {dc_ref_pt_name: self.daylighting_controls[zk].reference_points[ref_pt_key]}
+            self.daylighting_controls[zk].reference_points[dc_ref_pt_name]['ref_pt_name'] = dc_ref_pt_name
+
             dl_rpt = DaylightingReferencePoint.from_data({'name': dc_ref_pt_name,
-                                                                 'zone_name': zname,
-                                                                 'x': x,
-                                                                 'y': y,
-                                                                 'z': self.daylighting_controls_height,
-                                                                 })
+                                                          'zone_name': zname,
+                                                          'x': x,
+                                                          'y': y,
+                                                          'z': self.daylighting_controls_height,
+                                                          'fraction': dlr.fraction,
+                                                          'illuminance_set_point': dlr.illuminance_set_point,
+                                                          })
             self.daylighting_reference_points[dc_ref_pt_name] = dl_rpt
 
 

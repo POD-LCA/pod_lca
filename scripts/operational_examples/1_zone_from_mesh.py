@@ -5,10 +5,10 @@ import pod_lca
 
 from pod_lca.utilities import Mesh
 
-from pod_lca.lca_modules.operational import OperationalBuilding
-from pod_lca.lca_modules.operational import Zone
-from pod_lca.lca_modules.operational import Window
-from pod_lca.lca_modules.operational import Shading
+from pod_lca.lca_modules.operational.operational_building import OperationalBuilding
+from pod_lca.lca_modules.operational.operational_building import Zone
+from pod_lca.lca_modules.operational.operational_building import Window
+from pod_lca.lca_modules.operational.operational_building import Shading
 
 from pod_lca.lca_modules.operational.read_write import get_idf_data
 
@@ -111,4 +111,3 @@ b.load_results()
 
 v = ResultsViewer(b)
 v.show('total')
-

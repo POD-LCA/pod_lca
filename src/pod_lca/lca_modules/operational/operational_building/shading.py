@@ -8,7 +8,7 @@ __version__ = "0.1.0"
 
 
 import json
-from pod_lca.utilities.mesh import Mesh
+from pod_lca.utilities.geometry import Mesh
 from pod_lca.utilities.geometry import subtract_vectors
 from pod_lca.utilities.geometry import cross_vectors
 from pod_lca.utilities.geometry import scale_vector
