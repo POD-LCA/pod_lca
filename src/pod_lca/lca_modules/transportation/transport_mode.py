@@ -32,16 +32,17 @@ class TransportMode:
     set_impact: method
         a method to retrieve and update the environmental impacts for the given transportation mode and efficiency.
     """
+
     def __init__(self):
         self.mode_name = None
         self.efficiency = None
         self.fuel_type = None
-        self.impact = None
+        self.unit_impact = None
+        self.unit_emissions = None # TODO: add emissions
         self.electricity_consumption = None
         self.limitations = []
         self.faf_mode = None
         self.cfs_mode = None
-
 
     def __str__(self):
         """ String representation of the TransportMode object.
@@ -54,7 +55,7 @@ class TransportMode:
     # Constructors
     # ================================
     @classmethod
-    def new(cls, mode_name, efficiency = "Median", fuel_type = "Regular"):
+    def new(cls, mode_name, efficiency="Median", fuel_type="Regular"):
         """ Create a new transportation mode.
 
         Parameters
@@ -77,6 +78,7 @@ class TransportMode:
         mode.set_name(mode_name)
         mode.set_efficiency(efficiency)
         mode.set_fuel_type(fuel_type)
+
         mode.set_impact()
         mode.set_faf_mode()
         mode.set_cfs_mode()
@@ -86,7 +88,6 @@ class TransportMode:
     # ================================
     # Setters
     # ================================
-
     def set_name(self, mode_name:(str)):
         """ Set the name of the transportation mode.
 
@@ -143,9 +144,6 @@ class TransportMode:
 
         return self
 
-    # ========================
-    # Setters
-    # ========================
     def set_impact(self):
         """ Retrieve and update the environmental impacts for the given transportation mode and efficiency.
         """
@@ -154,7 +152,7 @@ class TransportMode:
         filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
             (emission_data["eff"] == self.efficiency) & (emission_data["fuel"] == self.fuel_type) ]
 
-        self.impact = Impacts.from_parent(self)
+        self.unit_impact = Impacts.from_parent(self)
         # If data is found, update the impacts
         if not filtered_data.empty:
             row = filtered_data.iloc[0]  # Get the first (and only) matching row
@@ -169,7 +167,7 @@ class TransportMode:
                 "POCP": row["POCP"]
             }
 
-            self.impact.update_qty(impacts)
+            self.unit_impact.update_qty(impacts)
         else:
 
             print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
@@ -187,10 +185,10 @@ class TransportMode:
         """
         return self.efficiency
 
-    def get_impact (self):
+    def get_unit_impacts (self):
         """ Retrieve the impacts of the transportation mode.
         """
-        return self.impact
+        return self.unit_impact
 
     def get_faf_mode (self):
         """ Retrieve the FAF mode code of the transportation mode.

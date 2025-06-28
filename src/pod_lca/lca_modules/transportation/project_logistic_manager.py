@@ -6,40 +6,29 @@ __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 import gc
+import pickle
 
+from ..impacts import Emissions
 from ..impacts import Impacts
-from ..location import Location
-from ..transportation import Link
-from ..transportation import Scenario
+from ..transportation import LogisticLink, ForeignLink, DomesticLink
 
 
 class ProjectLogisticManager:
-    """
-    ProjectLogisticManager class which maintains the links of transportation.
+    """ ProjectLogisticManager class which maintains the links of transportation.
 
     Attributes
     ----------
     name : str
         name of the project.
-    shipping_dest : str.
-        neme of the shipping destination location.
-    shipping_org : str.
-        name of the shipping origin location.
-    links : list.
+    links : list. # TODO: consider changing to a dictionary of goods and their links
         list of links.
-    impact : obj.
-        impact object.
     """
 
     def __init__(self):
-
         self.name = None
-        self.links = {}
-        self.impacts = Impacts.from_parent(self)
-
+        self.goods_links_map = {}
 
     def __str__(self):
-
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
 
         for link in self.get_links():
@@ -50,11 +39,8 @@ class ProjectLogisticManager:
     # ================================
     # Constructors
     # ================================
-
-
     @classmethod
     def new(cls, name=None):
-
         """ Create a new project.
 
         Parameters
@@ -67,17 +53,14 @@ class ProjectLogisticManager:
         Project Obj.
             Project created.
         """
-
         new_project = cls()
         new_project.set_name(name)
 
         return new_project  
 
-
     # ================================
     # Setters and Getters
     # ================================
-
     def set_name(self, name:(str)):
         """ Set the name of the project.
 
@@ -86,17 +69,36 @@ class ProjectLogisticManager:
         name : str
             Name of the project.
         """
-
         self.name = name
 
         return self
 
+    def set_project_origin(self, origin:(str)):
+        """ Set the origin location of the project.
 
-    #TO DO: Add the method to update the destination and origin location in the links.
+        Parameters
+        ----------
+        origin : str
+            Origin location of the project.
+        """
+        for link in self.get_links():
+            link.set_shipping_org(origin)
+        # TODO consider having a project level variable for origin
+
+    def set_project_destination(self, destination:(str)):
+        """ Set the destination location of the project.
+
+        Parameters
+        ----------
+        destination : str
+            Destination location of the project.
+        """
+        for link in self.get_links():
+            link.set_shipping_dest(destination)
+        # TODO consider having a project level variable for origin
 
     def get_name(self):
-        """
-        Retrieve the name of the project.
+        """ Retrieve the name of the project.
 
         Returns
         -------
@@ -105,118 +107,115 @@ class ProjectLogisticManager:
         """
         return self.name
 
-
     def get_links(self):
-        """
-        Retrieve the links of the project.
+        """ Retrieve the links of the project.
 
         Returns
         -------
         list
             List of links.
         """
-        return self.links
+        return list(*self.goods_links_map.values())
+    
+    def get_goods(self):
+        """ Retrieve the goods of the project.
 
-    def get_impacts(self):
+        Returns
+        -------
+        list
+            List of goods.
         """
-        Retrieve the impacts of the project.
+        return list(self.goods_links_map.keys())
+
+    def get_impacts(self, product=None):
+        """ Retrieve the impacts of the project.
 
         Returns
         -------
         Impacts Obj.
             Impacts of the project.
         """
-        return self.impacts
+        
+        if product is None:
+            impact = Impacts.from_parent(self)
+            for link in self.get_links():
+                # link.update_inventory_records() # TODO: rename the compute_impact method to update_inventory_records
+                impact += link.get_impact()
 
-    def get_link(self, link_name:(str)):
-        """
-        Retrieve a link from the project.
-
-        Parameters
-        ----------
-        link_name : str
-            Name of the link to be retrieved.
-
-        Returns
-        -------
-        Link Obj.
-            The link object if found, else None.
-        """
-
-        if link_name in self.links:
-            return self.links[link_name]
+            return impact
+        
         else:
-            raise ValueError(f"Link '{link_name}' not found in the project.")
+            if product not in self.goods_links_map:
+                raise ValueError(f"Product '{product}' not found in the project.")
+            
+            impact = Impacts.from_parent(self)
+            for link in self.goods_links_map[product]:
+                # link.update_inventory_records() # TODO: rename the compute_impact method to update_inventory_records
+                impact += link.get_impact()
 
-    def get_link_names(self):
-        """
-        Retrieve the names of all the links in the project.
+            return impact
+
+    def get_emissions(self):
+        """ Retrieve the emissions of the product/process.
 
         Returns
         -------
-        list
-            List of link names.
+        Emissions Obj.
+            Emissions of the product/process.
         """
+        emission = Emissions.from_parent(self)
+        for link in self.get_links():
+            # link.update_inventory_records() # TODO: rename the compute_impact method to update_inventory_records
+            impact += link.get_emission()
 
-        return list(self.links.keys())
+        return impact
     
     # ================================
     # Model Methods
     # ================================
-
-    def add_link(self, link_name:(str), shipping_dest:(str) = None, shipping_org:(str) = None,
-                material:(str) = None, qty:(float) = None, qty_unit:(str) = "tonne", travel_dist = None,
-                travel_dist_unit:(str) = "km", return_trip_factor:(float) = None, mode_domestic:(str) = None,
-                mode_domestic_fuel_type:(str) = "Regular", mode_domestic_efficiency:(str) = "Median",
-                mode_foreign:(str) = None, mode_foreign_fuel_type:(str) = "Regular", mode_foreign_efficiency:(str) = "Median"):
-
-        """
-        Add a link to the project.
+    def add_goods(self, goods, 
+                  shipping_dest, shipping_org, travel_dist = None,
+                  travel_dist_unit:(str) = "km", 
+                  return_trip_factor:(float) = None, 
+                  mode:(str) = None,
+                  mode_fuel_type:(str) = "Regular", 
+                  mode_efficiency:(str) = "Median"):
+        """ Add goods to the project.
 
         Parameters
         ----------
-        link_name : str
-            Name of the link to be added.
         """
+        for good in goods:
+            self.goods_links_map[good] = []
+            if isinstance(travel_dist, str):
+                link_classes = [DomesticLink, ForeignLink] if travel_dist in ["North_america", "Global", "Known"] else [DomesticLink]
 
-        link = Link.in_project (self, link_name)
-        link.set_name(link_name)
-        link.set_shipping_dest(shipping_dest)
-        link.set_shipping_org(shipping_org)
-        link.set_material(material, qty, qty_unit)
-        link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
-        link.set_mode_domestic(mode_domestic, mode_domestic_fuel_type, mode_domestic_efficiency)
-        link.set_mode_foreign(mode_foreign, mode_foreign_fuel_type, mode_foreign_efficiency)
+            prev_link = None
+            for LinkClass in link_classes:
+                link = LinkClass.in_project (self, 'transport_' + good.get_name())
+                link.set_shipping_dest(shipping_dest)
+                link.set_shipping_org(shipping_org)
+                link.set_material(good)
+                link.set_mode(mode, mode_fuel_type, mode_efficiency)
+                link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
 
+                if prev_link is not None:
+                    prev_link.set_next_link(link)
+                
+                self.goods_links_map[good].append(link)
+                prev_link = link
 
-        self.links[link_name] = link
-
-        return link
-
+        return self
 
     # ================================
     # Project Methods
     # ================================
-
-
     def clear_project(self, links=True, impacts=True):  
+        """ Clear the project by removing all links and impacts.
         """
-        Clear the project by removing all links and impacts.
+        self.goods_links_map = {}
 
-        Parameters
-        ----------
-        links : bool, optional
-            If True, clear all links. Default is True.
-        impacts : bool, optional
-            If True, clear all impacts. Default is True.
-        """
-
-        if links:
-            self.links = {}
-
-        if impacts:
-            self.impacts = None
-
+        return self
 
     def save(self, file_path:(str)):
         """ Save as a *.pkl file.
@@ -226,10 +225,8 @@ class ProjectLogisticManager:
         file_path : str
             Location (including the name) where the data be saved.
         """
-        
         with open(file_path, "wb") as file:
             pickle.dump(self, file)
-
 
     @staticmethod
     def load(file_path:(str)):
@@ -247,7 +244,6 @@ class ProjectLogisticManager:
         PermissionError
             Permission denied to access file.
         """
-
         try:
             with open(file_path, 'rb') as file:
                 project = pickle.load(file)
@@ -260,28 +256,5 @@ class ProjectLogisticManager:
             print("An error occurred:", e)
 
 
-    def get_links_impacts(self):
-        """
-        Retrieve the impacts of the links.
-        """
-
-        new_impact = Impacts.from_parent(self)
-        for link in self.links:
-            new_impact += link.get_impact()
-        
-        self.impacts.update_qty(new_impact.get_record_dict())
-
-        del new_impact
-        gc.collect()
-
-        return self.impacts 
-
-
-
 if __name__ == '__main__':
     pass
-
-
-
-
-

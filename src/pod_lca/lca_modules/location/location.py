@@ -6,6 +6,7 @@ __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
 
 from ...utilities import config
 from ...utilities import DataImporter
@@ -85,11 +86,15 @@ class Location:
             location.set_state(location_data)
             location.set_country(location_data)
             location.set_country_code(location_data)
-            location.set_cfs_area()
-            location.set_faf_foreign_region()
-            location.set_faf_domestic_region()
+
+            # transportaion specific data
+            if location.get_country_code() == "US":
+                location.set_cfs_area()
+                location.set_faf_domestic_region()
+                location.set_us_coast()
+            else:
+                location.set_faf_foreign_region()
             location.set_marine_region()
-            location.set_us_coast()
 
             return location
 
@@ -168,7 +173,8 @@ class Location:
         elif geopy_location_nominatim.raw['addresstype'] in national_type:
             self.regionality = 'National'
         else:
-            raise ValueError("Regionality not recognized")
+            self.regionality = None
+            # raise ValueError("Regionality not recognized")
 
         return self
 
@@ -578,6 +584,44 @@ class Location:
     # Methods
     # ================================
     @staticmethod
+    def get_closest_states(destination, states_lst):
+        """ Get the closest states to the destination.
+        
+        Parameters
+        ----------
+        destination : Location
+            Destination location object.
+        states_lst : list of int
+            List of states to find the closest ones from.
+        
+        Returns
+        -------
+        str
+            The closest state to the destination.
+        int
+            The code of the closest state.
+        """
+
+        state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH']) 
+
+        lat = state_code[state_code["Code"].isin(states_lst)]["lat"].values
+        lon = state_code[state_code["Code"].isin(states_lst)]["lon"].values
+        states = state_code[state_code["Code"].isin(states_lst)]["State"].values
+
+        coords = list(zip(lat, lon))
+        dest_to_state = []
+        for coord in coords:
+            distance = geodesic(coord, destination.get_cordinates()).km
+            dest_to_state.append(distance)
+
+        min_index = dest_to_state.index(min(dest_to_state))
+
+        closest_state = states[min_index]
+        closest_state_code = state_code[state_code["State"]==closest_state]["Code"].values[0]
+
+        return closest_state, closest_state_code
+
+    @staticmethod
     def get_closest_zip(geopy_location, max_attempts=10, step=1):
         """ Get the zipcode of the location.
 
@@ -632,3 +676,5 @@ if __name__ == '__main__':
     print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
     print (f"Marine Region: {location_obj.get_marine_region()}")
     print (f"US Coast: {location_obj.us_coast}")
+
+    # TODO: try removing try/except blocks

@@ -7,15 +7,22 @@ __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 
-def faf_preprocessing (input_path_faf, output_path_faf):
+def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.gov/freight/freight_analysis/faf/'):
+    """ This function cleans the FAF dataset by removing unrelated columns, filtering the data, and converting distance units.
+        It also merges the cleaned data with the FAF distance band data and calculates average distances.
 
-    """
-    This function cleans the FAF dataset by removing unrelated columns, filtering the data, and converting distance units.
-    It also merges the cleaned data with the FAF distance band data and calculates average distances.
-    """
+        Original data source: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
 
+    Parameters
+    ----------
+    output_file : str
+        The path where the cleaned FAF dataset will be saved.
+    input_file : str
+        The path to the original FAF dataset CSV file. If None, downloads the dataset from the web.
+    """
     faf_dist_band = pd.read_csv(r"data\transportation_podlca_faf-dist-band.csv")
-    faf = pd.read_csv(input_path_faf)
+
+    faf = pd.read_csv(input_file)
 
     faf = faf[faf['trade_type'] == 2]
 
@@ -42,12 +49,11 @@ def faf_preprocessing (input_path_faf, output_path_faf):
     faf_merged['avr_dom_dist_km'] = (faf_merged['min_dom_dist_km'] + faf_merged['max_dom_dist_km']) / 2
     faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km','max_dom_dist_km','trade_type','dist_band' ], inplace=True)
 
-    faf = faf_merged.to_csv(output_path_faf, index=False)
+    faf = faf_merged.to_csv(output_file, index=False)
 
     return faf
 
 def cfaf_preprocessing (input_path_cfaf , output_path_cfaf):
-
     """
     This function cleans the CFaf dataset by filtering the data for specific conditions, dropping unrelated columns,
     and creating a mapping for SCTG groups to their corresponding numbers. It also calculates the average distance per shipment.
@@ -135,24 +141,29 @@ def cfs_preprocessing (input_path, output_path):
 
 
 if __name__ == "__main__":
-
     """"
     Original data sources:
 
-    FAF (Freight Analysis Framework) dataset: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
+    FAF () dataset: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
     CFaf (Canadian Freight Analysis Framework) dataset: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
     CFS (Commodity Flow Survey) dataset: https://www.census.gov/programs-surveys/cfs.html
-
     """
-
+    # Preprocessing Freight Analysis Framework (FAF) dataset
+    # original data from: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
     input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
     output_path_faf = r"data\transportation_faf_dataset.csv"
+    faf_preprocessing(input_path_faf, output_path_faf)
 
-    # input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
-    # output_path_cfs = r"data\transportation_cfs_dataset.csv"
+    # Preprocessing Canadian Freight Analysis Framework (CFaf) dataset
+    # original data from: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
+    input_path_cfaf = r"C:\Users\mhtaba\Downloads\CFaf_2017.xlsx"
+    output_path_cfaf = r"data\transportation_cfaf_dataset.csv"
+    cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
 
+    # Preprocessing Commodity Flow Survey (CFS) dataset
+    # original data from: https://www.census.gov/programs-surveys/cfs.html
+    input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
+    output_path_cfs = r"data\transportation_cfs_dataset.csv"
+    cfs_preprocessing (input_path_cfs, output_path_cfs)
 
-
-    faf_preprocessing (input_path_faf, output_path_faf)
-    # cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
-    #cfs_preprocessing (input_path_cfs, output_path_cfs)
+    # TODO: create option to download the datasets from the web if input_path is None
