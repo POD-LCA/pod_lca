@@ -41,28 +41,29 @@ class DomesticLink(LogisticLink):
         if isinstance(travel_dist, (float, int)):
             self.travel_dist = travel_dist
 
-        elif isinstance(travel_dist, str):
-            if travel_dist in ["Local", "Regional", "Regional_c", "National", "None", "Known_us", None]:
+        elif travel_dist is None:
+            transport_scenario = self.get_transport_scenario()
+            if transport_scenario in ["Local", "Regional", "Regional_c", "National", "None", "Known_us", None]:
                 try:
-                    self.travel_dist = self.get_distance_from_cfs(travel_dist)
+                    self.travel_dist = self.get_distance_from_cfs(transport_scenario)
                 except ValueError as e:
                     if str(e) == "Transportation mode in CFS dataset":
                         log(f"Transportation mode not found in CFS dataset. Using default mode 'Truck'.", "Warn")
                         self.set_mode('Truck', self.get_mode().get_fuel_type(), self.get_mode().get_efficiency())
-                        self.travel_dist = self.get_distance_from_cfs(travel_dist)
+                        self.travel_dist = self.get_distance_from_cfs(transport_scenario)
 
                 if self.get_next() is not None:
                     self.get_next().set_travel_dist(0, travel_dist_unit, return_trip_factor)
 
-            elif travel_dist in ["North_america", "Global", "Known"]:
+            elif transport_scenario in ["North_america", "Global", "Known"]:
                 pass
                 # TODO: create foreign link if it does not exist
                 # TODO: update the lengths
             else:
-                raise ValueError(f"Invalid travel distance: {travel_dist}. Must be a float, int, or a valid scenario string.")
+                raise ValueError(f"Transport scenario not recognized.")
             
         else:
-            raise TypeError(f"Invalid type for travel distance: {type(travel_dist)}. Must be a float, int, or a valid scenario string.")
+            raise TypeError(f"Either travel distance or transport scenario must be provided.")
         
         self.return_trip_factor = return_trip_factor
 

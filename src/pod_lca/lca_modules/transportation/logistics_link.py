@@ -49,6 +49,7 @@ class LogisticLink:
         self.project = None
         self.name = None
         self.material = None
+        self.transport_scenario = None
         self.travel_dist = None
         self.travel_dist_unit = None
         self.return_trip_factor = None
@@ -139,6 +140,23 @@ class LogisticLink:
         self.material = material    
 
         return self
+    
+    def set_transport_scenario(self, transport_scenario:(str)):
+        """ Set the transport scenario of the transportation link.
+
+        Parameters
+        ----------
+        transport_scenario : str
+            Transport scenario of the transportation link (e.g., "North_america", "Global", "Known").
+        """
+        if transport_scenario is None:
+            self.transport_scenario = None # TODO set the default transport scenario
+        elif isinstance(transport_scenario, str):
+            self.transport_scenario = transport_scenario
+        else:
+            raise ValueError("Transport scenario must be a string.")
+
+        return self
 
     def set_travel_dist(self, 
                         travel_dist, 
@@ -158,7 +176,7 @@ class LogisticLink:
         if isinstance(travel_dist, (float, int)):
             self.travel_dist = travel_dist
         else:
-            pass
+            raise ValueError("Travel distance must be a number.")
 
         self.travel_dist_unit = travel_dist_unit
         self.return_trip_factor = return_trip_factor
@@ -255,6 +273,16 @@ class LogisticLink:
             The material of the transportation link.
         """
         return self.material
+    
+    def get_transport_scenario(self):
+        """ Retrieve the transport scenario of the transportation link.
+
+        Returns
+        -------
+        str
+            The transport scenario of the transportation link.
+        """
+        return self.transport_scenario
     
     def get_mode(self):
         """ Retrieve the transportation mode of the transportation link.

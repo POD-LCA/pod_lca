@@ -117,6 +117,17 @@ class ProjectLogisticManager:
         """
         return list(*self.goods_links_map.values())
     
+    def get_link(self, product):
+        """ Retrieve the links corresponding to a product.
+        
+        Parameters
+        ----------
+        product : Master Obj.
+            Object for which the transportation links correspond to.
+        """
+        if product in self.goods_links_map:
+            return self.goods_links_map[product]
+
     def get_goods(self):
         """ Retrieve the goods of the project.
 
@@ -174,7 +185,9 @@ class ProjectLogisticManager:
     # Model Methods
     # ================================
     def add_goods(self, goods, 
-                  shipping_dest, shipping_org, travel_dist = None,
+                  shipping_dest, shipping_org,
+                  tranpsort_scenario:(str) = None,
+                  travel_dist = None,
                   travel_dist_unit:(str) = "km", 
                   return_trip_factor:(float) = None, 
                   mode:(str) = None,
@@ -187,23 +200,26 @@ class ProjectLogisticManager:
         """
         for good in goods:
             self.goods_links_map[good] = []
-            if isinstance(travel_dist, str):
-                link_classes = [DomesticLink, ForeignLink] if travel_dist in ["North_america", "Global", "Known"] else [DomesticLink]
 
-            prev_link = None
-            for LinkClass in link_classes:
-                link = LinkClass.in_project (self, 'transport_' + good.get_name())
-                link.set_shipping_dest(shipping_dest)
-                link.set_shipping_org(shipping_org)
-                link.set_material(good)
-                link.set_mode(mode, mode_fuel_type, mode_efficiency)
-                link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
+            if travel_dist is None:
+                if isinstance(tranpsort_scenario, str):
+                    LinkClass = ForeignLink if tranpsort_scenario in ["North_america", "Global", "Known"] else DomesticLink
+                else:
+                    LinkClass = DomesticLink
+            elif isinstance(travel_dist, (int, float)):
+                LinkClass = LogisticLink
+            else:
+                raise ValueError("travel_dist must be a number or None.")
 
-                if prev_link is not None:
-                    prev_link.set_next_link(link)
-                
-                self.goods_links_map[good].append(link)
-                prev_link = link
+            link = LinkClass.in_project (self, 'transport_' + good.get_name())
+            link.set_shipping_dest(shipping_dest)
+            link.set_shipping_org(shipping_org)
+            link.set_material(good)
+            link.set_mode(mode, mode_fuel_type, mode_efficiency)
+            link.set_transport_scenario(tranpsort_scenario)
+            link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
+            
+            self.goods_links_map[good].append(link)
 
         return self
 

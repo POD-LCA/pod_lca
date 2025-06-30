@@ -8,13 +8,14 @@ __version__ = "0.1.0"
 from geopy.distance import geodesic
 
 from . import LogisticLink
-from . import DomesticLink
+from . import CFSDataset
 from ..transportation import TransportMode
 from ..location import Location
 from ...units import KILOMETER
 from ...units import MILE
 from ...utilities import config
 from ...utilities import DataImporter
+from ...utilities import log
 
 
 class ForeignLink(LogisticLink):
@@ -23,6 +24,59 @@ class ForeignLink(LogisticLink):
     # ================================
     # Setters and Getters
     # ================================
+    def set_mode(self, mode:(str) , fuel_type:(str) , efficiency:(str) ):
+        """ Set the transportation mode of the transportation link.
+
+        Parameters
+        ----------
+        mode : str
+            transportation mode of the transportation link.
+        fuel_type : str, optional
+            type of fuel used in the transportation mode (default is "Regular").
+        efficiency : str, optional
+            efficiency of the transportation mode "low, medium, high" (default is "medium").
+        """
+        if isinstance(mode, str) or mode is None:
+            fuel_type = "Regular" if fuel_type is None else fuel_type
+            mode_efficiency = "Median" if efficiency is None else efficiency
+            mode_name = "Truck" if mode is None else mode
+
+            mode_obj = TransportMode.new(mode_name, mode_efficiency, fuel_type)
+
+            self.mode = {'domestic': mode_obj, 'foreign': mode_obj}
+
+        elif isinstance(mode, dict):
+            domestic_mode_name = mode['domestic'] if 'domestic' in mode and isinstance(mode['domestic'], str) else 'Truck'
+            foreign_mode_name = mode['foreign'] if 'foreign' in mode and isinstance(mode['foreign'], str) else 'Air' # TODO check default option here
+            
+            if isinstance(efficiency, dict):
+                domestic_mode_efficiency = efficiency['domestic'] if 'domestic' in efficiency and isinstance(efficiency['domestic'], str) else 'Median'
+                foreign_mode_effciency = efficiency['foreign'] if 'foreign' in efficiency and isinstance(efficiency['foreign'], str) else 'Median'
+            elif isinstance(efficiency, (str, None)):
+                foreign_mode_effciency = efficiency if isinstance(efficiency, str) else 'Median'
+                domestic_mode_efficiency = efficiency if isinstance(efficiency, str) else 'Median'
+            else:
+                raise ValueError("Transport efficiency not recognized.")
+            
+            if isinstance(fuel_type, dict):
+                domestic_mode_fuel_type = fuel_type['domestic'] if 'domestic' in fuel_type and isinstance(fuel_type['domestic'], str) else 'Regular'
+                foreign_mode_fuel_type = fuel_type['foreign'] if 'foreign' in fuel_type and isinstance(fuel_type['foreign'], str) else 'Regular'
+            elif isinstance(fuel_type, (str, None)):
+                foreign_mode_fuel_type = fuel_type if isinstance(fuel_type, str) else 'Regular'
+                domestic_mode_fuel_type = fuel_type if isinstance(fuel_type, str) else 'Regular'
+            else:
+                raise ValueError("Transport fuel type not recognized.")
+            
+            self.mode = {
+                'domestic': TransportMode.new(domestic_mode_name, domestic_mode_efficiency, domestic_mode_fuel_type),
+                'foreign': TransportMode.new(foreign_mode_name, foreign_mode_effciency, foreign_mode_fuel_type)
+            }
+
+        else:
+            raise TypeError(f"Invalid type for mode: {type(mode)}. Must be a str or dict.")
+            
+        return self
+    
     def set_travel_dist(self, 
                         travel_dist, 
                         travel_dist_unit:(str) = KILOMETER, 
@@ -60,8 +114,8 @@ class ForeignLink(LogisticLink):
                 pass
                 # TODO: set travel distnace of the associated domestic links to zero
             elif travel_dist in ["North_america", "Global", "Known"]:
-                sctg_code = DomesticLink.get_sctg_code(self.get_material().get_name())
-                datasets_filtered = FAFDataset.filter_datasets(sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.previous.get_mode(), self.get_mode(),travel_dist)
+                sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
+                datasets_filtered = FAFDataset.filter_datasets(self, sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.get_mode('domestic'), self.get_mode('foreign'), travel_dist)
                 domestic_dis, foreign_dis = FAFDataset.get_travel_dist(datasets_filtered, self.get_shipping_dest(), self.get_shipping_org())
                 
                 self.travel_dist = foreign_dis
@@ -91,6 +145,16 @@ class ForeignLink(LogisticLink):
 
         return self.return_trip_factor
 
+    def get_mode(self, mode_type:(str) = "domestic"):
+        """ Retrieve the transportation mode of the transportation link.
+
+        Returns
+        -------
+        TransportMode obj.
+            The domestic transportation mode of the transportation link.
+        """
+        return self.mode[mode_type] if mode_type in self.mode else None
+    
     # ================================
     # CFS Methods
     # ================================
@@ -102,19 +166,19 @@ class FAFDataset:
     @staticmethod
     def filter_datasets(link, sctg=None, destination=None, origin=None, mode_domestic=None, mode_foreign=None, scenario=None):
 
-        faf = link.filter_faf(sctg, destination, origin, mode_foreign, mode_domestic, scenario)
+        faf = FAFDataset.filter_faf(link, sctg, destination, origin, mode_foreign, mode_domestic, scenario)
         if faf[1] == True:
             raise LookupError("An error occurred while filtering the FAF data, please check the data and try again.")
         else:
             faf = faf[0]
 
-        marine = link.filter_marine(destination, origin, scenario)
+        marine = FAFDataset.filter_marine(destination, origin, scenario)
         if marine[1] == True:
             raise LookupError(" An error occurred while filtering the Marine data, please check the data and try again.")
         else:
             marine = marine[0]
 
-        cfaf = link.filter_cfaf(sctg)
+        cfaf = FAFDataset.filter_cfaf(sctg)
 
         return faf, marine, cfaf
     
@@ -124,173 +188,83 @@ class FAFDataset:
         cfs_state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
         faf  = DataImporter.csv_to_pandas(r"data\transportation_faf_dataset.csv")
         Faf_city_representation = DataImporter.json_to_dict(config['file_paths']['location']['FAF_CITY_REPRESENTATION'])
-        failed = False
         
         # SCTG
-        try:
-            if sctg is not None:
-                faf = faf[faf["sctg2"] == sctg]
-                if faf.empty:
-                    raise ValueError("no data for the selected SCTG code in FAF561 dataset")
-        except Exception as e:
-            print("Error:", e)
-            failed = True
+        if sctg is not None:
+            faf = faf[faf["sctg2"] == sctg]
+            if faf.empty:
+                raise ValueError("Material not found in FAF561 dataset")
         
         # Destination
-        try:
-            faf_without_dest = faf.copy()
-            if destination is not None:
-                faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
-                
-                if faf.empty:
+        if isinstance(destination, Location):
+            faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
+            if faf.empty:
+                faf_region_list = faf["dms_dest"].tolist()
+                cfs_state_list = []
+                for region in faf_region_list:
+                    cfs_state_list.append(FAFDataset.faf_region_to_cfs_area_mapping(region))
 
-                    faf_region_list = faf["dms_dest"].tolist()
-                    faf_to_cfs_code = []
-                    for region in faf_region_list:
-                        faf_to_cfs_code.append(FAFDataset.faf_region_to_cfs_area_mapping(region))
-
-                    cfs_lat = []
-                    cfs_lon = []
-
-                    for state in faf_to_cfs_code:
-                        lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
-                        lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
-
-                        if len(lat) > 0 and len(lon) > 0:
-                            cfs_lat.append(lat[0])
-                            cfs_lon.append(lon[0])
-
-                    coords = list(zip(cfs_lat, cfs_lon))
-                    dest_to_org = []
-                    
-                    for coord in coords:
-                        distance = geodesic(coord, destination.get_cordinates()).km
-                        dest_to_org.append(distance)
-
-                    cfs_dist = dict(zip(faf_to_cfs_code, dest_to_org))
-                    sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
-
-                    while faf.empty:
-                        closest_state = list(sorted_cfs_dist.keys())[0]
-                        faf_region = FAFDataset.cfs_area_to_faf_region_mapping(closest_state) 
-                        faf = faf[faf["dms_dest"].isin(faf_region)] 
-                        del sorted_cfs_dist[closest_state]
-                        print(f"No location for destination found in FAF, The value shows the closest shipping to the selected destination {closest_state}")
-                        for key, value in faf_domestic_data.items():
-                            if closest_state in value:
-                                closest_state = key
-                        link.set_shipping_dest(closest_state)
-            
-            else:
-                major_domes = faf["dms_dest"].mode()[0]
-
-                faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])     
-                for key, value in faf_domestic_data.items():
-                    if major_domes in value:
-                        major_domes = key
-                link.set_shipping_dest(major_domes)
-
-        except Exception as e:
-            print("Error:", e)
-            failed = True
+                closest_state_name, closest_state_code = Location.get_closest_states(destination, cfs_state_list)
+                closest_faf_region = FAFDataset.cfs_area_to_faf_region_mapping(closest_state_code)
+                faf_filtered = faf[faf["dms_dest"] == closest_faf_region]
+                log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+            faf = faf_filtered
         
         # Origin
-        try:
-            if origin is not None:
-                faf = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
-                faf_without_dest = faf_without_dest[faf_without_dest["fr_orig"] == float(origin.get_faf_foreign_region())]
-
-                if faf.empty:
-
-                    faf_region_list =  faf_without_dest["dms_dest"].tolist()
-
-                    faf_to_cfs_code = []
-                    for region in faf_region_list:
-                        faf_to_cfs_code.append(FAFDataset.faf_region_to_cfs_area_mapping(region))
-
-                    cfs_lat = []
-                    cfs_lon = []
-
-                    for state in faf_to_cfs_code:
-                        lat = cfs_state_code[cfs_state_code["Code"] == state]["lat"].values
-                        lon = cfs_state_code[cfs_state_code["Code"] == state]["lon"].values
-
-                        if len(lat) > 0 and len(lon) > 0:
-                            cfs_lat.append(lat[0])
-                            cfs_lon.append(lon[0])
-
-                    coords = list(zip(cfs_lat, cfs_lon))
-                    dest_to_dest = []
-
-                    for coord in coords:
-                        distance = geodesic(coord, destination.get_cordinates()).km
-                        dest_to_dest.append(distance)
-
-                    cfs_dist = dict(zip(faf_to_cfs_code, dest_to_dest))
-                    sorted_cfs_dist = dict(sorted(cfs_dist.items(), key=lambda item: item[1]))
-
-                    while faf.empty:
-                        closest_state = list(sorted_cfs_dist.keys())[0]
-                        faf_region = FAFDataset.cfs_area_to_faf_region_mapping(closest_state)
-                        faf = faf[faf["dms_dest"].isin(faf_region)]
-                        del sorted_cfs_dist[closest_state]
-                        print(f"No location for origin and selected destination found in FAF, The value shows the closest shipping to the selected destination with datapoint to the selected origin {closest_state}")
-                        for key, value in faf_domestic_data.items():
-                            if closest_state in value:
-                                closest_state = key
-                                link.set_shipping_dest(closest_state)
-            else:
-                
-                if scenario == "North_america":
-                    faf = faf[faf["fr_orig"].isin([801, 802])]
-                    faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
-                    link.set_shipping_dest(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
-                elif scenario == "Global":
-                    faf = faf[faf["fr_orig"].isin([801, 802]) == False]
-                    faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
-                    link.set_shipping_dest(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
+        if isinstance(origin, Location):
+            faf = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
             
-        except Exception as e:
-            print("Error:", e)
-            failed = True
+            if faf.empty:
+                faf_region_list = faf["fr_orig"].tolist()
+                cfs_state_list = []
+                for region in faf_region_list:
+                    cfs_state_list.append(FAFDataset.faf_region_to_cfs_area_mapping(region))
+
+                closest_state_name, closest_state_code = Location.get_closest_states(origin, cfs_state_list)
+                closest_faf_region = FAFDataset.cfs_area_to_faf_region_mapping(closest_state_code)
+                faf_filtered = faf[faf["fr_orig"] == closest_faf_region]
+                log(f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+            faf = faf_filtered
+
+        else: # TODO: move to set origin method
+            
+            if scenario == "North_america":
+                faf = faf[faf["fr_orig"].isin([801, 802])]
+                faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
+                link.set_shipping_dest(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
+            elif scenario == "Global":
+                faf = faf[faf["fr_orig"].isin([801, 802]) == False]
+                faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
+                link.set_shipping_dest(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
+        
 
         # Mode
-        try:
-            if foreign_mode is not None:
-                faf = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
-                if faf.empty:
-                    link.mode_foreign = TransportMode.new("Ocean", link.link.get_mode_foreign_efficiency(), link.link.get_mode_foreign_fuel_type())
-                    faf = faf[faf["fr_inmode"] == link.mode_foreign.get_faf_mode()]
-                    print ("No datapoint for selected mode of transportation.Using Ocean as the default mode of transportation instead.")
-            else:
-
+        if foreign_mode is not None:
+            faf = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
+            if faf.empty:
                 link.mode_foreign = TransportMode.new("Ocean", link.link.get_mode_foreign_efficiency(), link.link.get_mode_foreign_fuel_type())
                 faf = faf[faf["fr_inmode"] == link.mode_foreign.get_faf_mode()]
-                if faf.empty:
-                    raise ValueError("no data for Ocean as a mode in FAF561 dataset")
-
-        except Exception as e:
-            print("Error:", e)
-            failed = True
+                print ("No datapoint for selected mode of transportation.Using Ocean as the default mode of transportation instead.")
+        else: # TODO: move to set mode method
+            link.mode_foreign = TransportMode.new("Ocean", link.link.get_mode_foreign_efficiency(), link.link.get_mode_foreign_fuel_type())
+            faf = faf[faf["fr_inmode"] == link.mode_foreign.get_faf_mode()]
+            if faf.empty:
+                raise ValueError("no data for Ocean as a mode in FAF561 dataset")
         
         
         # Domestic Mode
-        try:
-            if domestic_mode is not None:
-                faf = faf[faf["dms_mode"] == domestic_mode.get_faf_mode()]
-                if faf.empty:
-                    raise ValueError("no data for the selected domestic mode in FAF561 dataset")
-            else:
-                link.mode_domestic = TransportMode.new("Truck",link.link.get_mode_domestic_efficiency(), link.link.get_mode_domestic_fuel_type())
-                faf = faf[faf["dms_mode"] == link.mode_domestic.get_faf_mode()]
-                if faf.empty:
-                    raise ValueError("no data for Truck as a domestic mode in FAF561 dataset")
+        if domestic_mode is not None:
+            faf = faf[faf["dms_mode"] == domestic_mode.get_faf_mode()]
+            if faf.empty:
+                raise ValueError("no data for the selected domestic mode in FAF561 dataset")
+        else:
+            link.mode_domestic = TransportMode.new("Truck",link.link.get_mode_domestic_efficiency(), link.link.get_mode_domestic_fuel_type())
+            faf = faf[faf["dms_mode"] == link.mode_domestic.get_faf_mode()]
+            if faf.empty:
+                raise ValueError("no data for Truck as a domestic mode in FAF561 dataset")
 
-        except Exception as e:
-            print("Error:", e)
-            failed = True
 
-        return faf, failed
+        return faf
 
     @staticmethod
     def faf_region_to_cfs_area_mapping(region):

@@ -300,7 +300,7 @@ class Location:
         """
         try:
             country = self.get_country()
-            faf_foreign_region = DataImporter.json_to_dict(config['file_paths']['location']['CFS_DATA_PATH'])
+            faf_foreign_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
 
             for key, value in faf_foreign_region.items():
                 if country in value:
