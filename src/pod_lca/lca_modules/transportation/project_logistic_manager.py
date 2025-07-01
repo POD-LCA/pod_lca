@@ -186,7 +186,7 @@ class ProjectLogisticManager:
     # ================================
     def add_goods(self, goods, 
                   shipping_dest, shipping_org,
-                  tranpsort_scenario:(str) = None,
+                  transport_scenario:(str) = None,
                   travel_dist = None,
                   travel_dist_unit:(str) = "km", 
                   return_trip_factor:(float) = None, 
@@ -202,24 +202,36 @@ class ProjectLogisticManager:
             self.goods_links_map[good] = []
 
             if travel_dist is None:
-                if isinstance(tranpsort_scenario, str):
-                    LinkClass = ForeignLink if tranpsort_scenario in ["North_america", "Global", "Known"] else DomesticLink
-                else:
+                if isinstance(transport_scenario, str):
+                    if transport_scenario in ["North_america", "Global", "Known"]:
+                        LinkClass = ForeignLink
+                    elif transport_scenario in ["National", "Regional_c", "Regional", "Local", "Known_us"]:
+                        LinkClass = DomesticLink
+                    else:
+                        raise ValueError("Transport scenario not recognized.")
+                elif transport_scenario is None:
                     LinkClass = DomesticLink
+                else:
+                    raise TypeError("Transport scenario not recognized.")
             elif isinstance(travel_dist, (int, float)):
                 LinkClass = LogisticLink
             else:
                 raise ValueError("travel_dist must be a number or None.")
 
             link = LinkClass.in_project (self, 'transport_' + good.get_name())
+            if isinstance(link, ForeignLink):
+                link_domestic = DomesticLink.in_project(self, 'transport_' + good.get_name() + '_domestic')
+                link.set_next(link_domestic)
+            link.set_transport_scenario(transport_scenario)
             link.set_shipping_dest(shipping_dest)
             link.set_shipping_org(shipping_org)
             link.set_material(good)
             link.set_mode(mode, mode_fuel_type, mode_efficiency)
-            link.set_transport_scenario(tranpsort_scenario)
             link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
             
             self.goods_links_map[good].append(link)
+            if isinstance(link, ForeignLink):
+                self.goods_links_map[good].append(link_domestic)
 
         return self
 

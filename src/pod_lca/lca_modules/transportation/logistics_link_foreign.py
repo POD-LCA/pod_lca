@@ -10,6 +10,7 @@ from geopy.distance import geodesic
 from . import LogisticLink
 from . import CFSDataset
 from ..transportation import TransportMode
+from ..transportation import DomesticLink
 from ..location import Location
 from ...units import KILOMETER
 from ...units import MILE
@@ -36,7 +37,10 @@ class ForeignLink(LogisticLink):
         efficiency : str, optional
             efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
-        if isinstance(mode, str) or mode is None:
+        if isinstance(mode, TransportMode):
+            self.mode = mode
+        
+        elif isinstance(mode, str) or mode is None:
             fuel_type = "Regular" if fuel_type is None else fuel_type
             mode_efficiency = "Median" if efficiency is None else efficiency
             mode_name = "Truck" if mode is None else mode
@@ -47,7 +51,7 @@ class ForeignLink(LogisticLink):
 
         elif isinstance(mode, dict):
             domestic_mode_name = mode['domestic'] if 'domestic' in mode and isinstance(mode['domestic'], str) else 'Truck'
-            foreign_mode_name = mode['foreign'] if 'foreign' in mode and isinstance(mode['foreign'], str) else 'Air' # TODO check default option here
+            foreign_mode_name = mode['foreign'] if 'foreign' in mode and isinstance(mode['foreign'], str) else 'Ocean'
             
             if isinstance(efficiency, dict):
                 domestic_mode_efficiency = efficiency['domestic'] if 'domestic' in efficiency and isinstance(efficiency['domestic'], str) else 'Median'
@@ -67,16 +71,61 @@ class ForeignLink(LogisticLink):
             else:
                 raise ValueError("Transport fuel type not recognized.")
             
-            self.mode = {
-                'domestic': TransportMode.new(domestic_mode_name, domestic_mode_efficiency, domestic_mode_fuel_type),
-                'foreign': TransportMode.new(foreign_mode_name, foreign_mode_effciency, foreign_mode_fuel_type)
-            }
+            self.mode = TransportMode.new(foreign_mode_name, foreign_mode_effciency, foreign_mode_fuel_type)
+
+            domestic_mode =TransportMode.new(domestic_mode_name, domestic_mode_efficiency, domestic_mode_fuel_type)
+            if isinstance(self.get_next(), DomesticLink):
+                self.get_next().set_mode(domestic_mode)
+            else:
+                domestic_link = DomesticLink.in_project(self.get_project(), self.get_name() + '_domestic')
+                domestic_link.set_mode(domestic_mode)
+                self.set_next(domestic_link)
 
         else:
             raise TypeError(f"Invalid type for mode: {type(mode)}. Must be a str or dict.")
             
         return self
     
+    def set_shipping_org(self, shipping_org:(str)):
+        """ Set the shipping origin of the project.
+
+        Parameters
+        ----------
+        shipping_dest : str
+            Name of the shipping origin location.
+        """
+        if shipping_org is None:
+            if self.get_transport_scenario() in ["North_america", "Global"]: # TODO: verify this
+                Faf_city_representation = DataImporter.json_to_dict(config['file_paths']['location']['FAF_CITY_REPRESENTATION'])
+                faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
+                faf = faf[faf["fr_orig"].isin([801, 802])] if self.get_transport_scenario() == "North_america" else faf[faf["fr_orig"].isin([801, 802]) == False]
+                faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
+
+                self.shipping_org = Location.from_str(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
+            else:
+                self.shipping_org = None
+        elif isinstance(shipping_org, Location):
+            self.shipping_org = shipping_org
+        elif isinstance(shipping_org, str):
+            self.shipping_org = Location.from_str(shipping_org)
+        else:
+            raise ValueError("Shipping destination must be a Location object or a string representing the location.")
+
+        return self
+
+    def set_transport_scenario(self, transport_scenario:(str)):
+        """ Set the transport scenario of the transportation link.
+
+        Parameters
+        ----------
+        transport_scenario : str
+            Transport scenario of the transportation link (e.g., "North_america", "Global", "Known").
+        """
+        super().set_transport_scenario(transport_scenario)
+        self.get_next().set_transport_scenario(transport_scenario)
+
+        return self
+     
     def set_travel_dist(self, 
                         travel_dist, 
                         travel_dist_unit:(str) = KILOMETER, 
@@ -109,21 +158,28 @@ class ForeignLink(LogisticLink):
         """
         if isinstance(travel_dist, (float, int)):
             self.travel_dist = travel_dist
-        elif isinstance(travel_dist, str):
-            if travel_dist in ["Local", "Regional", "Regional_c", "National", "None", "Known_us", None]:
-                pass
-                # TODO: set travel distnace of the associated domestic links to zero
-            elif travel_dist in ["North_america", "Global", "Known"]:
-                sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
-                datasets_filtered = FAFDataset.filter_datasets(self, sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.get_mode('domestic'), self.get_mode('foreign'), travel_dist)
-                domestic_dis, foreign_dis = FAFDataset.get_travel_dist(datasets_filtered, self.get_shipping_dest(), self.get_shipping_org())
-                
-                self.travel_dist = foreign_dis
-                self.previous.set_travel_dist(domestic_dis, travel_dist_unit, return_trip_factor)
+        
+        elif travel_dist is None:
+            transport_scenario = self.get_transport_scenario()
+            if isinstance(transport_scenario, str):
+                if transport_scenario in ["Local", "Regional", "Regional_c", "National", "None", "Known_us", None]:
+                    pass
+                    # TODO: set travel distnace of the associated domestic links to zero
+                elif transport_scenario in ["North_america", "Global", "Known"]:
+                    sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
+                    #TODO: revisit the management of the foreign travel destination and domestic travel origin
+                    datasets_filtered = FAFDataset.filter_datasets(sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.get_next().get_mode(), self.get_mode(), transport_scenario)
+                    domestic_dis, foreign_dis = FAFDataset.get_travel_dist(datasets_filtered, self.get_shipping_dest(), self.get_shipping_org(), self.get_mode())
+                    
+                    self.travel_dist = foreign_dis
+                    self.get_next().set_travel_dist(domestic_dis, travel_dist_unit, return_trip_factor)                       
+                else:
+                    raise ValueError("Transport scenario not recognized.")
             else:
-                raise ValueError(f"Invalid travel distance: {travel_dist}. Must be a float, int, or a valid scenario string.")
+                raise ValueError("Either travel distance or transport scenario must be provided.")
+
         else:
-            raise TypeError(f"Invalid type for travel distance: {type(travel_dist)}. Must be a float, int, or a valid scenario string.")
+            raise ValueError("Either travel distance or transport scenario must be provided.")
         
         self.travel_dist_unit = travel_dist_unit
         self.return_trip_factor = return_trip_factor
@@ -143,52 +199,28 @@ class ForeignLink(LogisticLink):
 
         self.return_trip_factor = 1.5 if dist * convertion_factor < 500 else 1.0
 
-        return self.return_trip_factor
+        return self.return_trip_factor    
 
-    def get_mode(self, mode_type:(str) = "domestic"):
-        """ Retrieve the transportation mode of the transportation link.
-
-        Returns
-        -------
-        TransportMode obj.
-            The domestic transportation mode of the transportation link.
-        """
-        return self.mode[mode_type] if mode_type in self.mode else None
-    
-    # ================================
-    # CFS Methods
-    # ================================
-    # TODO: remove self from these methods
 
 class FAFDataset:
     """ A class to filter the FAF dataset based on the given parameters.
     """
     @staticmethod
-    def filter_datasets(link, sctg=None, destination=None, origin=None, mode_domestic=None, mode_foreign=None, scenario=None):
-
-        faf = FAFDataset.filter_faf(link, sctg, destination, origin, mode_foreign, mode_domestic, scenario)
-        if faf[1] == True:
-            raise LookupError("An error occurred while filtering the FAF data, please check the data and try again.")
-        else:
-            faf = faf[0]
-
+    def filter_datasets(sctg=None, destination=None, origin=None, mode_domestic=None, mode_foreign=None, scenario=None):
+        """ Filter all datasets corresponding to foreign travel.
+        """
+        faf = FAFDataset.filter_faf(sctg, destination, origin, mode_foreign, mode_domestic, scenario)
         marine = FAFDataset.filter_marine(destination, origin, scenario)
-        if marine[1] == True:
-            raise LookupError(" An error occurred while filtering the Marine data, please check the data and try again.")
-        else:
-            marine = marine[0]
-
         cfaf = FAFDataset.filter_cfaf(sctg)
 
         return faf, marine, cfaf
     
     @staticmethod
-    def filter_faf(link, sctg=None, destination=None, origin=None, foreign_mode=None, domestic_mode=None, scenario=None):
+    def filter_faf(sctg=None, destination=None, origin=None, foreign_mode=None, domestic_mode=None, scenario=None):
+        """ Filter FAF data"""
 
-        cfs_state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
-        faf  = DataImporter.csv_to_pandas(r"data\transportation_faf_dataset.csv")
-        Faf_city_representation = DataImporter.json_to_dict(config['file_paths']['location']['FAF_CITY_REPRESENTATION'])
-        
+        faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
+                
         # SCTG
         if sctg is not None:
             faf = faf[faf["sctg2"] == sctg]
@@ -197,8 +229,8 @@ class FAFDataset:
         
         # Destination
         if isinstance(destination, Location):
-            faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
-            if faf.empty:
+            faf_filtered = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
+            if faf_filtered.empty:
                 faf_region_list = faf["dms_dest"].tolist()
                 cfs_state_list = []
                 for region in faf_region_list:
@@ -212,9 +244,8 @@ class FAFDataset:
         
         # Origin
         if isinstance(origin, Location):
-            faf = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
-            
-            if faf.empty:
+            faf_filtered = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
+            if faf_filtered.empty: # TODO: if origin is foreign, the latter is redundant
                 faf_region_list = faf["fr_orig"].tolist()
                 cfs_state_list = []
                 for region in faf_region_list:
@@ -226,43 +257,19 @@ class FAFDataset:
                 log(f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
             faf = faf_filtered
 
-        else: # TODO: move to set origin method
-            
-            if scenario == "North_america":
-                faf = faf[faf["fr_orig"].isin([801, 802])]
-                faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
-                link.set_shipping_dest(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
-            elif scenario == "Global":
-                faf = faf[faf["fr_orig"].isin([801, 802]) == False]
-                faf = faf[faf["fr_orig"] == faf["fr_orig"].mode()[0]]
-                link.set_shipping_dest(Faf_city_representation[str(int(faf["fr_orig"].mode()[0]))])
-        
-
         # Mode
-        if foreign_mode is not None:
-            faf = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
-            if faf.empty:
-                link.mode_foreign = TransportMode.new("Ocean", link.link.get_mode_foreign_efficiency(), link.link.get_mode_foreign_fuel_type())
-                faf = faf[faf["fr_inmode"] == link.mode_foreign.get_faf_mode()]
-                print ("No datapoint for selected mode of transportation.Using Ocean as the default mode of transportation instead.")
-        else: # TODO: move to set mode method
-            link.mode_foreign = TransportMode.new("Ocean", link.link.get_mode_foreign_efficiency(), link.link.get_mode_foreign_fuel_type())
-            faf = faf[faf["fr_inmode"] == link.mode_foreign.get_faf_mode()]
-            if faf.empty:
-                raise ValueError("no data for Ocean as a mode in FAF561 dataset")
-        
+        if isinstance(foreign_mode, TransportMode):
+            faf_filtered = faf[faf["fr_inmode"] == foreign_mode.get_faf_mode()]
+            if faf_filtered.empty:
+                raise ValueError("Transportation mode in CFS dataset")
+            faf = faf_filtered
         
         # Domestic Mode
         if domestic_mode is not None:
-            faf = faf[faf["dms_mode"] == domestic_mode.get_faf_mode()]
-            if faf.empty:
-                raise ValueError("no data for the selected domestic mode in FAF561 dataset")
-        else:
-            link.mode_domestic = TransportMode.new("Truck",link.link.get_mode_domestic_efficiency(), link.link.get_mode_domestic_fuel_type())
-            faf = faf[faf["dms_mode"] == link.mode_domestic.get_faf_mode()]
-            if faf.empty:
-                raise ValueError("no data for Truck as a domestic mode in FAF561 dataset")
-
+            faf_filtered = faf[faf["dms_mode"] == domestic_mode.get_faf_mode()]
+            if faf_filtered.empty:
+                raise ValueError("Transportation mode in CFS dataset")
+            faf = faf_filtered
 
         return faf
 
@@ -326,84 +333,113 @@ class FAFDataset:
         return region
 
     @staticmethod
-    def filter_cfaf(sctg=None):
+    def filter_cfaf(sctg):
+        """ Filter Canadian Freight Analysis Framework (CFAF) dataset by material SCTG code.
+        
+        Parameters
+        ----------
+        sctg : int
+            Two-digit SCTG code of the material.
 
-        cfaf = DataImporter.csv_to_pandas(r"data\transportation_cfaf_dataset.csv")
-        try:
-            if sctg is not None:
-                cfaf = cfaf[cfaf["SCTG_2digits"] == sctg]
-                if cfaf.empty:
-                    raise ValueError("no data for the selected SCTG code in cfaf dataset")
-        except Exception as e:
-            print("Error:", e)
+        Returns
+        -------
+        pandas.DataFrame Obj
+            Filtered CFAF dataset.
+        """
+        cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_DATA_PATH'])
+        if isinstance(sctg, int):
+            cfaf = cfaf[cfaf["SCTG_2digits"] == sctg]
+            if cfaf.empty:
+                raise ValueError("Material not found in cfaf dataset")
 
         return cfaf
 
     @staticmethod
     def filter_marine(destination=None, origin=None, scenario=None):
+        """ Filter marine data.
         
-        marine = DataImporter.csv_to_pandas(r"data\transportation_podlca_marine.csv")
-        failed = False
-        # Destination
-        try:
-            if destination is not None:
-                marine = marine[marine["Coast"] == destination.us_coast]
-                if marine.empty:
-                    raise ValueError("no data for the selected destination in Marine dataset")
-            else:
-                pass
+        Parameters
+        ----------
+        destination : Location Obj.
+            Final destination of the product.
+        origin : Location Obj.
+            Origin of the travel.
+        scenario : str
+            Transportation scenario considered.
 
-        except Exception as e:
-            print("Error:", e)
-            failed = True
+        Returns
+        -------
+        pandas.DataFrame Obj
+            Filtered marine dataset.
+        """
+        marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH'])
+        
+        # Destination
+        if isinstance(destination, Location):
+            marine = marine[marine["Coast"] == destination.us_coast]
+            if marine.empty:
+                raise ValueError("no data for the selected destination in Marine dataset")
+        else:
+            pass
 
         # Origin
-        try:
-            if origin is not None:
-                marine = marine[marine["Region"] == origin.get_marine_region()]
-                if marine.empty:
-                    raise ValueError("no data for the selected origin in Marine dataset")
-                
+        if isinstance(origin, Location):
+            marine = marine[marine["Region"] == origin.get_marine_region()]
+            if marine.empty:
+                raise ValueError("no data for the selected origin in Marine dataset")
+        else:
+            if scenario == "North_america":
+                marine = marine[marine["Region"].isin(["Canada", "Mexico"])]
+            elif scenario == "Global":
+                marine = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]
             else:
-                if scenario == "North_america":
-                    marine = marine[marine["Region"].isin(["Canada", "Mexico"])]
-                    marine = marine[marine["Region"] == origin.get_marine_region()]
-
-                elif scenario == "Global":
-                    marine = marine[marine["Region"].isin(["Canada", "Mexico"]) == False]
-                    marine = marine[marine["Region"] == origin.get_marine_region()]
+                raise NotImplementedError
         
-        except Exception as e:
-            print("Error:", e)
-
-        return marine, failed
+        return marine
     
     @staticmethod
-    def get_travel_dist(link, fltered_datasets, shipping_dest, shipping_org):
+    def get_travel_dist(fltered_datasets, destination, origin, mode):
+        """ Get the average travel distance based on shipping destination, origin, and mode of transportation.
+        
+        Parameters
+        ----------
+        filtered_datasets : tuple
+            Filtered datasets as pandas dataframes.
+        destination : Location Obj.
+            Final destination of the product.
+        origin : Location Obj.
+            Origin of the travel.
+        mode : str
+            Transportation mode
 
+        Returns
+        -------
+        float
+            Travel distance of the domestic leg of travel.
+        float
+            Travel distance of the foreign leg of travel.
+        """
         faf, marine, cfaf = fltered_datasets
 
-        if link.mode_foreign.get_name() == "Truck":
+        if mode.get_name() == "Truck":
             domestic_dis = faf["avr_dom_dist_km"].mean()
             foreign_dis = 200
-
-        elif link.mode_foreign.get_name() == "Rail":
-            
+        elif mode.get_name() == "Rail":
             domestic_dis = 0
             foreign_dis = cfaf["Average_Distance_per_Shipment"].mean()
-
-        elif link.mode_foreign.get_name() in ("Ocean", "Ocean"):
-            link.domestic_dis = faf["avr_dom_dist_km"].mean()
-            link.foreign_dis = marine["Distance_km"].mean()
-        
-        elif link.mode_foreign.get_name() == "Air":
-            dms_coordinates = shipping_dest.get_cordinates()
-            fr_coordinates = shipping_org.get_cordinates()
+        elif mode.get_name() in ("Ocean", "Ocean"):
+            domestic_dis = faf["avr_dom_dist_km"].mean()
+            foreign_dis = marine["Distance_km"].mean()
+        elif mode.get_name() == "Air":
+            dms_coordinates = destination.get_cordinates()
+            fr_coordinates = origin.get_cordinates()
+            domestic_dis = 0.0
             foreign_dis = geodesic(dms_coordinates, fr_coordinates).km
         else:
-            raise ValueError(f"Invalid mode of transportation: {link.mode_foreign.get_name()}. Must be one of 'Truck', 'Rail', 'Ocean', or 'Air'.")
+            raise ValueError(f"Invalid mode of transportation: {mode.get_name()}. Must be one of 'Truck', 'Rail', 'Ocean', or 'Air'.")
 
         return domestic_dis, foreign_dis
+
 
 if __name__ == '__main__':
     pass

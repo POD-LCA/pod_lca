@@ -10,6 +10,7 @@ from geopy.distance import geodesic
 
 from ...utilities import config
 from ...utilities import DataImporter
+from ...utilities import log
 
 
 class Location:
@@ -132,7 +133,8 @@ class Location:
                 location.set_city(location_data)
                 location.set_state(location_data)
                 location.set_cfs_area()
-                location.set_faf_foreign_region(string)
+                location.set_faf_domestic_region()
+                location.set_us_coast()
 
             except Exception as e:
                 print(f"Error retrieving location data: {e}")
@@ -174,7 +176,7 @@ class Location:
             self.regionality = 'National'
         else:
             self.regionality = None
-            # raise ValueError("Regionality not recognized")
+            log("Regionality not set", "Warn")
 
         return self
 
@@ -269,28 +271,20 @@ class Location:
         return self
     
     def set_cfs_area(self):
-        """ Set the country of the location.
+        """ Set the state code from the COmodity Flow Survey (CFS).
         """    
-        try:
+        cfs_area = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_STATE_CODE'])
+        state = self.get_state()
 
-            cfs_area = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH'])
-            state = self.get_state()
-
-            if state:
-                if state in cfs_area["State"].values:
-                    self.cfs_area = cfs_area[cfs_area['State'] == state].iloc[0, 2]
-                elif state in cfs_area["State_Initial"].values:
-                    self.cfs_area = cfs_area[cfs_area['State_Initial'] == state].iloc[0, 2]
-                else:
-                    #print (f"State {state} not found in CFS data")
-                    self.cfs_area = None
+        if state:
+            if state in cfs_area["State"].values:
+                self.cfs_area = cfs_area[cfs_area['State'] == state].iloc[0, 2]
+            elif state in cfs_area["State_Initial"].values:
+                self.cfs_area = cfs_area[cfs_area['State_Initial'] == state].iloc[0, 2]
             else:
+                log(f"State {state} not found in CFS data", "Warn")
                 self.cfs_area = None
-
-            return self.cfs_area
-
-        except Exception as e:
-            print (f"Error in set CFS area: {e}")
+        else:
             self.cfs_area = None
 
         return self
@@ -298,43 +292,32 @@ class Location:
     def set_faf_foreign_region(self):
         """Set the FAF region (foreign) of the location.
         """
-        try:
-            country = self.get_country()
-            faf_foreign_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
+        country = self.get_country()
+        faf_foreign_region_country = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION_COUNTRY'])
 
-            for key, value in faf_foreign_region.items():
-                if country in value:
-                    self.faf_foreign = key
-
-                    return self
-
-            #print(f"Country '{country}' not found in any FAF region.")
-            self.faf_foreign = None
-
-        except Exception as e:
-            print(f"Error in set FAF foreign region: {e}")
-            self.faf_foreign = None
-
+        for key, value in faf_foreign_region_country.items():
+            if country in value:
+                self.faf_foreign = key
+                return self
+            
+        log("FAF foreign region not identified", "Warn")
+        self.faf_foreign = None
+        return self
 
     def set_faf_domestic_region(self):
         """ Set the FAF region (domestic) of the location.
         """
-        try:
-            faf_domestic_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
-            state = self.get_state()
+        faf_domestic_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
+        state = self.get_state()
 
-            for key,value in faf_domestic_region.items():
-                if state in key:
-                    self.faf_domestic = value
-                    return self
-            #print(f"State '{state}' not found in any FAF region.")
-            self.faf_domestic = None
+        for key,value in faf_domestic_region.items():
+            if state in key:
+                self.faf_domestic = value
+                return self
+        log(f"State '{state}' not found in any FAF region.", "Warn")
+        self.faf_domestic = None
+        return self
 
-        except Exception as e:
-            print (f"Error in set FAF domestic region: {e}")
-            self.faf_domestic = None
-        
-    
     def set_ferc_region(self):
         """ Set the Federal Energy Regulatory Commission (FERC) Region.
         """
@@ -602,7 +585,7 @@ class Location:
             The code of the closest state.
         """
 
-        state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_DATA_PATH']) 
+        state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_STATE_CODE']) 
 
         lat = state_code[state_code["Code"].isin(states_lst)]["lat"].values
         lon = state_code[state_code["Code"].isin(states_lst)]["lon"].values
@@ -676,5 +659,3 @@ if __name__ == '__main__':
     print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
     print (f"Marine Region: {location_obj.get_marine_region()}")
     print (f"US Coast: {location_obj.us_coast}")
-
-    # TODO: try removing try/except blocks

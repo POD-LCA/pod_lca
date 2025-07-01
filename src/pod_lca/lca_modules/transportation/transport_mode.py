@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from ..impacts import Impacts
 from ...utilities import DataImporter
+from ...units import KILOGRAM
 
 # TODO: Make this mappings JSON and set the file paths in config
 cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [7, 8, 9, 10, 101 ], "Air": [11]}
@@ -37,6 +38,7 @@ class TransportMode:
         self.mode_name = None
         self.efficiency = None
         self.fuel_type = None
+        self.declared_unit = KILOGRAM
         self.unit_impact = None
         self.unit_emissions = None # TODO: add emissions
         self.electricity_consumption = None

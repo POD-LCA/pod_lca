@@ -59,7 +59,6 @@ def run_test_files(test_file_path, output_csv_path):
         product.set_qty(qty)
         product.set_unit(UNITS_MAP[qty_unit])
 
-        
         mode = {'domestic': mode_domestic,
                 'foreign': mode_foreign} if travel_dist in ["North_america", "Global", "Known"] else mode_domestic
         mode_fuel_type = {'domestic': mode_domestic_fuel_type,
@@ -85,17 +84,8 @@ def run_test_files(test_file_path, output_csv_path):
                         mode,
                         mode_fuel_type, 
                         mode_efficiency)
-        # Build project
-        # truck_1 = project.add_link(link_name="Local_impact", shipping_dest=shipping_dest, shipping_org=shipping_org,
-        #                            material=material, qty=qty, qty_unit=qty_unit, travel_dist=travel_dist,
-        #                            travel_dist_unit=travel_dist_unit, return_trip_factor=return_trip_factor,
-        #                            mode_domestic=mode_domestic, mode_domestic_fuel_type=mode_domestic_fuel_type,
-        #                            mode_domestic_efficiency=mode_domestic_efficiency,
-        #                            mode_foreign=mode_foreign, mode_foreign_fuel_type=mode_foreign_fuel_type,
-        #                            mode_foreign_efficiency=mode_foreign_efficiency)
 
-        # truck_1.compute_impact()
-        print(project.get_impacts())
+        print(project.get_impacts(product))
 
         # if isinstance(, Domestic)
         distances = {}
@@ -111,39 +101,7 @@ def run_test_files(test_file_path, output_csv_path):
                 foreign_mode_impact = link.get_mode().get_unit_impacts()
                 distances['foreign'] = link.get_travel_dist()
 
-        # try:
-        #     new_domestic_mode = truck_1.get_mode_domestic().get_name()
-        # except Exception:
-        #     new_domestic_mode = None
-
-        # try:
-        #     new_foreign_mode = truck_1.get_mode_foreign().get_name()
-        # except Exception:
-        #     new_foreign_mode = None
-
-        # try:
-        #     new_destination = truck_1.get_shipping_dest().get_state()
-        # except Exception:
-        #     new_destination = None
-
-        # try:
-        #     new_shipping_org = truck_1.get_shipping_org().get_state()
-        # except Exception:
-        #     new_shipping_org = None
-
-        # try:
-        #     return_trip_factor = truck_1.get_return_trip_factor()
-        # except Exception:
-        #     return_trip_factor = None
-
-        # try:
-        #     electricity = truck_1.get_electricity_consumption()
-        # except Exception:
-        #     electricity = None
-
-        # Combine input and output into one row
         result_row = row.to_dict()
-        
         if domestic_impact is not None:
             domestic_impact_prefixed = {f"Domestic_{k}": v for k, v in domestic_impact.get_record_dict().items()}
             domestic_mode_impact_prefixed = {f"Domestic_mode_{k}": v for k, v in domestic_mode_impact.get_record_dict().items()} if domestic_mode_impact else {f"Domestic_mode_{k}": None for k, v in foreign_mode_impact.get_record_dict().items()}
@@ -159,14 +117,6 @@ def run_test_files(test_file_path, output_csv_path):
             "Domestic_distance_km": distances.get("Domestic", None),
             "Foreign_distance_km": distances.get("Foreign", None)
         })
-
-        # result_row.update({"New_destination": new_destination})
-        # result_row.update({"New_shipping_org": new_shipping_org})
-
-        # result_row.update({"Return_trip_factor": return_trip_factor})
-        # result_row.update({"Electricity": electricity})
-        # result_row.update({"New_domestic_mode": new_domestic_mode})
-        # result_row.update({"New_foreign_mode": new_foreign_mode})
 
         all_results.append(result_row)
 
@@ -190,6 +140,6 @@ if __name__ == "__main__":
     the input files should be in the form of a CSV file.
     """
 
-    test_file_path = r"tests\transportation_QC_5nd_TEMP.csv"
+    test_file_path = r"tests\transportation_QC_5nd.csv"
     output_csv_path = r"tests\transportation_test_report_TEMP.csv"
     run_test_files(test_file_path, output_csv_path)

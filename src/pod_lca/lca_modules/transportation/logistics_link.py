@@ -97,8 +97,6 @@ class LogisticLink:
         link.set_project(project)
         if name is not None:
             link.set_name(name)
-        else:
-            link.set_name(f"Link_{len(project.links)}")
 
         return link
 
@@ -129,7 +127,7 @@ class LogisticLink:
 
         return self
 
-    def set_material(self, material:(str)):
+    def set_material(self, material):
         """ Set the quantity of the transportation link.
 
         Parameters
@@ -137,7 +135,9 @@ class LogisticLink:
         material : Master Obj.
             Material name of the transportation link.
         """
-        self.material = material    
+        self.material = material
+        if isinstance(self.get_next(), LogisticLink):
+            self.get_next().set_material(material)  
 
         return self
     
@@ -183,23 +183,26 @@ class LogisticLink:
 
         return self
 
-    def set_mode(self, mode:(str) , fuel_type:(str) , efficiency:(str) ):
+    def set_mode(self, mode:(str)=None, fuel_type:(str)=None , efficiency:(str)=None):
         """ Set the transportation mode of the transportation link.
 
         Parameters
         ----------
-        mode : str
+        mode : str or TransportMode Obj
             transportation mode of the transportation link.
         fuel_type : str, optional
             type of fuel used in the transportation mode (default is "Regular").
         efficiency : str, optional
             efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
-        fuel_type = "Regular" if fuel_type is None else fuel_type
-        mode_efficiency = "Median" if efficiency is None else efficiency
-        mode_name = "Truck" if mode is None else mode
+        if isinstance(mode, TransportMode):
+            self.mode = mode
+        else:
+            fuel_type = "Regular" if fuel_type is None else fuel_type
+            mode_efficiency = "Median" if efficiency is None else efficiency
+            mode_name = "Truck" if mode is None else mode
 
-        self.mode = TransportMode.new(mode_name, mode_efficiency, fuel_type)
+            self.mode = TransportMode.new(mode_name, mode_efficiency, fuel_type)
 
         return self
 
@@ -241,6 +244,18 @@ class LogisticLink:
 
         return self
 
+    def set_next(self, next):
+        """ Set the next transportation link for the material.
+
+        Returns
+        -------
+        LogisticLink obj.
+            The next transportation link for the same material.
+        """
+        self.next = next
+        next.previous = self
+
+        return self
     # ================================
     # Getters
     # ================================

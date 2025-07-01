@@ -20,7 +20,7 @@ class DomesticLink(LogisticLink):
     """
     # ================================
     # Setters and Getters
-    # ================================
+    # ================================  
     def set_travel_dist(self, 
                         travel_dist, 
                         travel_dist_unit:(str) = KILOMETER, 
@@ -60,10 +60,10 @@ class DomesticLink(LogisticLink):
                 # TODO: create foreign link if it does not exist
                 # TODO: update the lengths
             else:
-                raise ValueError(f"Transport scenario not recognized.")
+                raise ValueError("Transport scenario not recognized.")
             
         else:
-            raise TypeError(f"Either travel distance or transport scenario must be provided.")
+            raise ValueError("Either travel distance or transport scenario must be provided.")
         
         self.return_trip_factor = return_trip_factor
 
