@@ -35,8 +35,6 @@ class EOLImpactsDatabase(ImpactsDatabase):
         ----------
         name : str
             Name of the database.
-        file_path : str
-            Location of the impact categories json file.
         
         Returns
         -------

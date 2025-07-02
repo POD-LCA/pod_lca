@@ -5,13 +5,13 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
+from ..impacts import Emissions
 from ..impacts import Impacts
-from ...utilities import DataImporter
 from ...units import KILOGRAM
+from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import log
 
-# TODO: Make this mappings JSON and set the file paths in config
-cfs_mapping = {"Truck": [3, 4, 5] , "Rail": [6], "Barge": [7, 8, 9, 10, 101 ], "Air": [11]}
-faf_mapping = {"Truck": 1 , "Rail": 2, "Barge": 3, "Ocean": 3, "Air": 4}
 
 class TransportMode:
     """ Initialize the TransportMode object.
@@ -22,25 +22,27 @@ class TransportMode:
         The name of the transportation mode (e.g., 'Truck', 'Rail').
     efficiency: int
         The efficiency level (e.g., 1, 2, 3).
-    project: ProjectLogisticManager 
-        an object representing the project.
-    impacts: dict, 
-        a dictionary containing the environmental impacts of the transportation mode.
+    fuel_type: str
+        The fuel type used
+    electricity consumption: float
+        Electriciity consumption if an electric vehicle
     limitations: list,
         a list of limitations for the transportation mode.
     faf_mode: int
-        the FAF mode code for the transportation mode.
-    set_impact: method
-        a method to retrieve and update the environmental impacts for the given transportation mode and efficiency.
+        FAF mode code for the transportation mode.
+    cfs_mode: int
+        CFS mode code for the transportation mode.
     """
 
     def __init__(self):
+        self.parent = None
         self.mode_name = None
         self.efficiency = None
         self.fuel_type = None
-        self.declared_unit = KILOGRAM
-        self.unit_impact = None
-        self.unit_emissions = None # TODO: add emissions
+        self.unit_impacts = None
+        self.unit_emissions = None
+        self.inventories_declared_unit = None
+        self.inventories_declared_qty = None
         self.electricity_consumption = None
         self.limitations = []
         self.faf_mode = None
@@ -81,15 +83,26 @@ class TransportMode:
         mode.set_efficiency(efficiency)
         mode.set_fuel_type(fuel_type)
 
-        mode.set_impact()
-        mode.set_faf_mode()
-        mode.set_cfs_mode()
+        mode.unit_impacts = Impacts.from_parent(mode)
+        mode.unit_emissions = Emissions.from_parent(mode)
 
         return mode
 
     # ================================
     # Setters
     # ================================
+    def set_parent(self, parent):
+        """ Set the parent transportation link.
+        
+        Parameters
+        ----------
+        parent : LogisticLink Obj.
+            The transportation link to which this mode belong.
+        """
+        self.parent = parent
+
+        return self
+    
     def set_name(self, mode_name:(str)):
         """ Set the name of the transportation mode.
 
@@ -99,6 +112,7 @@ class TransportMode:
             The name of the transportation mode.
         """
         self.mode_name = mode_name
+        self.set_inventory_records()
 
         return self
 
@@ -111,6 +125,7 @@ class TransportMode:
             the efficiency level (e.g., 'Low', 'Medium', 'High').
         """
         self.efficiency = efficiency
+        self.set_inventory_records()
 
         return self
 
@@ -123,60 +138,45 @@ class TransportMode:
             The type of fuel used (e.g., 'Regular', 'Premium').
         """
         self.fuel_type = fuel_type
+        self.set_inventory_records()
 
         return self
 
     def set_faf_mode(self):
         """ Set the FAF mode code for the transportation mode.
         """
-        if self.mode_name in faf_mapping:
-            self.faf_mode = faf_mapping[self.mode_name]
+        faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
+        if self.mode_name in faf_modes_mapping:
+            self.faf_mode = faf_modes_mapping[self.mode_name]
         else:
-            print(f"Warning: FAF mode mapping not found for {self.mode_name}.")
+            log(f"FAF mode mapping failed.", "Warn")
 
         return self
 
     def set_cfs_mode(self):
         """ Set the CFS mode code for the transportation mode.
         """
-        if self.mode_name in cfs_mapping:
-            self.cfs_mode = cfs_mapping[self.mode_name]
+        cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
+        if self.mode_name in cfs_modes_mapping:
+            self.cfs_mode = cfs_modes_mapping[self.mode_name]
         else:
-            print(f"Warning: CFS mode mapping not found for {self.mode_name}.")
+            log(f"CFS mode mapping failed.", "Warn")
 
         return self
-
-    def set_impact(self):
-        """ Retrieve and update the environmental impacts for the given transportation mode and efficiency.
-        """
-        #TODO: create transprtation database
-        emission_data = DataImporter.csv_to_pandas(r"data\transportation_podlca_emission.csv")
-        filtered_data = emission_data[(emission_data["mode_name"] == self.mode_name) &
-            (emission_data["eff"] == self.efficiency) & (emission_data["fuel"] == self.fuel_type) ]
-
-        self.unit_impact = Impacts.from_parent(self)
-        # If data is found, update the impacts
-        if not filtered_data.empty:
-            row = filtered_data.iloc[0]  # Get the first (and only) matching row
-
-            self.electricity_consumption = row["Electricity consumtion (kWh)"]
-
-            impacts = {
-                "GWP": row["GWP"],
-                "AP": row["AP"],
-                "EP": row["EP"],
-                "ODP": row["ODP"],
-                "POCP": row["POCP"]
-            }
-
-            self.unit_impact.update_qty(impacts)
-        else:
-
-            print(f"No matching data found for mode: {self.mode_name} and efficiency: {self.efficiency}.")
 
     # ================================
     # Getters
     # ================================
+    def get_parent(self):
+        """ Set the parent transportation link.
+        
+        Returns
+        ----------
+        LogisticLink Obj.
+            The transportation link to which this mode belong.
+        """
+        return self.parent
+    
     def get_name (self):
         """ Retrieve the name of the transportation mode.
         """
@@ -187,19 +187,20 @@ class TransportMode:
         """
         return self.efficiency
 
-    def get_unit_impacts (self):
-        """ Retrieve the impacts of the transportation mode.
-        """
-        return self.unit_impact
-
     def get_faf_mode (self):
         """ Retrieve the FAF mode code of the transportation mode.
         """
+        if self.faf_mode is None:
+            self.set_faf_mode()
+
         return self.faf_mode
 
     def get_cfs_mode (self):
         """ Retrieve the CFS mode code of the transportation mode.
         """
+        if self.cfs_mode is None:
+            self.set_cfs_mode()
+
         return self.cfs_mode
 
     def get_fuel_type (self):
@@ -211,6 +212,49 @@ class TransportMode:
         """ Retrieve the electricity consumption of the transportation mode.
         """
         return self.electricity_consumption
+    
+    def get_unit_impacts(self):
+        """ Get unit impacts from the transportation mode.
+        """
+        return self.unit_impacts
+    
+    def get_unit_emissions(self):
+        """ Get unit emissions from the transportation mode.
+        """
+        return self.unit_emissions
+    
+    def get_inventories_declared_unit(self):
+        """ Get the declared unit of the transportation mode.
+        """
+        return self.inventories_declared_unit
+    
+    def get_inventories_declared_qty(self):
+        """ Get the declared qty of the transportation mode.
+        """
+        return self.inventories_declared_qty
+            
+    # ================================
+    # Methods
+    # ================================
+    def set_inventory_records(self):
+        """ Set unit impacts of the transportation mode.
+        """
+        if (self.get_name() is not None) and (self.get_fuel_type() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
+
+            database = self.get_parent().get_project().get_database()
+
+            unit_inventories = database.get_data_entry(self)
+            self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
+            self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
+
+            impacts = {key: unit_inventories[key] for key in self.unit_impacts.record_attr_dict}
+            self.unit_impacts.update_qty(impacts)
+
+            emissions = {key: unit_inventories[key] for key in self.unit_emissions.record_attr_dict}
+            self.unit_emissions.update_qty(emissions)
+
+        return self
+
 
 if __name__ == '__main__':
     pass

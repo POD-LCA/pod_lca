@@ -52,6 +52,7 @@ def run_test_files(test_file_path, output_csv_path):
         mode_foreign_efficiency = clean(row["mode_foreign_efficiency"])
 
         project = ProjectLogisticManager.new("Building A")
+        project.set_database(r'data/transportation_podlca_emission.csv')
 
         # TODO: this to happen inside
         product = Master()
@@ -93,11 +94,11 @@ def run_test_files(test_file_path, output_csv_path):
         foreign_impact = None
         for link in project.get_link(product):
             if isinstance(link, DomesticLink):
-                domestic_impact = link.get_impact()
+                domestic_impact = link.get_impacts()
                 domestic_mode_impact = link.get_mode().get_unit_impacts()
                 distances['domestic'] = link.get_travel_dist()
             elif isinstance(link, ForeignLink):
-                foreign_impact = link.get_impact()
+                foreign_impact = link.get_impacts()
                 foreign_mode_impact = link.get_mode().get_unit_impacts()
                 distances['foreign'] = link.get_travel_dist()
 

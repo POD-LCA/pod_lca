@@ -5,8 +5,10 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-from ..transportation import TransportMode
+from ..impacts import Emissions
+from ..impacts import Impacts
 from ..location import Location
+from ..transportation import TransportMode
 from ...units import KILOMETER
 from ...units import MILE
 
@@ -99,6 +101,9 @@ class LogisticLink:
         if name is not None:
             link.set_name(name)
 
+        link.impacts = Impacts.from_parent(link)
+        link.emissions = Emissions.from_parent(link)
+
         return link
 
     # ================================
@@ -161,8 +166,8 @@ class LogisticLink:
 
     def set_travel_dist(self, 
                         travel_dist, 
-                        travel_dist_unit= KILOMETER, 
-                        return_trip_factor:(float) = None):
+                        travel_dist_unit, 
+                        return_trip_factor:(float)=None):
         """ Set the travel distance of the transportation link.
 
         Parameters
@@ -179,7 +184,7 @@ class LogisticLink:
         else:
             raise ValueError("Travel distance must be a number.")
 
-        self.travel_dist_unit = travel_dist_unit
+        self.travel_dist_unit = KILOMETER if travel_dist_unit is None else travel_dist_unit
         self.return_trip_factor = return_trip_factor
 
         return self
@@ -204,6 +209,8 @@ class LogisticLink:
             mode_name = "Truck" if mode is None else mode
 
             self.mode = TransportMode.new(mode_name, mode_efficiency, fuel_type)
+        
+        self.mode.set_parent(self)
 
         return self
 
@@ -367,7 +374,6 @@ class LogisticLink:
         else: # user set value
             return self.return_trip_factor
 
-
     def get_next(self):
         """ Retrieve the next transportation link for the material.
 
@@ -388,7 +394,7 @@ class LogisticLink:
         """
         return self.previous
 
-    def get_impact(self):
+    def get_impacts(self):
         """ Retrieve the impact of the transportation link.
 
         Returns
@@ -396,9 +402,21 @@ class LogisticLink:
         Impacts obj.
             The impact of the transportation link.
         """
-        self.impact = self.get_material().get_qty() * self.get_travel_dist() * self.get_return_trip_factor() * self.get_mode().get_unit_impacts()  # TODO: add unit_conversion
+        self.update_inventory_records()
 
-        return self.impact 
+        return self.impacts 
+    
+    def get_emissions(self):
+        """ Retrieve the emissions of the transportation link.
+
+        Returns
+        -------
+        Emissionbs obj.
+            The emissions of the transportation link.
+        """
+        self.update_inventory_records()
+
+        return self.emissions 
     
     def get_electricity_consumption(self):
         """ Retrieve the electricity consumption of the transportation link.
@@ -410,8 +428,29 @@ class LogisticLink:
         """
         return self.electricity_consumption
 
-# TODO: unit mapping
-# TODO: transport mode combined with the database manager
+    # ================================
+    # Methods
+    # ================================ 
+    def update_inventory_records(self):
+        """ Compute and update all invetories.
+        """
+        self.get_mode().set_inventory_records()
+
+        inventories_declared_qty = self.get_mode().get_inventories_declared_qty()
+        inventories_declared_unit = self.get_mode().get_inventories_declared_unit()
+        computed_unit = self.get_material().get_unit() * self.get_dist_unit()
+        conversion_factor = computed_unit.get_conversion_factor(inventories_declared_unit)
+
+        if conversion_factor is None:
+            raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
+        
+        impacts = {key: self.get_mode().get_unit_impacts().get_record(key) * conversion_factor * self.get_material().get_qty() * self.get_travel_dist() * self.get_return_trip_factor() / inventories_declared_qty for key in self.impacts.record_attr_dict}
+        self.impacts.update_qty(impacts)
+
+        emissions = {key: self.get_mode().get_unit_emissions().get_record(key) * conversion_factor * self.get_material().get_qty() * self.get_travel_dist() * self.get_return_trip_factor() / inventories_declared_qty for key in self.emissions.record_attr_dict}
+        self.emissions.update_qty(emissions)
+
+        return self
 
 
 if __name__ == '__main__':

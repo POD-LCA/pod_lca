@@ -22,7 +22,7 @@ class DomesticLink(LogisticLink):
     # ================================  
     def set_travel_dist(self, 
                         travel_dist, 
-                        travel_dist_unit:(str) = KILOMETER, 
+                        travel_dist_unit:(str) = None, 
                         return_trip_factor:(float) = None):
         """ Set the travel distance of the transportation link.
 
@@ -35,7 +35,7 @@ class DomesticLink(LogisticLink):
         return_trip_factor : float, optional
             Return trip factor of the transportation link (default is None).
         """
-        self.travel_dist_unit = travel_dist_unit
+        self.travel_dist_unit = KILOMETER if travel_dist_unit is None else travel_dist_unit
 
         if isinstance(travel_dist, (float, int)):
             self.travel_dist = travel_dist
@@ -50,9 +50,6 @@ class DomesticLink(LogisticLink):
                         log(f"Transportation mode not found in CFS dataset. Using default mode 'Truck'.", "Warn")
                         self.set_mode('Truck', self.get_mode().get_fuel_type(), self.get_mode().get_efficiency())
                         self.travel_dist = self.get_distance_from_cfs(transport_scenario)
-
-                if self.get_next() is not None:
-                    self.get_next().set_travel_dist(0, travel_dist_unit, return_trip_factor)
 
             elif transport_scenario in ["North_america", "Global", "Known"]:
                 pass # TODO: changing transportation scenario after creating links---i.e., converting domestic to international
@@ -82,10 +79,10 @@ class DomesticLink(LogisticLink):
         float
             The distance estimate for the specified scenario.
         """
-        convertion_factor = self.get_dist_unit().get_conversion_factor(KILOMETER)
+        conversion_factor = self.get_dist_unit().get_conversion_factor(KILOMETER)
         sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
         cfs_filtered = CFSDataset.filter_datasets(sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.get_mode())
-        travel_dist = CFSDataset.get_distance_estimate(cfs_filtered, transport_scenario) * convertion_factor
+        travel_dist = CFSDataset.get_distance_estimate(cfs_filtered, transport_scenario) * conversion_factor
 
         return travel_dist
 

@@ -5,12 +5,13 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-import gc
 import pickle
 
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..impacts import TranportationModeImpactsDatabase
 from ..transportation import LogisticLink, ForeignLink, DomesticLink
+from ...units import KILOMETER
 
 
 class ProjectLogisticManager:
@@ -20,13 +21,16 @@ class ProjectLogisticManager:
     ----------
     name : str
         name of the project.
-    links : list. # TODO: consider changing to a dictionary of goods and their links
-        list of links.
+    goods_links_map : dict
+        Dictionary mapping products to their corresponding transportation links.
+    mode_impact_database : TranportationModeImpactsDatabase Obj
+        Database containing unit impacts for transportation modes.
     """
 
     def __init__(self):
         self.name = None
         self.goods_links_map = {}
+        self.mode_impact_database = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
@@ -59,7 +63,7 @@ class ProjectLogisticManager:
         return new_project  
 
     # ================================
-    # Setters and Getters
+    # Setters
     # ================================
     def set_name(self, name:(str)):
         """ Set the name of the project.
@@ -71,6 +75,25 @@ class ProjectLogisticManager:
         """
         self.name = name
 
+        return self
+    
+    def set_database(self, database):
+        """ Set mode impact database used in the project.
+        
+        Parameters
+        ----------
+        database : TranportationModeImpactsDatabase Obj or str
+            Impact database created or filepath to the corresponding csv file containing impact data.
+        """
+        if isinstance(database, TranportationModeImpactsDatabase):
+            self.mode_impact_database = database
+        elif isinstance(database, str):
+            transport_impact_database = TranportationModeImpactsDatabase.new("mode impact database")
+            transport_impact_database.set_data(database)
+            self.set_database(transport_impact_database)
+        else:
+            raise TypeError("Database input not recognized")
+        
         return self
 
     def set_project_origin(self, origin:(str)):
@@ -97,6 +120,9 @@ class ProjectLogisticManager:
             link.set_shipping_dest(destination)
         # TODO consider having a project level variable for origin
 
+    # ================================
+    # Setters
+    # ================================
     def get_name(self):
         """ Retrieve the name of the project.
 
@@ -138,6 +164,16 @@ class ProjectLogisticManager:
         """
         return list(self.goods_links_map.keys())
 
+    def get_database(self):
+        """ Retrieve the transportation mode impact database.
+        
+        Returns
+        -------
+        TranportationModeImpactsDatabase Obj.
+            Transportation mode impact database.
+        """
+        return self.mode_impact_database
+    
     def get_impacts(self, product=None):
         """ Retrieve the impacts of the project.
 
@@ -146,11 +182,9 @@ class ProjectLogisticManager:
         Impacts Obj.
             Impacts of the project.
         """
-        
         if product is None:
             impact = Impacts.from_parent(self)
             for link in self.get_links():
-                # link.update_inventory_records() # TODO: rename the compute_impact method to update_inventory_records
                 impact += link.get_impact()
 
             return impact
@@ -161,8 +195,7 @@ class ProjectLogisticManager:
             
             impact = Impacts.from_parent(self)
             for link in self.goods_links_map[product]:
-                # link.update_inventory_records() # TODO: rename the compute_impact method to update_inventory_records
-                impact += link.get_impact()
+                impact += link.get_impacts()
 
             return impact
 
@@ -188,7 +221,7 @@ class ProjectLogisticManager:
                   shipping_dest, shipping_org,
                   transport_scenario:(str) = None,
                   travel_dist = None,
-                  travel_dist_unit:(str) = "km", 
+                  travel_dist_unit:(str) = KILOMETER, 
                   return_trip_factor:(float) = None, 
                   mode:(str) = None,
                   mode_fuel_type:(str) = "Regular", 

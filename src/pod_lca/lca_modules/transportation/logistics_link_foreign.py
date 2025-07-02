@@ -71,8 +71,9 @@ class ForeignLink(LogisticLink):
                 raise ValueError("Transport fuel type not recognized.")
             
             self.mode = TransportMode.new(foreign_mode_name, foreign_mode_effciency, foreign_mode_fuel_type)
-
+            
             domestic_mode =TransportMode.new(domestic_mode_name, domestic_mode_efficiency, domestic_mode_fuel_type)
+            
             if isinstance(self.get_next(), DomesticLink):
                 self.get_next().set_mode(domestic_mode)
             else:
@@ -82,7 +83,9 @@ class ForeignLink(LogisticLink):
 
         else:
             raise TypeError(f"Invalid type for mode: {type(mode)}. Must be a str or dict.")
-            
+
+        self.mode.set_parent(self)
+
         return self
     
     def set_shipping_org(self, shipping_org:(str)):
@@ -127,7 +130,7 @@ class ForeignLink(LogisticLink):
      
     def set_travel_dist(self, 
                         travel_dist, 
-                        travel_dist_unit:(str) = KILOMETER, 
+                        travel_dist_unit=None, 
                         return_trip_factor:(float) = None):
         """ Set the travel distance of the transportation link.
 
@@ -140,6 +143,8 @@ class ForeignLink(LogisticLink):
         return_trip_factor : float, optional
             Return trip factor of the transportation link (default is None).
         """
+        self.travel_dist_unit = KILOMETER if travel_dist_unit is None else travel_dist_unit
+        
         if isinstance(travel_dist, (float, int)):
             self.travel_dist = travel_dist
         
@@ -150,11 +155,7 @@ class ForeignLink(LogisticLink):
                     pass
                     # TODO: set travel distnace of the associated domestic links to zero
                 elif transport_scenario in ["North_america", "Global", "Known"]:
-                    sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
-                    #TODO: revisit the management of the foreign travel destination and domestic travel origin
-                    datasets_filtered = FAFDataset.filter_datasets(sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.get_next().get_mode(), self.get_mode(), transport_scenario)
-                    domestic_dis, foreign_dis = FAFDataset.get_travel_dist(datasets_filtered, self.get_shipping_dest(), self.get_shipping_org(), self.get_mode().get_name())
-                    
+                    domestic_dis, foreign_dis = self.get_distance_from_datasets(transport_scenario)
                     self.travel_dist = foreign_dis
                     self.get_next().set_travel_dist(domestic_dis, travel_dist_unit, return_trip_factor)                       
                 else:
@@ -165,11 +166,33 @@ class ForeignLink(LogisticLink):
         else:
             raise ValueError("Either travel distance or transport scenario must be provided.")
         
-        self.travel_dist_unit = travel_dist_unit
         self.return_trip_factor = return_trip_factor
 
         return self
 
+    # ================================
+    # Dataset Methods
+    # ================================
+    def get_distance_from_datasets(self, transport_scenario):
+        """ Get the average distance from the CFS dataset based on the scenario.
+
+        Parameters
+        ----------
+        scenario : str
+            The scenario to filter the distances by.
+
+        Returns
+        -------
+        float
+            The distance estimate for the specified scenario.
+        """
+        conversion_factor = self.get_dist_unit().get_conversion_factor(KILOMETER)
+
+        sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
+        datasets_filtered = FAFDataset.filter_datasets(sctg_code, self.get_shipping_dest(), self.get_shipping_org(), self.get_next().get_mode(), self.get_mode(), transport_scenario)
+        domestic_dis, foreign_dis = FAFDataset.get_travel_dist(datasets_filtered, self.get_shipping_dest(), self.get_shipping_org(), self.get_mode().get_name())
+
+        return domestic_dis * conversion_factor, foreign_dis * conversion_factor
 
 class FAFDataset:
     """ A class to filter the FAF dataset based on the given parameters.
@@ -372,7 +395,8 @@ class FAFDataset:
         elif mode == "Rail":
             domestic_dis = 0
             foreign_dis = cfaf["Average_Distance_per_Shipment"].mean()
-        elif mode in ("Ocean", "Ocean"):
+        elif mode == "Ocean":
+            #TODO: revisit the management of the foreign travel destination and domestic travel origin
             domestic_dis = faf["avr_dom_dist_km"].mean()
             foreign_dis = marine["Distance_km"].mean()
         elif mode == "Air":

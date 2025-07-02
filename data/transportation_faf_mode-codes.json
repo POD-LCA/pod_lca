@@ -1,0 +1,7 @@
+{
+    "Truck": 1 , 
+    "Rail": 2, 
+    "Barge": 3, 
+    "Ocean": 3, 
+    "Air": 4
+}

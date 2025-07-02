@@ -53,6 +53,8 @@ file_paths:
     CFS_STATE_CODE: data\\transportation_cfs_state-code.json
     CFS_SCTG_CODE: data\\transportation_podlca_material-sctg.csv
     MARINE_DATA_PATH: data\\transportation_podlca_marine.csv
+    CFS_MODE_CODE: data\\transportation_cfs_mode-codes.json
+    FAF_MODE_CODE: data\\transportation_faf_mode-codes.json 
   electricity:
     CAMBIUM_NATIONAL_DATA: data\\electricity_cambium_consumption-national.csv
     CAMBIUM_REGIONAL_DATA: data\\electricity_cambium_consumption-regional.csv
