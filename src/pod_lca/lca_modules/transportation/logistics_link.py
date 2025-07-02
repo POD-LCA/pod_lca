@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 from ..transportation import TransportMode
 from ..location import Location
 from ...units import KILOMETER
+from ...units import MILE
 
 
 class LogisticLink:
@@ -357,7 +358,15 @@ class LogisticLink:
         float
             The return trip factor of the transportation link.
         """
-        pass
+        if self.return_trip_factor is None: # Default return trip factor
+            dist = self.get_travel_dist()
+            convertion_factor = self.get_dist_unit().get_conversion_factor(MILE)
+
+            return 1.5 if dist * convertion_factor < 500 else 1.0
+        
+        else: # user set value
+            return self.return_trip_factor
+
 
     def get_next(self):
         """ Retrieve the next transportation link for the material.
@@ -401,9 +410,7 @@ class LogisticLink:
         """
         return self.electricity_consumption
 
-# TODO: global travel
 # TODO: unit mapping
-# TODO: issue of combined domestic and international legs
 # TODO: transport mode combined with the database manager
 
 

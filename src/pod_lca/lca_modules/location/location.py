@@ -273,17 +273,11 @@ class Location:
     def set_cfs_area(self):
         """ Set the state code from the COmodity Flow Survey (CFS).
         """    
-        cfs_area = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_STATE_CODE'])
+        cfs_area = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE'])
         state = self.get_state()
 
         if state:
-            if state in cfs_area["State"].values:
-                self.cfs_area = cfs_area[cfs_area['State'] == state].iloc[0, 2]
-            elif state in cfs_area["State_Initial"].values:
-                self.cfs_area = cfs_area[cfs_area['State_Initial'] == state].iloc[0, 2]
-            else:
-                log(f"State {state} not found in CFS data", "Warn")
-                self.cfs_area = None
+            self.cfs_area = cfs_area[state]
         else:
             self.cfs_area = None
 
@@ -567,7 +561,7 @@ class Location:
     # Methods
     # ================================
     @staticmethod
-    def get_closest_states(destination, states_lst):
+    def get_closest_states(destination, states_lst=None):
         """ Get the closest states to the destination.
         
         Parameters
@@ -581,15 +575,15 @@ class Location:
         -------
         str
             The closest state to the destination.
-        int
-            The code of the closest state.
         """
+        state_coords = DataImporter.csv_to_pandas(config['file_paths']['location']['US_STATE_COORDS']) 
 
-        state_code = DataImporter.csv_to_pandas(config['file_paths']['location']['CFS_STATE_CODE']) 
+        if states_lst is None:
+            pass
 
-        lat = state_code[state_code["Code"].isin(states_lst)]["lat"].values
-        lon = state_code[state_code["Code"].isin(states_lst)]["lon"].values
-        states = state_code[state_code["Code"].isin(states_lst)]["State"].values
+        lat = state_coords[state_coords["State"].isin(states_lst)]["lat"].values
+        lon = state_coords[state_coords["State"].isin(states_lst)]["lon"].values
+        states = state_coords[state_coords["State"].isin(states_lst)]["State"].values
 
         coords = list(zip(lat, lon))
         dest_to_state = []
@@ -600,9 +594,8 @@ class Location:
         min_index = dest_to_state.index(min(dest_to_state))
 
         closest_state = states[min_index]
-        closest_state_code = state_code[state_code["State"]==closest_state]["Code"].values[0]
-
-        return closest_state, closest_state_code
+       
+        return closest_state
 
     @staticmethod
     def get_closest_zip(geopy_location, max_attempts=10, step=1):
@@ -640,6 +633,61 @@ class Location:
                 return geopy_location.raw['address']['postcode']
         
         return "ZIP code not found within search range"
+
+    def get_closest_state_CFS(destination, codes_lst):
+        """ Get the closest states to the destination, where states are given in CFS codes
+        
+        Parameters
+        ----------
+        destination : Location
+            Destination location object.
+        states_lst : list of int
+            List of states to find the closest ones from.
+        
+        Returns
+        -------
+        str
+            The closest state to the destination.
+        int
+            CFS code of the closest state.
+        """        
+        codes_lst = list(set(codes_lst))
+
+        cfs_state_code = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE'])
+        cfs_code_state = {v: k for k, v in cfs_state_code.items()}
+        cfs_state_list = [cfs_code_state[v] for v in codes_lst if v in cfs_code_state]
+
+        closest_state_name = Location.get_closest_states(destination, cfs_state_list)
+        
+        closest_state_code = cfs_state_code[closest_state_name]
+
+        return closest_state_name, closest_state_code
+
+    def get_closest_regions_FAF(destination, region_lst):
+        """ Get the closest states to the destination, where states are given in FAF region codes
+        
+        Parameters
+        ----------
+        destination : Location
+            Destination location object.
+        states_lst : list of int
+            List of states to find the closest ones from.
+        
+        Returns
+        -------
+        str
+            The closest state to the destination.
+        int
+            FAF code of the closest state.
+        """  
+        faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])      
+        
+        cfs_code_list = [v // 10 for v in region_lst]
+        closest_state_name, _ = Location.get_closest_state_CFS(destination, cfs_code_list)
+        
+        closest_faf_region_codes = faf_domestic_data[closest_state_name]
+
+        return closest_state_name, closest_faf_region_codes
 
 
 if __name__ == '__main__':

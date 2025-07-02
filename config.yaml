@@ -50,7 +50,7 @@ file_paths:
     CFS_DATA_PATH: data\\transportation_cfs_dataset.csv
     CFAF_DATA_PATH: data\\transportation_cfaf_dataset.csv
     FAF_DATA_PATH: data\\transportation_faf_dataset.csv
-    CFS_STATE_CODE: data\\transportation_cfs_state-code.csv
+    CFS_STATE_CODE: data\\transportation_cfs_state-code.json
     CFS_SCTG_CODE: data\\transportation_podlca_material-sctg.csv
     MARINE_DATA_PATH: data\\transportation_podlca_marine.csv
   electricity:
@@ -70,7 +70,7 @@ file_paths:
     IMPACT_WEIGHTING_FACTOR_EPA: data\\impacts_epa_weighting-factors.csv
     IMPACT_WEIGHTING_FACTOR_NIST: data\\impacts_nist_weighting-factors.csv
   location:
-    CFS_STATE_CODE: data\\transportation_cfs_state-code.csv
+    US_STATE_COORDS: data\\location_podlca_us-state-coords.csv
     FAF_DOMESTIC_REGION: data\\transportation_faf_domestic-region.json
     FAF_FOREIGN_REGION: data\\transportation_faf_foreign-region.json
     FAF_CITY_REPRESENTATION: data\\transportation_podlca_faf-city-representation.json

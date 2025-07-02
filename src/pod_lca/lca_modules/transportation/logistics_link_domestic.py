@@ -9,7 +9,6 @@ from .logistics_link import LogisticLink
 from ..location import Location
 from ..transportation import TransportMode
 from ...units import KILOMETER
-from ...units import MILE
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
@@ -56,9 +55,7 @@ class DomesticLink(LogisticLink):
                     self.get_next().set_travel_dist(0, travel_dist_unit, return_trip_factor)
 
             elif transport_scenario in ["North_america", "Global", "Known"]:
-                pass
-                # TODO: create foreign link if it does not exist
-                # TODO: update the lengths
+                pass # TODO: changing transportation scenario after creating links---i.e., converting domestic to international
             else:
                 raise ValueError("Transport scenario not recognized.")
             
@@ -68,23 +65,6 @@ class DomesticLink(LogisticLink):
         self.return_trip_factor = return_trip_factor
 
         return self
-
-    def get_return_trip_factor(self):   
-        """ Retrieve the return trip factor of the transportation link.
-
-        Returns
-        -------
-        float
-            The return trip factor of the transportation link.
-        """
-        if self.return_trip_factor is None: # Default return trip factor
-            dist = self.get_travel_dist()
-            convertion_factor = self.get_dist_unit().get_conversion_factor(MILE)
-
-            return 1.5 if dist * convertion_factor < 500 else 1.0
-        
-        else: # user set value
-            return self.return_trip_factor
 
     # ================================
     # CFS Methods
@@ -170,7 +150,7 @@ class CFSDataset:
             If no data is found for the provided SCTG code, destination, or mode.
         """
         cfs = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH'])  
-         
+
         # filter SCTG code
         if isinstance(sctg, int):
             cfs_filtered = cfs[cfs["SCTG"] == sctg]
@@ -182,8 +162,7 @@ class CFSDataset:
         if isinstance(destination, Location):
             cfs_filtered = cfs[cfs["DEST_STATE"] == destination.get_cfs_area()]
             if cfs_filtered.empty:
-                cfs_state_list = cfs["DEST_STATE"].tolist()
-                closest_state_name, closest_state_code = Location.get_closest_states(destination, cfs_state_list)
+                closest_state_name, closest_state_code = Location.get_closest_state_CFS(destination, cfs["DEST_STATE"].tolist())
                 cfs_filtered = cfs[cfs["DEST_STATE"] == closest_state_code]
                 log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
             cfs = cfs_filtered
@@ -192,8 +171,7 @@ class CFSDataset:
         if isinstance(origin, Location):
             cfs_filtered = cfs[cfs["ORIG_STATE"] == origin.get_cfs_area()]
             if cfs_filtered.empty:
-                cfs_state_list = list(set(cfs["ORIG_STATE"].tolist()))
-                closest_state_name, closest_state_code = Location.get_closest_states(origin, cfs_state_list)
+                closest_state_name, closest_state_code = Location.get_closest_state_CFS(origin, cfs["ORIG_STATE"].tolist())
                 cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state_code]
                 log(f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
             cfs = cfs_filtered
@@ -251,8 +229,11 @@ class CFSDataset:
             domestic_dis = dataset[dataset["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
         elif scenario == "None" or scenario == "Known_us" or scenario == None:
             domestic_dis = dataset["SHIPMT_DIST_ROUTED"].mean()
+        else:
+            raise ValueError("Transportation scenario not recognized")
 
         return domestic_dis
+
 
 if __name__ == '__main__':
     pass
