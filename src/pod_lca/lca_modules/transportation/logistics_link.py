@@ -56,12 +56,11 @@ class LogisticLink:
         self.travel_dist = None
         self.travel_dist_unit = None
         self.return_trip_factor = None
-        self.mode = None
         self.shipping_dest = None
         self.shipping_org = None
+        self.mode = None
         self.impacts = None
         self.emissions = None
-        self.electricity_consumption = None
         self.next = None
         self.previous = None
 

@@ -175,7 +175,8 @@ class CFSDataset:
 
         # Mode
         if isinstance(mode,  TransportMode):
-            cfs_filtered = cfs[cfs["MODE"].isin(mode.get_cfs_mode())]
+            cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
+            cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
             if cfs_filtered.empty:
                 raise ValueError("Transportation mode in CFS dataset")
             

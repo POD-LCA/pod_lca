@@ -7,25 +7,31 @@ __version__ = "0.1.0"
 
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ...units import KILOGRAM
-from ...utilities import config
-from ...utilities import DataImporter
-from ...utilities import log
 
 
 class TransportMode:
-    """ Initialize the TransportMode object.
+    """ Transportation mode object.
 
     Attributes
     ----------
+    parent : LogisticLink Obj.
+        Transportation link to which the transportation mode correspond to.
     mode_name: str
         The name of the transportation mode (e.g., 'Truck', 'Rail').
     efficiency: int
         The efficiency level (e.g., 1, 2, 3).
     fuel_type: str
-        The fuel type used
+        The fuel type used.
     electricity consumption: float
         Electriciity consumption if an electric vehicle
+    unit_impacts : Impacts Obj.
+        Impacts from the transportation mode, per declared quantity and unit.
+    unit_emissions : Emissions Obj.
+        Emissions from the transportation mode, per declared quantity and unit.
+    inventories_declared_qty : float
+        The quantity for which the inventories are declared.
+    inventories_declared_unit : Unit Obj.
+        The unit corresponding to declared quantity of inventories.
     limitations: list,
         a list of limitations for the transportation mode.
     faf_mode: int
@@ -39,11 +45,11 @@ class TransportMode:
         self.mode_name = None
         self.efficiency = None
         self.fuel_type = None
+        self.electricity_consumption = None
         self.unit_impacts = None
         self.unit_emissions = None
-        self.inventories_declared_unit = None
         self.inventories_declared_qty = None
-        self.electricity_consumption = None
+        self.inventories_declared_unit = None
         self.limitations = []
         self.faf_mode = None
         self.cfs_mode = None
@@ -68,8 +74,6 @@ class TransportMode:
             the name of the transportation mode (e.g., 'Truck', 'Rail').
         efficiency: int
             the efficiency level (e.g., 1, 2, 3).
-        project: ProjectLogisticManager Obj. 
-            an object representing the project.
         fuel_type: str
             the type of fuel used (default is "Regular").
 
@@ -142,28 +146,6 @@ class TransportMode:
 
         return self
 
-    def set_faf_mode(self):
-        """ Set the FAF mode code for the transportation mode.
-        """
-        faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
-        if self.mode_name in faf_modes_mapping:
-            self.faf_mode = faf_modes_mapping[self.mode_name]
-        else:
-            log(f"FAF mode mapping failed.", "Warn")
-
-        return self
-
-    def set_cfs_mode(self):
-        """ Set the CFS mode code for the transportation mode.
-        """
-        cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
-        if self.mode_name in cfs_modes_mapping:
-            self.cfs_mode = cfs_modes_mapping[self.mode_name]
-        else:
-            log(f"CFS mode mapping failed.", "Warn")
-
-        return self
-
     # ================================
     # Getters
     # ================================
@@ -179,32 +161,31 @@ class TransportMode:
     
     def get_name (self):
         """ Retrieve the name of the transportation mode.
+
+        Returns
+        ----------
+        str
+            The name of the transportation mode.
         """
         return self.mode_name
 
     def get_efficiency (self):
         """ Retrieve the efficiency of the transportation mode.
+
+        Returns
+        ----------
+        str
+            the efficiency level (e.g., 'Low', 'Medium', 'High').
         """
         return self.efficiency
 
-    def get_faf_mode (self):
-        """ Retrieve the FAF mode code of the transportation mode.
-        """
-        if self.faf_mode is None:
-            self.set_faf_mode()
-
-        return self.faf_mode
-
-    def get_cfs_mode (self):
-        """ Retrieve the CFS mode code of the transportation mode.
-        """
-        if self.cfs_mode is None:
-            self.set_cfs_mode()
-
-        return self.cfs_mode
-
     def get_fuel_type (self):
         """ Retrieve the fuel type of the transportation mode.
+
+        Returns
+        -------
+        str
+            The type of fuel used (e.g., 'Regular', 'Premium').
         """
         return self.fuel_type
 
@@ -215,29 +196,49 @@ class TransportMode:
     
     def get_unit_impacts(self):
         """ Get unit impacts from the transportation mode.
+        
+        Returns
+        -------
+        Impacts Obj.
+            Impacts from the transportation mode, per declared quantity and unit.
         """
         return self.unit_impacts
     
     def get_unit_emissions(self):
         """ Get unit emissions from the transportation mode.
+
+        Returns
+        -------
+        Emissions Obj.
+            Emissions from the transportation mode, per declared quantity and unit.
         """
         return self.unit_emissions
+
+    def get_inventories_declared_qty(self):
+        """ Get the declared qty of the transportation mode.
+
+        Returns
+        -------
+        float
+            The quantity for which the inventories are declared.
+        """
+        return self.inventories_declared_qty
     
     def get_inventories_declared_unit(self):
         """ Get the declared unit of the transportation mode.
+
+        Returns
+        -------
+        Unit Obj.
+            The unit corresponding to declared quantity of inventories.    
         """
         return self.inventories_declared_unit
     
-    def get_inventories_declared_qty(self):
-        """ Get the declared qty of the transportation mode.
-        """
-        return self.inventories_declared_qty
-            
     # ================================
     # Methods
     # ================================
     def set_inventory_records(self):
-        """ Set unit impacts of the transportation mode.
+        """ Set unit inventory records of impacts and emissions for the transportation mode.
         """
         if (self.get_name() is not None) and (self.get_fuel_type() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
 
@@ -252,6 +253,8 @@ class TransportMode:
 
             emissions = {key: unit_inventories[key] for key in self.unit_emissions.record_attr_dict}
             self.unit_emissions.update_qty(emissions)
+
+            #TODO: set electricity consumption as well
 
         return self
 

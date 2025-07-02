@@ -286,14 +286,16 @@ class FAFDataset:
 
         # Mode
         if isinstance(mode_foreign, TransportMode):
-            faf_filtered = faf[faf["fr_inmode"] == mode_foreign.get_faf_mode()]
+            faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
+            faf_filtered = faf[faf["fr_inmode"] == faf_modes_mapping[mode_foreign.get_name()]]
             if faf_filtered.empty:
                 raise ValueError("Transportation mode in CFS dataset")
             faf = faf_filtered
         
         # Domestic Mode
         if mode_domestic is not None:
-            faf_filtered = faf[faf["dms_mode"] == mode_domestic.get_faf_mode()]
+            faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
+            faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[mode_domestic.get_name()]]
             if faf_filtered.empty:
                 raise ValueError("Transportation mode in CFS dataset")
             faf = faf_filtered
