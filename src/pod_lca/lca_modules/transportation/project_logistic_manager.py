@@ -10,6 +10,7 @@ import pickle
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import TranportationModeImpactsDatabase
+from ..location import Location
 from ..transportation import LogisticLink, ForeignLink, DomesticLink
 from ...units import KILOMETER
 
@@ -120,6 +121,9 @@ class ProjectLogisticManager:
             link.set_shipping_dest(destination)
         # TODO consider having a project level variable for origin
 
+    def set_scenario(self, transportation_scenario):
+        pass # TODO: set project level scenario
+
     # ================================
     # Setters
     # ================================
@@ -177,6 +181,11 @@ class ProjectLogisticManager:
     def get_impacts(self, product=None):
         """ Retrieve the impacts of the project.
 
+        Parameters
+        ----------
+        product : Master Obj.
+            Product for which the transportation impacts rquested
+
         Returns
         -------
         Impacts Obj.
@@ -199,72 +208,110 @@ class ProjectLogisticManager:
 
             return impact
 
-    def get_emissions(self):
-        """ Retrieve the emissions of the product/process.
+    def get_emissions(self, product=None):
+        """ Retrieve the emissions of the product.
+
+        Parameters
+        ----------
+        product : Master Obj or list of Master Obj.
+            Product for which the transportation impacts rquested
 
         Returns
         -------
         Emissions Obj.
             Emissions of the product/process.
         """
-        emission = Emissions.from_parent(self)
-        for link in self.get_links():
-            # link.update_inventory_records() # TODO: rename the compute_impact method to update_inventory_records
-            impact += link.get_emission()
+        if product is None:
+            impact = Emissions.from_parent(self)
+            for link in self.get_links():
+                impact += link.get_emissions()
 
-        return impact
+            return impact
+        
+        else:
+            if product not in self.goods_links_map:
+                raise ValueError(f"Product '{product}' not found in the project.")
+            
+            impact = Emissions.from_parent(self)
+            for link in self.goods_links_map[product]:
+                impact += link.get_emissions()
+
+            return impact
     
     # ================================
     # Model Methods
     # ================================
-    def add_goods(self, goods, 
-                  shipping_dest, shipping_org,
-                  transport_scenario:(str) = None,
-                  travel_dist = None,
-                  travel_dist_unit:(str) = KILOMETER, 
-                  return_trip_factor:(float) = None, 
-                  mode:(str) = None,
-                  mode_fuel_type:(str) = "Regular", 
-                  mode_efficiency:(str) = "Median"):
-        """ Add goods to the project.
+    def add_good(self, 
+                  good, 
+                  travel_dist=None,
+                  shipping_dest=None, 
+                  shipping_org=None,
+                  transport_scenario=None,
+                  distance_unit= KILOMETER, 
+                  return_trip_factor=None, 
+                  mode_name=None,
+                  mode_fuel_type="Regular", 
+                  mode_efficiency="Median"):
+        """ Add goods to the project. This method creates the appropriate logistick links based on the data provided
 
         Parameters
         ----------
+        goods : list of Product Obj.
+            Goods to be transported.
+        travel_dist : float
+            Transportation distance for goods
+        shipping_dest : Location Obj
+            Shipping destination.
+        shipping_org : Location Obj
+            Shipping origin
+        transportation_scenario : str
+            Transportation scenario considered.
+        distance_unit : Unit Obj
+            Unit of measurement of distances.
+        return_trip_factor : float
+            Return trip factor.
+        mode_name : str
+            Name of the transportation mode.
+        mode_fuel_type : str
+            Fuel type used by the transportation mode.
+        mode_efficiency : str
+            Efficiency of the transportation mode.
         """
-        for good in goods:
-            self.goods_links_map[good] = []
+        self.goods_links_map[good] = []
 
-            if travel_dist is None:
-                if isinstance(transport_scenario, str):
-                    if transport_scenario in ["North_america", "Global", "Known"]:
-                        LinkClass = ForeignLink
-                    elif transport_scenario in ["National", "Regional_c", "Regional", "Local", "Known_us"]:
-                        LinkClass = DomesticLink
-                    else:
-                        raise ValueError("Transport scenario not recognized.")
-                elif transport_scenario is None:
-                    LinkClass = DomesticLink
-                else:
-                    raise TypeError("Transport scenario not recognized.")
-            elif isinstance(travel_dist, (int, float)):
-                LinkClass = LogisticLink
+        # select type of link
+        if isinstance(travel_dist, (int, float)):
+            LinkClass = LogisticLink
+
+        elif (shipping_dest is not None) and (shipping_org is not None):
+            if (shipping_dest.get_country_code() == 'US') and not (shipping_org.get_country_code() == 'US'):
+                LinkClass = ForeignLink
+            elif (shipping_dest.get_country_code() == 'US') and (shipping_org.get_country_code() == 'US'):
+                LinkClass = DomesticLink
             else:
-                raise ValueError("travel_dist must be a number or None.")
+                raise NotImplementedError
 
-            link = LinkClass.in_project (self, 'transport_' + good.get_name())
-            if isinstance(link, ForeignLink):
-                link_domestic = DomesticLink.in_project(self, 'transport_' + good.get_name() + '_domestic')
-                link.set_next(link_domestic)
-            link.set_transport_scenario(transport_scenario)
-            link.set_shipping_dest(shipping_dest)
-            link.set_shipping_org(shipping_org)
-            link.set_material(good)
-            link.set_mode(mode, mode_fuel_type, mode_efficiency)
-            link.set_travel_dist(travel_dist, travel_dist_unit, return_trip_factor)
+        elif isinstance(transport_scenario, str):
+            if transport_scenario in ["North_america", "Global"]:
+                LinkClass = ForeignLink
+            elif transport_scenario in ["National", "Regional_c", "Regional", "Local"]:
+                LinkClass = DomesticLink
+            else:
+                raise ValueError("Transport scenario not recognized.")
             
-            self.goods_links_map[good].append(link)
-            if isinstance(link, ForeignLink):
-                self.goods_links_map[good].append(link_domestic)
+        else:
+            LinkClass = DomesticLink
+
+        # create link
+        link = LinkClass.in_project(good, self, 'transport_' + good.get_name())
+        
+        link.set_mode(mode_name, mode_fuel_type, mode_efficiency)
+
+        link.set_travel_dist(travel_dist, distance_unit, return_trip_factor)
+        link.set_shipping_destination(shipping_dest)
+        link.set_shipping_origin(shipping_org)
+        if isinstance(link, (DomesticLink, ForeignLink)):
+            link.set_transport_scenario(transport_scenario)
 
         return self
 

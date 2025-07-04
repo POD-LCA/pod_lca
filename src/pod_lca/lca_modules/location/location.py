@@ -140,7 +140,48 @@ class Location:
                 print(f"Error retrieving location data: {e}")
 
         return location
-    
+
+    @classmethod
+    def from_US_state(cls, state, set_all_location_data=False):
+        """ Create location from US zipcode.
+            The location data populated based on the centroid of the area represented by the zipcode.
+        
+        Parameters
+        ----------
+        zipcode : str
+            Zipcode of the location.
+        """
+        location = cls()
+
+        location.country = "USA"
+        location.country_code = "US"
+
+        if state in DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']):
+            location.state = state
+        else:
+            raise ValueError(f"{state} not recognized as a US State.")
+        
+        location.regionality = 'Regional'
+        location.set_cfs_area()
+        location.set_faf_domestic_region()
+        location.set_us_coast()
+
+        if set_all_location_data:
+            try:
+                string = state + ", USA"
+                geolocator = Nominatim(user_agent="pod_lca")
+
+                location_data = geolocator.geocode(string, featuretype=['settlement', 'city', 'town', 'village', 'county', 'state', 'country'], language='en', addressdetails=True, extratags=True) 
+                location.set_regionality(location_data)
+                location.set_cordinates(location_data)
+
+                location_data = geolocator.reverse(location.get_cordinates(), addressdetails=True, zoom=15, language='en') # zoom level 14 = neighbourhood
+                location.set_city(location_data)
+
+            except Exception as e:
+                print(f"Error retrieving location data: {e}")
+
+        return location
     # ================================
     # Setters
     # ================================

@@ -15,6 +15,7 @@ from pod_lca.transportation import ProjectLogisticManager
 from pod_lca.material_screening import Master
 from pod_lca.units import UNITS_MAP
 from pod_lca.transportation import DomesticLink, ForeignLink
+from pod_lca.location import Location
 
 def clean(value):
     return None if pd.isna(value) else value
@@ -54,18 +55,21 @@ def run_test_files(test_file_path, output_csv_path):
         project = ProjectLogisticManager.new("Building A")
         project.set_database(r'data/transportation_podlca_emission.csv')
 
+        # FIXME: ELectric truck as a mode and generate the electric data
+
         # TODO: this to happen inside
         product = Master()
         product.set_name(material)
         product.set_qty(qty)
         product.set_unit(UNITS_MAP[qty_unit])
 
+        # TODO: refine with what inputs are provided here
         mode = {'domestic': mode_domestic,
-                'foreign': mode_foreign} if travel_dist in ["North_america", "Global", "Known"] else mode_domestic
+                'foreign': mode_foreign} if mode_foreign_efficiency is not None else mode_domestic
         mode_fuel_type = {'domestic': mode_domestic_fuel_type,
-                            'foreign': mode_foreign_fuel_type} if travel_dist in ["North_america", "Global", "Known"] else mode_domestic_fuel_type
+                            'foreign': mode_foreign_fuel_type} if mode_foreign_efficiency is not None else mode_domestic_fuel_type
         mode_efficiency = {'domestic': mode_domestic_efficiency,
-                            'foreign': mode_foreign_efficiency} if travel_dist in ["North_america", "Global", "Known"] else mode_domestic_efficiency
+                            'foreign': mode_foreign_efficiency} if mode_foreign_efficiency is not None else mode_domestic_efficiency
         if isinstance(travel_dist, str):
             if travel_dist == "None":
                 transport_scenario = None
@@ -76,15 +80,19 @@ def run_test_files(test_file_path, output_csv_path):
             travel_dist = travel_dist
             transport_scenario = None
 
-        project.add_goods([product], 
-                        shipping_dest, shipping_org,
-                        transport_scenario,
-                        travel_dist,
-                        UNITS_MAP[travel_dist_unit], 
-                        return_trip_factor, 
-                        mode,
-                        mode_fuel_type, 
-                        mode_efficiency)
+        shipping_dest = None if shipping_dest is None else Location.from_str(shipping_dest)
+        shipping_org = None if shipping_org is None else Location.from_str(shipping_org) 
+
+        project.add_good(product, 
+                          travel_dist,
+                          shipping_dest, 
+                          shipping_org,
+                          transport_scenario,
+                          UNITS_MAP[travel_dist_unit], 
+                          return_trip_factor, 
+                          mode,
+                          mode_fuel_type, 
+                          mode_efficiency)
 
         print(project.get_impacts(product))
 

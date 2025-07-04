@@ -14,34 +14,32 @@ from ...units import MILE
 
 
 class LogisticLink:
-    """ Link object create a link of transportation for each material.
+    """ A generic transportation link of transporting goods.
 
     Attributes
     ----------
     project : Project obj.
         Refers to the main project.
+    name : str
+        Name of the logistic link.
     material : str.
         name of the material.
-    qty : str.
-        quantity of the of the material.
-    travel_dist : float or str.
-        transportation distance, if float; transportaion scenario, if string
+    travel_dist : float.
+        transportation distance
     travel_dist_unit : Unit Obj.
         Unit corresponding to the travel distance.
     return_trip_factor : float.
         transportation return trip factor.
-    mode : TransportationMode Obj.
-        transportation mode.
     shipping_dest : Location obj.
         shipping destination location.
     shipping_org : Location obj.
         shipping origin location.
+    mode : TransportationMode Obj.
+        transportation mode.
     impacts : Impacts obj.
         Environmental impacts of the transportation link.
     emissions : Emissions obj.
         Emissions of the transportation link.
-    electricity_consumption : float.
-        Electricity consumption of the transportation link.
     next : LogisticLink obj.
         Next transportation link for the goods transported.
     previous : LogisticLink obj.
@@ -52,7 +50,6 @@ class LogisticLink:
         self.project = None
         self.name = None
         self.material = None
-        self.transport_scenario = None
         self.travel_dist = None
         self.travel_dist_unit = None
         self.return_trip_factor = None
@@ -80,11 +77,13 @@ class LogisticLink:
     # Constructors
     # ================================
     @classmethod
-    def in_project(cls, project, name=None):
+    def in_project(cls, good, project, name=None):
         """ Create a new transportation link in the project.
 
         Parameters
         ----------
+        good : Master obj.
+            Product being transported.
         project : Project obj.
             The project to which the transportation link belongs.
         name : str, optional
@@ -92,16 +91,18 @@ class LogisticLink:
 
         Returns
         -------
-        Link obj.
+        LogisticLink obj.
             Transportation link created in the project.
         """
         link = cls()
+        link.set_material(good)
         link.set_project(project)
-        if name is not None:
-            link.set_name(name)
+        link.set_name(name)
 
         link.impacts = Impacts.from_parent(link)
         link.emissions = Emissions.from_parent(link)
+
+        project.goods_links_map[good].append(link)
 
         return link
 
@@ -120,7 +121,7 @@ class LogisticLink:
 
         return self
 
-    def set_name (self, name:(str)):
+    def set_name (self, name):
         """ Set the name of the transportation link.
 
         Parameters
@@ -145,37 +146,20 @@ class LogisticLink:
             self.get_next().set_material(material)  
 
         return self
-    
-    def set_transport_scenario(self, transport_scenario:(str)):
-        """ Set the transport scenario of the transportation link.
-
-        Parameters
-        ----------
-        transport_scenario : str
-            Transport scenario of the transportation link (e.g., "North_america", "Global", "Known").
-        """
-        if transport_scenario is None:
-            self.transport_scenario = None # TODO set the default transport scenario
-        elif isinstance(transport_scenario, str):
-            self.transport_scenario = transport_scenario
-        else:
-            raise ValueError("Transport scenario must be a string.")
-
-        return self
 
     def set_travel_dist(self, 
                         travel_dist, 
-                        travel_dist_unit, 
-                        return_trip_factor:(float)=None):
+                        travel_dist_unit=None, 
+                        return_trip_factor=None):
         """ Set the travel distance of the transportation link.
 
         Parameters
         ----------
-        travel_dist : float or str
-            travel distance of the transportation link.
-        travel_dist_unit : str, optional
-            Distance unit of the travel distance (default is "km").
-        return_trip_factor : float, optional
+        travel_dist : float
+            Travel distance of the transportation link.
+        travel_dist_unit : Unit Obj
+            Unit of the travel distance.
+        return_trip_factor : float
             Return trip factor of the transportation link (default is None).
         """
         if isinstance(travel_dist, (float, int)):
@@ -188,16 +172,50 @@ class LogisticLink:
 
         return self
 
-    def set_mode(self, mode:(str)=None, fuel_type:(str)=None , efficiency:(str)=None):
+    def set_shipping_destination(self, shipping_dest):
+        """ Set the shipping destination of the project.
+
+        Parameters
+        ----------
+        shipping_dest : Location Obj.
+            Name of the shipping destination location.
+        """
+        if shipping_dest is None:
+            self.shipping_dest = None
+        elif isinstance(shipping_dest, Location):
+            self.shipping_dest = shipping_dest
+        else:
+            raise ValueError("Shipping destination must be a Location object.")
+
+        return self
+
+    def set_shipping_origin(self, shipping_org):
+        """ Set the shipping origin of the project.
+
+        Parameters
+        ----------
+        shipping_org : Location Obj.
+            Name of the shipping origin location.
+        """
+        if shipping_org is None:
+            self.shipping_org = None
+        elif isinstance(shipping_org, Location):
+            self.shipping_org = shipping_org
+        else:
+            raise ValueError("Shipping origin must be a Location object.")
+
+        return self
+
+    def set_mode(self, mode=None, fuel_type=None , efficiency=None):
         """ Set the transportation mode of the transportation link.
 
         Parameters
         ----------
         mode : str or TransportMode Obj
             transportation mode of the transportation link.
-        fuel_type : str, optional
+        fuel_type : str
             type of fuel used in the transportation mode (default is "Regular").
-        efficiency : str, optional
+        efficiency : str
             efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
         if isinstance(mode, TransportMode):
@@ -210,44 +228,7 @@ class LogisticLink:
             self.mode = TransportMode.new(mode_name, mode_efficiency, fuel_type)
         
         self.mode.set_parent(self)
-
-        return self
-
-    def set_shipping_dest(self, shipping_dest:(str)):
-        """ Set the shipping destination of the project.
-
-        Parameters
-        ----------
-        shipping_dest : str
-            Name of the shipping destination location.
-        """
-        if shipping_dest is None:
-            self.shipping_dest = None
-        elif isinstance(shipping_dest, Location):
-            self.shipping_dest = shipping_dest
-        elif isinstance(shipping_dest, str):
-            self.shipping_dest = Location.from_str(shipping_dest)
-        else:
-            raise ValueError("Shipping destination must be a Location object or a string representing the location.")
-
-        return self
-
-    def set_shipping_org(self, shipping_org:(str)):
-        """ Set the shipping origin of the project.
-
-        Parameters
-        ----------
-        shipping_org : str
-            Name of the shipping origin location.
-        """
-        if shipping_org is None:
-            self.shipping_org = None
-        elif isinstance(shipping_org, Location):
-            self.shipping_org = shipping_org
-        elif isinstance(shipping_org, str):
-            self.shipping_org = Location.from_str(shipping_org)
-        else:
-            raise ValueError("Shipping origin must be a Location object or a string representing the location.")
+        self.mode.set_inventory_records()
 
         return self
 
@@ -263,6 +244,7 @@ class LogisticLink:
         next.previous = self
 
         return self
+    
     # ================================
     # Getters
     # ================================
@@ -295,46 +277,6 @@ class LogisticLink:
             The material of the transportation link.
         """
         return self.material
-    
-    def get_transport_scenario(self):
-        """ Retrieve the transport scenario of the transportation link.
-
-        Returns
-        -------
-        str
-            The transport scenario of the transportation link.
-        """
-        return self.transport_scenario
-    
-    def get_mode(self):
-        """ Retrieve the transportation mode of the transportation link.
-
-        Returns
-        -------
-        TransportMode obj.
-            The domestic transportation mode of the transportation link.
-        """
-        return self.mode
-
-    def get_shipping_dest(self):
-        """ Retrieve the shipping destination of the project.
-
-        Returns
-        -------
-        str
-            Name of the shipping destination location.
-        """
-        return self.shipping_dest
-
-    def get_shipping_org(self):
-        """ Retrieve the shipping origin of the project.
-
-        Returns
-        -------
-        str
-            Name of the shipping origin location.
-        """
-        return self.shipping_org
 
     def get_travel_dist(self):
         """ Retrieve the travel distance of the transportation link.
@@ -351,7 +293,7 @@ class LogisticLink:
 
         Returns
         -------
-        str
+        Unit Obj.
             The distance unit of the transportation link.
         """
         return self.travel_dist_unit
@@ -364,15 +306,47 @@ class LogisticLink:
         float
             The return trip factor of the transportation link.
         """
-        if self.return_trip_factor is None: # Default return trip factor
+        if self.return_trip_factor is None:
             dist = self.get_travel_dist()
             convertion_factor = self.get_dist_unit().get_conversion_factor(MILE)
 
             return 1.5 if dist * convertion_factor < 500 else 1.0
         
-        else: # user set value
+            # FIXME: 1.5 only truck / domestic
+        
+        else:
             return self.return_trip_factor
+        
+    def get_shipping_destination(self):
+        """ Retrieve the shipping destination of the project.
 
+        Returns
+        -------
+        str
+            Name of the shipping destination location.
+        """
+        return self.shipping_dest
+
+    def get_shipping_origin(self):
+        """ Retrieve the shipping origin of the project.
+
+        Returns
+        -------
+        str
+            Name of the shipping origin location.
+        """
+        return self.shipping_org
+
+    def get_mode(self):
+        """ Retrieve the transportation mode of the transportation link.
+
+        Returns
+        -------
+        TransportMode obj.
+            The domestic transportation mode of the transportation link.
+        """
+        return self.mode
+    
     def get_next(self):
         """ Retrieve the next transportation link for the material.
 
@@ -402,7 +376,6 @@ class LogisticLink:
             The impact of the transportation link.
         """
         self.update_inventory_records()
-
         return self.impacts 
     
     def get_emissions(self):
@@ -414,18 +387,7 @@ class LogisticLink:
             The emissions of the transportation link.
         """
         self.update_inventory_records()
-
         return self.emissions 
-    
-    def get_electricity_consumption(self):
-        """ Retrieve the electricity consumption of the transportation link.
-
-            Returns
-            -------
-            float
-                The electricity consumption of the transportation link.
-        """
-        return self.electricity_consumption
 
     # ================================
     # Methods
@@ -433,20 +395,22 @@ class LogisticLink:
     def update_inventory_records(self):
         """ Compute and update all invetories.
         """
-        self.get_mode().set_inventory_records()
-
         inventories_declared_qty = self.get_mode().get_inventories_declared_qty()
         inventories_declared_unit = self.get_mode().get_inventories_declared_unit()
         computed_unit = self.get_material().get_unit() * self.get_dist_unit()
         conversion_factor = computed_unit.get_conversion_factor(inventories_declared_unit)
 
+        travel_dist = self.get_travel_dist()
+        transport_material_qty = self.get_material().get_qty()
+        return_trip_factor = self.get_return_trip_factor()
+
         if conversion_factor is None:
             raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
         
-        impacts = {key: self.get_mode().get_unit_impacts().get_record(key) * conversion_factor * self.get_material().get_qty() * self.get_travel_dist() * self.get_return_trip_factor() / inventories_declared_qty for key in self.impacts.record_attr_dict}
+        impacts = {key: self.get_mode().get_unit_impacts().get_record(key) * conversion_factor * transport_material_qty * travel_dist * return_trip_factor / inventories_declared_qty for key in self.impacts.record_attr_dict}
         self.impacts.update_qty(impacts)
 
-        emissions = {key: self.get_mode().get_unit_emissions().get_record(key) * conversion_factor * self.get_material().get_qty() * self.get_travel_dist() * self.get_return_trip_factor() / inventories_declared_qty for key in self.emissions.record_attr_dict}
+        emissions = {key: self.get_mode().get_unit_emissions().get_record(key) * conversion_factor * transport_material_qty * travel_dist * return_trip_factor / inventories_declared_qty for key in self.emissions.record_attr_dict}
         self.emissions.update_qty(emissions)
 
         return self
