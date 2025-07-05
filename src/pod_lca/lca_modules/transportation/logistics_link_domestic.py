@@ -27,6 +27,8 @@ class DomesticLink(LogisticLink):
     def __init__(self):
         super().__init__()
         self.transport_scenario = None
+        self._cache_travel_dist = None
+        self._last_params = None
 
     # ================================
     # Setters
@@ -49,8 +51,61 @@ class DomesticLink(LogisticLink):
         else:
             raise ValueError("Transport scenario must be a string.")
 
+        self._invalidate_cache()
+        return self
+    
+    def set_material(self, material):
+        """ Set the quantity of the transportation link.
+
+        Parameters
+        ----------
+        material : Master Obj.
+            Material name of the transportation link.
+        """
+        self = super().set_material(material)
+        self._invalidate_cache()
+        return self
+    
+    def set_shipping_destination(self, shipping_dest):
+        """ Set the shipping destination of the project.
+
+        Parameters
+        ----------
+        shipping_dest : Location Obj.
+            Name of the shipping destination location.
+        """
+        self = super().set_shipping_destination(shipping_dest)
+        self._invalidate_cache()
+        return self
+        
+    def set_shipping_origin(self, shipping_org):
+        """ Set the shipping origin of the project.
+
+        Parameters
+        ----------
+        shipping_org : Location Obj.
+            Name of the shipping origin location.
+        """
+        self = super().set_shipping_origin(shipping_org)
+        self._invalidate_cache()
         return self
 
+    def set_mode(self, mode=None, fuel_type=None , efficiency=None):
+        """ Set the transportation mode of the transportation link.
+
+        Parameters
+        ----------
+        mode : str or TransportMode Obj
+            transportation mode of the transportation link.
+        fuel_type : str
+            type of fuel used in the transportation mode (default is "Regular").
+        efficiency : str
+            efficiency of the transportation mode "low, medium, high" (default is "medium").
+        """
+        self = super().set_mode(mode, fuel_type, efficiency)
+        self._invalidate_cache()
+        return self
+    
     def set_travel_dist(self, travel_dist=None, travel_dist_unit=None, return_trip_factor=None):
         """ Set the travel distance of the transportation link.
 
@@ -64,7 +119,7 @@ class DomesticLink(LogisticLink):
             Return trip factor of the transportation link (default is None).
         """
         self.travel_dist_unit = KILOMETER if travel_dist_unit is None else travel_dist_unit
-
+        self._invalidate_cache()
         return self
 
     # ================================
@@ -88,21 +143,36 @@ class DomesticLink(LogisticLink):
         float or str
             travel distance of the transportation link.
         """
-        transport_scenario = self.get_transport_scenario()
-        if transport_scenario in ["Local", "Regional", "Regional_c", "National", None]:
-            try:
-                travel_dist = self.get_distance_from_cfs(transport_scenario)
-            except ValueError as e:
-                if str(e) == "Transportation mode not in CFS dataset":
-                    log(f"Transportation mode not found in CFS dataset. Using default mode 'Truck'.", "Warn")
-                    self.set_mode('Truck', self.get_mode().get_fuel_type(), self.get_mode().get_efficiency())
-
-                    travel_dist = self.get_distance_from_cfs(transport_scenario)
+        current_params = (self.get_material(), 
+                          self.get_shipping_destination(), 
+                          self.get_shipping_origin(), 
+                          self.get_mode().get_name(),
+                          self.get_mode().get_efficiency(),
+                          self.get_transport_scenario(), 
+                          self.get_dist_unit())
+        
+        if self._last_params == current_params and self._cache_travel_dist is not None:
+            log("Returning cached result.", "Info")
+            return self._cache_travel_dist
         else:
-            raise ValueError("Transport scenario not recognized.")
+            transport_scenario = self.get_transport_scenario()
+            if transport_scenario in ["Local", "Regional", "Regional_c", "National", None]:
+                try:
+                    travel_dist = self.get_distance_from_cfs(transport_scenario)
+                except ValueError as e:
+                    if str(e) == "Transportation mode not in CFS dataset":
+                        # TODO: verify this logic in view of the resulting inconsistencies
+                        log(f"Transportation mode not found in CFS dataset. Using default mode 'Truck'.", "Warn")
+                        self.set_mode('Truck', self.get_mode().get_fuel_type(), self.get_mode().get_efficiency())
 
+                        travel_dist = self.get_distance_from_cfs(transport_scenario)
+            else:
+                raise ValueError("Transport scenario not recognized.")
 
-        return travel_dist
+            self._cache_travel_dist = travel_dist
+            self._last_params = current_params
+
+            return travel_dist
 
     def get_return_trip_factor(self):   
         """ Retrieve the return trip factor of the transportation link.
@@ -139,6 +209,13 @@ class DomesticLink(LogisticLink):
         travel_dist = CFSDataset.get_distance_estimate(cfs_filtered, transport_scenario) * conversion_factor
 
         return travel_dist
+    
+    # ================================
+    # Cache Method
+    # ================================
+    def _invalidate_cache(self):
+        self._cache_travel_dist = None
+        self._last_params = None
 
 
 class CFSDataset:
@@ -270,7 +347,7 @@ class CFSDataset:
             else:
                 return 'Q4'
         dataset['quartile'] = dataset["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
-        
+        # TODO: dealing with when the number of entries are less than 4
         if scenario == "Local":
             domestic_dis = dataset[dataset["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
         elif scenario == "Regional":
@@ -279,7 +356,7 @@ class CFSDataset:
             domestic_dis = dataset[dataset["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
         elif scenario == "National":
             domestic_dis = dataset[dataset["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
-        else:
+        else: # TODO: Verify this for consistency
             domestic_dis = dataset["SHIPMT_DIST_ROUTED"].mean()
 
         return domestic_dis
