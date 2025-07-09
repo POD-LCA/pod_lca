@@ -6,7 +6,7 @@ from pod_lca.units import KILOMETER
 from pod_lca.units import M_TON
 from pod_lca.location import Location
 from pod_lca.material_screening import Master
-from pod_lca.transportation import ProjectLogisticManager
+from pod_lca.transportation import USDomesticLogisticProject
 from pod_lca.transportation import CFSDataset
 from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
@@ -14,8 +14,10 @@ from pod_lca.utilities import DataImporter
 
 output_file = "save_files\\transportation_dataset_temp.csv"
 
-origin_states = [None, "Washington", "California"]
-destination_states = [None, "Colorado", "Illinois"]
+states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
+
+origin_states = [None] + states_list
+destination_states = [None] + states_list
 
 tranpsort_scenarios = ["National", "Regional", "Regional_c", "Local"]
 Material_names = ["Photovoltaics", "Aggregates", "Cement", "Glass", "Piping"]
@@ -26,8 +28,9 @@ travel_modes = ["Truck", "Rail", "Air", "Barge"]
 travel_mode_efficiency = ["Low", "Median", "High"]
 travel_fuel_types = ["Regular"]
 
-project = ProjectLogisticManager.new("Building A")
-project.set_database(r'data/transportation_podlca_emission.csv')
+project = USDomesticLogisticProject.new("Building A")
+project.set_impact_database(r'data/transportation_podlca_emission.csv')
+CFSDataset = project.get_dataset()
 
 impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
 emission_inventories = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
@@ -47,24 +50,23 @@ for material in Material_names:
                 origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
                 destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
                 scenarios = tranpsort_scenarios if (destination_state is None or  origin_state_obj is None) else [None]
+                
+                project.add_good(product, 
+                                None,
+                                destination_state_obj, 
+                                origin_state_obj,
+                                None,
+                                KILOMETER)  
+                link = project.get_link(product)[0]              
                 for scenario in scenarios:
+                    link.set_transport_scenario(scenario)
                     for travel_mode in travel_modes:
                         for eff in travel_mode_efficiency:
                             for travel_fuel_type in travel_fuel_types:
-
-                                project.add_good(product, 
-                                                None,
-                                                destination_state_obj, 
-                                                origin_state_obj,
-                                                scenario,
-                                                KILOMETER, 
-                                                None, 
-                                                travel_mode,
-                                                travel_fuel_type, 
-                                                eff)
+                                link.set_mode(travel_mode, fuel_type=travel_fuel_type , efficiency=eff)
 
                                 try:
-                                    distance = project.goods_links_map[product][0].get_travel_dist()
+                                    distance = link.get_travel_dist()
                                     RTT =  project.goods_links_map[product][0].get_return_trip_factor()
                                     impacts = project.get_impacts(product)
                                     emissions = project.get_emissions(product)

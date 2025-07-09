@@ -10,8 +10,7 @@ import pickle
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import TranportationModeImpactsDatabase
-from ..location import Location
-from ..transportation import LogisticLink, ForeignLink, DomesticLink
+from ..transportation import LogisticLink, ForeignLink, DomesticLink, CFSDataset
 from ...units import KILOMETER
 
 
@@ -26,12 +25,15 @@ class ProjectLogisticManager:
         Dictionary mapping products to their corresponding transportation links.
     mode_impact_database : TranportationModeImpactsDatabase Obj
         Database containing unit impacts for transportation modes.
+    dataset : dict or obj.
+        Dataset corresponding to the project.
     """
 
     def __init__(self):
         self.name = None
         self.goods_links_map = {}
         self.mode_impact_database = None
+        self.dataset = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
@@ -62,6 +64,25 @@ class ProjectLogisticManager:
         new_project.set_name(name)
 
         return new_project  
+    
+    @classmethod
+    def US_domestic_project(cls, name=None):
+        """ Create a new project to generate for a project in USA procuring material from the USA.
+
+        Parameters
+        ----------
+        name : str
+            Name of the project.
+
+        Returns
+        -------
+        Project Obj.
+        """
+        new_project = cls.new()
+
+        new_project.dataset = CFSDataset()
+
+        return new_project
 
     # ================================
     # Setters
@@ -78,7 +99,7 @@ class ProjectLogisticManager:
 
         return self
     
-    def set_database(self, database):
+    def set_impact_database(self, database):
         """ Set mode impact database used in the project.
         
         Parameters
@@ -91,12 +112,19 @@ class ProjectLogisticManager:
         elif isinstance(database, str):
             transport_impact_database = TranportationModeImpactsDatabase.new("mode impact database")
             transport_impact_database.set_data(database)
-            self.set_database(transport_impact_database)
+            self.set_impact_database(transport_impact_database)
         else:
             raise TypeError("Database input not recognized")
         
         return self
+    
+    def set_dataset(self, dataset):
+        """ Set background dataset for the proect.
+        """
+        self.dataset = dataset
 
+        return self
+    
     def set_project_origin(self, origin:(str)):
         """ Set the origin location of the project.
 
@@ -168,7 +196,7 @@ class ProjectLogisticManager:
         """
         return list(self.goods_links_map.keys())
 
-    def get_database(self):
+    def get_impact_database(self):
         """ Retrieve the transportation mode impact database.
         
         Returns
@@ -177,6 +205,14 @@ class ProjectLogisticManager:
             Transportation mode impact database.
         """
         return self.mode_impact_database
+    
+    def get_dataset(self, name=None):
+        """ Return the dataset corresponding to the project.
+        """
+        if name is None:
+            return self.dataset
+        elif isinstance(self.database, dict) and isinstance(name, str):
+            return self.dataset[name]
     
     def get_impacts(self, product=None):
         """ Retrieve the impacts of the project.

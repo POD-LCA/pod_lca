@@ -242,7 +242,7 @@ class TransportMode:
         """
         if (self.get_name() is not None) and (self.get_fuel_type() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
 
-            database = self.get_parent().get_project().get_database()
+            database = self.get_parent().get_project().get_impact_database()
 
             unit_inventories = database.get_data_entry(self)
             self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
