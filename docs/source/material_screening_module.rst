@@ -13,5 +13,3 @@ A brief description...
    project
    model
    products
-   processess
-   calculator

@@ -9,5 +9,6 @@ The package is organized into LCA modules
 .. toctree::
    :maxdepth: 4
 
-   impacts
-   impacts_database
+   impact_records
+   impact_databases
+   olca_pipeline

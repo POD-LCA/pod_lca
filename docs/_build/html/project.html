@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Model" href="model.html" />
-    <link rel="prev" title="Material Module" href="material_module.html" /> 
+    <link rel="prev" title="Material Module" href="material_screening_module.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,18 +122,17 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="material_module.html">Material Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="material_screening_module.html">Material Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="products.html">Products</a></li>
-<li class="toctree-l3"><a class="reference internal" href="processess.html">Processes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="calculator.html">Calculator</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -154,12 +153,12 @@
   <section id="project">
 <h1>Project<a class="headerlink" href="#project" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.lca_modules.material_screening.project_manager.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project" title="Link to this definition">¶</a></dt>
-<dd><p>Project class which maintains the process models at a link to the impact database.</p>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.material_screening.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><a class="headerlink" href="#pod_lca.material_screening.Project" title="Link to this definition">¶</a></dt>
+<dd><p>Project class which maintains the process models and a link to the impact database.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.material_screening.Project.name" title="Link to this definition">¶</a></dt>
 <dd><p>Name of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -169,8 +168,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.models">
-<span class="sig-name descname"><span class="pre">models</span></span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.models" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.models">
+<span class="sig-name descname"><span class="pre">models</span></span><a class="headerlink" href="#pod_lca.material_screening.Project.models" title="Link to this definition">¶</a></dt>
 <dd><p>All models created/compared in the current project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -180,8 +179,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.database">
-<span class="sig-name descname"><span class="pre">database</span></span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.database" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.database">
+<span class="sig-name descname"><span class="pre">database</span></span><a class="headerlink" href="#pod_lca.material_screening.Project.database" title="Link to this definition">¶</a></dt>
 <dd><p>Maintains input impact data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -191,8 +190,8 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.location">
-<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.location" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.location">
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#pod_lca.material_screening.Project.location" title="Link to this definition">¶</a></dt>
 <dd><p>Location of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -202,8 +201,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.add_model">
-<span class="sig-name descname"><span class="pre">add_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.add_model" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.add_model">
+<span class="sig-name descname"><span class="pre">add_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.add_model" title="Link to this definition">¶</a></dt>
 <dd><p>Create and add a model to the current project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -213,8 +212,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.clear_project">
-<span class="sig-name descname"><span class="pre">clear_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.clear_project" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.clear_project">
+<span class="sig-name descname"><span class="pre">clear_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.clear_project" title="Link to this definition">¶</a></dt>
 <dd><p>Remove all existing models and the impact database of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -227,8 +226,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_database">
-<span class="sig-name descname"><span class="pre">get_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_database" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_database">
+<span class="sig-name descname"><span class="pre">get_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_database" title="Link to this definition">¶</a></dt>
 <dd><p>Get the impacts database of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -241,8 +240,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_LCstages_models">
-<span class="sig-name descname"><span class="pre">get_impacts_by_LCstages_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_LCstages_models" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_impacts_by_LCstages_models">
+<span class="sig-name descname"><span class="pre">get_impacts_by_LCstages_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_impacts_by_LCstages_models" title="Link to this definition">¶</a></dt>
 <dd><p>Returns impact data by life cycle stage for given multiple model and impact category.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -261,8 +260,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_LCstages_models_items">
-<span class="sig-name descname"><span class="pre">get_impacts_by_LCstages_models_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_LCstages_models_items" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_impacts_by_LCstages_models_items">
+<span class="sig-name descname"><span class="pre">get_impacts_by_LCstages_models_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_impacts_by_LCstages_models_items" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Returns impact data by life cycle stage for given multiple model and impact category, with impacts</dt><dd><p>identifieable by individaul item.</p>
 </dd>
@@ -284,8 +283,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_category_models">
-<span class="sig-name descname"><span class="pre">get_impacts_by_category_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_category_models" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_impacts_by_category_models">
+<span class="sig-name descname"><span class="pre">get_impacts_by_category_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_impacts_by_category_models" title="Link to this definition">¶</a></dt>
 <dd><p>Returns impact data by impact category for given multiple models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -301,8 +300,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_impactcategorys_models_LCstage">
-<span class="sig-name descname"><span class="pre">get_impacts_by_impactcategorys_models_LCstage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_impactcategorys_models_LCstage" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_impacts_by_impactcategorys_models_LCstage">
+<span class="sig-name descname"><span class="pre">get_impacts_by_impactcategorys_models_LCstage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_categories</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_impacts_by_impactcategorys_models_LCstage" title="Link to this definition">¶</a></dt>
 <dd><p>Returns data for a barchart.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -321,8 +320,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_location">
-<span class="sig-name descname"><span class="pre">get_location</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_location" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_location">
+<span class="sig-name descname"><span class="pre">get_location</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_location" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve the location of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -335,8 +334,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_model">
-<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_model" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_model" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve a model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -355,8 +354,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_model_names">
-<span class="sig-name descname"><span class="pre">get_model_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_model_names" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_model_names">
+<span class="sig-name descname"><span class="pre">get_model_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_model_names" title="Link to this definition">¶</a></dt>
 <dd><p>Get all names of all the models in the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -369,8 +368,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_name">
-<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_name" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve the name of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -383,8 +382,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.get_normalized_impacts_by_category_models">
-<span class="sig-name descname"><span class="pre">get_normalized_impacts_by_category_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_normalized_impacts_by_category_models" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.get_normalized_impacts_by_category_models">
+<span class="sig-name descname"><span class="pre">get_normalized_impacts_by_category_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.get_normalized_impacts_by_category_models" title="Link to this definition">¶</a></dt>
 <dd><p>Returns impact data by impact category for given multiple models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -400,8 +399,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.load">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.load" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.load">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.load" title="Link to this definition">¶</a></dt>
 <dd><p>Load a project from a pickled file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -417,8 +416,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.new">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.new" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.new">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.new" title="Link to this definition">¶</a></dt>
 <dd><p>Create a new project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -434,8 +433,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.save" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.save" title="Link to this definition">¶</a></dt>
 <dd><p>Save as a <a href="#id1"><span class="problematic" id="id2">*</span></a>.pkl file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -445,8 +444,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.set_database">
-<span class="sig-name descname"><span class="pre">set_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ImpactsDatabase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.set_database" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.set_database">
+<span class="sig-name descname"><span class="pre">set_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase" title="pod_lca.lca_modules.impacts.impacts_database.ImpactsDatabase"><span class="pre">ImpactsDatabase</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.set_database" title="Link to this definition">¶</a></dt>
 <dd><p>Set the impacts database of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -456,8 +455,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.set_location">
-<span class="sig-name descname"><span class="pre">set_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.set_location" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.set_location">
+<span class="sig-name descname"><span class="pre">set_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.set_location" title="Link to this definition">¶</a></dt>
 <dd><p>Set the location of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -467,8 +466,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.lca_modules.material_screening.project_manager.Project.set_name">
-<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.lca_modules.material_screening.project_manager.Project.set_name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.material_screening.Project.set_name">
+<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Project.set_name" title="Link to this definition">¶</a></dt>
 <dd><p>Set the name of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -496,29 +495,29 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Project</a><ul>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.models"><code class="docutils literal notranslate"><span class="pre">Project.models</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.database"><code class="docutils literal notranslate"><span class="pre">Project.database</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.location"><code class="docutils literal notranslate"><span class="pre">Project.location</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.add_model"><code class="docutils literal notranslate"><span class="pre">Project.add_model()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.clear_project"><code class="docutils literal notranslate"><span class="pre">Project.clear_project()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_database"><code class="docutils literal notranslate"><span class="pre">Project.get_database()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_LCstages_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_LCstages_models_items"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models_items()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_category_models()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_impacts_by_impactcategorys_models_LCstage"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_impactcategorys_models_LCstage()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_location"><code class="docutils literal notranslate"><span class="pre">Project.get_location()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_model"><code class="docutils literal notranslate"><span class="pre">Project.get_model()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_model_names"><code class="docutils literal notranslate"><span class="pre">Project.get_model_names()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_name"><code class="docutils literal notranslate"><span class="pre">Project.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.get_normalized_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_normalized_impacts_by_category_models()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.load"><code class="docutils literal notranslate"><span class="pre">Project.load()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.new"><code class="docutils literal notranslate"><span class="pre">Project.new()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.save"><code class="docutils literal notranslate"><span class="pre">Project.save()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.set_database"><code class="docutils literal notranslate"><span class="pre">Project.set_database()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.set_location"><code class="docutils literal notranslate"><span class="pre">Project.set_location()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.lca_modules.material_screening.project_manager.Project.set_name"><code class="docutils literal notranslate"><span class="pre">Project.set_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.models"><code class="docutils literal notranslate"><span class="pre">Project.models</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.database"><code class="docutils literal notranslate"><span class="pre">Project.database</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.location"><code class="docutils literal notranslate"><span class="pre">Project.location</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.add_model"><code class="docutils literal notranslate"><span class="pre">Project.add_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.clear_project"><code class="docutils literal notranslate"><span class="pre">Project.clear_project()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_database"><code class="docutils literal notranslate"><span class="pre">Project.get_database()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_impacts_by_LCstages_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_impacts_by_LCstages_models_items"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models_items()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_category_models()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_impacts_by_impactcategorys_models_LCstage"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_impactcategorys_models_LCstage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_location"><code class="docutils literal notranslate"><span class="pre">Project.get_location()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_model"><code class="docutils literal notranslate"><span class="pre">Project.get_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_model_names"><code class="docutils literal notranslate"><span class="pre">Project.get_model_names()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_name"><code class="docutils literal notranslate"><span class="pre">Project.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.get_normalized_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_normalized_impacts_by_category_models()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.load"><code class="docutils literal notranslate"><span class="pre">Project.load()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.new"><code class="docutils literal notranslate"><span class="pre">Project.new()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.save"><code class="docutils literal notranslate"><span class="pre">Project.save()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.set_database"><code class="docutils literal notranslate"><span class="pre">Project.set_database()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.set_location"><code class="docutils literal notranslate"><span class="pre">Project.set_location()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Project.set_name"><code class="docutils literal notranslate"><span class="pre">Project.set_name()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -535,7 +534,7 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="material_module.html">
+                <a href="material_screening_module.html">
                     <span class="icon">&lt;</span><span>Material Module</span></a>
                 
             </div>

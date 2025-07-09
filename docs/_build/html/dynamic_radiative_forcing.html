@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+
+<html lang="Python" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dynamic Radiative Forcing &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Emission Profiles" href="emission_profiles.html" />
+    <link rel="prev" title="Electricity" href="electricity_module.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Dynamic Radiative Forcing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html">Emission Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="dynamic-radiative-forcing">
+<h1>Dynamic Radiative Forcing<a class="headerlink" href="#dynamic-radiative-forcing" title="Link to this heading">¶</a></h1>
+<hr class="docutils" />
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="emission_profiles.html">Emission Profiles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.start</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.duration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.discrete_from_continous"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.discrete_from_continous()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.get_duration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.get_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.set_duration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.set_start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.dynamic_radiative_forcing.</span></span><span class="sig-name descname"><span class="pre">DynamicRadiativeForcing</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing" title="Link to this definition">¶</a></dt>
+<dd><p>Computation methods related to dynamic radiative forcing methods.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_AGWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Absolute Global Warming Potential (AGWP) of a greenhouse gas, for the given time_horizon.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_GWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Global Warming Potential (GWP) of a greenhouse gas, for the given time_horizon.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atmospheric_concentration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration" title="Link to this definition">¶</a></dt>
+<dd><p>Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.</p>
+<p class="rubric">Notes</p>
+<ol class="arabic simple">
+<li><p>For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>at_year</strong> (<em>int</em><em> or </em><em>array</em>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
+<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative values if true, else instantaneous values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Concentration of the greenhouse gas, in kg (if not cumulative) or in kg-yrs (if cumulative).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_concentration_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series" title="Link to this definition">¶</a></dt>
+<dd><p>Get the concentration of the greenhouse gas in the atmosphere as a time-series.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Noting the behaviour of numpy.arange with floats, the end value of years is checked against time horizon.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
+<li><p><strong>time_step</strong> (<em>float</em>) -- Time step in years.</p></li>
+<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative radiative forcing if true, else instantaneous values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>numpy.array</em> -- years of the time series</p></li>
+<li><p><em>numpy.array</em> -- concentration values at the end of the year #TODO: double check this</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pertubation_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime" title="Link to this definition">¶</a></dt>
+<dd><p>Get the pertubation lifetime of the greenhouse_gas in question.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pertubation lifetime in years.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radiative_efficiency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Wm-2ppb-1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_for_indirect_effects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency" title="Link to this definition">¶</a></dt>
+<dd><p>Get the radiative efficiency of given greenhouse_gas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g.,'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>ref_unit</strong> (<em>str</em>) -- Output unit: 'Wm-2ppb-1', 'Wm-2kg-1'</p></li>
+<li><p><strong>adjust_for_indirect_effects</strong> (<em>bool</em>) -- Adjust radiative efficiency to account for indirect effects</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Radiative efficiency, in reference unit</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radiative_forcing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CH4_oxidation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convolution_time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing" title="Link to this definition">¶</a></dt>
+<dd><p>Get the radiative forcing (in W/m^2) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>at_year</strong> (<em>int</em><em> or </em><em>array</em>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
+<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative values if true, else instantaneous values.</p></li>
+<li><p><strong>CH4_oxidation</strong> (<em>bool</em>) -- If true, account for oxidation of CH4 to CO2</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
+<li><p><strong>convolution_time_step</strong> (<em>float</em>) -- Time step for CH4 oxidation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>radiative forcing, in W/m2.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radiative_forcing_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CH4_oxidation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series" title="Link to this definition">¶</a></dt>
+<dd><p>Get the daynamic radiative forcing values (in W/m^2) as a time-series, given that a 1kg of gas emitted on start year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>greenhouse_gas</strong> (<em>str</em>) -- Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'</p></li>
+<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
+<li><p><strong>time_step</strong> (<em>float</em>) -- Time step in years.</p></li>
+<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative radiative forcing if true, else instantaneous values.</p></li>
+<li><p><strong>CH4_oxidation</strong> (<em>bool</em>) -- If true, account for oxidation of CH4 to CO2</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>numpy.array</em> -- Years of the time series</p></li>
+<li><p><em>numpy.array</em> -- Atmospheric concentration values at the end of the year #TODO: double check this</p></li>
+<li><p><em>numpy.array</em> -- Radiative forcing values at the end of the year</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.dynamic_radiative_forcing.</span></span><span class="sig-name descname"><span class="pre">DynamicRadiativeForcingRecord</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord" title="Link to this definition">¶</a></dt>
+<dd><p>This record keeps a timeseries record of the dynamic radiative forcing from emissions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.start_year">
+<span class="sig-name descname"><span class="pre">start_year</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.start_year" title="Link to this definition">¶</a></dt>
+<dd><p>Start year of the emissions record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_horizon">
+<span class="sig-name descname"><span class="pre">time_horizon</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_horizon" title="Link to this definition">¶</a></dt>
+<dd><p>Time horizon in years.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_step">
+<span class="sig-name descname"><span class="pre">time_step</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_step" title="Link to this definition">¶</a></dt>
+<dd><p>Time step of the record. The same time step is used for both for integration and for reporting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.emissions_lst">
+<span class="sig-name descname"><span class="pre">emissions_lst</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.emissions_lst" title="Link to this definition">¶</a></dt>
+<dd><p>List of emissions considered in the record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Emissions Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_years">
+<span class="sig-name descname"><span class="pre">data_years</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_years" title="Link to this definition">¶</a></dt>
+<dd><p>Years in the record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.array of int or float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_emission_intensity">
+<span class="sig-name descname"><span class="pre">data_emission_intensity</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_emission_intensity" title="Link to this definition">¶</a></dt>
+<dd><p>Emission intensity (in kg/yr); {greenhous gas (str): [emission intensity (float)]}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_concentrations">
+<span class="sig-name descname"><span class="pre">data_concentrations</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_concentrations" title="Link to this definition">¶</a></dt>
+<dd><p>Atmospheric concentration (in kg); {greenhous gas (str): [atmospheric concenration (float)]}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_irf">
+<span class="sig-name descname"><span class="pre">data_irf</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_irf" title="Link to this definition">¶</a></dt>
+<dd><p>Instantaneous radiative forcing values at the time steps (in W/m^2); {greenhous gas (str): [irf (float)]}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_crf">
+<span class="sig-name descname"><span class="pre">data_crf</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_crf" title="Link to this definition">¶</a></dt>
+<dd><p>Cumulative radiative forcing values at the time steps (in W/m^2); {greenhous gas (str): [crf (float)]}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.add_emission_records">
+<span class="sig-name descname"><span class="pre">add_emission_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emissions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.add_emission_records" title="Link to this definition">¶</a></dt>
+<dd><p>Assign an emission to the dynamic radiative forcing record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>emissions</strong> (<em>list</em><em> or </em><em>Emissions Obj.</em>) -- Emission(s) to be assigned to the record</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_emissions">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emissions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08333333333333333</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Create a dynamic radiative forcing (DRF) record from emissions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>emissions</strong> (<em>list</em><em> of </em><em>Emissions Obj.</em><em> or </em><em>str</em>) -- Emissions in the record.</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) -- Start year of the record.</p></li>
+<li><p><strong>time_horizon</strong> (<em>int</em><em> or </em><em>float</em>) -- Time horizon of the record, in years.</p></li>
+<li><p><strong>time_step</strong> (<em>int</em><em> or </em><em>float</em>) -- Time step of the record, in years.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_products">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_products</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">products</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08333333333333333</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_products" title="Link to this definition">¶</a></dt>
+<dd><p>Create a dynamic radiative forcing (DRF) record from products, inheriting from Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>products</strong> (<em>list</em><em> of </em><em>Master Obj.</em><em> or </em><em>str</em>) -- Products in the record.</p></li>
+<li><p><strong>start_year</strong> (<em>int</em>) -- Start year of the record.</p></li>
+<li><p><strong>time_horizon</strong> (<em>int</em><em> or </em><em>float</em>) -- Time horizon of the record, in years.</p></li>
+<li><p><strong>time_step</strong> (<em>int</em><em> or </em><em>float</em>) -- Time step of the record, in years.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'radiative</span> <span class="pre">forcing'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_data" title="Link to this definition">¶</a></dt>
+<dd><p>Get the dynamic radiative forcing data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_category</strong> (<em>str</em>) -- Category of data to be reported; 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'</p></li>
+<li><p><strong>xy_pairs</strong> (<em>bool</em>) -- If true, provide data as xy pairs, else as sperate lists.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_emissions_list">
+<span class="sig-name descname"><span class="pre">get_emissions_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_emissions_list" title="Link to this definition">¶</a></dt>
+<dd><p>Get the list of emissions assigned to the dynamic radiative forcing record.</p>
+<section id="retruns">
+<h2>Retruns<a class="headerlink" href="#retruns" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>list of Emission Obj.</dt><dd><p>List of emissions considered in the record.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_start_year">
+<span class="sig-name descname"><span class="pre">get_start_year</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_start_year" title="Link to this definition">¶</a></dt>
+<dd><p>Get the start year of the dynamic radiative forcing record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Start year of the emissions record.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_horizon">
+<span class="sig-name descname"><span class="pre">get_time_horizon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_horizon" title="Link to this definition">¶</a></dt>
+<dd><p>Get the time horizon (in years) of the dynamic radiative forcing record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Time horizon in years.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_step">
+<span class="sig-name descname"><span class="pre">get_time_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_step" title="Link to this definition">¶</a></dt>
+<dd><p>Set the time step for time series record.</p>
+<section id="id1">
+<h2>Retruns<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>float</dt><dd><p>Time step of the record.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'atmospheric</span> <span class="pre">concentration'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lineplot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Plot the dynamic radiative forcing record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>to_plot</strong> (<em>str</em>) -- Parameter to be ploted: 'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record'.</p></li>
+<li><p><strong>plot_type</strong> (<em>str</em>) -- Type of the plot: 'lineplot', 'stackplot'.</p></li>
+<li><p><strong>plot_time_step</strong> (<em>int</em><em> or </em><em>float</em>) -- Time step for ticks along x axis.</p></li>
+<li><p><strong>colors</strong> (<em>list</em><em> of </em><em>str</em>) -- Colors of each line or stack.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission_intensity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concentration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">irf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.save" title="Link to this definition">¶</a></dt>
+<dd><p>Write the data to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the save file.</p></li>
+<li><p><strong>emission_intensity</strong> (<em>bool</em>) -- If true, save emission intensity values of greenhouse gases.</p></li>
+<li><p><strong>concentration</strong> (<em>bool</em>) -- if true, save atmospheric concentration of greenhouse gases.</p></li>
+<li><p><strong>irf</strong> (<em>bool</em>) -- If true, save the Instantaneous Radiative Forcing (IRF) values of greenhouse gases.</p></li>
+<li><p><strong>crf</strong> (<em>bool</em>) -- If true, save the Cumulative Radiative Forcing (IRF) values of greenhouse gases.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_data">
+<span class="sig-name descname"><span class="pre">set_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_data" title="Link to this definition">¶</a></dt>
+<dd><p>Set dynamic radiative forcing data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>list of int</em> -- Time steps in the record.</p></li>
+<li><p><em>list of float</em> -- Radiative forcing values at the time steps.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_start_year">
+<span class="sig-name descname"><span class="pre">set_start_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_start_year" title="Link to this definition">¶</a></dt>
+<dd><p>Set the start year of the dynamic radiative forcing record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>start_year</strong> (<em>int</em>) -- Start year of the emissions record.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_horizon">
+<span class="sig-name descname"><span class="pre">set_time_horizon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">years</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_horizon" title="Link to this definition">¶</a></dt>
+<dd><p>Set the time horizon (in years) of the dynamic radiative forcing record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_step">
+<span class="sig-name descname"><span class="pre">set_time_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_step" title="Link to this definition">¶</a></dt>
+<dd><p>Set the time step for time series record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time_step</strong> (<em>float</em>) -- Time step of the record.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Dynamic Radiative Forcing</a><ul>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_AGWP()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_GWP()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_atmospheric_concentration()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_concentration_time_series()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_pertubation_lifetime()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_efficiency()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_forcing()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_forcing_time_series()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.start_year"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.start_year</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_horizon"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.time_horizon</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_step"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.time_step</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.emissions_lst"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.emissions_lst</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_years"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_years</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_emission_intensity"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_emission_intensity</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_concentrations"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_concentrations</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_irf"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_irf</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_crf"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_crf</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.add_emission_records"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.add_emission_records()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_emissions"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.from_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_products"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.from_products()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_data"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_data()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_emissions_list"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_emissions_list()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_start_year"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_start_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_horizon"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_time_horizon()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_step"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_time_step()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.plot"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.plot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.save"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.save()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_data"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_data()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_start_year"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_start_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_horizon"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_time_horizon()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_step"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_time_step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="electricity_module.html">
+                    <span class="icon">&lt;</span><span>Electricity</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="emission_profiles.html"><span>Emission Profiles</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2024, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

@@ -5,5 +5,7 @@ A brief description...
 
 -------
 
-.. toctree::
-   :maxdepth: 4
+.. autoclass:: pod_lca.location.Location
+   :members:
+
+   

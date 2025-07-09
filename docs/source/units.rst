@@ -1,10 +1,14 @@
 **********
 Units
 **********
+Maintains units and unit conversions.
 
-.. autoclass:: utilities.units.units.Unit
+List of common units, metric prefixes, and units map to be added.
+
+----
+.. autoclass:: pod_lca.units.Unit
    :members:
 
-.. autoclass:: utilities.units.units.MetricPrefix
+.. autoclass:: pod_lca.units.MetricPrefix
    :members:
     

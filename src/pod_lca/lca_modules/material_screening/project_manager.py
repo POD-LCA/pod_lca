@@ -15,7 +15,7 @@ from ...utilities import DataImporter
 
 
 class Project:
-    """ Project class which maintains the process models at a link to the impact database.
+    """ Project class which maintains the process models and a link to the impact database.
 
     Attributes
     ----------

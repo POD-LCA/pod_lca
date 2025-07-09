@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Processes" href="processess.html" />
+    <link rel="next" title="Transportation Module" href="transportation.html" />
     <link rel="prev" title="Model" href="model.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -122,18 +122,18 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="material_module.html">Material Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="material_screening_module.html">Material Module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="project.html">Project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Products</a></li>
-<li class="toctree-l3"><a class="reference internal" href="processess.html">Processes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="calculator.html">Calculator</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -153,6 +153,1201 @@
             
   <section id="products">
 <h1>Products<a class="headerlink" href="#products" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.material_screening.</span></span><span class="sig-name descname"><span class="pre">Master</span></span><a class="headerlink" href="#pod_lca.material_screening.Master" title="Link to this definition">¶</a></dt>
+<dd><p>Master object from which product and process objects inherit.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.id" title="Link to this definition">¶</a></dt>
+<dd><p>An identification number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.model" title="Link to this definition">¶</a></dt>
+<dd><p>Model object to which this product/process belong.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.name" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.life_cycle_stage">
+<span class="sig-name descname"><span class="pre">life_cycle_stage</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Life cycle stage corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.impacts">
+<span class="sig-name descname"><span class="pre">impacts</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Impacts object corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Impacts Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.emissions">
+<span class="sig-name descname"><span class="pre">emissions</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Emissions Inventory object corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>EmissionsInventory Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.carbon_storage">
+<span class="sig-name descname"><span class="pre">carbon_storage</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.carbon_storage" title="Link to this definition">¶</a></dt>
+<dd><p>Carbon storage corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Carbon Storage Obj</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.impact_database_entry">
+<span class="sig-name descname"><span class="pre">impact_database_entry</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><p>Flow name corresponding to the database entry which gives the unit impact of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.qty">
+<span class="sig-name descname"><span class="pre">qty</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.qty" title="Link to this definition">¶</a></dt>
+<dd><p>Quantity of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.unit">
+<span class="sig-name descname"><span class="pre">unit</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.unit" title="Link to this definition">¶</a></dt>
+<dd><p>Unit of measurement corresponding to the quantity of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit Obj</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.is_hotspot">
+<span class="sig-name descname"><span class="pre">is_hotspot</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.is_hotspot" title="Link to this definition">¶</a></dt>
+<dd><p>True, if the object is a hotspot in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.data_distribution">
+<span class="sig-name descname"><span class="pre">data_distribution</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.data_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Data distributions corresponding to attributes: {attr (str): Dataset Obj}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.pedigree_score">
+<span class="sig-name descname"><span class="pre">pedigree_score</span></span><a class="headerlink" href="#pod_lca.material_screening.Master.pedigree_score" title="Link to this definition">¶</a></dt>
+<dd><p>Data quality indicator for the object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PedigreeScore Obj</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.add_inventory_records_to_model">
+<span class="sig-name descname"><span class="pre">add_inventory_records_to_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.add_inventory_records_to_model" title="Link to this definition">¶</a></dt>
+<dd><p>Add all inventory records to the product/process, if it is not already in the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.copy">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.copy" title="Link to this definition">¶</a></dt>
+<dd><p>Make a copy of an object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Master Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_carbon_storage">
+<span class="sig-name descname"><span class="pre">get_carbon_storage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_carbon_storage" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the carbon storage of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Carbon storage of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>CarbonStorage Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_data_distribution">
+<span class="sig-name descname"><span class="pre">get_data_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_data_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Get data_distribution object corresponding to the given attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Data distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataDistribution Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_data_distributions">
+<span class="sig-name descname"><span class="pre">get_data_distributions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_data_distributions" title="Link to this definition">¶</a></dt>
+<dd><p>Get data_distribution objects of the Master obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataDistribution objects corresponding to attributes: {attr (str): Dataset Obj}</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_emissions">
+<span class="sig-name descname"><span class="pre">get_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the emissions of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Emissions of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Emissions Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_id" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the identification number of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identification number of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_impact_database_entry">
+<span class="sig-name descname"><span class="pre">get_impact_database_entry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the impact database row corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flow name corresponding to the database entry which gives the unit impact of the product.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_impacts">
+<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the impacts of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Impacts of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Impacts Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_life_cycle_stage">
+<span class="sig-name descname"><span class="pre">get_life_cycle_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the life cycle stage corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Corresponding life cycle stage.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_model" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the model corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model corresponding to the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_name" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the name of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_pedigree_score">
+<span class="sig-name descname"><span class="pre">get_pedigree_score</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_pedigree_score" title="Link to this definition">¶</a></dt>
+<dd><p>Get pedigree score of the Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_project">
+<span class="sig-name descname"><span class="pre">get_project</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_project" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the corresponding project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Corresponding project.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Project Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_qty">
+<span class="sig-name descname"><span class="pre">get_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the quantity of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantity of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.get_unit">
+<span class="sig-name descname"><span class="pre">get_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.get_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the unit of measurement of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit of measurement of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.new">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impacts_from</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.new" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new item in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- Name of the item.</p></li>
+<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
+<li><p><strong>stage</strong> (<em>str</em>) -- LCA stage.</p></li>
+<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the item</p></li>
+<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
+<li><p><strong>impacts_from</strong> (<em>str</em>) -- Name of the impact database entry from which to use impacts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.remove_inventory_records_from_model">
+<span class="sig-name descname"><span class="pre">remove_inventory_records_from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.remove_inventory_records_from_model" title="Link to this definition">¶</a></dt>
+<dd><p>Remove all inventory records from the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.
+If None, all stages are checked to find the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_data_distribution">
+<span class="sig-name descname"><span class="pre">set_data_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_data_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Set a data_distribution object to the Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distribution</strong> (<em>DataDistribution Obj.</em>) -- DataDistribution object to be set</p></li>
+<li><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_id">
+<span class="sig-name descname"><span class="pre">set_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_id" title="Link to this definition">¶</a></dt>
+<dd><p>Set the product/process id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>float</em>) -- Item identification number.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_impact_database_entry">
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets the database (impacts) entry corresponding to the item.</dt><dd><p>This method will also update the corresponding impact quanitities.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>database_item</strong> (<em>str.</em>) -- The name of the database item which gives the item impacts.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_life_cycle_stage">
+<span class="sig-name descname"><span class="pre">set_life_cycle_stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Set life cycle stage of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_model" title="Link to this definition">¶</a></dt>
+<dd><p>Set the model corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model corresponding to the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_name">
+<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_name" title="Link to this definition">¶</a></dt>
+<dd><p>Set name of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- Name of the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_pedigree_score">
+<span class="sig-name descname"><span class="pre">set_pedigree_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pedigree_score</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_pedigree_score" title="Link to this definition">¶</a></dt>
+<dd><p>Set a pedigree score (data quality score) to the Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pedigree_score</strong> (<em>PedigreeScore Obj</em>) -- Data quality indicator for the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_qty">
+<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_qty" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Update the qty of the item.</dt><dd><p>This will also re-calculate the corresponding impact quantities.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>qty</strong> (<em>float</em>) -- Production quantity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.set_unit">
+<span class="sig-name descname"><span class="pre">set_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.set_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit of measurement for the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Master.update_inventory_records">
+<span class="sig-name descname"><span class="pre">update_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Master.update_inventory_records" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets inventory quantities, based on database item asigned to the product/process</dt><dd><p>and the product/process quantity.
+If no database entry is asigned, impacts are not updated.</p>
+</dd>
+</dl>
+<p>:raises ImportError : Incompatible units of Master object and database entry.:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.material_screening.</span></span><span class="sig-name descname"><span class="pre">Product</span></span><a class="headerlink" href="#pod_lca.material_screening.Product" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.material_screening.Master" title="pod_lca.lca_modules.material_screening.master.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a></p>
+<p>Product object, inheriting from the Master object, represent a product.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.production_year">
+<span class="sig-name descname"><span class="pre">production_year</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.production_year" title="Link to this definition">¶</a></dt>
+<dd><p>The year the product was produced.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.electricity">
+<span class="sig-name descname"><span class="pre">electricity</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.electricity" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Dictionary containing A3 electricity impacts of the production of the material.</dt><dd><p>'from_database' contains unit electricity impacts retrieved from the database;
+'by_location' contains corresponding electricity impacts by location, retrieved from electricity sub-package.
+'_current' indicates which of the above is in use for impacts.
+'_tag' prefix used in the database to identify grouped impacts of electricity.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.weight" title="Link to this definition">¶</a></dt>
+<dd><p>Mass of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.weight_unit">
+<span class="sig-name descname"><span class="pre">weight_unit</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.weight_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Unit of measurement of mass. Default is set as 'kg'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.density">
+<span class="sig-name descname"><span class="pre">density</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.density" title="Link to this definition">¶</a></dt>
+<dd><p>The mass of product in weight units per unit of product's unit of measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.trnasporter">
+<span class="sig-name descname"><span class="pre">trnasporter</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.trnasporter" title="Link to this definition">¶</a></dt>
+<dd><p>Transportation process, if the product is being transported, else None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TransportationProcess Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.mineral_carbonation_potential">
+<span class="sig-name descname"><span class="pre">mineral_carbonation_potential</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.mineral_carbonation_potential" title="Link to this definition">¶</a></dt>
+<dd><p>Mineral carbonation potential of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.is_material">
+<span class="sig-name descname"><span class="pre">is_material</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.is_material" title="Link to this definition">¶</a></dt>
+<dd><p>True, if the product is a material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.is_fuel">
+<span class="sig-name descname"><span class="pre">is_fuel</span></span><a class="headerlink" href="#pod_lca.material_screening.Product.is_fuel" title="Link to this definition">¶</a></dt>
+<dd><p>True, of the product is an energy source.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_density">
+<span class="sig-name descname"><span class="pre">get_density</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_density" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieve density of the product.</dt><dd><p>Density is defined here as mass per unit measurement of product (not necessarily volume)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Denisty of product (mass per unit mesurement of product).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_electricity">
+<span class="sig-name descname"><span class="pre">get_electricity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_electricity" title="Link to this definition">¶</a></dt>
+<dd><p>Get the electricity product of the item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Electricity used in the production of the item.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Electricity Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_electricity_database_tag">
+<span class="sig-name descname"><span class="pre">get_electricity_database_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_electricity_database_tag" title="Link to this definition">¶</a></dt>
+<dd><p>Find the tag used to identify electricity data in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tag used to identify electricity data in the database.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_electricity_qty">
+<span class="sig-name descname"><span class="pre">get_electricity_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_electricity_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Get electricity quantity used for the production of product quantity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantity of the electricity</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_electricity_source">
+<span class="sig-name descname"><span class="pre">get_electricity_source</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_electricity_source" title="Link to this definition">¶</a></dt>
+<dd><p>Get the source of electricity inventories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Source of electricity inventories data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_mineral_carbonation_potential">
+<span class="sig-name descname"><span class="pre">get_mineral_carbonation_potential</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_mineral_carbonation_potential" title="Link to this definition">¶</a></dt>
+<dd><p>Set mineral carbonation potential of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mineral carbonation potential of the product.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_production_year">
+<span class="sig-name descname"><span class="pre">get_production_year</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_production_year" title="Link to this definition">¶</a></dt>
+<dd><p>Get the year of production for the item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>year</strong> -- Year of production.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_transporter">
+<span class="sig-name descname"><span class="pre">get_transporter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_transporter" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve transport processes the product is subject to, if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Transportation process the product is subject to, if any.
+None, otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>TransportationProcess Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_weight">
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the mass of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mass of the product.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.get_weight_unit">
+<span class="sig-name descname"><span class="pre">get_weight_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.get_weight_unit" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Retrieve the unit of measurement of mass of the product.</dt><dd><p>This is used for the definition of density of the product.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit of measurement of mass of the product.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_density">
+<span class="sig-name descname"><span class="pre">set_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_density" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set density of the product.</dt><dd><p>Density is defined here as mass per unit measurement of product (not necessarily volume)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>density</strong> (<em>float</em>) -- Denisty of product (mass per unit mesurement of product).</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> -- Density must be a numerical value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_electricity_database_tag">
+<span class="sig-name descname"><span class="pre">set_electricity_database_tag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_electricity_database_tag" title="Link to this definition">¶</a></dt>
+<dd><p>Find the tag used to identify electricity data in the database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_electricity_source">
+<span class="sig-name descname"><span class="pre">set_electricity_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'from_database'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_electricity_source" title="Link to this definition">¶</a></dt>
+<dd><p>Set the source of electricity inventories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<em>str</em>) -- Source of electricity inventories data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_mineral_carbon_intensity">
+<span class="sig-name descname"><span class="pre">set_mineral_carbon_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit=&lt;pod_lca.units.units.Unit</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">per=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_mineral_carbon_intensity" title="Link to this definition">¶</a></dt>
+<dd><p>Set accelerated carbonation uptake to the 'Mineral C' entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of accelerated carbonation uptake.</p></li>
+<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit of accelerated carbonation uptake.</p></li>
+<li><p><strong>per</strong> (<em>dict</em><em> or </em><em>Unit Obj</em>) -- Parent quantity for which the mineral carbon intensity is declared.
+If dict, {'per': {'qty': (int or float), 'unit': (Unit Obj.)}}
+If Unit object only, the quantity is taken as 1.0;
+If None, taken as per unit of parent objects declared unit.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_mineral_carbonation_potential">
+<span class="sig-name descname"><span class="pre">set_mineral_carbonation_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">potential</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_mineral_carbonation_potential" title="Link to this definition">¶</a></dt>
+<dd><p>Set mineral carbonation potential of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>potential</strong> (<em>bool</em>) -- Mineral carbonation potential of the product.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_production_year">
+<span class="sig-name descname"><span class="pre">set_production_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_production_year" title="Link to this definition">¶</a></dt>
+<dd><p>Set the year of production for the item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>year</strong> (<em>int</em>) -- Year of production.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_qty">
+<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_qty" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Update the qty of the product.</dt><dd><p>This will also re-calculate the corresponding impact quantities.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>qty</strong> (<em>float</em>) -- Product quantity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_transporter">
+<span class="sig-name descname"><span class="pre">set_transporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transporter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_transporter" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set transport processes the product is subject to.</dt><dd><p>If not already added, will add the product to the transportation process as a transported product.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is equivalent to calling 'set_transported_product' from the TransportationProcess Obj.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Obj.</strong> (<em>TransportationProcess</em>) -- Transportation process the product is subject to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_unit">
+<span class="sig-name descname"><span class="pre">set_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_unit" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Set unit of measurement for the product.</dt><dd><p>If the unit of measurement is of mass dimensions, same unit is set as weight unit of the product.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.set_weight_unit">
+<span class="sig-name descname"><span class="pre">set_weight_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.set_weight_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit of measurement for the mass of the product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>str</strong> -- Unit of measurement of mass.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.update_electricity_records">
+<span class="sig-name descname"><span class="pre">update_electricity_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.update_electricity_records" title="Link to this definition">¶</a></dt>
+<dd><p>Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories).
+The electricity data in the database should be prefixed with one of '<a href="#id1"><span class="problematic" id="id2">Electricity_</span></a>', '<a href="#id3"><span class="problematic" id="id4">electricity_</span></a>', '<a href="#id5"><span class="problematic" id="id6">elec_</span></a>', or '<a href="#id7"><span class="problematic" id="id8">Elec_</span></a>'.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Product.update_inventory_records">
+<span class="sig-name descname"><span class="pre">update_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Product.update_inventory_records" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets inventory quantities, based on database item asigned to the product/process</dt><dd><p>and the product/process quantity.
+If no database entry is asigned, impacts are not updated.</p>
+</dd>
+</dl>
+<p>:raises ImportError : Incompatible units of Master object and database entry.:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.material_screening.</span></span><span class="sig-name descname"><span class="pre">Electricity</span></span><a class="headerlink" href="#pod_lca.material_screening.Electricity" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.material_screening.Master" title="pod_lca.lca_modules.material_screening.master.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a></p>
+<p>Electricity product object, inheriting from the Fuel object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.electricity_supplier">
+<span class="sig-name descname"><span class="pre">electricity_supplier</span></span><a class="headerlink" href="#pod_lca.material_screening.Electricity.electricity_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Electricity supplier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ElectricitySupply Obj</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.year">
+<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#pod_lca.material_screening.Electricity.year" title="Link to this definition">¶</a></dt>
+<dd><p>Year of electricity consumption</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.geographical_scope">
+<span class="sig-name descname"><span class="pre">geographical_scope</span></span><a class="headerlink" href="#pod_lca.material_screening.Electricity.geographical_scope" title="Link to this definition">¶</a></dt>
+<dd><p>Geographical scope considered for electricity data: 'National'. 'Regional', 'Local'</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#pod_lca.material_screening.Electricity.scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Cambium scenario for prediction of electricity technology futures.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.from_unit_inventories">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_unit_inventories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impacts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emissions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.from_unit_inventories" title="Link to this definition">¶</a></dt>
+<dd><p>Create an electricity impact from given impacts. This is primarily for seperating electricity component of products.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) -- Name of the electricity.</p></li>
+<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of elctricity consumption.</p></li>
+<li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of electricity consumption.</p></li>
+<li><p><strong>impacts</strong> (<em>Impacts Obj.</em>) -- Impacts corresponding to electricity consumption.</p></li>
+<li><p><strong>emissions</strong> (<em>Emissions Obj.</em>) -- Emissions corresponding to electricity consumption.</p></li>
+<li><p><strong>carbon_storage</strong> (<em>CarbonStorage Obj.</em>) -- Carbon storage corresponding to electricity consumption.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.get_data_distribution">
+<span class="sig-name descname"><span class="pre">get_data_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.get_data_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Get data_distribution object corresponding to the given attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Data distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataDistribution Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.get_geographical_scope">
+<span class="sig-name descname"><span class="pre">get_geographical_scope</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.get_geographical_scope" title="Link to this definition">¶</a></dt>
+<dd><p>Get the spatial resolution of the electricity supply.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>str</strong> -- Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.get_impact_database_entry">
+<span class="sig-name descname"><span class="pre">get_impact_database_entry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.get_impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><p>Electricity does not directly read from database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.get_scenario">
+<span class="sig-name descname"><span class="pre">get_scenario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.get_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Get scenario name. This will what used with cambium data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>str</strong> -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.get_supplier">
+<span class="sig-name descname"><span class="pre">get_supplier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.get_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Get the electricity supplier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Electricity supplier.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ElectricitySupply Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.get_year">
+<span class="sig-name descname"><span class="pre">get_year</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.get_year" title="Link to this definition">¶</a></dt>
+<dd><p>Get the year of electricity consumption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Year of electricity consumption.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.new">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.new" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new item in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- Name of the item.</p></li>
+<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
+<li><p><strong>stage</strong> (<em>str</em>) -- LCA stage.</p></li>
+<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the item</p></li>
+<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
+<li><p><strong>impacts_from</strong> (<em>str</em>) -- Name of the impact database entry from which to use impacts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.set_geographical_scope">
+<span class="sig-name descname"><span class="pre">set_geographical_scope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geographical_scope</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.set_geographical_scope" title="Link to this definition">¶</a></dt>
+<dd><p>Set the spatial resolution of the electricity supply.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>str</em>) -- Geographical scope of the electricity supply: 'National', 'Regional', 'Local'.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.set_impact_database_entry">
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><p>Electricity does not directly read from database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.set_scenario">
+<span class="sig-name descname"><span class="pre">set_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.set_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Set scenario name. This will be used with cambium data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>str</em>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.set_supplier">
+<span class="sig-name descname"><span class="pre">set_supplier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">supplier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.set_supplier" title="Link to this definition">¶</a></dt>
+<dd><p>Set electricity supplier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>supplier</strong> (<em>ElectricitySupply Obj.</em>) -- Electricity supply</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.set_year">
+<span class="sig-name descname"><span class="pre">set_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.set_year" title="Link to this definition">¶</a></dt>
+<dd><p>Set the year of electricity consumption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>year</strong> (<em>int</em>) -- Year of electricity consumption.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Electricity.update_inventory_records">
+<span class="sig-name descname"><span class="pre">update_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.material_screening.Electricity.update_inventory_records" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets impacts quantities, based on database item asigned to the product/process</dt><dd><p>and the product/process quantity.
+If no database entry is asigned, impacts are not updated.</p>
+</dd>
+</dl>
+<p>:raises ImportError : Incompatible units of Master object and database entry.:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Fuel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.material_screening.</span></span><span class="sig-name descname"><span class="pre">Fuel</span></span><a class="headerlink" href="#pod_lca.material_screening.Fuel" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.material_screening.Product" title="pod_lca.lca_modules.material_screening.product.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a></p>
+<p>Fuel product object, inheriting from the product object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Fuel.is_material">
+<span class="sig-name descname"><span class="pre">is_material</span></span><a class="headerlink" href="#pod_lca.material_screening.Fuel.is_material" title="Link to this definition">¶</a></dt>
+<dd><p>True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Fuel.is_energy">
+<span class="sig-name descname"><span class="pre">is_energy</span></span><a class="headerlink" href="#pod_lca.material_screening.Fuel.is_energy" title="Link to this definition">¶</a></dt>
+<dd><p>True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Process">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.material_screening.</span></span><span class="sig-name descname"><span class="pre">Process</span></span><a class="headerlink" href="#pod_lca.material_screening.Process" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.material_screening.Master" title="pod_lca.lca_modules.material_screening.master.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a></p>
+<p>Process object, inheriting from the Master object, represent a process.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.material_screening.Process.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span><a class="headerlink" href="#pod_lca.material_screening.Process.inputs" title="Link to this definition">¶</a></dt>
+<dd><p>Input products and processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Master Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -160,6 +1355,130 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Products</a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master"><code class="docutils literal notranslate"><span class="pre">Master</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.id"><code class="docutils literal notranslate"><span class="pre">Master.id</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.model"><code class="docutils literal notranslate"><span class="pre">Master.model</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.name"><code class="docutils literal notranslate"><span class="pre">Master.name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.life_cycle_stage</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.impacts"><code class="docutils literal notranslate"><span class="pre">Master.impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.emissions"><code class="docutils literal notranslate"><span class="pre">Master.emissions</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.carbon_storage"><code class="docutils literal notranslate"><span class="pre">Master.carbon_storage</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.impact_database_entry</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.qty"><code class="docutils literal notranslate"><span class="pre">Master.qty</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.unit"><code class="docutils literal notranslate"><span class="pre">Master.unit</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.is_hotspot"><code class="docutils literal notranslate"><span class="pre">Master.is_hotspot</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.data_distribution</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.pedigree_score</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.add_inventory_records_to_model"><code class="docutils literal notranslate"><span class="pre">Master.add_inventory_records_to_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.copy"><code class="docutils literal notranslate"><span class="pre">Master.copy()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Master.get_carbon_storage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.get_data_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_data_distributions"><code class="docutils literal notranslate"><span class="pre">Master.get_data_distributions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_emissions"><code class="docutils literal notranslate"><span class="pre">Master.get_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_id"><code class="docutils literal notranslate"><span class="pre">Master.get_id()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.get_impact_database_entry()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_impacts"><code class="docutils literal notranslate"><span class="pre">Master.get_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.get_life_cycle_stage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_model"><code class="docutils literal notranslate"><span class="pre">Master.get_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_name"><code class="docutils literal notranslate"><span class="pre">Master.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.get_pedigree_score()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_project"><code class="docutils literal notranslate"><span class="pre">Master.get_project()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_qty"><code class="docutils literal notranslate"><span class="pre">Master.get_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.get_unit"><code class="docutils literal notranslate"><span class="pre">Master.get_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.new"><code class="docutils literal notranslate"><span class="pre">Master.new()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.remove_inventory_records_from_model"><code class="docutils literal notranslate"><span class="pre">Master.remove_inventory_records_from_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.set_data_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_id"><code class="docutils literal notranslate"><span class="pre">Master.set_id()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.set_impact_database_entry()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.set_life_cycle_stage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_model"><code class="docutils literal notranslate"><span class="pre">Master.set_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_name"><code class="docutils literal notranslate"><span class="pre">Master.set_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.set_pedigree_score()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_qty"><code class="docutils literal notranslate"><span class="pre">Master.set_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.set_unit"><code class="docutils literal notranslate"><span class="pre">Master.set_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Master.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Master.update_inventory_records()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.production_year"><code class="docutils literal notranslate"><span class="pre">Product.production_year</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.electricity"><code class="docutils literal notranslate"><span class="pre">Product.electricity</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.weight"><code class="docutils literal notranslate"><span class="pre">Product.weight</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.weight_unit</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.density"><code class="docutils literal notranslate"><span class="pre">Product.density</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.trnasporter"><code class="docutils literal notranslate"><span class="pre">Product.trnasporter</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.mineral_carbonation_potential</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.is_material"><code class="docutils literal notranslate"><span class="pre">Product.is_material</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.is_fuel"><code class="docutils literal notranslate"><span class="pre">Product.is_fuel</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_density"><code class="docutils literal notranslate"><span class="pre">Product.get_density()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_electricity"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_database_tag()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_electricity_qty"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_source()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.get_mineral_carbonation_potential()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_production_year"><code class="docutils literal notranslate"><span class="pre">Product.get_production_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_transporter"><code class="docutils literal notranslate"><span class="pre">Product.get_transporter()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_weight"><code class="docutils literal notranslate"><span class="pre">Product.get_weight()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.get_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.get_weight_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_density"><code class="docutils literal notranslate"><span class="pre">Product.set_density()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_database_tag()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_source()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_mineral_carbon_intensity"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbon_intensity()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbonation_potential()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_production_year"><code class="docutils literal notranslate"><span class="pre">Product.set_production_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_qty"><code class="docutils literal notranslate"><span class="pre">Product.set_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_transporter"><code class="docutils literal notranslate"><span class="pre">Product.set_transporter()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.set_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_weight_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.update_electricity_records"><code class="docutils literal notranslate"><span class="pre">Product.update_electricity_records()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Product.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Product.update_inventory_records()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity"><code class="docutils literal notranslate"><span class="pre">Electricity</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.electricity_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.electricity_supplier</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.year"><code class="docutils literal notranslate"><span class="pre">Electricity.year</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.geographical_scope</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.scenario</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.from_unit_inventories"><code class="docutils literal notranslate"><span class="pre">Electricity.from_unit_inventories()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Electricity.get_data_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.get_geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.get_geographical_scope()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Electricity.get_impact_database_entry()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.get_scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.get_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.get_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.get_supplier()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.get_year"><code class="docutils literal notranslate"><span class="pre">Electricity.get_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.new"><code class="docutils literal notranslate"><span class="pre">Electricity.new()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.set_geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.set_geographical_scope()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Electricity.set_impact_database_entry()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.set_scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.set_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.set_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.set_supplier()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.set_year"><code class="docutils literal notranslate"><span class="pre">Electricity.set_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Electricity.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Electricity.update_inventory_records()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Fuel"><code class="docutils literal notranslate"><span class="pre">Fuel</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Fuel.is_material"><code class="docutils literal notranslate"><span class="pre">Fuel.is_material</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Fuel.is_energy"><code class="docutils literal notranslate"><span class="pre">Fuel.is_energy</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.material_screening.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.material_screening.Process.inputs"><code class="docutils literal notranslate"><span class="pre">Process.inputs</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>
@@ -175,7 +1494,7 @@
 
             <div class="right">
                 
-                    <a href="processess.html"><span>Processes</span><span class="icon">&gt;</span></a>
+                    <a href="transportation.html"><span>Transportation Module</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
