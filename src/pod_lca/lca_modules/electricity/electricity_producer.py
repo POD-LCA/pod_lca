@@ -7,6 +7,8 @@ __version__ = "0.1.0"
 
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ...units import UNITS_MAP
+from ...utilities import config
 
 
 class ElectricityProducer:
@@ -15,8 +17,9 @@ class ElectricityProducer:
         self.name = None
         self.energy_source = None
         self.year = None
-        self.impacts = None
-        self.emissions = None
+        self.unit_impacts = None
+        self.unit_emissions = None
+        self.declared_unit = UNITS_MAP[config['setup']['electricity']['DEFAULT_DECLARED_UNIT']]
 
     @classmethod
     def from_technology_year(cls, technology, year):
@@ -40,8 +43,8 @@ class ElectricityProducer:
         elec_producer.set_year(year)
         elec_producer.set_invetories()
 
-        elec_producer.impacts = Impacts.from_parent(elec_producer)
-        elec_producer.emissions = Emissions.from_parent(elec_producer)
+        elec_producer.unit_impacts = Impacts.from_parent(elec_producer)
+        elec_producer.unit_emissions = Emissions.from_parent(elec_producer)
 
         return elec_producer
     
@@ -85,7 +88,7 @@ class ElectricityProducer:
 
         return self
     
-    def set_impacts(self, impacts=None):
+    def set_unit_impacts(self, impacts=None):
         """ Set the impacts of the electricity producer.
         
         Parameters
@@ -93,11 +96,11 @@ class ElectricityProducer:
         impacts : dict
             The impacts of the electricity producer.
         """
-        self.impacts = impacts
+        self.unit_impacts = impacts
 
         return self
     
-    def set_emissions(self, emissions=None):
+    def set_unit_emissions(self, emissions=None):
         """ Set the emissions of the electricity producer.
         
         Parameters
@@ -108,15 +111,27 @@ class ElectricityProducer:
         if emissions is None:
             emissions = {}
         else:
-            self.emissions = emissions
+            self.unit_emissions = emissions
+
+        return self
+    
+    def set_declared_unit(self, unit):
+        """ Set the declared unit of impacts.
+    
+        Parameters
+        ----------
+        unit : Unit Obj.
+            Declared unit.
+        """
+        self.declared_unit = unit
 
         return self
     
     def set_invetories(self):
         """ Set the impacts and emissions inventories of the electricity producer.
         """
-        self.set_impacts()
-        self.set_emissions()
+        self.set_unit_impacts()
+        self.set_unit_emissions()
 
         return self
     
@@ -153,7 +168,7 @@ class ElectricityProducer:
         """
         return self.year
     
-    def get_impacts(self):
+    def get_unit_impacts(self):
         """ Get the impacts of the electricity producer.
         
         Returns
@@ -161,9 +176,9 @@ class ElectricityProducer:
         dict
             The impacts of the electricity producer.
         """
-        return self.impacts
+        return self.unit_impacts
     
-    def get_emissions(self):
+    def get_unit_emissions(self):
         """ Get the emissions of the electricity producer.
         
         Returns
@@ -171,8 +186,18 @@ class ElectricityProducer:
         dict
             The emissions of the electricity producer.
         """
-        return self.emissions
+        return self.unit_emissions
+
+    def get_declared_unit(self):
+        """ Set the declared unit of impacts.
     
-    
+        Returns
+        -------
+        unit : Unit Obj.
+            Declared unit.
+        """
+        return self.declared_unit
+
+
 if __name__ == '__main__':
     pass

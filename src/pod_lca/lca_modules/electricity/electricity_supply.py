@@ -13,6 +13,7 @@ from ..impacts import ElectricityImpactsDatabase
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ...units import UNITS_MAP
+from ...units import WATT_HOUR
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
@@ -53,8 +54,8 @@ class ElectricitySupply:
         self.electricity_producers = {}
         self.year = None
         self.scenario = config['setup']['electricity']['DEFAULT_SCENARIO']
-        self.impacts = None
-        self.emissions = None
+        self.unit_impacts = None
+        self.unit_emissions = None
         self.declared_unit = UNITS_MAP[config['setup']['electricity']['DEFAULT_DECLARED_UNIT']]
 
         self.impact_database_national = None
@@ -123,8 +124,8 @@ class ElectricitySupply:
             A new ElectricitySupplyAuthority object with the given location.
         """
         elec_supp_authority = cls()
-        elec_supp_authority.impacts = Impacts.from_parent(elec_supp_authority)
-        elec_supp_authority.emissions = Emissions.from_parent(elec_supp_authority)
+        elec_supp_authority.unit_impacts = Impacts.from_parent(elec_supp_authority)
+        elec_supp_authority.unit_emissions = Emissions.from_parent(elec_supp_authority)
 
         elec_supp_authority.set_location(location)
         if year is None:
@@ -284,12 +285,15 @@ class ElectricitySupply:
                 self.electricity_producers[key] = producer
 
             data_dict = impact_database.get_data_entry(region, key)
+            declared_qty = data_dict[impact_database.get_qty_key()]
              
-            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
-            producer.get_impacts().update_qty(impact_data_dict)
+            impact_data_dict = {cat:impact / declared_qty for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
+            producer.get_unit_impacts().update_qty(impact_data_dict)
+            
+            emissions_data_dict = {cat:emission / declared_qty for cat, emission in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'].keys()}
+            producer.get_unit_emissions().update_qty(emissions_data_dict)
 
-            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'].keys()}
-            producer.get_emissions().update_qty(emissions_data_dict)
+            producer.set_declared_unit(data_dict[impact_database.get_unit_key()])
 
         return self
     
@@ -346,7 +350,7 @@ class ElectricitySupply:
         """
         return self.year
     
-    def get_impacts(self):
+    def get_unit_impacts(self):
         """ Get the impacts of the electricity supply authority.
         
         Returns
@@ -356,9 +360,9 @@ class ElectricitySupply:
         """
         self.update_inventory_records()
 
-        return self.impacts
+        return self.unit_impacts
     
-    def get_emissions(self):
+    def get_unit_emissions(self):
         """ Get the emissions of the electricity supply authority.
         
         Returns
@@ -368,7 +372,7 @@ class ElectricitySupply:
         """
         self.update_inventory_records()
         
-        return self.emissions
+        return self.unit_emissions
     
     def get_scenario(self):
         """ Get the elecetricity consumption scenario.
@@ -411,7 +415,9 @@ class ElectricitySupply:
         for region in regions:
             impact_dict[region] = 0
             for technology, percentage in consumption_mix.items():
-                impact = impact_database.get_data_entry(region, technology)[impact_category]
+                data_entry = impact_database.get_data_entry(region, technology)
+                conversion_factor = data_entry[impact_database.get_unit_key()].convert_to(WATT_HOUR)
+                impact = data_entry[impact_category] * conversion_factor / data_entry[impact_database.get_qty_key()]
                 impact_dict[region] += impact * percentage
 
         region_selected = max(impact_dict, key=impact_dict.get)
@@ -430,13 +436,16 @@ class ElectricitySupply:
 
         temporal_data.delete_data()
 
-        self.impacts.clear_qty()
-        self.emissions.clear_qty()
-
+        self.unit_impacts.clear_qty()
+        self.unit_emissions.clear_qty()
+        supply_unit = self.get_unit()
         for technology, percentage in self.get_consumption_mix().items():
             if technology in self.electricity_producers:
-                self.impacts += self.electricity_producers[technology].get_impacts() * percentage
-                self.emissions += self.electricity_producers[technology].get_emissions() * percentage
+                production_unit = self.electricity_producers[technology].get_declared_unit()
+                conversion_factor = production_unit.convert_to(supply_unit)
+
+                self.unit_impacts += self.electricity_producers[technology].get_unit_impacts() * conversion_factor * percentage
+                self.unit_emissions += self.electricity_producers[technology].get_unit_emissions() * conversion_factor * percentage
 
         return self
     
@@ -472,7 +481,7 @@ class ElectricitySupply:
 
         elif self.get_geographical_scope() == 'Local':
             log("Data on impact data variability available at local level.", "info")
-            return [self.get_impacts()]
+            return [self.get_unit_impacts()]
         else:
             raise ValueError("Geographical scope of electricity supply is not recognized.")
 

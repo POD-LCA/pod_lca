@@ -21,18 +21,6 @@ class CambiumData:
     
     Attributes
     ----------
-    NATIONAL_DATA : str
-        File path to national level cambium data.
-    REGIONAL_DATA : str
-        File path to regional level cambium data.
-    LOCAL_DATA : str
-        File path to local level cambium data.
-    DATA_YEARS : list
-        List of years for which cambium data is available.
-    HEADER_MAP : str
-        File path to mapping of cambium data headers with electricity generation technology.
-    TECHNOLOGY_MAP : str
-        File path to mapping of cambium technology names with that of impact data source.
     data : DataFrame (Pandas)
         Pandas dataframe of cambium data loaded.
     """

@@ -45,15 +45,17 @@ class Location:
         self.city = None
         self.state = None
         self.country = None
+        self.country_code =None
         self.cfs_area = None
         self.faf_foreign = None
+        self.faf_domestic = None
+        self.marine_region = None
+        self.us_coast = None
         self.ferc_region = None
         self.balancing_authority = None
         self.cambium_gea_region = None
         self.reeds_balancing_area = None
-        self.faf_domestic = None
-        self.marine_region = None
-        self.us_coast = None
+
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"

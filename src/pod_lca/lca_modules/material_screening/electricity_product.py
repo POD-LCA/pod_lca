@@ -113,8 +113,8 @@ class Electricity(Master):
         """
         self.electricity_supplier = supplier
 
-        self.unit_impacts = supplier.get_impacts()
-        self.unit_emissions = supplier.get_emissions()
+        self.unit_impacts = supplier.get_unit_impacts()
+        self.unit_emissions = supplier.get_unit_emissions()
         self.unit_carbon_storage = CarbonStorage.from_parent(supplier) # ElectricitySupply does not have CarbonStorage record
 
         self.inventories_declared_qty = 1.0 # ElectricitySupply computes impact per one unit

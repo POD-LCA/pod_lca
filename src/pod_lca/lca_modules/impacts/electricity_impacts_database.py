@@ -135,7 +135,7 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         """
         if self.data is not None:
             if region in self.data[self.get_region_key()].values:
-                impact_data_tmp = self.data[self.data[self.get_region_key()] == region].drop([self.get_region_key(), self.get_qty_key(), self.get_unit_key()], axis='columns')
+                impact_data_tmp = self.data[self.data[self.get_region_key()] == region].drop([self.get_region_key()], axis='columns')
                 impact_data_dict = impact_data_tmp[impact_data_tmp[self.get_technology_key()] == technology].drop([self.get_technology_key()], axis='columns').squeeze().to_dict()
                 return impact_data_dict
             else:
