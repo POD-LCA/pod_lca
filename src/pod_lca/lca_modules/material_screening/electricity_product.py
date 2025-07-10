@@ -236,7 +236,7 @@ class Electricity(Master):
             impact_distribution, weights = supplier.get_impact_distribution() # this is a sampling of unit impacts
 
             declared_unit = supplier.get_unit()
-            conversion_factor = declared_unit.get_conversion_factor(self.get_unit())
+            conversion_factor = declared_unit.convert_to(self.get_unit())
 
             impact_distributions = []
             for category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:

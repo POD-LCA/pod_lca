@@ -261,7 +261,7 @@ class openLCA:
                 elif unit.get_standard_notation() == node.product.ref_unit:
                     conversion_factor = 1.0
                 else:
-                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+                    conversion_factor = UNITS_MAP[node.product.ref_unit].convert_to(unit)
 
                 qty += node.required_amount * conversion_factor
                 impact += node.result
@@ -325,16 +325,16 @@ class openLCA:
                 conversion_factor = 1.0
             else:
                 if conversion_map is None:
-                    conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)        
+                    conversion_factor = UNITS_MAP[node.product.ref_unit].convert_to(unit)        
                 else:
                     if node.provider.id in conversion_map:
-                        conversion_factor_a = UNITS_MAP[node.product.ref_unit].get_conversion_factor(UNITS_MAP[conversion_map[node.provider.id]['declared_unit']])
+                        conversion_factor_a = UNITS_MAP[node.product.ref_unit].convert_to(UNITS_MAP[conversion_map[node.provider.id]['declared_unit']])
                         conversion_factor_b = float(conversion_map[node.provider.id]['conversion_factor']) / float(conversion_map[node.provider.id]['declared_qty'])
-                        conversion_factor_c = UNITS_MAP[conversion_map[node.provider.id]['converted_unit']].get_conversion_factor(unit)
+                        conversion_factor_c = UNITS_MAP[conversion_map[node.provider.id]['converted_unit']].convert_to(unit)
                         
                         conversion_factor = conversion_factor_a * conversion_factor_b * conversion_factor_c
                     else:
-                        conversion_factor = UNITS_MAP[node.product.ref_unit].get_conversion_factor(unit)
+                        conversion_factor = UNITS_MAP[node.product.ref_unit].convert_to(unit)
       
             qty += node.required_amount * conversion_factor
             impact += node.result

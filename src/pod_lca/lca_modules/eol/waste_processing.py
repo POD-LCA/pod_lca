@@ -163,7 +163,7 @@ class WasteProcess:
             value_in = self.get_qty()
             unit_in = self.get_unit()
 
-            conversion_factor = unit_in.get_conversion_factor(unit)
+            conversion_factor = unit_in.convert_to(unit)
 
             if conversion_factor is not None:
                 self.unit = unit
@@ -211,7 +211,7 @@ class WasteProcess:
         database_entry = database.get_data_entry(material, process, life_cycle_stage)
 
         declared_unit = database_entry[database.get_unit_key()]
-        conversion_factor = declared_unit.get_conversion_factor(unit)
+        conversion_factor = declared_unit.convert_to(unit)
 
         impacts = {key: database_entry[key]*conversion_factor for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
         emissions = {key: database_entry[key]*conversion_factor for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}

@@ -105,7 +105,7 @@ class ProjectLogisticManager:
         Parameters
         ----------
         database : TranportationModeImpactsDatabase Obj or str
-            Impact database created or filepath to the corresponding csv file containing impact data.
+            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
         """
         if isinstance(database, TranportationModeImpactsDatabase):
             self.mode_impact_database = database

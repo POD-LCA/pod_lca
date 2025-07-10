@@ -139,7 +139,7 @@ class TransportationProcess(Process):
         products = self.get_transported_products()
         for product in products:
             weight_added = product.get_weight()
-            weight_conversion_factor = product.get_weight_unit().get_conversion_factor(self.get_transported_weight_unit())
+            weight_conversion_factor = product.get_weight_unit().convert_to(self.get_transported_weight_unit())
             weight += (weight_added * weight_conversion_factor)
         
         self.transported_weight = weight

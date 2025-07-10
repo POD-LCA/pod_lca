@@ -306,7 +306,7 @@ class GUIInputManager():
         old_unit = GUIInputManager.units_map[old_unit]
         new_unit = GUIInputManager.units_map[new_unit]
         
-        factor = old_unit.get_conversion_factor(new_unit)
+        factor = old_unit.convert_to(new_unit)
         if factor is None:
             e = f"Units {old_unit} and {new_unit} are incompatible." 
             GUIInputManager.show_error_popup("TypeError", str(e))

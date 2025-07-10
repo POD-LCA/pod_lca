@@ -266,7 +266,7 @@ class Master:
             value_in = self.get_qty()
             unit_in = self.get_unit()
 
-            conversion_factor = unit_in.get_conversion_factor(unit)
+            conversion_factor = unit_in.convert_to(unit)
 
             if conversion_factor is not None:
                 self.unit = unit
@@ -469,7 +469,7 @@ class Master:
         ------
         ImportError : Incompatible units of Master object and database entry.
         """
-        conversion_factor = self.get_unit().get_conversion_factor(self.inventories_declared_unit)
+        conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit)
 
         if conversion_factor is None:
             raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")

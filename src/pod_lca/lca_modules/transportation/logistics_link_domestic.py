@@ -8,6 +8,9 @@ __version__ = "0.1.0"
 from time import time
 
 from .logistics_link import LogisticLink
+from ..transportation import ElectricTransportMode
+from ..transportation import TransportMode
+from ..location import Location
 from ...units import KILOMETER
 from ...units import MILE
 from ...utilities import log
@@ -42,7 +45,7 @@ class DomesticLink(LogisticLink):
         if transport_scenario is None:
             self.transport_scenario = None
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ["National", "Regional", "Regional_c", "Local"]:
+            if transport_scenario in ["National", "Regional", "Regional_c", "Local", "Average"]:
                 self.transport_scenario = transport_scenario
             else:
                 raise ValueError("Transportation scenario not recognized")
@@ -88,19 +91,36 @@ class DomesticLink(LogisticLink):
         self._invalidate_cache()
         return self
 
-    def set_mode(self, mode=None, fuel_type=None , efficiency=None):
+    def set_mode(self, mode=None, efficiency=None):
         """ Set the transportation mode of the transportation link.
 
+        Notes
+        -----
+        1. Prefix 'E_' in the mode_name is used as the identifier of an electricity based transportation mode.
+        2. Electric vehicles takes electricity based on origin location.
+        
         Parameters
         ----------
         mode : str or TransportMode Obj
             transportation mode of the transportation link.
-        fuel_type : str
-            type of fuel used in the transportation mode (default is "Regular").
         efficiency : str
             efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
-        self = super().set_mode(mode, fuel_type, efficiency)
+        if isinstance(mode, TransportMode):
+            self.mode = mode
+        else:
+            mode_efficiency = "Median" if efficiency is None else efficiency
+            mode_name = "Truck" if mode is None else mode
+
+            if mode_name[0:2] == 'E_':
+                self.mode = ElectricTransportMode.new(mode_name[2:], mode_efficiency)
+                self.mode.set_location(self.get_shipping_origin())
+            else:
+                self.mode = TransportMode.new(mode_name, mode_efficiency)
+        
+        self.mode.set_parent(self)
+        self.mode.set_inventory_records()
+
         self._invalidate_cache()
         return self
     
@@ -155,15 +175,7 @@ class DomesticLink(LogisticLink):
         else:
             transport_scenario = self.get_transport_scenario()
             if transport_scenario in ["Local", "Regional", "Regional_c", "National", None]:
-                try:
-                    travel_dist = self.get_distance_from_cfs(transport_scenario)
-                except ValueError as e:
-                    if str(e) == "Transportation mode not in CFS dataset":
-                        # TODO: verify this logic in view of the resulting inconsistencies
-                        log(f"Transportation mode not found in CFS dataset. Using default mode 'Truck'.", "Warn")
-                        self.set_mode('Truck', self.get_mode().get_fuel_type(), self.get_mode().get_efficiency())
-
-                        travel_dist = self.get_distance_from_cfs(transport_scenario)
+                travel_dist = self.get_distance_from_cfs(transport_scenario)
             else:
                 raise ValueError("Transport scenario not recognized.")
 
@@ -181,7 +193,7 @@ class DomesticLink(LogisticLink):
             The return trip factor of the transportation link.
         """
         dist = self.get_travel_dist()
-        convertion_factor = self.get_dist_unit().get_conversion_factor(MILE)
+        convertion_factor = self.get_dist_unit().convert_to(MILE)
 
         return 1.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 1.0
         
@@ -203,7 +215,7 @@ class DomesticLink(LogisticLink):
         """
         dataset = self.get_project().get_dataset()
 
-        conversion_factor = self.get_dist_unit().get_conversion_factor(KILOMETER)
+        conversion_factor = self.get_dist_unit().convert_to(KILOMETER)
         sctg_code = dataset.get_sctg_code(self.get_material().get_name())
         cfs_filtered = dataset.filter_datasets(sctg_code, self.get_shipping_destination(), self.get_shipping_origin(), self.get_mode())
         travel_dist = dataset.get_distance_estimate(cfs_filtered, transport_scenario) * conversion_factor

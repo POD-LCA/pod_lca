@@ -21,7 +21,6 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
 
     def __init__(self):
         super().__init__()
-        self.fuel_type_key = None
         self.mode_efficiency_key = None
 
     # =================================
@@ -46,26 +45,13 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
         new_db.set_primary_key('mode_name')
         new_db.set_unit_key('Unit') 
         new_db.set_qty_key('Qty')
-        new_db.set_fuel_type_key('fuel')
         new_db.set_mode_efficiency_key('eff')
 
         return new_db
     
     # =================================
     # Setters
-    # =================================
-    def set_fuel_type_key(self, key):
-        """ Set the fuel type key of the database.
-        
-        Parameters
-        ----------
-        key : str
-            Data header corresponding to the fuel type corresponding to the database entry.
-        """
-        self.fuel_type_key = key
-
-        return self
-    
+    # =================================  
     def set_mode_efficiency_key(self, key):
         """ Set the mode efficiency key of the database.
 
@@ -81,16 +67,6 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
     # =================================
     # Getters
     # =================================
-    def get_fuel_type_key(self):
-        """ Get the fuel type key of the database.
-        
-        Returns
-        -------
-        str
-            Data header corresponding to the fuel type corresponding to the database entry.
-        """
-        return self.fuel_type_key
-    
     def get_mode_efficiency_key(self):
         """ Get the mode efficiency key of the database.
 
@@ -104,7 +80,7 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
     def get_required_headers(self):
         """ Get the required headers of the database.
         """
-        return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_fuel_type_key(), self.get_mode_efficiency_key()] 
+        return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_mode_efficiency_key()] 
     
     def get_data_entry(self, mode):
         """ Retrieve impacts for given flow.
@@ -120,15 +96,14 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
             Databse entry corresponding to the flow.
         """
         mode_name = mode.get_name()
-        fuel_type = mode.get_fuel_type()
         mode_efficiency = mode.get_efficiency()
 
         if self.data is not None:
-            row_id = self.data.index[(self.data[self.get_primary_key()] == mode_name) & (self.data[self.get_fuel_type_key()] == fuel_type) & (self.data[self.get_mode_efficiency_key()] == mode_efficiency)]
+            row_id = self.data.index[(self.data[self.get_primary_key()] == mode_name) & (self.data[self.get_mode_efficiency_key()] == mode_efficiency)]
             if len(row_id) == 1:
                 return self.data.iloc[row_id[0]]
             elif len(row_id) == 0:
-                raise ImportError(f"Data for {mode_name} {fuel_type} fuel of {mode_efficiency} efficiency not in database.")
+                raise ImportError(f"Data for {mode_name} fuel of {mode_efficiency} efficiency not in database.")
             else:
                 raise ImportError("Multiple matching entries exist...")
 

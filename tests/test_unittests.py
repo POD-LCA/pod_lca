@@ -268,8 +268,8 @@ class TestBuilder(unittest.TestCase):
         kilogram = KILO * GRAM
         megagram = MEGA * GRAM
 
-        self.assertEqual(kilogram.get_conversion_factor(GRAM), 1000)
-        self.assertEqual(kilogram.get_conversion_factor(megagram), 1000)
+        self.assertEqual(kilogram.convert_to(GRAM), 1000)
+        self.assertEqual(kilogram.convert_to(megagram), 1000)
 
     def test_13b_units_and_conversions(self):
         """ Test units and there conversions.
@@ -284,11 +284,11 @@ class TestBuilder(unittest.TestCase):
         wt_density_metric = kilogram / CUBIC_METER
         wt_density_imperial = POUND / CUBIC_FEET
 
-        self.assertAlmostEqual(GRAM.get_conversion_factor(POUND), 0.00220462)
-        self.assertAlmostEqual(kilogram.get_conversion_factor(POUND), 2.2046226, places=3)
-        self.assertAlmostEqual(TON_KILOMETER.get_conversion_factor(TON_MILE), 0.621371, places=3)
-        self.assertAlmostEqual(TON_KILOMETER.get_conversion_factor(pound_mile), 1369.891, places=1)
-        self.assertAlmostEqual(wt_density_metric.get_conversion_factor(wt_density_imperial), 0.06242796, places=4)
+        self.assertAlmostEqual(GRAM.convert_to(POUND), 0.00220462)
+        self.assertAlmostEqual(kilogram.convert_to(POUND), 2.2046226, places=3)
+        self.assertAlmostEqual(TON_KILOMETER.convert_to(TON_MILE), 0.621371, places=3)
+        self.assertAlmostEqual(TON_KILOMETER.convert_to(pound_mile), 1369.891, places=1)
+        self.assertAlmostEqual(wt_density_metric.convert_to(wt_density_imperial), 0.06242796, places=4)
 
         
     def test_13c_units_and_conversions(self):

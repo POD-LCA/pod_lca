@@ -206,26 +206,23 @@ class LogisticLink:
 
         return self
 
-    def set_mode(self, mode=None, fuel_type=None , efficiency=None):
+    def set_mode(self, mode=None, efficiency=None):
         """ Set the transportation mode of the transportation link.
 
         Parameters
         ----------
         mode : str or TransportMode Obj
             transportation mode of the transportation link.
-        fuel_type : str
-            type of fuel used in the transportation mode (default is "Regular").
         efficiency : str
             efficiency of the transportation mode "low, medium, high" (default is "medium").
         """
         if isinstance(mode, TransportMode):
             self.mode = mode
         else:
-            fuel_type = "Regular" if fuel_type is None else fuel_type
             mode_efficiency = "Median" if efficiency is None else efficiency
             mode_name = "Truck" if mode is None else mode
 
-            self.mode = TransportMode.new(mode_name, mode_efficiency, fuel_type)
+            self.mode = TransportMode.new(mode_name, mode_efficiency)
         
         self.mode.set_parent(self)
         self.mode.set_inventory_records()
@@ -308,7 +305,7 @@ class LogisticLink:
         """
         if self.return_trip_factor is None:
             dist = self.get_travel_dist()
-            convertion_factor = self.get_dist_unit().get_conversion_factor(MILE)
+            convertion_factor = self.get_dist_unit().convert_to(MILE)
 
             return 1.5 if dist * convertion_factor < 500 else 1.0
         
@@ -398,7 +395,7 @@ class LogisticLink:
         inventories_declared_qty = self.get_mode().get_inventories_declared_qty()
         inventories_declared_unit = self.get_mode().get_inventories_declared_unit()
         computed_unit = self.get_material().get_unit() * self.get_dist_unit()
-        conversion_factor = computed_unit.get_conversion_factor(inventories_declared_unit)
+        conversion_factor = computed_unit.convert_to(inventories_declared_unit)
 
         travel_dist = self.get_travel_dist()
         transport_material_qty = self.get_material().get_qty()

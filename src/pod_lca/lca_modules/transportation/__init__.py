@@ -1,5 +1,6 @@
 
 from .transport_mode import TransportMode
+from .electirc_transport_mode import ElectricTransportMode
 from .logistics_link import LogisticLink
 from .logistics_link_domestic import DomesticLink
 from .cfs_dataset import CFSDataset

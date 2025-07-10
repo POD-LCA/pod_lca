@@ -237,14 +237,14 @@ class Product(Master):
             if self.get_mineral_carbonation_potential():
                 mineral_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
                 input_unit = unit
-                conversion_factor_1 = input_unit.get_conversion_factor(mineral_carbon_unit)
+                conversion_factor_1 = input_unit.convert_to(mineral_carbon_unit)
                 
                 if per is None:
                     conversion_factor_2  = 1.0 * self.inventories_declared_qty
                 elif isinstance(per, Unit):
-                    conversion_factor_2 = per.get_conversion_factor(self.inventories_declared_unit) * self.inventories_declared_qty
+                    conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
                 elif isinstance(per, dict):
-                    conversion_factor_2 = per['unit'].get_conversion_factor(self.inventories_declared_unit) * self.inventories_declared_qty / per['qty']
+                    conversion_factor_2 = per['unit'].convert_to(self.inventories_declared_unit) * self.inventories_declared_qty / per['qty']
                 else:
                     raise TypeError
 
@@ -312,7 +312,7 @@ class Product(Master):
 
         declared_unit = database.get_data_entry(self.get_impact_database_entry())[database.get_unit_key()]
         declared_qty = database.get_data_entry(self.get_impact_database_entry())[database.get_qty_key()]
-        conversion_factor = self.get_unit().get_conversion_factor(declared_unit)
+        conversion_factor = self.get_unit().convert_to(declared_unit)
 
         return qty * (self.get_qty() * conversion_factor / declared_qty)
     

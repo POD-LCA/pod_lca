@@ -237,7 +237,7 @@ class Unit:
         """
         return self.components
 
-    def get_conversion_factor(self, to_unit):
+    def convert_to(self, to_unit):
         """ Returns conversion factor.
 
         Parameters
@@ -257,7 +257,7 @@ class Unit:
                 elif self.get_base() is None or to_unit.get_base() is None:
                     return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
                 elif self.get_base() == to_unit.get_base():
-                    return self.prefix.get_conversion_factor(to_unit.get_prefix())
+                    return self.prefix.convert_to(to_unit.get_prefix())
                 else: # both units are prefixed
                     return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
             else:
@@ -266,7 +266,7 @@ class Unit:
 
                 conversion_factor = 1.0
                 for component_in, component_out in zip(components_in, components_out): # it is assumed components of in and out are in same order
-                    conversion_factor *= component_in.get_conversion_factor(component_out)
+                    conversion_factor *= component_in.convert_to(component_out)
                 return conversion_factor
             
         else:
@@ -437,7 +437,7 @@ class MetricPrefix:
         """
         return self.power
         
-    def get_conversion_factor(self, to_prefix):
+    def convert_to(self, to_prefix):
         """ Compute conversion factor for converting preixes.
         
         Parameters

@@ -6,8 +6,6 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-from time import time
-
 from ..location import Location
 from ..transportation import TransportMode
 from ...utilities import config
@@ -136,6 +134,7 @@ class CFSDataset:
             If the scenario is not recognized or if no data is found for the scenario.
         """
         quartiles = dataset["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
+
         def assign_quartile(x, q1, q2, q3):
             if x <= q1:
                 return 'Q1'
@@ -146,17 +145,22 @@ class CFSDataset:
             else:
                 return 'Q4'
         dataset['quartile'] = dataset["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
-        # TODO: dealing with when the number of entries are less than 4
-        if scenario == "Local":
-            domestic_dis = dataset[dataset["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
-        elif scenario == "Regional":
-            domestic_dis = dataset[dataset["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
-        elif scenario == "Regional_c":
-            domestic_dis = dataset[dataset["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
-        elif scenario == "National":
-            domestic_dis = dataset[dataset["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
-        else: # TODO: Verify this for consistency
+        
+        if len(dataset) < 4:
             domestic_dis = dataset["SHIPMT_DIST_ROUTED"].mean()
+        else:
+            if scenario == "Local":
+                domestic_dis = dataset[dataset["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
+            elif scenario == "Regional":
+                domestic_dis = dataset[dataset["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
+            elif scenario == "Regional_c":
+                domestic_dis = dataset[dataset["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+            elif scenario == "National":
+                domestic_dis = dataset[dataset["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
+            elif scenario == "Average":
+                domestic_dis = dataset["SHIPMT_DIST_ROUTED"].mean()
+            else:
+                raise ValueError(f"{scenario} scenario is not recognized")
 
         return domestic_dis
 

@@ -44,8 +44,6 @@ class TransportMode:
         self.parent = None
         self.mode_name = None
         self.efficiency = None
-        self.fuel_type = None
-        self.electricity_consumption = None
         self.unit_impacts = None
         self.unit_emissions = None
         self.inventories_declared_qty = None
@@ -65,7 +63,7 @@ class TransportMode:
     # Constructors
     # ================================
     @classmethod
-    def new(cls, mode_name, efficiency="Median", fuel_type="Regular"):
+    def new(cls, mode_name, efficiency="Median"):
         """ Create a new transportation mode.
 
         Parameters
@@ -74,8 +72,6 @@ class TransportMode:
             the name of the transportation mode (e.g., 'Truck', 'Rail').
         efficiency: int
             the efficiency level (e.g., 1, 2, 3).
-        fuel_type: str
-            the type of fuel used (default is "Regular").
 
         Returns
         -------
@@ -85,7 +81,6 @@ class TransportMode:
         mode = cls()
         mode.set_name(mode_name)
         mode.set_efficiency(efficiency)
-        mode.set_fuel_type(fuel_type)
 
         mode.unit_impacts = Impacts.from_parent(mode)
         mode.unit_emissions = Emissions.from_parent(mode)
@@ -133,19 +128,6 @@ class TransportMode:
 
         return self
 
-    def set_fuel_type(self, fuel_type:(str)):
-        """ Set the fuel type of the transportation mode.
-
-        Parameters
-        ----------
-        fuel_type: str
-            The type of fuel used (e.g., 'Regular', 'Premium').
-        """
-        self.fuel_type = fuel_type
-        self.set_inventory_records()
-
-        return self
-
     # ================================
     # Getters
     # ================================
@@ -178,21 +160,6 @@ class TransportMode:
             the efficiency level (e.g., 'Low', 'Medium', 'High').
         """
         return self.efficiency
-
-    def get_fuel_type (self):
-        """ Retrieve the fuel type of the transportation mode.
-
-        Returns
-        -------
-        str
-            The type of fuel used (e.g., 'Regular', 'Premium').
-        """
-        return self.fuel_type
-
-    def get_electricity_consumption (self):
-        """ Retrieve the electricity consumption of the transportation mode.
-        """
-        return self.electricity_consumption
     
     def get_unit_impacts(self):
         """ Get unit impacts from the transportation mode.
@@ -240,7 +207,7 @@ class TransportMode:
     def set_inventory_records(self):
         """ Set unit inventory records of impacts and emissions for the transportation mode.
         """
-        if (self.get_name() is not None) and (self.get_fuel_type() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
+        if (self.get_name() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
 
             database = self.get_parent().get_project().get_impact_database()
 
@@ -254,10 +221,8 @@ class TransportMode:
             emissions = {key: unit_inventories[key] for key in self.unit_emissions.record_attr_dict}
             self.unit_emissions.update_qty(emissions)
 
-            #TODO: set electricity consumption as well
-
         return self
 
-
+    
 if __name__ == '__main__':
     pass

@@ -102,7 +102,7 @@ class Impacts(Records):
             if carbon_storage_record is not None:
                 for record, unit in carbon_storage_record.record_attr_dict.items():
                     input_unit = UNITS_MAP[unit]
-                    conversion_factor = input_unit.get_conversion_factor(KG_CARBON_DIOXIDE)
+                    conversion_factor = input_unit.convert_to(KG_CARBON_DIOXIDE)
 
                     qty = carbon_storage_record.get_record(record)
 

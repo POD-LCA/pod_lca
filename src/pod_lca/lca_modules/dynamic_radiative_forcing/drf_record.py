@@ -188,7 +188,7 @@ class DynamicRadiativeForcingRecord:
             _, unit_emission_profile = time_profile.discrete_from_continous(record_start_year, record_time_horizon, time_step, integrate_point='left')
             
             for greenhouse_gas in emission.record_attr_dict:
-                conversion_factor = UNITS_MAP[emission.record_attr_dict[greenhouse_gas]].get_conversion_factor(KILOGRAM)
+                conversion_factor = UNITS_MAP[emission.record_attr_dict[greenhouse_gas]].convert_to(KILOGRAM)
                 greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0) * conversion_factor
                 if greenhouse_gas_emission_qty > 0:
                     # get emission records for unit pulse

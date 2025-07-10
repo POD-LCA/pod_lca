@@ -1,0 +1,4 @@
+mode_name,efficiency,electricity_consumption,electricity_unit,qty,unit
+Truck,High,0.069,kWh,1,tkm
+Truck,Median,0.079,kWh,1,tkm
+Truck,Low,0.094,kWh,1,tkm

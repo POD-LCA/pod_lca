@@ -91,7 +91,7 @@ class USDomesticLogisticProject(ProjectLogisticManager):
                 raise ValueError("This project is for US domestic logistics only")
 
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ["National", "Regional_c", "Regional", "Local"]:
+            if transport_scenario in ["National", "Regional_c", "Regional", "Local", "Average"]:
                 LinkClass = DomesticLink
             else:
                 raise ValueError("Transport scenario not recognized.")
@@ -102,7 +102,7 @@ class USDomesticLogisticProject(ProjectLogisticManager):
         # create link
         link = LinkClass.in_project(good, self, 'transport_' + good.get_name())
         
-        link.set_mode(mode_name, mode_fuel_type, mode_efficiency)
+        link.set_mode(mode_name, mode_efficiency)
 
         link.set_travel_dist(travel_dist, distance_unit, return_trip_factor)
         link.set_shipping_destination(shipping_dest)

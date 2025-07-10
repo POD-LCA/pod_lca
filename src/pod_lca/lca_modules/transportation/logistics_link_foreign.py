@@ -236,7 +236,7 @@ class ForeignLink(LogisticLink):
         float
             The distance estimate for the specified scenario.
         """
-        conversion_factor = self.get_dist_unit().get_conversion_factor(KILOMETER)
+        conversion_factor = self.get_dist_unit().convert_to(KILOMETER)
 
         sctg_code = CFSDataset.get_sctg_code(self.get_material().get_name())
         datasets_filtered = FAFDataset.filter_datasets(sctg_code, self.get_shipping_destination(), self.get_shipping_origin(), self.get_next().get_mode(), self.get_mode(), transport_scenario)
