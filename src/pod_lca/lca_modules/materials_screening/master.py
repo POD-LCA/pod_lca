@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ...utilities import config
 from ...utilities import log
 
 

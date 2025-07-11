@@ -179,7 +179,7 @@ class Product(Master):
         Parameters
         ----------
         source : str
-            Source of electricity inventories data.
+            Source of electricity inventories data: 'from_database', or 'by_location'.
         """
         if source in [key for key in self.electricity if not key.startswith('_')]:
             self.electricity["_current"] = source

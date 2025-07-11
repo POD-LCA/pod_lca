@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Products &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <title>Products/Processes &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -124,9 +124,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="project.html">Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_screening_project.html">Project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Products</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Products/Processes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
@@ -153,12 +153,17 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="products">
-<h1>Products<a class="headerlink" href="#products" title="Link to this heading">¶</a></h1>
+  <section id="products-processes">
+<h1>Products/Processes<a class="headerlink" href="#products-processes" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a> and <a class="reference internal" href="#pod_lca.materials_screening.Process" title="pod_lca.materials_screening.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a> objects keeps track of product/process quantities and their LCA data (e.g., <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a>, <a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>). They both inherit from the abstract class <a class="reference internal" href="#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a>.</p>
+<p>Furthermore, they keep track of advanced analysis options such as <a class="reference internal" href="#pod_lca.materials_screening.Master.is_hotspot" title="pod_lca.materials_screening.Master.is_hotspot"><code class="xref py py-attr docutils literal notranslate"><span class="pre">is_hotspot</span></code></a>, <a class="reference internal" href="#pod_lca.materials_screening.Master.data_distribution" title="pod_lca.materials_screening.Master.data_distribution"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data_distribution</span></code></a> and <a class="reference internal" href="#pod_lca.materials_screening.Master.pedigree_score" title="pod_lca.materials_screening.Master.pedigree_score"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pedigree_score</span></code></a>.</p>
+<p><a class="reference internal" href="#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a> object keep track of its electricity usage (if the database provides data disagregated for electricity consumption), allowing swapping out of electricity based on project location (<a class="reference internal" href="#pod_lca.materials_screening.Product.set_electricity_source" title="pod_lca.materials_screening.Product.set_electricity_source"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_electricity_source()</span></code></a>).</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.materials_screening.</span></span><span class="sig-name descname"><span class="pre">Master</span></span><a class="headerlink" href="#pod_lca.materials_screening.Master" title="Link to this definition">¶</a></dt>
-<dd><p>Master object from which product and process objects inherit.</p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Master object from which product and process objects inherit.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master.id">
 <span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#pod_lca.materials_screening.Master.id" title="Link to this definition">¶</a></dt>
@@ -874,7 +879,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set the source of electricity inventories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source</strong> (<em>str</em>) -- Source of electricity inventories data.</p>
+<dd class="field-odd"><p><strong>source</strong> (<em>str</em>) -- Source of electricity inventories data: 'from_database', or 'by_location'.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1348,6 +1353,375 @@ If no database entry is asigned, impacts are not updated.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.add_inventory_records_to_model">
+<span class="sig-name descname"><span class="pre">add_inventory_records_to_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.add_inventory_records_to_model" title="Link to this definition">¶</a></dt>
+<dd><p>Add all inventory records to the product/process, if it is not already in the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.copy">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.copy" title="Link to this definition">¶</a></dt>
+<dd><p>Make a copy of an object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Master Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_carbon_storage">
+<span class="sig-name descname"><span class="pre">get_carbon_storage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_carbon_storage" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the carbon storage of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Carbon storage of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>CarbonStorage Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_data_distribution">
+<span class="sig-name descname"><span class="pre">get_data_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_data_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Get data_distribution object corresponding to the given attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Data distribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataDistribution Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_data_distributions">
+<span class="sig-name descname"><span class="pre">get_data_distributions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_data_distributions" title="Link to this definition">¶</a></dt>
+<dd><p>Get data_distribution objects of the Master obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>DataDistribution objects corresponding to attributes: {attr (str): Dataset Obj}</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_emissions">
+<span class="sig-name descname"><span class="pre">get_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the emissions of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Emissions of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Emissions Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_id" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the identification number of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Identification number of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_impact_database_entry">
+<span class="sig-name descname"><span class="pre">get_impact_database_entry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the impact database row corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Flow name corresponding to the database entry which gives the unit impact of the product.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_impacts">
+<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the impacts of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Impacts of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Impacts Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_life_cycle_stage">
+<span class="sig-name descname"><span class="pre">get_life_cycle_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the life cycle stage corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Corresponding life cycle stage.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_model" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the model corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model corresponding to the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_name" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the name of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_pedigree_score">
+<span class="sig-name descname"><span class="pre">get_pedigree_score</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_pedigree_score" title="Link to this definition">¶</a></dt>
+<dd><p>Get pedigree score of the Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_project">
+<span class="sig-name descname"><span class="pre">get_project</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_project" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the corresponding project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Corresponding project.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Project Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_qty">
+<span class="sig-name descname"><span class="pre">get_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the quantity of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantity of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.get_unit">
+<span class="sig-name descname"><span class="pre">get_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.get_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the unit of measurement of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit of measurement of the product/process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.new">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impacts_from</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.new" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new item in a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- Name of the item.</p></li>
+<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
+<li><p><strong>stage</strong> (<em>str</em>) -- LCA stage.</p></li>
+<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the item</p></li>
+<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
+<li><p><strong>impacts_from</strong> (<em>str</em>) -- Name of the impact database entry from which to use impacts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.remove_inventory_records_from_model">
+<span class="sig-name descname"><span class="pre">remove_inventory_records_from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.remove_inventory_records_from_model" title="Link to this definition">¶</a></dt>
+<dd><p>Remove all inventory records from the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.
+If None, all stages are checked to find the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_data_distribution">
+<span class="sig-name descname"><span class="pre">set_data_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_data_distribution" title="Link to this definition">¶</a></dt>
+<dd><p>Set a data_distribution object to the Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distribution</strong> (<em>DataDistribution Obj.</em>) -- DataDistribution object to be set</p></li>
+<li><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_id">
+<span class="sig-name descname"><span class="pre">set_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_id" title="Link to this definition">¶</a></dt>
+<dd><p>Set the product/process id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>float</em>) -- Item identification number.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_impact_database_entry">
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets the database (impacts) entry corresponding to the item.</dt><dd><p>This method will also update the corresponding impact quanitities.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>database_item</strong> (<em>str.</em>) -- The name of the database item which gives the item impacts.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_life_cycle_stage">
+<span class="sig-name descname"><span class="pre">set_life_cycle_stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Set life cycle stage of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_model" title="Link to this definition">¶</a></dt>
+<dd><p>Set the model corresponding to the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model corresponding to the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_name">
+<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_name" title="Link to this definition">¶</a></dt>
+<dd><p>Set name of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- Name of the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_pedigree_score">
+<span class="sig-name descname"><span class="pre">set_pedigree_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pedigree_score</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_pedigree_score" title="Link to this definition">¶</a></dt>
+<dd><p>Set a pedigree score (data quality score) to the Master Obj.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pedigree_score</strong> (<em>PedigreeScore Obj</em>) -- Data quality indicator for the object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_qty">
+<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_qty" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Update the qty of the item.</dt><dd><p>This will also re-calculate the corresponding impact quantities.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>qty</strong> (<em>float</em>) -- Production quantity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_unit">
+<span class="sig-name descname"><span class="pre">set_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit of measurement for the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Process.update_inventory_records">
+<span class="sig-name descname"><span class="pre">update_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.update_inventory_records" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Sets inventory quantities, based on database item asigned to the product/process</dt><dd><p>and the product/process quantity.
+If no database entry is asigned, impacts are not updated.</p>
+</dd>
+</dl>
+<p>:raises ImportError : Incompatible units of Master object and database entry.:</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1366,7 +1740,7 @@ If no database entry is asigned, impacts are not updated.</p>
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Products</a><ul>
+<li><a class="reference internal" href="#">Products/Processes</a><ul>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Master"><code class="docutils literal notranslate"><span class="pre">Master</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Master.id"><code class="docutils literal notranslate"><span class="pre">Master.id</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Master.model"><code class="docutils literal notranslate"><span class="pre">Master.model</span></code></a></li>
@@ -1473,6 +1847,34 @@ If no database entry is asigned, impacts are not updated.</p>
 </li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Process.inputs"><code class="docutils literal notranslate"><span class="pre">Process.inputs</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.add_inventory_records_to_model"><code class="docutils literal notranslate"><span class="pre">Process.add_inventory_records_to_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.copy"><code class="docutils literal notranslate"><span class="pre">Process.copy()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Process.get_carbon_storage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Process.get_data_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_data_distributions"><code class="docutils literal notranslate"><span class="pre">Process.get_data_distributions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_emissions"><code class="docutils literal notranslate"><span class="pre">Process.get_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_id"><code class="docutils literal notranslate"><span class="pre">Process.get_id()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Process.get_impact_database_entry()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_impacts"><code class="docutils literal notranslate"><span class="pre">Process.get_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Process.get_life_cycle_stage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_model"><code class="docutils literal notranslate"><span class="pre">Process.get_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_name"><code class="docutils literal notranslate"><span class="pre">Process.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Process.get_pedigree_score()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_project"><code class="docutils literal notranslate"><span class="pre">Process.get_project()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_qty"><code class="docutils literal notranslate"><span class="pre">Process.get_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.get_unit"><code class="docutils literal notranslate"><span class="pre">Process.get_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.new"><code class="docutils literal notranslate"><span class="pre">Process.new()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.remove_inventory_records_from_model"><code class="docutils literal notranslate"><span class="pre">Process.remove_inventory_records_from_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_data_distribution"><code class="docutils literal notranslate"><span class="pre">Process.set_data_distribution()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_id"><code class="docutils literal notranslate"><span class="pre">Process.set_id()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Process.set_impact_database_entry()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Process.set_life_cycle_stage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_model"><code class="docutils literal notranslate"><span class="pre">Process.set_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_name"><code class="docutils literal notranslate"><span class="pre">Process.set_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Process.set_pedigree_score()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_qty"><code class="docutils literal notranslate"><span class="pre">Process.set_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.set_unit"><code class="docutils literal notranslate"><span class="pre">Process.set_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Process.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Process.update_inventory_records()</span></code></a></li>
 </ul>
 </li>
 </ul>

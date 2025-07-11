@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Products" href="products.html" />
-    <link rel="prev" title="Project" href="project.html" /> 
+    <link rel="next" title="Products/Processes" href="products.html" />
+    <link rel="prev" title="Project" href="material_screening_project.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -124,9 +124,9 @@
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="project.html">Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="material_screening_project.html">Project</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html">Products</a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html">Products/Processes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
@@ -155,6 +155,9 @@
             
   <section id="model">
 <h1>Model<a class="headerlink" href="#model" title="Link to this heading">¶</a></h1>
+<p>A material screening <a class="reference internal" href="#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a> will maintain a list of <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a> and <a class="reference internal" href="products.html#pod_lca.materials_screening.Process" title="pod_lca.materials_screening.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a> objects going into the material production.</p>
+<p>This also is a point to retrive the LCA output (e.g., <a class="reference internal" href="#pod_lca.materials_screening.Model.get_total_impact" title="pod_lca.materials_screening.Model.get_total_impact"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_total_impact()</span></code></a>)</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Model">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.materials_screening.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><a class="headerlink" href="#pod_lca.materials_screening.Model" title="Link to this definition">¶</a></dt>
@@ -714,14 +717,14 @@ Quantity in the transportation process should be the distance.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="project.html">
+                <a href="material_screening_project.html">
                     <span class="icon">&lt;</span><span>Project</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="products.html"><span>Products</span><span class="icon">&gt;</span></a>
+                    <a href="products.html"><span>Products/Processes</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
