@@ -2,5 +2,5 @@
 Hotspot Analysis
 ****************
 
-.. autoclass:: lca_modules.uncertainty.hotspots.HotSpotAnalysis
+.. autoclass:: pod_lca.uncertainty.HotSpotAnalysis
     :members:

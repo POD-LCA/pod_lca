@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Monte Carlo Simulation &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Monte Carlo Simulation &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Units" href="units.html" />
+    <link rel="next" title="Location Module" href="location_module.html" />
     <link rel="prev" title="Sensitivity Analysis" href="sensitivity_analysis.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,20 +123,21 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Monte Carlo Simulation</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -157,6 +158,257 @@
             
   <section id="monte-carlo-simulation">
 <h1>Monte Carlo Simulation<a class="headerlink" href="#monte-carlo-simulation" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">MonteCarloSimulator</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator" title="Link to this definition">¶</a></dt>
+<dd><p>MonteCarloSimulation object carries out Monte Carlo Simulation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.model" title="Link to this definition">¶</a></dt>
+<dd><p>Model on which the Monte Carlo Simulation is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.iterations">
+<span class="sig-name descname"><span class="pre">iterations</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.iterations" title="Link to this definition">¶</a></dt>
+<dd><p>No of iterations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.impact_cat">
+<span class="sig-name descname"><span class="pre">impact_cat</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.impact_cat" title="Link to this definition">¶</a></dt>
+<dd><p>Impact category considered for the impact calculation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.var_param">
+<span class="sig-name descname"><span class="pre">var_param</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.var_param" title="Link to this definition">¶</a></dt>
+<dd><p>List of Distribution objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+Scenario values are 'low', 'med', and 'high'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.result">
+<span class="sig-name descname"><span class="pre">result</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.result" title="Link to this definition">¶</a></dt>
+<dd><p>Data from the Monte Carlo Simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>result Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.from_model">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_cat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GWP'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.from_model" title="Link to this definition">¶</a></dt>
+<dd><p>Create a Monte Carlo Simulator for a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model on which the Monte Carlo Simulation is performed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.set_model" title="Link to this definition">¶</a></dt>
+<dd><p>Set a model to the Simulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model on which the Monte Carlo Simulation is performed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.set_iterations">
+<span class="sig-name descname"><span class="pre">set_iterations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">no_iters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.set_iterations" title="Link to this definition">¶</a></dt>
+<dd><p>Set the number of iterations of the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>no_iters</strong> (<em>int.</em>) -- Number of iterations of the simulations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.set_impact_cat">
+<span class="sig-name descname"><span class="pre">set_impact_cat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_cat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.set_impact_cat" title="Link to this definition">¶</a></dt>
+<dd><p>Set the impact category considered for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>impact_cat</strong> (<em>str.</em>) -- Impact category considered for the impact calculation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.set_var_params">
+<span class="sig-name descname"><span class="pre">set_var_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.set_var_params" title="Link to this definition">¶</a></dt>
+<dd><p>Find and set the variable parameters within the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>list</em>) -- List of distributions to be considered in the MCS.</p></li>
+<li><p><strong>set_all</strong> (<em>bool</em>) -- If true, set all the parameters in the model with a distribution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.set_scenario">
+<span class="sig-name descname"><span class="pre">set_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.set_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Set scenarios for a simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>dict.</em>) -- Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+Scenario values are 'low', 'med', and 'high'.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.set_result">
+<span class="sig-name descname"><span class="pre">set_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_cts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.set_result" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the results of the Monte Carlo Simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results</strong> (<em>list</em><em> of </em><em>float</em>) -- A list of impact data from each iteration of the simulation.</p></li>
+<li><p><strong>is_cts</strong> (<em>bool</em>) -- True, if the results are in a continous scale.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.get_model" title="Link to this definition">¶</a></dt>
+<dd><p>Get the model for which the simulation will be run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model on which the Monte Carlo Simulation is performed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.get_iterations">
+<span class="sig-name descname"><span class="pre">get_iterations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.get_iterations" title="Link to this definition">¶</a></dt>
+<dd><p>Get the number of iterations of the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of iterations of the simulations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.get_impact_cat">
+<span class="sig-name descname"><span class="pre">get_impact_cat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.get_impact_cat" title="Link to this definition">¶</a></dt>
+<dd><p>Get the impact category considered for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Impact category considered for the impact calculation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.get_var_params">
+<span class="sig-name descname"><span class="pre">get_var_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.get_var_params" title="Link to this definition">¶</a></dt>
+<dd><p>Get variable parameters within the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.get_scenario">
+<span class="sig-name descname"><span class="pre">get_scenario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.get_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Get scenarios set for the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+Scenario values are 'low', 'med', and 'high'.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.get_result">
+<span class="sig-name descname"><span class="pre">get_result</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.get_result" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the results of the Monte Carlo Simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data from the Monte Carlo Simulation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>MonteCarlo_reults Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.run" title="Link to this definition">¶</a></dt>
+<dd><p>Run a Monte Carlo Simulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator.update_all_distributions">
+<span class="sig-name descname"><span class="pre">update_all_distributions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator.update_all_distributions" title="Link to this definition">¶</a></dt>
+<dd><p>Set distribution objects to all data objects in the project objects with dataset.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloResults">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">MonteCarloResults</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloResults" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -164,6 +416,47 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Monte Carlo Simulation</a><ul>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.model</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.iterations</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.impact_cat</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.var_param"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.var_param</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.scenario"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.scenario</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.result"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.result</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.from_model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.from_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.set_model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.set_iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_iterations()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.set_impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_impact_cat()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.set_var_params"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_var_params()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.set_scenario"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.set_result"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_result()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.get_model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.get_iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_iterations()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.get_impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_impact_cat()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.get_var_params"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_var_params()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.get_scenario"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.get_result"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_result()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.run"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.run()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator.update_all_distributions"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.update_all_distributions()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloResults"><code class="docutils literal notranslate"><span class="pre">MonteCarloResults</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>
@@ -179,7 +472,7 @@
 
             <div class="right">
                 
-                    <a href="units.html"><span>Units</span><span class="icon">&gt;</span></a>
+                    <a href="location_module.html"><span>Location Module</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -187,7 +480,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

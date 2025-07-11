@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Emission Profiles &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Emission Profiles &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Location Module" href="location_module.html" />
+    <link rel="next" title="Uncertainty Module" href="uncertainty_module.html" />
     <link rel="prev" title="Dynamic Radiative Forcing" href="dynamic_radiative_forcing.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,15 +123,16 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Emission Profiles</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -156,7 +157,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.</span></span><span class="sig-name descname"><span class="pre">TemporalEmissionProfiles</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.lca_modules.uncertainty.datasets.DataDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></a></p>
 <p>Temporal emission profiles for the purpose of calculating dynamic radiative forcing.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.start">
@@ -176,6 +177,56 @@
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int or float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_start">
+<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_start" title="Link to this definition">¶</a></dt>
+<dd><p>Set the starting point of the temporal emission profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>start</strong> (<em>int</em><em> or </em><em>float</em>) -- starting point of the temporal emission profile.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration">
+<span class="sig-name descname"><span class="pre">set_duration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration" title="Link to this definition">¶</a></dt>
+<dd><p>Set the duration of the temporal emission profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>duration</strong> (<em>int</em><em> or </em><em>float</em>) -- Duration of the temporal emission profile.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start">
+<span class="sig-name descname"><span class="pre">get_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start" title="Link to this definition">¶</a></dt>
+<dd><p>Get the starting point of the temporal emission profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>starting point of the temporal emission profile.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int or float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration">
+<span class="sig-name descname"><span class="pre">get_duration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration" title="Link to this definition">¶</a></dt>
+<dd><p>Get the duration of the temporal emission profile.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>starting point of the temporal emission profile.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int or float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -203,56 +254,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration">
-<span class="sig-name descname"><span class="pre">get_duration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration" title="Link to this definition">¶</a></dt>
-<dd><p>Get the duration of the temporal emission profile.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>starting point of the temporal emission profile.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int or float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start">
-<span class="sig-name descname"><span class="pre">get_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start" title="Link to this definition">¶</a></dt>
-<dd><p>Get the starting point of the temporal emission profile.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>starting point of the temporal emission profile.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int or float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration">
-<span class="sig-name descname"><span class="pre">set_duration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">duration</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration" title="Link to this definition">¶</a></dt>
-<dd><p>Set the duration of the temporal emission profile.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>duration</strong> (<em>int</em><em> or </em><em>float</em>) -- Duration of the temporal emission profile.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_start">
-<span class="sig-name descname"><span class="pre">set_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_start" title="Link to this definition">¶</a></dt>
-<dd><p>Set the starting point of the temporal emission profile.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>start</strong> (<em>int</em><em> or </em><em>float</em>) -- starting point of the temporal emission profile.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -275,11 +276,11 @@
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.start</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.duration</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.discrete_from_continous"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.discrete_from_continous()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.get_duration()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.get_start()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.set_duration()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.set_start()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.set_duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.set_duration()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_start"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.get_start()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.get_duration"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.get_duration()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles.discrete_from_continous"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles.discrete_from_continous()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -303,7 +304,7 @@
 
             <div class="right">
                 
-                    <a href="location_module.html"><span>Location Module</span><span class="icon">&gt;</span></a>
+                    <a href="uncertainty_module.html"><span>Uncertainty Module</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -311,7 +312,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

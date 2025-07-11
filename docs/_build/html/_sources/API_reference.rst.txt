@@ -2,21 +2,21 @@
 API Reference
 **************
 
-The package is organized into LCA modules
+The POD|LCA Python package is organized into Life Cycle Analysis (LCA) modules, as sub-packages (e.g., impacts, electricity, transportation). There are other non-LCA utility sub-packages as well (e.g., units, visualizer, utilities)
 
 --------
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
    impacts_module
-   material_screening_module
-   buildings_module
-   transportation
+   materials_screening_module
    electricity_module
-   eol_module
+   end_of_life
    dynamic_radiative_forcing
-   location_module
    uncertainty_module
+   location_module
+   visualizer
    units
    utilities
+

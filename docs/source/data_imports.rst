@@ -2,6 +2,6 @@
 Data Imports
 *************
 
-.. autoclass:: utilities.data_imports.csv.CSV_Importer
+.. autoclass:: pod_lca.utilities.DataImporter
    :members:
     

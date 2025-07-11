@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Impacts &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>End-of-life Module &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Impacts Database" href="impacts_database.html" />
-    <link rel="prev" title="Impact Module" href="impacts_module.html" /> 
+    <link rel="next" title="Waste Products" href="waste.html" />
+    <link rel="prev" title="Electricity" href="electricity_module.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -122,15 +122,19 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="material_module.html">Material Module</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="impacts_module.html">Impact Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Impacts</a></li>
-<li class="toctree-l3"><a class="reference internal" href="impacts_database.html">Impacts Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">End-of-life Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="waste.html">Waste Products</a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html">Waste Processing</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -148,8 +152,73 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="impacts">
-<h1>Impacts<a class="headerlink" href="#impacts" title="Link to this heading">¶</a></h1>
+  <section id="end-of-life-module">
+<h1>End-of-life Module<a class="headerlink" href="#end-of-life-module" title="Link to this heading">¶</a></h1>
+<p>A brief description...</p>
+<hr class="docutils" />
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="waste.html">Waste Products</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste.html#pod_lca.eol.Waste"><code class="docutils literal notranslate"><span class="pre">Waste</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.parent"><code class="docutils literal notranslate"><span class="pre">Waste.parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.waste_processes"><code class="docutils literal notranslate"><span class="pre">Waste.waste_processes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.process_mix</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.impacts"><code class="docutils literal notranslate"><span class="pre">Waste.impacts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.bio_based"><code class="docutils literal notranslate"><span class="pre">Waste.bio_based</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.new"><code class="docutils literal notranslate"><span class="pre">Waste.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.set_parent"><code class="docutils literal notranslate"><span class="pre">Waste.set_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Waste.set_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.set_waste_processess"><code class="docutils literal notranslate"><span class="pre">Waste.set_waste_processess()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.set_bio_based"><code class="docutils literal notranslate"><span class="pre">Waste.set_bio_based()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.get_parent"><code class="docutils literal notranslate"><span class="pre">Waste.get_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.get_waste_processes"><code class="docutils literal notranslate"><span class="pre">Waste.get_waste_processes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.get_process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.get_process_mix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.get_bio_based"><code class="docutils literal notranslate"><span class="pre">Waste.get_bio_based()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Waste.update_inventory_records()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.update_process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.update_process_mix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste.html#pod_lca.eol.Waste.check_mix_sum"><code class="docutils literal notranslate"><span class="pre">Waste.check_mix_sum()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="waste_processing.html">Waste Processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess"><code class="docutils literal notranslate"><span class="pre">WasteProcess</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.process_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.qty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.life_cycle_stage</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit_impacts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.location"><code class="docutils literal notranslate"><span class="pre">WasteProcess.location</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.transporation_link"><code class="docutils literal notranslate"><span class="pre">WasteProcess.transporation_link</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.linked_to"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_to</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.linked_from"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_from</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.new"><code class="docutils literal notranslate"><span class="pre">WasteProcess.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_process_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_unit_inventories"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_unit_inventories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_location"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.set_linked_process"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_linked_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_process_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_unit_emissions"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit_emissions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess.get_linked_process"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_linked_process()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 
 
@@ -165,14 +234,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="impacts_module.html">
-                    <span class="icon">&lt;</span><span>Impact Module</span></a>
+                <a href="electricity_module.html">
+                    <span class="icon">&lt;</span><span>Electricity</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="impacts_database.html"><span>Impacts Database</span><span class="icon">&gt;</span></a>
+                    <a href="waste.html"><span>Waste Products</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -180,7 +249,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

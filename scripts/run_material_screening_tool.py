@@ -1,4 +1,4 @@
-from ui.material_screening_tool.app import App
+from ui.materials_screening_tool.app import App
 
 app = App()
 app.mainloop()

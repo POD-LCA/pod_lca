@@ -213,8 +213,8 @@ class WasteProcess:
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.get_conversion_factor(unit)
 
-        impacts = {key: database_entry[key]*conversion_factor for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
-        emissions = {key: database_entry[key]*conversion_factor for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+        impacts = {key: database_entry[key]*conversion_factor for key in self.get_unit_impacts().get_categories()}
+        emissions = {key: database_entry[key]*conversion_factor for key in self.get_unit_emissions().get_categories()}
         
         self.get_unit_impacts().update_qty(impacts)
         self.get_unit_emissions().update_qty(emissions)
@@ -293,7 +293,7 @@ class WasteProcess:
         
         Returns
         -------
-        unit : Unit Obj.
+        Unit Obj.
             Unit of measurement.
         """        
         return self.unit

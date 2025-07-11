@@ -1,5 +1,5 @@
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
-from ui.material_screening_tool.popup import Popup
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.popup import Popup
 
 from tkinter import Menu, BooleanVar
 

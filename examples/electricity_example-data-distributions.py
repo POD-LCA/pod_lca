@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 from numpy import percentile, linspace
 
-from pod_lca.material_screening import Project 
+from pod_lca.materials_screening import Project 
 from pod_lca.location import Location
 from pod_lca.units import KILO
 from pod_lca.units import WATT_HOUR

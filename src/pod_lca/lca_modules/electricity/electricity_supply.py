@@ -39,7 +39,7 @@ class ElectricitySupply:
     impacts : Impacts Obj.
         The impacts of the electricity supply authority.
 
-    Notes
+    Note
     -----
     1. Location, regionality, and year determines the consumption mix.
     2. location and regionality determines the impact by technology.
@@ -285,10 +285,10 @@ class ElectricitySupply:
 
             data_dict = impact_database.get_data_entry(region, key)
              
-            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
+            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in producer.get_impacts().get_categories()}
             producer.get_impacts().update_qty(impact_data_dict)
 
-            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'].keys()}
+            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in producer.get_emissions().get_categories()}
             producer.get_emissions().update_qty(emissions_data_dict)
 
         return self
@@ -488,7 +488,7 @@ class ElectricitySupply:
             impact_obj = Impacts.from_parent(self)
             for technology, percentage in energy_mix.items():
                 data_dict = impact_database.get_data_entry(country_code, technology)
-                impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys()}
+                impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in impact_obj.get_categories()}
                 tmp_impact_obj = Impacts.from_dict(impact_data_dict) 
                 impact_obj += tmp_impact_obj * percentage
 

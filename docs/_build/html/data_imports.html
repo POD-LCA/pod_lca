@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Data Imports &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Data Imports &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="License" href="license.html" />
-    <link rel="prev" title="Plotters" href="plotters.html" /> 
+    <link rel="next" title="Mathematical Functions" href="math_funcs.html" />
+    <link rel="prev" title="Utilities" href="utilities.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,17 +123,18 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="utilities.html">Utilities</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="plotters.html">Plotters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Data Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="math_funcs.html">Mathematical Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="array_methods.html">Object Array Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -154,6 +155,141 @@
             
   <section id="data-imports">
 <h1>Data Imports<a class="headerlink" href="#data-imports" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.utilities.</span></span><span class="sig-name descname"><span class="pre">DataImporter</span></span><a class="headerlink" href="#pod_lca.utilities.DataImporter" title="Link to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.csv_to_pandas">
+<span class="sig-name descname"><span class="pre">csv_to_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multipliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.csv_to_pandas" title="Link to this definition">¶</a></dt>
+<dd><p>Import data to database from a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file</p></li>
+<li><p><strong>headers</strong> (<em>list</em><em> of </em><em>str</em>) -- The headers of the CSV file as they would be mapped to the dataset.</p></li>
+<li><p><strong>multipliers</strong> (<em>list</em><em> of </em><em>float</em>) -- Values of each column of the CSV will be multiplied by these values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.csv_to_dict">
+<span class="sig-name descname"><span class="pre">csv_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.csv_to_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Import data to dictionary from a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV</p></li>
+<li><p><strong>primary_key</strong> (<em>str</em>) -- The column name that will be used as the primary key in the dictionary.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with the UUID as the key and the row as the</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.csv_to_list">
+<span class="sig-name descname"><span class="pre">csv_to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.csv_to_list" title="Link to this definition">¶</a></dt>
+<dd><p>Import data to list from a CSV file. The first row of the CSV file is used as the header. Only one column identified by the column header is imported. If the column header is not provided, the first column of the CSV file is imported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
+<li><p><strong>column_header</strong> (<em>str</em>) -- Header of the column from where the data to be read to the list, when the file has headers.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.dict_to_csv">
+<span class="sig-name descname"><span class="pre">dict_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.dict_to_csv" title="Link to this definition">¶</a></dt>
+<dd><p>Transfer data from a dictionary to a CSV file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dict</strong> (<em>dict</em>) -- A dictionary with the row as the value.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.list_to_csv">
+<span class="sig-name descname"><span class="pre">list_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.list_to_csv" title="Link to this definition">¶</a></dt>
+<dd><p>Write data to a CSV file from a list of str.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_list</strong> (<em>list</em><em> of </em><em>str</em>) -- List of strings to be written to the CSV file.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.lists_to_csv">
+<span class="sig-name descname"><span class="pre">lists_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.lists_to_csv" title="Link to this definition">¶</a></dt>
+<dd><p>Write data to a CSV file from a list of str.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_list</strong> (<em>list</em><em> of </em><em>lists</em>) -- Lists to be written to the CSV file.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
+<li><p><strong>as_columns</strong> (<em>bool</em>) -- If true, each list will be written as a column.</p></li>
+<li><p><strong>headers</strong> (<em>list</em>) -- Data headers.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.dict_to_json">
+<span class="sig-name descname"><span class="pre">dict_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.dict_to_json" title="Link to this definition">¶</a></dt>
+<dd><p>Transfer data from a dictionary to a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dict</strong> (<em>dict</em>) -- A dictionary with the UUID as the key and the row as the value.</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the JSON file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.json_to_dict">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.json_to_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Import data to dictionary from a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) -- Location of the JSON file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with the UUID as the key and the row as the value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -162,6 +298,33 @@
         </div>
       </div>
     
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Data Imports</a><ul>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter"><code class="docutils literal notranslate"><span class="pre">DataImporter</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.csv_to_pandas"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_pandas()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.csv_to_dict"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.csv_to_list"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_list()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.dict_to_csv"><code class="docutils literal notranslate"><span class="pre">DataImporter.dict_to_csv()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.list_to_csv"><code class="docutils literal notranslate"><span class="pre">DataImporter.list_to_csv()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.lists_to_csv"><code class="docutils literal notranslate"><span class="pre">DataImporter.lists_to_csv()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.dict_to_json"><code class="docutils literal notranslate"><span class="pre">DataImporter.dict_to_json()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.json_to_dict"><code class="docutils literal notranslate"><span class="pre">DataImporter.json_to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
 
       <div class="clearer"></div>
     </div>
@@ -169,14 +332,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="plotters.html">
-                    <span class="icon">&lt;</span><span>Plotters</span></a>
+                <a href="utilities.html">
+                    <span class="icon">&lt;</span><span>Utilities</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="license.html"><span>License</span><span class="icon">&gt;</span></a>
+                    <a href="math_funcs.html"><span>Mathematical Functions</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -184,7 +347,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

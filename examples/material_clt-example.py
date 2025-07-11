@@ -9,7 +9,7 @@ __version__ = "0.1.0"
 
 from pod_lca.impacts import ImpactsDatabase
 from pod_lca.location import Location
-from pod_lca.material_screening import Project
+from pod_lca.materials_screening import Project
 from pod_lca.uncertainty import HotSpotAnalysis
 from pod_lca.units import CUBIC_METER
 from pod_lca.units import KILO

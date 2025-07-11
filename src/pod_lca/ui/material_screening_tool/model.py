@@ -1,4 +1,4 @@
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
 
 import csv
 import os

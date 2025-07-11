@@ -239,7 +239,7 @@ class DynamicRadiativeForcingRecord:
     def get_emissions_list(self):
         """ Get the list of emissions assigned to the dynamic radiative forcing record.
         
-        Retruns
+        Returns
         -------
         list of Emission Obj.
             List of emissions considered in the record.
@@ -249,7 +249,7 @@ class DynamicRadiativeForcingRecord:
     def get_time_step(self):
         """ Set the time step for time series record.
         
-        Retruns
+        Returns
         -------
         float
             Time step of the record.

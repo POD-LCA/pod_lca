@@ -636,7 +636,7 @@ class openLCA:
     def compute_impacts(client, product_system_ref, impact_method_ref , qty=1.0):
         """ Compute the impacts of the product system.
         
-        Notes
+        Note
         -----
         1. Allocation method set to 'As Defined in Processes' by default (same as openLCA GUI default). For other allocation method names see https://greendelta.github.io/olca-schema/enums/AllocationType.html.
         2. The calculation of the impact method does not occur asynchronously, therefore the wait_until_ready() method called after the results object is created.

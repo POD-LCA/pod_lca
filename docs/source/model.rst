@@ -2,5 +2,5 @@
 Model
 **********
 
-.. autoclass:: pod_lca.material_screening.Model
+.. autoclass:: pod_lca.materials_screening.Model
     :members:

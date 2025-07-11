@@ -2,6 +2,5 @@
 Data Quality Assessment
 ************************
 
-.. autoclass:: lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis
+.. autoclass:: pod_lca.uncertainty.DataQualityAnalysis
     :members:
-

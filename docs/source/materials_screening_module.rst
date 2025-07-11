@@ -1,8 +1,6 @@
-.. _section-API_Material_Module:
-
-****************
-Material Module
-****************
+***************************
+Materials Screening Module
+***************************
 A brief description... 
 
 -------

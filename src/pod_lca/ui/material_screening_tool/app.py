@@ -1,19 +1,19 @@
 
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
-from ui.material_screening_tool.menubar import MenubarMixin
-from ui.material_screening_tool.plots import PlotsMixin
-from ui.material_screening_tool.process import Process
-from ui.material_screening_tool.model import ModelMixin
-from ui.material_screening_tool.energy import EnergyProduct
-from ui.material_screening_tool.emission import EmissionProduct
-from ui.material_screening_tool.waste import WasteProduct
-from ui.material_screening_tool.parameter import Parameter
-from ui.material_screening_tool.connectors import ConnectorsMixin
-from ui.material_screening_tool.transportation import Transportation
-from ui.material_screening_tool.relationships import RelationshipsMixin
-from ui.material_screening_tool.canvas_opps import CanvasOperationsMixin
-from ui.material_screening_tool.save_load import SaveLoadMethods
-from ui.material_screening_tool.hotspots import HotspotMixins
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.menubar import MenubarMixin
+from ui.materials_screening_tool.plots import PlotsMixin
+from ui.materials_screening_tool.process import Process
+from ui.materials_screening_tool.model import ModelMixin
+from ui.materials_screening_tool.energy import EnergyProduct
+from ui.materials_screening_tool.emission import EmissionProduct
+from ui.materials_screening_tool.waste import WasteProduct
+from ui.materials_screening_tool.parameter import Parameter
+from ui.materials_screening_tool.connectors import ConnectorsMixin
+from ui.materials_screening_tool.transportation import Transportation
+from ui.materials_screening_tool.relationships import RelationshipsMixin
+from ui.materials_screening_tool.canvas_opps import CanvasOperationsMixin
+from ui.materials_screening_tool.save_load import SaveLoadMethods
+from ui.materials_screening_tool.hotspots import HotspotMixins
 
 from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar, IntVar
 from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
@@ -30,7 +30,7 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
         # self.geometry("1500x800")
         self.state("zoomed")
         self.database_file_path = r'data\Impact_data.csv'
-        self.documentation_file_path = r'docs\user_manuals\material_screening_tool_user_manual.pdf'
+        self.documentation_file_path = r'docs\user_manuals\materials_screening_tool_user_manual.pdf'
         impact_headers = list(GUIInputManager.get_impact_categories().keys())
         self.save_path = None
 
@@ -332,5 +332,5 @@ class App(Tk, CanvasOperationsMixin, MenubarMixin, PlotsMixin, ModelMixin, Proce
 if __name__ == "__main__":
     app = App()
     app.database_file_path = r'data\Impact_data.csv'
-    app.documentation_file_path = r'docs\user_manuals\material_screening_tool_user_manual.pdf'
+    app.documentation_file_path = r'docs\user_manuals\materials_screening_tool_user_manual.pdf'
     app.mainloop()

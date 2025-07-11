@@ -207,13 +207,13 @@ class Master:
             self.inventories_declared_unit = self.get_unit()
             self.inventories_declared_qty = 1.0
 
-            impacts = {key: 0.0 for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+            impacts = {key: 0.0 for key in self.unit_impacts.get_categories()}
             self.unit_impacts.update_qty(impacts)
 
-            emissions = {key: 0.0 for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+            emissions = {key: 0.0 for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
-            carbon_storage = {key: 0.0 for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+            carbon_storage = {key: 0.0 for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)            
 
             log(f'Impacts not assigned for the item {self.get_name()}.', 'Warn')
@@ -222,13 +222,13 @@ class Master:
             self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
             self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
 
-            impacts = {key: unit_inventories[key] for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+            impacts = {key: unit_inventories[key] for key in self.unit_impacts.get_categories()}
             self.unit_impacts.update_qty(impacts)
 
-            emissions = {key: unit_inventories[key] for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+            emissions = {key: unit_inventories[key] for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
-            carbon_storage = {key: unit_inventories[key] for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+            carbon_storage = {key: unit_inventories[key] for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)
 
         return self
@@ -474,13 +474,13 @@ class Master:
         if conversion_factor is None:
             raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
         
-        impacts = {key: self.unit_impacts.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+        impacts = {key: self.unit_impacts.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.unit_impacts.get_categories()}
         self.impacts.update_qty(impacts)
 
-        emissions = {key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+        emissions = {key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.emissions.get_categories()}
         self.emissions.update_qty(emissions)
 
-        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.carbon_storage.get_categories()}
         self.carbon_storage.update_qty(carbon_storage)
 
         return self

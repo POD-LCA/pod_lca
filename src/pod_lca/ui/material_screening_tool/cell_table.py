@@ -1,6 +1,6 @@
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
-from ui.material_screening_tool.GUI_outputManager import GUIOutputManager
-from ui.material_screening_tool.item_context_menu import ItemContextMenuMixin
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.GUI_outputManager import GUIOutputManager
+from ui.materials_screening_tool.item_context_menu import ItemContextMenuMixin
 
 import re
 from tkinter import END, E, W, CENTER, RIGHT, BOTH, TOP, LEFT, Entry, Label, StringVar, Button, Menu

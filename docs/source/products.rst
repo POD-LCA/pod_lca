@@ -2,21 +2,21 @@
 Products
 **********
 
-.. autoclass:: pod_lca.material_screening.Master
+.. autoclass:: pod_lca.materials_screening.Master
    :members:
 
-.. autoclass:: pod_lca.material_screening.Product
+.. autoclass:: pod_lca.materials_screening.Product
    :show-inheritance:
    :members:
 
-.. autoclass:: pod_lca.material_screening.Electricity
+.. autoclass:: pod_lca.materials_screening.Electricity
    :show-inheritance:
    :members:
 
-.. autoclass:: pod_lca.material_screening.Fuel
+.. autoclass:: pod_lca.materials_screening.Fuel
    :show-inheritance:
    :members:
 
-.. autoclass:: pod_lca.material_screening.Process
+.. autoclass:: pod_lca.materials_screening.Process
    :show-inheritance:
    :members:

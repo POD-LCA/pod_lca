@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plotters &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Plotters &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Data Imports" href="data_imports.html" />
-    <link rel="prev" title="Utilities" href="utilities.html" /> 
+    <link rel="next" title="Units" href="units.html" />
+    <link rel="prev" title="Products" href="plots.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,19 +123,19 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="utilities.html">Utilities</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="visualizer.html">Visualizer</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Products</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Plotters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html">Units</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_imports.html">Data Imports</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -154,6 +154,339 @@
             
   <section id="plotters">
 <h1>Plotters<a class="headerlink" href="#plotters" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.visualizer.</span></span><span class="sig-name descname"><span class="pre">AbstractPlotter</span></span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter" title="Link to this definition">¶</a></dt>
+<dd><p>A plotter provides a means of drawing and displaying plots (graphs, charts. etc.).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.create_plot">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.create_plot" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a new plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.clear_plot">
+<span class="sig-name descname"><span class="pre">clear_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.clear_plot" title="Link to this definition">¶</a></dt>
+<dd><p>Clear the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.show" title="Link to this definition">¶</a></dt>
+<dd><p>Display the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.draw_bar">
+<span class="sig-name descname"><span class="pre">draw_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'center'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.draw_bar" title="Link to this definition">¶</a></dt>
+<dd><p>draw a bar in a bar chart.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_title">
+<span class="sig-name descname"><span class="pre">set_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_title" title="Link to this definition">¶</a></dt>
+<dd><p>Set title of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_labels">
+<span class="sig-name descname"><span class="pre">set_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_labels" title="Link to this definition">¶</a></dt>
+<dd><p>Set axis labels of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_legend">
+<span class="sig-name descname"><span class="pre">set_legend</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_legend" title="Link to this definition">¶</a></dt>
+<dd><p>Set the legend of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_xlim">
+<span class="sig-name descname"><span class="pre">set_xlim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_xlim" title="Link to this definition">¶</a></dt>
+<dd><p>Set limits of the x-axis of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_ylim">
+<span class="sig-name descname"><span class="pre">set_ylim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_ylim" title="Link to this definition">¶</a></dt>
+<dd><p>Set limits of the y-axis of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_xticks">
+<span class="sig-name descname"><span class="pre">set_xticks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_xticks" title="Link to this definition">¶</a></dt>
+<dd><p>Set and label ticks along the x-axis of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_yticks">
+<span class="sig-name descname"><span class="pre">set_yticks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_yticks" title="Link to this definition">¶</a></dt>
+<dd><p>Set and label ticks along the y-axis of the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter.set_grid">
+<span class="sig-name descname"><span class="pre">set_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter.set_grid" title="Link to this definition">¶</a></dt>
+<dd><p>Set grid lines of the plot.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.visualizer.</span></span><span class="sig-name descname"><span class="pre">MatplotlibPlotter</span></span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.plotters.abstract_plotter.AbstractPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractPlotter</span></code></a></p>
+<p>A plotter implemented from Matplotlib package.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.fig">
+<span class="sig-name descname"><span class="pre">fig</span></span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.fig" title="Link to this definition">¶</a></dt>
+<dd><p>Figure being plotted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.figure.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.ax">
+<span class="sig-name descname"><span class="pre">ax</span></span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.ax" title="Link to this definition">¶</a></dt>
+<dd><p>Axes of the figure being plotted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.create_plot">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">polar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.create_plot" title="Link to this definition">¶</a></dt>
+<dd><p>Creates a new matplotlib plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Polar</strong> (<em>bool</em>) -- If true, create a plot with polar axis.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.clear_plot">
+<span class="sig-name descname"><span class="pre">clear_plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.clear_plot" title="Link to this definition">¶</a></dt>
+<dd><p>Clear the plot</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.show" title="Link to this definition">¶</a></dt>
+<dd><p>Display the plot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_bar">
+<span class="sig-name descname"><span class="pre">draw_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bottom</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'center'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_bar" title="Link to this definition">¶</a></dt>
+<dd><p>draw a bar in a bar chart.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<em>float</em>) -- Position (center) of the bar on the x-axis.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) -- Height of the bar.</p></li>
+<li><p><strong>width</strong> (<em>float</em>) -- Width of the bar.</p></li>
+<li><p><strong>bottom</strong> (<em>float</em>) -- Position (bottom) of the bar on y-axis.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- Labeling of the bar.</p></li>
+<li><p><strong>label_pos</strong> (<em>str</em>) -- Label position on the bar.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_radar">
+<span class="sig-name descname"><span class="pre">draw_radar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_radar" title="Link to this definition">¶</a></dt>
+<dd><p>Draw radar lines in a polar plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>angles</strong> (<em>list</em>) -- List of angles for the radar lines.</p></li>
+<li><p><strong>values</strong> (<em>list</em>) -- List of values to be marked in each radar line.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- Label for the radar created.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) -- Transparency of the radar (value between 0 and 1).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_histogram">
+<span class="sig-name descname"><span class="pre">draw_histogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_histogram" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a histogram.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em>) -- List of all data points.</p></li>
+<li><p><strong>no_bins</strong> (<em>int</em>) -- Number of bins in the histogram</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- Identifier of the histogram.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) -- Transparency of the radar (value between 0 and 1).</p></li>
+<li><p><strong>unitize</strong> (<em>bool</em>) -- If true, the area under of the histogram is set to 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_line">
+<span class="sig-name descname"><span class="pre">draw_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_line" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a line plot through (x, y) data pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_data</strong> (<em>list</em>) -- List of x values.</p></li>
+<li><p><strong>y_data</strong> (<em>list</em>) -- f(x) for all the y values.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- label for the function plotted</p></li>
+<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_stackplot">
+<span class="sig-name descname"><span class="pre">draw_stackplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_stackplot" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a stackplot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_data</strong> (<em>array-like</em>) -- X data; shape (N,)</p></li>
+<li><p><strong>y_data</strong> (<em>array-like</em>) -- Y data; shape(M, N)</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em> of </em><em>str</em>) -- Labels for y data series.</p></li>
+<li><p><strong>colors</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>tuples</em>) -- Colors of named, hex string, or RGB tuples.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_boxplot">
+<span class="sig-name descname"><span class="pre">draw_boxplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_boxplot" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a boxplot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em>) -- List of all data points.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- Identifier of the histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.draw_violinplot">
+<span class="sig-name descname"><span class="pre">draw_violinplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.draw_violinplot" title="Link to this definition">¶</a></dt>
+<dd><p>Draw a violinplot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>list</em>) -- List of all data points.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- Identifier of the histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_title">
+<span class="sig-name descname"><span class="pre">set_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_title" title="Link to this definition">¶</a></dt>
+<dd><p>Set title of the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) -- Title of the plot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_labels">
+<span class="sig-name descname"><span class="pre">set_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_labels" title="Link to this definition">¶</a></dt>
+<dd><p>Set plot title and axis labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_label</strong> (<em>str</em>) -- X-axis label.</p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) -- Y-axis labe</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_legend">
+<span class="sig-name descname"><span class="pre">set_legend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_legend" title="Link to this definition">¶</a></dt>
+<dd><p>Set the legend of the plot. If colors and labels are given, override with patches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>colors</strong> (<em>list</em>) -- List of colors, if patches are being used.</p></li>
+<li><p><strong>labels</strong> (<em>str</em>) -- List of labels, if patches are being used.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) -- Title of the legend.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_xticks">
+<span class="sig-name descname"><span class="pre">set_xticks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ticks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_xticks" title="Link to this definition">¶</a></dt>
+<dd><p>Set and label ticks along the x-axis of the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ticks</strong> (<em>1D array-like</em>) -- List of x values where ticks to be added.</p></li>
+<li><p><strong>labels</strong> (<em>list</em>) -- List of labels for the ticks.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_xlim">
+<span class="sig-name descname"><span class="pre">set_xlim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_xlim" title="Link to this definition">¶</a></dt>
+<dd><p>Set limits of the x-axis of the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min</strong> (<em>float</em>) -- Minimum value on x-axis.</p></li>
+<li><p><strong>max</strong> (<em>float</em>) -- Maximum value on x-axis.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_ylim">
+<span class="sig-name descname"><span class="pre">set_ylim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_ylim" title="Link to this definition">¶</a></dt>
+<dd><p>Set limits of the y-axis of the plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>min</strong> (<em>float</em>) -- Minimum value on y-axis.</p></li>
+<li><p><strong>max</strong> (<em>float</em>) -- Maximum value on y-axis.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.visualizer.MatplotlibPlotter.set_grid">
+<span class="sig-name descname"><span class="pre">set_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.MatplotlibPlotter.set_grid" title="Link to this definition">¶</a></dt>
+<dd><p>Set grid lines of the plot.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -162,6 +495,59 @@
         </div>
       </div>
     
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Plotters</a><ul>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.create_plot"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.create_plot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.clear_plot"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.clear_plot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.show"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.show()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.draw_bar"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.draw_bar()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_title"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_title()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_labels"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_labels()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_legend"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_legend()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_xlim"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_xlim()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_ylim"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_ylim()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_xticks"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_xticks()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_yticks"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_yticks()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter.set_grid"><code class="docutils literal notranslate"><span class="pre">AbstractPlotter.set_grid()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.fig"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.fig</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.ax"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.ax</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.create_plot"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.create_plot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.clear_plot"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.clear_plot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.show"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.show()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_bar"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_bar()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_radar"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_radar()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_histogram"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_histogram()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_line"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_line()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_stackplot"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_stackplot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_boxplot"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_boxplot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.draw_violinplot"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.draw_violinplot()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_title"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_title()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_labels"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_labels()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_legend"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_legend()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_xticks"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_xticks()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_xlim"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_xlim()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_ylim"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_ylim()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter.set_grid"><code class="docutils literal notranslate"><span class="pre">MatplotlibPlotter.set_grid()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
 
       <div class="clearer"></div>
     </div>
@@ -169,14 +555,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="utilities.html">
-                    <span class="icon">&lt;</span><span>Utilities</span></a>
+                <a href="plots.html">
+                    <span class="icon">&lt;</span><span>Products</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="data_imports.html"><span>Data Imports</span><span class="icon">&gt;</span></a>
+                    <a href="units.html"><span>Units</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -184,7 +570,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

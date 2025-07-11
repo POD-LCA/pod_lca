@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Material Module &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Materials Screening Module &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -14,9 +14,7 @@
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Project" href="project.html" />
-    <link rel="prev" title="OpenLCA Pipeline" href="olca_pipeline.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -118,25 +116,10 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper"><ul class="current">
+        <div class="sphinxsidebarwrapper"><ul>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Material Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project.html">Project</a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html">Products</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
@@ -151,183 +134,183 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="material-module">
-<span id="section-api-material-module"></span><h1>Material Module<a class="headerlink" href="#material-module" title="Link to this heading">¶</a></h1>
+  <section id="materials-screening-module">
+<h1>Materials Screening Module<a class="headerlink" href="#materials-screening-module" title="Link to this heading">¶</a></h1>
 <p>A brief description...</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="project.html">Project</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project.html#pod_lca.material_screening.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.models"><code class="docutils literal notranslate"><span class="pre">Project.models</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.database"><code class="docutils literal notranslate"><span class="pre">Project.database</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.location"><code class="docutils literal notranslate"><span class="pre">Project.location</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.add_model"><code class="docutils literal notranslate"><span class="pre">Project.add_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.clear_project"><code class="docutils literal notranslate"><span class="pre">Project.clear_project()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_database"><code class="docutils literal notranslate"><span class="pre">Project.get_database()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_impacts_by_LCstages_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_impacts_by_LCstages_models_items"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models_items()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_category_models()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_impacts_by_impactcategorys_models_LCstage"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_impactcategorys_models_LCstage()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_location"><code class="docutils literal notranslate"><span class="pre">Project.get_location()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_model"><code class="docutils literal notranslate"><span class="pre">Project.get_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_model_names"><code class="docutils literal notranslate"><span class="pre">Project.get_model_names()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_name"><code class="docutils literal notranslate"><span class="pre">Project.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.get_normalized_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_normalized_impacts_by_category_models()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.load"><code class="docutils literal notranslate"><span class="pre">Project.load()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.new"><code class="docutils literal notranslate"><span class="pre">Project.new()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.save"><code class="docutils literal notranslate"><span class="pre">Project.save()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.set_database"><code class="docutils literal notranslate"><span class="pre">Project.set_database()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.set_location"><code class="docutils literal notranslate"><span class="pre">Project.set_location()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project.set_name"><code class="docutils literal notranslate"><span class="pre">Project.set_name()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.models"><code class="docutils literal notranslate"><span class="pre">Project.models</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.database"><code class="docutils literal notranslate"><span class="pre">Project.database</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.location"><code class="docutils literal notranslate"><span class="pre">Project.location</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.add_model"><code class="docutils literal notranslate"><span class="pre">Project.add_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.clear_project"><code class="docutils literal notranslate"><span class="pre">Project.clear_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_database"><code class="docutils literal notranslate"><span class="pre">Project.get_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_impacts_by_LCstages_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_impacts_by_LCstages_models_items"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_LCstages_models_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_category_models()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_impacts_by_impactcategorys_models_LCstage"><code class="docutils literal notranslate"><span class="pre">Project.get_impacts_by_impactcategorys_models_LCstage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_location"><code class="docutils literal notranslate"><span class="pre">Project.get_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_model"><code class="docutils literal notranslate"><span class="pre">Project.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_model_names"><code class="docutils literal notranslate"><span class="pre">Project.get_model_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_name"><code class="docutils literal notranslate"><span class="pre">Project.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.get_normalized_impacts_by_category_models"><code class="docutils literal notranslate"><span class="pre">Project.get_normalized_impacts_by_category_models()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.load"><code class="docutils literal notranslate"><span class="pre">Project.load()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.new"><code class="docutils literal notranslate"><span class="pre">Project.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.save"><code class="docutils literal notranslate"><span class="pre">Project.save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.set_database"><code class="docutils literal notranslate"><span class="pre">Project.set_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.set_location"><code class="docutils literal notranslate"><span class="pre">Project.set_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.materials_screening.Project.set_name"><code class="docutils literal notranslate"><span class="pre">Project.set_name()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="model.html#pod_lca.material_screening.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.project"><code class="docutils literal notranslate"><span class="pre">Model.project</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.name"><code class="docutils literal notranslate"><span class="pre">Model.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.processes"><code class="docutils literal notranslate"><span class="pre">Model.processes</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.products"><code class="docutils literal notranslate"><span class="pre">Model.products</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.impacts"><code class="docutils literal notranslate"><span class="pre">Model.impacts</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_electricity"><code class="docutils literal notranslate"><span class="pre">Model.add_electricity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_emission"><code class="docutils literal notranslate"><span class="pre">Model.add_emission()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_energy"><code class="docutils literal notranslate"><span class="pre">Model.add_energy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_process"><code class="docutils literal notranslate"><span class="pre">Model.add_process()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_product"><code class="docutils literal notranslate"><span class="pre">Model.add_product()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_transportation_process"><code class="docutils literal notranslate"><span class="pre">Model.add_transportation_process()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.add_waste"><code class="docutils literal notranslate"><span class="pre">Model.add_waste()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.delete_item"><code class="docutils literal notranslate"><span class="pre">Model.delete_item()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.find_item"><code class="docutils literal notranslate"><span class="pre">Model.find_item()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.from_CSV"><code class="docutils literal notranslate"><span class="pre">Model.from_CSV()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_all_items"><code class="docutils literal notranslate"><span class="pre">Model.get_all_items()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Model.get_carbon_storage()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_emissions"><code class="docutils literal notranslate"><span class="pre">Model.get_emissions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_impacts"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_impacts_by_LCstages"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts_by_LCstages()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_impacts_by_category"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts_by_category()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_name"><code class="docutils literal notranslate"><span class="pre">Model.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_normalized_impacts_by_category"><code class="docutils literal notranslate"><span class="pre">Model.get_normalized_impacts_by_category()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_processes"><code class="docutils literal notranslate"><span class="pre">Model.get_processes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_products"><code class="docutils literal notranslate"><span class="pre">Model.get_products()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_project"><code class="docutils literal notranslate"><span class="pre">Model.get_project()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.get_total_impact"><code class="docutils literal notranslate"><span class="pre">Model.get_total_impact()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.in_project"><code class="docutils literal notranslate"><span class="pre">Model.in_project()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.set_name"><code class="docutils literal notranslate"><span class="pre">Model.set_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model.set_project"><code class="docutils literal notranslate"><span class="pre">Model.set_project()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.project"><code class="docutils literal notranslate"><span class="pre">Model.project</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.name"><code class="docutils literal notranslate"><span class="pre">Model.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.processes"><code class="docutils literal notranslate"><span class="pre">Model.processes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.products"><code class="docutils literal notranslate"><span class="pre">Model.products</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.impacts"><code class="docutils literal notranslate"><span class="pre">Model.impacts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_electricity"><code class="docutils literal notranslate"><span class="pre">Model.add_electricity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_emission"><code class="docutils literal notranslate"><span class="pre">Model.add_emission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_energy"><code class="docutils literal notranslate"><span class="pre">Model.add_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_process"><code class="docutils literal notranslate"><span class="pre">Model.add_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_product"><code class="docutils literal notranslate"><span class="pre">Model.add_product()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_transportation_process"><code class="docutils literal notranslate"><span class="pre">Model.add_transportation_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.add_waste"><code class="docutils literal notranslate"><span class="pre">Model.add_waste()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.delete_item"><code class="docutils literal notranslate"><span class="pre">Model.delete_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.find_item"><code class="docutils literal notranslate"><span class="pre">Model.find_item()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.from_CSV"><code class="docutils literal notranslate"><span class="pre">Model.from_CSV()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_all_items"><code class="docutils literal notranslate"><span class="pre">Model.get_all_items()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Model.get_carbon_storage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_emissions"><code class="docutils literal notranslate"><span class="pre">Model.get_emissions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_impacts"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_impacts_by_LCstages"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts_by_LCstages()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_impacts_by_category"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts_by_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_name"><code class="docutils literal notranslate"><span class="pre">Model.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_normalized_impacts_by_category"><code class="docutils literal notranslate"><span class="pre">Model.get_normalized_impacts_by_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_processes"><code class="docutils literal notranslate"><span class="pre">Model.get_processes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_products"><code class="docutils literal notranslate"><span class="pre">Model.get_products()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_project"><code class="docutils literal notranslate"><span class="pre">Model.get_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.get_total_impact"><code class="docutils literal notranslate"><span class="pre">Model.get_total_impact()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.in_project"><code class="docutils literal notranslate"><span class="pre">Model.in_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.set_name"><code class="docutils literal notranslate"><span class="pre">Model.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.materials_screening.Model.set_project"><code class="docutils literal notranslate"><span class="pre">Model.set_project()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="products.html">Products</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.material_screening.Master"><code class="docutils literal notranslate"><span class="pre">Master</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.id"><code class="docutils literal notranslate"><span class="pre">Master.id</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.model"><code class="docutils literal notranslate"><span class="pre">Master.model</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.name"><code class="docutils literal notranslate"><span class="pre">Master.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.life_cycle_stage</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.impacts"><code class="docutils literal notranslate"><span class="pre">Master.impacts</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.emissions"><code class="docutils literal notranslate"><span class="pre">Master.emissions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.carbon_storage"><code class="docutils literal notranslate"><span class="pre">Master.carbon_storage</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.impact_database_entry</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.qty"><code class="docutils literal notranslate"><span class="pre">Master.qty</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.unit"><code class="docutils literal notranslate"><span class="pre">Master.unit</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.is_hotspot"><code class="docutils literal notranslate"><span class="pre">Master.is_hotspot</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.data_distribution</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.pedigree_score</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.add_inventory_records_to_model"><code class="docutils literal notranslate"><span class="pre">Master.add_inventory_records_to_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.copy"><code class="docutils literal notranslate"><span class="pre">Master.copy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Master.get_carbon_storage()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.get_data_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_data_distributions"><code class="docutils literal notranslate"><span class="pre">Master.get_data_distributions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_emissions"><code class="docutils literal notranslate"><span class="pre">Master.get_emissions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_id"><code class="docutils literal notranslate"><span class="pre">Master.get_id()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.get_impact_database_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_impacts"><code class="docutils literal notranslate"><span class="pre">Master.get_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.get_life_cycle_stage()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_model"><code class="docutils literal notranslate"><span class="pre">Master.get_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_name"><code class="docutils literal notranslate"><span class="pre">Master.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.get_pedigree_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_project"><code class="docutils literal notranslate"><span class="pre">Master.get_project()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_qty"><code class="docutils literal notranslate"><span class="pre">Master.get_qty()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.get_unit"><code class="docutils literal notranslate"><span class="pre">Master.get_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.new"><code class="docutils literal notranslate"><span class="pre">Master.new()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.remove_inventory_records_from_model"><code class="docutils literal notranslate"><span class="pre">Master.remove_inventory_records_from_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.set_data_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_id"><code class="docutils literal notranslate"><span class="pre">Master.set_id()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.set_impact_database_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.set_life_cycle_stage()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_model"><code class="docutils literal notranslate"><span class="pre">Master.set_model()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_name"><code class="docutils literal notranslate"><span class="pre">Master.set_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.set_pedigree_score()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_qty"><code class="docutils literal notranslate"><span class="pre">Master.set_qty()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.set_unit"><code class="docutils literal notranslate"><span class="pre">Master.set_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Master.update_inventory_records()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master"><code class="docutils literal notranslate"><span class="pre">Master</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.id"><code class="docutils literal notranslate"><span class="pre">Master.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.model"><code class="docutils literal notranslate"><span class="pre">Master.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.name"><code class="docutils literal notranslate"><span class="pre">Master.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.life_cycle_stage</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.impacts"><code class="docutils literal notranslate"><span class="pre">Master.impacts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.emissions"><code class="docutils literal notranslate"><span class="pre">Master.emissions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.carbon_storage"><code class="docutils literal notranslate"><span class="pre">Master.carbon_storage</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.impact_database_entry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.qty"><code class="docutils literal notranslate"><span class="pre">Master.qty</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.unit"><code class="docutils literal notranslate"><span class="pre">Master.unit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.is_hotspot"><code class="docutils literal notranslate"><span class="pre">Master.is_hotspot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.data_distribution</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.pedigree_score</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.add_inventory_records_to_model"><code class="docutils literal notranslate"><span class="pre">Master.add_inventory_records_to_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.copy"><code class="docutils literal notranslate"><span class="pre">Master.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Master.get_carbon_storage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.get_data_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_data_distributions"><code class="docutils literal notranslate"><span class="pre">Master.get_data_distributions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_emissions"><code class="docutils literal notranslate"><span class="pre">Master.get_emissions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_id"><code class="docutils literal notranslate"><span class="pre">Master.get_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.get_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_impacts"><code class="docutils literal notranslate"><span class="pre">Master.get_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.get_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_model"><code class="docutils literal notranslate"><span class="pre">Master.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_name"><code class="docutils literal notranslate"><span class="pre">Master.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.get_pedigree_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_project"><code class="docutils literal notranslate"><span class="pre">Master.get_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_qty"><code class="docutils literal notranslate"><span class="pre">Master.get_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.get_unit"><code class="docutils literal notranslate"><span class="pre">Master.get_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.new"><code class="docutils literal notranslate"><span class="pre">Master.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.remove_inventory_records_from_model"><code class="docutils literal notranslate"><span class="pre">Master.remove_inventory_records_from_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_data_distribution"><code class="docutils literal notranslate"><span class="pre">Master.set_data_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_id"><code class="docutils literal notranslate"><span class="pre">Master.set_id()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Master.set_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">Master.set_life_cycle_stage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_model"><code class="docutils literal notranslate"><span class="pre">Master.set_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_name"><code class="docutils literal notranslate"><span class="pre">Master.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_pedigree_score"><code class="docutils literal notranslate"><span class="pre">Master.set_pedigree_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_qty"><code class="docutils literal notranslate"><span class="pre">Master.set_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.set_unit"><code class="docutils literal notranslate"><span class="pre">Master.set_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Master.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Master.update_inventory_records()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.material_screening.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.production_year"><code class="docutils literal notranslate"><span class="pre">Product.production_year</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.electricity"><code class="docutils literal notranslate"><span class="pre">Product.electricity</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.weight"><code class="docutils literal notranslate"><span class="pre">Product.weight</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.weight_unit</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.density"><code class="docutils literal notranslate"><span class="pre">Product.density</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.trnasporter"><code class="docutils literal notranslate"><span class="pre">Product.trnasporter</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.mineral_carbonation_potential</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.is_material"><code class="docutils literal notranslate"><span class="pre">Product.is_material</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.is_fuel"><code class="docutils literal notranslate"><span class="pre">Product.is_fuel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_density"><code class="docutils literal notranslate"><span class="pre">Product.get_density()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_electricity"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_database_tag()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_electricity_qty"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_qty()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_source()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.get_mineral_carbonation_potential()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_production_year"><code class="docutils literal notranslate"><span class="pre">Product.get_production_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_transporter"><code class="docutils literal notranslate"><span class="pre">Product.get_transporter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_weight"><code class="docutils literal notranslate"><span class="pre">Product.get_weight()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.get_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.get_weight_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_density"><code class="docutils literal notranslate"><span class="pre">Product.set_density()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_database_tag()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_source()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_mineral_carbon_intensity"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbon_intensity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbonation_potential()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_production_year"><code class="docutils literal notranslate"><span class="pre">Product.set_production_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_qty"><code class="docutils literal notranslate"><span class="pre">Product.set_qty()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_transporter"><code class="docutils literal notranslate"><span class="pre">Product.set_transporter()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.set_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_weight_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.update_electricity_records"><code class="docutils literal notranslate"><span class="pre">Product.update_electricity_records()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Product.update_inventory_records()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.production_year"><code class="docutils literal notranslate"><span class="pre">Product.production_year</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.electricity"><code class="docutils literal notranslate"><span class="pre">Product.electricity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.weight"><code class="docutils literal notranslate"><span class="pre">Product.weight</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.weight_unit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.density"><code class="docutils literal notranslate"><span class="pre">Product.density</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.trnasporter"><code class="docutils literal notranslate"><span class="pre">Product.trnasporter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.mineral_carbonation_potential</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.is_material"><code class="docutils literal notranslate"><span class="pre">Product.is_material</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.is_fuel"><code class="docutils literal notranslate"><span class="pre">Product.is_fuel</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_density"><code class="docutils literal notranslate"><span class="pre">Product.get_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_electricity"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_database_tag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_electricity_qty"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.get_mineral_carbonation_potential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_production_year"><code class="docutils literal notranslate"><span class="pre">Product.get_production_year()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_transporter"><code class="docutils literal notranslate"><span class="pre">Product.get_transporter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_weight"><code class="docutils literal notranslate"><span class="pre">Product.get_weight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.get_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.get_weight_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_density"><code class="docutils literal notranslate"><span class="pre">Product.set_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_database_tag()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_mineral_carbon_intensity"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbon_intensity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbonation_potential()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_production_year"><code class="docutils literal notranslate"><span class="pre">Product.set_production_year()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_qty"><code class="docutils literal notranslate"><span class="pre">Product.set_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_transporter"><code class="docutils literal notranslate"><span class="pre">Product.set_transporter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.set_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_weight_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.update_electricity_records"><code class="docutils literal notranslate"><span class="pre">Product.update_electricity_records()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Product.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Product.update_inventory_records()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity"><code class="docutils literal notranslate"><span class="pre">Electricity</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.electricity_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.electricity_supplier</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.year"><code class="docutils literal notranslate"><span class="pre">Electricity.year</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.geographical_scope</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.scenario</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.from_unit_inventories"><code class="docutils literal notranslate"><span class="pre">Electricity.from_unit_inventories()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Electricity.get_data_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.get_geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.get_geographical_scope()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Electricity.get_impact_database_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.get_scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.get_scenario()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.get_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.get_supplier()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.get_year"><code class="docutils literal notranslate"><span class="pre">Electricity.get_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.new"><code class="docutils literal notranslate"><span class="pre">Electricity.new()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.set_geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.set_geographical_scope()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Electricity.set_impact_database_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.set_scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.set_scenario()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.set_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.set_supplier()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.set_year"><code class="docutils literal notranslate"><span class="pre">Electricity.set_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Electricity.update_inventory_records()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity"><code class="docutils literal notranslate"><span class="pre">Electricity</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.electricity_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.electricity_supplier</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.year"><code class="docutils literal notranslate"><span class="pre">Electricity.year</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.geographical_scope</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.scenario</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.from_unit_inventories"><code class="docutils literal notranslate"><span class="pre">Electricity.from_unit_inventories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.get_data_distribution"><code class="docutils literal notranslate"><span class="pre">Electricity.get_data_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.get_geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.get_geographical_scope()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.get_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Electricity.get_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.get_scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.get_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.get_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.get_supplier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.get_year"><code class="docutils literal notranslate"><span class="pre">Electricity.get_year()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.new"><code class="docutils literal notranslate"><span class="pre">Electricity.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.set_geographical_scope"><code class="docutils literal notranslate"><span class="pre">Electricity.set_geographical_scope()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Electricity.set_impact_database_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.set_scenario"><code class="docutils literal notranslate"><span class="pre">Electricity.set_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.set_supplier"><code class="docutils literal notranslate"><span class="pre">Electricity.set_supplier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.set_year"><code class="docutils literal notranslate"><span class="pre">Electricity.set_year()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Electricity.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Electricity.update_inventory_records()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.material_screening.Fuel"><code class="docutils literal notranslate"><span class="pre">Fuel</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Fuel.is_material"><code class="docutils literal notranslate"><span class="pre">Fuel.is_material</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Fuel.is_energy"><code class="docutils literal notranslate"><span class="pre">Fuel.is_energy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.materials_screening.Fuel"><code class="docutils literal notranslate"><span class="pre">Fuel</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Fuel.is_material"><code class="docutils literal notranslate"><span class="pre">Fuel.is_material</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Fuel.is_energy"><code class="docutils literal notranslate"><span class="pre">Fuel.is_energy</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.material_screening.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Process.inputs"><code class="docutils literal notranslate"><span class="pre">Process.inputs</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html#pod_lca.materials_screening.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.materials_screening.Process.inputs"><code class="docutils literal notranslate"><span class="pre">Process.inputs</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -349,14 +332,9 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="olca_pipeline.html">
-                    <span class="icon">&lt;</span><span>OpenLCA Pipeline</span></a>
-                
             </div>
 
             <div class="right">
-                
-                    <a href="project.html"><span>Project</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

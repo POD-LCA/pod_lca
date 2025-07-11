@@ -121,12 +121,10 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        material_name : str
-            Name of the material
-        process_name: str
-            End-of-Life process name.
-        life_cycle_stage : str
-            Life cycle stage.
+        region : str
+            Electricity generation region, as appropriate to the regionality used.
+        technology: str
+            Electricity generation technology.
         
         Returns
         -------

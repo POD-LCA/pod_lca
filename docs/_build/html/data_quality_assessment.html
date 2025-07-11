@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Data Quality Assessment &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Data Quality Assessment &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,20 +123,21 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Data Quality Assessment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -157,6 +158,155 @@
             
   <section id="data-quality-assessment">
 <h1>Data Quality Assessment<a class="headerlink" href="#data-quality-assessment" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">DataQualityAnalysis</span></span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis" title="Link to this definition">¶</a></dt>
+<dd><p>DataQualityAnalysis object carries out data quality analysis and stores pedigree data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.model" title="Link to this definition">¶</a></dt>
+<dd><p>Model on which the hotspot analysis is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.DQS">
+<span class="sig-name descname"><span class="pre">DQS</span></span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Data Quality Score of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.normalised_DQS">
+<span class="sig-name descname"><span class="pre">normalised_DQS</span></span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.normalised_DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Normalised Data Quality Score of the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.set_model" title="Link to this definition">¶</a></dt>
+<dd><p>Set a model to the Analyser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model on which the Data Quality Analysis is performed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.set_model_DQS">
+<span class="sig-name descname"><span class="pre">set_model_DQS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DQS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.set_model_DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Set Data Quality Score of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>DQS</strong> (<em>float</em>) -- Data Quality Score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.set_normalised_DQS">
+<span class="sig-name descname"><span class="pre">set_normalised_DQS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nDQS</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.set_normalised_DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Set normalised Data Quality Score of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nDQS</strong> (<em>float</em>) -- Normalised Data Quality Score.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.get_model" title="Link to this definition">¶</a></dt>
+<dd><p>Get the model for which the analysis will be run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model on which the Data Quality Analysis is performed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.get_model_DQS">
+<span class="sig-name descname"><span class="pre">get_model_DQS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.get_model_DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Get Data Quality Score of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data Quality Score.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.get_normalised_DQS">
+<span class="sig-name descname"><span class="pre">get_normalised_DQS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.get_normalised_DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Get the normalised Data Quality Score of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Normalised Data Quality Score.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.setPedigreeScores">
+<span class="sig-name descname"><span class="pre">setPedigreeScores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.setPedigreeScores" title="Link to this definition">¶</a></dt>
+<dd><p>Set pedigree scores for all products/processes in a model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.setTemporalCorrelationScores">
+<span class="sig-name descname"><span class="pre">setTemporalCorrelationScores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.setTemporalCorrelationScores" title="Link to this definition">¶</a></dt>
+<dd><p>Update all Temporal Correlation scores.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.setGeographicalCorrelationScores">
+<span class="sig-name descname"><span class="pre">setGeographicalCorrelationScores</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.setGeographicalCorrelationScores" title="Link to this definition">¶</a></dt>
+<dd><p>Update all Temporal Correlation scores.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.calculate_model_DQS">
+<span class="sig-name descname"><span class="pre">calculate_model_DQS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_cat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GWP'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.calculate_model_DQS" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the Data Quality Score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>impact_cat</strong> (<em>str</em>) -- Impact category considered for weighing individual pedigree scores.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.print_results">
+<span class="sig-name descname"><span class="pre">print_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.print_results" title="Link to this definition">¶</a></dt>
+<dd><p>Print results of the hotspot analysis.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -164,6 +314,39 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Data Quality Assessment</a><ul>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.model</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.DQS</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.normalised_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.normalised_DQS</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.set_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.set_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.set_model_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.set_model_DQS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.set_normalised_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.set_normalised_DQS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.get_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.get_model_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_model_DQS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.get_normalised_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_normalised_DQS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.setPedigreeScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setPedigreeScores()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.setTemporalCorrelationScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setTemporalCorrelationScores()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.setGeographicalCorrelationScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setGeographicalCorrelationScores()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.calculate_model_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.calculate_model_DQS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.print_results"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.print_results()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>
@@ -187,7 +370,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

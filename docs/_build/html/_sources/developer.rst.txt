@@ -4,6 +4,10 @@ Developer Guide
 
 The program structure of the code base is as below. The program is structured in such a way that it is independent of the front-end and the background database.
 
+Provide reference to utitlites settings to access config, and log methods
+
+Procide reference to the combined class file
+
 .. image:: ../_images/Program_structure.png
   :width: 1000
   :alt: Add alternative text

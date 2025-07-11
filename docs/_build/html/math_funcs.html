@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Processes &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Mathematical Functions &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -14,7 +14,9 @@
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Object Array Methods" href="array_methods.html" />
+    <link rel="prev" title="Data Imports" href="data_imports.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -28,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -116,10 +118,27 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper"><ul>
+        <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="utilities.html">Utilities</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="data_imports.html">Data Imports</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Mathematical Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="array_methods.html">Object Array Methods</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
@@ -134,8 +153,35 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="processes">
-<h1>Processes<a class="headerlink" href="#processes" title="Link to this heading">¶</a></h1>
+  <section id="mathematical-functions">
+<h1>Mathematical Functions<a class="headerlink" href="#mathematical-functions" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.utilities.MathFuncs">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.utilities.</span></span><span class="sig-name descname"><span class="pre">MathFuncs</span></span><a class="headerlink" href="#pod_lca.utilities.MathFuncs" title="Link to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.MathFuncs.round_to_significant">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_to_significant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sig_figs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.MathFuncs.round_to_significant" title="Link to this definition">¶</a></dt>
+<dd><p>Round a list of numbers to the given number of significant figures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.utilities.MathFuncs.integrate_exp">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">integrate_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pow_coeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.MathFuncs.integrate_exp" title="Link to this definition">¶</a></dt>
+<dd><p>Evaluate the integral of (coeff) * e ** (pow_coeff * x), from a to b, with respect to x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) -- Start and end of integral evaluation.</p></li>
+<li><p><strong>b</strong> (<em>float</em>) -- Start and end of integral evaluation.</p></li>
+<li><p><strong>coeff</strong> (<em>float</em>) -- Coeffecient on the exponent and its power.</p></li>
+<li><p><strong>pow_coeff</strong> (<em>float</em>) -- Coeffecient on the exponent and its power.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -144,6 +190,27 @@
         </div>
       </div>
     
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Mathematical Functions</a><ul>
+<li><a class="reference internal" href="#pod_lca.utilities.MathFuncs"><code class="docutils literal notranslate"><span class="pre">MathFuncs</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.utilities.MathFuncs.round_to_significant"><code class="docutils literal notranslate"><span class="pre">MathFuncs.round_to_significant()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.utilities.MathFuncs.integrate_exp"><code class="docutils literal notranslate"><span class="pre">MathFuncs.integrate_exp()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
 
       <div class="clearer"></div>
     </div>
@@ -151,9 +218,14 @@
         <div class="button_nav">
             <div class="left">
                 
+                <a href="data_imports.html">
+                    <span class="icon">&lt;</span><span>Data Imports</span></a>
+                
             </div>
 
             <div class="right">
+                
+                    <a href="array_methods.html"><span>Object Array Methods</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -161,7 +233,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

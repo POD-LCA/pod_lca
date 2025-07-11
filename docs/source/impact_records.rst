@@ -1,9 +1,12 @@
-**********
+******************
 Inventory Records
-**********
-Inventory records are containers for impacts, emissions, and carbon storage data
+******************
 
-.. autoclass:: pod_lca.impacts.records.Records
+Inventory records are containers for :py:class:`~pod_lca.impacts.Impacts`, :py:class:`~pod_lca.impacts.Emissions`, and :py:class:`~pod_lca.impacts.CarbonStorage` data. They all inherit from :py:class:`~pod_lca.impacts.Records`.
+
+--------
+
+.. autoclass:: pod_lca.impacts.Records
     :members:
 
 .. autoclass:: pod_lca.impacts.Impacts

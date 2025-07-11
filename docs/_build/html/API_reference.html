@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>API Reference &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,12 +123,13 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -149,240 +150,66 @@
             
   <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
-<p>The package is organized into LCA modules</p>
+<p>The POD|LCA Python package is organized into Life Cycle Analysis (LCA) modules, as sub-packages (e.g., impacts, electricity, transportation). There are other non-LCA utility sub-packages as well (e.g., units, visualizer, utilities)</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="impacts_module.html">Impact Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="impact_records.html">Inventory Records</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records"><code class="docutils literal notranslate"><span class="pre">Records</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts"><code class="docutils literal notranslate"><span class="pre">Impacts</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions"><code class="docutils literal notranslate"><span class="pre">Emissions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage"><code class="docutils literal notranslate"><span class="pre">CarbonStorage</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="impact_records.html">Inventory Records</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impact_databases.html">Impacts Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="impact_databases.html">Impacts Database</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA"><code class="docutils literal notranslate"><span class="pre">openLCA</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="material_screening_module.html">Material Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project.html">Project</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project.html#pod_lca.material_screening.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="model.html#pod_lca.material_screening.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="products.html">Products</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Master"><code class="docutils literal notranslate"><span class="pre">Master</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Electricity"><code class="docutils literal notranslate"><span class="pre">Electricity</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Fuel"><code class="docutils literal notranslate"><span class="pre">Fuel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#pod_lca.material_screening.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="transportation.html">Transportation Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
-<li class="toctree-l2"><a class="reference internal" href="logistics_link.html">Logistic Link</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transport_mode.html">Transport Mode</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transport_scenarios.html">Transportation Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project.html">Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html">Products</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="electricity_module.html">Electricity</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.name"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.geographical_scope"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.geographical_scope</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.location"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.location</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.consumption_mix"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.consumption_mix</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.year"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.year</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.impacts"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.impacts</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.from_location"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.from_location()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_consumption_mix"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_consumption_mix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_emissions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_geographical_scope"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_geographical_scope()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_impact_distribution"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_impact_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_location"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_location()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_name"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_scenario"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_scenario()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_unit"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.get_year"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.pick_region"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.pick_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_consumption_mix"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_consumption_mix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_electricity_producers"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_electricity_producers()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_geographical_scope"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_geographical_scope()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_location"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_location()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_name"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_scenario"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_scenario()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_unit"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.set_year"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.update_inventory_records()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricitySupply"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData"><code class="docutils literal notranslate"><span class="pre">CambiumData</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.from_technology_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.from_technology_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.get_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_emissions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.get_energy_source"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_energy_source()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.get_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.get_name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.get_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.set_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_emissions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.set_energy_source"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_energy_source()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.set_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.set_invetories"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_invetories()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.set_name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.ElectricityProducer.set_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_year()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData"><code class="docutils literal notranslate"><span class="pre">CambiumData</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.NATIONAL_DATA"><code class="docutils literal notranslate"><span class="pre">CambiumData.NATIONAL_DATA</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.REGIONAL_DATA"><code class="docutils literal notranslate"><span class="pre">CambiumData.REGIONAL_DATA</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.LOCAL_DATA"><code class="docutils literal notranslate"><span class="pre">CambiumData.LOCAL_DATA</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.DATA_YEARS"><code class="docutils literal notranslate"><span class="pre">CambiumData.DATA_YEARS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.HEADER_MAP"><code class="docutils literal notranslate"><span class="pre">CambiumData.HEADER_MAP</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.TECHNOLOGY_MAP"><code class="docutils literal notranslate"><span class="pre">CambiumData.TECHNOLOGY_MAP</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.data"><code class="docutils literal notranslate"><span class="pre">CambiumData.data</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.delete_data"><code class="docutils literal notranslate"><span class="pre">CambiumData.delete_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.from_geographical_scope"><code class="docutils literal notranslate"><span class="pre">CambiumData.from_geographical_scope()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.get_load"><code class="docutils literal notranslate"><span class="pre">CambiumData.get_load()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="electricity_module.html#pod_lca.electricity.CambiumData.get_mix"><code class="docutils literal notranslate"><span class="pre">CambiumData.get_mix()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="end_of_life.html">End-of-life Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste.html">Waste Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_processing.html">Waste Processing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="emission_profiles.html">Emission Profiles</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="emission_profiles.html#pod_lca.dynamic_radiative_forcing.temporal_emission_profiles.TemporalEmissionProfiles"><code class="docutils literal notranslate"><span class="pre">TemporalEmissionProfiles</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_AGWP()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_GWP()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_atmospheric_concentration()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_concentration_time_series()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_pertubation_lifetime()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_efficiency()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_forcing()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_forcing_time_series()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.start_year"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.start_year</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_horizon"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.time_horizon</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.time_step"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.time_step</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.emissions_lst"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.emissions_lst</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_years"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_years</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_emission_intensity"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_emission_intensity</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_concentrations"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_concentrations</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_irf"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_irf</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.data_crf"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.data_crf</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.add_emission_records"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.add_emission_records()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_emissions"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.from_emissions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.from_products"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.from_products()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_data"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_emissions_list"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_emissions_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_start_year"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_start_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_horizon"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_time_horizon()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.get_time_step"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.get_time_step()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.plot"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.plot()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.save"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.save()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_data"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_start_year"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_start_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_horizon"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_time_horizon()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord.set_time_step"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord.set_time_step()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="location_module.html">Location Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html#pod_lca.location.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.location_name"><code class="docutils literal notranslate"><span class="pre">Location.location_name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.regionality"><code class="docutils literal notranslate"><span class="pre">Location.regionality</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.coords"><code class="docutils literal notranslate"><span class="pre">Location.coords</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.zipcode"><code class="docutils literal notranslate"><span class="pre">Location.zipcode</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.city"><code class="docutils literal notranslate"><span class="pre">Location.city</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.state"><code class="docutils literal notranslate"><span class="pre">Location.state</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.country"><code class="docutils literal notranslate"><span class="pre">Location.country</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.country_code"><code class="docutils literal notranslate"><span class="pre">Location.country_code</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.from_US_zip"><code class="docutils literal notranslate"><span class="pre">Location.from_US_zip()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.from_str"><code class="docutils literal notranslate"><span class="pre">Location.from_str()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.get_balancing_authority()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.get_cambium_gea_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_cfs_area"><code class="docutils literal notranslate"><span class="pre">Location.get_cfs_area()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_city"><code class="docutils literal notranslate"><span class="pre">Location.get_city()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_closest_zip"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_zip()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_cordinates"><code class="docutils literal notranslate"><span class="pre">Location.get_cordinates()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_country"><code class="docutils literal notranslate"><span class="pre">Location.get_country()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_country_code"><code class="docutils literal notranslate"><span class="pre">Location.get_country_code()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_faf_foreign_region"><code class="docutils literal notranslate"><span class="pre">Location.get_faf_foreign_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_ferc_region"><code class="docutils literal notranslate"><span class="pre">Location.get_ferc_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_location_name"><code class="docutils literal notranslate"><span class="pre">Location.get_location_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_marine_region"><code class="docutils literal notranslate"><span class="pre">Location.get_marine_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.get_reeds_balancing_area()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_regionality"><code class="docutils literal notranslate"><span class="pre">Location.get_regionality()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_state"><code class="docutils literal notranslate"><span class="pre">Location.get_state()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.get_zip"><code class="docutils literal notranslate"><span class="pre">Location.get_zip()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.set_balancing_authority()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.set_cambium_gea_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_cfs_area"><code class="docutils literal notranslate"><span class="pre">Location.set_cfs_area()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_city"><code class="docutils literal notranslate"><span class="pre">Location.set_city()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_cordinates"><code class="docutils literal notranslate"><span class="pre">Location.set_cordinates()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_country"><code class="docutils literal notranslate"><span class="pre">Location.set_country()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_country_code"><code class="docutils literal notranslate"><span class="pre">Location.set_country_code()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_faf_domestic_region"><code class="docutils literal notranslate"><span class="pre">Location.set_faf_domestic_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_faf_foreign_region"><code class="docutils literal notranslate"><span class="pre">Location.set_faf_foreign_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_ferc_region"><code class="docutils literal notranslate"><span class="pre">Location.set_ferc_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_marine_region"><code class="docutils literal notranslate"><span class="pre">Location.set_marine_region()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_name"><code class="docutils literal notranslate"><span class="pre">Location.set_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.set_reeds_balancing_area()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_regionality"><code class="docutils literal notranslate"><span class="pre">Location.set_regionality()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_state"><code class="docutils literal notranslate"><span class="pre">Location.set_state()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_us_coast"><code class="docutils literal notranslate"><span class="pre">Location.set_us_coast()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="location_module.html#pod_lca.location.Location.set_zip"><code class="docutils literal notranslate"><span class="pre">Location.set_zip()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="emission_profiles.html">Emission Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcingRecord</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="units.html">Units</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.symbol</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.power</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.get_conversion_factor"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_conversion_factor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.get_name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.get_power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_power()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix.get_symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_symbol()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="location_module.html">Location Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html#pod_lca.location.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="visualizer.html">Visualizer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plots.html">Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotters.html">Plotters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="units.html">Units</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="units.html#pod_lca.units.Unit"><code class="docutils literal notranslate"><span class="pre">Unit</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="plotters.html">Plotters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="units.html#pod_lca.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="data_imports.html">Data Imports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_funcs.html">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="array_methods.html">Object Array Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -417,7 +244,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Hotspot Analysis &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Hotspot Analysis &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Datasets" href="datasets.html" />
+    <link rel="next" title="Data Distributions" href="datasets.html" />
     <link rel="prev" title="Data Quality Assessment" href="data_quality_assessment.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -123,20 +123,21 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -157,6 +158,137 @@
             
   <section id="hotspot-analysis">
 <h1>Hotspot Analysis<a class="headerlink" href="#hotspot-analysis" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">HotSpotAnalysis</span></span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis" title="Link to this definition">¶</a></dt>
+<dd><p>HotSpotAnalysis object carries out hotspot analysis and stores data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.model" title="Link to this definition">¶</a></dt>
+<dd><p>Model on which the hotspot analysis is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.hotspots">
+<span class="sig-name descname"><span class="pre">hotspots</span></span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.hotspots" title="Link to this definition">¶</a></dt>
+<dd><p>{impact_category (str): list (Master Obj)} .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.from_model">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.from_model" title="Link to this definition">¶</a></dt>
+<dd><p>Create a hotspot analyis from a a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model on which the hotspot analysis is performed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.set_model">
+<span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.set_model" title="Link to this definition">¶</a></dt>
+<dd><p>Set a model to the analyser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model on which the hotspot analysis is performed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.set_hotspots">
+<span class="sig-name descname"><span class="pre">set_hotspots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hotspots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.set_hotspots" title="Link to this definition">¶</a></dt>
+<dd><p>Set attribute in hotspots to identify as hotspots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hotspots</strong> (<em>list</em><em> of </em><em>Master Objs.</em>) -- List of hotspot object of the model.</p></li>
+<li><p><strong>impact_category</strong> (<em>str</em>) -- Impact category for which the hotspot analysis was run.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.get_model">
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.get_model" title="Link to this definition">¶</a></dt>
+<dd><p>Get the model for which the analsysis will be run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Model on which the hotspot analysis is performed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Model Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.get_hotspots">
+<span class="sig-name descname"><span class="pre">get_hotspots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.get_hotspots" title="Link to this definition">¶</a></dt>
+<dd><p>Get hotspots of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{impact_category (str): list (Master Obj)} .</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.get_hotspots_by_impact_category">
+<span class="sig-name descname"><span class="pre">get_hotspots_by_impact_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.get_hotspots_by_impact_category" title="Link to this definition">¶</a></dt>
+<dd><p>Get hotspots of the model, by the impact category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>impact_category</strong> (<em>str</em>) -- Impact category.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of hotspot object of the model.
+None if hotspots are not set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Master Objs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.HotSpotAnalysis.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GWP'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.HotSpotAnalysis.run" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Determines the hotspot of the model.</dt><dd><p>The hotspots are the largest group out of (a) top 20% contributors to the impact or
+(b) the smallest group of contributors to the 80% (or more) of the impact category specified.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>str</em>) -- Name of the model considered.</p></li>
+<li><p><strong>impact_category</strong> (<em>str</em>) -- Impact category considered.</p></li>
+<li><p><strong>Retrurn</strong></p></li>
+<li><p><strong>-------</strong></p></li>
+<li><p><strong>Obj.</strong> (<em>List</em><em> of </em><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- Hotspot objects.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -164,6 +296,34 @@
           </div>
         </div>
       </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Hotspot Analysis</a><ul>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.model</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.hotspots</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.from_model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.from_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.set_model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.set_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.set_hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.set_hotspots()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.get_model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_model()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.get_hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_hotspots()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.get_hotspots_by_impact_category"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_hotspots_by_impact_category()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.HotSpotAnalysis.run"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
     
 
       <div class="clearer"></div>
@@ -179,7 +339,7 @@
 
             <div class="right">
                 
-                    <a href="datasets.html"><span>Datasets</span><span class="icon">&gt;</span></a>
+                    <a href="datasets.html"><span>Data Distributions</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -187,7 +347,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

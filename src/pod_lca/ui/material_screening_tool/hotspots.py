@@ -1,5 +1,5 @@
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
-from ui.material_screening_tool.GUI_outputManager import GUIOutputManager
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.GUI_outputManager import GUIOutputManager
 
 from math import log10, floor
 

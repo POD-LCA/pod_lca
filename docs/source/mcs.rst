@@ -2,5 +2,10 @@
 Monte Carlo Simulation
 ***********************
 
-.. autoclass:: lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation
+.. autoclass:: pod_lca.uncertainty.MonteCarloSimulator
     :members:
+
+.. autoclass:: pod_lca.uncertainty.MonteCarloResults
+    :members:
+
+    

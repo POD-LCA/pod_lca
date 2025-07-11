@@ -97,7 +97,7 @@ class DynamicRadiativeForcing:
     def get_atmospheric_concentration(greenhouse_gas, at_year, cumulative=False):
         """ Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.
 
-        Notes
+        Note
         -----
         1. For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825
         

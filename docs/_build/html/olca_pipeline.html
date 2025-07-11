@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>OpenLCA Pipeline &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>OpenLCA Pipeline &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Transportation Module" href="transportation.html" />
+    <link rel="next" title="Materials Screening Module" href="materials_screening_module.html" />
     <link rel="prev" title="Impacts Database" href="impact_databases.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -128,9 +128,13 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -151,32 +155,21 @@
             
   <section id="openlca-pipeline">
 <h1>OpenLCA Pipeline<a class="headerlink" href="#openlca-pipeline" title="Link to this heading">¶</a></h1>
-<p>This provides a link to the OpenLCA API.</p>
+<p>This provides a link to the <a class="reference external" href="https://www.openlca.org/">OpenLCA</a> application.</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.impacts.openLCA">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.</span></span><span class="sig-name descname"><span class="pre">openLCA</span></span><a class="headerlink" href="#pod_lca.impacts.openLCA" title="Link to this definition">¶</a></dt>
 <dd><dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.compute_impacts">
-<span class="sig-name descname"><span class="pre">compute_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_system_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_method_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.compute_impacts" title="Link to this definition">¶</a></dt>
-<dd><p>Compute the impacts of the product system.</p>
-<p class="rubric">Notes</p>
-<ol class="arabic simple">
-<li><p>Allocation method set to 'As Defined in Processes' by default (same as openLCA GUI default). For other allocation method names see <a class="reference external" href="https://greendelta.github.io/olca-schema/enums/AllocationType.html">https://greendelta.github.io/olca-schema/enums/AllocationType.html</a>.</p></li>
-<li><p>The calculation of the impact method does not occur asynchronously, therefore the wait_until_ready() method called after the results object is created.</p></li>
-</ol>
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.set_connection">
+<span class="sig-name descname"><span class="pre">set_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.set_connection" title="Link to this definition">¶</a></dt>
+<dd><p>Connect to the openLCA server.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>product_system_ref</strong> (<em>schema.Ref</em>) -- Reference to the product system object.</p></li>
-<li><p><strong>impact_method_ref</strong> (<em>schema.Ref</em>) -- Reference to the impact method object.</p></li>
-</ul>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The client object for the openLCA server.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The result of the calculation.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>olca_ipc.Result</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>olca_ipc.Client</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,60 +195,52 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.filter_processes_by">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_processes_by</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_by</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.filter_processes_by" title="Link to this definition">¶</a></dt>
-<dd><p>Filters the process list by the category given by NAICS or ISIC ids.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.get_impact_method">
+<span class="sig-name descname"><span class="pre">get_impact_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_method_uuid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.get_impact_method" title="Link to this definition">¶</a></dt>
+<dd><p>Get the impact method from the openLCA server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The impact method object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>schema.ImpactMethod</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.get_process_list">
+<span class="sig-name descname"><span class="pre">get_process_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.get_process_list" title="Link to this definition">¶</a></dt>
+<dd><p>Get the list of processes from the openLCA server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_list</strong> (<em>list</em><em> of </em><em>Schema.Process Obj</em>) -- List of processes.</p></li>
-<li><p><strong>filter_by</strong> (<em>str</em><em>, </em><em>int</em><em>, or </em><em>list</em><em> of </em><em>str</em><em>, </em><em>int</em>) -- NAICS or ISIC ids of Categories to be filter by.</p></li>
+<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
+<li><p><strong>uuids</strong> (<em>list</em><em> of </em><em>str</em>) -- List of UUIDs of the processes to be filtered. If None, all processes are returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of processess.</p>
+<dd class="field-even"><p>List of processes reference objects from the openLCA server.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Schema.Process Obj.</p>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.fix_last_internal_ids">
-<span class="sig-name descname"><span class="pre">fix_last_internal_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.fix_last_internal_ids" title="Link to this definition">¶</a></dt>
-<dd><p>Finds any processes in process_list for which last_internal_id &lt; len(exchanges), and fixes by setting last_internal_id = len(exchanges).</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.get_impacts">
+<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.get_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Get the impact results of the product system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>process_list</strong> (<em>list</em>) -- List of UUIDs of the processess to be tested</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.generate_impacts_dir">
-<span class="sig-name descname"><span class="pre">generate_impacts_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.generate_impacts_dir" title="Link to this definition">¶</a></dt>
-<dd><p>Generate the impacts of the processes in the openLCA server.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>process_list</strong> (<em>list</em>) -- List of UUIDs of the processess to be tested</p></li>
+<li><p><strong>result</strong> (<em>olca_ipc.Result</em>) -- The result of the calculation.</p></li>
 <li><p><strong>impact_dict</strong> (<em>dict</em>) -- Dictionary of impact categories.</p></li>
-<li><p><strong>impact_method</strong> (<em>str</em>) -- UUID of the impact method.</p></li>
-<li><p><strong>group_by</strong> (<em>dict</em><em> or </em><em>list</em><em> of </em><em>dict</em>) -- <dl class="simple">
-<dt>Dictionary of group categorization: {'name'<span class="classifier">category name (str),</span></dt><dd><p>'ids' : [category id (int) or product uuid (str)],
-'unit': unit to be reported - optional (Unit Obj),
-'conversion_map': conversion map - optional (dict)}</p>
-</dd>
-</dl>
-<p>Category IDs are from the North American Industry Classification System (NAICS).
-When unit is not given the default unit of the first item in the group is used.
-Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.</p>
-</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -294,44 +279,6 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <li><p><em>Unit Obj.</em> -- The declared unit of the category.</p></li>
 </ul>
 </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.get_impact_method">
-<span class="sig-name descname"><span class="pre">get_impact_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impact_method_uuid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.get_impact_method" title="Link to this definition">¶</a></dt>
-<dd><p>Get the impact method from the openLCA server.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The impact method object.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>schema.ImpactMethod</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.get_impacts">
-<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.get_impacts" title="Link to this definition">¶</a></dt>
-<dd><p>Get the impact results of the product system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>result</strong> (<em>olca_ipc.Result</em>) -- The result of the calculation.</p></li>
-<li><p><strong>impact_dict</strong> (<em>dict</em>) -- Dictionary of impact categories.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dictionary of impact results.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -376,66 +323,15 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.get_process_list">
-<span class="sig-name descname"><span class="pre">get_process_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.get_process_list" title="Link to this definition">¶</a></dt>
-<dd><p>Get the list of processes from the openLCA server.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.is_UUID">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_UUID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.is_UUID" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the input is a valid UUID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>uuids</strong> (<em>list</em><em> of </em><em>str</em>) -- List of UUIDs of the processes to be filtered. If None, all processes are returned.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>uuid</strong> (<em>str</em><em> or </em><em>int</em>) -- The input to be checked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of processes reference objects from the openLCA server.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.import_from_json">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">import_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.import_from_json" title="Link to this definition">¶</a></dt>
-<dd><p>Import a database item from a json file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>file_name</strong> (<em>str</em>) -- The name of the file.</p></li>
-<li><p><strong>data</strong> (<em>ZipExtFile</em>) -- The data from the file.</p></li>
-<li><p><strong>duplicates</strong> (<em>str</em>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.import_from_zip">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">import_from_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'overwrite'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.import_from_zip" title="Link to this definition">¶</a></dt>
-<dd><p>Import a database from a zip file. Handle only the first level of nested zip files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>path</strong> (<em>str</em>) -- The path to the zip file.</p></li>
-<li><p><strong>duplicates</strong> (<em>str</em>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.is_ISIC">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_ISIC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.is_ISIC" title="Link to this definition">¶</a></dt>
-<dd><p>Check if the input is a valid International Standard Industrial Classification (ISIC) code.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>isic</strong> (<em>int</em>) -- The input integer to be checked.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the input is a valid ISIC code, False otherwise.</p>
+<dd class="field-even"><p>True if the input is a valid UUID, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
@@ -461,15 +357,15 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.is_UUID">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_UUID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.is_UUID" title="Link to this definition">¶</a></dt>
-<dd><p>Check if the input is a valid UUID.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.is_ISIC">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_ISIC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.is_ISIC" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the input is a valid International Standard Industrial Classification (ISIC) code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>uuid</strong> (<em>str</em><em> or </em><em>int</em>) -- The input to be checked.</p>
+<dd class="field-odd"><p><strong>isic</strong> (<em>int</em>) -- The input integer to be checked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the input is a valid UUID, False otherwise.</p>
+<dd class="field-even"><p>True if the input is a valid ISIC code, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
@@ -478,15 +374,126 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.set_connection">
-<span class="sig-name descname"><span class="pre">set_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.set_connection" title="Link to this definition">¶</a></dt>
-<dd><p>Connect to the openLCA server.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.fix_last_internal_ids">
+<span class="sig-name descname"><span class="pre">fix_last_internal_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.fix_last_internal_ids" title="Link to this definition">¶</a></dt>
+<dd><p>Finds any processes in process_list for which last_internal_id &lt; len(exchanges), and fixes by setting last_internal_id = len(exchanges).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The client object for the openLCA server.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
+<li><p><strong>process_list</strong> (<em>list</em>) -- List of UUIDs of the processess to be tested</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>olca_ipc.Client</p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.filter_processes_by">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filter_processes_by</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_by</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.filter_processes_by" title="Link to this definition">¶</a></dt>
+<dd><p>Filters the process list by the category given by NAICS or ISIC ids.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process_list</strong> (<em>list</em><em> of </em><em>Schema.Process Obj</em>) -- List of processes.</p></li>
+<li><p><strong>filter_by</strong> (<em>str</em><em>, </em><em>int</em><em>, or </em><em>list</em><em> of </em><em>str</em><em>, </em><em>int</em>) -- NAICS or ISIC ids of Categories to be filter by.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of processess.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of Schema.Process Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.import_from_zip">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">import_from_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'overwrite'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.import_from_zip" title="Link to this definition">¶</a></dt>
+<dd><p>Import a database from a zip file. Handle only the first level of nested zip files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
+<li><p><strong>path</strong> (<em>str</em>) -- The path to the zip file.</p></li>
+<li><p><strong>duplicates</strong> (<em>str</em>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.import_from_json">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">import_from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duplicates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.import_from_json" title="Link to this definition">¶</a></dt>
+<dd><p>Import a database item from a json file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) -- The name of the file.</p></li>
+<li><p><strong>data</strong> (<em>ZipExtFile</em>) -- The data from the file.</p></li>
+<li><p><strong>duplicates</strong> (<em>str</em>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.compute_impacts">
+<span class="sig-name descname"><span class="pre">compute_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">product_system_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_method_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.compute_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the impacts of the product system.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Allocation method set to 'As Defined in Processes' by default (same as openLCA GUI default). For other allocation method names see <a class="reference external" href="https://greendelta.github.io/olca-schema/enums/AllocationType.html">https://greendelta.github.io/olca-schema/enums/AllocationType.html</a>.</p></li>
+<li><p>The calculation of the impact method does not occur asynchronously, therefore the wait_until_ready() method called after the results object is created.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
+<li><p><strong>product_system_ref</strong> (<em>schema.Ref</em>) -- Reference to the product system object.</p></li>
+<li><p><strong>impact_method_ref</strong> (<em>schema.Ref</em>) -- Reference to the impact method object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the calculation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>olca_ipc.Result</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.openLCA.generate_impacts_dir">
+<span class="sig-name descname"><span class="pre">generate_impacts_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impact_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.openLCA.generate_impacts_dir" title="Link to this definition">¶</a></dt>
+<dd><p>Generate the impacts of the processes in the openLCA server.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
+<li><p><strong>process_list</strong> (<em>list</em>) -- List of UUIDs of the processess to be tested</p></li>
+<li><p><strong>impact_dict</strong> (<em>dict</em>) -- Dictionary of impact categories.</p></li>
+<li><p><strong>impact_method</strong> (<em>str</em>) -- UUID of the impact method.</p></li>
+<li><p><strong>group_by</strong> (<em>dict</em><em> or </em><em>list</em><em> of </em><em>dict</em>) -- <dl class="simple">
+<dt>Dictionary of group categorization: {'name'<span class="classifier">category name (str),</span></dt><dd><p>'ids' : [category id (int) or product uuid (str)],
+'unit': unit to be reported - optional (Unit Obj),
+'conversion_map': conversion map - optional (dict)}</p>
+</dd>
+</dl>
+<p>Category IDs are from the North American Industry Classification System (NAICS).
+When unit is not given the default unit of the first item in the group is used.
+Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of impact results.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -511,22 +518,22 @@ Category IDs from the North American Industry Classification System (NAICS) or I
                 <ul>
 <li><a class="reference internal" href="#">OpenLCA Pipeline</a><ul>
 <li><a class="reference internal" href="#pod_lca.impacts.openLCA"><code class="docutils literal notranslate"><span class="pre">openLCA</span></code></a><ul>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.compute_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.compute_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.create_product_system"><code class="docutils literal notranslate"><span class="pre">openLCA.create_product_system()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.filter_processes_by"><code class="docutils literal notranslate"><span class="pre">openLCA.filter_processes_by()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.fix_last_internal_ids"><code class="docutils literal notranslate"><span class="pre">openLCA.fix_last_internal_ids()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.generate_impacts_dir"><code class="docutils literal notranslate"><span class="pre">openLCA.generate_impacts_dir()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_category_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_category_in_process()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_impact_method"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impact_method()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_process_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_in_process()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_process_list"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_list()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.import_from_json"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_json()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.import_from_zip"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_zip()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.is_ISIC"><code class="docutils literal notranslate"><span class="pre">openLCA.is_ISIC()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.is_NAICS"><code class="docutils literal notranslate"><span class="pre">openLCA.is_NAICS()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.openLCA.is_UUID"><code class="docutils literal notranslate"><span class="pre">openLCA.is_UUID()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.openLCA.set_connection"><code class="docutils literal notranslate"><span class="pre">openLCA.set_connection()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.create_product_system"><code class="docutils literal notranslate"><span class="pre">openLCA.create_product_system()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_impact_method"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impact_method()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_process_list"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_list()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_category_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_category_in_process()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.get_process_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_in_process()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.is_UUID"><code class="docutils literal notranslate"><span class="pre">openLCA.is_UUID()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.is_NAICS"><code class="docutils literal notranslate"><span class="pre">openLCA.is_NAICS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.is_ISIC"><code class="docutils literal notranslate"><span class="pre">openLCA.is_ISIC()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.fix_last_internal_ids"><code class="docutils literal notranslate"><span class="pre">openLCA.fix_last_internal_ids()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.filter_processes_by"><code class="docutils literal notranslate"><span class="pre">openLCA.filter_processes_by()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.import_from_zip"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.import_from_json"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_json()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.compute_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.compute_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.openLCA.generate_impacts_dir"><code class="docutils literal notranslate"><span class="pre">openLCA.generate_impacts_dir()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -550,7 +557,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 
             <div class="right">
                 
-                    <a href="transportation.html"><span>Transportation Module</span><span class="icon">&gt;</span></a>
+                    <a href="materials_screening_module.html"><span>Materials Screening Module</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -558,7 +565,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

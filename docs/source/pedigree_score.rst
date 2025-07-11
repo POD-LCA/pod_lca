@@ -2,5 +2,5 @@
 Pedigree Score
 ****************
 
-.. autoclass:: lca_modules.uncertainty.data_quality_assessment.PedigreeScore
+.. autoclass:: pod_lca.uncertainty.PedigreeScore
     :members:

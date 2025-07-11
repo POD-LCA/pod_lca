@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Impact Module &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Impact Module &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -128,10 +128,13 @@
 <li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="material_screening_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -152,40 +155,42 @@
             
   <section id="impact-module">
 <h1>Impact Module<a class="headerlink" href="#impact-module" title="Link to this heading">¶</a></h1>
-<p>The package is organized into LCA modules</p>
+<p>Impacts sub-package has the abstract classes of inventory records (<a class="reference internal" href="impact_records.html#pod_lca.impacts.Records" title="pod_lca.impacts.Records"><code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></a>) and databases (<a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImpactsDatabase</span></code></a>). The inventory records of <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a>, <a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>, and <a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage" title="pod_lca.impacts.CarbonStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarbonStorage</span></code></a> are containers for those LCA inventories. The databases of <a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase" title="pod_lca.impacts.ElectricityImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase</span></code></a> and <a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase" title="pod_lca.impacts.EOLImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">EOLImpactsDatabase</span></code></a> speacialised classes to manage and retrieve inventory data for electricity and end-of-life pathways, respectively.</p>
+<p>In addition, the <a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA" title="pod_lca.impacts.openLCA"><code class="xref py py-class docutils literal notranslate"><span class="pre">openLCA</span></code></a> class provides access to OpenLCA API to pre-process and retrieve data from USLCI and Ecoinvent databases.</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="impact_records.html">Inventory Records</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records"><code class="docutils literal notranslate"><span class="pre">Records</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.parent"><code class="docutils literal notranslate"><span class="pre">Records.parent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.clear_qty"><code class="docutils literal notranslate"><span class="pre">Records.clear_qty()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.copy"><code class="docutils literal notranslate"><span class="pre">Records.copy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.from_dict"><code class="docutils literal notranslate"><span class="pre">Records.from_dict()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.from_parent"><code class="docutils literal notranslate"><span class="pre">Records.from_parent()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.get_parent"><code class="docutils literal notranslate"><span class="pre">Records.get_parent()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.get_record"><code class="docutils literal notranslate"><span class="pre">Records.get_record()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.get_record_dict"><code class="docutils literal notranslate"><span class="pre">Records.get_record_dict()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.set_parent"><code class="docutils literal notranslate"><span class="pre">Records.set_parent()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.records.Records.update_qty"><code class="docutils literal notranslate"><span class="pre">Records.update_qty()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records"><code class="docutils literal notranslate"><span class="pre">Records</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.parent"><code class="docutils literal notranslate"><span class="pre">Records.parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.from_parent"><code class="docutils literal notranslate"><span class="pre">Records.from_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.from_dict"><code class="docutils literal notranslate"><span class="pre">Records.from_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.copy"><code class="docutils literal notranslate"><span class="pre">Records.copy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.set_parent"><code class="docutils literal notranslate"><span class="pre">Records.set_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.get_parent"><code class="docutils literal notranslate"><span class="pre">Records.get_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.get_categories"><code class="docutils literal notranslate"><span class="pre">Records.get_categories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.clear_qty"><code class="docutils literal notranslate"><span class="pre">Records.clear_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.update_qty"><code class="docutils literal notranslate"><span class="pre">Records.update_qty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.get_record"><code class="docutils literal notranslate"><span class="pre">Records.get_record()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Records.get_record_dict"><code class="docutils literal notranslate"><span class="pre">Records.get_record_dict()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts"><code class="docutils literal notranslate"><span class="pre">Impacts</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts.parent"><code class="docutils literal notranslate"><span class="pre">Impacts.parent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts.get_adjusted_GWP"><code class="docutils literal notranslate"><span class="pre">Impacts.get_adjusted_GWP()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts.get_weighted_impact"><code class="docutils literal notranslate"><span class="pre">Impacts.get_weighted_impact()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts.get_adjusted_GWP"><code class="docutils literal notranslate"><span class="pre">Impacts.get_adjusted_GWP()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions"><code class="docutils literal notranslate"><span class="pre">Emissions</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.parent"><code class="docutils literal notranslate"><span class="pre">Emissions.parent</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.temporal_emission_profile</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.methane_bio_oxidation"><code class="docutils literal notranslate"><span class="pre">Emissions.methane_bio_oxidation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.from_dict"><code class="docutils literal notranslate"><span class="pre">Emissions.from_dict()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.from_parent"><code class="docutils literal notranslate"><span class="pre">Emissions.from_parent()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.get_emission_duration"><code class="docutils literal notranslate"><span class="pre">Emissions.get_emission_duration()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.get_start_year"><code class="docutils literal notranslate"><span class="pre">Emissions.get_start_year()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.get_temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.get_temporal_emission_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.from_dict"><code class="docutils literal notranslate"><span class="pre">Emissions.from_dict()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.set_temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.set_temporal_emission_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.get_temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.get_temporal_emission_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.get_start_year"><code class="docutils literal notranslate"><span class="pre">Emissions.get_start_year()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions.get_emission_duration"><code class="docutils literal notranslate"><span class="pre">Emissions.get_emission_duration()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage"><code class="docutils literal notranslate"><span class="pre">CarbonStorage</span></code></a><ul>
@@ -201,67 +206,67 @@
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.unit_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.unit_key</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.qty_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.qty_key</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.data"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.data</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_data_all"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_data_all()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_data_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_impact_category_units"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_impact_category_units()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_name"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_primary_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_primary_key()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_qty_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_qty_key()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_required_headers()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_unit_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_unit_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.new"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_name"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_data"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_data_entry"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_data_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_name"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_primary_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_primary_key()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_qty_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_qty_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_unit_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_unit_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.set_qty_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.set_qty_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_name"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_impact_category_units"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_impact_category_units()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_data_all"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_data_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_data_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_primary_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_primary_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_unit_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_unit_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_qty_key"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_qty_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase.get_required_headers()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.process_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.process_key</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.life_cycle_stage_key</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_data_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_region_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_region_key()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_required_headers()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_technology_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_technology_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.new"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.set_region_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.set_region_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.set_technology_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.set_technology_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_region_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_region_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_technology_key"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_technology_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_required_headers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ElectricityImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase.get_data_entry()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.process_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.process_key</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.life_cycle_stage_key</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_data_entry()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_life_cycle_stage_key()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_process_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_process_key()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_required_headers()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.new"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.new()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.set_life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.set_life_cycle_stage_key()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.set_process_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.set_process_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.set_life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.set_life_cycle_stage_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_process_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_process_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_life_cycle_stage_key()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_required_headers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.EOLImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_data_entry()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA"><code class="docutils literal notranslate"><span class="pre">openLCA</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.compute_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.compute_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.create_product_system"><code class="docutils literal notranslate"><span class="pre">openLCA.create_product_system()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.filter_processes_by"><code class="docutils literal notranslate"><span class="pre">openLCA.filter_processes_by()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.fix_last_internal_ids"><code class="docutils literal notranslate"><span class="pre">openLCA.fix_last_internal_ids()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.generate_impacts_dir"><code class="docutils literal notranslate"><span class="pre">openLCA.generate_impacts_dir()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_category_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_category_in_process()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_impact_method"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impact_method()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impacts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_process_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_in_process()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_process_list"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_list()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.import_from_json"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_json()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.import_from_zip"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_zip()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.is_ISIC"><code class="docutils literal notranslate"><span class="pre">openLCA.is_ISIC()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.is_NAICS"><code class="docutils literal notranslate"><span class="pre">openLCA.is_NAICS()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.is_UUID"><code class="docutils literal notranslate"><span class="pre">openLCA.is_UUID()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.set_connection"><code class="docutils literal notranslate"><span class="pre">openLCA.set_connection()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.create_product_system"><code class="docutils literal notranslate"><span class="pre">openLCA.create_product_system()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_impact_method"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impact_method()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_process_list"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.get_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_category_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_category_in_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.get_process_in_process"><code class="docutils literal notranslate"><span class="pre">openLCA.get_process_in_process()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.is_UUID"><code class="docutils literal notranslate"><span class="pre">openLCA.is_UUID()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.is_NAICS"><code class="docutils literal notranslate"><span class="pre">openLCA.is_NAICS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.is_ISIC"><code class="docutils literal notranslate"><span class="pre">openLCA.is_ISIC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.fix_last_internal_ids"><code class="docutils literal notranslate"><span class="pre">openLCA.fix_last_internal_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.filter_processes_by"><code class="docutils literal notranslate"><span class="pre">openLCA.filter_processes_by()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.import_from_zip"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_zip()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.import_from_json"><code class="docutils literal notranslate"><span class="pre">openLCA.import_from_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.compute_impacts"><code class="docutils literal notranslate"><span class="pre">openLCA.compute_impacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html#pod_lca.impacts.openLCA.generate_impacts_dir"><code class="docutils literal notranslate"><span class="pre">openLCA.generate_impacts_dir()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -298,7 +303,7 @@
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

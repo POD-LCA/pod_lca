@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Inventory Records &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
+    <title>Inventory Records &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -30,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -128,9 +128,13 @@
 <li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
@@ -151,17 +155,15 @@
             
   <section id="inventory-records">
 <h1>Inventory Records<a class="headerlink" href="#inventory-records" title="Link to this heading">¶</a></h1>
-<p>Inventory records are containers for impacts, emissions, and carbon storage data</p>
+<p>Inventory records are containers for <a class="reference internal" href="#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a>, <a class="reference internal" href="#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>, and <a class="reference internal" href="#pod_lca.impacts.CarbonStorage" title="pod_lca.impacts.CarbonStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">CarbonStorage</span></code></a> data. They all inherit from <a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.impacts.Records"><code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></a>.</p>
+<hr class="docutils" />
 <dl class="py class">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.records.</span></span><span class="sig-name descname"><span class="pre">Records</span></span><a class="headerlink" href="#pod_lca.impacts.records.Records" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.</dt><dd><p>The inventory recorded by the class is in the class variable 'record_type'.</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pod_lca.impacts.Records">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.</span></span><span class="sig-name descname"><span class="pre">Records</span></span><a class="headerlink" href="#pod_lca.impacts.Records" title="Link to this definition">¶</a></dt>
+<dd><p>Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.parent">
-<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#pod_lca.impacts.records.Records.parent" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#pod_lca.impacts.Records.parent" title="Link to this definition">¶</a></dt>
 <dd><p>The product or process object to which this record belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -183,45 +185,8 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.clear_qty">
-<span class="sig-name descname"><span class="pre">clear_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.clear_qty" title="Link to this definition">¶</a></dt>
-<dd><p>Set all record quantities to zero.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.copy">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.copy" title="Link to this definition">¶</a></dt>
-<dd><p>Make a copy of the record object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Copy of the object.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.from_dict">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.from_dict" title="Link to this definition">¶</a></dt>
-<dd><p>Create an record object from a dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record_dict</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Records object created.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Records Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.from_parent">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.from_parent" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.from_parent">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.from_parent" title="Link to this definition">¶</a></dt>
 <dd><p>Create an record object from a parent object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -237,8 +202,50 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.get_parent">
-<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.get_parent" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.from_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.from_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Create an record object from a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record_dict</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Records object created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Records Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.copy">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.copy" title="Link to this definition">¶</a></dt>
+<dd><p>Make a copy of the record object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of the object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Impacts Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.set_parent">
+<span class="sig-name descname"><span class="pre">set_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.set_parent" title="Link to this definition">¶</a></dt>
+<dd><p>Set the parent object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>Master Obj.</em>) -- The product or process object to which this record belong.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.get_parent">
+<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.get_parent" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve the product or process object to which this record belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -251,8 +258,43 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.get_record">
-<span class="sig-name descname"><span class="pre">get_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.get_record" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.get_categories">
+<span class="sig-name descname"><span class="pre">get_categories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.get_categories" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the categories (i.e., entry names) in the record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>units</strong> (<em>bool</em>) -- If true, returns a dictionary of categories and corresponding units.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>list</em> -- List of categories.</p></li>
+<li><p><em>dict</em> -- Dictionary of units, keyed by category name.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.clear_qty">
+<span class="sig-name descname"><span class="pre">clear_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.clear_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Set all record quantities to zero.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.update_qty">
+<span class="sig-name descname"><span class="pre">update_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">records</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.update_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Update the record quantities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>records</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.get_record">
+<span class="sig-name descname"><span class="pre">get_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.get_record" title="Link to this definition">¶</a></dt>
 <dd><p>Get the quantity of a specific record attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -268,8 +310,8 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.get_record_dict">
-<span class="sig-name descname"><span class="pre">get_record_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.get_record_dict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.impacts.Records.get_record_dict">
+<span class="sig-name descname"><span class="pre">get_record_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Records.get_record_dict" title="Link to this definition">¶</a></dt>
 <dd><p>Get the record as a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -281,34 +323,12 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.set_parent">
-<span class="sig-name descname"><span class="pre">set_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.set_parent" title="Link to this definition">¶</a></dt>
-<dd><p>Set the parent object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em>Master Obj.</em>) -- The product or process object to which this record belong.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.records.Records.update_qty">
-<span class="sig-name descname"><span class="pre">update_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">records</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.records.Records.update_qty" title="Link to this definition">¶</a></dt>
-<dd><p>Update the record quantities.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>records</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.impacts.Impacts">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.</span></span><span class="sig-name descname"><span class="pre">Impacts</span></span><a class="headerlink" href="#pod_lca.impacts.Impacts" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.lca_modules.impacts.records.Records"><code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></a></p>
 <p>Impacts object keep record of the impacts created by a product or a process.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.impacts.Impacts.parent">
@@ -334,32 +354,16 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.Impacts.get_adjusted_GWP">
-<span class="sig-name descname"><span class="pre">get_adjusted_GWP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Impacts.get_adjusted_GWP" title="Link to this definition">¶</a></dt>
-<dd><p>Get GWP values adjusted for biogenic and accelerated carbonation effects.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Adjusted GWP value</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.impacts.Impacts.get_weighted_impact">
 <span class="sig-name descname"><span class="pre">get_weighted_impact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'TRACI_EPA'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Impacts.get_weighted_impact" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Get a normalized and weighted value for impacts.</dt><dd><dl class="simple">
-<dt>Ref: [1] The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide.</dt><dd><p>DOI: <a class="reference external" href="http://hdl.handle.net/1773/41885">http://hdl.handle.net/1773/41885</a></p>
-</dd>
-</dl>
-</dd>
-</dl>
+<dd><p>Get a normalized and weighted value for impacts.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Reference: The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. DOI: <a class="reference external" href="http://hdl.handle.net/1773/41885">http://hdl.handle.net/1773/41885</a></p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) -- <dl class="simple">
+<dd class="field-odd"><p><strong>method</strong> (<em>&lt;str&gt;</em>) -- <dl class="simple">
 <dt>Which weightages to be used:</dt><dd><p>'TRACI_EPA' - from Ref [1]
 'TRACI_NIST' - from Ref [1]</p>
 </dd>
@@ -375,12 +379,26 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Impacts.get_adjusted_GWP">
+<span class="sig-name descname"><span class="pre">get_adjusted_GWP</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Impacts.get_adjusted_GWP" title="Link to this definition">¶</a></dt>
+<dd><p>Get GWP values adjusted for biogenic and accelerated carbonation effects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Adjusted GWP value</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.impacts.Emissions">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.</span></span><span class="sig-name descname"><span class="pre">Emissions</span></span><a class="headerlink" href="#pod_lca.impacts.Emissions" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.lca_modules.impacts.records.Records"><code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></a></p>
 <p>Emissions object keep record of the emissions created by a product or a process.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.impacts.Emissions.parent">
@@ -428,23 +446,6 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.from_dict">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.from_dict" title="Link to this definition">¶</a></dt>
-<dd><p>Create an record object from a dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record_dict</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Records object created.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Records Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.impacts.Emissions.from_parent">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.from_parent" title="Link to this definition">¶</a></dt>
 <dd><p>Create an record object from a parent object.</p>
@@ -462,29 +463,29 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.get_emission_duration">
-<span class="sig-name descname"><span class="pre">get_emission_duration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.get_emission_duration" title="Link to this definition">¶</a></dt>
-<dd><p>Get the duration of emissions.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.from_dict">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.from_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Create an record object from a dictionary.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Duration of emission, in years.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record_dict</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Records object created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Records Obj.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.get_start_year">
-<span class="sig-name descname"><span class="pre">get_start_year</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.get_start_year" title="Link to this definition">¶</a></dt>
-<dd><p>Set year of the emission.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.set_temporal_emission_profile">
+<span class="sig-name descname"><span class="pre">set_temporal_emission_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_profile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.set_temporal_emission_profile" title="Link to this definition">¶</a></dt>
+<dd><p>Set the dyanamic emissions function.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Year of the emission occuring.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>time_profile</strong> (<em>DataDistribution Object</em>) -- Function describing the dynamic emission profile.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -504,12 +505,29 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.set_temporal_emission_profile">
-<span class="sig-name descname"><span class="pre">set_temporal_emission_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_profile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.set_temporal_emission_profile" title="Link to this definition">¶</a></dt>
-<dd><p>Set the dyanamic emissions function.</p>
+<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.get_start_year">
+<span class="sig-name descname"><span class="pre">get_start_year</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.get_start_year" title="Link to this definition">¶</a></dt>
+<dd><p>Set year of the emission.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>time_profile</strong> (<em>DataDistribution Object</em>) -- Function describing the dynamic emission profile.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Year of the emission occuring.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.Emissions.get_emission_duration">
+<span class="sig-name descname"><span class="pre">get_emission_duration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.Emissions.get_emission_duration" title="Link to this definition">¶</a></dt>
+<dd><p>Get the duration of emissions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Duration of emission, in years.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -519,7 +537,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.impacts.CarbonStorage">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.</span></span><span class="sig-name descname"><span class="pre">CarbonStorage</span></span><a class="headerlink" href="#pod_lca.impacts.CarbonStorage" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.lca_modules.impacts.records.Records"><code class="xref py py-class docutils literal notranslate"><span class="pre">Records</span></code></a></p>
 <p>CarbonStorage object keep record of the carbon storage records created by a product or a process.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.impacts.CarbonStorage.parent">
@@ -563,35 +581,36 @@ Currently, this is set to the CARBON_STORAGE in the config file.</p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Inventory Records</a><ul>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records"><code class="docutils literal notranslate"><span class="pre">Records</span></code></a><ul>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.parent"><code class="docutils literal notranslate"><span class="pre">Records.parent</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.clear_qty"><code class="docutils literal notranslate"><span class="pre">Records.clear_qty()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.copy"><code class="docutils literal notranslate"><span class="pre">Records.copy()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.from_dict"><code class="docutils literal notranslate"><span class="pre">Records.from_dict()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.from_parent"><code class="docutils literal notranslate"><span class="pre">Records.from_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.get_parent"><code class="docutils literal notranslate"><span class="pre">Records.get_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.get_record"><code class="docutils literal notranslate"><span class="pre">Records.get_record()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.get_record_dict"><code class="docutils literal notranslate"><span class="pre">Records.get_record_dict()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.set_parent"><code class="docutils literal notranslate"><span class="pre">Records.set_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.records.Records.update_qty"><code class="docutils literal notranslate"><span class="pre">Records.update_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records"><code class="docutils literal notranslate"><span class="pre">Records</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.parent"><code class="docutils literal notranslate"><span class="pre">Records.parent</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.from_parent"><code class="docutils literal notranslate"><span class="pre">Records.from_parent()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.from_dict"><code class="docutils literal notranslate"><span class="pre">Records.from_dict()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.copy"><code class="docutils literal notranslate"><span class="pre">Records.copy()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.set_parent"><code class="docutils literal notranslate"><span class="pre">Records.set_parent()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.get_parent"><code class="docutils literal notranslate"><span class="pre">Records.get_parent()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.get_categories"><code class="docutils literal notranslate"><span class="pre">Records.get_categories()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.clear_qty"><code class="docutils literal notranslate"><span class="pre">Records.clear_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.update_qty"><code class="docutils literal notranslate"><span class="pre">Records.update_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.get_record"><code class="docutils literal notranslate"><span class="pre">Records.get_record()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Records.get_record_dict"><code class="docutils literal notranslate"><span class="pre">Records.get_record_dict()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pod_lca.impacts.Impacts"><code class="docutils literal notranslate"><span class="pre">Impacts</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.impacts.Impacts.parent"><code class="docutils literal notranslate"><span class="pre">Impacts.parent</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.Impacts.get_adjusted_GWP"><code class="docutils literal notranslate"><span class="pre">Impacts.get_adjusted_GWP()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.Impacts.get_weighted_impact"><code class="docutils literal notranslate"><span class="pre">Impacts.get_weighted_impact()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Impacts.get_adjusted_GWP"><code class="docutils literal notranslate"><span class="pre">Impacts.get_adjusted_GWP()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pod_lca.impacts.Emissions"><code class="docutils literal notranslate"><span class="pre">Emissions</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.impacts.Emissions.parent"><code class="docutils literal notranslate"><span class="pre">Emissions.parent</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.Emissions.temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.temporal_emission_profile</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.Emissions.methane_bio_oxidation"><code class="docutils literal notranslate"><span class="pre">Emissions.methane_bio_oxidation</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.Emissions.from_dict"><code class="docutils literal notranslate"><span class="pre">Emissions.from_dict()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.Emissions.from_parent"><code class="docutils literal notranslate"><span class="pre">Emissions.from_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.Emissions.get_emission_duration"><code class="docutils literal notranslate"><span class="pre">Emissions.get_emission_duration()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.Emissions.get_start_year"><code class="docutils literal notranslate"><span class="pre">Emissions.get_start_year()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.impacts.Emissions.get_temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.get_temporal_emission_profile()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Emissions.from_dict"><code class="docutils literal notranslate"><span class="pre">Emissions.from_dict()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.Emissions.set_temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.set_temporal_emission_profile()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Emissions.get_temporal_emission_profile"><code class="docutils literal notranslate"><span class="pre">Emissions.get_temporal_emission_profile()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Emissions.get_start_year"><code class="docutils literal notranslate"><span class="pre">Emissions.get_start_year()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.Emissions.get_emission_duration"><code class="docutils literal notranslate"><span class="pre">Emissions.get_emission_duration()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pod_lca.impacts.CarbonStorage"><code class="docutils literal notranslate"><span class="pre">CarbonStorage</span></code></a><ul>
@@ -627,7 +646,7 @@ Currently, this is set to the CARBON_STORAGE in the config file.</p>
 
 
     <div class="footer" role="contentinfo">
-    &#169; Copyright 2024, POD LCA Team.
+    &#169; Copyright 2025, POD LCA Team.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 

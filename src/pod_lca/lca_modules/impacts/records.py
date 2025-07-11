@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 
 class Records:
     """ Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.
-        The inventory recorded by the class is in the class variable 'record_type'.
 
     Attributes
     ----------
@@ -195,6 +194,25 @@ class Records:
             Product or process object to which this record belong.
         """
         return self.parent
+    
+    def get_categories(self, units=False):
+        """ Retrieves the categories (i.e., entry names) in the record.
+
+        Parameters
+        ----------
+        units : bool
+            If true, returns a dictionary of categories and corresponding units.
+        Returns
+        -------
+        list
+            List of categories.
+        dict
+            Dictionary of units, keyed by category name.
+        """
+        if units:
+            return list(self.record_attr_dict.keys()), self.record_attr_dict
+        else:
+            return list(self.record_attr_dict.keys())
     
     # ========================
     # Methods

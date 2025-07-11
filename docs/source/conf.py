@@ -10,8 +10,8 @@ sys.path.insert(0, os.path.abspath('../../src'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'POD|LCA Materials Tool'
-copyright = '2024, POD LCA Team'
+project = 'POD|LCA Python Framework'
+copyright = '2025, POD LCA Team'
 author = 'POD LCA Team'
 release = 'v0.1.0'
 
@@ -22,6 +22,7 @@ extensions = ['sphinx.ext.napoleon']
 
 templates_path = ['_templates']
 exclude_patterns = []
+autodoc_member_order = 'bysource'
 
 language = 'Python'
 

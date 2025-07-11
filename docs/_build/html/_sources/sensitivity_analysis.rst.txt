@@ -2,4 +2,5 @@
 Sensitivity Analysis
 *********************
 
-to be added...
+.. autoclass:: pod_lca.uncertainty.SensitivityAnalysis
+    :members:

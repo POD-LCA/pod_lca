@@ -37,7 +37,7 @@ class HotSpotAnalysis:
                         impact_val = obj.get_impacts().get_weighted_impact()
                     else:
                         impact_val = obj.get_impacts().get_record(impact_category)
-                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category]} \n"
+                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {obj.get_impacts().get_categories(units=True)[impact_category]} \n"
         
         return str
 
@@ -48,7 +48,7 @@ class HotSpotAnalysis:
     def from_model(cls, model):
         """ Create a hotspot analyis from a a model.
         
-        Attributes
+        Parameters
         ----------
         model : Model Obj.
             Model on which the hotspot analysis is performed.
@@ -66,7 +66,7 @@ class HotSpotAnalysis:
     def set_model(self, model):
         """ Set a model to the analyser.
         
-        Attributes
+        Parameters
         ----------
         model : Model Obj.
             Model on which the hotspot analysis is performed.        

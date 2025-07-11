@@ -8,7 +8,7 @@ __version__ = "0.1.0"
 from math import isnan
 
 from . import WasteProcess
-from ..material_screening import Master
+from ..materials_screening import Master
 from ...utilities import ArrayMethods
 from ...utilities import config
 from ...utilities import log
@@ -236,7 +236,7 @@ class Waste(Master):
         
         Returns
         -------
-        process_mix : dict
+        dict
             The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
             Percentage can be in the form of string with a % sign or decimal value.       
         """

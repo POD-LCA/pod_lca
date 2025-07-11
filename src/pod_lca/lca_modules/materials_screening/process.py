@@ -188,7 +188,7 @@ class TransportationProcess(Process):
             of the transportation process will be set to that of the product added.
             If not already added, will set the transportation process to the product as its transporter.
 
-        Notes
+        Note
         -----
         This method is equivalent to calling 'set_transporter' from the Product Object.
     

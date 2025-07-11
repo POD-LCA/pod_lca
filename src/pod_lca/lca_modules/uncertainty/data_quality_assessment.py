@@ -178,7 +178,7 @@ class DataQualityAnalysis:
     def set_model(self, model):
         """ Set a model to the Analyser.
         
-        Attributes
+        Parameters
         ----------
         model : Model Obj.
             Model on which the Data Quality Analysis is performed.        

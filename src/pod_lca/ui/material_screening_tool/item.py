@@ -1,6 +1,6 @@
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
-from ui.material_screening_tool.slider import Slider
-from ui.material_screening_tool.item_context_menu import ItemContextMenuMixin
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.slider import Slider
+from ui.materials_screening_tool.item_context_menu import ItemContextMenuMixin
 
 from tkinter import DISABLED
 
