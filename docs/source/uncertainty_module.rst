@@ -1,5 +1,5 @@
 **********************
-Uncertainty Module
+Uncertainty
 **********************
 A brief description... 
 

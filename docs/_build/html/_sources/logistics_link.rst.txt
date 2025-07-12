@@ -1,6 +1,10 @@
 **************************
-Logistic Link
+Logistics Link
 **************************
 
-.. autoclass:: lca_modules.transportation.logistics_link.Link
+:py:class:`~pod_lca.transportation.Link` manages individual leg of transportation, including the travel distance. Domestic link and foreign link are abstracted classes 
+
+------
+
+.. autoclass:: pod_lca.transportation.Link
     :members:

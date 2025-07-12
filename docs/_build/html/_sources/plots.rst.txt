@@ -1,5 +1,5 @@
 **********
-Products
+Plots
 **********
 
 .. autoclass:: pod_lca.visualizer.AbstractPlot

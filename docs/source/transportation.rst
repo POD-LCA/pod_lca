@@ -1,14 +1,14 @@
 **********************
-Transportation Module
+Transportation
 **********************
-A brief description... 
+
+This sub-package handles transportation. :py:class:`~pod_lca.transportation.ProjectLogisticManager` class provides a means of managing a logistics operation (i.e., transportation of multiple :py:class:`~pod_lca.materials_screening.Product` objects). :py:class:`~pod_lca.transportation.Link` manages individual leg of transportation, including the travel distance, and :py:class:`~pod_lca.transportation.TransportMode` class manages various aspects of transportation modes, including their :py:class:`~pod_lca.impacts.Impacts` and :py:class:`~pod_lca.impacts.Emissions`. 
 
 -------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 3
 
    project_logistic_manager
    logistics_link
    transport_mode
-   transport_scenarios

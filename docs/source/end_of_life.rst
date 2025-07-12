@@ -1,8 +1,8 @@
 *******************
-End-of-life Module
+End-of-life
 *******************
 
-A brief description... 
+This sub-package manages :py:class:`~pod_lca.eol.Waste` and their :py:class:`~pod_lca.eol.WasteProcess` (i.e., end-of-life pathways).
 
 -------
 

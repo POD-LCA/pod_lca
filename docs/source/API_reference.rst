@@ -12,6 +12,7 @@ The POD|LCA Python package is organized into Life Cycle Analysis (LCA) modules, 
    impacts_module
    materials_screening_module
    electricity_module
+   transportation
    end_of_life
    dynamic_radiative_forcing
    uncertainty_module

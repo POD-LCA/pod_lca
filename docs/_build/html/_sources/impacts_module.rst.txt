@@ -1,5 +1,5 @@
 **************
-Impact Module
+Impacts
 **************
 
 Impacts sub-package has the abstract classes of inventory records (:py:class:`~pod_lca.impacts.Records`) and databases (:py:class:`~pod_lca.impacts.ImpactsDatabase`). The inventory records of :py:class:`~pod_lca.impacts.Impacts`, :py:class:`~pod_lca.impacts.Emissions`, and :py:class:`~pod_lca.impacts.CarbonStorage` are containers for those LCA inventories. The databases of :py:class:`~pod_lca.impacts.ElectricityImpactsDatabase` and :py:class:`~pod_lca.impacts.EOLImpactsDatabase` speacialised classes to manage and retrieve inventory data for electricity and end-of-life pathways, respectively.

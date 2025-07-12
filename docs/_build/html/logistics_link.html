@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Logistic Link &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <title>Logistics Link &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -14,7 +14,9 @@
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Transport Mode" href="transport_mode.html" />
+    <link rel="prev" title="Project Logistics Manager" href="project_logistic_manager.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -116,10 +118,28 @@
 
     
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
-        <div class="sphinxsidebarwrapper"><ul>
+        <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="API_reference.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="transportation.html">Transportation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Logistics Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html">Transport Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
@@ -134,8 +154,253 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="logistic-link">
-<h1>Logistic Link<a class="headerlink" href="#logistic-link" title="Link to this heading">¶</a></h1>
+  <section id="logistics-link">
+<h1>Logistics Link<a class="headerlink" href="#logistics-link" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.transportation.Link" title="pod_lca.transportation.Link"><code class="xref py py-class docutils literal notranslate"><span class="pre">Link</span></code></a> manages individual leg of transportation, including the travel distance. Domestic link and foreign link are abstracted classes</p>
+<hr class="docutils" />
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.transportation.</span></span><span class="sig-name descname"><span class="pre">Link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">travel_dist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_trip_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feul_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_dms_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency_dms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link" title="Link to this definition">¶</a></dt>
+<dd><p>Link object create a link of transportation for each material.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.project">
+<span class="sig-name descname"><span class="pre">project</span></span><a class="headerlink" href="#pod_lca.transportation.Link.project" title="Link to this definition">¶</a></dt>
+<dd><p>Refers to the main project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Project obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.material">
+<span class="sig-name descname"><span class="pre">material</span></span><a class="headerlink" href="#pod_lca.transportation.Link.material" title="Link to this definition">¶</a></dt>
+<dd><p>name of the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.qty">
+<span class="sig-name descname"><span class="pre">qty</span></span><a class="headerlink" href="#pod_lca.transportation.Link.qty" title="Link to this definition">¶</a></dt>
+<dd><p>quantity of the of the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.travel_dist">
+<span class="sig-name descname"><span class="pre">travel_dist</span></span><a class="headerlink" href="#pod_lca.transportation.Link.travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>transportation distance.
+transportaion scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float or str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.return_trip_factor">
+<span class="sig-name descname"><span class="pre">return_trip_factor</span></span><a class="headerlink" href="#pod_lca.transportation.Link.return_trip_factor" title="Link to this definition">¶</a></dt>
+<dd><p>transportation return trip factor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.dist_unit">
+<span class="sig-name descname"><span class="pre">dist_unit</span></span><a class="headerlink" href="#pod_lca.transportation.Link.dist_unit" title="Link to this definition">¶</a></dt>
+<dd><p>transportation distance unit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.mode_name">
+<span class="sig-name descname"><span class="pre">mode_name</span></span><a class="headerlink" href="#pod_lca.transportation.Link.mode_name" title="Link to this definition">¶</a></dt>
+<dd><p>transportation mode (ex: truck, rail).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.mode_dms_name">
+<span class="sig-name descname"><span class="pre">mode_dms_name</span></span><a class="headerlink" href="#pod_lca.transportation.Link.mode_dms_name" title="Link to this definition">¶</a></dt>
+<dd><p>transportation domestic mode (ex: truck, rail).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.efficiency">
+<span class="sig-name descname"><span class="pre">efficiency</span></span><a class="headerlink" href="#pod_lca.transportation.Link.efficiency" title="Link to this definition">¶</a></dt>
+<dd><p>transportation mode efficiency (ex: (1)high, (2)medium, (3)low).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.efficiency_dms">
+<span class="sig-name descname"><span class="pre">efficiency_dms</span></span><a class="headerlink" href="#pod_lca.transportation.Link.efficiency_dms" title="Link to this definition">¶</a></dt>
+<dd><p>Domestic transportation mode efficiency (ex: (1)high, (2)medium, (3)low).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_qty">
+<span class="sig-name descname"><span class="pre">get_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the quantity of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantity of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_material">
+<span class="sig-name descname"><span class="pre">get_material</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_material" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the material name of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>material name of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_mode">
+<span class="sig-name descname"><span class="pre">get_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the transportation mode of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>transportation mode of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_efficiency">
+<span class="sig-name descname"><span class="pre">get_efficiency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_efficiency" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the transportation efficiency of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>transportation efficiency of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_efficiency_dms">
+<span class="sig-name descname"><span class="pre">get_efficiency_dms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_efficiency_dms" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the transportation domestic efficiency of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>transportation domestic efficiency of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_return_trip_factor">
+<span class="sig-name descname"><span class="pre">get_return_trip_factor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_return_trip_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the return trip factor of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return trip factor of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_travel_dist">
+<span class="sig-name descname"><span class="pre">get_travel_dist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the travel distance of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>travel distance of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.get_impact">
+<span class="sig-name descname"><span class="pre">get_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.get_impact" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the impact of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>impact of the transportation link.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Impact Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.Link.compute_impact">
+<span class="sig-name descname"><span class="pre">compute_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.Link.compute_impact" title="Link to this definition">¶</a></dt>
+<dd><p>compute the impaact of the transportation link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of impacts for each category.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -144,6 +409,44 @@
         </div>
       </div>
     
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Logistics Link</a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.Link"><code class="docutils literal notranslate"><span class="pre">Link</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.project"><code class="docutils literal notranslate"><span class="pre">Link.project</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.material"><code class="docutils literal notranslate"><span class="pre">Link.material</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.qty"><code class="docutils literal notranslate"><span class="pre">Link.qty</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.travel_dist"><code class="docutils literal notranslate"><span class="pre">Link.travel_dist</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.return_trip_factor"><code class="docutils literal notranslate"><span class="pre">Link.return_trip_factor</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.dist_unit"><code class="docutils literal notranslate"><span class="pre">Link.dist_unit</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.mode_name"><code class="docutils literal notranslate"><span class="pre">Link.mode_name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.mode_dms_name"><code class="docutils literal notranslate"><span class="pre">Link.mode_dms_name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.efficiency"><code class="docutils literal notranslate"><span class="pre">Link.efficiency</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.efficiency_dms"><code class="docutils literal notranslate"><span class="pre">Link.efficiency_dms</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_qty"><code class="docutils literal notranslate"><span class="pre">Link.get_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_material"><code class="docutils literal notranslate"><span class="pre">Link.get_material()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_mode"><code class="docutils literal notranslate"><span class="pre">Link.get_mode()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_efficiency"><code class="docutils literal notranslate"><span class="pre">Link.get_efficiency()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_efficiency_dms"><code class="docutils literal notranslate"><span class="pre">Link.get_efficiency_dms()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">Link.get_return_trip_factor()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">Link.get_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.get_impact"><code class="docutils literal notranslate"><span class="pre">Link.get_impact()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.Link.compute_impact"><code class="docutils literal notranslate"><span class="pre">Link.compute_impact()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
 
       <div class="clearer"></div>
     </div>
@@ -151,9 +454,14 @@
         <div class="button_nav">
             <div class="left">
                 
+                <a href="project_logistic_manager.html">
+                    <span class="icon">&lt;</span><span>Project Logistics Manager</span></a>
+                
             </div>
 
             <div class="right">
+                
+                    <a href="transport_mode.html"><span>Transport Mode</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
