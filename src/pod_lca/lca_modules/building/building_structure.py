@@ -236,7 +236,7 @@ class Building:
 
     def demolish(self):
 
-        pass # TODO: writte method to demolish the building and add C1 impacts
+        pass # TODO: write method to demolish the building and add C1 impacts
 
 
 if __name__ == '__main__':

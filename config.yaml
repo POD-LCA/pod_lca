@@ -56,6 +56,7 @@ file_paths:
     CFS_MODE_CODE: data\\transportation_cfs_mode-codes.json
     FAF_MODE_CODE: data\\transportation_faf_mode-codes.json
     ELECTRIC_VEHICLES: data\\transportation_podlca_electric-vehicles.csv
+    WASTE_TRANSPORT: data\\transportation_podlca_waste-transport.csv
   electricity:
     CAMBIUM_NATIONAL_DATA: data\\electricity_cambium_consumption-national.csv
     CAMBIUM_REGIONAL_DATA: data\\electricity_cambium_consumption-regional.csv
@@ -73,6 +74,7 @@ file_paths:
     IMPACT_WEIGHTING_FACTOR_EPA: data\\impacts_epa_weighting-factors.csv
     IMPACT_WEIGHTING_FACTOR_NIST: data\\impacts_nist_weighting-factors.csv
   location:
+    US_STATES: data\\location_faa_us-states.json
     US_STATE_COORDS: data\\location_podlca_us-state-coords.csv
     FAF_DOMESTIC_REGION: data\\transportation_faf_domestic-region.json
     FAF_FOREIGN_REGION: data\\transportation_faf_foreign-region.json

@@ -44,6 +44,7 @@ class Location:
         self.zipcode = None
         self.city = None
         self.state = None
+        self.state_abbr = None
         self.country = None
         self.country_code =None
         self.cfs_area = None
@@ -158,8 +159,10 @@ class Location:
         location.country = "USA"
         location.country_code = "US"
 
-        if state in DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']):
+        us_states = DataImporter.json_to_dict(config['file_paths']['location']['US_STATES'])
+        if state in us_states:
             location.state = state
+            location.state_abbr = us_states[state]
         else:
             raise ValueError(f"{state} not recognized as a US State.")
         
@@ -278,6 +281,9 @@ class Location:
         """
         try:
             self.state = geopy_location.raw['address']['state']
+
+            us_states = DataImporter.json_to_dict(config['file_paths']['location']['US_STATES'])
+            self.state_abbr = us_states[self.state]
         except:
             self.state = None
 
@@ -531,6 +537,16 @@ class Location:
         """
         return self.state
 
+    def get_state_abbr(self):
+        """ Retrieve the state abbreviation of the location.
+
+        Returns
+        -------
+        str
+            Name of the state.
+        """
+        return self.state_abbr
+
     def get_country(self):
         """ Retrieve the country of the location.
 
@@ -604,7 +620,7 @@ class Location:
     # Methods
     # ================================
     @staticmethod
-    def get_closest_states(destination, states_lst=None):
+    def get_closest_states(location, states_lst=None):
         """ Get the closest states to the destination.
         
         Parameters
@@ -631,7 +647,7 @@ class Location:
         coords = list(zip(lat, lon))
         dest_to_state = []
         for coord in coords:
-            distance = geodesic(coord, destination.get_cordinates()).km
+            distance = geodesic(coord, location.get_cordinates()).km
             dest_to_state.append(distance)
 
         min_index = dest_to_state.index(min(dest_to_state))
