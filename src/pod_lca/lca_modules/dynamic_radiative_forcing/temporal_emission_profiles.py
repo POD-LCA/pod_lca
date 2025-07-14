@@ -79,7 +79,7 @@ class TemporalEmissionProfiles(DataDistribution):
         Returns
         -------
         int or float
-            starting point of the temporal emission profile.
+            duration of the temporal emission profile in years.
         """        
         return self.duration
 
@@ -171,7 +171,8 @@ class NormEmissionProfile(TemporalEmissionProfiles, Norm):
     """
 
     @classmethod
-    def from_range(cls, start, range, area_covered=0.999, name='unspecified'):
+    #def from_range(cls, start, range, area_covered=0.999, name='unspecified'):
+    def from_range(cls, start, range, area_covered=0.95, name='unspecified'):
         """ Create a normal distribution from start and range specified. 
             The distribution is fitted so that area under the curve within [start, start + range] is greater than specified.
         

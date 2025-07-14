@@ -190,7 +190,7 @@ class DynamicRadiativeForcingRecord:
             for greenhouse_gas in emission.record_attr_dict:
                 conversion_factor = UNITS_MAP[emission.record_attr_dict[greenhouse_gas]].get_conversion_factor(KILOGRAM)
                 greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0) * conversion_factor
-                if greenhouse_gas_emission_qty > 0:
+                if greenhouse_gas_emission_qty != 0: # EE: changed from > to != so negative emissions (removals) are included
                     # get emission records for unit pulse
                     if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
                         _, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=False, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)

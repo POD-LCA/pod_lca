@@ -1,5 +1,5 @@
 {
-    "CO2": {"val": 1.7517e-15, "unit":"Wm-2kg-1"},
+    "CO2": {"val": 1.41e-5, "unit":"Wm-2ppb-1"},
     "CH4": {"val": 3.63e-4, "unit":"Wm-2ppb-1"},
     "N2O": {"val": 3.00e-3, "unit":"Wm-2ppb-1"},
     "CFC-11": {"val": 0.26, "unit":"Wm-2ppb-1"},
