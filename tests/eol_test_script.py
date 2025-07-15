@@ -13,6 +13,7 @@ from pod_lca.impacts import EOLImpactsDatabase
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
 from pod_lca.units import UNITS_MAP
+from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import config
 
@@ -83,4 +84,4 @@ for test_name in tqdm(tests_dict):
    output_dict[test_name]['test status'] = 'PASS' if test_status else 'FAIL'
 
 
-DataImporter.dict_to_csv(output_dict, output_file) 
+DataExporter.dict_to_csv(output_dict, output_file) 

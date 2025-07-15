@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="End-of-life Module" href="end_of_life.html" />
-    <link rel="prev" title="Electricity Supply" href="electricity_supply.html" /> 
+    <link rel="next" title="Electricity Supply" href="electricity_supply.html" />
+    <link rel="prev" title="Electricity" href="electricity_module.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,19 +122,20 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="electricity_module.html">Electricity</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="electricity_supply.html">Electricity Supply</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Electricity Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="electricity_supply.html">Electricity Supply</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -167,7 +168,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>technology</strong> (<em>str.</em>) -- The name of the electricity technology.</p></li>
-<li><p><strong>year</strong> (<em>int</em>) -- The year of electricity production.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The year of electricity production.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -185,7 +186,7 @@
 <dd><p>Set the name of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- The name of the electricity producer.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the electricity producer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,7 +197,7 @@
 <dd><p>Set the energy source of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>energy_source</strong> (<em>str</em>) -- The energy source of the electricity producer.</p>
+<dd class="field-odd"><p><strong>energy_source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The energy source of the electricity producer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -207,7 +208,7 @@
 <dd><p>Set the year of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>year</strong> (<em>int</em>) -- The year of the electricity producer.</p>
+<dd class="field-odd"><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The year of the electricity producer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -218,7 +219,7 @@
 <dd><p>Set the impacts of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>impacts</strong> (<em>dict</em>) -- The impacts of the electricity producer.</p>
+<dd class="field-odd"><p><strong>impacts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The impacts of the electricity producer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -229,7 +230,7 @@
 <dd><p>Set the emissions of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>emissions</strong> (<em>dict</em>) -- The emissions of the electricity producer.</p>
+<dd class="field-odd"><p><strong>emissions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The emissions of the electricity producer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -249,7 +250,7 @@
 <dd class="field-odd"><p>The name of the electricity producer.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,7 +264,7 @@
 <dd class="field-odd"><p>The energy source of the electricity producer.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,7 +278,7 @@
 <dd class="field-odd"><p>The year of the electricity producer.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -291,7 +292,7 @@
 <dd class="field-odd"><p>The impacts of the electricity producer.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,7 +306,7 @@
 <dd class="field-odd"><p>The emissions of the electricity producer.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -358,14 +359,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="electricity_supply.html">
-                    <span class="icon">&lt;</span><span>Electricity Supply</span></a>
+                <a href="electricity_module.html">
+                    <span class="icon">&lt;</span><span>Electricity</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="end_of_life.html"><span>End-of-life Module</span><span class="icon">&gt;</span></a>
+                    <a href="electricity_supply.html"><span>Electricity Supply</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

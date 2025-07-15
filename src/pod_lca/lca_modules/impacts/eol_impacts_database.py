@@ -40,7 +40,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         
         Returns
         -------
-        ImpactsDatabase Obj.
+        ~pod_lca.impacts.EOLImpactsDatabase
             Database created.
         """
         new_db = cls()
@@ -105,6 +105,11 @@ class EOLImpactsDatabase(ImpactsDatabase):
     
     def get_required_headers(self):
         """ Get the required headers of the database.
+
+        Returns
+        -------
+        list of str
+            Database headers.
         """
         return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_process_key(), self.get_life_cycle_stage_key()] 
     

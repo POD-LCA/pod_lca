@@ -18,6 +18,5 @@ The POD|LCA Python package is organized into Life Cycle Analysis (LCA) modules, 
    uncertainty_module
    location_module
    visualizer
-   units
+   units_module
    utilities
-

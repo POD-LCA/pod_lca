@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Sensitivity Analysis" href="sensitivity_analysis.html" />
-    <link rel="prev" title="Hotspot Analysis" href="hotspots.html" /> 
+    <link rel="next" title="Location" href="location_module.html" />
+    <link rel="prev" title="Monte Carlo Simulation" href="mcs.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,23 +122,23 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Analysis</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Data Distributions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Data Distributions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -158,6 +158,9 @@
             
   <section id="data-distributions">
 <h1>Data Distributions<a class="headerlink" href="#data-distributions" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></a> objects holds underlying <a class="reference internal" href="#pod_lca.uncertainty.DataDistribution.data" title="pod_lca.uncertainty.DataDistribution.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a> or <code class="xref py py-attr docutils literal notranslate"><span class="pre">distribution</span></code> corresponding to an <code class="xref py py-attr docutils literal notranslate"><span class="pre">attribute</span></code> of another <a class="reference internal" href="#pod_lca.uncertainty.DataDistribution.parent" title="pod_lca.uncertainty.DataDistribution.parent"><code class="xref py py-attr docutils literal notranslate"><span class="pre">object</span></code></a> (e.g., <a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a>)</p>
+<p>A selected set of distributions of known distribution parameters are available for use: <a class="reference internal" href="#pod_lca.uncertainty.Uniform" title="pod_lca.uncertainty.Uniform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Uniform</span></code></a>, <a class="reference internal" href="#pod_lca.uncertainty.Norm" title="pod_lca.uncertainty.Norm"><code class="xref py py-class docutils literal notranslate"><span class="pre">Normal</span></code></a>, <a class="reference internal" href="#pod_lca.uncertainty.LogNorm" title="pod_lca.uncertainty.LogNorm"><code class="xref py py-class docutils literal notranslate"><span class="pre">Log</span> <span class="pre">Normal</span></code></a>, and <a class="reference internal" href="#pod_lca.uncertainty.ExponentDecay" title="pod_lca.uncertainty.ExponentDecay"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exponential</span> <span class="pre">Decay</span></code></a>.</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">DataDistribution</span></span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution" title="Link to this definition">¶</a></dt>
@@ -182,7 +185,7 @@
 <dd><p>The data set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of floats (or str)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of floats (or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -226,7 +229,7 @@
 <dd><p>Attribute to which dataset is attached.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -238,7 +241,7 @@
 For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -249,7 +252,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>If true, the data are from a contrinous variable, otherwise a discrete variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -261,9 +264,9 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>list</em><em> of </em><em>floats</em>) -- The data set.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>floats</em>) -- The data set.</p></li>
 <li><p><strong>name</strong> (<em>str.</em>) -- Name of the data set.</p></li>
-<li><p><strong>is_cts</strong> (<em>bool</em>) -- If true, the data are from a contrinous variable, otherwise a discrete variable.</p></li>
+<li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, the data are from a contrinous variable, otherwise a discrete variable.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -284,7 +287,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dist</strong> (<em>scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.</em>) -- Fitted distribution object from Scipy.</p></li>
 <li><p><strong>name</strong> (<em>str.</em>) -- Name of the data set.</p></li>
-<li><p><strong>is_cts</strong> (<em>bool</em>) -- If true, the data are from a contrinous variable, otherwise a discrete variable.</p></li>
+<li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, the data are from a contrinous variable, otherwise a discrete variable.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -302,7 +305,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Set data to the DataSet Obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>list</em><em> of </em><em>floats</em>) -- The data set.</p>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>floats</em>) -- The data set.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -358,8 +361,8 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario_name</strong> (<em>str</em>) -- Scenario name given as 'high', 'med', or 'low'.</p></li>
-<li><p><strong>value</strong> (<em>float</em>) -- Scenario value given as a value between 0 and 1.</p></li>
+<li><p><strong>scenario_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Scenario name given as 'high', 'med', or 'low'.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Scenario value given as a value between 0 and 1.</p></li>
 </ul>
 </dd>
 </dl>
@@ -374,7 +377,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd class="field-odd"><p>The data set.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of floats</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of floats</p>
 </dd>
 </dl>
 </dd></dl>
@@ -436,7 +439,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Get the statistic for a given scenario.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scenario_name</strong> (<em>str</em>) -- Scenario name given as 'high', 'med', or 'low'.</p>
+<dd class="field-odd"><p><strong>scenario_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Scenario name given as 'high', 'med', or 'low'.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -454,16 +457,16 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>list</em>) -- Data to be fitted.</p></li>
-<li><p><strong>is_cts</strong> (<em>bool</em>) -- True, if the data comes from a continous variable.</p></li>
-<li><p><strong>fit_methods</strong> (<em>str</em>) -- 'MLE', 'MSE'</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- Data to be fitted.</p></li>
+<li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True, if the data comes from a continous variable.</p></li>
+<li><p><strong>fit_methods</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- 'MLE', 'MSE'</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Name of the selected distribution.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -476,14 +479,14 @@ For continous variables values are numbers between 0-1.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dist_name</strong> (<em>str.</em>) -- Distribution name as used in scipy.stats.</p></li>
-<li><p><strong>params</strong> (<em>tuple</em>) -- Parameters corresponding to the fit.</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) -- Parameters corresponding to the fit.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if validated, otherwise False.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -495,8 +498,8 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dist_fit</strong> (<em>str</em>) -- Name of the distribution fitted to the data set, following Scipy.stats module.</p></li>
-<li><p><strong>fit_methods</strong> (<em>str</em>) -- 'MLE', 'MSE'</p></li>
+<li><p><strong>dist_fit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the distribution fitted to the data set, following Scipy.stats module.</p></li>
+<li><p><strong>fit_methods</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- 'MLE', 'MSE'</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -532,7 +535,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd class="field-odd"><p>A random variate from the distribution.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float or str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -543,13 +546,13 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Pick a random variate from the distibution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) -- Number of points to pick</p>
+<dd class="field-odd"><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Number of points to pick</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of random variates from the distribution.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -560,13 +563,13 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Get the probability density at the given random variate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>float</em>) -- Random variate picked.</p>
+<dd class="field-odd"><p><strong>x</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Random variate picked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Probability density.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -577,13 +580,13 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Get the percentile of the distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>p</strong> (<em>float</em>) -- Percentile to be calculated.</p>
+<dd class="field-odd"><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Percentile to be calculated.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Percentile of the distribution.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -595,10 +598,10 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>float</em>) -- Starting value of the discrete data set.</p></li>
-<li><p><strong>range</strong> (<em>float</em>) -- Range of the data set.</p></li>
-<li><p><strong>step</strong> (<em>float</em>) -- Step of the discrete data series.</p></li>
-<li><p><strong>integrate_point</strong> (<em>str</em>) -- Point to which the data is grouped: 'left', 'middle', 'right'</p></li>
+<li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Starting value of the discrete data set.</p></li>
+<li><p><strong>range</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Range of the data set.</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Step of the discrete data series.</p></li>
+<li><p><strong>integrate_point</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Point to which the data is grouped: 'left', 'middle', 'right'</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -623,9 +626,9 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>int</em><em> or </em><em>float</em>) -- Starting point of uniform distribution.</p></li>
-<li><p><strong>step</strong> (<em>int</em><em> or </em><em>float</em>) -- Width of the distributions (distribution ends at start + step).</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the data distribution.</p></li>
+<li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Starting point of uniform distribution.</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Width of the distributions (distribution ends at start + step).</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data distribution.</p></li>
 </ul>
 </dd>
 </dl>
@@ -644,9 +647,9 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mean</strong> (<em>int</em><em> or </em><em>float</em>) -- Mean of the normal distribution.</p></li>
-<li><p><strong>std_dev</strong> (<em>int</em><em> or </em><em>float</em>) -- Standard deviation of the normal distribution.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the data distribution.</p></li>
+<li><p><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Mean of the normal distribution.</p></li>
+<li><p><strong>std_dev</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Standard deviation of the normal distribution.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data distribution.</p></li>
 </ul>
 </dd>
 </dl>
@@ -668,10 +671,10 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mean</strong> (<em>int</em><em> or </em><em>float</em>) -- Mean of the corresponding normal distribution, relative to start of the log-normal distribution.</p></li>
-<li><p><strong>std_dev</strong> (<em>int</em><em> or </em><em>float</em>) -- Standard deviation of the corresponding normal distribution.</p></li>
-<li><p><strong>start</strong> (<em>int</em><em> or </em><em>float</em>) -- Starting point of the log-normal distribution.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the data distribution.</p></li>
+<li><p><strong>mean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Mean of the corresponding normal distribution, relative to start of the log-normal distribution.</p></li>
+<li><p><strong>std_dev</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Standard deviation of the corresponding normal distribution.</p></li>
+<li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Starting point of the log-normal distribution.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data distribution.</p></li>
 </ul>
 </dd>
 </dl>
@@ -690,9 +693,9 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>int</em><em> or </em><em>float</em>) -- Starting point of the exponential decay function.</p></li>
-<li><p><strong>decay_rate</strong> (<em>int</em><em> or </em><em>float</em>) -- Decay rate of the exponential function.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the data distribution.</p></li>
+<li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Starting point of the exponential decay function.</p></li>
+<li><p><strong>decay_rate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Decay rate of the exponential function.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data distribution.</p></li>
 </ul>
 </dd>
 </dl>
@@ -783,14 +786,14 @@ For continous variables values are numbers between 0-1.</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="hotspots.html">
-                    <span class="icon">&lt;</span><span>Hotspot Analysis</span></a>
+                <a href="mcs.html">
+                    <span class="icon">&lt;</span><span>Monte Carlo Simulation</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="sensitivity_analysis.html"><span>Sensitivity Analysis</span><span class="icon">&gt;</span></a>
+                    <a href="location_module.html"><span>Location</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

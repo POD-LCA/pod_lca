@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from pod_lca.impacts import openLCA
 from pod_lca.utilities import DataImporter
+from pod_lca.utilities import DataExporter
 from pod_lca.units import JOULE
 from pod_lca.units import MEGA
 
@@ -75,4 +76,4 @@ for uuid in results_with_wood_chips:
 
 # save results
 save_path = './data/impacts_ecoinvent391_categorized-data.csv'
-DataImporter.dict_to_csv(results, save_path)
+DataExporter.dict_to_csv(results, save_path)

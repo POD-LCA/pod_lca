@@ -373,9 +373,7 @@ class Product(Master):
     # Methods
     # ================================    
     def update_inventory_records(self):
-        """ Sets inventory quantities, based on database item asigned to the product/process 
-            and the product/process quantity.
-            If no database entry is asigned, impacts are not updated.
+        """ Sets inventory quantities, based on database item asigned to the product/process and the product/process quantity. If no database entry is asigned, impacts are not updated.
 
         Raises
         ------
@@ -405,8 +403,7 @@ class Product(Master):
         return self
     
     def update_electricity_records(self):
-        """ Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories).
-            The electricity data in the database should be prefixed with one of 'Electricity_', 'electricity_', 'elec_', or 'Elec_'.
+        """ Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of 'Electricity_', 'electricity_', 'elec_', or 'Elec_'.
         """
         if self.get_impact_database_entry() is not None:
             if self.get_electricity_database_tag() is None:

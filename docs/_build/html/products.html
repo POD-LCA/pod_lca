@@ -122,20 +122,21 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="material_screening_project.html">Project</a></li>
 <li class="toctree-l3"><a class="reference internal" href="model.html">Model</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Products/Processes</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -162,7 +163,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.materials_screening.</span></span><span class="sig-name descname"><span class="pre">Master</span></span><a class="headerlink" href="#pod_lca.materials_screening.Master" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Master object from which product and process objects inherit.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master.id">
@@ -192,7 +193,7 @@
 <dd><p>Name of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -203,7 +204,7 @@
 <dd><p>Life cycle stage corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -247,7 +248,7 @@
 <dd><p>Flow name corresponding to the database entry which gives the unit impact of the product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -258,7 +259,7 @@
 <dd><p>Quantity of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -280,7 +281,7 @@
 <dd><p>True, if the object is a hotspot in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -315,12 +316,12 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the item.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the item.</p></li>
 <li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
-<li><p><strong>stage</strong> (<em>str</em>) -- LCA stage.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the item</p></li>
+<li><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- LCA stage.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the item</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
-<li><p><strong>impacts_from</strong> (<em>str</em>) -- Name of the impact database entry from which to use impacts.</p></li>
+<li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -342,11 +343,11 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master.set_id">
-<span class="sig-name descname"><span class="pre">set_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Master.set_id" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Master.set_id" title="Link to this definition">¶</a></dt>
 <dd><p>Set the product/process id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>id</strong> (<em>float</em>) -- Item identification number.</p>
+<dd class="field-odd"><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Item identification number.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -368,7 +369,7 @@
 <dd><p>Set life cycle stage of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.</p>
+<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -379,14 +380,14 @@
 <dd><p>Set name of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- Name of the product/process.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master.set_impact_database_entry">
-<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Master.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Master.set_impact_database_entry" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Sets the database (impacts) entry corresponding to the item.</dt><dd><p>This method will also update the corresponding impact quanitities.</p>
 </dd>
@@ -400,14 +401,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master.set_qty">
-<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Master.set_qty" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Master.set_qty" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Update the qty of the item.</dt><dd><p>This will also re-calculate the corresponding impact quantities.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qty</strong> (<em>float</em>) -- Production quantity.</p>
+<dd class="field-odd"><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Production quantity.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -457,7 +458,7 @@
 <dd class="field-odd"><p>Identification number of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -485,7 +486,7 @@
 <dd class="field-odd"><p>Name of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -499,7 +500,7 @@
 <dd class="field-odd"><p>Corresponding life cycle stage.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -513,7 +514,7 @@
 <dd class="field-odd"><p>Flow name corresponding to the database entry which gives the unit impact of the product.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -527,7 +528,7 @@
 <dd class="field-odd"><p>Quantity of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -541,7 +542,7 @@
 <dd class="field-odd"><p>Unit of measurement of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -664,7 +665,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Remove all inventory records from the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.
+<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.
 If None, all stages are checked to find the product/process.</p>
 </dd>
 </dl>
@@ -689,7 +690,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>The year the product was produced.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -706,7 +707,7 @@ If None, all stages are checked to find the product/process.</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -717,7 +718,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Mass of the product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -728,7 +729,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Unit of measurement of mass. Default is set as 'kg'.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -739,7 +740,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>The mass of product in weight units per unit of product's unit of measurement.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -761,7 +762,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Mineral carbonation potential of the product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -772,7 +773,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>True, if the product is a material.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -783,7 +784,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>True, of the product is an energy source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -797,7 +798,7 @@ If None, all stages are checked to find the product/process.</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qty</strong> (<em>float</em>) -- Product quantity.</p>
+<dd class="field-odd"><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Product quantity.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -822,7 +823,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set the year of production for the item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>year</strong> (<em>int</em>) -- Year of production.</p>
+<dd class="field-odd"><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of production.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -847,10 +848,10 @@ If None, all stages are checked to find the product/process.</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>density</strong> (<em>float</em>) -- Denisty of product (mass per unit mesurement of product).</p>
+<dd class="field-odd"><p><strong>density</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Denisty of product (mass per unit mesurement of product).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TypeError</strong> -- Density must be a numerical value.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Density must be a numerical value.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -879,7 +880,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set the source of electricity inventories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source</strong> (<em>str</em>) -- Source of electricity inventories data: 'from_database', or 'by_location'.</p>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Source of electricity inventories data: 'from_database', or 'by_location'.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -896,7 +897,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set mineral carbonation potential of the product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>potential</strong> (<em>bool</em>) -- Mineral carbonation potential of the product.</p>
+<dd class="field-odd"><p><strong>potential</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Mineral carbonation potential of the product.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -908,9 +909,9 @@ If None, all stages are checked to find the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of accelerated carbonation uptake.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of accelerated carbonation uptake.</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit of accelerated carbonation uptake.</p></li>
-<li><p><strong>per</strong> (<em>dict</em><em> or </em><em>Unit Obj</em>) -- Parent quantity for which the mineral carbon intensity is declared.
+<li><p><strong>per</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><em>Unit Obj</em>) -- Parent quantity for which the mineral carbon intensity is declared.
 If dict, {'per': {'qty': (int or float), 'unit': (Unit Obj.)}}
 If Unit object only, the quantity is taken as 1.0;
 If None, taken as per unit of parent objects declared unit.</p></li>
@@ -928,7 +929,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p><strong>year</strong> -- Year of production.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -956,7 +957,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Source of electricity inventories data.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -970,7 +971,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Tag used to identify electricity data in the database.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -984,7 +985,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Quantity of the electricity</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -998,7 +999,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Mass of the product.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1015,7 +1016,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Unit of measurement of mass of the product.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1032,7 +1033,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Denisty of product (mass per unit mesurement of product).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1061,7 +1062,7 @@ None, otherwise.</p>
 <dd class="field-odd"><p>Mineral carbonation potential of the product.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1069,19 +1070,14 @@ None, otherwise.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Product.update_inventory_records">
 <span class="sig-name descname"><span class="pre">update_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.update_inventory_records" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Sets inventory quantities, based on database item asigned to the product/process</dt><dd><p>and the product/process quantity.
-If no database entry is asigned, impacts are not updated.</p>
-</dd>
-</dl>
+<dd><p>Sets inventory quantities, based on database item asigned to the product/process and the product/process quantity. If no database entry is asigned, impacts are not updated.</p>
 <p>:raises ImportError : Incompatible units of Master object and database entry.:</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Product.update_electricity_records">
 <span class="sig-name descname"><span class="pre">update_electricity_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.update_electricity_records" title="Link to this definition">¶</a></dt>
-<dd><p>Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories).
-The electricity data in the database should be prefixed with one of '<a href="#id1"><span class="problematic" id="id2">Electricity_</span></a>', '<a href="#id3"><span class="problematic" id="id4">electricity_</span></a>', '<a href="#id5"><span class="problematic" id="id6">elec_</span></a>', or '<a href="#id7"><span class="problematic" id="id8">Elec_</span></a>'.</p>
+<dd><p>Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of '<a href="#id1"><span class="problematic" id="id2">Electricity_</span></a>', '<a href="#id3"><span class="problematic" id="id4">electricity_</span></a>', '<a href="#id5"><span class="problematic" id="id6">elec_</span></a>', or '<a href="#id7"><span class="problematic" id="id8">Elec_</span></a>'.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1108,7 +1104,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd><p>Year of electricity consumption</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1119,7 +1115,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd><p>Geographical scope considered for electricity data: 'National'. 'Regional', 'Local'</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1130,7 +1126,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd><p>Cambium scenario for prediction of electricity technology futures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1143,12 +1139,12 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the item.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the item.</p></li>
 <li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
-<li><p><strong>stage</strong> (<em>str</em>) -- LCA stage.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the item</p></li>
+<li><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- LCA stage.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the item</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
-<li><p><strong>impacts_from</strong> (<em>str</em>) -- Name of the impact database entry from which to use impacts.</p></li>
+<li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1161,8 +1157,8 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the electricity.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of elctricity consumption.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the electricity.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of elctricity consumption.</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of electricity consumption.</p></li>
 <li><p><strong>impacts</strong> (<em>Impacts Obj.</em>) -- Impacts corresponding to electricity consumption.</p></li>
 <li><p><strong>emissions</strong> (<em>Emissions Obj.</em>) -- Emissions corresponding to electricity consumption.</p></li>
@@ -1174,7 +1170,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Electricity.set_impact_database_entry">
-<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Electricity.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Electricity.set_impact_database_entry" title="Link to this definition">¶</a></dt>
 <dd><p>Electricity does not directly read from database.</p>
 </dd></dl>
 
@@ -1195,7 +1191,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd><p>Set the year of electricity consumption.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>year</strong> (<em>int</em>) -- Year of electricity consumption.</p>
+<dd class="field-odd"><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1206,7 +1202,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd><p>Set the spatial resolution of the electricity supply.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>str</em>) -- Geographical scope of the electricity supply: 'National', 'Regional', 'Local'.</p>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Geographical scope of the electricity supply: 'National', 'Regional', 'Local'.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1217,7 +1213,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd><p>Set scenario name. This will be used with cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scenario</strong> (<em>str</em>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
+<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1251,7 +1247,7 @@ The electricity data in the database should be prefixed with one of '<a href="#i
 <dd class="field-odd"><p>Year of electricity consumption.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1319,7 +1315,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>True</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1330,7 +1326,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>True</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1348,7 +1344,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Input products and processes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Master Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of Master Obj.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1441,7 +1437,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Identification number of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1455,7 +1451,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Flow name corresponding to the database entry which gives the unit impact of the product.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1483,7 +1479,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Corresponding life cycle stage.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1511,7 +1507,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Name of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1553,7 +1549,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Quantity of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1567,7 +1563,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Unit of measurement of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1580,12 +1576,12 @@ If no database entry is asigned, impacts are not updated.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) -- Name of the item.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the item.</p></li>
 <li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
-<li><p><strong>stage</strong> (<em>str</em>) -- LCA stage.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the item</p></li>
+<li><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- LCA stage.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the item</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
-<li><p><strong>impacts_from</strong> (<em>str</em>) -- Name of the impact database entry from which to use impacts.</p></li>
+<li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1597,7 +1593,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Remove all inventory records from the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.
+<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.
 If None, all stages are checked to find the product/process.</p>
 </dd>
 </dl>
@@ -1619,18 +1615,18 @@ If None, all stages are checked to find the product/process.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_id">
-<span class="sig-name descname"><span class="pre">set_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_id" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_id" title="Link to this definition">¶</a></dt>
 <dd><p>Set the product/process id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>id</strong> (<em>float</em>) -- Item identification number.</p>
+<dd class="field-odd"><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Item identification number.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_impact_database_entry">
-<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_impact_database_entry" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Sets the database (impacts) entry corresponding to the item.</dt><dd><p>This method will also update the corresponding impact quanitities.</p>
 </dd>
@@ -1648,7 +1644,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set life cycle stage of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<em>str</em>) -- Life cycle stage of the product/process.</p>
+<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1670,7 +1666,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set name of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- Name of the product/process.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1688,14 +1684,14 @@ If None, all stages are checked to find the product/process.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Process.set_qty">
-<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_qty" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Process.set_qty" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Update the qty of the item.</dt><dd><p>This will also re-calculate the corresponding impact quantities.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qty</strong> (<em>float</em>) -- Production quantity.</p>
+<dd class="field-odd"><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Production quantity.</p>
 </dd>
 </dl>
 </dd></dl>

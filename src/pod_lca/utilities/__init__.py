@@ -9,8 +9,9 @@ from .geometry import *
 
 from .settings import config
 from .data_imports.data_importer import DataImporter
+from .data_imports.data_exporter import DataExporter
 from .maths.funcs import MathFuncs
 from .objects.array_methods import ArrayMethods
 from .logger import log
 
-__all__ = ["config", "DataImporter", "ArrayMethods","MathFuncs", "log"]
+__all__ = ["config", "DataExporter", "DataImporter", "ArrayMethods","MathFuncs", "log"]

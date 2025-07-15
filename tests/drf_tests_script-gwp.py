@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 from tqdm import tqdm
 
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcing
+from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 
 test_data = r'tests/drf_test_gwp-test-values.csv'
@@ -44,4 +45,4 @@ for test_name in tqdm(test_dict):
     output_dict[test_name]['GWP (computed)'] = gwp
     output_dict[test_name]['test status'] = test_status
 
-DataImporter.dict_to_csv(output_dict, output_file)
+DataExporter.dict_to_csv(output_dict, output_file)

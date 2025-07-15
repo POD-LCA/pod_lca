@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Electricity Generation" href="electricity_producer.html" />
-    <link rel="prev" title="Electricity" href="electricity_module.html" /> 
+    <link rel="next" title="Transportation" href="transportation.html" />
+    <link rel="prev" title="Electricity Generation" href="electricity_producer.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,19 +122,20 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="electricity_module.html">Electricity</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Electricity Supply</a></li>
 <li class="toctree-l3"><a class="reference internal" href="electricity_producer.html">Electricity Generation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Electricity Supply</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -166,7 +167,7 @@
 <dd><p>The name of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,7 +183,7 @@
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -204,7 +205,7 @@
 <dd><p>The consumption mix of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -215,7 +216,7 @@
 <dd><p>The year of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -246,7 +247,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>location</strong> (<em>Location Obj.</em>) -- The location of the electricity supply authority.</p></li>
-<li><p><strong>year</strong> (<em>int</em>) -- Year of electricity consumption.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -264,7 +265,7 @@
 <dd><p>Set the name of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) -- The name of the electricity supply authority.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the electricity supply authority.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -275,7 +276,7 @@
 <dd><p>Set the geographical cope of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>str</em>) -- <dl class="simple">
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- <dl class="simple">
 <dt>Geographical scope of the electricity supply.</dt><dd><p>'National': US average
 'Regional': FERC region
 'Local': Balancing Authority.</p>
@@ -303,7 +304,7 @@
 <dd><p>Set the consumption mix of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>consumption_mix</strong> (<em>dict</em>) -- The consumption mix of the electricity supply authority.</p>
+<dd class="field-odd"><p><strong>consumption_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The consumption mix of the electricity supply authority.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -317,7 +318,7 @@
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>year</strong> (<em>int</em>) -- The year of the electricity supply authority.</p>
+<dd class="field-odd"><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The year of the electricity supply authority.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -339,7 +340,7 @@
 <dd><p>Set scenario name. This will be used with cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scenario</strong> (<em>str</em>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
+<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -350,7 +351,7 @@
 <dd><p>Set the electricity producers for a given technology mix and corresponding impact data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>str</em>) -- <dl class="simple">
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- <dl class="simple">
 <dt>Geographical scope of the electricity supply.</dt><dd><p>'National': US average
 'Regional': FERC region
 'Local': Balancing Authority.</p>
@@ -370,7 +371,7 @@
 <dd class="field-odd"><p>The name of the electricity supply authority.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -384,7 +385,7 @@
 <dd class="field-odd"><p>The geographical scope of the electricity supply.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -412,7 +413,7 @@
 <dd class="field-odd"><p>The consumption mix of the electricity supply authority.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -426,7 +427,7 @@
 <dd class="field-odd"><p>The year of the electricity supply authority.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -486,16 +487,16 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>regions</strong> (<em>list</em><em> of </em><em>str</em>) -- List of regions to choose from.</p></li>
+<li><p><strong>regions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of regions to choose from.</p></li>
 <li><p><strong>impact_data</strong> (<em>DataFrame</em>) -- DataFrame containing impact data for the regions.</p></li>
-<li><p><strong>impact_category</strong> (<em>str</em>) -- The impact category to consider for the selection.</p></li>
+<li><p><strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The impact category to consider for the selection.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The region with the highest impact.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -533,7 +534,7 @@
 <dd><p>File path to national level cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -544,7 +545,7 @@
 <dd><p>File path to regional level cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -555,7 +556,7 @@
 <dd><p>File path to local level cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -566,7 +567,7 @@
 <dd><p>List of years for which cambium data is available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -577,7 +578,7 @@
 <dd><p>File path to mapping of cambium data headers with electricity generation technology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -588,7 +589,7 @@
 <dd><p>File path to mapping of cambium technology names with that of impact data source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -611,8 +612,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geographical_scope</strong> (<em>str</em>) -- Geographical scope of data: e.g., 'National', 'Regional', 'Local'.</p></li>
-<li><p><strong>location</strong> (<em>Location Obj.</em><em> or </em><em>str</em>) -- Location of electricity supply.
+<li><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Geographical scope of data: e.g., 'National', 'Regional', 'Local'.</p></li>
+<li><p><strong>location</strong> (<em>Location Obj.</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of electricity supply.
 If a string is provided, it should be the country code for national level data,
 region name for regional level data, or REEDS balancing authority for local level data.</p></li>
 </ul>
@@ -629,17 +630,17 @@ region name for regional level data, or REEDS balancing authority for local leve
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>year</strong> (<em>int</em>) -- Year of electricity consumption.</p></li>
-<li><p><strong>technologies</strong> (<em>list</em>) -- List of electricity generation technoclogies to be classified by.</p></li>
-<li><p><strong>scenario</strong> (<em>str</em>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p></li>
-<li><p><strong>interpolate</strong> (<em>str</em>) -- Linear interpolation of electricity consumption between two years by 'values' or 'percentages'.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
+<li><p><strong>technologies</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of electricity generation technoclogies to be classified by.</p></li>
+<li><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p></li>
+<li><p><strong>interpolate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Linear interpolation of electricity consumption between two years by 'values' or 'percentages'.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dictionary of electricity generation technology in percentages.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -651,15 +652,15 @@ region name for regional level data, or REEDS balancing authority for local leve
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>year</strong> (<em>int</em>) -- Year of electricity consumption.</p></li>
-<li><p><strong>scenario</strong> (<em>str</em>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
+<li><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Electricity load in GWh.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -747,14 +748,14 @@ region name for regional level data, or REEDS balancing authority for local leve
         <div class="button_nav">
             <div class="left">
                 
-                <a href="electricity_module.html">
-                    <span class="icon">&lt;</span><span>Electricity</span></a>
+                <a href="electricity_producer.html">
+                    <span class="icon">&lt;</span><span>Electricity Generation</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="electricity_producer.html"><span>Electricity Generation</span><span class="icon">&gt;</span></a>
+                    <a href="transportation.html"><span>Transportation</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

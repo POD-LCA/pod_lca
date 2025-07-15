@@ -44,8 +44,8 @@ class DataDistribution:
         self.name = None
         self.data = None
         self.dist_name = None
-        self.dist = None
-        self.attr = None
+        self.distribution = None
+        self.attribute = None
         self.parent = None
         self.scenarios = {'low': 0.2, 'med': 0.5, 'high':0.8}
         self.is_cts =None
@@ -158,18 +158,18 @@ class DataDistribution:
                     best_fit = self.find_best_fit(is_cts=True)
                     if best_fit is not None:
                         dist, _ = self.fit_cts_distribution(best_fit, fit_method='MLE')
-                        self.dist = dist
+                        self.distribution = dist
                         self.dist_name = best_fit
                     else:
                         raise ValueError("A best-fit found could not be found.")
                 except:
                     log("A valid distribution could not be fitted.", "Warn")        
             else:
-                self.dist = self.generate_discrete_distribution()
-                self.dist_name = self.dist.name
+                self.distribution = self.generate_discrete_distribution()
+                self.dist_name = self.distribution.name
         else:
-            self.dist = dist
-            self.dist_name = dist.dist.name if isinstance(self.dist, stats._distn_infrastructure.rv_continuous_frozen) else dist.name
+            self.distribution = dist
+            self.dist_name = dist.dist.name if isinstance(self.distribution, stats._distn_infrastructure.rv_continuous_frozen) else dist.name
 
         return self
     
@@ -193,7 +193,7 @@ class DataDistribution:
         attr : str.
             Attribute to which the dataset correspond.
         """ 
-        self.attr = attr
+        self.attribute = attr
 
         return self
     
@@ -235,7 +235,7 @@ class DataDistribution:
     def get_distribution(self):
         """ Get the distribution fitted to the dataset.
         """
-        return self.dist
+        return self.distribution
 
     def get_dist_name(self):
         """ Get the name of the distribution fitted.
@@ -250,7 +250,7 @@ class DataDistribution:
         str.
             Attribute to which the dataset correspond.
         """ 
-        return self.attr
+        return self.attribute
 
     def get_parent(self):
         """ Get parent of the dataset.
@@ -406,7 +406,7 @@ class DataDistribution:
         float or str
             A random variate from the distribution.
         """
-        return self.dist.rvs(size=1)[0]
+        return self.distribution.rvs(size=1)[0]
 
     def pick_data_points_from_distribution(self, n):
         """ Pick a random variate from the distibution.
@@ -422,12 +422,12 @@ class DataDistribution:
             A list of random variates from the distribution.
         """
         if self.is_cts:
-            return self.dist.rvs(size=n)
+            return self.distribution.rvs(size=n)
         else:
-            if self.dist.xk.dtype == np.int32:
-                return self.dist.rvs(size=n)
+            if self.distribution.xk.dtype == np.int32:
+                return self.distribution.rvs(size=n)
             else:
-                xk, pk = self.dist.xk, self.dist.pk
+                xk, pk = self.distribution.xk, self.distribution.pk
                 dist_tmp = stats.rv_discrete(name='custm', values=(np.arange(len(xk)), pk))
                 inidces = dist_tmp.rvs(size=n)
 
@@ -447,10 +447,10 @@ class DataDistribution:
             Probability density.
         """
         if self.is_cts:
-            return self.dist.pdf(x)
+            return self.distribution.pdf(x)
             # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
         else:
-            return self.dist.pmf(x)
+            return self.distribution.pmf(x)
         
     def percentile(self, p):
         """ Get the percentile of the distribution.
@@ -466,9 +466,9 @@ class DataDistribution:
             Percentile of the distribution.
         """
         if self.is_cts:
-            return self.dist.ppf(p)
+            return self.distribution.ppf(p)
         else:
-            return self.dist.ppf(p)
+            return self.distribution.ppf(p)
         
     def discrete_from_continous(self, start, range, step, integrate_point='left'):
         """ Create a discrete data set from the continous distribution.
@@ -505,7 +505,7 @@ class DataDistribution:
             raise ValueError("Integrate point not recognized")
 
         if self.is_cts:
-            return t, np.asarray(self.dist.cdf(interval_ends) - self.dist.cdf(interval_starts))
+            return t, np.asarray(self.distribution.cdf(interval_ends) - self.distribution.cdf(interval_starts))
 
         
 

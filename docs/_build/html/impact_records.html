@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Impacts Database" href="impact_databases.html" />
-    <link rel="prev" title="Impact Module" href="impacts_module.html" /> 
+    <link rel="prev" title="Impacts" href="impacts_module.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,20 +122,21 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="impacts_module.html">Impact Module</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="impacts_module.html">Impacts</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Inventory Records</a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html">Impacts Database</a></li>
 <li class="toctree-l3"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -167,7 +168,7 @@
 <dd><p>The product or process object to which this record belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Master Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -179,7 +180,7 @@
 Class variable 'record_attr_dict' keep track of the record category names and corresponding units.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -190,13 +191,13 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Create an record object from a parent object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em>Master Obj.</em>) -- The product or process object to which this record belong.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- The product or process object to which this record belong.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Record object created.</p>
+<dd class="field-even"><p>Record created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Record Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.impacts.Records"><em>Records</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -207,13 +208,13 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Create an record object from a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record_dict</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+<dd class="field-odd"><p><strong>record_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Records object created.</p>
+<dd class="field-even"><p>Record created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Records Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.impacts.Records"><em>Records</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -227,7 +228,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd class="field-odd"><p>Copy of the object.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="#pod_lca.impacts.Records" title="pod_lca.impacts.Records"><em>Records</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -238,7 +239,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Set the parent object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em>Master Obj.</em>) -- The product or process object to which this record belong.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<em></em>) -- The product or process object to which this record belong.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -252,7 +253,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd class="field-odd"><p>Product or process object to which this record belong.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Master Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,7 +264,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Retrieves the categories (i.e., entry names) in the record.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>units</strong> (<em>bool</em>) -- If true, returns a dictionary of categories and corresponding units.</p>
+<dd class="field-odd"><p><strong>units</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, returns a dictionary of categories and corresponding units.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
@@ -287,7 +288,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Update the record quantities.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>records</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+<dd class="field-odd"><p><strong>records</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records - { <strong>record catergory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>record quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -298,13 +299,13 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Get the quantity of a specific record attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>attr</strong> (<em>str</em>) -- Name of the record attribute of concern (e.g., impact category, emission gas).</p>
+<dd class="field-odd"><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the record attribute of concern (e.g., impact category, emission gas).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Quantity of the record attribute.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -315,10 +316,10 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Get the record as a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dictionary of impacts {impact catergory (str): impact quantity (float)}</p>
+<dd class="field-odd"><p>Dictionary of impacts - { <strong>impact catergory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>impact quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -336,7 +337,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>The product or process object to which this impacts record belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Master Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -348,7 +349,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -363,18 +364,19 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>method</strong> (<em>&lt;str&gt;</em>) -- <dl class="simple">
-<dt>Which weightages to be used:</dt><dd><p>'TRACI_EPA' - from Ref [1]
-'TRACI_NIST' - from Ref [1]</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p><strong>method</strong> (<em>{'TRACI_EPA'</em><em>, </em><em>'TRACI_NIST'}</em>) -- Weightages to be used:
+- <strong>'TRACI_EPA'</strong>: From Ref [1].
+- <strong>'TRACI_NIST'</strong>: From Ref [1].
+Default is 'TRACI_EPA'.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The weighted impact.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Weightage method not recognized, or incomplete.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -388,7 +390,7 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 <dd class="field-odd"><p>Adjusted GWP value</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -406,7 +408,7 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 <dd><p>The product or process object to which this emissions record belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Master Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -418,7 +420,7 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -429,7 +431,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Function describing the dynamic emission profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DataDistribution Object</p>
+<dd class="field-odd"><p><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -440,7 +442,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Percentage of biogenic methane oxidating to CO2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -451,13 +453,13 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Create an record object from a parent object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em>Master Obj.</em>) -- The product or process object to which this record belong.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<em></em>) -- The product or process object to which this record belong.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Record object created.</p>
+<dd class="field-even"><p>Record created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Record Obj.</p>
+<dd class="field-odd"><p><em>Record</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -468,13 +470,13 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Create an record object from a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record_dict</strong> (<em>dict</em>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+<dd class="field-odd"><p><strong>record_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Records object created.</p>
+<dd class="field-even"><p>Records created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Records Obj.</p>
+<dd class="field-odd"><p><em>Record</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -485,7 +487,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Set the dyanamic emissions function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>time_profile</strong> (<em>DataDistribution Object</em>) -- Function describing the dynamic emission profile.</p>
+<dd class="field-odd"><p><strong>time_profile</strong> (<a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a>) -- Function describing the dynamic emission profile.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -499,7 +501,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd class="field-odd"><p>Function describing the dynamic emission profile.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataDistribution Object</p>
+<dd class="field-even"><p><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -513,7 +515,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd class="field-odd"><p>Year of the emission occuring.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -527,7 +529,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd class="field-odd"><p>Duration of emission, in years.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -545,7 +547,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>The product or process object to which this carbon storage record belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Master Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -557,7 +559,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 Currently, this is set to the CARBON_STORAGE in the config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,7 +634,7 @@ Currently, this is set to the CARBON_STORAGE in the config file.</p>
             <div class="left">
                 
                 <a href="impacts_module.html">
-                    <span class="icon">&lt;</span><span>Impact Module</span></a>
+                    <span class="icon">&lt;</span><span>Impacts</span></a>
                 
             </div>
 

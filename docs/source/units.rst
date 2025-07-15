@@ -1,15 +1,11 @@
 **********
 Units
 **********
-Maintains units and unit conversions.
 
-List of common units, metric prefixes, and units map to be added.
+:py:class:`~pod_lca.units.Unit` and :py:class:`~pod_lca.units.MetricPrefix` objects manage unit multiplication/division and unit conversions.
 
 -------
 
 .. autoclass:: pod_lca.units.Unit
-   :members:
-
-.. autoclass:: pod_lca.units.MetricPrefix
    :members:
     

@@ -26,12 +26,12 @@ class ImpactsDatabase:
         Data header corresponding to the units of the database entries.
     qty_key : str
         Data header corresponding to the quantity of the database entries.
-    data : pandas DataFrame Obj.
+    data : pandas.DataFrame
         Impact data, with following headings.
-            primary_key (str) : name of impact
-            qty_key (str) : impacts per this unit of measure
-            unit_key (str) : the unit of measure
-            impact catergory (float) : quantity of impact
+        - **primary_key** (str): Name of the impact.
+        - **qty_key** (str): Impacts per unit of measure.
+        - **unit_key** (str): The unit of measure.
+        - **impact category** (float): Quantity of impact.
     """
 
     DATA_IMPORTS = {    
@@ -69,7 +69,7 @@ class ImpactsDatabase:
         
         Returns
         -------
-        ImpactsDatabase Obj.
+        ~pod_lca.impacts.ImpactsDatabase
             Database created.
         """
         new_db = cls()

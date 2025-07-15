@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Location Module" href="location_module.html" />
+    <link rel="next" title="Data Distributions" href="datasets.html" />
     <link rel="prev" title="Sensitivity Analysis" href="sensitivity_analysis.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -122,23 +122,23 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Analysis</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Monte Carlo Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -158,6 +158,8 @@
             
   <section id="monte-carlo-simulation">
 <h1>Monte Carlo Simulation<a class="headerlink" href="#monte-carlo-simulation" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.uncertainty.MonteCarloSimulator" title="pod_lca.uncertainty.MonteCarloSimulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">MonteCarloSimulator</span></code></a> object facilitates runing of Monte Carlo Simulations on the materials screening or Building model.</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.MonteCarloSimulator">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">MonteCarloSimulator</span></span><a class="headerlink" href="#pod_lca.uncertainty.MonteCarloSimulator" title="Link to this definition">¶</a></dt>
@@ -179,7 +181,7 @@
 <dd><p>No of iterations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -280,8 +282,8 @@ Scenario values are 'low', 'med', and 'high'.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>params</strong> (<em>list</em>) -- List of distributions to be considered in the MCS.</p></li>
-<li><p><strong>set_all</strong> (<em>bool</em>) -- If true, set all the parameters in the model with a distribution.</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of distributions to be considered in the MCS.</p></li>
+<li><p><strong>set_all</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, set all the parameters in the model with a distribution.</p></li>
 </ul>
 </dd>
 </dl>
@@ -306,8 +308,8 @@ Scenario values are 'low', 'med', and 'high'.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>results</strong> (<em>list</em><em> of </em><em>float</em>) -- A list of impact data from each iteration of the simulation.</p></li>
-<li><p><strong>is_cts</strong> (<em>bool</em>) -- True, if the results are in a continous scale.</p></li>
+<li><p><strong>results</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- A list of impact data from each iteration of the simulation.</p></li>
+<li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True, if the results are in a continous scale.</p></li>
 </ul>
 </dd>
 </dl>
@@ -472,7 +474,7 @@ Scenario values are 'low', 'med', and 'high'.</p>
 
             <div class="right">
                 
-                    <a href="location_module.html"><span>Location Module</span><span class="icon">&gt;</span></a>
+                    <a href="datasets.html"><span>Data Distributions</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

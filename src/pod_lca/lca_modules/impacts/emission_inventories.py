@@ -15,12 +15,12 @@ class Emissions(Records):
 
     Attributes
     ----------
-    parent : Master Obj.
+    parent : ~pod_lca.materials_screening.Master
         The product or process object to which this emissions record belong.
     <emission_name> : float
         Emission names are dynamically set based on the class variable 'record_attr_dict'.
         Currently, this is set to the EMISSION_INVENTORIES in the config file.
-    temporal_emission_profile : DataDistribution Object
+    temporal_emission_profile : ~pod_lca.uncertainty.DataDistribution
         Function describing the dynamic emission profile.
     methane_bio_oxidation : float
         Percentage of biogenic methane oxidating to CO2.
@@ -42,13 +42,13 @@ class Emissions(Records):
         
         Parameters
         ----------
-        parent : Master Obj.
+        parent : ~pod_lca.materials_screening.Master.
             The product or process object to which this record belong.
         
         Returns
         -------
-        Record Obj.
-            Record object created.
+        ~pod_lca.impacts.Record
+            Record created.
         """
         record_obj = super().from_parent(parent)
 
@@ -65,8 +65,8 @@ class Emissions(Records):
         
         Returns
         -------
-        Records Obj.
-            Records object created.
+        ~pod_lca.impacts.Record
+            Records created.
         """
         record_obj = super().from_dict(record_dict)
 
@@ -80,7 +80,7 @@ class Emissions(Records):
         
         Parameters
         ----------
-        time_profile : DataDistribution Object
+        time_profile : ~pod_lca.uncertainty.DataDistribution
             Function describing the dynamic emission profile.
         """
         if isinstance(time_profile, DataDistribution):
@@ -98,7 +98,7 @@ class Emissions(Records):
 
         Returns
         -------
-        DataDistribution Object
+        ~pod_lca.uncertainty.DataDistribution
             Function describing the dynamic emission profile.
         """
         return self.temporal_emission_profile

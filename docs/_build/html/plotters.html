@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Units" href="units.html" />
-    <link rel="prev" title="Products" href="plots.html" /> 
+    <link rel="next" title="Units" href="units_module.html" />
+    <link rel="prev" title="Plots" href="plots.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,19 +122,20 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="visualizer.html">Visualizer</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="plots.html">Products</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plots.html">Plots</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Plotters</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -154,6 +155,8 @@
             
   <section id="plotters">
 <h1>Plotters<a class="headerlink" href="#plotters" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.AbstractPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plots</span></code></a> is an abstract object for plots. <a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter" title="pod_lca.visualizer.MatplotlibPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">MatplotlibPlotter</span></code></a> is a concrete implementation of a Plotter.</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.visualizer.</span></span><span class="sig-name descname"><span class="pre">AbstractPlotter</span></span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlotter" title="Link to this definition">¶</a></dt>
@@ -265,7 +268,7 @@
 <dd><p>Creates a new matplotlib plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Polar</strong> (<em>bool</em>) -- If true, create a plot with polar axis.</p>
+<dd class="field-odd"><p><strong>Polar</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, create a plot with polar axis.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -289,12 +292,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pos</strong> (<em>float</em>) -- Position (center) of the bar on the x-axis.</p></li>
-<li><p><strong>height</strong> (<em>float</em>) -- Height of the bar.</p></li>
-<li><p><strong>width</strong> (<em>float</em>) -- Width of the bar.</p></li>
-<li><p><strong>bottom</strong> (<em>float</em>) -- Position (bottom) of the bar on y-axis.</p></li>
-<li><p><strong>label</strong> (<em>str</em>) -- Labeling of the bar.</p></li>
-<li><p><strong>label_pos</strong> (<em>str</em>) -- Label position on the bar.</p></li>
+<li><p><strong>pos</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Position (center) of the bar on the x-axis.</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Height of the bar.</p></li>
+<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Width of the bar.</p></li>
+<li><p><strong>bottom</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Position (bottom) of the bar on y-axis.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Labeling of the bar.</p></li>
+<li><p><strong>label_pos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Label position on the bar.</p></li>
 </ul>
 </dd>
 </dl>
@@ -307,11 +310,11 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>angles</strong> (<em>list</em>) -- List of angles for the radar lines.</p></li>
-<li><p><strong>values</strong> (<em>list</em>) -- List of values to be marked in each radar line.</p></li>
-<li><p><strong>label</strong> (<em>str</em>) -- Label for the radar created.</p></li>
-<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) -- Transparency of the radar (value between 0 and 1).</p></li>
+<li><p><strong>angles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of angles for the radar lines.</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of values to be marked in each radar line.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Label for the radar created.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Transparency of the radar (value between 0 and 1).</p></li>
 </ul>
 </dd>
 </dl>
@@ -324,12 +327,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>list</em>) -- List of all data points.</p></li>
-<li><p><strong>no_bins</strong> (<em>int</em>) -- Number of bins in the histogram</p></li>
-<li><p><strong>label</strong> (<em>str</em>) -- Identifier of the histogram.</p></li>
-<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) -- Transparency of the radar (value between 0 and 1).</p></li>
-<li><p><strong>unitize</strong> (<em>bool</em>) -- If true, the area under of the histogram is set to 1.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of all data points.</p></li>
+<li><p><strong>no_bins</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Number of bins in the histogram</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Identifier of the histogram.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Transparency of the radar (value between 0 and 1).</p></li>
+<li><p><strong>unitize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, the area under of the histogram is set to 1.</p></li>
 </ul>
 </dd>
 </dl>
@@ -342,10 +345,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x_data</strong> (<em>list</em>) -- List of x values.</p></li>
-<li><p><strong>y_data</strong> (<em>list</em>) -- f(x) for all the y values.</p></li>
-<li><p><strong>label</strong> (<em>str</em>) -- label for the function plotted</p></li>
-<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>x_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of x values.</p></li>
+<li><p><strong>y_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- f(x) for all the y values.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- label for the function plotted</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Color of the radar plot as a named or hex string.</p></li>
 </ul>
 </dd>
 </dl>
@@ -360,8 +363,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_data</strong> (<em>array-like</em>) -- X data; shape (N,)</p></li>
 <li><p><strong>y_data</strong> (<em>array-like</em>) -- Y data; shape(M, N)</p></li>
-<li><p><strong>labels</strong> (<em>list</em><em> of </em><em>str</em>) -- Labels for y data series.</p></li>
-<li><p><strong>colors</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>tuples</em>) -- Colors of named, hex string, or RGB tuples.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Labels for y data series.</p></li>
+<li><p><strong>colors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>tuples</em>) -- Colors of named, hex string, or RGB tuples.</p></li>
 </ul>
 </dd>
 </dl>
@@ -374,9 +377,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>list</em>) -- List of all data points.</p></li>
-<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
-<li><p><strong>label</strong> (<em>str</em>) -- Identifier of the histogram.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of all data points.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Identifier of the histogram.</p></li>
 </ul>
 </dd>
 </dl>
@@ -389,9 +392,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>list</em>) -- List of all data points.</p></li>
-<li><p><strong>color</strong> (<em>str</em>) -- Color of the radar plot as a named or hex string.</p></li>
-<li><p><strong>label</strong> (<em>str</em>) -- Identifier of the histogram.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of all data points.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Color of the radar plot as a named or hex string.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Identifier of the histogram.</p></li>
 </ul>
 </dd>
 </dl>
@@ -403,7 +406,7 @@
 <dd><p>Set title of the plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>title</strong> (<em>str</em>) -- Title of the plot.</p>
+<dd class="field-odd"><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the plot.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -415,8 +418,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x_label</strong> (<em>str</em>) -- X-axis label.</p></li>
-<li><p><strong>y_label</strong> (<em>str</em>) -- Y-axis labe</p></li>
+<li><p><strong>x_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- X-axis label.</p></li>
+<li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Y-axis labe</p></li>
 </ul>
 </dd>
 </dl>
@@ -429,9 +432,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>colors</strong> (<em>list</em>) -- List of colors, if patches are being used.</p></li>
-<li><p><strong>labels</strong> (<em>str</em>) -- List of labels, if patches are being used.</p></li>
-<li><p><strong>title</strong> (<em>str</em>) -- Title of the legend.</p></li>
+<li><p><strong>colors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of colors, if patches are being used.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of labels, if patches are being used.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the legend.</p></li>
 </ul>
 </dd>
 </dl>
@@ -445,7 +448,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ticks</strong> (<em>1D array-like</em>) -- List of x values where ticks to be added.</p></li>
-<li><p><strong>labels</strong> (<em>list</em>) -- List of labels for the ticks.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of labels for the ticks.</p></li>
 </ul>
 </dd>
 </dl>
@@ -458,8 +461,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>min</strong> (<em>float</em>) -- Minimum value on x-axis.</p></li>
-<li><p><strong>max</strong> (<em>float</em>) -- Maximum value on x-axis.</p></li>
+<li><p><strong>min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Minimum value on x-axis.</p></li>
+<li><p><strong>max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Maximum value on x-axis.</p></li>
 </ul>
 </dd>
 </dl>
@@ -472,8 +475,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>min</strong> (<em>float</em>) -- Minimum value on y-axis.</p></li>
-<li><p><strong>max</strong> (<em>float</em>) -- Maximum value on y-axis.</p></li>
+<li><p><strong>min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Minimum value on y-axis.</p></li>
+<li><p><strong>max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Maximum value on y-axis.</p></li>
 </ul>
 </dd>
 </dl>
@@ -556,13 +559,13 @@
             <div class="left">
                 
                 <a href="plots.html">
-                    <span class="icon">&lt;</span><span>Products</span></a>
+                    <span class="icon">&lt;</span><span>Plots</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="units.html"><span>Units</span><span class="icon">&gt;</span></a>
+                    <a href="units_module.html"><span>Units</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

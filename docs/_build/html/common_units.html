@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Pedigree Score &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <title>Common Units &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Data Quality Assessment" href="data_quality_assessment.html" />
-    <link rel="prev" title="Uncertainty Module" href="uncertainty_module.html" /> 
+    <link rel="next" title="Units Map" href="unit_map.html" />
+    <link rel="prev" title="Metrix Prefixes" href="metric_prefixes.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,23 +122,22 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Pedigree Score</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="units_module.html">Units</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metric_prefixes.html">Metrix Prefixes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Common Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unit_map.html">Units Map</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -156,126 +155,313 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="pedigree-score">
-<h1>Pedigree Score<a class="headerlink" href="#pedigree-score" title="Link to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">PedigreeScore</span></span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore" title="Link to this definition">¶</a></dt>
-<dd><p>PedigreeScore object contains background data for data quality scores.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.parent">
-<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.parent" title="Link to this definition">¶</a></dt>
-<dd><p>Product/Process object for which the data quality is related.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Master Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.DQS">
-<span class="sig-name descname"><span class="pre">DQS</span></span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.DQS" title="Link to this definition">¶</a></dt>
-<dd><p>Data quality score of the object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">&lt;indicators&gt;</span></span></dt>
-<dd><p>Data Quality Indicators are dynamically set based on the Data Quality Analysis (DQA) used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.from_parent">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.from_parent" title="Link to this definition">¶</a></dt>
-<dd><p>Create pedigree score object from parent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj.</strong> -- Parent object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.set_parent">
-<span class="sig-name descname"><span class="pre">set_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.set_parent" title="Link to this definition">¶</a></dt>
-<dd><p>Set parent of the pedigree score.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> (<em>Master Obj.</em>) -- Object to which the pedigree score correspond.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.set_item_DQS">
-<span class="sig-name descname"><span class="pre">set_item_DQS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.set_item_DQS" title="Link to this definition">¶</a></dt>
-<dd><p>Calculate and set the Data Quality Score of the pedigree score object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Data Quality Score.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.get_parent">
-<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.get_parent" title="Link to this definition">¶</a></dt>
-<dd><p>Get parent of the pedigree score.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Object to which the pedigree score correspond.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Master Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.get_item_DQS">
-<span class="sig-name descname"><span class="pre">get_item_DQS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.get_item_DQS" title="Link to this definition">¶</a></dt>
-<dd><p>Get the Data Quality Score of the object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Data quality score of the object.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.uncertainty.PedigreeScore.update_pedigree_scores">
-<span class="sig-name descname"><span class="pre">update_pedigree_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.PedigreeScore.update_pedigree_scores" title="Link to this definition">¶</a></dt>
-<dd><p>Update the pedigree score.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*args</strong> (<em>tuple</em><em> or </em><em>dict</em>) -- An (indicator, score) pair or a dictionary of indicator-score pairs.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> -- If the scores are not within the score ranges specified.
-    If the input are not in expected format.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="common-units">
+<h1>Common Units<a class="headerlink" href="#common-units" title="Link to this heading">¶</a></h1>
+<p>The basics units are defined for this package, based on common units of measurements used in life cycle assessments. The units include both metric and imperial units of measurements. The units of measurements defined are categoriesed based on the quantity measured (e.g., 'time', 'length').</p>
+<p>If a user want to create a new basic unit, they are encouraged to use the Unit.from_basics(name, standard_notation, qty_measured) method. For conversions to work as expected, they need to add the corresponding conversion factor to UNIT_CONVERSIONS, keyed by the measurement category and the standard_notation. The values in UNIT_CONVERSIONS[category] are equivalent. The conversion factors defined are based on references [1] and [2] below.</p>
+<p>The units presented here can be used to create new units of measurements. These can be derived by multiplication and/or division of units by other units or metric prefixes, where applicable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">KILOMETER</span> <span class="o">=</span> <span class="n">KILO</span> <span class="o">*</span> <span class="n">METER</span>
+<span class="n">UNIT_WEIGHT</span> <span class="o">=</span> <span class="n">KILOGRAM</span> <span class="o">/</span> <span class="n">CUBIC_METER</span>
+</pre></div>
+</div>
+<p>The list below defines the derived units of KILOMETER and KILOGRAM as these are common units. The users are encouraged to add their commonly used units here and import from this central source.</p>
+<p>A method is defined for obtaining the conversion factor for converting a unit to another within the same category. In this note the special case of 'area' and 'volume', when conversion across metric and imperial units are envisaged. Although you can define a new unit of measurement (say) METER * METER this would be categorized as 'length-length' and thus cannot be converted to ACRE, which is categorized as 'area'. Thus, the users are encouraged to use the predeefined unit of SQUARE_METER instead. The similar is applied to 'volume' calculations</p>
+<section id="time">
+<h2>Time<a class="headerlink" href="#time" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SECOND</p></td>
+<td><p>second</p></td>
+<td><p>sec</p></td>
+<td><p>3600</p></td>
+</tr>
+<tr class="row-odd"><td><p>MINUTE</p></td>
+<td><p>minute</p></td>
+<td><p>min</p></td>
+<td><p>60</p></td>
+</tr>
+<tr class="row-even"><td><p>HOUR</p></td>
+<td><p>hour</p></td>
+<td><p>hr</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>DAY</p></td>
+<td><p>day</p></td>
+<td><p>d</p></td>
+<td><p>1 / 24</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="mass">
+<h2>Mass<a class="headerlink" href="#mass" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>GRAM</p></td>
+<td><p>gram</p></td>
+<td><p>g</p></td>
+<td><p>907184.74</p></td>
+</tr>
+<tr class="row-odd"><td><p>M_TON</p></td>
+<td><p>metric Ton</p></td>
+<td><p>t</p></td>
+<td><p>0.90718474</p></td>
+</tr>
+<tr class="row-even"><td><p>S_TON</p></td>
+<td><p>short Ton</p></td>
+<td><p>tn</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>POUND</p></td>
+<td><p>pound</p></td>
+<td><p>lb</p></td>
+<td><p>2000</p></td>
+</tr>
+<tr class="row-even"><td><p>OUNCE</p></td>
+<td><p>ounce</p></td>
+<td><p>oz</p></td>
+<td><p>32000</p></td>
+</tr>
+</tbody>
+</table>
+<p>KILOGRAM = KILO * GRAM</p>
+<p>Reference: [1] pp. C-19/20</p>
+</section>
+<section id="length">
+<h2>Length<a class="headerlink" href="#length" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>METER</p></td>
+<td><p>meter</p></td>
+<td><p>m</p></td>
+<td><p>1609.344</p></td>
+</tr>
+<tr class="row-odd"><td><p>FEET</p></td>
+<td><p>feet</p></td>
+<td><p>ft</p></td>
+<td><p>5280</p></td>
+</tr>
+<tr class="row-even"><td><p>INCH</p></td>
+<td><p>inch</p></td>
+<td><p>in</p></td>
+<td><p>63360</p></td>
+</tr>
+<tr class="row-odd"><td><p>YARD</p></td>
+<td><p>yard</p></td>
+<td><p>yd</p></td>
+<td><p>1760</p></td>
+</tr>
+<tr class="row-even"><td><p>MILE</p></td>
+<td><p>mile</p></td>
+<td><p>mi</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>NAUTICAL_MILE</p></td>
+<td><p>nautical mile</p></td>
+<td><p>nmi</p></td>
+<td><p>1.151</p></td>
+</tr>
+</tbody>
+</table>
+<p>KILOMETER = KILO * METER</p>
+<p>Reference: [1] pp. C-10</p>
+</section>
+<section id="transportation">
+<h2>Transportation<a class="headerlink" href="#transportation" title="Link to this heading">¶</a></h2>
+<p>TON_KILOMETER = M_TON * KILOMETER</p>
+<p>TON_MILE = M_TON * MILE</p>
+</section>
+<section id="area">
+<h2>Area<a class="headerlink" href="#area" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>SQUARE_METER</p></td>
+<td><p>square meter</p></td>
+<td><p>m2</p></td>
+<td><p>4046.8564224</p></td>
+</tr>
+<tr class="row-odd"><td><p>SQUARE_FEET</p></td>
+<td><p>square feet</p></td>
+<td><p>ft2</p></td>
+<td><p>43560</p></td>
+</tr>
+<tr class="row-even"><td><p>ACRE</p></td>
+<td><p>acre</p></td>
+<td><p>acre</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>HECTARE</p></td>
+<td><p>hectare</p></td>
+<td><p>ha</p></td>
+<td><p>0.40468564224</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reference: [1] pp. C-14/15</p>
+</section>
+<section id="volume">
+<h2>Volume<a class="headerlink" href="#volume" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LITER</p></td>
+<td><p>liter</p></td>
+<td><p>l</p></td>
+<td><p>28.316846592</p></td>
+</tr>
+<tr class="row-odd"><td><p>US_GALLON</p></td>
+<td><p>US gallon</p></td>
+<td><p>US gal</p></td>
+<td><p>28.316846592 / 3.785411784</p></td>
+</tr>
+<tr class="row-even"><td><p>CUBIC_METER</p></td>
+<td><p>cubic meter</p></td>
+<td><p>m3</p></td>
+<td><p>0.028316846592</p></td>
+</tr>
+<tr class="row-odd"><td><p>CUBIC_FEET</p></td>
+<td><p>cubic feet</p></td>
+<td><p>ft3</p></td>
+<td><p>1.0</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reference: [1] pp. C-17/18</p>
+</section>
+<section id="power">
+<h2>Power<a class="headerlink" href="#power" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>WATT</p></td>
+<td><p>watt</p></td>
+<td><p>W</p></td>
+<td><p>1.0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="energy">
+<h2>Energy<a class="headerlink" href="#energy" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>WATT_HOUR</p></td>
+<td><p>watt-hour</p></td>
+<td><p>Wh</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>JOULE</p></td>
+<td><p>joule</p></td>
+<td><p>J</p></td>
+<td><p>3600</p></td>
+</tr>
+<tr class="row-even"><td><p>THERM</p></td>
+<td><p>therm</p></td>
+<td><p>thm</p></td>
+<td><p>3600 / 1.054804e+08</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reference: [2] pp. 55</p>
+</section>
+<section id="count">
+<h2>Count<a class="headerlink" href="#count" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ITEM</p></td>
+<td><p>item</p></td>
+<td><p>Item(s)</p></td>
+<td><p>12</p></td>
+</tr>
+<tr class="row-odd"><td><p>DOZEN</p></td>
+<td><p>dozen</p></td>
+<td><p>Doz</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="carbon-storage">
+<h2>Carbon Storage<a class="headerlink" href="#carbon-storage" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Unit Object Name</p></th>
+<th class="head"><p>Unit Name</p></th>
+<th class="head"><p>Standard Notation</p></th>
+<th class="head"><p>Conversion Factor</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>KG_CARBON</p></td>
+<td><p>kg of Carbon</p></td>
+<td><p>kg C</p></td>
+<td><p>1.0</p></td>
+</tr>
+<tr class="row-odd"><td><p>KG_CARBON_DIOXIDE</p></td>
+<td><p>kg of Carbon dioxide</p></td>
+<td><p>kg CO2</p></td>
+<td><p>44.01 / 12.01</p></td>
+</tr>
+</tbody>
+</table>
+<p>References:</p>
+<p>[1]  National Institute of Standards and Technology (NIST) Handbook 44 (2024). Specifications, Tolerances, and Other Technical Requirements for Weighing and Measuring Devices.</p>
+<p>[2]  National Institute of Standards and Technology (NIST) Special Publication 811 (2008). Guide for the Use of the International System of Units (SI)</p>
+</section>
 </section>
 
 
@@ -292,18 +478,17 @@
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Pedigree Score</a><ul>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore"><code class="docutils literal notranslate"><span class="pre">PedigreeScore</span></code></a><ul>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.parent</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.DQS</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.from_parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.from_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.set_parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.set_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.set_item_DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.set_item_DQS()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.get_parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.get_parent()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.get_item_DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.get_item_DQS()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.uncertainty.PedigreeScore.update_pedigree_scores"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.update_pedigree_scores()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Common Units</a><ul>
+<li><a class="reference internal" href="#time">Time</a></li>
+<li><a class="reference internal" href="#mass">Mass</a></li>
+<li><a class="reference internal" href="#length">Length</a></li>
+<li><a class="reference internal" href="#transportation">Transportation</a></li>
+<li><a class="reference internal" href="#area">Area</a></li>
+<li><a class="reference internal" href="#volume">Volume</a></li>
+<li><a class="reference internal" href="#power">Power</a></li>
+<li><a class="reference internal" href="#energy">Energy</a></li>
+<li><a class="reference internal" href="#count">Count</a></li>
+<li><a class="reference internal" href="#carbon-storage">Carbon Storage</a></li>
 </ul>
 </li>
 </ul>
@@ -318,14 +503,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="uncertainty_module.html">
-                    <span class="icon">&lt;</span><span>Uncertainty Module</span></a>
+                <a href="metric_prefixes.html">
+                    <span class="icon">&lt;</span><span>Metrix Prefixes</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="data_quality_assessment.html"><span>Data Quality Assessment</span><span class="icon">&gt;</span></a>
+                    <a href="unit_map.html"><span>Units Map</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

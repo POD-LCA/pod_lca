@@ -37,7 +37,7 @@ class HotSpotAnalysis:
                         impact_val = obj.get_impacts().get_weighted_impact()
                     else:
                         impact_val = obj.get_impacts().get_record(impact_category)
-                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {obj.get_impacts().get_categories(units=True)[impact_category]} \n"
+                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {obj.get_impacts().get_categories(units=True)[1][impact_category]} \n"
         
         return str
 
@@ -108,7 +108,6 @@ class HotSpotAnalysis:
         dict.
             {impact_category (str): list (Master Obj)} .
         """
-
         return self.hotspots
 
     def get_hotspots_by_impact_category(self, impact_category):
@@ -125,10 +124,10 @@ class HotSpotAnalysis:
             List of hotspot object of the model.
             None if hotspots are not set.
         """
-        if impact_category in self.hotspots:
-            return self.hotspots[impact_category]
-        else:
-            log("No hotspots set yet. Run hotspot analysis first.", "Warn")
+        if not impact_category in self.hotspots:
+            self.run(impact_category)
+            
+        return self.hotspots[impact_category]
 
     # ================================
     # Methods

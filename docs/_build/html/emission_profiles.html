@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Uncertainty" href="uncertainty_module.html" />
+    <link rel="next" title="Analysis" href="uncertainty_module.html" />
     <link rel="prev" title="Dynamic Radiative Forcing Record" href="drf_record.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -133,10 +133,10 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Emission Profiles</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -168,7 +168,7 @@
 <dd><p>starting point of the temporal emission profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int or float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -179,7 +179,7 @@
 <dd><p>Duration of the temporal emission profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int or float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -190,7 +190,7 @@
 <dd><p>Set the starting point of the temporal emission profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>start</strong> (<em>int</em><em> or </em><em>float</em>) -- starting point of the temporal emission profile.</p>
+<dd class="field-odd"><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- starting point of the temporal emission profile.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -201,7 +201,7 @@
 <dd><p>Set the duration of the temporal emission profile.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>duration</strong> (<em>int</em><em> or </em><em>float</em>) -- Duration of the temporal emission profile.</p>
+<dd class="field-odd"><p><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Duration of the temporal emission profile.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -215,7 +215,7 @@
 <dd class="field-odd"><p>starting point of the temporal emission profile.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int or float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -229,7 +229,7 @@
 <dd class="field-odd"><p>starting point of the temporal emission profile.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int or float</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -241,11 +241,11 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>start</strong> (<em>float</em>) -- Starting value of the discrete data set.</p></li>
-<li><p><strong>range</strong> (<em>float</em>) -- Range of the data set.</p></li>
-<li><p><strong>step</strong> (<em>float</em>) -- Step of the discrete data series.</p></li>
-<li><p><strong>integrate_point</strong> (<em>str</em>) -- Point to which the data is grouped: 'left', 'middle', 'right'</p></li>
-<li><p><strong>cutoff</strong> (<em>bool</em>) -- Set distribution values before and after the range to zero.</p></li>
+<li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Starting value of the discrete data set.</p></li>
+<li><p><strong>range</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Range of the data set.</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Step of the discrete data series.</p></li>
+<li><p><strong>integrate_point</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Point to which the data is grouped: 'left', 'middle', 'right'</p></li>
+<li><p><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Set distribution values before and after the range to zero.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -307,7 +307,7 @@
 
             <div class="right">
                 
-                    <a href="uncertainty_module.html"><span>Uncertainty</span><span class="icon">&gt;</span></a>
+                    <a href="uncertainty_module.html"><span>Analysis</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

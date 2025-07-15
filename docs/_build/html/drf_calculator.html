@@ -133,10 +133,10 @@
 <li class="toctree-l3"><a class="reference internal" href="emission_profiles.html">Emission Profiles</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -171,14 +171,14 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
 <li><p><strong>ref_unit</strong> (<em>{'Wm-2ppb-1'</em><em>, </em><em>'Wm-2kg-1'}</em>) -- Output unit</p></li>
-<li><p><strong>adjust_for_indirect_effects</strong> (<em>bool</em>) -- Adjust radiative efficiency to account for indirect effects</p></li>
+<li><p><strong>adjust_for_indirect_effects</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Adjust radiative efficiency to account for indirect effects</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Radiative efficiency, in reference unit</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,7 +195,7 @@
 <dd class="field-even"><p>Pertubation lifetime in years.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -214,15 +214,15 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>at_year</strong> (<em>int</em><em> or </em><em>array</em>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
-<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative values if true, else instantaneous values.</p></li>
+<li><p><strong>at_year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><em>array</em>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
+<li><p><strong>cumulative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Cumulative values if true, else instantaneous values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Concentration of the greenhouse gas, in kg (if not cumulative) or in kg-yrs (if cumulative).</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -235,18 +235,18 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>at_year</strong> (<em>int</em><em> or </em><em>array</em>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
-<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative values if true, else instantaneous values.</p></li>
-<li><p><strong>CH4_oxidation</strong> (<em>bool</em>) -- If true, account for oxidation of CH4 to CO2</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
-<li><p><strong>convolution_time_step</strong> (<em>float</em>) -- Time step for CH4 oxidation.</p></li>
+<li><p><strong>at_year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><em>array</em>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
+<li><p><strong>cumulative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Cumulative values if true, else instantaneous values.</p></li>
+<li><p><strong>CH4_oxidation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, account for oxidation of CH4 to CO2</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
+<li><p><strong>convolution_time_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Time step for CH4 oxidation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>radiative forcing, in W/m2.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,9 +265,9 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
-<li><p><strong>time_step</strong> (<em>float</em>) -- Time step in years.</p></li>
-<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative radiative forcing if true, else instantaneous values.</p></li>
+<li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
+<li><p><strong>time_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Time step in years.</p></li>
+<li><p><strong>cumulative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Cumulative radiative forcing if true, else instantaneous values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -288,11 +288,11 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
-<li><p><strong>time_step</strong> (<em>float</em>) -- Time step in years.</p></li>
-<li><p><strong>cumulative</strong> (<em>bool</em>) -- Cumulative radiative forcing if true, else instantaneous values.</p></li>
-<li><p><strong>CH4_oxidation</strong> (<em>bool</em>) -- If true, account for oxidation of CH4 to CO2</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
+<li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
+<li><p><strong>time_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Time step in years.</p></li>
+<li><p><strong>cumulative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Cumulative radiative forcing if true, else instantaneous values.</p></li>
+<li><p><strong>CH4_oxidation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, account for oxidation of CH4 to CO2</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -320,7 +320,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'CH4 fossil'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
+<li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
 </ul>
 </dd>
 </dl>
@@ -340,7 +340,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>time_horizon</strong> (<em>int</em>) -- Time horizon in years.</p></li>
+<li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
 </ul>
 </dd>
 </dl>

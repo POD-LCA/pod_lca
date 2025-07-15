@@ -11,7 +11,7 @@ class Records:
 
     Attributes
     ----------
-    parent : Master Obj.
+    parent : ~pod_lca.materials_screening.Master
         The product or process object to which this record belong.
     <record_category> : float
         Record categories are dynamically set based on the class.
@@ -35,7 +35,8 @@ class Records:
         return str
 
     def __add__(self, other):
-        """ Addition of two records."""
+        """ Addition of two records.
+        """
         if not isinstance(other, self.__class__):
             return NotImplemented
 
@@ -49,7 +50,8 @@ class Records:
         return new_record
 
     def __iadd__(self, other):
-        """ In-place addition of two records."""
+        """ In-place addition of two records.
+        """
         if not isinstance(other, self.__class__):
             return NotImplemented
 
@@ -59,7 +61,8 @@ class Records:
         return self
     
     def __sub__(self, other):
-        """ Subtraction of two records."""
+        """ Subtraction of two records.
+        """
         if not isinstance(other, self.__class__):
             return NotImplemented
 
@@ -73,7 +76,8 @@ class Records:
         return new_record
 
     def __isub__(self, other):
-        """ In-place subtraction of two records."""
+        """ In-place subtraction of two records.
+        """
         if not isinstance(other, self.__class__):
             return NotImplemented
 
@@ -83,7 +87,8 @@ class Records:
         return self
     
     def __mul__(self, scalar):
-        """ Multiplication of a record by a scalar."""
+        """ Multiplication of a record by a scalar.
+        """
         if not isinstance(scalar, (int, float)):
             return NotImplemented
 
@@ -97,8 +102,8 @@ class Records:
         return new_record
     
     def __imul__(self, scalar):
-        """ In-place multiplication of a record."""
-
+        """ In-place multiplication of a record.
+        """
         if not isinstance(scalar, (int, float)):
             return NotImplemented
 
@@ -108,7 +113,8 @@ class Records:
         return self
 
     def __rmul__(self, scalar):
-        """ Reflexive multiplication of a record by a scalar."""
+        """ Reflexive multiplication of a record by a scalar.
+        """
         return self.__mul__(scalar)
 
     # ========================
@@ -120,13 +126,13 @@ class Records:
         
         Parameters
         ----------
-        parent : Master Obj.
+        parent : ~pod_lca.materials_screening.Master
             The product or process object to which this record belong.
         
         Returns
         -------
-        Record Obj.
-            Record object created.
+        ~pod_lca.impacts.Records
+            Record created.
         """
         record_obj = cls()
         record_obj.set_parent(parent)
@@ -147,8 +153,8 @@ class Records:
         
         Returns
         -------
-        Records Obj.
-            Records object created.
+        ~pod_lca.impacts.Records
+            Record created.
         """
         record_obj = cls()
         record_obj.set_parent(None)
@@ -162,7 +168,7 @@ class Records:
 
         Returns
         -------
-        Impacts Obj.
+        ~pod_lca.impacts.Records
             Copy of the object.
         """
         new_obj = cls()
@@ -178,7 +184,7 @@ class Records:
         
         Parameters
         ----------
-        parent : Master Obj.
+        parent : ~pod_lca.materials_screening.Master.
             The product or process object to which this record belong.
         """
         self.parent = parent
@@ -190,7 +196,7 @@ class Records:
         
         Returns
         -------
-        Master Obj.
+        ~pod_lca.materials_screening.Master
             Product or process object to which this record belong.
         """
         return self.parent
@@ -202,6 +208,7 @@ class Records:
         ----------
         units : bool
             If true, returns a dictionary of categories and corresponding units.
+
         Returns
         -------
         list
@@ -231,7 +238,7 @@ class Records:
         Parameters
         ----------
         records : dict
-            Dictionary of records {record catergory (str): record quantity (float)}
+            Dictionary of records - { **record catergory** (:class:`str`): **record quantity** (:class:`float`)}
         """
         for key, value in records.items():
             if key not in self.__class__.record_attr_dict.keys():
@@ -263,7 +270,7 @@ class Records:
         Returns
         -------
         dict
-            Dictionary of impacts {impact catergory (str): impact quantity (float)}
+            Dictionary of impacts - { **impact catergory** (:class:`str`): **impact quantity** (:class:`float`)}
         """
         record = {record: getattr(self, record, 0.0) for record in self.__class__.record_attr_dict.keys()}
 

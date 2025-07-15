@@ -2,8 +2,9 @@ import pandas as pd
 import sys
 sys.path.append(r'C:\Users\kiun\ElectricityLCI-development')
 
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.logger import log
+from pod_lca.utilities import DataExporter
+from pod_lca.utilities import DataImporter
+from pod_lca.utilities import log
 import electricitylci
 
 
@@ -49,7 +50,7 @@ for ferc_region in ferc_regions:
 
         tmp_6 = pd.concat([tmp_5['Balancing Authority Name'], calc_2], axis=1)
 
-        electricity_impact = Data_Importer.csv_to_pandas(impact_data_file)
+        electricity_impact = DataImporter.csv_to_pandas(impact_data_file)
         impacts_dict = dict.fromkeys(impact_data_headers, 0)
         for index, row in tmp_6.iterrows():
             USLCI_entry = 'Electricity - ' + technology + ' - ' + row['Balancing Authority Name']
@@ -64,7 +65,7 @@ for ferc_region in ferc_regions:
 
         data_all[ferc_region][technology] = impacts_dict
 
-    Data_Importer.dict_to_csv(data_all[ferc_region], output_file + f'_{ferc_region}.csv')
+    DataExporter.dict_to_csv(data_all[ferc_region], output_file + f'_{ferc_region}.csv')
     # TODO: write to a single file
 
 # TODO: ERCOT and NYISO need seperate treating

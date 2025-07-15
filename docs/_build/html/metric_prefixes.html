@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Data Imports &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <title>Metrix Prefixes &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Mathematical Functions" href="math_funcs.html" />
-    <link rel="prev" title="Utilities" href="utilities.html" /> 
+    <link rel="next" title="Common Units" href="common_units.html" />
+    <link rel="prev" title="Units" href="units.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,21 +122,23 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="utilities.html">Utilities</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Data Imports</a></li>
-<li class="toctree-l3"><a class="reference internal" href="math_funcs.html">Mathematical Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="array_methods.html">Object Array Methods</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="units_module.html">Units</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Metrix Prefixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="common_units.html">Common Units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unit_map.html">Units Map</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -153,137 +155,218 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="data-imports">
-<h1>Data Imports<a class="headerlink" href="#data-imports" title="Link to this heading">¶</a></h1>
+  <section id="metrix-prefixes">
+<h1>Metrix Prefixes<a class="headerlink" href="#metrix-prefixes" title="Link to this heading">¶</a></h1>
+<p>There is a definitive list of <a class="reference internal" href="#pod_lca.units.MetricPrefix" title="pod_lca.units.MetricPrefix"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a> objects [1].</p>
+<p>They can be imported as follows;</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pod_lca.units</span><span class="w"> </span><span class="kn">import</span> <span class="n">MEGA</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric Prefix Object Name</p></th>
+<th class="head"><p>Prefix Name</p></th>
+<th class="head"><p>Symbol</p></th>
+<th class="head"><p>Exponent</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>YOTTA</p></td>
+<td><p>yotta</p></td>
+<td><p>Y</p></td>
+<td><p>24</p></td>
+</tr>
+<tr class="row-odd"><td><p>ZETTA</p></td>
+<td><p>zetta</p></td>
+<td><p>Z</p></td>
+<td><p>21</p></td>
+</tr>
+<tr class="row-even"><td><p>EXA</p></td>
+<td><p>exa</p></td>
+<td><p>E</p></td>
+<td><p>18</p></td>
+</tr>
+<tr class="row-odd"><td><p>PETA</p></td>
+<td><p>peta</p></td>
+<td><p>P</p></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>TERA</p></td>
+<td><p>tera</p></td>
+<td><p>T</p></td>
+<td><p>12</p></td>
+</tr>
+<tr class="row-odd"><td><p>GIGA</p></td>
+<td><p>giga</p></td>
+<td><p>G</p></td>
+<td><p>9</p></td>
+</tr>
+<tr class="row-even"><td><p>MEGA</p></td>
+<td><p>mega</p></td>
+<td><p>M</p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-odd"><td><p>KILO</p></td>
+<td><p>kilo</p></td>
+<td><p>k</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>HECTO</p></td>
+<td><p>hecto</p></td>
+<td><p>h</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>DEKA</p></td>
+<td><p>deka</p></td>
+<td><p>da</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>DECI</p></td>
+<td><p>deci</p></td>
+<td><p>d</p></td>
+<td><p>-1</p></td>
+</tr>
+<tr class="row-odd"><td><p>CENTI</p></td>
+<td><p>centi</p></td>
+<td><p>c</p></td>
+<td><p>-2</p></td>
+</tr>
+<tr class="row-even"><td><p>MILI</p></td>
+<td><p>mili</p></td>
+<td><p>m</p></td>
+<td><p>-3</p></td>
+</tr>
+<tr class="row-odd"><td><p>MICRO</p></td>
+<td><p>micro</p></td>
+<td><p>mu</p></td>
+<td><p>-6</p></td>
+</tr>
+<tr class="row-even"><td><p>NANO</p></td>
+<td><p>nano</p></td>
+<td><p>n</p></td>
+<td><p>-9</p></td>
+</tr>
+<tr class="row-odd"><td><p>PICO</p></td>
+<td><p>pico</p></td>
+<td><p>p</p></td>
+<td><p>-12</p></td>
+</tr>
+<tr class="row-even"><td><p>FEMTO</p></td>
+<td><p>femto</p></td>
+<td><p>f</p></td>
+<td><p>-15</p></td>
+</tr>
+<tr class="row-odd"><td><p>ATTO</p></td>
+<td><p>atto</p></td>
+<td><p>a</p></td>
+<td><p>-18</p></td>
+</tr>
+<tr class="row-even"><td><p>ZEPTO</p></td>
+<td><p>zepto</p></td>
+<td><p>z</p></td>
+<td><p>-21</p></td>
+</tr>
+<tr class="row-odd"><td><p>YOCTO</p></td>
+<td><p>yocto</p></td>
+<td><p>y</p></td>
+<td><p>-24</p></td>
+</tr>
+</tbody>
+</table>
+<p>Reference:</p>
+<p>[1]  National Institute of Standards and Technology (NIST) Handbook 44 (2024). Specifications, Tolerances, and Other Technical Requirements for Weighing and Measuring Devices.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.utilities.</span></span><span class="sig-name descname"><span class="pre">DataImporter</span></span><a class="headerlink" href="#pod_lca.utilities.DataImporter" title="Link to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.csv_to_pandas">
-<span class="sig-name descname"><span class="pre">csv_to_pandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multipliers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.csv_to_pandas" title="Link to this definition">¶</a></dt>
-<dd><p>Import data to database from a CSV file.</p>
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.units.</span></span><span class="sig-name descname"><span class="pre">MetricPrefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.units.MetricPrefix" title="Link to this definition">¶</a></dt>
+<dd><p>Unit object from which units are created.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.units.MetricPrefix.name" title="Link to this definition">¶</a></dt>
+<dd><p>Standard name of the prefix.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file</p></li>
-<li><p><strong>headers</strong> (<em>list</em><em> of </em><em>str</em>) -- The headers of the CSV file as they would be mapped to the dataset.</p></li>
-<li><p><strong>multipliers</strong> (<em>list</em><em> of </em><em>float</em>) -- Values of each column of the CSV will be multiplied by these values.</p></li>
-</ul>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.symbol">
+<span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#pod_lca.units.MetricPrefix.symbol" title="Link to this definition">¶</a></dt>
+<dd><p>Standard symbol of the unit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.power">
+<span class="sig-name descname"><span class="pre">power</span></span><a class="headerlink" href="#pod_lca.units.MetricPrefix.power" title="Link to this definition">¶</a></dt>
+<dd><p>Power to the ten corresponding to the prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.csv_to_dict">
-<span class="sig-name descname"><span class="pre">csv_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.csv_to_dict" title="Link to this definition">¶</a></dt>
-<dd><p>Import data to dictionary from a CSV file.</p>
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.units.MetricPrefix.get_name" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the name of the prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Standard name of the prefix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.get_symbol">
+<span class="sig-name descname"><span class="pre">get_symbol</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.units.MetricPrefix.get_symbol" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the symbol of the prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Symbol of the prefix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.get_power">
+<span class="sig-name descname"><span class="pre">get_power</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.units.MetricPrefix.get_power" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the power to the ten corresponding to the prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Power to the ten corresponding to the prefix.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.units.MetricPrefix.get_conversion_factor">
+<span class="sig-name descname"><span class="pre">get_conversion_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_prefix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.units.MetricPrefix.get_conversion_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Compute conversion factor for converting preixes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV</p></li>
-<li><p><strong>primary_key</strong> (<em>str</em>) -- The column name that will be used as the primary key in the dictionary.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>to_prefix</strong> (<em>MetricPrefix Obj.</em>) -- Metric prefix to which the value will be converted to (from the current metric prefix).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A dictionary with the UUID as the key and the row as the</p>
+<dd class="field-even"><p>Conversion factor to be applied on the value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.csv_to_list">
-<span class="sig-name descname"><span class="pre">csv_to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.csv_to_list" title="Link to this definition">¶</a></dt>
-<dd><p>Import data to list from a CSV file. The first row of the CSV file is used as the header. Only one column identified by the column header is imported. If the column header is not provided, the first column of the CSV file is imported.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
-<li><p><strong>column_header</strong> (<em>str</em>) -- Header of the column from where the data to be read to the list, when the file has headers.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.dict_to_csv">
-<span class="sig-name descname"><span class="pre">dict_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.dict_to_csv" title="Link to this definition">¶</a></dt>
-<dd><p>Transfer data from a dictionary to a CSV file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>dict</em>) -- A dictionary with the row as the value.</p></li>
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.list_to_csv">
-<span class="sig-name descname"><span class="pre">list_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.list_to_csv" title="Link to this definition">¶</a></dt>
-<dd><p>Write data to a CSV file from a list of str.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_list</strong> (<em>list</em><em> of </em><em>str</em>) -- List of strings to be written to the CSV file.</p></li>
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.lists_to_csv">
-<span class="sig-name descname"><span class="pre">lists_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.lists_to_csv" title="Link to this definition">¶</a></dt>
-<dd><p>Write data to a CSV file from a list of str.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_list</strong> (<em>list</em><em> of </em><em>lists</em>) -- Lists to be written to the CSV file.</p></li>
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the CSV file.</p></li>
-<li><p><strong>as_columns</strong> (<em>bool</em>) -- If true, each list will be written as a column.</p></li>
-<li><p><strong>headers</strong> (<em>list</em>) -- Data headers.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.dict_to_json">
-<span class="sig-name descname"><span class="pre">dict_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.dict_to_json" title="Link to this definition">¶</a></dt>
-<dd><p>Transfer data from a dictionary to a JSON file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dict</strong> (<em>dict</em>) -- A dictionary with the UUID as the key and the row as the value.</p></li>
-<li><p><strong>file_path</strong> (<em>str</em>) -- Location of the JSON file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.utilities.DataImporter.json_to_dict">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">json_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.utilities.DataImporter.json_to_dict" title="Link to this definition">¶</a></dt>
-<dd><p>Import data to dictionary from a JSON file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) -- Location of the JSON file.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A dictionary with the UUID as the key and the row as the value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -306,16 +389,15 @@
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Data Imports</a><ul>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter"><code class="docutils literal notranslate"><span class="pre">DataImporter</span></code></a><ul>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.csv_to_pandas"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_pandas()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.csv_to_dict"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_dict()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.csv_to_list"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_list()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.dict_to_csv"><code class="docutils literal notranslate"><span class="pre">DataImporter.dict_to_csv()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.list_to_csv"><code class="docutils literal notranslate"><span class="pre">DataImporter.list_to_csv()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.lists_to_csv"><code class="docutils literal notranslate"><span class="pre">DataImporter.lists_to_csv()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.dict_to_json"><code class="docutils literal notranslate"><span class="pre">DataImporter.dict_to_json()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.utilities.DataImporter.json_to_dict"><code class="docutils literal notranslate"><span class="pre">DataImporter.json_to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#">Metrix Prefixes</a><ul>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.symbol</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.power</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.get_name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.get_symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_symbol()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.get_power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_power()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.units.MetricPrefix.get_conversion_factor"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_conversion_factor()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -332,14 +414,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="utilities.html">
-                    <span class="icon">&lt;</span><span>Utilities</span></a>
+                <a href="units.html">
+                    <span class="icon">&lt;</span><span>Units</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="math_funcs.html"><span>Mathematical Functions</span><span class="icon">&gt;</span></a>
+                    <a href="common_units.html"><span>Common Units</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

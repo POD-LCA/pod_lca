@@ -19,7 +19,7 @@ class Impacts(Records):
 
     Attributes
     ----------
-    parent : Master Obj.
+    parent : ~pod_lca.materials_screening.Master
         The product or process object to which this impacts record belong.
     <impact_category> : float
         Impact categories are dynamically set based on the class variable 'record_attr_dict'.
@@ -43,15 +43,21 @@ class Impacts(Records):
         
         Parameters
         ----------
-        method : <str>
-            Which weightages to be used:
-                'TRACI_EPA' - from Ref [1]
-                'TRACI_NIST' - from Ref [1]
+        method : {'TRACI_EPA', 'TRACI_NIST'}
+            Weightages to be used:
+            - **'TRACI_EPA'**: From Ref [1].
+            - **'TRACI_NIST'**: From Ref [1].
+            Default is 'TRACI_EPA'.
             
         Returns
         -------
         float
             The weighted impact.
+
+        Raises
+        ------
+        ValueError
+            Weightage method not recognized, or incomplete.
         """
         if method == 'TRACI_EPA':
             weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])

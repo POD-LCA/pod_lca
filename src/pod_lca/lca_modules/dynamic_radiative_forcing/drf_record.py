@@ -17,7 +17,7 @@ from . import UniformEmissionProfile
 from ..impacts import Emissions
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
-from ...utilities import DataImporter
+from ...utilities import DataExporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
 from ...visualizer import Stackplot
@@ -401,7 +401,7 @@ class DynamicRadiativeForcingRecord:
                 headers.append(f'{greenhouse_gas} crf (in W/m^2)')
                 lists_to_write.append(data_array.tolist())
 
-        return DataImporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)
+        return DataExporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)
 
         
 if __name__ == '__main__':

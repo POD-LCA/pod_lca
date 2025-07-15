@@ -12,6 +12,7 @@ from numpy import hstack
 from numpy import vstack
 
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcing
+from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 
 test_data = "tests\\drf_test_data-series-test-values.csv"
@@ -59,4 +60,4 @@ for greenhouse_gas in greenhouse_gases:
     else:
         print(f"{greenhouse_gas} data failed")
 
-DataImporter.list_to_csv(data, output_file)
+DataExporter.list_to_csv(data, output_file)

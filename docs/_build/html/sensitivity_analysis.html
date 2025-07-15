@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Monte Carlo Simulation" href="mcs.html" />
-    <link rel="prev" title="Data Distributions" href="datasets.html" /> 
+    <link rel="prev" title="Hotspot Analysis" href="hotspots.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -122,23 +122,23 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="uncertainty_module.html">Analysis</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Sensitivity Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -158,6 +158,8 @@
             
   <section id="sensitivity-analysis">
 <h1>Sensitivity Analysis<a class="headerlink" href="#sensitivity-analysis" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.uncertainty.SensitivityAnalysis" title="pod_lca.uncertainty.SensitivityAnalysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">SensitivityAnalysis</span></code></a> object contains methods for the calculation of sensitivity of LCA output to changes in parameters in <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a> objects.</p>
+<hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.SensitivityAnalysis">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">SensitivityAnalysis</span></span><a class="headerlink" href="#pod_lca.uncertainty.SensitivityAnalysis" title="Link to this definition">¶</a></dt>
@@ -169,15 +171,13 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>obj</strong> (<em>Master Obj</em>) -- Entry on which the sensitivity is tested.</p></li>
-<li><p><strong>param</strong> (<em>str</em>) -- Parameter varied.
-This must be an attribute of the object.</p></li>
-<li><p><strong>impact_cat</strong> (<em>str</em>) -- Impact category considered.
-Weighted impact, if 'weighted'</p></li>
-<li><p><strong>sensitivity_type</strong> (<em>str</em>) -- Type of sensitivity analysis.
-'relative' - relative percentage change of impact.  (default)
-'symmetric' - symmetric percentage change of impact.</p></li>
-<li><p><strong>printout</strong> (<em>bool</em>) -- Printout results if true.
-Default - True</p></li>
+<li><p><strong>param</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Parameter varied. This must be an attribute of the object.</p></li>
+<li><p><strong>impact_cat</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Impact category considered.  Weighted impact, if 'weighted'</p></li>
+<li><p><strong>sensitivity_type</strong> (<em>{'relative'</em><em>, </em><em>'symmetric'}</em>) -- Type of sensitivity analysis.
+'relative' - relative percentage change of impact.
+'symmetric' - symmetric percentage change of impact.
+Default is 'relative'.</p></li>
+<li><p><strong>printout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Printout results if true. Default is True</p></li>
 <li><p><strong>**kwargs</strong> -- <dl class="simple">
 <dt>range<span class="classifier">tuple</span></dt><dd><p>Minimum and maximum value for the parameter.
 e.g., qty of a product or process.</p>
@@ -193,7 +193,7 @@ e.g., database_item name (i.e., to change the impact value)</p>
 <dd class="field-even"><p>Minimum and maximum percentage change of impact.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -209,7 +209,7 @@ e.g., database_item name (i.e., to change the impact value)</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the sensitivity is considered.</p></li>
-<li><p><strong>groups</strong> (<em>List</em><em> of </em><em>dict</em>) -- <p>[{'obj': Master Obj, 'param': str, 'range': tuple},
+<li><p><strong>groups</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>[{'obj': Master Obj, 'param': str, 'range': tuple},
 {'obj': Master Obj, 'param': str, 'options': list of str},
 ...
 ]
@@ -236,7 +236,7 @@ e.g., database_item name (i.e., to change the impact value)</p>
 <dd class="field-even"><p>Minimum and maximum percentage change of impact.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>tuple</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -279,8 +279,8 @@ e.g., database_item name (i.e., to change the impact value)</p>
         <div class="button_nav">
             <div class="left">
                 
-                <a href="datasets.html">
-                    <span class="icon">&lt;</span><span>Data Distributions</span></a>
+                <a href="hotspots.html">
+                    <span class="icon">&lt;</span><span>Hotspot Analysis</span></a>
                 
             </div>
 

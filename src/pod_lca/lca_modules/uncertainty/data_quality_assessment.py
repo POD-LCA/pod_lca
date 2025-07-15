@@ -161,8 +161,13 @@ class DataQualityAnalysis:
 
     def __init__(self):
         self.model = None
-        self.DQS = None
-        self.normalised_DQS = None
+
+    def __str__(self):
+        output = "*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50  + '\n'
+        output += f"Data Quality Score: {self.get_model_DQS():.2f}"  + '\n'
+        output +=f"Normalised Data Quality Score (0-100 scale): {self.get_normalised_DQS():.0f}"
+
+        return output
         
     @classmethod
     def from_model(cls, model):
@@ -185,26 +190,6 @@ class DataQualityAnalysis:
         """
         self.model = model
 
-    def set_model_DQS(self, DQS):
-        """ Set Data Quality Score of the model.
-        
-        Parameters
-        ----------
-        DQS : float
-            Data Quality Score.
-        """
-        self.DQS = DQS
-
-    def set_normalised_DQS(self, nDQS):
-        """ Set normalised Data Quality Score of the model.
-        
-        Parameters
-        ----------
-        nDQS : float
-            Normalised Data Quality Score.
-        """
-        self.normalised_DQS = nDQS        
-
     def get_model(self):
         """ Get the model for which the analysis will be run.
         
@@ -215,25 +200,55 @@ class DataQualityAnalysis:
         """
         return self.model
 
-    def get_model_DQS(self):
+    def get_model_DQS(self, impact_cat='GWP'):
         """ Get Data Quality Score of the model.
-        
+
+        Parameters
+        ----------
+        impact_cat : str
+            Impact category considered for weighing individual pedigree scores.
+
         Returns
         -------
         float
             Data Quality Score.
         """
-        return self.DQS
+        DQS_tmp = 0.0
+        impact_sum = 0.0
+        for obj in self.model.get_all_items():
+            impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_record(impact_cat) 
+            if impact is not None:
+                obj.get_pedigree_score().set_item_DQS()
+                DQS_tmp += obj.get_pedigree_score().get_item_DQS() * impact
+                impact_sum += impact
+            else:
+                log(f"{obj.get_name()} has no impacts.", "Info")
 
-    def get_normalised_DQS(self):
+        DQS = DQS_tmp / impact_sum
+
+
+        return DQS
+
+    def get_normalised_DQS(self, impact_cat='GWP'):
         """ Get the normalised Data Quality Score of the model.
-        
+
+        Parameters
+        ----------
+        impact_cat : str
+            Impact category considered for weighing individual pedigree scores.
+
         Returns
         -------
         float
             Normalised Data Quality Score.
         """
-        return self.normalised_DQS
+        DQS =self.get_model_DQS(impact_cat)
+        n = len(config['setup']['uncertainty']['DATA_QUALITY_INDICATORS'])
+        max = config['setup']['uncertainty']['MAX_DQS']
+        min = config['setup']['uncertainty']['MIN_DQS']
+        normalized_DQS = 100 * (n * max - DQS)/(n * (max- min))
+
+        return normalized_DQS
 
     def setPedigreeScores(self):
         """ Set pedigree scores for all products/processes in a model.
@@ -255,43 +270,6 @@ class DataQualityAnalysis:
         """ Update all Temporal Correlation scores.
         """
         pass
-
-    def calculate_model_DQS(self, impact_cat='GWP'):
-        """ Calculate the Data Quality Score.
-
-        Parameters
-        ----------
-        impact_cat : str
-            Impact category considered for weighing individual pedigree scores.
-        """
-        DQS_tmp = 0.0
-        impact_sum = 0.0
-        for obj in self.model.get_all_items():
-            impact = obj.get_impacts().get_weighted_impact() if impact_cat=='weighted' else obj.get_impacts().get_record(impact_cat) 
-            if impact is not None:
-                obj.get_pedigree_score().set_item_DQS()
-                DQS_tmp += obj.get_pedigree_score().get_item_DQS() * impact
-                impact_sum += impact
-            else:
-                log(f"{obj.get_name()} has no impacts.", "Info")
-
-        DQS = DQS_tmp / impact_sum
-        n = len(config['setup']['uncertainty']['DATA_QUALITY_INDICATORS'])
-        max = config['setup']['uncertainty']['MAX_DQS']
-        min = config['setup']['uncertainty']['MIN_DQS']
-        normalized_DQS = 100 * (n * max - DQS)/(n * (max- min))
-
-        self.set_model_DQS(DQS)
-        self.set_normalised_DQS(normalized_DQS)
-
-        return DQS, normalized_DQS
-    
-    def print_results(self):
-        """ Print results of the hotspot analysis.
-        """
-        print("*"*50 + "\nDATA QUALITY ASSESSMENT\n" + "*"*50)
-        print(f"Data Quality Score: {self.get_model_DQS():.2f}")
-        print(f"Normalised Data Quality Score (0-100 scale): {self.get_normalised_DQS():.0f}")
 
 
 if __name__ == '__main__':

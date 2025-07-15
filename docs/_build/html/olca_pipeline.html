@@ -15,7 +15,7 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Materials Screening Module" href="materials_screening_module.html" />
+    <link rel="next" title="Materials Screening" href="materials_screening_module.html" />
     <link rel="prev" title="Impacts Database" href="impact_databases.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -122,20 +122,21 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="impacts_module.html">Impact Module</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="impacts_module.html">Impacts</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="impact_records.html">Inventory Records</a></li>
 <li class="toctree-l3"><a class="reference internal" href="impact_databases.html">Impacts Database</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -219,14 +220,14 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>uuids</strong> (<em>list</em><em> of </em><em>str</em>) -- List of UUIDs of the processes to be filtered. If None, all processes are returned.</p></li>
+<li><p><strong>uuids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of UUIDs of the processes to be filtered. If None, all processes are returned.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of processes reference objects from the openLCA server.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -240,14 +241,14 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
 <li><p><strong>result</strong> (<em>olca_ipc.Result</em>) -- The result of the calculation.</p></li>
-<li><p><strong>impact_dict</strong> (<em>dict</em>) -- Dictionary of impact categories.</p></li>
+<li><p><strong>impact_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of impact categories.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dictionary of impact results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -262,14 +263,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>categories</strong> (<em>list</em><em> or </em><em>int.</em>) -- IDs of categories to be identified.
+<li><p><strong>categories</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> or </em><em>int.</em>) -- IDs of categories to be identified.
 Category IDs from the North American Industry Classification System (NAICS) or International Standard Industrial Classification (ISIC).</p></li>
 <li><p><strong>node</strong> (<em>utree.Node</em>) -- The node object.</p></li>
-<li><p><strong>level</strong> (<em>int</em>) -- The level of the node in the tree.</p></li>
-<li><p><strong>impact</strong> (<em>float</em>) -- The impact from the category.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- The declared quantity of the category.</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The level of the node in the tree.</p></li>
+<li><p><strong>impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The impact from the category.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The declared quantity of the category.</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- The declared unit of the category.</p></li>
-<li><p><strong>max_levels</strong> (<em>int</em>) -- The maximum number of levels to expand the tree.</p></li>
+<li><p><strong>max_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The maximum number of levels to expand the tree.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -293,14 +294,14 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>processes</strong> (<em>list</em><em> or </em><em>str.</em>) -- UUIDs of processess to be identified.</p></li>
+<li><p><strong>processes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> or </em><em>str.</em>) -- UUIDs of processess to be identified.</p></li>
 <li><p><strong>node</strong> (<em>utree.Node</em>) -- The node object.</p></li>
-<li><p><strong>level</strong> (<em>int</em>) -- The level of the node in the tree.</p></li>
-<li><p><strong>impact</strong> (<em>float</em>) -- The impact from the category.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- The declared quantity of the category.</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The level of the node in the tree.</p></li>
+<li><p><strong>impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The impact from the category.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The declared quantity of the category.</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- The declared unit of the category.</p></li>
-<li><p><strong>max_levels</strong> (<em>int</em>) -- The maximum number of levels to expand the tree.</p></li>
-<li><p><strong>conversion_map</strong> (<em>dict</em>) -- <p>A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
+<li><p><strong>max_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The maximum number of levels to expand the tree.</p></li>
+<li><p><strong>conversion_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
 {uuid (str): {'name' : name of the process (str),</p>
 <blockquote>
 <div><p>'declared_qty': declared quantity of the process (str or float),
@@ -328,13 +329,13 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dd><p>Check if the input is a valid UUID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>uuid</strong> (<em>str</em><em> or </em><em>int</em>) -- The input to be checked.</p>
+<dd class="field-odd"><p><strong>uuid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The input to be checked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the input is a valid UUID, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -345,13 +346,13 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dd><p>Check if the input is a valid North American Industry Classification System (NAICS) code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>naics</strong> (<em>int</em>) -- The input integer to be checked.</p>
+<dd class="field-odd"><p><strong>naics</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The input integer to be checked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the input is a valid NAICS code, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -362,13 +363,13 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dd><p>Check if the input is a valid International Standard Industrial Classification (ISIC) code.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>isic</strong> (<em>int</em>) -- The input integer to be checked.</p>
+<dd class="field-odd"><p><strong>isic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The input integer to be checked.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the input is a valid ISIC code, False otherwise.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -381,7 +382,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>process_list</strong> (<em>list</em>) -- List of UUIDs of the processess to be tested</p></li>
+<li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of UUIDs of the processess to be tested</p></li>
 </ul>
 </dd>
 </dl>
@@ -394,15 +395,15 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_list</strong> (<em>list</em><em> of </em><em>Schema.Process Obj</em>) -- List of processes.</p></li>
-<li><p><strong>filter_by</strong> (<em>str</em><em>, </em><em>int</em><em>, or </em><em>list</em><em> of </em><em>str</em><em>, </em><em>int</em>) -- NAICS or ISIC ids of Categories to be filter by.</p></li>
+<li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>Schema.Process Obj</em>) -- List of processes.</p></li>
+<li><p><strong>filter_by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- NAICS or ISIC ids of Categories to be filter by.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List of processess.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of Schema.Process Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of Schema.Process Obj.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -415,8 +416,8 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>path</strong> (<em>str</em>) -- The path to the zip file.</p></li>
-<li><p><strong>duplicates</strong> (<em>str</em>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The path to the zip file.</p></li>
+<li><p><strong>duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
 </ul>
 </dd>
 </dl>
@@ -430,9 +431,9 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>file_name</strong> (<em>str</em>) -- The name of the file.</p></li>
+<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the file.</p></li>
 <li><p><strong>data</strong> (<em>ZipExtFile</em>) -- The data from the file.</p></li>
-<li><p><strong>duplicates</strong> (<em>str</em>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
+<li><p><strong>duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
 </ul>
 </dd>
 </dl>
@@ -474,10 +475,10 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
-<li><p><strong>process_list</strong> (<em>list</em>) -- List of UUIDs of the processess to be tested</p></li>
-<li><p><strong>impact_dict</strong> (<em>dict</em>) -- Dictionary of impact categories.</p></li>
-<li><p><strong>impact_method</strong> (<em>str</em>) -- UUID of the impact method.</p></li>
-<li><p><strong>group_by</strong> (<em>dict</em><em> or </em><em>list</em><em> of </em><em>dict</em>) -- <dl class="simple">
+<li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of UUIDs of the processess to be tested</p></li>
+<li><p><strong>impact_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of impact categories.</p></li>
+<li><p><strong>impact_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- UUID of the impact method.</p></li>
+<li><p><strong>group_by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <dl class="simple">
 <dt>Dictionary of group categorization: {'name'<span class="classifier">category name (str),</span></dt><dd><p>'ids' : [category id (int) or product uuid (str)],
 'unit': unit to be reported - optional (Unit Obj),
 'conversion_map': conversion map - optional (dict)}</p>
@@ -493,7 +494,7 @@ Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty'
 <dd class="field-even"><p>Dictionary of impact results.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -557,7 +558,7 @@ Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty'
 
             <div class="right">
                 
-                    <a href="materials_screening_module.html"><span>Materials Screening Module</span><span class="icon">&gt;</span></a>
+                    <a href="materials_screening_module.html"><span>Materials Screening</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

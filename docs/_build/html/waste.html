@@ -132,10 +132,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -179,7 +179,7 @@
 <dd><p>List of processes the waste will be subjected to. These processes are in parallel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of WasteProcess Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of WasteProcess Obj.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -191,7 +191,7 @@
 Percentage can be in the form of string with a % sign or decimal value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,7 +213,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd><p>True if the material is bio-based.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -226,12 +226,12 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parent</strong> (<em>BuildingComponent Obj.</em><em> or </em><em>Master Obj.</em>) -- The thing that which was converted to waste.</p></li>
-<li><p><strong>database_item</strong> (<em>str</em>) -- Material name corresponding to the database entry which gives the unit impact of the product.</p></li>
-<li><p><strong>qty</strong> (<em>float</em>) -- Quantity of the product/process.</p></li>
+<li><p><strong>database_item</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Material name corresponding to the database entry which gives the unit impact of the product.</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the product/process.</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit of measurement corresponding to the quantity of the product/process.</p></li>
-<li><p><strong>process_mix</strong> (<em>dict</em>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<li><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p></li>
-<li><p><strong>bio_based</strong> (<em>bool</em>) -- True if the material is bio-based.</p></li>
+<li><p><strong>bio_based</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True if the material is bio-based.</p></li>
 </ul>
 </dd>
 </dl>
@@ -250,7 +250,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.set_impact_database_entry">
-<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_impact_database_entry" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_impact_database_entry" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Sets the database (impacts) entry corresponding to the item.</dt><dd><p>This method will also update the corresponding impact quanitities.</p>
 </dd>
@@ -268,7 +268,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <dd><p>Set waste processe for the waste product. Also sets the process mix.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>process_mix</strong> (<em>dict</em>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<dd class="field-odd"><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p>
 </dd>
 </dl>
@@ -280,7 +280,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd><p>Set the bio-based nature of the material.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>is_bio_based</strong> (<em>bool</em>) -- True, if the material is bio-based.</p>
+<dd class="field-odd"><p><strong>is_bio_based</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True, if the material is bio-based.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -308,7 +308,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd class="field-odd"><p><strong>waste_processes</strong> -- List of processes the waste will be subjected to. These processes are in parallel.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of WasteProcess Obj.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of WasteProcess Obj.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -323,7 +323,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 Percentage can be in the form of string with a % sign or decimal value.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -337,7 +337,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd class="field-odd"><p>True, if the material is bio-based.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -355,9 +355,9 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_mix</strong> (<em>dict</em>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<li><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p></li>
-<li><p><strong>overide</strong> (<em>bool</em>) -- If true, allows any process to be added, if not only processes created in default are allowed.</p></li>
+<li><p><strong>overide</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, allows any process to be added, if not only processes created in default are allowed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -370,16 +370,16 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_mix</strong> (<em>dict</em>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<li><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p></li>
-<li><p><strong>tol</strong> (<em>float</em>) -- Tolerence checked against</p></li>
+<li><p><strong>tol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Tolerence checked against</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the sum of the mix percentages adds upto a 100%, within tolerence.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>bool</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
