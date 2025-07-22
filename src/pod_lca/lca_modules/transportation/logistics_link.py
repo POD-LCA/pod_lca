@@ -26,7 +26,7 @@ class LogisticLink:
         name of the material.
     travel_dist : float.
         transportation distance
-    travel_dist_unit : Unit Obj.
+    dist_unit : Unit Obj.
         Unit corresponding to the travel distance.
     return_trip_factor : float.
         transportation return trip factor.
@@ -51,10 +51,10 @@ class LogisticLink:
         self.name = None
         self.material = None
         self.travel_dist = None
-        self.travel_dist_unit = None
+        self.dist_unit = None
         self.return_trip_factor = None
-        self.shipping_dest = None
-        self.shipping_org = None
+        self.shipping_destination = None
+        self.shipping_origin = None
         self.mode = None
         self.impacts = None
         self.emissions = None
@@ -102,7 +102,7 @@ class LogisticLink:
         link.impacts = Impacts.from_parent(link)
         link.emissions = Emissions.from_parent(link)
 
-        project.goods_links_map[good].append(link)
+        project.links[good].append(link)
 
         return link
 
@@ -149,7 +149,7 @@ class LogisticLink:
 
     def set_travel_dist(self, 
                         travel_dist, 
-                        travel_dist_unit=None, 
+                        dist_unit=None, 
                         return_trip_factor=None):
         """ Set the travel distance of the transportation link.
 
@@ -157,7 +157,7 @@ class LogisticLink:
         ----------
         travel_dist : float
             Travel distance of the transportation link.
-        travel_dist_unit : Unit Obj
+        dist_unit : Unit Obj
             Unit of the travel distance.
         return_trip_factor : float
             Return trip factor of the transportation link (default is None).
@@ -167,7 +167,7 @@ class LogisticLink:
         else:
             raise ValueError("Travel distance must be a number.")
 
-        self.travel_dist_unit = KILOMETER if travel_dist_unit is None else travel_dist_unit
+        self.dist_unit = KILOMETER if dist_unit is None else dist_unit
         self.return_trip_factor = return_trip_factor
 
         return self
@@ -181,9 +181,9 @@ class LogisticLink:
             Name of the shipping destination location.
         """
         if shipping_dest is None:
-            self.shipping_dest = None
+            self.shipping_destination = None
         elif isinstance(shipping_dest, Location):
-            self.shipping_dest = shipping_dest
+            self.shipping_destination = shipping_dest
         else:
             raise ValueError("Shipping destination must be a Location object.")
 
@@ -198,9 +198,9 @@ class LogisticLink:
             Name of the shipping origin location.
         """
         if shipping_org is None:
-            self.shipping_org = None
+            self.shipping_origin = None
         elif isinstance(shipping_org, Location):
-            self.shipping_org = shipping_org
+            self.shipping_origin = shipping_org
         else:
             raise ValueError("Shipping origin must be a Location object.")
 
@@ -293,7 +293,7 @@ class LogisticLink:
         Unit Obj.
             The distance unit of the transportation link.
         """
-        return self.travel_dist_unit
+        return self.dist_unit
 
     def get_return_trip_factor(self):   
         """ Retrieve the return trip factor of the transportation link.
@@ -322,7 +322,7 @@ class LogisticLink:
         str
             Name of the shipping destination location.
         """
-        return self.shipping_dest
+        return self.shipping_destination
 
     def get_shipping_origin(self):
         """ Retrieve the shipping origin of the project.
@@ -332,7 +332,7 @@ class LogisticLink:
         str
             Name of the shipping origin location.
         """
-        return self.shipping_org
+        return self.shipping_origin
 
     def get_mode(self):
         """ Retrieve the transportation mode of the transportation link.
@@ -392,8 +392,7 @@ class LogisticLink:
     def update_inventory_records(self):
         """ Compute and update all invetories.
         """
-        inventories_declared_qty = self.get_mode().get_inventories_declared_qty()
-        inventories_declared_unit = self.get_mode().get_inventories_declared_unit()
+        inventories_declared_unit = self.get_mode().get_declared_unit()
         computed_unit = self.get_material().get_unit() * self.get_dist_unit()
         conversion_factor = computed_unit.convert_to(inventories_declared_unit)
 
@@ -404,10 +403,10 @@ class LogisticLink:
         if conversion_factor is None:
             raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
         
-        impacts = {key: self.get_mode().get_unit_impacts().get_record(key) * conversion_factor * transport_material_qty * travel_dist * return_trip_factor / inventories_declared_qty for key in self.impacts.record_attr_dict}
+        impacts = {key: self.get_mode().get_unit_impacts().get_record(key) * conversion_factor * transport_material_qty * travel_dist * return_trip_factor for key in self.impacts.record_attr_dict}
         self.impacts.update_qty(impacts)
 
-        emissions = {key: self.get_mode().get_unit_emissions().get_record(key) * conversion_factor * transport_material_qty * travel_dist * return_trip_factor / inventories_declared_qty for key in self.emissions.record_attr_dict}
+        emissions = {key: self.get_mode().get_unit_emissions().get_record(key) * conversion_factor * transport_material_qty * travel_dist * return_trip_factor for key in self.emissions.record_attr_dict}
         self.emissions.update_qty(emissions)
 
         return self

@@ -9,6 +9,7 @@ import pickle
 
 from . import Model
 from ..impacts import ImpactsDatabase
+from ..impacts import TranportationModeImpactsDatabase
 from ...utilities import log
 from ...utilities import config
 from ...utilities import DataImporter
@@ -31,7 +32,8 @@ class Project:
 
     def __init__(self):
         self.name = None
-        self.database = None
+        self.impact_database = None
+        self.transport_mode_impact_database = None
         self.models = {}
         self.location = None
 
@@ -81,17 +83,39 @@ class Project:
 
         return self
     
-    def set_database(self, database:(ImpactsDatabase)):
+    def set_impact_database(self, database:(ImpactsDatabase)):
         """ Set the impacts database of the project.
-        
+    
         Parameters
         ----------
-        database : Database Obj.
-            Impact database of the project.
+        database : ImpactsDatabase Obj or str
+            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
         """
-        self.database = database
-
-        return self
+        if isinstance(database, ImpactsDatabase):
+            self.impact_database = database
+        elif isinstance(database, str):
+            impact_database = ImpactsDatabase.new("impact database")
+            impact_database.set_data(database)
+            self.set_impact_database(impact_database)
+        else:
+            raise TypeError("Database input not recognized")
+        
+    def set_transportation_mode_impact_database(self, database:(TranportationModeImpactsDatabase)):
+        """ Set the impacts database for transportation impacts by mode.
+    
+        Parameters
+        ----------
+        database : ImpactsDatabase Obj or str
+            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+        """
+        if isinstance(database, TranportationModeImpactsDatabase):
+            self.transport_mode_impact_database = database
+        elif isinstance(database, str):
+            transport_impact_database = TranportationModeImpactsDatabase.new("impact database")
+            transport_impact_database.set_data(database)
+            self.set_transportation_mode_impact_database(transport_impact_database)
+        else:
+            raise TypeError("Database input not recognized")
     
     def set_location(self, location):
         """ Set the location of the project.
@@ -115,7 +139,7 @@ class Project:
         """
         return self.name
 
-    def get_database(self):
+    def get_impact_database(self):
         """ Get the impacts database of the project.
         
         Returns
@@ -123,8 +147,18 @@ class Project:
         DatabaseManager Obj.
             Impact database of the project.
         """
-        return self.database
+        return self.impact_database
 
+    def get_transportation_mode_impact_database(self):
+        """ Get the impacts database of the project.
+        
+        Returns
+        -------
+        DatabaseManager Obj.
+            Impact database of the tranportation modes.
+        """
+        return self.transport_mode_impact_database
+    
     def get_location(self):
         """ Retrieve the location of the project.
         
@@ -204,7 +238,7 @@ class Project:
             self.models = {}
 
         if database:
-            self.database = None
+            self.impact_database = None
 
     def save(self, file_path:(str)):
         """ Save as a *.pkl file.

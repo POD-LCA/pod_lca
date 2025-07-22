@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ...utilities import log
 
 
 class TransportMode:
@@ -20,20 +21,12 @@ class TransportMode:
         The name of the transportation mode (e.g., 'Truck', 'Rail').
     efficiency: int
         The efficiency level (e.g., 1, 2, 3).
-    fuel_type: str
-        The fuel type used.
-    electricity consumption: float
-        Electriciity consumption if an electric vehicle
     unit_impacts : Impacts Obj.
         Impacts from the transportation mode, per declared quantity and unit.
     unit_emissions : Emissions Obj.
         Emissions from the transportation mode, per declared quantity and unit.
-    inventories_declared_qty : float
-        The quantity for which the inventories are declared.
     inventories_declared_unit : Unit Obj.
         The unit corresponding to declared quantity of inventories.
-    limitations: list,
-        a list of limitations for the transportation mode.
     faf_mode: int
         FAF mode code for the transportation mode.
     cfs_mode: int
@@ -46,9 +39,7 @@ class TransportMode:
         self.efficiency = None
         self.unit_impacts = None
         self.unit_emissions = None
-        self.inventories_declared_qty = None
-        self.inventories_declared_unit = None
-        self.limitations = []
+        self.declared_unit = None
         self.faf_mode = None
         self.cfs_mode = None
 
@@ -180,18 +171,8 @@ class TransportMode:
             Emissions from the transportation mode, per declared quantity and unit.
         """
         return self.unit_emissions
-
-    def get_inventories_declared_qty(self):
-        """ Get the declared qty of the transportation mode.
-
-        Returns
-        -------
-        float
-            The quantity for which the inventories are declared.
-        """
-        return self.inventories_declared_qty
     
-    def get_inventories_declared_unit(self):
+    def get_declared_unit(self):
         """ Get the declared unit of the transportation mode.
 
         Returns
@@ -199,7 +180,7 @@ class TransportMode:
         Unit Obj.
             The unit corresponding to declared quantity of inventories.    
         """
-        return self.inventories_declared_unit
+        return self.declared_unit
     
     # ================================
     # Methods
@@ -210,18 +191,22 @@ class TransportMode:
         if (self.get_name() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
 
             database = self.get_parent().get_project().get_impact_database()
+            if database is not None:
+                inventories = database.get_data_entry(self)
+                self.declared_unit = inventories[database.get_unit_key()]
+                inventories_declared_qty = inventories[database.get_qty_key()]
 
-            unit_inventories = database.get_data_entry(self)
-            self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
-            self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
+                impacts = {key: inventories[key] / inventories_declared_qty for key in self.unit_impacts.record_attr_dict}
+                self.unit_impacts.update_qty(impacts)
 
-            impacts = {key: unit_inventories[key] for key in self.unit_impacts.record_attr_dict}
-            self.unit_impacts.update_qty(impacts)
+                emissions = {key: inventories[key] / inventories_declared_qty for key in self.unit_emissions.record_attr_dict}
+                self.unit_emissions.update_qty(emissions)
 
-            emissions = {key: unit_inventories[key] for key in self.unit_emissions.record_attr_dict}
-            self.unit_emissions.update_qty(emissions)
+                return self
+            else:
+                log("No transportation mode impact database set.", "Warn")
 
-        return self
+                return None
 
     
 if __name__ == '__main__':

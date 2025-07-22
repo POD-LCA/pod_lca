@@ -33,7 +33,7 @@ class AbstractPlot():
         """
         chart = cls()
 
-        chart.set_plot_from_plotter(plotter)
+        chart.set_plot(plotter)
 
         return chart
     
@@ -53,26 +53,14 @@ class AbstractPlot():
         """
         chart = cls()
 
-        chart.set_plot(plot)
+        chart.plot = plot
 
         return chart
     
     # ================================
     # Setters and Getters
     # ================================  
-    def set_plot(self, plot):
-        """ Set the plot.
-        
-        Parameters
-        ----------
-        plot : Object
-            Plot created by an AbstractPlotter Obj.        
-        """
-        self.plot = plot
-
-        return self
-
-    def set_plot_from_plotter(self, plotter):
+    def set_plot(self, plotter):
         """ Set the plot.
         
         Parameters

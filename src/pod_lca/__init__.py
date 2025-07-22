@@ -21,13 +21,13 @@ from . import units
 from . import visualizer
 from . import utilities
 from .lca_modules import location
-from .lca_modules import impacts
 from .lca_modules import uncertainty
+from .lca_modules import impacts
 from .lca_modules import electricity
+from .lca_modules import transportation
 from .lca_modules import material_screening
 from .lca_modules import building
 from .lca_modules import eol
-from .lca_modules import transportation
 from .lca_modules import dynamic_radiative_forcing
 
 import sys

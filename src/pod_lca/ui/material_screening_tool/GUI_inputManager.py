@@ -215,7 +215,7 @@ class GUIInputManager():
     @staticmethod
     def get_impact_data(project, row):
 
-        return project.get_database().get_impact_data(row)
+        return project.get_impact_database().get_impact_data(row)
     
     @staticmethod
     def set_impact_data(visualizer, item, database_row, close_error=True):
@@ -478,7 +478,7 @@ class GUIInputManager():
     @staticmethod
     def get_database_data(project):
 
-        return project.get_database().get_data_all()
+        return project.get_impact_database().get_data_all()
     
     @staticmethod
     def get_impact_categories():
@@ -495,7 +495,7 @@ class GUIInputManager():
         
         unit = GUIInputManager.units_map[unit]
 
-        project.get_database().set_custom_entry(flow, unit, impacts)
+        project.get_impact_database().set_custom_entry(flow, unit, impacts)
     
     # =================================
     # Error handling

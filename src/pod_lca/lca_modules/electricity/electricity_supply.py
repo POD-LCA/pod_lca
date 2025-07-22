@@ -213,7 +213,7 @@ class ElectricitySupply:
 
         return self
     
-    def set_unit(self, unit):
+    def set_declared_unit(self, unit):
         """ Set the declared unit of impacts.
     
         Parameters
@@ -379,7 +379,7 @@ class ElectricitySupply:
         """
         return self.scenario
     
-    def get_unit(self):
+    def get_declared_unit(self):
         """ Get the declared unit of the impacts.
         
         Returns
@@ -438,7 +438,7 @@ class ElectricitySupply:
 
         self.unit_impacts.clear_qty()
         self.unit_emissions.clear_qty()
-        supply_unit = self.get_unit()
+        supply_unit = self.get_declared_unit()
         for technology, percentage in self.get_consumption_mix().items():
             if technology in self.electricity_producers:
                 production_unit = self.electricity_producers[technology].get_declared_unit()

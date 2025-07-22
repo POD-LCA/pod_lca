@@ -7,5 +7,6 @@ from .cfs_dataset import CFSDataset
 from .logistics_link_foreign import ForeignLink
 from .project_logistic_manager import ProjectLogisticManager
 from .us_domestic_logistics_manager import USDomesticLogisticProject
+from .us_global_logistics_manager import USGlobalLogisticProject
 
 __all__ = ["DomesticLink", "ForeignLink", "LogisticLink", "ProjectLogisticManager", "Scenario", "TransportMode"]

@@ -13,9 +13,12 @@ from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ...units import KG_CARBON_DIOXIDE
+from ...units import KILOMETER
 from ...units import Unit
 from ...units import UNITS_MAP
 from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import log
 
 
 class Product(Master):
@@ -39,6 +42,8 @@ class Product(Master):
         The mass of product in weight units per unit of product's unit of measurement.
     trnasporter : TransportationProcess Obj.
         Transportation process, if the product is being transported, else None.
+    sctg_code : int
+        Standard Classification of Transported Goods (SCTG) code.
     mineral_carbonation_potential : bool
         Mineral carbonation potential of the product.
     is_material : bool
@@ -57,9 +62,9 @@ class Product(Master):
         self.weight = 0.0
         self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
-        self.transporter = None
         self.mineral_carbonation_potential = None
         self.is_material = True
+        self.sctg_code = None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -80,8 +85,8 @@ class Product(Master):
 
         self.weight = self.qty * self.density
 
-        if self.get_transporter() is not None:
-            transporter = self.get_transporter()
+        if self.get_transportation() is not None:
+            transporter = self.get_transportation()
             transporter.set_transported_weight()
 
         return self
@@ -154,22 +159,42 @@ class Product(Master):
 
         return self
 
-    def set_transporter(self, transporter):
+    def set_transportation(self, travel_dist=None, dist_unit=None, transport_scenario=None, return_trip_factor=None, mode_name=None, mode_efficiency=None):
         """ Set transport processes the product is subject to.
-            If not already added, will add the product to the transportation process as a transported product.
-            
-        Note
-        ----
-        This method is equivalent to calling 'set_transported_product' from the TransportationProcess Obj.
 
         Parameters
         ----------
-        TransportationProcess Obj.
-            Transportation process the product is subject to.
+        travel_dist : float
+            Transportation distance for goods
+        dist_unit : Unit Obj
+            Unit of measurement of distances.
+        transportation_scenario : str
+            Transportation scenario considered.
+        return_trip_factor : float
+            Return trip factor.
+        mode_name : str
+            Name of the transportation mode..
+        mode_efficiency : str
+            Efficiency of the transportation mode.
         """
-        self.transporter = transporter
-        if self not in transporter.get_transported_products():
-            transporter.set_transported_product(self)
+        if travel_dist is None:
+            transport_scenario = 'Local' if transport_scenario is None else transport_scenario
+            mode_efficiency = 'Median' if mode_efficiency is None else mode_efficiency
+            mode_name = 'Truck' if mode_name is None else mode_name
+        
+        dist_unit = KILOMETER if dist_unit is None else dist_unit
+
+        transportation_manager = self.get_model().get_transportation_manager()
+        if transportation_manager.get_impact_database() is not None:
+            transportation_manager.add_good(self, 
+                                            travel_dist=travel_dist,
+                                            shipping_dest=self.get_project().get_location(), 
+                                            shipping_org=None,
+                                            transport_scenario=transport_scenario,
+                                            distance_unit=dist_unit, 
+                                            return_trip_factor=None, 
+                                            mode_name=mode_name,
+                                            mode_efficiency=mode_efficiency)
 
         return self
        
@@ -190,7 +215,7 @@ class Product(Master):
         """ Find the tag used to identify electricity data in the database.
         """
         if self.get_impact_database_entry() is not None:
-            database = self.get_project().get_database()
+            database = self.get_project().get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
             
             electricity_tag = None
@@ -254,6 +279,26 @@ class Product(Master):
 
         return self
     
+    def set_sctg_code(self, code=None):
+        """ Set the Standard Classification of Transported Goods (SCTG) code for the material.
+        
+        Parameters
+        ----------
+        code : int
+            Standard Classification of Transported Goods (SCTG) code of the material
+        """
+        if code is None:
+            data_material = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_SCTG_CODE'])
+            if self.get_name() in data_material["material"].values:
+                sctg = data_material[data_material["material"] == self.get_name()].iloc[0, 1]
+                self.sctg_code = int(str(sctg))
+            else:
+                log("Material not found in the dataset", 'Warn')
+        else:
+            self.sctg_code = code
+
+        return self
+    
     # ================================
     # Getters
     # ================================      
@@ -305,7 +350,7 @@ class Product(Master):
         float
             Quantity of the electricity
         """
-        database = self.get_project().get_database()
+        database = self.get_project().get_impact_database()
         data_set = database.get_data_entry(self.get_impact_database_entry())
 
         qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
@@ -348,16 +393,17 @@ class Product(Master):
         """
         return self.density 
        
-    def get_transporter(self):
+    def get_transportation(self):
         """ Retrieve transport processes the product is subject to, if any.
 
         Returns
         -------
-        TransportationProcess Obj.
-            Transportation process the product is subject to, if any.
-            None, otherwise.
+        List of ~pod_lca.transportation.LogisticLink
+            Transportation legs the product is subject to.
         """
-        return self.transporter
+        transportation_manager = self.get_model().get_transportation_manager()
+
+        return transportation_manager.get_link(self)
 
     def get_mineral_carbonation_potential(self):
         """ Set mineral carbonation potential of the product.
@@ -369,6 +415,22 @@ class Product(Master):
         """
         return self.mineral_carbonation_potential
 
+    def get_sctg_code(self, digits=2):
+        """ Get the Standard Classification of Transported Goods (SCTG) code for the material.
+        
+        Parameters
+        ----------
+        digits : int
+            Significant digits of the Standard Classification of Transported Goods (SCTG) code of the material
+        """
+        if not self.sctg_code is None:
+            if digits <= len(str(self.sctg_code)):
+                return int(str(self.sctg_code)[:digits])
+            else:
+                raise ValueError(f"SCTG code length ({len(str(self.sctg_code))}) shorter than digits requested ({digits}).")
+        else:
+            return self.sctg_code
+    
     # ================================
     # Methods
     # ================================    
@@ -385,7 +447,7 @@ class Product(Master):
         self.update_electricity_records()
 
         if self.get_mineral_carbonation_potential() is None and self.get_impact_database_entry() is not None:
-            data_entry = self.get_project().get_database().get_data_entry(self.get_impact_database_entry())
+            data_entry = self.get_project().get_impact_database().get_data_entry(self.get_impact_database_entry())
             key = config['setup']['impacts']['ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER']
             if key in data_entry.index:
                 if isinstance(data_entry[key], (bool, np_bool)):
@@ -412,7 +474,7 @@ class Product(Master):
             if self.get_electricity_database_tag() is None:
                 self.set_electricity_database_tag()
             
-            database = self.get_project().get_database()
+            database = self.get_project().get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
 
             electricity_tag = self.get_electricity_database_tag()

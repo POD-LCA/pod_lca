@@ -22,7 +22,7 @@ class RadarChart(AbstractPlot):
     # ================================
     # Setters and Getters
     # ================================  
-    def set_plot_from_plotter(self, plotter):
+    def set_plot(self, plotter):
         """ Set the plot.
     
         Parameters

@@ -72,7 +72,7 @@ class PedigreeScore:
         
         return self
 
-    def set_item_DQS(self):
+    def set_DQS(self):
         """ Calculate and set the Data Quality Score of the pedigree score object.
 
         Returns
@@ -100,7 +100,7 @@ class PedigreeScore:
         """ 
         return self.parent
 
-    def get_item_DQS(self):
+    def get_DQS(self):
         """ Get the Data Quality Score of the object.
         
         Returns
@@ -161,7 +161,7 @@ class DataQualityAnalysis:
 
     def __init__(self):
         self.model = None
-        self.DQS = None
+        self.model_DQS = None
         self.normalised_DQS = None
         
     @classmethod
@@ -169,7 +169,7 @@ class DataQualityAnalysis:
         data_quality_analysis = cls()
         data_quality_analysis.set_model(model)
         
-        data_quality_analysis.setPedigreeScores()
+        data_quality_analysis.set_pedigree_scores()
 
         model.data_quality = data_quality_analysis
 
@@ -193,7 +193,7 @@ class DataQualityAnalysis:
         DQS : float
             Data Quality Score.
         """
-        self.DQS = DQS
+        self.model_DQS = DQS
 
     def set_normalised_DQS(self, nDQS):
         """ Set normalised Data Quality Score of the model.
@@ -223,7 +223,7 @@ class DataQualityAnalysis:
         float
             Data Quality Score.
         """
-        return self.DQS
+        return self.model_DQS
 
     def get_normalised_DQS(self):
         """ Get the normalised Data Quality Score of the model.
@@ -235,23 +235,23 @@ class DataQualityAnalysis:
         """
         return self.normalised_DQS
 
-    def setPedigreeScores(self):
+    def set_pedigree_scores(self):
         """ Set pedigree scores for all products/processes in a model.
         """
         for obj in self.model.get_all_items():
             PedigreeScore.from_parent(obj)
         
-        self.setTemporalCorrelationScores()
-        self.setGeographicalCorrelationScores()
+        self.set_temporal_correlation_scores()
+        self.set_geographical_correlation_scores()
 
         return self
     
-    def setTemporalCorrelationScores(self):
+    def set_temporal_correlation_scores(self):
         """ Update all Temporal Correlation scores.
         """
         pass 
 
-    def setGeographicalCorrelationScores(self):
+    def set_geographical_correlation_scores(self):
         """ Update all Temporal Correlation scores.
         """
         pass

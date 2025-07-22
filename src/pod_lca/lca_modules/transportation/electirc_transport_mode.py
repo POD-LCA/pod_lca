@@ -99,7 +99,7 @@ class ElectricTransportMode(TransportMode):
         electricity_supply.set_geographical_scope('National') # Default to National average
         electricity_supply.set_scenario('MidCase')
 
-        return electricity_supply.get_unit_impacts(), electricity_supply.get_unit_emissions(), electricity_supply.get_unit()
+        return electricity_supply.get_unit_impacts(), electricity_supply.get_unit_emissions(), electricity_supply.get_declared_unit()
 
     # ================================
     # Methods

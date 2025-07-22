@@ -201,7 +201,7 @@ class Master:
         """
         self.impact_database_entry = database_item
 
-        database = self.get_project().get_database()
+        database = self.get_project().get_impact_database()
 
         if database_item is None:
             self.inventories_declared_unit = self.get_unit()

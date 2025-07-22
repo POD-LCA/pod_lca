@@ -20,43 +20,13 @@ class CFSDataset:
     def __init__(self):
         self.cfs_dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH']) 
         self.cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
-        self.sctg_codes = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_SCTG_CODE'])
 
-    def get_sctg_code(self, material ,digit=2):
-        """ Get the SCTG code based on the material category.
-
-        Parameters
-        ----------
-        material : str
-            The material category for which to retrieve the SCTG code.
-        digit: int
-            the digit of the SCTG code to retrieve.
-
-        Returns
-        -------
-        int
-            The SCTG code of the material.
-
-        Raises
-        ------
-        ValueError
-            If the material is not found in the dataset.
-        """
-        data_material = self.sctg_codes
-        if material not in data_material["material"].values:
-            raise ValueError("material not found in the dataset")
-        
-        sctg = data_material[data_material["material"] == material].iloc[0, 1]
-        sctg = int(str(sctg)[:digit])
-
-        return sctg
-
-    def filter_datasets(self, sctg=None, destination=None, origin=None, mode=None):
+    def filter_datasets(self, material=None, destination=None, origin=None, mode=None):
         """ Filter the CFS dataset based on the provided parameters.
         
         Parameters
         ----------
-        sctg : int, optional
+        material : ~pod_lca.materials_screening.Master
             The Standard Classification of Transported Goods (SCTG) code to filter by.
         destination : Location, optional
             The destination location to filter by.
@@ -76,10 +46,11 @@ class CFSDataset:
             If no data is found for the provided SCTG code, destination, or mode.
         """
         cfs = self.cfs_dataset
+        sctg_code = material.get_sctg_code(digits=2)
 
         # filter SCTG code
-        if isinstance(sctg, int):
-            cfs_filtered = cfs[cfs["SCTG"] == sctg]
+        if isinstance(sctg_code, int):
+            cfs_filtered = cfs[cfs["SCTG"] == sctg_code]
             if cfs_filtered.empty:
                 raise ValueError("Material not found in the CFS dataset")
             cfs = cfs_filtered

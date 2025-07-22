@@ -45,7 +45,7 @@ class DataDistribution:
         self.data = None
         self.dist_name = None
         self.dist = None
-        self.attr = None
+        self.attr_name = None
         self.parent = None
         self.scenarios = {'low': 0.2, 'med': 0.5, 'high':0.8}
         self.is_cts =None
@@ -193,7 +193,7 @@ class DataDistribution:
         attr : str.
             Attribute to which the dataset correspond.
         """ 
-        self.attr = attr
+        self.attr_name = attr
 
         return self
     
@@ -250,7 +250,7 @@ class DataDistribution:
         str.
             Attribute to which the dataset correspond.
         """ 
-        return self.attr
+        return self.attr_name
 
     def get_parent(self):
         """ Get parent of the dataset.

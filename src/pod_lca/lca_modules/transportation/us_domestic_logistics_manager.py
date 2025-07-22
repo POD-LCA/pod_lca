@@ -17,6 +17,11 @@ class USDomesticLogisticProject(ProjectLogisticManager):
     """ A project in US uding domestic logistic.
     """
 
+    def __init__(self):
+        super().__init__()
+        self.dataset = None
+
+
     # ================================
     # Constructors
     # ================================
@@ -35,10 +40,27 @@ class USDomesticLogisticProject(ProjectLogisticManager):
             Project created.
         """
         new_project = super().new(name)
-        new_project.dataset = CFSDataset()
+        new_project.set_dataset(CFSDataset())
 
         return new_project  
     
+    # ================================
+    # Setters and Getters
+    # ================================
+    def set_dataset(self, dataset):
+        """ Set background dataset for the proect.
+        """
+        self.dataset = dataset
+
+        return self
+
+    def get_dataset(self, name=None):
+        """ Return the dataset corresponding to the project.
+        """
+        if name is None:
+            return self.dataset
+        elif isinstance(self.database, dict) and isinstance(name, str):
+            return self.dataset[name] 
     # ================================
     # Model Methods
     # ================================
@@ -51,7 +73,6 @@ class USDomesticLogisticProject(ProjectLogisticManager):
                   distance_unit= KILOMETER, 
                   return_trip_factor=None, 
                   mode_name=None,
-                  mode_fuel_type="Regular", 
                   mode_efficiency="Median"):
         """ Add goods to the project. This method creates the appropriate logistick links based on the data provided
 
@@ -78,7 +99,7 @@ class USDomesticLogisticProject(ProjectLogisticManager):
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
-        self.goods_links_map[good] = []
+        self.links[good] = []
 
         # select type of link
         if isinstance(travel_dist, (int, float)):

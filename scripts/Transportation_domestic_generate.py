@@ -72,7 +72,7 @@ for material in Material_names:
 
                             try:
                                 distance = link.get_travel_dist()
-                                RTT =  project.goods_links_map[product][0].get_return_trip_factor()
+                                RTT =  project.links[product][0].get_return_trip_factor()
                                 impacts = project.get_impacts(product)
                                 emissions = project.get_emissions(product)
 

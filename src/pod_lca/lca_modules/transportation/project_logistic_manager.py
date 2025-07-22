@@ -21,7 +21,7 @@ class ProjectLogisticManager:
     ----------
     name : str
         name of the project.
-    goods_links_map : dict
+    links : dict
         Dictionary mapping products to their corresponding transportation links.
     mode_impact_database : TranportationModeImpactsDatabase Obj
         Database containing unit impacts for transportation modes.
@@ -31,9 +31,8 @@ class ProjectLogisticManager:
 
     def __init__(self):
         self.name = None
-        self.goods_links_map = {}
+        self.links = {}
         self.mode_impact_database = None
-        self.dataset = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
@@ -64,25 +63,6 @@ class ProjectLogisticManager:
         new_project.set_name(name)
 
         return new_project  
-    
-    @classmethod
-    def US_domestic_project(cls, name=None):
-        """ Create a new project to generate for a project in USA procuring material from the USA.
-
-        Parameters
-        ----------
-        name : str
-            Name of the project.
-
-        Returns
-        -------
-        Project Obj.
-        """
-        new_project = cls.new()
-
-        new_project.dataset = CFSDataset()
-
-        return new_project
 
     # ================================
     # Setters
@@ -116,13 +96,6 @@ class ProjectLogisticManager:
         else:
             raise TypeError("Database input not recognized")
         
-        return self
-    
-    def set_dataset(self, dataset):
-        """ Set background dataset for the proect.
-        """
-        self.dataset = dataset
-
         return self
     
     def set_project_origin(self, origin:(str)):
@@ -173,18 +146,19 @@ class ProjectLogisticManager:
         list
             List of links.
         """
-        return list(*self.goods_links_map.values())
+        return sum(self.links.values(), [])
+
     
     def get_link(self, product):
         """ Retrieve the links corresponding to a product.
         
         Parameters
         ----------
-        product : Master Obj.
+        product : ~pod_lca.materials_screening.Product Obj.
             Object for which the transportation links correspond to.
         """
-        if product in self.goods_links_map:
-            return self.goods_links_map[product]
+        if product in self.links:
+            return self.links[product]
 
     def get_goods(self):
         """ Retrieve the goods of the project.
@@ -194,7 +168,7 @@ class ProjectLogisticManager:
         list
             List of goods.
         """
-        return list(self.goods_links_map.keys())
+        return list(self.links.keys())
 
     def get_impact_database(self):
         """ Retrieve the transportation mode impact database.
@@ -205,14 +179,6 @@ class ProjectLogisticManager:
             Transportation mode impact database.
         """
         return self.mode_impact_database
-    
-    def get_dataset(self, name=None):
-        """ Return the dataset corresponding to the project.
-        """
-        if name is None:
-            return self.dataset
-        elif isinstance(self.database, dict) and isinstance(name, str):
-            return self.dataset[name]
     
     def get_impacts(self, product=None):
         """ Retrieve the impacts of the project.
@@ -230,16 +196,16 @@ class ProjectLogisticManager:
         if product is None:
             impact = Impacts.from_parent(self)
             for link in self.get_links():
-                impact += link.get_impact()
+                impact += link.get_impacts()
 
             return impact
         
         else:
-            if product not in self.goods_links_map:
+            if product not in self.links:
                 raise ValueError(f"Product '{product}' not found in the project.")
             
             impact = Impacts.from_parent(self)
-            for link in self.goods_links_map[product]:
+            for link in self.links[product]:
                 impact += link.get_impacts()
 
             return impact
@@ -265,11 +231,11 @@ class ProjectLogisticManager:
             return impact
         
         else:
-            if product not in self.goods_links_map:
+            if product not in self.links:
                 raise ValueError(f"Product '{product}' not found in the project.")
             
             impact = Emissions.from_parent(self)
-            for link in self.goods_links_map[product]:
+            for link in self.links[product]:
                 impact += link.get_emissions()
 
             return impact
@@ -313,7 +279,7 @@ class ProjectLogisticManager:
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
-        self.goods_links_map[good] = []
+        self.links[good] = []
 
         # select type of link
         if isinstance(travel_dist, (int, float)):
@@ -341,7 +307,7 @@ class ProjectLogisticManager:
         # create link
         link = LinkClass.in_project(good, self, 'transport_' + good.get_name())
         
-        link.set_mode(mode_name, mode_fuel_type, mode_efficiency)
+        link.set_mode(mode_name, mode_efficiency)
 
         link.set_travel_dist(travel_dist, distance_unit, return_trip_factor)
         link.set_shipping_destination(shipping_dest)
@@ -357,7 +323,7 @@ class ProjectLogisticManager:
     def clear_project(self, links=True, impacts=True):  
         """ Clear the project by removing all links and impacts.
         """
-        self.goods_links_map = {}
+        self.links = {}
 
         return self
 

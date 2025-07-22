@@ -10,6 +10,7 @@ __version__ = "0.1.0"
 from tqdm import tqdm
 
 from pod_lca.impacts import ImpactsDatabase
+from pod_lca.location import Location
 from pod_lca.material_screening import Project
 from pod_lca.units import KILOGRAM
 from pod_lca.units import UNITS_MAP
@@ -22,9 +23,14 @@ test_dict = DataImporter.csv_to_dict(test_data, 'test name')
 
 project = Project()
 
+# concrete_yard = Location.from_str("Seattle, Washington")
+# project.set_location(concrete_yard)
+
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impacts_podlca_data.csv', additional_headers='Mineral Carbonation Potential')
-project.set_database(custom_impact_database)
+project.set_impact_database(custom_impact_database)
+
+# project.set_transportation_mode_impact_database(r'data/transportation_podlca_emission.csv')
 
 my_model = project.add_model("Test")
 GWP_tag = config['setup']['impacts']['CARBONATION_EFFECTS_IMPACT_CATEGORY']

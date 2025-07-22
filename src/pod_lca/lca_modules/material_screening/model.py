@@ -14,8 +14,10 @@ from . import Emission
 from . import Fuel
 from . import Process
 from . import Product
-from . import TransportationProcess
 from . import Waste
+from ..transportation import ProjectLogisticManager
+from ..transportation import USDomesticLogisticProject
+from ..transportation import USGlobalLogisticProject
 from ...units import UNITS_MAP
 from ...units import KILO 
 from ...units import WATT_HOUR 
@@ -29,16 +31,22 @@ class Model:
 
     Attributes
     ----------
-    project : Project Obj.
+    project : ~pod_lca.materials_screening.Project
         Project on which the calculator operates.
     name : str
         Name of the model.
-    processes : list of Process Obj.
+    processes : list of ~pod_lca.materials_screening.Process Obj.
         Processes in the model.
-    products : list of Product Obj.
+    products : list of ~pod_lca.materials_screening.Product Obj.
         Products in the model.
+    transportation_manager : ~pod_lca.transportation.ProjectLogisticManager
+        Logistics manager for the model.
     impacts : dict
-        Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+        ~pod_lca.impacts.Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+    emissions : dict
+        ~pod_lca.impacts.Emissions objects categorized by life cycle stage {life cycle stage (str): list of Emission Obj.}
+    carbon_storage :
+        ~pod_lca.impacts.CarbonStorage objects categorized by life cycle stage {life cycle stage (str): list of CarbonStorage Obj.}
     """
 
     def __init__(self):
@@ -46,9 +54,10 @@ class Model:
         self.name = None
         self.processes = []
         self.products = []
-        self.impacts = {'A1':[], 'A2':[], 'A3':[]}
-        self.emissions = {'A1':[], 'A2':[], 'A3':[]}
-        self.carbon_storage = {'A1':[], 'A2':[], 'A3':[]}
+        self.transportation_manager = None
+        self.impacts = {'A1':[],  'A3':[]}
+        self.emissions = {'A1':[], 'A3':[]}
+        self.carbon_storage = {'A1':[], 'A3':[]}
 
     def __str__(self):
         str = "="*75 + "\n" + f"Product/Process List of {self.get_name()}\n" + "="*75 + "\n"
@@ -67,7 +76,7 @@ class Model:
     # Constructors
     # ================================
     @classmethod
-    def in_project(cls, project, name=None):    
+    def in_project(cls, project, name=None, transport_scope='local'):    
         """ Create a model object from a parent object.
         
         Parameters
@@ -76,7 +85,9 @@ class Model:
             Project to which the model belong.
         name : str.
             Name of the model.
-        
+        transport_scope : {'local', 'global'}
+            Transportation scope of the model.  
+
         Returns
         -------
         Model Obj.
@@ -89,6 +100,10 @@ class Model:
             model.set_name(name)
         else:
             model.set_name(f"Model_{len(project.models)}")
+
+        model.set_transportation_manager(transport_scope)
+        if project.get_transportation_mode_impact_database() is not None:
+            model.get_transportation_manager().set_impact_database(project.get_transportation_mode_impact_database())
 
         return model
     
@@ -171,6 +186,8 @@ class Model:
         if tmp_transportation_map:
             for entry in tmp_transportation_map:
                 tmp_transportation_map[entry]['transporter'].set_transported_product(tmp_transportation_map[entry]['product'])
+
+        # TODO: update with new transportation manager
                 
         return model    
     
@@ -200,6 +217,28 @@ class Model:
         self.name = name
 
         return self
+
+    def set_transportation_manager(self, logistic_type='local'):
+        """ Set the logistics manager of the model.
+        
+        Parameters
+        ----------
+        logistic_type : {'local', 'global'}
+            Transportation scope of the model.
+        """
+        if self.get_project().get_location() is None:
+            self.transportation_manager = ProjectLogisticManager.new('transportation')
+        elif self.get_project().get_location().get_country_code() == 'US':
+            if logistic_type == 'local':
+                self.transportation_manager = USDomesticLogisticProject.new('transportation')
+            elif logistic_type == 'global':
+                self.transportation_manager = USGlobalLogisticProject.new('transportation')
+            else: 
+                raise ValueError(f"Logistic type {logistic_type} not recognized.")
+        else:
+            self.transportation_manager = ProjectLogisticManager.new('transportation')
+
+        return self
     
     def get_project(self):
         """ Retrieve the project object.
@@ -221,6 +260,8 @@ class Model:
         """
         return self.name
 
+
+    
     def get_processes(self):
         """ Retrieve all the processes in the model.
 
@@ -244,24 +285,36 @@ class Model:
     def get_all_items(self):
         """ Retrieve all the products and processes in the model.
         
-            Returns
-            -------
-            list of Master Obj.
-                All products and processess in the model.
+        Returns
+        -------
+        list of Master Obj.
+            All products and processess in the model.
 
         """
         return self.get_products() + self.get_processes()
+    
+    def get_transportation_manager(self):
+        """ Retrieve the logistics manager of the model.
+        
+        Returns
+        -------   
+        ~pod_lca.transportation.ProjectLogisticManager
+            Logistics manager for the model.     
+        """
+        return self.transportation_manager
 
     def get_impacts(self):
         """ Retrieve all the impacts in the model categorized by life cycle stage.
 
-            Returns
-            -------
-            dict.
-                Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+        Returns
+        -------
+        dict.
+            Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
+
+        self.impacts['A2'] = [self.get_transportation_manager().get_impacts()]
 
         return self.impacts
     
@@ -273,6 +326,11 @@ class Model:
             dict.
                 Emission objects categorized by life cycle stage {life cycle stage (str): list of Emissions Obj.}
         """
+        for item in self.get_all_items():
+            item.update_inventory_records()
+
+        self.emissions['A2'] = [self.get_transportation_manager().get_emissions()]
+
         return self.emissions
     
     def get_carbon_storage(self):
@@ -283,6 +341,9 @@ class Model:
             dict.
                 Carbon storage objects categorized by life cycle stage {life cycle stage (str): list of Carbon Storage Obj.}
         """
+        for item in self.get_all_items():
+            item.update_inventory_records()
+        
         return self.carbon_storage
             
     # ================================
@@ -319,35 +380,7 @@ class Model:
         
         return process
     
-    def add_transportation_process(self, name, stage, transported_distance, unit, impacts_from):
-        """ Create and add process to the model.
-
-        Parameters
-        ----------
-        name : str.
-            Name of the process.
-        stage : str.
-            Life cycle stage.
-        qty : float
-            Quantity processed.
-        unit : Unit Obj
-            Unit of the quantity.
-        impacts_from : str
-            Name of the impact database entry from which to use impacts.
-
-        Returns
-        -------
-        Process Obj.
-            Process object created.
-        """
-        n = len(self.get_processes()) 
-        process = TransportationProcess.new(n, name, self, stage, transported_distance, unit, impacts_from)
-
-        self.processes.append(process)
-        
-        return process
-    
-    def add_product(self, name, stage, qty, unit, impacts_from):
+    def add_product(self, name, stage, qty, unit, impacts_from, sctg_code=None):
         """ Create and add product to the model.
 
         Parameters
@@ -362,6 +395,8 @@ class Model:
             Unit of measurement.            
         impacts_from : str
             Name of the impact database entry from which to use impacts.
+        sctg_code : int
+            Standard Classification of Transported Goods (SCTG) code of the material        
 
         Returns
         -------
@@ -370,6 +405,8 @@ class Model:
         """
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
+        product.set_sctg_code(sctg_code)
+        product.set_transportation()
 
         self.products.append(product)
         
