@@ -628,7 +628,10 @@ class Model:
                 for impact in impact_lst:
                     data[stage] += impact.get_record(impact_cat)
 
-            return data
+            sorted_data = sorted(data.items())
+            sorted_dict = dict(sorted_data)
+
+            return sorted_dict
 
     def get_impacts_by_category(self):
         """ Returns impact data by impact category for given model.

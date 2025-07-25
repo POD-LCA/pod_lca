@@ -16,6 +16,8 @@ from pod_lca.units import KILO
 from pod_lca.units import KILOGRAM
 from pod_lca.units import KILOMETER
 from pod_lca.units import WATT_HOUR
+from pod_lca.visualizer import BarChart
+from pod_lca.visualizer import MatplotlibPlotter
 
 project = Project()
 
@@ -45,3 +47,7 @@ print(project)
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
 print(hotspot_analysis)
+
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(CLT_model.get_impacts_by_LCstages('GWP'), "Parameter by category", "Category", "Parameter (unit)")
+graph.show()
