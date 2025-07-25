@@ -17,13 +17,13 @@ class ElectricTransportMode(TransportMode):
 
     Attributes
     ----------
-    location : Location Obj.
+    location : ~pod_lca.location.Location
         Location where the electricity consumption occurs.
     year : int
         The year of electricity consumption.
     electricity_consumption : float
         Electricity consumption by the transportation mode.
-    electricity_consumption_units : Unit Obj
+    electricity_consumption_units : ~pod_lca.unit.Unit
         Unit corresponding to electricity consumption.
     """
 
@@ -42,7 +42,7 @@ class ElectricTransportMode(TransportMode):
         
         Parameters
         ----------
-        location : Location Obj.
+        location : ~pod_lca.location.Location
             Location of electricity consumption.
         """
         self.location = location
@@ -57,13 +57,20 @@ class ElectricTransportMode(TransportMode):
         
         Returns
         -------
-        Location Obj.
+        ~pod_lca.location.Location
             Location of electricity consumption.
         """        
         return self.location
     
     def get_electricity_consumption(self):
         """ Retrieve the electricity consumption of the transportation mode.
+
+        Returns
+        -------
+        float
+            Electricity consumption.
+        ~pod_lca.unit.Unit
+            Corresponding unit of measurement.
         """
         if self.electricity_consumption is None:
             dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['ELECTRIC_VEHICLES'])
@@ -74,8 +81,8 @@ class ElectricTransportMode(TransportMode):
             self.electricity_consumption = unit_data['electricity_consumption']
             self.electricity_consumption_unit = UNITS_MAP[unit_data['electricity_unit']]
 
-            self.inventories_declared_qty = unit_data['qty']
-            self.inventories_declared_unit = UNITS_MAP[unit_data['unit']]
+            self.declared_qty = unit_data['qty']
+            self.declared_unit = UNITS_MAP[unit_data['unit']]
 
         return self.electricity_consumption, self.electricity_consumption_unit
     
@@ -88,11 +95,11 @@ class ElectricTransportMode(TransportMode):
 
         Returns
         -------
-        Impacts Obj
+        ~pod_lca.impacts.Impacts
             Unit electricity impacts.
-        Emissions Obj.
+        ~pod_lca.impacts.Emissions
             Unit electricity emissions.
-        Unit Obj.
+        ~pod_lca.unit.Unit
             Corresponding electricity supply unit.
         """
         electricity_supply = ElectricitySupply.from_location(self.get_location())

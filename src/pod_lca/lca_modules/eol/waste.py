@@ -8,13 +8,13 @@ __version__ = "0.1.0"
 from math import isnan
 
 from . import WasteProcess
-from ..material_screening import Master
+from ..material_screening import Product
 from ...utilities import ArrayMethods
 from ...utilities import config
 from ...utilities import log
 
 
-class Waste(Master):
+class Waste(Product):
     """ Waste product handling the end-of-life or product. This inherit from the material.Master object.
     
     Attributes

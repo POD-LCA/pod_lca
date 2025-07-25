@@ -6,6 +6,7 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
+from . import TransportDataset
 from ..location import Location
 from ..transportation import TransportMode
 from ...utilities import config
@@ -13,8 +14,8 @@ from ...utilities import DataImporter
 from ...utilities import log
 
 
-class CFSDataset:
-    """ A class to handle the CFS dataset for transportation links.
+class CFSDataset(TransportDataset):
+    """ A class to handle the CFS dataset for transportation legs.
     """
 
     def __init__(self):
@@ -28,11 +29,11 @@ class CFSDataset:
         ----------
         material : ~pod_lca.materials_screening.Master
             The Standard Classification of Transported Goods (SCTG) code to filter by.
-        destination : Location, optional
+        destination : ~pod_lca.location.Location, optional
             The destination location to filter by.
-        origin : Location, optional
+        origin : ~pod_lca.location.Location, optional
             The origin location to filter by.
-        mode : TransportMode, optional
+        mode : ~pod_lca.transportation.TransportMode, optional
             The transportation mode to filter by.
         
         Returns
@@ -43,7 +44,7 @@ class CFSDataset:
         Raises
         ------
         ValueError
-            If no data is found for the provided SCTG code, destination, or mode.
+            If no data is found for the provided SCTG code or mode.
         """
         cfs = self.cfs_dataset
         sctg_code = material.get_sctg_code(digits=2)
@@ -55,6 +56,14 @@ class CFSDataset:
                 raise ValueError("Material not found in the CFS dataset")
             cfs = cfs_filtered
 
+        # Mode
+        if isinstance(mode,  TransportMode):
+            cfs_modes_mapping = self.cfs_modes_mapping
+            cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
+            if cfs_filtered.empty:
+                raise ValueError("Transportation mode not in CFS dataset")
+            cfs = cfs_filtered  
+        
         # Destination
         if isinstance(destination, Location):
             cfs_filtered = cfs[cfs["DEST_STATE"] == destination.get_cfs_area()]
@@ -72,14 +81,6 @@ class CFSDataset:
                 cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state_code]
                 log(f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
             cfs = cfs_filtered
-
-        # Mode
-        if isinstance(mode,  TransportMode):
-            cfs_modes_mapping = self.cfs_modes_mapping
-            cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
-            if cfs_filtered.empty:
-                raise ValueError("Transportation mode not in CFS dataset")
-            cfs = cfs_filtered  
       
         return cfs
     
@@ -91,7 +92,7 @@ class CFSDataset:
         ----------
         dataset : pandas.DataFrame
             The filtered CFS dataset.
-        scenario : str
+        scenario : {'Local', 'Regional'. 'Regional_c', 'National', 'Average'}
             The scenario to filter the distances by.
         
         Returns
@@ -102,38 +103,35 @@ class CFSDataset:
         Raises
         ------
         ValueError
-            If the scenario is not recognized or if no data is found for the scenario.
+            If the scenario is not recognized.
         """
-        quartiles = dataset["SHIPMT_DIST_ROUTED"].quantile([0.25, 0.5, 0.75]).values
-
-        def assign_quartile(x, q1, q2, q3):
-            if x <= q1:
-                return 'Q1'
-            elif x <= q2:
-                return 'Q2'
-            elif x <= q3:
-                return 'Q3'
-            else:
-                return 'Q4'
-        dataset['quartile'] = dataset["SHIPMT_DIST_ROUTED"].apply(assign_quartile, args=(quartiles[0], quartiles[1], quartiles[2]))
-        
-        if len(dataset) < 4:
-            domestic_dis = dataset["SHIPMT_DIST_ROUTED"].mean()
+        if len(dataset) < 4 or scenario == "Average":
+            return dataset["SHIPMT_DIST_ROUTED"].mean()
         else:
             if scenario == "Local":
-                domestic_dis = dataset[dataset["quartile"] == "Q1"]["SHIPMT_DIST_ROUTED"].mean()
+                n = 1
             elif scenario == "Regional":
-                domestic_dis = dataset[dataset["quartile"] == "Q2"]["SHIPMT_DIST_ROUTED"].mean()
+                n = 2
             elif scenario == "Regional_c":
-                domestic_dis = dataset[dataset["quartile"] == "Q3"]["SHIPMT_DIST_ROUTED"].mean()
+                n = 3
             elif scenario == "National":
-                domestic_dis = dataset[dataset["quartile"] == "Q4"]["SHIPMT_DIST_ROUTED"].mean()
-            elif scenario == "Average":
-                domestic_dis = dataset["SHIPMT_DIST_ROUTED"].mean()
+                n = 4
             else:
                 raise ValueError(f"{scenario} scenario is not recognized")
 
-        return domestic_dis
+            sorted_data = dataset["SHIPMT_DIST_ROUTED"].sort_values(ignore_index=True)
+            length = len(sorted_data)
+            base_size = length // 4
+            extras = length % 4
+
+            group_sizes = [base_size + (1 if i < extras else 0) for i in range(4)]
+
+            start = sum(group_sizes[:n - 1])
+            end = start + group_sizes[n - 1]
+
+            group = sorted_data[start:end]
+
+            return group.mean()
 
 
 if __name__ == '__main__':

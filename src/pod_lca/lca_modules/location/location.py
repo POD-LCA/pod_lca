@@ -48,9 +48,9 @@ class Location:
         self.country = None
         self.country_code =None
         self.cfs_area = None
-        self.faf_foreign = None
-        self.faf_domestic = None
-        self.marine_region = None
+        self.faf_foreign_code = None
+        self.faf_foreign_name = None
+        self.faf_domestic_codes = None
         self.us_coast = None
         self.ferc_region = None
         self.balancing_authority = None
@@ -98,7 +98,6 @@ class Location:
                 location.set_us_coast()
             else:
                 location.set_faf_foreign_region()
-            location.set_marine_region()
 
             return location
 
@@ -187,6 +186,47 @@ class Location:
                 print(f"Error retrieving location data: {e}")
 
         return location
+    
+    @classmethod
+    def from_faf_regions(cls, faf_region, set_all_location_data=False):
+        """ Create location from Freight Analysis Framework (FAF) region
+        
+        Parameters
+        ----------
+        faf_region : {'Rest of Americas', 'Europe', 'Africa', 'SW & Central Asia', 'Eastern Asia', 'SE Asia & Oceania'}
+            FAF region name.
+        country : str
+            Country name.
+        """
+        if faf_region not in [None, 'Rest of Americas', 'Europe', 'Africa', 'SW & Central Asia', 'Eastern Asia', 'SE Asia & Oceania']:
+            raise ValueError('FAF region not recognized.')
+
+        location = cls()
+
+        faf_foreign_regions = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
+        faf_foreign_regions_city = DataImporter.json_to_dict(config['file_paths']['location']['FAF_CITY_REPRESENTATION'])
+
+        location.faf_foreign_code = faf_foreign_regions[faf_region]
+        location.faf_foreign_name = faf_region
+        location.location_name = faf_foreign_regions_city[location.faf_foreign_code]
+
+        if set_all_location_data:
+            try:
+                string = location.location_name
+                geolocator = Nominatim(user_agent="pod_lca")
+
+                location_data = geolocator.geocode(string, featuretype=['settlement', 'city', 'town', 'village', 'county', 'state', 'country'], language='en', addressdetails=True, extratags=True) 
+                location.set_regionality(location_data)
+                location.set_cordinates(location_data)
+
+                location_data = geolocator.reverse(location.get_cordinates(), addressdetails=True, zoom=15, language='en') # zoom level 14 = neighbourhood
+                location.set_city(location_data)
+
+            except Exception as e:
+                print(f"Error retrieving location data: {e}")
+
+        return location
+
     # ================================
     # Setters
     # ================================
@@ -226,7 +266,7 @@ class Location:
 
         return self
 
-    def set_cordinates(self, geopy_location_nominatim):
+    def set_cordinates(self, geopy_location_nominatim=None):
         """ Set the coordinates of the location.
 
         Parameters
@@ -234,6 +274,16 @@ class Location:
         geopy_location_nominatim : <class 'geopy.location.Location'>
             Geopy location object from Nominatim
         """
+        if geopy_location_nominatim is None:
+            for attr in ['location_name', 'zipcode', 'city', 'state', 'country']:
+                if getattr(self, attr) is None:
+                    pass
+                else:
+                    string = getattr(self, attr)
+                    break
+            geolocator = Nominatim(user_agent="pod_lca", timeout=10)
+            geopy_location_nominatim = geolocator.geocode(string, language='en', addressdetails=True, extratags=True)
+
         self.coords = geopy_location_nominatim.latitude, geopy_location_nominatim.longitude
 
         return self
@@ -320,7 +370,7 @@ class Location:
         return self
     
     def set_cfs_area(self):
-        """ Set the state code from the COmodity Flow Survey (CFS).
+        """ Set the state code from the Comodity Flow Survey (CFS).
         """    
         cfs_area = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE'])
         state = self.get_state()
@@ -340,11 +390,15 @@ class Location:
 
         for key, value in faf_foreign_region_country.items():
             if country in value:
-                self.faf_foreign = key
-                return self
+                self.faf_foreign_code = key
+                break
+        
+        faf_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
+        for key, value in faf_region.items():
+            if self.faf_foreign_code == value:
+                self.faf_foreign_name = key
+                break
             
-        log("FAF foreign region not identified", "Warn")
-        self.faf_foreign = None
         return self
 
     def set_faf_domestic_region(self):
@@ -355,10 +409,10 @@ class Location:
 
         for key,value in faf_domestic_region.items():
             if state in key:
-                self.faf_domestic = value
+                self.faf_domestic_codes = value
                 return self
         log(f"State '{state}' not found in any FAF region.", "Warn")
-        self.faf_domestic = None
+        self.faf_domestic_codes = None
         return self
 
     def set_ferc_region(self):
@@ -433,45 +487,21 @@ class Location:
             
         return self
 
-    def set_marine_region(self):
-        """ Set the marine region of the location.
-        """
-        try:
-            country = self.get_country()
-            faf_region_countries = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION_COUNTRY'])
-            faf_region = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
-
-            for key, value in faf_region_countries.items():
-                if country in value:
-                    region = key
-
-            for key, value in faf_region.items():
-                if region == value:
-                    self.marine_region = key
-                    return self
-
-        except Exception as e:
-            #print (f"Error in set marine region: {e}")
-            self.marine_region = None
-
     def set_us_coast(self):
         """ Set the US coast of the location.
         """
+        us_coast = DataImporter.json_to_dict(config['file_paths']['location']['US_COAST'])
+        state = self.get_state()
 
-        try:
-            us_coast = DataImporter.json_to_dict(config['file_paths']['location']['US_COAST'])
-            state = self.get_state()
+        for key, value in us_coast.items():
+            if state in value:
+                self.us_coast = key
+                return self
 
-            for key, value in us_coast.items():
-                if state in value:
-                    self.us_coast = key
-                    return self
+        log(f"State '{state}' not found in any US coast region.", "Warn")
+        self.us_coast = None
 
-            #print(f"State '{state}' not found in any US coast region.")
-            self.us_coast = None
-        except Exception as e:
-            print (f"Error in set US coast: {e}")
-            self.us_coast = None
+        return self
 
     # ================================
     # Getters
@@ -566,11 +596,6 @@ class Location:
             Country code from IS) 3166-1.
         """
         return self.country_code
-    
-    def get_egrid(self):
-        #TODO we have to find a dataset for this
-        pass
-
 
     def get_cfs_area(self):
         """ Get the Comodity Flow Survey (CFS) area of the location.
@@ -582,19 +607,24 @@ class Location:
         """          
         return self.cfs_area
 
-    def get_faf_foreign_region(self):
-        """ Get the FAF region (foreign) of the location.
-        """  
-        return self.faf_foreign
+    def get_faf_foreign_region(self, type='code'):
+        """ Get the Freight Analysis Framework (FAF) region (foreign) of the location.
 
+        Parameters
+        ----------
+        type : {'code', 'name'}
+            FAF foreign region code or name
+        """  
+        if type == 'code':
+            return self.faf_foreign_code
+        elif type == 'name':
+            return self.faf_foreign_name
+        else:
+            raise ValueError('Request type not recognized.')
+    
     def get_faf_domestic_region(self):
 
-        return self.faf_domestic
-
-    def get_marine_region(self):
-        """ Get the marine region of the location.
-        """
-        return self.marine_region
+        return self.faf_domestic_codes
 
     def get_ferc_region(self):
         """ Get the Federal Energy Regulatory Commission (FERC) Region.
@@ -723,7 +753,7 @@ class Location:
         return closest_state_name, closest_state_code
 
     def get_closest_regions_FAF(destination, region_lst):
-        """ Get the closest states to the destination, where states are given in FAF region codes
+        """ Get the closest states to the destination, where states are given in Freight Analysis Framework (FAF) domestic region codes
         
         Parameters
         ----------
@@ -738,11 +768,11 @@ class Location:
             The closest state to the destination.
         int
             FAF code of the closest state.
-        """  
+        """
         faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])      
         
-        cfs_code_list = [v // 10 for v in region_lst]
-        closest_state_name, _ = Location.get_closest_state_CFS(destination, cfs_code_list)
+        faf_code_list = [v // 10 for v in region_lst]
+        closest_state_name, _ = Location.get_closest_state_CFS(destination, faf_code_list)
         
         closest_faf_region_codes = faf_domestic_data[closest_state_name]
 

@@ -85,10 +85,6 @@ class Product(Master):
 
         self.weight = self.qty * self.density
 
-        if self.get_transportation() is not None:
-            transporter = self.get_transportation()
-            transporter.set_transported_weight()
-
         return self
 
     def set_unit(self, unit):
@@ -284,14 +280,14 @@ class Product(Master):
         
         Parameters
         ----------
-        code : int
+        code : str
             Standard Classification of Transported Goods (SCTG) code of the material
         """
         if code is None:
             data_material = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_SCTG_CODE'])
             if self.get_name() in data_material["material"].values:
                 sctg = data_material[data_material["material"] == self.get_name()].iloc[0, 1]
-                self.sctg_code = int(str(sctg))
+                self.sctg_code = str(sctg)
             else:
                 log("Material not found in the dataset", 'Warn')
         else:
@@ -562,39 +558,6 @@ class Fuel(Product):
     def __str__(self):
         return f"Fuel(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
-
-class Emission(Product):
-    """ Emission product object, inheriting from the product object.
-
-    Attributes
-    ----------
-    is_emission : bool
-        True  
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.is_emssion = True
-
-    def __str__(self):
-        return f"Emission(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
-
-
-class Waste(Product):
-    """ Waste product object, inheriting from the product object.
-
-    Attributes
-    ----------
-    is_waste : bool
-        True 
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.is_waste = True
-
-    def __str__(self):
-        return f"Waste(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
 
 if __name__ == '__main__':

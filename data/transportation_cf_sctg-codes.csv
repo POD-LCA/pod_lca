@@ -1,13 +1,13 @@
-SCTG code,maerial
-1,animals and fish (live)
-2,cereal grains (includes seed)
-3,"agricultural products (excludes animal feed, cereal grains, and forage products)"
-4,"animal feed, eggs, honey, and other products of animal origin"
-5,"meat, poultry, fish, seafood, and their preparations"
-6,"milled grain products and preparations, and bakery products"
-7,"other prepared foodstuffs, fats and oils"
-8,alcoholic beverages and denatured alcohol
-9,tobacco products
+SCTG code,material
+01,animals and fish (live)
+02,cereal grains (includes seed)
+03,"agricultural products (excludes animal feed, cereal grains, and forage products)"
+04,"animal feed, eggs, honey, and other products of animal origin"
+05,"meat, poultry, fish, seafood, and their preparations"
+06,"milled grain products and preparations, and bakery products"
+07,"other prepared foodstuffs, fats and oils"
+08,alcoholic beverages and denatured alcohol
+09,tobacco products
 10,monumental or building stone
 11,natural sands
 12,gravel and crushed stone (excludes dolomite and slate)
@@ -41,8 +41,3 @@ SCTG code,maerial
 40,miscellaneous manufactured products
 41,waste and scrap (excludes of agriculture or food)
 43,mixed freight
-,
-,
-,
-,"
-"

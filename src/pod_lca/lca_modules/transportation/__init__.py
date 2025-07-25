@@ -1,12 +1,14 @@
 
 from .transport_mode import TransportMode
 from .electirc_transport_mode import ElectricTransportMode
-from .logistics_link import LogisticLink
-from .logistics_link_domestic import DomesticLink
+from .transport_dataset import TransportDataset
 from .cfs_dataset import CFSDataset
-from .logistics_link_foreign import ForeignLink
-from .project_logistic_manager import ProjectLogisticManager
-from .us_domestic_logistics_manager import USDomesticLogisticProject
-from .us_global_logistics_manager import USGlobalLogisticProject
+from .us_global_dataset import USGlobalDataset
+from .transport_leg import TransportationLeg
+from .transport_leg_domestic import DomesticLeg
+from .transport_leg_foreign import ForeignLeg
+from .transportation_manager import TransportationManager
+from .us_domestic_transport_manager import USDomesticTransportationManager
+from .us_global_logistics_manager import USGlobalTransportationManager
 
-__all__ = ["DomesticLink", "ForeignLink", "LogisticLink", "ProjectLogisticManager", "Scenario", "TransportMode"]
+__all__ = ["DomesticLeg", "ForeignLeg", "TransportationLeg", "TransportationManager", "Scenario", "TransportMode"]

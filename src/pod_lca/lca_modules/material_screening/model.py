@@ -10,14 +10,12 @@ import gc
 import os
 
 from . import Electricity
-from . import Emission
 from . import Fuel
 from . import Process
 from . import Product
-from . import Waste
-from ..transportation import ProjectLogisticManager
-from ..transportation import USDomesticLogisticProject
-from ..transportation import USGlobalLogisticProject
+from ..transportation import TransportationManager
+from ..transportation import USDomesticTransportationManager
+from ..transportation import USGlobalTransportationManager
 from ...units import UNITS_MAP
 from ...units import KILO 
 from ...units import WATT_HOUR 
@@ -227,16 +225,16 @@ class Model:
             Transportation scope of the model.
         """
         if self.get_project().get_location() is None:
-            self.transportation_manager = ProjectLogisticManager.new('transportation')
+            self.transportation_manager = TransportationManager.new('transportation')
         elif self.get_project().get_location().get_country_code() == 'US':
             if logistic_type == 'local':
-                self.transportation_manager = USDomesticLogisticProject.new('transportation')
+                self.transportation_manager = USDomesticTransportationManager.new('transportation')
             elif logistic_type == 'global':
-                self.transportation_manager = USGlobalLogisticProject.new('transportation')
+                self.transportation_manager = USGlobalTransportationManager.new('transportation')
             else: 
                 raise ValueError(f"Logistic type {logistic_type} not recognized.")
         else:
-            self.transportation_manager = ProjectLogisticManager.new('transportation')
+            self.transportation_manager = TransportationManager.new('transportation')
 
         return self
     

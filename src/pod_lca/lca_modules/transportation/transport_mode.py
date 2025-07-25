@@ -15,18 +15,18 @@ class TransportMode:
 
     Attributes
     ----------
-    parent : LogisticLink Obj.
-        Transportation link to which the transportation mode correspond to.
-    mode_name: str
-        The name of the transportation mode (e.g., 'Truck', 'Rail').
-    efficiency: int
-        The efficiency level (e.g., 1, 2, 3).
-    unit_impacts : Impacts Obj.
-        Impacts from the transportation mode, per declared quantity and unit.
-    unit_emissions : Emissions Obj.
-        Emissions from the transportation mode, per declared quantity and unit.
-    inventories_declared_unit : Unit Obj.
-        The unit corresponding to declared quantity of inventories.
+    parent : ~pod_lca.transportation.TransportationLeg 
+        Transportation leg to which the transportation mode correspond to.
+    mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge' 'Ocean', 'Air'}
+        The name of the transportation mode.
+    efficiency: {'High', 'Median', 'Low'}
+        The efficiency level.
+    unit_impacts : ~pod_lca.impacts.Impacts Obj.
+        Impacts from the transportation mode, per unit of declared quantity.
+    unit_emissions : ~pod_lca.impacts.Emissions Obj.
+        Emissions from the transportation mode, per unit of declared quantity.
+    declared_unit : ~pod_lca.units.Unit Obj.
+        The declared unit corresponding to inventories.
     faf_mode: int
         FAF mode code for the transportation mode.
     cfs_mode: int
@@ -44,8 +44,6 @@ class TransportMode:
         self.cfs_mode = None
 
     def __str__(self):
-        """ String representation of the TransportMode object.
-        """
         str = "="*75 + "\n" + f"Transportation Mode: {self.get_name()}\n" + "="*75 + "\n"
 
         return str
@@ -82,12 +80,12 @@ class TransportMode:
     # Setters
     # ================================
     def set_parent(self, parent):
-        """ Set the parent transportation link.
+        """ Set the parent transportation leg.
         
         Parameters
         ----------
-        parent : LogisticLink Obj.
-            The transportation link to which this mode belong.
+        parent : ~pod_lca.transportation.TransportationLeg
+            The transportation leg to which this mode belong.
         """
         self.parent = parent
 
@@ -98,7 +96,7 @@ class TransportMode:
 
         Parameters
         ----------
-        mode_name: str
+        mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge' 'Ocean', 'Air'}
             The name of the transportation mode.
         """
         self.mode_name = mode_name
@@ -111,8 +109,8 @@ class TransportMode:
 
         Parameters
         ----------
-        efficiency: str
-            the efficiency level (e.g., 'Low', 'Medium', 'High').
+        efficiency: {'High', 'Median', 'Low'}
+            the efficiency level.
         """
         self.efficiency = efficiency
         self.set_inventory_records()
@@ -123,12 +121,12 @@ class TransportMode:
     # Getters
     # ================================
     def get_parent(self):
-        """ Set the parent transportation link.
+        """ Set the parent transportation leg.
         
         Returns
         ----------
-        LogisticLink Obj.
-            The transportation link to which this mode belong.
+        ~pod_lca.transportation.TransportationLeg 
+            The transportation leg to which this mode belong.
         """
         return self.parent
     
@@ -148,7 +146,7 @@ class TransportMode:
         Returns
         ----------
         str
-            the efficiency level (e.g., 'Low', 'Medium', 'High').
+            the efficiency level.
         """
         return self.efficiency
     
@@ -157,7 +155,7 @@ class TransportMode:
         
         Returns
         -------
-        Impacts Obj.
+        ~pod_lca.impacts.Impacts
             Impacts from the transportation mode, per declared quantity and unit.
         """
         return self.unit_impacts
@@ -167,7 +165,7 @@ class TransportMode:
 
         Returns
         -------
-        Emissions Obj.
+        ~pod_lca.impacts.Emissions
             Emissions from the transportation mode, per declared quantity and unit.
         """
         return self.unit_emissions
@@ -177,7 +175,7 @@ class TransportMode:
 
         Returns
         -------
-        Unit Obj.
+        ~pod_lca.units.Unit
             The unit corresponding to declared quantity of inventories.    
         """
         return self.declared_unit
