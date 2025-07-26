@@ -23,7 +23,7 @@ class ElectricTransportMode(TransportMode):
         The year of electricity consumption.
     electricity_consumption : float
         Electricity consumption by the transportation mode.
-    electricity_consumption_units : ~pod_lca.unit.Unit
+    electricity_consumption_units : ~pod_lca.units.Unit
         Unit corresponding to electricity consumption.
     """
 
@@ -69,7 +69,7 @@ class ElectricTransportMode(TransportMode):
         -------
         float
             Electricity consumption.
-        ~pod_lca.unit.Unit
+        ~pod_lca.units.Unit
             Corresponding unit of measurement.
         """
         if self.electricity_consumption is None:
@@ -99,7 +99,7 @@ class ElectricTransportMode(TransportMode):
             Unit electricity impacts.
         ~pod_lca.impacts.Emissions
             Unit electricity emissions.
-        ~pod_lca.unit.Unit
+        ~pod_lca.units.Unit
             Corresponding electricity supply unit.
         """
         electricity_supply = ElectricitySupply.from_location(self.get_location())

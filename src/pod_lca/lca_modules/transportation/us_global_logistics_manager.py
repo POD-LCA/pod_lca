@@ -101,7 +101,7 @@ class USGlobalTransportationManager(TransportationManager):
             Shipping origin
         transport_scenario : {'Global'}
             Transportation scenario considered.
-        distance_unit : ~pod_lca.unit.Unit Obj
+        distance_unit : ~pod_lca.units.Unit Obj
             Unit of measurement of distances.
         return_trip_factor : float
             Return trip factor.

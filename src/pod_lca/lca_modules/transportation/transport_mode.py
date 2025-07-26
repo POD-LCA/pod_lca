@@ -180,6 +180,16 @@ class TransportMode:
         """
         return self.declared_unit
     
+    def get_impact_database(self):
+        """ Get the impact database.
+
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            Impacts database
+        """
+        return self.get_parent().get_impact_database()
+
     # ================================
     # Methods
     # ================================
@@ -187,8 +197,7 @@ class TransportMode:
         """ Set unit inventory records of impacts and emissions for the transportation mode.
         """
         if (self.get_name() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
-
-            database = self.get_parent().get_project().get_impact_database()
+            database = self.get_impact_database()
             if database is not None:
                 inventories = database.get_data_entry(self)
                 self.declared_unit = inventories[database.get_unit_key()]

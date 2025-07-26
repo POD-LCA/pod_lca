@@ -19,15 +19,15 @@ class TransportationLeg:
 
     Attributes
     ----------
-    project : ~pod_lca.materials_screening.Project
-        Refers to the main project.
+    manager : pod_lca.transportation.TransportationManager
+        Refers to the transportation manager.
     name : str
         Name of the logistic leg.
     material : str.
         name of the material.
     travel_dist : float.
         transportation distance
-    dist_unit : ~pod_lca.unit.Unit
+    dist_unit : ~pod_lca.units.Unit
         Unit corresponding to the travel distance.
     return_trip_factor : float.
         transportation return trip factor.
@@ -48,7 +48,7 @@ class TransportationLeg:
     """
 
     def __init__(self):
-        self.project = None
+        self.manager = None
         self.name = None
         self.material = None
         self.travel_dist = None
@@ -71,14 +71,14 @@ class TransportationLeg:
     # Constructors
     # ================================
     @classmethod
-    def in_project(cls, good, project, name=None):
+    def in_project(cls, good, manager, name=None):
         """ Create a new transportation leg in the project.
 
         Parameters
         ----------
         good : ~pod_lca.material_screening.Product
             Product being transported.
-        project :  ~pod_lca.material_screening.Project
+        manager :  ~pod_lca.transportation.TransportationManager
             The project to which the transportation leg belongs.
         name : str, optional
             Name of the transportation leg (default is None).
@@ -90,28 +90,28 @@ class TransportationLeg:
         """
         leg = cls()
         leg.set_material(good)
-        leg.set_project(project)
+        leg.set_manager(manager)
         leg.set_name(name)
 
         leg.impacts = Impacts.from_parent(leg)
         leg.emissions = Emissions.from_parent(leg)
 
-        project.transport_legs[good].append(leg)
+        manager.transport_legs[good].append(leg)
 
         return leg
 
     # ================================
     # Setters
     # ================================
-    def set_project (self, project):
+    def set_manager (self, manager):
         """ Set the project the transportation leg belongs to.
 
         Parameters
         ----------
-        project : ~pod_lca.material_screening.Project
+        project : pod_lca.transportation.TransportationManager
             The project to which the transportation leg belong.
         """
-        self.project = project
+        self.manager = manager
 
         return self
 
@@ -151,7 +151,7 @@ class TransportationLeg:
         ----------
         travel_dist : float
             Travel distance of the transportation leg.
-        dist_unit : ~pod_lca.unit.Unit, optional
+        dist_unit : ~pod_lca.units.Unit, optional
             Unit of the travel distance. Defualt is KILOMETER
         return_trip_factor : float, optional
             Return trip factor of the transportation leg.
@@ -248,15 +248,15 @@ class TransportationLeg:
     # ================================
     # Getters
     # ================================
-    def get_project(self):
+    def get_manager(self):
         """ Retrieve the project of the transportation leg.
 
         Returns
         -------
-        ~pod_lca.materials_screening.Project
+        pod_lca.transportation.TransportationManager
             The project of the transportation leg.
         """
-        return self.project 
+        return self.manager 
 
     def get_name(self):
         """ Retrieve the name of the transportation leg.
@@ -293,7 +293,7 @@ class TransportationLeg:
 
         Returns
         -------
-        ~pod_lca.unit.Unit
+        ~pod_lca.units.Unit
             The distance unit of the transportation leg.
         """
         return self.dist_unit
@@ -379,6 +379,16 @@ class TransportationLeg:
         """
         self.update_inventory_records()
         return self.emissions 
+    
+    def get_impact_database(self):
+        """ Get the impact database.
+
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            Impacts database
+        """
+        return self.get_manager().get_impact_database()
 
     # ================================
     # Methods

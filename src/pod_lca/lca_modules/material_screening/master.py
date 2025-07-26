@@ -474,13 +474,13 @@ class Master:
         if conversion_factor is None:
             raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
         
-        impacts = {key: self.unit_impacts.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}
+        impacts = {key: self.unit_impacts.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.impacts.record_attr_dict}
         self.impacts.update_qty(impacts)
 
-        emissions = {key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}
+        emissions = {key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.emissions.record_attr_dict}
         self.emissions.update_qty(emissions)
 
-        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']}
+        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.carbon_storage.record_attr_dict}
         self.carbon_storage.update_qty(carbon_storage)
 
         return self

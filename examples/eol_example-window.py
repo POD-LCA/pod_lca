@@ -11,6 +11,7 @@ from pod_lca.impacts import Emissions
 from pod_lca.impacts import EOLImpactsDatabase
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
+from pod_lca.transportation import EOLTransportDataset
 from pod_lca.units import KILOGRAM
 
 # create building
@@ -25,6 +26,8 @@ eol_impact_database.set_life_cycle_stage_key('LCA Stage')
 eol_impact_database.set_data(r'data/impacts_podlca_eol-impacts.csv')
 
 my_building.set_eol_database(eol_impact_database)
+my_building.set_eol_transport_dataset(EOLTransportDataset())
+my_building.set_transportation_impact_database(r'data/transportation_podlca_emission.csv')
 
 # add a window to the building
 my_timber_window = BuildingComponent.create(name='Window', materials=[None]) # Making a building component from materials not within the scope of EOL
@@ -33,7 +36,7 @@ my_building.add_component(my_timber_window)
 # deconstruct window
 deconstruction_map = {
                         'Wood':{'qty': 4.2, 'unit': KILOGRAM},
-                        'Glass': {'qty': 0.5, 'unit': KILOGRAM, 'bio_based': False}
+                        # 'Glass': {'qty': 0.5, 'unit': KILOGRAM, 'bio_based': False}
                      }
 my_timber_window.deconstruct(deconstruction_map)
 
@@ -47,10 +50,12 @@ my_timber_window.deconstruct(deconstruction_map)
 #             print(impact) 
 
 # impacts by life cycle stage
-impact_dict = {'C3':Impacts.from_parent(my_timber_window), 
+impact_dict = {'C2':Impacts.from_parent(my_timber_window),
+               'C3':Impacts.from_parent(my_timber_window), 
                'C4':Impacts.from_parent(my_timber_window), 
                'D':Impacts.from_parent(my_timber_window)}
-emission_dict = {'C3':Emissions.from_parent(my_timber_window), 
+emission_dict = {'C2':Emissions.from_parent(my_timber_window),
+                'C3':Emissions.from_parent(my_timber_window), 
                 'C4':Emissions.from_parent(my_timber_window), 
                 'D':Emissions.from_parent(my_timber_window)}
 for waste in my_timber_window.get_waste_products():

@@ -426,6 +426,11 @@ class Product(Master):
                 raise ValueError(f"SCTG code length ({len(str(self.sctg_code))}) shorter than digits requested ({digits}).")
         else:
             return self.sctg_code
+
+    def get_eol_manager(self):
+        """ Return the place where end-of-life transport dataset reside.
+        """
+        return self.get_model()
     
     # ================================
     # Methods

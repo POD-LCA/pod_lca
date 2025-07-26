@@ -251,7 +251,7 @@ class TransportationManager:
                   shipping_dest=None, 
                   shipping_org=None,
                   transport_scenario=None,
-                  distance_unit= KILOMETER, 
+                  distance_unit=KILOMETER, 
                   return_trip_factor=None, 
                   mode_name=None,
                   mode_fuel_type="Regular", 
@@ -270,7 +270,7 @@ class TransportationManager:
             Shipping origin
         transportation_scenario : {'Local', 'Regional', 'Regional_c', 'National', 'Global'}
             Transportation scenario considered.
-        distance_unit : ~pod_lca.unit.Unit Obj
+        distance_unit : ~pod_lca.units.Unit Obj
             Unit of measurement of distances.
         return_trip_factor : float
             Return trip factor.

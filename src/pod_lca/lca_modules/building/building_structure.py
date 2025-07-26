@@ -5,6 +5,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..impacts import EOLImpactsDatabase
+from ..impacts import TranportationModeImpactsDatabase
+
 
 class Building:
     """ Building object to keep track of the building materials flow (i.e., embodied energy component).
@@ -38,7 +41,9 @@ class Building:
         self.built_year = None
         self.components = []
         self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
+        self.transport_impact_database = None
         self.eol_impact_database = None
+        self.eol_transport_dataset = None
         self.transportation_in = None
         self.transportation_out = None
 
@@ -130,16 +135,52 @@ class Building:
         self.built_year = year
 
         return self
-    
+
+    def set_transportation_impact_database(self, database):
+        """ Set the impact database for end-of-life impacts.
+        
+        Parameters
+        ----------
+        database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
+            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+        """
+        if isinstance(database, TranportationModeImpactsDatabase):
+            self.transport_impact_database = database
+        elif isinstance(database, str):
+            impact_database = TranportationModeImpactsDatabase.new("impact database")
+            impact_database.set_data(database)
+            self.set_transportation_impact_database(impact_database)
+        else:
+            raise TypeError("Database input not recognized")
+
+        return self
+      
     def set_eol_database(self, database):
         """ Set the impact database for end-of-life impacts.
         
         Parameters
         ----------
-        database : ImpactsDatabase Obj.
-            End-of-Life impacts database.
+        database : ~pod_lca.impacts.EOLImpactsDatabase or str
+            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
         """
-        self.eol_impact_database = database
+        if isinstance(database, EOLImpactsDatabase):
+            self.eol_impact_database = database
+        elif isinstance(database, str):
+            impact_database = EOLImpactsDatabase.new("impact database")
+            impact_database.set_data(database)
+            self.set_eol_database(impact_database)
+        else:
+            raise TypeError("Database input not recognized")
+    
+    def set_eol_transport_dataset(self, dataset):
+        """ Set transportation dataset for the end-of-life impacts.
+
+        Parameters
+        ----------
+        dataset : ~pod_lca.transportation.TransportDataset
+            End-of-life transportation dataset.
+        """
+        self.eol_transport_dataset = dataset
 
         return self
     
@@ -198,24 +239,43 @@ class Building:
         """
         return self.components
 
+    def get_transportation_impact_database(self):
+        """ Set the impact database for end-of-life impacts.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            End-of-Life impacts database.
+        """
+        return self.transport_impact_database
+    
     def get_eol_database(self):
         """ Get the impact database for end-of-life impacts.
         
-        Parameters
-        ----------
-        ImpactsDatabase Obj.
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
             End-of-Life impacts database.
         """
         return self.eol_impact_database
-    
+
+    def get_eol_transport_dataset(self):
+        """ Get transportation dataset for the end-of-life impacts.
+
+        Returns
+        -------
+        ~pod_lca.transportation.TransportDataset
+            End-of-life transportation dataset.
+        """
+        return self.eol_transport_dataset
     # ================================
     # Assembly Methods
     # ================================ 
     def add_component(self, component):
         """ Add a component to the building.
         
-        Parameters
-        ----------
+        Returns
+        -------
         component : BuildingComponent Objs.
             Structural or fascade element to be added to the building.
         """
