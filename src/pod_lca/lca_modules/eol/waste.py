@@ -10,7 +10,6 @@ from math import isnan
 from . import WasteProcess
 from ..material_screening import Product
 from ..transportation import WasteTransportLeg
-from ...utilities import ArrayMethods
 from ...utilities import config
 from ...utilities import log
 
@@ -37,8 +36,8 @@ class Waste(Product):
         super().__init__()
         self.parent = None
         self.is_waste = True
-        self.waste_processes = []
-        self.process_mix = {}
+        self.waste_processes = None
+        self.process_mix = None
         self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
         self.emissions = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
         self.bio_based = True
@@ -134,7 +133,7 @@ class Waste(Product):
 
         Notes
         -----
-        The waste mix allocated to any process which is beyond its cutoff poitn will be reallocated to Landfill.
+        The waste mix allocated to any process which is beyond its cutoff distance is reallocated to Landfill.
 
         Parameters
         ----------
@@ -143,57 +142,73 @@ class Waste(Product):
             Percentage can be in the form of string with a % sign or decimal value. 
         """
         waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
+        self.waste_processes = []
 
         transfer_to_landfill_quantity = 0.0
         for waste_process_name in waste_process_dict.keys() - ['Landfill']:
             mix_percent = self.get_process_mix(waste_process_name)
             if mix_percent:
                 process_qty = self.get_qty() * mix_percent
-                lc_stage = waste_process_dict[waste_process_name]
-                linked_process = None
-                if isinstance(lc_stage, list):
-                    lc_stage = waste_process_dict[waste_process_name][0]
-                    linked_process = waste_process_dict[waste_process_name][1:]
+                result = self.set_waste_process(waste_process_name, process_qty)
+                if isinstance(result, (float, int)):
+                    transfer_to_landfill_quantity += result
 
-                waste_process_obj = WasteProcess.new(self, 
-                                                    waste_process_name, 
-                                                    process_qty, 
-                                                    self.get_unit(), 
-                                                    lc_stage,
-                                                    linked_process)
-
-                waste_process_obj.transporation_leg = WasteTransportLeg.from_object(material=waste_process_obj,
-                                                                            manager=self.get_parent().get_eol_manager(),
-                                                                            eol_pathway=waste_process_name)
-
-                if waste_process_obj.transporation_leg.get_travel_dist() > waste_process_obj.transporation_leg.get_cutoff_distance():
-                    transfer_to_landfill_quantity += process_qty
-                    process_qty = 0.0 # for linked processes, if any
-                    waste_process_obj.set_qty(0.0)
-                    log(f"Waste process {waste_process_name} quantity for {waste_process_obj.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
-        
         # set landfill process
         mix_percent = self.get_process_mix('Landfill')
         process_qty = self.get_qty() * mix_percent
         process_qty += transfer_to_landfill_quantity
 
-        lc_stage = waste_process_dict['Landfill']
-        linked_process = None
-        if isinstance(lc_stage, list):
-            lc_stage = waste_process_dict['Landfill'][0]
-            linked_process = waste_process_dict[waste_process_name][1:]
-
-        waste_process_obj = WasteProcess.new(self, 
-                                            'Landfill', 
-                                            process_qty, 
-                                            self.get_unit(), 
-                                            lc_stage)
-
-        waste_process_obj.transporation_leg = WasteTransportLeg.from_object(material=waste_process_obj,
-                                                                            manager=self.get_parent().get_eol_manager(),
-                                                                            eol_pathway='Landfill')
+        self.set_waste_process('Landfill', process_qty)
 
         return self
+    
+    def set_waste_process(self, process_name, process_qty):
+        """ Set waste process. If cutoff due to distance, returns the unprocessed waste quantity.
+        
+        Parameters
+        ----------
+        process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+            End-of-life pathway:
+            - 'Landfill': transporting waste to a landfill.
+            - 'Recycle': transporting waste to a recycler.
+            - 'Compost': transporting to a composting facility.
+            - 'Incinerate': transporting to an incinerator.
+        process_qty : float
+            Quantity of waste subjected to this process
+
+        Returns
+        -------
+        ~pod_lca.eol.WasteProcess
+            If the process is not cutoff
+        float
+            If the process is cutoff, the balance waste quantity to be processed
+        """
+        waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
+
+        lc_stage = waste_process_dict[process_name]
+        linked_process = None
+        if isinstance(lc_stage, list):
+            lc_stage = waste_process_dict[process_name][0]
+            linked_process = waste_process_dict[process_name][1:]
+
+        waste_process_obj = WasteProcess.new(self, 
+                                            process_name, 
+                                            process_qty, 
+                                            self.get_unit(), 
+                                            lc_stage,
+                                            linked_process)
+
+        waste_process_obj.transporation_leg = WasteTransportLeg.from_object(material=waste_process_obj,
+                                                                    manager=self.get_parent().get_eol_manager(),
+                                                                    eol_pathway=process_name)
+
+        if waste_process_obj.transporation_leg.get_travel_dist() > waste_process_obj.transporation_leg.get_cutoff_distance():
+            waste_process_obj.set_qty(0.0)
+            log(f"Waste process {process_name} quantity for {waste_process_obj.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
+
+            return process_qty
+
+        return waste_process_obj
         
     def set_bio_based(self, is_bio_based):
         """ Set the bio-based nature of the material.
@@ -223,22 +238,25 @@ class Waste(Product):
         process_mix_cleaned = {}
         if Waste.check_mix_sum(process_mix):
             for process_name in waste_process_dict.keys():
-                mix_percent_input = process_mix[process_name]
-                if isinstance(mix_percent_input, (float, int)):
-                    if isnan(mix_percent_input):
-                        mix_percent = 0.0
+                if process_name in process_mix.keys():
+                    mix_percent_input = process_mix[process_name]
+                    if isinstance(mix_percent_input, (float, int)):
+                        if isnan(mix_percent_input):
+                            mix_percent = 0.0
+                        else:
+                            mix_percent = mix_percent_input
+                    elif isinstance(mix_percent_input, str):
+                        if mix_percent_input in ['NA', 'N/A']:
+                            mix_percent = 0.0
+                        if mix_percent_input[-1] == "%":
+                            mix_percent = float(mix_percent_input[:-1]) / 100.0
+                        else:
+                            mix_percent = float(mix_percent_input)                
                     else:
-                        mix_percent = mix_percent_input
-                elif isinstance(mix_percent_input, str):
-                    if mix_percent_input in ['NA', 'N/A']:
-                        mix_percent = 0.0
-                    if mix_percent_input[-1] == "%":
-                        mix_percent = float(mix_percent_input[:-1]) / 100.0
-                    else:
-                        mix_percent = float(mix_percent_input)                
+                        raise TypeError(f"mix percentages are of unrecognized type. Must be float, int, or string.")
                 else:
-                    raise TypeError(f"mix percentages are of unrecognized type. Must be float, int, or string.")
-                
+                    mix_percent = 0.0
+
                 process_mix_cleaned[process_name] = mix_percent
             
             self.process_mix = process_mix_cleaned
@@ -301,8 +319,12 @@ class Waste(Product):
                 return self.process_mix[process_name]
         elif mode == 'actual':
             self.update_waste_processess()
+            process_mix = {}
+            for process in self.get_waste_processes():
+                if process.get_linked_process(to=False) is None:
+                    process_mix[process.get_life_cycle_stage()] = process.get_qty() / self.get_qty()
             
-            pass # TODO create method
+            return process_mix
         else:
             raise ValueError('Calucation mode of process mix is not recognized.')
 
@@ -345,29 +367,46 @@ class Waste(Product):
 
         return self
 
-    def update_waste_processess(self, overide=False):
+    def update_waste_processess(self):
         """ Update the waste processess.
-        
-        Parameters
-        ----------
-        overide : bool
-            If true, allows any process to be added, if not only processes created in default are allowed.            
+
+        Notes
+        -----
+        The waste mix allocated to any process which is beyond its cutoff distance is reallocated to Landfill.        
         """
         process_mix = self.get_process_mix()
-        if not overide:
-            available_processes = ArrayMethods.get_attribute_as_list(self.get_waste_processes(), 'process_name')
-            for key, value in process_mix.items():
-                if not (key in available_processes): # add only allowable processes.
-                    raise KeyError(f"Waste process of {key} is not available for {self.get_name()}")
 
+        transfer_to_landfill_quantity = 0.0
+        landfill_process = None
+        existing_processes = []
+        # update existing processes
         for process in self.get_waste_processes():
-            if process.get_process_name() in process_mix.keys():
-                # TODO: check the cutoffs
-                if process.get_linked_process(to=False) is None:
-                    new_qty = self.get_qty() * process_mix[key]
+            process_name = process.get_process_name()
+            if (process_name in process_mix.keys()) and not (process_name == 'Landfill') and (process.get_linked_process(to=False) is None):
+                new_qty = self.get_qty() * process_mix[process_name]
+                if process.transporation_leg.get_travel_dist() > process.transporation_leg.get_cutoff_distance():
+                    transfer_to_landfill_quantity += new_qty
+                    process.set_qty(0.0)
+                    log(f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
+            elif process_name == 'Landfill':
+                landfill_process = process
             else:
-                new_qty = 0.0
-            process.set_qty(new_qty)
+                pass
+
+            existing_processes.append(process_name)
+
+        # add new processes
+        for process_name in process_mix.keys() - existing_processes:
+            process_qty = self.get_qty() * process_mix[process_name]
+            if process_qty:
+                result = self.set_waste_process(process_name, process_qty)
+                if isinstance(result, (float, int)):
+                    transfer_to_landfill_quantity += result
+
+        # set landfill process
+        if not landfill_process is None:
+            new_qty = self.get_qty() * process_mix['Landfill'] + transfer_to_landfill_quantity
+            landfill_process.set_qty(new_qty)
 
         return self
     

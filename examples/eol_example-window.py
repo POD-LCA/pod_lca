@@ -36,7 +36,7 @@ my_building.add_component(my_timber_window)
 # deconstruct window
 deconstruction_map = {
                         'Wood':{'qty': 4.2, 'unit': KILOGRAM},
-                        # 'Glass': {'qty': 0.5, 'unit': KILOGRAM, 'bio_based': False}
+                        'Glass': {'qty': 0.5, 'unit': KILOGRAM, 'bio_based': False}
                      }
 my_timber_window.deconstruct(deconstruction_map)
 
@@ -67,6 +67,12 @@ for waste in my_timber_window.get_waste_products():
       if emissions_lst:
          for emission in emissions_lst:
             emission_dict[lc_stage] += emission
+
+# tests
+# my_timber_window.get_waste_products()[1].get_process_mix()
+# my_timber_window.get_waste_products()[1].set_process_mix({'Compost':1.0})
+# my_timber_window.get_waste_products()[1].get_impacts()
+
 
 for lc_stage in impact_dict.keys():
    print(f"Life cycle stage: {lc_stage}")
