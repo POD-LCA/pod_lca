@@ -30,9 +30,8 @@ project = Project()
 factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 
-custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
-project.set_database(custom_impact_database)
+project.set_impact_database(r'data/impacts_podlca_material-data.csv')
+project.set_transportation_mode_impact_database(r'data/transportation_podlca_emission.csv')
 
 CLT_model = project.add_model("CLT_01")
 
@@ -45,15 +44,6 @@ dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KIL
 electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR)
 natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]")
 
-lumber_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=302, unit=KILOMETER, impacts_from="Transportation_combination_truck_short-haul_diesel_NW_[USLCI]")
-lumber_by_truck.set_transported_product(lumber)
-
-PUR1_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=2160, unit=KILOMETER, impacts_from="Transportation_combination_truck_diesel_US_[USLCI]")
-PUR1_by_truck.set_transported_product(dummy_PUR_1)
-
-PUR2_by_truck = CLT_model.add_transportation_process(name="Lumber Transportation", stage="A2", transported_distance=64800, unit=KILOMETER, impacts_from="Transportation_freight_train_diesel_US_[ecoinvent]")
-PUR2_by_truck.set_transported_product(dummy_PUR_2)
-
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
@@ -64,6 +54,5 @@ data_quality_assessment = DataQualityAnalysis.from_model(CLT_model)
 print(electricity.get_pedigree_score())
 electricity.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 1,'temporal correlation': 4,'geographical correlation': 1,'technological representativeness': 3})
 lumber.get_pedigree_score().update_pedigree_scores({'reliability': 1,'completeness': 2, 'temporal correlation': 2, 'geographical correlation': 2, 'technological representativeness': 4})
-lumber_by_truck.get_pedigree_score().update_pedigree_scores({'reliability': 1, 'completeness': 3, 'temporal correlation': 4, 'geographical correlation': 3, 'technological representativeness': 3})
 DQS, nDQS = data_quality_assessment.calculate_model_DQS('GWP')
 data_quality_assessment.print_results()

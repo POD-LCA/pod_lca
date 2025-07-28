@@ -38,7 +38,7 @@ print(electricity_supplier)
 # Electricity impacts
 # =================================
 # electiriciyt supplier would hold the unit impacts
-unit_impacts = electricity_supplier.get_impacts()
+unit_impacts = electricity_supplier.get_unit_impacts()
 print(unit_impacts)
 
 # electricity product would hold the product impacts
@@ -52,7 +52,7 @@ print(impacts)
 # and not the electricity product impacts
 electricity_supplier.set_year(2037)
 
-unit_impacts = electricity_supplier.get_impacts()
+unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
@@ -69,7 +69,7 @@ print(electricity.get_impacts())
 # and not the electricity product impacts
 electricity_supplier.set_geographical_scope('Regional')
 
-unit_impacts = electricity_supplier.get_impacts()
+unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
@@ -78,7 +78,7 @@ print(impacts)
 # this will automatically update the supplier year as well
 electricity.set_geographical_scope('Regional')
 
-unit_impacts = electricity_supplier.get_impacts()
+unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
@@ -90,7 +90,7 @@ print(impacts)
 # and not the electricity product impacts
 electricity_supplier.set_scenario('Decarb95by2050')
 
-unit_impacts = electricity_supplier.get_impacts()
+unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)
@@ -99,7 +99,7 @@ print(impacts)
 # this will automatically update the supplier year as well
 electricity.set_scenario('Decarb95by2050')
 
-unit_impacts = electricity_supplier.get_impacts()
+unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
 print(unit_impacts)
 print(impacts)

@@ -17,7 +17,7 @@ project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impacts_podlca_data.csv', grouped_data='Electricity')
-project.set_database(custom_impact_database)
+project.set_impact_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
 

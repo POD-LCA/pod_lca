@@ -235,7 +235,7 @@ class Electricity(Master):
             supplier = self.get_supplier()
             impact_distribution, weights = supplier.get_impact_distribution() # this is a sampling of unit impacts
 
-            declared_unit = supplier.get_unit()
+            declared_unit = supplier.get_declared_unit()
             conversion_factor = declared_unit.convert_to(self.get_unit())
 
             impact_distributions = []

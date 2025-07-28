@@ -30,7 +30,7 @@ custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv', impact
                                                                              'SFP': 'POCP'})
 custom_impact_database.set_data_entry("Electricity_New", 1.0, KILO * WATT_HOUR, 
                                       impacts={"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "POCP":3.37e-2})
-project.set_database(custom_impact_database)
+project.set_impact_database(custom_impact_database)
 
 CLT_model = project.add_model("CLT_01")
 

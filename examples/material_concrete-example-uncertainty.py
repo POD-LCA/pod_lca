@@ -23,7 +23,7 @@ project.set_location(concrete_yard)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(r'data/impacts_podlca_material-data.csv')
-project.set_database(custom_impact_database)
+project.set_impact_database(custom_impact_database)
 
 concrete_model = project.add_model("concrete_01")
 
