@@ -12,6 +12,7 @@ from pod_lca.building import BuildingComponent
 from pod_lca.impacts import EOLImpactsDatabase
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
+from pod_lca.transportation import EOLTransportDataset
 from pod_lca.units import UNITS_MAP
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import config
@@ -35,6 +36,8 @@ eol_impact_database.set_life_cycle_stage_key('LCA Stage')
 eol_impact_database.set_data(impact_data_file_path)
 
 test_building.set_eol_database(eol_impact_database)
+test_building.set_eol_transport_dataset(EOLTransportDataset())
+test_building.set_transportation_impact_database(r'data/transportation_podlca_emission.csv')
 
 tests_dict = DataImporter.json_to_dict(test_dict_file_path)
 impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
@@ -48,9 +51,9 @@ for test_name in tqdm(tests_dict):
    test_building.add_component(test_component)
    test_component.deconstruct(parts)
 
-   impact_dict = {'C3':Impacts.from_parent(test_component), 
-                  'C4':Impacts.from_parent(test_component), 
-                  'D':Impacts.from_parent(test_component)}
+   impact_dict = {'C2':Impacts.from_parent(test_component),
+                  'C3':Impacts.from_parent(test_component), 
+                  'C4':Impacts.from_parent(test_component)}
    for waste in test_component.get_waste_products():
       for lc_stage, impacts_lst in waste.get_impacts().items():
          if impacts_lst:

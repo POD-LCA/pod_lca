@@ -13,9 +13,13 @@ class EOLImpactsDatabase(ImpactsDatabase):
 
     Attributes
     ----------
-    process_key : str
-        Data header corresponding to the end-of-life process corresponding to the database entry.
-    life_cycle_stage_key : str
+    process_key : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+        Data header corresponding to the end-of-life pathway corresponding to the database entry.
+        - 'Landfill': transporting waste to a landfill.
+        - 'Recycle': transporting waste to a recycler.
+        - 'Compost': transporting to a composting facility.
+        - 'Incinerate': transporting to an incinerator.
+    life_cycle_stage_key : {'C3', 'C4', 'D'}
         Data header corresponding to the life cycle stage corresponding to the database entry.
     """
 
@@ -38,7 +42,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         
         Returns
         -------
-        ImpactsDatabase Obj.
+        ~pod_lca.impacts.ImpactsDatabase
             Database created.
         """
         new_db = cls()
@@ -59,8 +63,12 @@ class EOLImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        key : str
-            Data header corresponding to the end-of-life process corresponding to the database entry.
+        key : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+            Data header corresponding to the end-of-life pathway corresponding to the database entry.
+            - 'Landfill': transporting waste to a landfill.
+            - 'Recycle': transporting waste to a recycler.
+            - 'Compost': transporting to a composting facility.
+            - 'Incinerate': transporting to an incinerator.
         """
         self.process_key = key
 
@@ -71,7 +79,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        key : str
+        key : {'C3', 'C4', 'D'}
             Data header corresponding to the life cycle stage corresponding to the database entry.
         """
         self.life_cycle_stage_key = key
@@ -113,14 +121,18 @@ class EOLImpactsDatabase(ImpactsDatabase):
         ----------
         material_name : str
             Name of the material
-        process_name: str
-            End-of-Life process name.
-        life_cycle_stage : str
+        process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+            End-of-life pathway:
+            - 'Landfill': transporting waste to a landfill.
+            - 'Recycle': transporting waste to a recycler.
+            - 'Compost': transporting to a composting facility.
+            - 'Incinerate': transporting to an incinerator.
+        life_cycle_stage : {'C3', 'C4', 'D'}
             Life cycle stage.
         
         Returns
         -------
-        Pandas Series
+        pandas.Series
             Databse entry corresponding to the flow.
         """
         if self.data is not None:

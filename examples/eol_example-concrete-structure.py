@@ -10,6 +10,7 @@ from pod_lca.building import BuildingComponent
 from pod_lca.impacts import EOLImpactsDatabase
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
+from pod_lca.transportation import EOLTransportDataset
 from pod_lca.units import KILOGRAM
 
 # create building
@@ -24,6 +25,8 @@ eol_impact_database.set_life_cycle_stage_key('LCA Stage')
 eol_impact_database.set_data(r'data/impacts_podlca_eol-impacts.csv')
 
 my_building.set_eol_database(eol_impact_database)
+my_building.set_eol_transport_dataset(EOLTransportDataset())
+my_building.set_transportation_impact_database(r'data/transportation_podlca_emission.csv')
 
 # add a window to the building
 my_concrete_structure = BuildingComponent.create(name='Structure', materials=[None]) # Making a building component from materials not within the scope of EOL
@@ -34,7 +37,8 @@ deconstruction_map = {'Concrete':{'qty': 100000, 'unit': KILOGRAM}}
 my_concrete_structure.deconstruct(deconstruction_map)
 
 # impacts by cycle stage
-impact_dict = {'C3':Impacts.from_parent(my_concrete_structure), 
+impact_dict = {'C2':Impacts.from_parent(my_concrete_structure),
+               'C3':Impacts.from_parent(my_concrete_structure), 
                'C4':Impacts.from_parent(my_concrete_structure), 
                'D':Impacts.from_parent(my_concrete_structure)}
 for waste in my_concrete_structure.get_waste_products():

@@ -28,8 +28,8 @@ setup:
   eol:
     EOL_DEFAULT_KEY: DEFAULT
     WASTE_PROCESS_STAGES:
-      Recycle: [C3, D] 
-      Compost: [C3, D]
+      Recycle: C3
+      Compost: C3
       Incinerate: C4
       Landfill: C4
   impacts:

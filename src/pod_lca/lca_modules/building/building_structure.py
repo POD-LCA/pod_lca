@@ -16,9 +16,9 @@ class Building:
     ----------
     name : str
         Name of the building.
-    type : str
-        Type of building: e.g., 'Commercial', 'Residential'.
-    location : Location Obj.
+    type : {'Commercial', 'Residential'}
+        Type of building.
+    location : ~pod_lca.location.Location
         Location of the building site.
     built_year: int
         Built year of the building.
@@ -29,23 +29,25 @@ class Building:
     eol_impact_database : ImpactsDatabase Obj.
         Impacts related to end of life processes.
     transportation_in: ProjectLogisticManager Obj.
-        Inward trransportation of material for the construction of the building.
-    transportation_out: ProjectLogisticManager Obj.
-        Outward trransportation of waste material after demolition and/or deconstruction.    
+        Inward trransportation of material for the construction of the building.   
     """
 
     def __init__(self): # NOTE: Currently only includes EOL
         self.name = None
-        self.type = None
+        self.building_type = None
         self.location = None
         self.built_year = None
+        self.gloors = {}
+        self.structure = None
+        self.envelope = None
+        self.operational_object = None
         self.components = []
         self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
+        self.emissions = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
         self.transport_impact_database = None
         self.eol_impact_database = None
         self.eol_transport_dataset = None
         self.transportation_in = None
-        self.transportation_out = None
 
     # ================================
     # Constructors
@@ -108,7 +110,7 @@ class Building:
         type : str
             Type of building: e.g., 'Commercial', 'Residential'.
         """
-        self.type = type
+        self.building_type = type
 
         return self
     
@@ -206,7 +208,7 @@ class Building:
             Type of building: e.g., 'Commercial', 'Residential'.
         """
 
-        self.type = type
+        self.building_type = type
 
     def get_location(self):
         """ Get location of the building site.

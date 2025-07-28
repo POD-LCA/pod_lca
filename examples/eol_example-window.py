@@ -52,12 +52,10 @@ my_timber_window.deconstruct(deconstruction_map)
 # impacts by life cycle stage
 impact_dict = {'C2':Impacts.from_parent(my_timber_window),
                'C3':Impacts.from_parent(my_timber_window), 
-               'C4':Impacts.from_parent(my_timber_window), 
-               'D':Impacts.from_parent(my_timber_window)}
+               'C4':Impacts.from_parent(my_timber_window)}
 emission_dict = {'C2':Emissions.from_parent(my_timber_window),
                 'C3':Emissions.from_parent(my_timber_window), 
-                'C4':Emissions.from_parent(my_timber_window), 
-                'D':Emissions.from_parent(my_timber_window)}
+                'C4':Emissions.from_parent(my_timber_window)}
 for waste in my_timber_window.get_waste_products():
    for lc_stage, impacts_lst in waste.get_impacts().items():
       if impacts_lst:
