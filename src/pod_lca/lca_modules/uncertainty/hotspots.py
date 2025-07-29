@@ -105,7 +105,7 @@ class HotSpotAnalysis:
 
         Returns
         ----------
-        dict.
+        dict
             {impact_category (str): list (Master Obj)} .
         """
         return self.hotspots

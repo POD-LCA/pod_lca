@@ -304,7 +304,7 @@ class Model:
 
         Returns
         -------
-        dict.
+        dict
             :class:`~pod_lca.impacts.Impacts` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
         """
         for item in self.get_all_items():
@@ -319,7 +319,7 @@ class Model:
 
         Returns
         -------
-        dict.
+        dict
             :class:`~pod_lca.impacts.Emissions` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
         """
         for item in self.get_all_items():
@@ -334,7 +334,7 @@ class Model:
 
         Returns
         -------
-        dict.
+        dict
             :class:`~pod_lca.impacts.CarbonStorage` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.CarbonStorage`}
         """
         for item in self.get_all_items():

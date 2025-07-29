@@ -24,7 +24,7 @@ class Building:
         Built year of the building.
     components : list of BuildingComponent Objs.
         Structural and Fascade elements that make up the building.
-    impacts : dict.
+    impacts : dict
         Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
     eol_impact_database : ImpactsDatabase Obj.
         Impacts related to end of life processes.

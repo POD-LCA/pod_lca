@@ -161,11 +161,11 @@
 <dt class="sig sig-object py" id="pod_lca.eol.Waste">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.eol.</span></span><span class="sig-name descname"><span class="pre">Waste</span></span><a class="headerlink" href="#pod_lca.eol.Waste" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.lca_modules.materials_screening.product.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a></p>
-<p>Waste product handling the end-of-life or product. This inherit from the material.Master object.</p>
+<p>Waste product handling the end-of-life or product.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.parent">
 <span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#pod_lca.eol.Waste.parent" title="Link to this definition">¶</a></dt>
-<dd><p>The thing that which was converted to waste.</p>
+<dd><p>The thing being was converted to waste.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><em>BuildingComponent</em> or <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a></p>
@@ -199,10 +199,21 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.impacts">
 <span class="sig-name descname"><span class="pre">impacts</span></span><a class="headerlink" href="#pod_lca.eol.Waste.impacts" title="Link to this definition">¶</a></dt>
-<dd><p>Impact objects categorized by life cycle stage {<strong>life cycle stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): list of :class:~pod_lca.impacts.Impacts}</p>
+<dd><p>Impact objects categorized by life cycle stage {<strong>life cycle stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): list of <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a>}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.Waste.emissions">
+<span class="sig-name descname"><span class="pre">emissions</span></span><a class="headerlink" href="#pod_lca.eol.Waste.emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Emission objects categorized by life cycle stage {<strong>life cycle stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): list of <a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,6 +245,12 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <li><p><strong>bio_based</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True if the material is bio-based.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Waste product.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -251,10 +268,8 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.set_impact_database_entry">
 <span class="sig-name descname"><span class="pre">set_impact_database_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_impact_database_entry" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Sets the database (impacts) entry corresponding to the item.</dt><dd><p>This method will also update the corresponding impact quanitities.</p>
-</dd>
-</dl>
+<dd><p>Sets the impacts database entry corresponding to the item.
+This method will also update the corresponding impact quanitities.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>database_item</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the database item which gives the item impacts.</p>
@@ -318,8 +333,14 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd><p>Get the mix of process the waste product is subjected to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dict</strong> -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<dd class="field-odd"><p><strong>dict</strong> -- The mix of processes the waste product will be subject to: {<strong>process name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>percentage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}.
 Percentage can be in the form of string with a % sign or decimal value.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Mix percentates are unrecognized.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Mix percentages does not sum to 100%.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -371,11 +392,14 @@ Default is 'assigned'</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<dd class="field-even"><p>The mix of processes the waste product will be subject to: {<strong>process name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>percentage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}.
 Percentage can be in the form of string with a % sign or decimal value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Calculation mode not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -453,6 +477,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.waste_processes"><code class="docutils literal notranslate"><span class="pre">Waste.waste_processes</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.process_mix</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.impacts"><code class="docutils literal notranslate"><span class="pre">Waste.impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.Waste.emissions"><code class="docutils literal notranslate"><span class="pre">Waste.emissions</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.bio_based"><code class="docutils literal notranslate"><span class="pre">Waste.bio_based</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.new"><code class="docutils literal notranslate"><span class="pre">Waste.new()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.set_parent"><code class="docutils literal notranslate"><span class="pre">Waste.set_parent()</span></code></a></li>

@@ -24,7 +24,7 @@ class MonteCarloSimulator:
         Impact category considered for the impact calculation.
     var_param : List
         List of Distribution objects.
-    scenario : dict.
+    scenario : dict
         Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
         Scenario values are 'low', 'med', and 'high'.
     result : result Obj.
@@ -140,7 +140,7 @@ class MonteCarloSimulator:
         
         Parameters
         ----------
-        scenario : dict.
+        scenario : dict
             Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
             Scenario values are 'low', 'med', and 'high'.
         """
@@ -204,7 +204,7 @@ class MonteCarloSimulator:
         
         Returns
         ----------
-        dict.
+        dict
             Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
             Scenario values are 'low', 'med', and 'high'.
         """

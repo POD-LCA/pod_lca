@@ -38,7 +38,7 @@ class Master:
         Unit of measurement corresponding to the quantity of the product/process.
     is_hotspot : bool
         True, if the object is a hotspot in the model.
-    data_distribution : dict.
+    data_distribution : dict
         Data distributions corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}.
     pedigree_score : ~pod_lca.uncertainty.PedigreeScore
         Data quality indicator for the object
@@ -420,7 +420,7 @@ class Master:
 
         Returns
         -------
-        dict.
+        dict
             DataDistribution objects corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}        
         """
         return self.data_distributions
@@ -445,7 +445,7 @@ class Master:
 
         Returns
         -------
-        dict.
+        dict
             Distributions Datasets corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}.
         """
         return self.pedigree_score

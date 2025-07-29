@@ -16,19 +16,21 @@ from ...utilities import log
 
 
 class Waste(Product):
-    """ Waste product handling the end-of-life or product. This inherit from the material.Master object.
+    """ Waste product handling the end-of-life or product.
     
     Attributes
     ----------
     parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
-        The thing that which was converted to waste.
+        The thing being was converted to waste.
     waste_processes : list of ~pod_lca.eol.WasteProcess
         List of processes the waste will be subjected to. These processes are in parallel.
     process_mix : dict
-        The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
+        The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}. 
         Percentage can be in the form of string with a % sign or decimal value.              
-    impacts : dict.
-        Impact objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:~pod_lca.impacts.Impacts}
+    impacts : dict
+        Impact objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
+    emissions : dict
+        Emission objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
     bio_based : bool
         True if the material is bio-based.          
     """
@@ -36,7 +38,6 @@ class Waste(Product):
     def __init__(self):
         super().__init__()
         self.parent = None
-        self.is_waste = True
         self.waste_processes = None
         self.process_mix = None
         self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
@@ -77,7 +78,12 @@ class Waste(Product):
             The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
             Percentage can be in the form of string with a % sign or decimal value.
         bio_based : bool
-            True if the material is bio-based.       
+            True if the material is bio-based.
+
+        Returns
+        -------
+        ~pod_lca.eol.Waste
+            Waste product.     
         """
         waste_item = cls()
 
@@ -109,8 +115,8 @@ class Waste(Product):
         return self
 
     def set_impact_database_entry(self, database_item:str):
-        """ Sets the database (impacts) entry corresponding to the item.
-            This method will also update the corresponding impact quanitities.
+        """ Sets the impacts database entry corresponding to the item.
+        This method will also update the corresponding impact quanitities.
         
         Parameters
         ----------
@@ -232,8 +238,15 @@ class Waste(Product):
         Parameters
         ----------
         dict
-            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-            Percentage can be in the form of string with a % sign or decimal value.       
+            The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
+            Percentage can be in the form of string with a % sign or decimal value.
+
+        Raises
+        ------
+        TypeError  
+            Mix percentates are unrecognized.
+        ValueError
+            Mix percentages does not sum to 100%.
         """
         waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
         process_mix_cleaned = {}
@@ -310,8 +323,13 @@ class Waste(Product):
         Returns
         -------
         dict
-            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-            Percentage can be in the form of string with a % sign or decimal value.       
+            The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
+            Percentage can be in the form of string with a % sign or decimal value.
+
+        Raises
+        ------
+        ValueError
+            Calculation mode not recognized.   
         """
         if mode == 'assigned':
             if process_name is None:
@@ -427,6 +445,7 @@ class Waste(Product):
         -------
         bool
             True if the sum of the mix percentages adds upto a 100%, within tolerence.
+
         """
         sum = 0.0
         for key, value in process_mix.items():
@@ -440,7 +459,7 @@ class Waste(Product):
         if abs(sum - 1) < tol:
             return True
         else:
-            raise ValueError(f"Total of mix does not add upp to 100%. Value reached {sum*100}\%.")
+            return False
         
         
 if __name__ == '__main__':

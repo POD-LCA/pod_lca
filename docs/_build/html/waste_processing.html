@@ -173,17 +173,6 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.name" title="Link to this definition">¶</a></dt>
-<dd><p>Name to identifying the waste process and parent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.process_name">
 <span class="sig-name descname"><span class="pre">process_name</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.process_name" title="Link to this definition">¶</a></dt>
 <dd><p>End-of-life pathway:
@@ -238,7 +227,18 @@ Default to 'Incinerate'.</p>
 <dd><p>Unit impacts of the process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Impact</em></p>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.unit_emissions">
+<span class="sig-name descname"><span class="pre">unit_emissions</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.unit_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Unit emissions of the process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -307,6 +307,12 @@ Default to 'Incinerate'.</p></li>
 <li><p><strong>linked_process</strong> (<em>{None</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Linked waste process.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Waste process object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -337,17 +343,6 @@ Default to 'Incinerate'.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_name">
-<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_name" title="Link to this definition">¶</a></dt>
-<dd><p>Set name of the process identifying the parent and process.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name identifyer.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_qty">
 <span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_qty" title="Link to this definition">¶</a></dt>
 <dd><p>Set quantity of the parent subjected to this waste process.</p>
@@ -365,6 +360,9 @@ Default to 'Incinerate'.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- New unit incompatible with the existing units.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -501,7 +499,7 @@ Default to 'Incinerate'.</p></li>
 <dd class="field-odd"><p>Unit impacts of the process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Impact</em></p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -515,7 +513,7 @@ Default to 'Incinerate'.</p></li>
 <dd class="field-odd"><p>Unit emissions of the process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Emission</em></p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -578,12 +576,12 @@ Default to 'Incinerate'.</p></li>
 <li><a class="reference internal" href="#">Waste Processing</a><ul>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess"><code class="docutils literal notranslate"><span class="pre">WasteProcess</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.parent</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.name</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.process_name</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.qty</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.life_cycle_stage</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit_impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit_emissions"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit_emissions</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.location"><code class="docutils literal notranslate"><span class="pre">WasteProcess.location</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.transporation_leg"><code class="docutils literal notranslate"><span class="pre">WasteProcess.transporation_leg</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.linked_to"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_to</span></code></a></li>
@@ -591,7 +589,6 @@ Default to 'Incinerate'.</p></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.new"><code class="docutils literal notranslate"><span class="pre">WasteProcess.new()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_parent()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_process_name()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_qty()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_unit()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_life_cycle_stage()</span></code></a></li>

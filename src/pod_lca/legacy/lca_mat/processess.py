@@ -60,8 +60,8 @@ class ProcessessMatrix():
         
         Inputs:
         ------
-            exchanges : dict.
-                Dictionary of all exchanges.
+        exchanges : dict
+            Dictionary of all exchanges.
         
         """
         mat_data = self.get_mat_data()

@@ -16,8 +16,6 @@ class WasteProcess:
     ----------
     parent : ~pod_lca.eol.Waste
         Waste object for which the waste processing belong.
-    name : str
-        Name to identifying the waste process and parent.
     process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
             End-of-life pathway:
             - 'Landfill': transporting waste to a landfill.
@@ -31,8 +29,10 @@ class WasteProcess:
         Unit of measurement.
     life_cycle_stage : {'C3', 'C4', 'D'}
         Life cycle stage of this process.
-    unit_impacts :  ~pod_lca.impacts.Impact
+    unit_impacts :  ~pod_lca.impacts.Impacts
         Unit impacts of the process.
+    unit_emissions :  ~pod_lca.impacts.Emissions
+        Unit emissions of the process.
     location : ~pod_lca.location.Location
         Location where the process occurs.
     transporation_leg : ~pod_lca.transportation.TransportationLeg
@@ -85,6 +85,11 @@ class WasteProcess:
             Life cycle stage of this process.
         linked_process : {None, 'C4', 'D'}  
             Linked waste process.
+
+        Returns
+        -------
+        ~pod_lca.eol.WasteProcess
+            Waste process object.
         """
         waste_process = cls()
 
@@ -92,10 +97,9 @@ class WasteProcess:
         waste_process.set_life_cycle_stage(life_cycle_stage)
         waste_process.set_unit(unit)
         waste_process.set_process_name(process_name)
-        waste_process.set_name()
         waste_process.set_qty(qty)
 
-        parent.waste_processes.append(waste_process)
+        parent.get_waste_processes().append(waste_process)
 
         if linked_process is not None:
             for process in linked_process:
@@ -123,7 +127,7 @@ class WasteProcess:
         """
         self.parent = parent
 
-        return parent
+        return self
     
     def set_process_name(self, name):
         """ Set the process name.
@@ -138,21 +142,6 @@ class WasteProcess:
                 - 'Incinerate': transporting to an incinerator.
         """
         self.process_name = name
-
-        return self
-    
-    def set_name(self, name=None):
-        """ Set name of the process identifying the parent and process.
-        
-        Parameters
-        ----------
-        name : str
-            Name identifyer.
-        """
-        if name is None:
-            self.name = self.get_parent().get_name() + '-' + self.get_process_name()
-        else:
-            self.name = name
 
         return self
             
@@ -172,6 +161,8 @@ class WasteProcess:
             else:
                 self.get_linked_process().set_unit(self.get_unit())
                 self.get_linked_process().set_qty(qty)
+        
+        return self
 
     def set_unit(self, unit):
         """ Set unit of measurement for the waste amount processed.
@@ -180,6 +171,11 @@ class WasteProcess:
         ----------
         unit : ~pod_lca.units.Unit
             Unit of measurement.
+
+        Raises
+        ------
+        ValueError
+            New unit incompatible with the existing units.
         """
         if self.get_unit() is None:
             self.unit = unit
@@ -242,6 +238,8 @@ class WasteProcess:
         self.get_unit_impacts().update_qty(impacts)
         self.get_unit_emissions().update_qty(emissions)
 
+        return self
+
     def set_location(self, location):
         """ Set location of the waste process facility.
 
@@ -299,8 +297,7 @@ class WasteProcess:
         str
             Name identifyer.
         """
-
-        return self.name
+        return self.get_parent().get_parent().get_name() + '_' + self.get_process_name()
         
     def get_qty(self):
         """ Get quantity of the parent subjected to this waste process.
@@ -337,7 +334,7 @@ class WasteProcess:
 
         Returns
         -------
-        ~pod_lca.impacts.Impact
+        ~pod_lca.impacts.Impacts
             Unit impacts of the process.
         """
         self.update_unit_inventories()
@@ -348,7 +345,7 @@ class WasteProcess:
 
         Returns
         -------
-        ~pod_lca.impacts.Emission
+        ~pod_lca.impacts.Emissions
             Unit emissions of the process.
         """
         self.update_unit_inventories()
