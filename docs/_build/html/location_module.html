@@ -277,6 +277,34 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.from_US_state">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_US_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_all_location_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.from_US_state" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Create location from US zipcode.</dt><dd><p>The location data populated based on the centroid of the area represented by the zipcode.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>zipcode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Zipcode of the location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.from_faf_regions">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_faf_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faf_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_all_location_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.from_faf_regions" title="Link to this definition">¶</a></dt>
+<dd><p>Create location from Freight Analysis Framework (FAF) region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>faf_region</strong> (<em>{'Rest</em><em> of </em><em>Americas'</em><em>, </em><em>'Europe'</em><em>, </em><em>'Africa'</em><em>, </em><em>'SW &amp; Central Asia'</em><em>, </em><em>'Eastern Asia'</em><em>, </em><em>'SE Asia &amp; Oceania'}</em>) -- FAF region name.</p></li>
+<li><p><strong>country</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Country name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.location.Location.set_name">
 <span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_name" title="Link to this definition">¶</a></dt>
 <dd><p>Set name of the location.</p>
@@ -300,7 +328,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.location.Location.set_cordinates">
-<span class="sig-name descname"><span class="pre">set_cordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location_nominatim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_cordinates" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_cordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location_nominatim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_cordinates" title="Link to this definition">¶</a></dt>
 <dd><p>Set the coordinates of the location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -367,7 +395,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.location.Location.set_cfs_area">
 <span class="sig-name descname"><span class="pre">set_cfs_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_cfs_area" title="Link to this definition">¶</a></dt>
-<dd><p>Set the country of the location.</p>
+<dd><p>Set the state code from the Comodity Flow Survey (CFS).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -404,12 +432,6 @@
 <dt class="sig sig-object py" id="pod_lca.location.Location.set_reeds_balancing_area">
 <span class="sig-name descname"><span class="pre">set_reeds_balancing_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_reeds_balancing_area" title="Link to this definition">¶</a></dt>
 <dd><p>Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.location.Location.set_marine_region">
-<span class="sig-name descname"><span class="pre">set_marine_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_marine_region" title="Link to this definition">¶</a></dt>
-<dd><p>Set the marine region of the location.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -503,6 +525,20 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_state_abbr">
+<span class="sig-name descname"><span class="pre">get_state_abbr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_state_abbr" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the state abbreviation of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.location.Location.get_country">
 <span class="sig-name descname"><span class="pre">get_country</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_country" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve the country of the location.</p>
@@ -546,14 +582,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.location.Location.get_faf_foreign_region">
-<span class="sig-name descname"><span class="pre">get_faf_foreign_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_faf_foreign_region" title="Link to this definition">¶</a></dt>
-<dd><p>Get the FAF region (foreign) of the location.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.location.Location.get_marine_region">
-<span class="sig-name descname"><span class="pre">get_marine_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_marine_region" title="Link to this definition">¶</a></dt>
-<dd><p>Get the marine region of the location.</p>
+<span class="sig-name descname"><span class="pre">get_faf_foreign_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'code'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_faf_foreign_region" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Freight Analysis Framework (FAF) region (foreign) of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>{'code'</em><em>, </em><em>'name'}</em>) -- FAF foreign region code or name</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -581,6 +616,26 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_states">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_closest_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_states" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest states to the destination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Destination location object.</p></li>
+<li><p><strong>states_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- List of states to find the closest ones from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The closest state to the destination.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_zip">
 <em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_closest_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_zip" title="Link to this definition">¶</a></dt>
 <dd><p>Get the zipcode of the location.</p>
@@ -591,6 +646,48 @@
 <li><p><strong>max_attempts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Maximum number of attempts to find the closest zip code</p></li>
 <li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Step size in km (approx.)</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_state_CFS">
+<span class="sig-name descname"><span class="pre">get_closest_state_CFS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">codes_lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_state_CFS" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest states to the destination, where states are given in CFS codes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Destination location object.</p></li>
+<li><p><strong>states_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- List of states to find the closest ones from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> -- The closest state to the destination.</p></li>
+<li><p><em>int</em> -- CFS code of the closest state.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_regions_FAF">
+<span class="sig-name descname"><span class="pre">get_closest_regions_FAF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_regions_FAF" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest states to the destination, where states are given in Freight Analysis Framework (FAF) domestic region codes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Destination location object.</p></li>
+<li><p><strong>states_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- List of states to find the closest ones from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>str</em> -- The closest state to the destination.</p></li>
+<li><p><em>int</em> -- FAF code of the closest state.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -625,6 +722,8 @@
 <li><a class="reference internal" href="#pod_lca.location.Location.country_code"><code class="docutils literal notranslate"><span class="pre">Location.country_code</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.from_str"><code class="docutils literal notranslate"><span class="pre">Location.from_str()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.from_US_zip"><code class="docutils literal notranslate"><span class="pre">Location.from_US_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.from_US_state"><code class="docutils literal notranslate"><span class="pre">Location.from_US_state()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.from_faf_regions"><code class="docutils literal notranslate"><span class="pre">Location.from_faf_regions()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.set_name"><code class="docutils literal notranslate"><span class="pre">Location.set_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.set_regionality"><code class="docutils literal notranslate"><span class="pre">Location.set_regionality()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.set_cordinates"><code class="docutils literal notranslate"><span class="pre">Location.set_cordinates()</span></code></a></li>
@@ -640,7 +739,6 @@
 <li><a class="reference internal" href="#pod_lca.location.Location.set_balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.set_balancing_authority()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.set_cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.set_cambium_gea_region()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.set_reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.set_reeds_balancing_area()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.location.Location.set_marine_region"><code class="docutils literal notranslate"><span class="pre">Location.set_marine_region()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.set_us_coast"><code class="docutils literal notranslate"><span class="pre">Location.set_us_coast()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_location_name"><code class="docutils literal notranslate"><span class="pre">Location.get_location_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_regionality"><code class="docutils literal notranslate"><span class="pre">Location.get_regionality()</span></code></a></li>
@@ -648,16 +746,19 @@
 <li><a class="reference internal" href="#pod_lca.location.Location.get_zip"><code class="docutils literal notranslate"><span class="pre">Location.get_zip()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_city"><code class="docutils literal notranslate"><span class="pre">Location.get_city()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_state"><code class="docutils literal notranslate"><span class="pre">Location.get_state()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_state_abbr"><code class="docutils literal notranslate"><span class="pre">Location.get_state_abbr()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_country"><code class="docutils literal notranslate"><span class="pre">Location.get_country()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_country_code"><code class="docutils literal notranslate"><span class="pre">Location.get_country_code()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_cfs_area"><code class="docutils literal notranslate"><span class="pre">Location.get_cfs_area()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_faf_foreign_region"><code class="docutils literal notranslate"><span class="pre">Location.get_faf_foreign_region()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.location.Location.get_marine_region"><code class="docutils literal notranslate"><span class="pre">Location.get_marine_region()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_ferc_region"><code class="docutils literal notranslate"><span class="pre">Location.get_ferc_region()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.get_balancing_authority()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.get_cambium_gea_region()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.get_reeds_balancing_area()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_states"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_states()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.location.Location.get_closest_zip"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_state_CFS"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_state_CFS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_regions_FAF"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_regions_FAF()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -113,7 +113,7 @@ class ElectricitySupply:
         
         Parameters
         ----------
-        location : Location Obj.
+        location : ~pod_lca.location.Location
             The location of the electricity supply authority.
         year : int
             Year of electricity consumption.
@@ -160,11 +160,11 @@ class ElectricitySupply:
         
         Parameters
         ----------
-        geographical_scope : str
+        geographical_scope : {'National'. 'Regional', 'Local'}
             Geographical scope of the electricity supply.
-                'National': US average
-                'Regional': FERC region
-                'Local': Balancing Authority.
+            - 'National': US average
+            - 'Regional': FERC region
+            - 'Local': Balancing Authority.
         """
         location_resolution = self.get_location().get_regionality() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
         if ((location_resolution == 'National') and (geographical_scope == 'Local' or geographical_scope == 'Regional')) or ((location_resolution == 'Regional') and (geographical_scope == 'Local')):
@@ -180,7 +180,7 @@ class ElectricitySupply:
         
         Parameters
         ----------
-        location : Location Obj.
+        location : ~pod_lca.location.Location
             The location of the electricity supply authority.
         """
         self.location = location
@@ -218,7 +218,7 @@ class ElectricitySupply:
     
         Parameters
         ----------
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Declared unit.
         """
         self.declared_unit = unit
@@ -230,8 +230,8 @@ class ElectricitySupply:
     
         Parameters
         ----------
-        scenario : str
-            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
+            Electricity consmuption scenario considered.
         """
         self.scenario = scenario
 
@@ -242,11 +242,11 @@ class ElectricitySupply:
         
         Parameters
         ----------
-        geographical_scope : str
+        geographical_scope : {'National'. 'Regional', 'Local'}
             Geographical scope of the electricity supply.
-                'National': US average
-                'Regional': FERC region
-                'Local': Balancing Authority.        
+            - 'National': US average
+            - 'Regional': FERC region
+            - 'Local': Balancing Authority.        
         """
         # Get regionalised impact data
         if (geographical_scope== 'National'):
@@ -323,7 +323,7 @@ class ElectricitySupply:
         
         Returns
         -------
-        Location Obj.
+        ~pod_lca.location.Location
             The location of the electricity supply authority.
         """
         return self.location
@@ -353,7 +353,7 @@ class ElectricitySupply:
         
         Returns
         -------
-        Impacts Obj.
+        ~pod_lca.impacts.Impacts
             The impacts of the electricity supply authority.
         """
         self.update_inventory_records()
@@ -365,7 +365,7 @@ class ElectricitySupply:
         
         Returns
         -------
-        Emissions Obj.
+        ~pod_lca.impacts.Emissions
             The emissions of the electricity supply authority.
         """
         self.update_inventory_records()
@@ -382,7 +382,7 @@ class ElectricitySupply:
         
         Returns
         -------
-        Unit Obj.
+        ~pod_lca.units.Unit
             Declared unit
         """
         return self.declared_unit
@@ -397,7 +397,7 @@ class ElectricitySupply:
         ----------
         regions : list of str
             List of regions to choose from.
-        impact_data : DataFrame
+        impact_data : pandas.DataFrame
             DataFrame containing impact data for the regions.
         impact_category : str
             The impact category to consider for the selection.
@@ -452,7 +452,7 @@ class ElectricitySupply:
         
         Returns
         -------
-        list of Impact Obj.
+        list of ~pod_lca.impacts.Impact
             Impact objects representing the distribution of the impacts.
         list of int
             List of weights for each impact object in the distribution.

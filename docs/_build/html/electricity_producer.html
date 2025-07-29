@@ -214,8 +214,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_impacts">
-<span class="sig-name descname"><span class="pre">set_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impacts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_impacts" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_unit_impacts">
+<span class="sig-name descname"><span class="pre">set_unit_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impacts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_unit_impacts" title="Link to this definition">¶</a></dt>
 <dd><p>Set the impacts of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -225,12 +225,23 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_emissions">
-<span class="sig-name descname"><span class="pre">set_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emissions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_emissions" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_unit_emissions">
+<span class="sig-name descname"><span class="pre">set_unit_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emissions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_unit_emissions" title="Link to this definition">¶</a></dt>
 <dd><p>Set the emissions of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>emissions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The emissions of the electricity producer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_declared_unit">
+<span class="sig-name descname"><span class="pre">set_declared_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_declared_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Set the declared unit of impacts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Declared unit.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -284,8 +295,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_impacts">
-<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_impacts" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_unit_impacts">
+<span class="sig-name descname"><span class="pre">get_unit_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_unit_impacts" title="Link to this definition">¶</a></dt>
 <dd><p>Get the impacts of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -298,8 +309,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_emissions">
-<span class="sig-name descname"><span class="pre">get_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_emissions" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_unit_emissions">
+<span class="sig-name descname"><span class="pre">get_unit_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_unit_emissions" title="Link to this definition">¶</a></dt>
 <dd><p>Get the emissions of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -307,6 +318,20 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_declared_unit">
+<span class="sig-name descname"><span class="pre">get_declared_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_declared_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Set the declared unit of impacts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Declared unit.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -335,14 +360,16 @@
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_energy_source"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_energy_source()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_year()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_unit_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_unit_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_unit_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_unit_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_declared_unit"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_declared_unit()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_invetories"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_invetories()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_energy_source"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_energy_source()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_year()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_unit_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_unit_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_unit_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_unit_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_declared_unit"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_declared_unit()</span></code></a></li>
 </ul>
 </li>
 </ul>

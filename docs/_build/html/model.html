@@ -172,7 +172,7 @@
 <dd><p>Project on which the calculator operates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Project Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="material_screening_project.html#pod_lca.materials_screening.Project" title="pod_lca.materials_screening.Project"><em>Project</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -194,7 +194,7 @@
 <dd><p>Processes in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of Process Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <em></em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,7 +205,18 @@
 <dd><p>Products in the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of Product Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <em></em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.transportation_manager">
+<span class="sig-name descname"><span class="pre">transportation_manager</span></span><a class="headerlink" href="#pod_lca.materials_screening.Model.transportation_manager" title="Link to this definition">¶</a></dt>
+<dd><p>Logistics manager for the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ProjectLogisticManager</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,7 +224,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Model.impacts">
 <span class="sig-name descname"><span class="pre">impacts</span></span><a class="headerlink" href="#pod_lca.materials_screening.Model.impacts" title="Link to this definition">¶</a></dt>
-<dd><p>Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}</p>
+<dd><p>~pod_lca.impacts.Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -221,15 +232,33 @@
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.emissions">
+<span class="sig-name descname"><span class="pre">emissions</span></span><a class="headerlink" href="#pod_lca.materials_screening.Model.emissions" title="Link to this definition">¶</a></dt>
+<dd><p>~pod_lca.impacts.Emissions objects categorized by life cycle stage {life cycle stage (str): list of Emission Obj.}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.carbon_storage">
+<span class="sig-name descname"><span class="pre">carbon_storage</span></span><a class="headerlink" href="#pod_lca.materials_screening.Model.carbon_storage" title="Link to this definition">¶</a></dt>
+<dd><p>~pod_lca.impacts.CarbonStorage objects categorized by life cycle stage {life cycle stage (str): list of CarbonStorage Obj.}</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Model.in_project">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.in_project" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.in_project" title="Link to this definition">¶</a></dt>
 <dd><p>Create a model object from a parent object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>project</strong> (<em>Project Obj.</em>) -- Project to which the model belong.</p></li>
 <li><p><strong>name</strong> (<em>str.</em>) -- Name of the model.</p></li>
+<li><p><strong>transport_scope</strong> (<em>{'local'</em><em>, </em><em>'global'}</em>) -- Transportation scope of the model.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -279,6 +308,17 @@ Quantity in the transportation process should be the distance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<em>str.</em>) -- Name of the model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.set_transportation_manager">
+<span class="sig-name descname"><span class="pre">set_transportation_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logistic_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'local'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.set_transportation_manager" title="Link to this definition">¶</a></dt>
+<dd><p>Set the logistics manager of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logistic_type</strong> (<em>{'local'</em><em>, </em><em>'global'}</em>) -- Transportation scope of the model.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,6 +394,20 @@ Quantity in the transportation process should be the distance.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.get_transportation_manager">
+<span class="sig-name descname"><span class="pre">get_transportation_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.get_transportation_manager" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the logistics manager of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Logistics manager for the model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ProjectLogisticManager</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Model.get_impacts">
 <span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.get_impacts" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve all the impacts in the model categorized by life cycle stage.</p>
@@ -419,31 +473,8 @@ Quantity in the transportation process should be the distance.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.add_transportation_process">
-<span class="sig-name descname"><span class="pre">add_transportation_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transported_distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impacts_from</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.add_transportation_process" title="Link to this definition">¶</a></dt>
-<dd><p>Create and add process to the model.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str.</em>) -- Name of the process.</p></li>
-<li><p><strong>stage</strong> (<em>str.</em>) -- Life cycle stage.</p></li>
-<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity processed.</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit of the quantity.</p></li>
-<li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Process object created.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Process Obj.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Model.add_product">
-<span class="sig-name descname"><span class="pre">add_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impacts_from</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.add_product" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impacts_from</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sctg_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.add_product" title="Link to this definition">¶</a></dt>
 <dd><p>Create and add product to the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -453,6 +484,7 @@ Quantity in the transportation process should be the distance.</p>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Product quantity.</p></li>
 <li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p></li>
 <li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
+<li><p><strong>sctg_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Standard Classification of Transported Goods (SCTG) code of the material</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -676,21 +708,25 @@ Quantity in the transportation process should be the distance.</p>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.name"><code class="docutils literal notranslate"><span class="pre">Model.name</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.processes"><code class="docutils literal notranslate"><span class="pre">Model.processes</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.products"><code class="docutils literal notranslate"><span class="pre">Model.products</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.transportation_manager"><code class="docutils literal notranslate"><span class="pre">Model.transportation_manager</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.impacts"><code class="docutils literal notranslate"><span class="pre">Model.impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.emissions"><code class="docutils literal notranslate"><span class="pre">Model.emissions</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.carbon_storage"><code class="docutils literal notranslate"><span class="pre">Model.carbon_storage</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.in_project"><code class="docutils literal notranslate"><span class="pre">Model.in_project()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.from_CSV"><code class="docutils literal notranslate"><span class="pre">Model.from_CSV()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.set_project"><code class="docutils literal notranslate"><span class="pre">Model.set_project()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.set_name"><code class="docutils literal notranslate"><span class="pre">Model.set_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.set_transportation_manager"><code class="docutils literal notranslate"><span class="pre">Model.set_transportation_manager()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_project"><code class="docutils literal notranslate"><span class="pre">Model.get_project()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_name"><code class="docutils literal notranslate"><span class="pre">Model.get_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_processes"><code class="docutils literal notranslate"><span class="pre">Model.get_processes()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_products"><code class="docutils literal notranslate"><span class="pre">Model.get_products()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_all_items"><code class="docutils literal notranslate"><span class="pre">Model.get_all_items()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_transportation_manager"><code class="docutils literal notranslate"><span class="pre">Model.get_transportation_manager()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_impacts"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_emissions"><code class="docutils literal notranslate"><span class="pre">Model.get_emissions()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_carbon_storage"><code class="docutils literal notranslate"><span class="pre">Model.get_carbon_storage()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.add_process"><code class="docutils literal notranslate"><span class="pre">Model.add_process()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.materials_screening.Model.add_transportation_process"><code class="docutils literal notranslate"><span class="pre">Model.add_transportation_process()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.add_product"><code class="docutils literal notranslate"><span class="pre">Model.add_product()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.add_energy"><code class="docutils literal notranslate"><span class="pre">Model.add_energy()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.add_electricity"><code class="docutils literal notranslate"><span class="pre">Model.add_electricity()</span></code></a></li>

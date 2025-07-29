@@ -21,7 +21,7 @@ class CambiumData:
     
     Attributes
     ----------
-    data : DataFrame (Pandas)
+    data : pandas.DataFrame
         Pandas dataframe of cambium data loaded.
     """
 
@@ -34,9 +34,9 @@ class CambiumData:
         
         Parameters
         ----------
-        geographical_scope : str
-            Geographical scope of data: e.g., 'National', 'Regional', 'Local'.
-        location : Location Obj. or str
+        geographical_scope : {'National', 'Regional', 'Local'}
+            Geographical scope of data.
+        location : ~pod_lca.location.Location or str
             Location of electricity supply.
             If a string is provided, it should be the country code for national level data,
             region name for regional level data, or REEDS balancing authority for local level data.
@@ -98,10 +98,13 @@ class CambiumData:
             Year of electricity consumption.
         technologies : list
             List of electricity generation technoclogies to be classified by.
-        scenario : str
-            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
-        interpolate : str
-            Linear interpolation of electricity consumption between two years by 'values' or 'percentages'.
+        scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
+            Electricity consmuption scenario considered.
+        interpolate : {'values', 'percentages'}
+            Linear interpolation of electricity consumption between two years.
+            - 'values': interpolate values
+            - 'percentages': interpolate percentages
+            Default is by 'values'.
 
         Returns
         -------
@@ -171,8 +174,8 @@ class CambiumData:
         ----------
         year : int
             Year of electricity consumption.
-        scenario : str
-            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
+            Electricity consmuption scenario considered.
 
         Returns
         -------

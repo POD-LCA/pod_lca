@@ -160,7 +160,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.eol.</span></span><span class="sig-name descname"><span class="pre">Waste</span></span><a class="headerlink" href="#pod_lca.eol.Waste" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.lca_modules.materials_screening.master.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.lca_modules.materials_screening.product.Product"><code class="xref py py-class docutils literal notranslate"><span class="pre">Product</span></code></a></p>
 <p>Waste product handling the end-of-life or product. This inherit from the material.Master object.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.parent">
@@ -168,7 +168,7 @@
 <dd><p>The thing that which was converted to waste.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>BuildingComponent Obj. or Master Obj.</p>
+<dd class="field-odd"><p><em>BuildingComponent</em> or <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -179,7 +179,7 @@
 <dd><p>List of processes the waste will be subjected to. These processes are in parallel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of WasteProcess Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,10 +225,10 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<em>BuildingComponent Obj.</em><em> or </em><em>Master Obj.</em>) -- The thing that which was converted to waste.</p></li>
+<li><p><strong>parent</strong> (<em>BuildingComponent</em><em> or </em><a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- The thing that which was converted to waste.</p></li>
 <li><p><strong>database_item</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Material name corresponding to the database entry which gives the unit impact of the product.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the product/process.</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit of measurement corresponding to the quantity of the product/process.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement corresponding to the quantity of the product/process.</p></li>
 <li><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <li><p><strong>bio_based</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True if the material is bio-based.</p></li>
@@ -243,7 +243,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <dd><p>Set parent of the waste product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em>BuildingComponent Obj.</em><em> or </em><em>Master Obj.</em>) -- The thing that which was converted to waste.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<em>BuildingComponent</em><em> or </em><a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- The thing that which was converted to waste.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,12 +264,39 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.set_waste_processess">
-<span class="sig-name descname"><span class="pre">set_waste_processess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_mix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_waste_processess" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_waste_processess</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_waste_processess" title="Link to this definition">¶</a></dt>
 <dd><p>Set waste processe for the waste product. Also sets the process mix.</p>
+<p class="rubric">Notes</p>
+<p>The waste mix allocated to any process which is beyond its cutoff distance is reallocated to Landfill.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.Waste.set_waste_process">
+<span class="sig-name descname"><span class="pre">set_waste_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_qty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_waste_process" title="Link to this definition">¶</a></dt>
+<dd><p>Set waste process. If cutoff due to distance, returns the unprocessed waste quantity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.</p></li>
+<li><p><strong>process_qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of waste subjected to this process</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>~pod_lca.eol.WasteProcess</em> -- If the process is not cutoff</p></li>
+<li><p><em>float</em> -- If the process is cutoff, the balance waste quantity to be processed</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -286,6 +313,18 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.Waste.set_process_mix">
+<span class="sig-name descname"><span class="pre">set_process_mix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_mix</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.set_process_mix" title="Link to this definition">¶</a></dt>
+<dd><p>Get the mix of process the waste product is subjected to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dict</strong> -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+Percentage can be in the form of string with a % sign or decimal value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.get_parent">
 <span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.get_parent" title="Link to this definition">¶</a></dt>
 <dd><p>Get parent of the waste product.</p>
@@ -294,7 +333,7 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd class="field-odd"><p>The thing that which was converted to waste.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>BuildingComponent Obj. or Master Obj.</p>
+<dd class="field-even"><p><em>BuildingComponent</em> or <a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,25 +344,38 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dd><p>Get waste processe for the waste product.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>waste_processes</strong> -- List of processes the waste will be subjected to. These processes are in parallel.</p>
+<dd class="field-odd"><p>List of processes the waste will be subjected to. These processes are in parallel.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of WasteProcess Obj.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.Waste.get_process_mix">
-<span class="sig-name descname"><span class="pre">get_process_mix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.get_process_mix" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_process_mix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'assigned'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.get_process_mix" title="Link to this definition">¶</a></dt>
 <dd><p>Get the mix of process the waste product is subjected to.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.</p></li>
+<li><p><strong>mode</strong> (<em>{'assigned'</em><em>, </em><em>'actual'}</em>) -- Mode of calculation used for process mix;
+- 'assigned': the prescribed process mix.
+- 'actual': realized process mix. The differences due to cut-off distances are considered.
+Default is 'assigned'</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
 Percentage can be in the form of string with a % sign or decimal value.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -349,18 +401,11 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.eol.Waste.update_process_mix">
-<span class="sig-name descname"><span class="pre">update_process_mix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process_mix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overide</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.update_process_mix" title="Link to this definition">¶</a></dt>
-<dd><p>Update the waste process mix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>process_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
-Percentage can be in the form of string with a % sign or decimal value.</p></li>
-<li><p><strong>overide</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, allows any process to be added, if not only processes created in default are allowed.</p></li>
-</ul>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pod_lca.eol.Waste.update_waste_processess">
+<span class="sig-name descname"><span class="pre">update_waste_processess</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.Waste.update_waste_processess" title="Link to this definition">¶</a></dt>
+<dd><p>Update the waste processess.</p>
+<p class="rubric">Notes</p>
+<p>The waste mix allocated to any process which is beyond its cutoff distance is reallocated to Landfill.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -413,13 +458,15 @@ Percentage can be in the form of string with a % sign or decimal value.</p></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.set_parent"><code class="docutils literal notranslate"><span class="pre">Waste.set_parent()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.set_impact_database_entry"><code class="docutils literal notranslate"><span class="pre">Waste.set_impact_database_entry()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.set_waste_processess"><code class="docutils literal notranslate"><span class="pre">Waste.set_waste_processess()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.Waste.set_waste_process"><code class="docutils literal notranslate"><span class="pre">Waste.set_waste_process()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.set_bio_based"><code class="docutils literal notranslate"><span class="pre">Waste.set_bio_based()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.Waste.set_process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.set_process_mix()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.get_parent"><code class="docutils literal notranslate"><span class="pre">Waste.get_parent()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.get_waste_processes"><code class="docutils literal notranslate"><span class="pre">Waste.get_waste_processes()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.get_process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.get_process_mix()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.get_bio_based"><code class="docutils literal notranslate"><span class="pre">Waste.get_bio_based()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Waste.update_inventory_records()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.eol.Waste.update_process_mix"><code class="docutils literal notranslate"><span class="pre">Waste.update_process_mix()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.Waste.update_waste_processess"><code class="docutils literal notranslate"><span class="pre">Waste.update_waste_processess()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.Waste.check_mix_sum"><code class="docutils literal notranslate"><span class="pre">Waste.check_mix_sum()</span></code></a></li>
 </ul>
 </li>

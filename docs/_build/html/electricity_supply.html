@@ -246,7 +246,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>location</strong> (<em>Location Obj.</em>) -- The location of the electricity supply authority.</p></li>
+<li><p><strong>location</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- The location of the electricity supply authority.</p></li>
 <li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
 </ul>
 </dd>
@@ -276,13 +276,10 @@
 <dd><p>Set the geographical cope of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- <dl class="simple">
-<dt>Geographical scope of the electricity supply.</dt><dd><p>'National': US average
-'Regional': FERC region
-'Local': Balancing Authority.</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'. 'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the electricity supply.
+- 'National': US average
+- 'Regional': FERC region
+- 'Local': Balancing Authority.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -293,7 +290,7 @@
 <dd><p>Set the location of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>location</strong> (<em>Location Obj.</em>) -- The location of the electricity supply authority.</p>
+<dd class="field-odd"><p><strong>location</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- The location of the electricity supply authority.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -324,12 +321,12 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.set_unit">
-<span class="sig-name descname"><span class="pre">set_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.set_unit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.set_declared_unit">
+<span class="sig-name descname"><span class="pre">set_declared_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.set_declared_unit" title="Link to this definition">¶</a></dt>
 <dd><p>Set the declared unit of impacts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Declared unit.</p>
+<dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Declared unit.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -340,7 +337,7 @@
 <dd><p>Set scenario name. This will be used with cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -351,13 +348,10 @@
 <dd><p>Set the electricity producers for a given technology mix and corresponding impact data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- <dl class="simple">
-<dt>Geographical scope of the electricity supply.</dt><dd><p>'National': US average
-'Regional': FERC region
-'Local': Balancing Authority.</p>
-</dd>
-</dl>
-</p>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'. 'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the electricity supply.
+- 'National': US average
+- 'Regional': FERC region
+- 'Local': Balancing Authority.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -399,7 +393,7 @@
 <dd class="field-odd"><p>The location of the electricity supply authority.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Location Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -433,29 +427,29 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.get_impacts">
-<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.get_impacts" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.get_unit_impacts">
+<span class="sig-name descname"><span class="pre">get_unit_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.get_unit_impacts" title="Link to this definition">¶</a></dt>
 <dd><p>Get the impacts of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The impacts of the electricity supply authority.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.get_emissions">
-<span class="sig-name descname"><span class="pre">get_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.get_emissions" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.get_unit_emissions">
+<span class="sig-name descname"><span class="pre">get_unit_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.get_unit_emissions" title="Link to this definition">¶</a></dt>
 <dd><p>Get the emissions of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The emissions of the electricity supply authority.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Emissions Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -467,15 +461,15 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.get_unit">
-<span class="sig-name descname"><span class="pre">get_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.get_unit" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.get_declared_unit">
+<span class="sig-name descname"><span class="pre">get_declared_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.get_declared_unit" title="Link to this definition">¶</a></dt>
 <dd><p>Get the declared unit of the impacts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Declared unit</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Unit Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -488,7 +482,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>regions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of regions to choose from.</p></li>
-<li><p><strong>impact_data</strong> (<em>DataFrame</em>) -- DataFrame containing impact data for the regions.</p></li>
+<li><p><strong>impact_data</strong> (<a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)"><em>pandas.DataFrame</em></a>) -- DataFrame containing impact data for the regions.</p></li>
 <li><p><strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The impact category to consider for the selection.</p></li>
 </ul>
 </dd>
@@ -514,7 +508,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><em>list of Impact Obj.</em> -- Impact objects representing the distribution of the impacts.</p></li>
+<li><p><em>list of ~pod_lca.impacts.Impact</em> -- Impact objects representing the distribution of the impacts.</p></li>
 <li><p><em>list of int</em> -- List of weights for each impact object in the distribution.</p></li>
 </ul>
 </p>
@@ -529,78 +523,12 @@
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.electricity.</span></span><span class="sig-name descname"><span class="pre">CambiumData</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData" title="Link to this definition">¶</a></dt>
 <dd><p>A class to operate on cambium data.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.NATIONAL_DATA">
-<span class="sig-name descname"><span class="pre">NATIONAL_DATA</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.NATIONAL_DATA" title="Link to this definition">¶</a></dt>
-<dd><p>File path to national level cambium data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.REGIONAL_DATA">
-<span class="sig-name descname"><span class="pre">REGIONAL_DATA</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.REGIONAL_DATA" title="Link to this definition">¶</a></dt>
-<dd><p>File path to regional level cambium data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.LOCAL_DATA">
-<span class="sig-name descname"><span class="pre">LOCAL_DATA</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.LOCAL_DATA" title="Link to this definition">¶</a></dt>
-<dd><p>File path to local level cambium data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.DATA_YEARS">
-<span class="sig-name descname"><span class="pre">DATA_YEARS</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.DATA_YEARS" title="Link to this definition">¶</a></dt>
-<dd><p>List of years for which cambium data is available.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.HEADER_MAP">
-<span class="sig-name descname"><span class="pre">HEADER_MAP</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.HEADER_MAP" title="Link to this definition">¶</a></dt>
-<dd><p>File path to mapping of cambium data headers with electricity generation technology.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.TECHNOLOGY_MAP">
-<span class="sig-name descname"><span class="pre">TECHNOLOGY_MAP</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.TECHNOLOGY_MAP" title="Link to this definition">¶</a></dt>
-<dd><p>File path to mapping of cambium technology names with that of impact data source.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.electricity.CambiumData.data">
 <span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#pod_lca.electricity.CambiumData.data" title="Link to this definition">¶</a></dt>
 <dd><p>Pandas dataframe of cambium data loaded.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DataFrame (Pandas)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -612,8 +540,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Geographical scope of data: e.g., 'National', 'Regional', 'Local'.</p></li>
-<li><p><strong>location</strong> (<em>Location Obj.</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of electricity supply.
+<li><p><strong>geographical_scope</strong> (<em>{'National'</em><em>, </em><em>'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of data.</p></li>
+<li><p><strong>location</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of electricity supply.
 If a string is provided, it should be the country code for national level data,
 region name for regional level data, or REEDS balancing authority for local level data.</p></li>
 </ul>
@@ -632,8 +560,11 @@ region name for regional level data, or REEDS balancing authority for local leve
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
 <li><p><strong>technologies</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of electricity generation technoclogies to be classified by.</p></li>
-<li><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p></li>
-<li><p><strong>interpolate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Linear interpolation of electricity consumption between two years by 'values' or 'percentages'.</p></li>
+<li><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered.</p></li>
+<li><p><strong>interpolate</strong> (<em>{'values'</em><em>, </em><em>'percentages'}</em>) -- Linear interpolation of electricity consumption between two years.
+- 'values': interpolate values
+- 'percentages': interpolate percentages
+Default is by 'values'.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -653,7 +584,7 @@ region name for regional level data, or REEDS balancing authority for local leve
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
-<li><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p></li>
+<li><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -703,7 +634,7 @@ region name for regional level data, or REEDS balancing authority for local leve
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_location"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_location()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_consumption_mix"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_consumption_mix()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_year"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_year()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_unit"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_declared_unit"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_declared_unit()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_scenario"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_scenario()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.set_electricity_producers"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.set_electricity_producers()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_name"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_name()</span></code></a></li>
@@ -711,22 +642,16 @@ region name for regional level data, or REEDS balancing authority for local leve
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_location"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_location()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_consumption_mix"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_consumption_mix()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_year"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_year()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_unit_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_unit_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_unit_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_unit_emissions()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_scenario"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_scenario()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_unit"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_declared_unit"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_declared_unit()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.pick_region"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.pick_region()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.update_inventory_records()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply.get_impact_distribution"><code class="docutils literal notranslate"><span class="pre">ElectricitySupply.get_impact_distribution()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#pod_lca.electricity.CambiumData"><code class="docutils literal notranslate"><span class="pre">CambiumData</span></code></a><ul>
-<li><a class="reference internal" href="#pod_lca.electricity.CambiumData.NATIONAL_DATA"><code class="docutils literal notranslate"><span class="pre">CambiumData.NATIONAL_DATA</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.CambiumData.REGIONAL_DATA"><code class="docutils literal notranslate"><span class="pre">CambiumData.REGIONAL_DATA</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.CambiumData.LOCAL_DATA"><code class="docutils literal notranslate"><span class="pre">CambiumData.LOCAL_DATA</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.CambiumData.DATA_YEARS"><code class="docutils literal notranslate"><span class="pre">CambiumData.DATA_YEARS</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.CambiumData.HEADER_MAP"><code class="docutils literal notranslate"><span class="pre">CambiumData.HEADER_MAP</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.CambiumData.TECHNOLOGY_MAP"><code class="docutils literal notranslate"><span class="pre">CambiumData.TECHNOLOGY_MAP</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.CambiumData.data"><code class="docutils literal notranslate"><span class="pre">CambiumData.data</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.CambiumData.from_geographical_scope"><code class="docutils literal notranslate"><span class="pre">CambiumData.from_geographical_scope()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.CambiumData.get_mix"><code class="docutils literal notranslate"><span class="pre">CambiumData.get_mix()</span></code></a></li>

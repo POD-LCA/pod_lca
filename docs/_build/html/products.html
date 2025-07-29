@@ -757,6 +757,17 @@ If None, all stages are checked to find the product/process.</p>
 </dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.sctg_code">
+<span class="sig-name descname"><span class="pre">sctg_code</span></span><a class="headerlink" href="#pod_lca.materials_screening.Product.sctg_code" title="Link to this definition">¶</a></dt>
+<dd><p>Standard Classification of Transported Goods (SCTG) code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Product.mineral_carbonation_potential">
 <span class="sig-name descname"><span class="pre">mineral_carbonation_potential</span></span><a class="headerlink" href="#pod_lca.materials_screening.Product.mineral_carbonation_potential" title="Link to this definition">¶</a></dt>
 <dd><p>Mineral carbonation potential of the product.</p>
@@ -857,19 +868,19 @@ If None, all stages are checked to find the product/process.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.set_transporter">
-<span class="sig-name descname"><span class="pre">set_transporter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transporter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.set_transporter" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Set transport processes the product is subject to.</dt><dd><p>If not already added, will add the product to the transportation process as a transported product.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method is equivalent to calling 'set_transported_product' from the TransportationProcess Obj.</p>
-</div>
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.set_transportation">
+<span class="sig-name descname"><span class="pre">set_transportation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_trip_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.set_transportation" title="Link to this definition">¶</a></dt>
+<dd><p>Set transport processes the product is subject to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Obj.</strong> (<em>TransportationProcess</em>) -- Transportation process the product is subject to.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>travel_dist</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Transportation distance for goods</p></li>
+<li><p><strong>dist_unit</strong> (<em>Unit Obj</em>) -- Unit of measurement of distances.</p></li>
+<li><p><strong>transportation_scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Transportation scenario considered.</p></li>
+<li><p><strong>return_trip_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Return trip factor.</p></li>
+<li><p><strong>mode_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the transportation mode..</p></li>
+<li><p><strong>mode_efficiency</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Efficiency of the transportation mode.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -916,6 +927,17 @@ If dict, {'per': {'qty': (int or float), 'unit': (Unit Obj.)}}
 If Unit object only, the quantity is taken as 1.0;
 If None, taken as per unit of parent objects declared unit.</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.set_sctg_code">
+<span class="sig-name descname"><span class="pre">set_sctg_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.set_sctg_code" title="Link to this definition">¶</a></dt>
+<dd><p>Set the Standard Classification of Transported Goods (SCTG) code for the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>code</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Standard Classification of Transported Goods (SCTG) code of the material</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1039,16 +1061,15 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.get_transporter">
-<span class="sig-name descname"><span class="pre">get_transporter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.get_transporter" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.get_transportation">
+<span class="sig-name descname"><span class="pre">get_transportation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.get_transportation" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve transport processes the product is subject to, if any.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Transportation process the product is subject to, if any.
-None, otherwise.</p>
+<dd class="field-odd"><p>Transportation legs the product is subject to.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>TransportationProcess Obj.</p>
+<dd class="field-even"><p>List of <em>LogisticLink</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1065,6 +1086,23 @@ None, otherwise.</p>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.get_sctg_code">
+<span class="sig-name descname"><span class="pre">get_sctg_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">digits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.get_sctg_code" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Standard Classification of Transported Goods (SCTG) code for the material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>digits</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Significant digits of the Standard Classification of Transported Goods (SCTG) code of the material</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Product.get_eol_manager">
+<span class="sig-name descname"><span class="pre">get_eol_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Product.get_eol_manager" title="Link to this definition">¶</a></dt>
+<dd><p>Return the place where end-of-life transport dataset reside.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1788,6 +1826,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.weight_unit</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.density"><code class="docutils literal notranslate"><span class="pre">Product.density</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.trnasporter"><code class="docutils literal notranslate"><span class="pre">Product.trnasporter</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Product.sctg_code"><code class="docutils literal notranslate"><span class="pre">Product.sctg_code</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.mineral_carbonation_potential</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.is_material"><code class="docutils literal notranslate"><span class="pre">Product.is_material</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.is_fuel"><code class="docutils literal notranslate"><span class="pre">Product.is_fuel</span></code></a></li>
@@ -1796,11 +1835,12 @@ If no database entry is asigned, impacts are not updated.</p>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_production_year"><code class="docutils literal notranslate"><span class="pre">Product.set_production_year()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.set_weight_unit()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_density"><code class="docutils literal notranslate"><span class="pre">Product.set_density()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_transporter"><code class="docutils literal notranslate"><span class="pre">Product.set_transporter()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_transportation"><code class="docutils literal notranslate"><span class="pre">Product.set_transportation()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_source()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_electricity_database_tag"><code class="docutils literal notranslate"><span class="pre">Product.set_electricity_database_tag()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbonation_potential()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_mineral_carbon_intensity"><code class="docutils literal notranslate"><span class="pre">Product.set_mineral_carbon_intensity()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Product.set_sctg_code"><code class="docutils literal notranslate"><span class="pre">Product.set_sctg_code()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_production_year"><code class="docutils literal notranslate"><span class="pre">Product.get_production_year()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_electricity"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_electricity_source"><code class="docutils literal notranslate"><span class="pre">Product.get_electricity_source()</span></code></a></li>
@@ -1809,8 +1849,10 @@ If no database entry is asigned, impacts are not updated.</p>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_weight"><code class="docutils literal notranslate"><span class="pre">Product.get_weight()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_weight_unit"><code class="docutils literal notranslate"><span class="pre">Product.get_weight_unit()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_density"><code class="docutils literal notranslate"><span class="pre">Product.get_density()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_transporter"><code class="docutils literal notranslate"><span class="pre">Product.get_transporter()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_transportation"><code class="docutils literal notranslate"><span class="pre">Product.get_transportation()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_mineral_carbonation_potential"><code class="docutils literal notranslate"><span class="pre">Product.get_mineral_carbonation_potential()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_sctg_code"><code class="docutils literal notranslate"><span class="pre">Product.get_sctg_code()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Product.get_eol_manager"><code class="docutils literal notranslate"><span class="pre">Product.get_eol_manager()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">Product.update_inventory_records()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Product.update_electricity_records"><code class="docutils literal notranslate"><span class="pre">Product.update_electricity_records()</span></code></a></li>
 </ul>

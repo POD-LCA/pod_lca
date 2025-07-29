@@ -586,10 +586,14 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.impacts.EOLImpactsDatabase.process_key">
 <span class="sig-name descname"><span class="pre">process_key</span></span><a class="headerlink" href="#pod_lca.impacts.EOLImpactsDatabase.process_key" title="Link to this definition">¶</a></dt>
-<dd><p>Data header corresponding to the end-of-life process corresponding to the database entry.</p>
+<dd><p>Data header corresponding to the end-of-life pathway corresponding to the database entry.
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p>{'Landfill', 'Recycle', 'Compost', 'Incinerate'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -600,7 +604,7 @@
 <dd><p>Data header corresponding to the life cycle stage corresponding to the database entry.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p>{'C3', 'C4', 'D'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -611,10 +615,7 @@
 <dd><p>Create a new database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the database.</p></li>
-<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of the impact categories json file.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the database.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Database created.</p>
@@ -631,7 +632,11 @@
 <dd><p>Set process key of the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Data header corresponding to the end-of-life process corresponding to the database entry.</p>
+<dd class="field-odd"><p><strong>key</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- Data header corresponding to the end-of-life pathway corresponding to the database entry.
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -642,7 +647,7 @@
 <dd><p>Set life cycle stage key of the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Data header corresponding to the life cycle stage corresponding to the database entry.</p>
+<dd class="field-odd"><p><strong>key</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Data header corresponding to the life cycle stage corresponding to the database entry.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -697,15 +702,19 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>material_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the material</p></li>
-<li><p><strong>process_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- End-of-Life process name.</p></li>
-<li><p><strong>life_cycle_stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage.</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.</p></li>
+<li><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Databse entry corresponding to the flow.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pandas Series</p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.3.1)">pandas.Series</a></p>
 </dd>
 </dl>
 </dd></dl>

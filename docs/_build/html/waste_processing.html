@@ -167,7 +167,7 @@
 <dd><p>Waste object for which the waste processing belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Waste Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="waste.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -186,10 +186,15 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.process_name">
 <span class="sig-name descname"><span class="pre">process_name</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.process_name" title="Link to this definition">¶</a></dt>
-<dd><p>Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'.</p>
+<dd><p>End-of-life pathway:
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.
+Default to 'Incinerate'.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
+<dd class="field-odd"><p>{'Landfill', 'Recycle', 'Compost', 'Incinerate'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -211,7 +216,7 @@
 <dd><p>Unit of measurement.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Unit Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,10 +224,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.life_cycle_stage">
 <span class="sig-name descname"><span class="pre">life_cycle_stage</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.life_cycle_stage" title="Link to this definition">¶</a></dt>
-<dd><p>Life cycle stage of this process: e.g., 'C3', 'C4'.</p>
+<dd><p>Life cycle stage of this process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str.</p>
+<dd class="field-odd"><p>{'C3', 'C4', 'D'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -233,7 +238,7 @@
 <dd><p>Unit impacts of the process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Impact Obj.</p>
+<dd class="field-odd"><p><em>Impact</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,18 +249,18 @@
 <dd><p>Location where the process occurs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Location Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.transporation_link">
-<span class="sig-name descname"><span class="pre">transporation_link</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.transporation_link" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.transporation_leg">
+<span class="sig-name descname"><span class="pre">transporation_leg</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.transporation_leg" title="Link to this definition">¶</a></dt>
 <dd><p>Transportation of the waste object from parent's location to process location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Link Obj.</p>
+<dd class="field-odd"><p><em>TransportationLeg</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -266,7 +271,7 @@
 <dd><p>A follow up process. e.g, Recycle processing (C3) and Reuse (D).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>WasteProcess Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,23 +282,29 @@
 <dd><p>A previous end-of-life process. e.g, Recycle processing (C3) and Reuse (D).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>WasteProcess Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.new">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">life_cycle_stage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.new" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">life_cycle_stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linked_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.new" title="Link to this definition">¶</a></dt>
 <dd><p>Create new waste process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<em>Waste Obj.</em>) -- Waste object for which the waste processing belong.</p></li>
-<li><p><strong>process_name</strong> (<em>str.</em>) -- Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'.</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="waste.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a>) -- Waste object for which the waste processing belong.</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.
+Default to 'Incinerate'.</p></li>
 <li><p><strong>qty</strong> (<em>float.</em>) -- Quantity of the parent object subjected to this process.</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p></li>
-<li><p><strong>life_cycle_stage</strong> (<em>str.</em>) -- Life cycle stage of this process: e.g., 'C3', 'C4'.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p></li>
+<li><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage of this process.</p></li>
+<li><p><strong>linked_process</strong> (<em>{None</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Linked waste process.</p></li>
 </ul>
 </dd>
 </dl>
@@ -305,7 +316,7 @@
 <dd><p>Set parent Waste object of the Waste Processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em>Waste Obj.</em>) -- Waste object for which the waste processing belong.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="waste.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a>) -- Waste object for which the waste processing belong.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -316,7 +327,11 @@
 <dd><p>Set the process name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
+- 'Landfill': transporting waste to a landfill.
+- 'Recycle': transporting waste to a recycler.
+- 'Compost': transporting to a composting facility.
+- 'Incinerate': transporting to an incinerator.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -349,7 +364,7 @@
 <dd><p>Set unit of measurement for the waste amount processed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p>
+<dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -360,7 +375,7 @@
 <dd><p>Set life cycle stage of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>life_cycle_stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.</p>
+<dd class="field-odd"><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage of the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -377,7 +392,7 @@
 <dd><p>Set location of the waste process facility.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>location</strong> (<em>Location Obj.</em>) -- Location of the waster process facility.</p>
+<dd class="field-odd"><p><strong>location</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Location of the waster process facility.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -388,7 +403,7 @@
 <dd><p>Set a linked process to the current process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>process</strong> (<em>WasteProcess Obj.</em>) -- Secondary process following the current process.</p>
+<dd class="field-odd"><p><strong>process</strong> (<a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a>) -- Secondary process following the current process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -402,7 +417,7 @@
 <dd class="field-odd"><p>Waste object for which the waste processing belong.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Waste Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="waste.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -458,7 +473,7 @@
 <dd class="field-odd"><p>Unit of measurement.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Unit Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -486,7 +501,7 @@
 <dd class="field-odd"><p>Unit impacts of the process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impact Obj.</p>
+<dd class="field-even"><p><em>Impact</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -500,7 +515,7 @@
 <dd class="field-odd"><p>Unit emissions of the process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Emission Obj.</p>
+<dd class="field-even"><p><em>Emission</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -517,9 +532,29 @@
 <dd class="field-even"><p>Secondary process following the current process.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>WasteProcess Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_transportation_leg">
+<span class="sig-name descname"><span class="pre">get_transportation_leg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_transportation_leg" title="Link to this definition">¶</a></dt>
+<dd><p>Get the transportation leg corresponding to the end-of-life pathway.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Secondary process following the current process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>TransportationLeg</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.update_unit_inventories">
+<span class="sig-name descname"><span class="pre">update_unit_inventories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.update_unit_inventories" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit impacts of the waste process.</p>
 </dd></dl>
 
 </dd></dl>
@@ -550,7 +585,7 @@
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.life_cycle_stage</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit_impacts</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.location"><code class="docutils literal notranslate"><span class="pre">WasteProcess.location</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.transporation_link"><code class="docutils literal notranslate"><span class="pre">WasteProcess.transporation_link</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.transporation_leg"><code class="docutils literal notranslate"><span class="pre">WasteProcess.transporation_leg</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.linked_to"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_to</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.linked_from"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_from</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.new"><code class="docutils literal notranslate"><span class="pre">WasteProcess.new()</span></code></a></li>
@@ -572,6 +607,8 @@
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit_impacts()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_unit_emissions"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit_emissions()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_linked_process"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_linked_process()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_transportation_leg"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_transportation_leg()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.update_unit_inventories"><code class="docutils literal notranslate"><span class="pre">WasteProcess.update_unit_inventories()</span></code></a></li>
 </ul>
 </li>
 </ul>

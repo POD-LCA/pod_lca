@@ -120,7 +120,7 @@ class ElectricityProducer:
     
         Parameters
         ----------
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Declared unit.
         """
         self.declared_unit = unit
@@ -193,7 +193,7 @@ class ElectricityProducer:
     
         Returns
         -------
-        unit : Unit Obj.
+        ~pod_lca.units.Unit
             Declared unit.
         """
         return self.declared_unit
