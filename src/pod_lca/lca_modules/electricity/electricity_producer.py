@@ -27,7 +27,7 @@ class ElectricityProducer:
         
         Parameters
         ----------
-        technology : str.
+        technology : str
             The name of the electricity technology.
         year : int
             The year of electricity production.

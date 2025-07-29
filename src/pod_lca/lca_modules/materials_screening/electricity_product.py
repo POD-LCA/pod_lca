@@ -19,12 +19,12 @@ class Electricity(Master):
 
     Attributes
     ----------
-    electricity_supplier: ElectricitySupply Obj
+    electricity_supplier: ~pod_lca.electricity.ElectricitySupply
         Electricity supplier
     year : int
         Year of electricity consumption
-    geographical_scope: str
-        Geographical scope considered for electricity data: 'National'. 'Regional', 'Local'
+    geographical_scope: {'National'. 'Regional', 'Local'}
+        Geographical scope considered for electricity data.
     scenario: str
         Cambium scenario for prediction of electricity technology futures.
     """
@@ -68,13 +68,13 @@ class Electricity(Master):
             Name of the electricity.
         qty : float
             Quantity of elctricity consumption.
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Unit of electricity consumption.
-        impacts : Impacts Obj.
+        impacts : ~pod_lca.impacts.Impacts
             Impacts corresponding to electricity consumption.
-        emissions : Emissions Obj.
+        emissions : ~pod_lca.impacts.Emissions
             Emissions corresponding to electricity consumption.
-        carbon_storage : CarbonStorage Obj.
+        carbon_storage : ~pod_lca.impacts.CarbonStorage
             Carbon storage corresponding to electricity consumption.
         """
         item = cls()
@@ -108,7 +108,7 @@ class Electricity(Master):
         
         Parameters
         ----------
-        supplier : ElectricitySupply Obj.
+        supplier : ~pod_lca.electricity.ElectricitySupply
             Electricity supply
         """
         self.electricity_supplier = supplier
@@ -142,8 +142,8 @@ class Electricity(Master):
         
         Parameters
         ----------
-        geographical_scope : str
-            Geographical scope of the electricity supply: 'National', 'Regional', 'Local'.
+        geographical_scope : {'National', 'Regional', 'Local'}
+            Geographical scope of the electricity supply. 
         """
         self.geographical_scope = geographical_scope
 
@@ -157,8 +157,8 @@ class Electricity(Master):
         
         Parameters
         ----------
-        scenario : str
-            Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
+        scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
+            Electricity consmuption scenario considered.
         """
         self.scenario = scenario
 
@@ -183,7 +183,7 @@ class Electricity(Master):
         
         Returns
         -------
-        ElectricitySupply Obj.
+        ~pod_lca.electricity.ElectricitySupply
             Electricity supplier.
         """
         return self.electricity_supplier
@@ -223,12 +223,12 @@ class Electricity(Master):
 
         Parameters
         ----------
-        attr : str.
+        attr : str
             Attribute to which the distribution correspond.
 
         Returns
         -------
-        DataDistribution Obj.
+        ~pod_lca.uncertainty.DataDistribution
             Data distribution.        
         """ 
         if (attr == 'impacts') and (self.get_supplier() is not None):

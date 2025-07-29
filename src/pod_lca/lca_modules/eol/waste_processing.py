@@ -25,7 +25,7 @@ class WasteProcess:
             - 'Compost': transporting to a composting facility.
             - 'Incinerate': transporting to an incinerator.
             Default to 'Incinerate'. 
-    qty : float.
+    qty : float
         Quantity of the parent object subjected to this process.
     unit : ~pod_lca.units.Unit
         Unit of measurement.
@@ -77,7 +77,7 @@ class WasteProcess:
                 - 'Compost': transporting to a composting facility.
                 - 'Incinerate': transporting to an incinerator.
                 Default to 'Incinerate'. 
-        qty : float.
+        qty : float
             Quantity of the parent object subjected to this process.
         unit : ~pod_lca.units.Unit
             Unit of measurement.
@@ -161,7 +161,7 @@ class WasteProcess:
         
         Parameters
         ----------
-        qty : float.
+        qty : float
             Quantity of the parent object subjected to this process.
         """
         self.qty = qty
@@ -307,7 +307,7 @@ class WasteProcess:
         
         Returns
         -------
-        float.
+        float
             Quantity of the parent object subjected to this process.
         """
         return self.qty

@@ -26,18 +26,18 @@ class ElectricitySupply:
     ----------
     name : str
         The name of the electricity supply authority.
-    geographical_scope : str
+    geographical_scope : {'National', 'Regional', 'Local'}
         Geographical scope of the electricity supply.
-            'National': US average
-            'Regional': FERC region
-            'Local': Balancing Authority.
-    location : Location Obj.
+        - 'National': US average
+        - 'Regional': FERC region
+        - 'Local': Balancing Authority.
+    location : ~pod_lca.location.Location
         The location of the electricity supply authority.
     consumption_mix : dict
         The consumption mix of the electricity supply authority.
     year : int
         The year of the electricity supply authority.
-    impacts : Impacts Obj.
+    impacts : ~pod_lca.impacts.Impacts
         The impacts of the electricity supply authority.
 
     Note

@@ -97,8 +97,8 @@ class TemporalEmissionProfiles(DataDistribution):
             Range of the data set.
         step : float
             Step of the discrete data series.
-        integrate_point : str
-            Point to which the data is grouped: 'left', 'middle', 'right'
+        integrate_point : {'left', 'middle', 'right'}
+            Point to which the data is grouped.
         cutoff : bool
             Set distribution values before and after the range to zero.
 

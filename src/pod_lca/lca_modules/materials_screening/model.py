@@ -33,18 +33,18 @@ class Model:
         Project on which the calculator operates.
     name : str
         Name of the model.
-    processes : list of ~pod_lca.materials_screening.Process Obj.
+    processes : list of ~pod_lca.materials_screening.Process
         Processes in the model.
-    products : list of ~pod_lca.materials_screening.Product Obj.
+    products : list of ~pod_lca.materials_screening.Product
         Products in the model.
     transportation_manager : ~pod_lca.transportation.ProjectLogisticManager
         Logistics manager for the model.
     impacts : dict
-        ~pod_lca.impacts.Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+        :class:`~pod_lca.impacts.Impacts` objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
     emissions : dict
-        ~pod_lca.impacts.Emissions objects categorized by life cycle stage {life cycle stage (str): list of Emission Obj.}
+        :class:`~pod_lca.impacts.Emissions` objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
     carbon_storage :
-        ~pod_lca.impacts.CarbonStorage objects categorized by life cycle stage {life cycle stage (str): list of CarbonStorage Obj.}
+        :class:`~pod_lca.impacts.CarbonStorage` objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.CarbonStorage`}
     """
 
     def __init__(self):
@@ -79,16 +79,16 @@ class Model:
         
         Parameters
         ----------
-        project : Project Obj.
+        project : ~pod_lca.materials_screening.Project
             Project to which the model belong.
-        name : str.
+        name : str
             Name of the model.
         transport_scope : {'local', 'global'}
             Transportation scope of the model.  
 
         Returns
         -------
-        Model Obj.
+        ~pod_lca.materials_screening.Model
             Model object created.
         """
         model = cls()
@@ -118,7 +118,7 @@ class Model:
             Location of the csv file.
         name : str
             Name of the model to be created.   
-        project : Project Obj.
+        project : ~pod_lca.materials_screening.Project
             Project to which the model belong.    
         """        
         model = cls()
@@ -197,7 +197,7 @@ class Model:
         
         Parameters
         ----------
-        project : Project Obj.
+        project : ~pod_lca.materials_screening.Project
             Project to which the model belong.
         """
         self.project = project
@@ -209,7 +209,7 @@ class Model:
         
         Parameters
         ----------
-        name : str.
+        name : str
             Name of the model.
         """
         self.name = name
@@ -243,7 +243,7 @@ class Model:
         
         Returns
         -------
-        Project Obj.
+        ~pod_lca.materials_screening.Project
             Project to which the model belong.
         """
         return self.project
@@ -253,30 +253,28 @@ class Model:
         
         Returns
         -------
-        str.
+        str
             Name of the model.
         """
         return self.name
 
-
-    
     def get_processes(self):
         """ Retrieve all the processes in the model.
 
-            Returns
-            -------
-            list of Process Obj.
-                All processes in the model.
+        Returns
+        -------
+        list of ~pod_lca.materials_screening.Process
+            All processes in the model.
         """
         return self.processes
     
     def get_products(self):
         """ Retrieve all the products in the model.
 
-            Returns
-            -------
-            list of Product Obj.
-                All products in the model.
+        Returns
+        -------
+        list of ~pod_lca.materials_screening.Product
+            All products in the model.
         """
         return self.products
     
@@ -285,7 +283,7 @@ class Model:
         
         Returns
         -------
-        list of Master Obj.
+        list of ~pod_lca.materials_screening.Master
             All products and processess in the model.
 
         """
@@ -296,7 +294,7 @@ class Model:
         
         Returns
         -------   
-        ~pod_lca.transportation.ProjectLogisticManager
+        ~pod_lca.transportation.TransportationManager
             Logistics manager for the model.     
         """
         return self.transportation_manager
@@ -307,7 +305,7 @@ class Model:
         Returns
         -------
         dict.
-            Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+            :class:`~pod_lca.impacts.Impacts` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
@@ -319,10 +317,10 @@ class Model:
     def get_emissions(self):
         """ Retrieve all the emissions in the model categorized by life cycle stage.
 
-            Returns
-            -------
-            dict.
-                Emission objects categorized by life cycle stage {life cycle stage (str): list of Emissions Obj.}
+        Returns
+        -------
+        dict.
+            :class:`~pod_lca.impacts.Emissions` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
@@ -334,10 +332,10 @@ class Model:
     def get_carbon_storage(self):
         """ Retrieve all the carbon storage in the model categorized by life cycle stage.
 
-            Returns
-            -------
-            dict.
-                Carbon storage objects categorized by life cycle stage {life cycle stage (str): list of Carbon Storage Obj.}
+        Returns
+        -------
+        dict.
+            :class:`~pod_lca.impacts.CarbonStorage` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.CarbonStorage`}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
@@ -352,20 +350,20 @@ class Model:
 
         Parameters
         ----------
-        name : str.
+        name : str
             Name of the process.
-        stage : str.
+        stage : {'A3'}
             Life cycle stage.
         qty : float
             Quantity processed.
-        unit : Unit Obj
+        unit : ~pod_lca.units.Unit
             Unit of the quantity.
         impacts_from : str
             Name of the impact database entry from which to use impacts.
 
         Returns
         -------
-        Process Obj.
+        ~pod_lca.materials_screening.Process
             Process object created.
         """
         n = len(self.get_processes())
@@ -383,13 +381,13 @@ class Model:
 
         Parameters
         ----------
-        name : str.
+        name : str
             Name of the product.
-        stage : str.
+        stage : {'A1'}
             Life cycle stage.
         qty : float
             Product quantity.
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Unit of measurement.            
         impacts_from : str
             Name of the impact database entry from which to use impacts.
@@ -398,7 +396,7 @@ class Model:
 
         Returns
         -------
-        Product Obj.
+        ~pod_lca.materials_screening.Product
             Product object created.
         """
         n = len(self.get_products())
@@ -415,20 +413,20 @@ class Model:
 
         Parameters
         ----------
-        name : str.
+        name : str
             Name of the product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
+        stage : str
+            Life cycle stage.
         qty : float
             Product quantity.
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Unit of measurement.
         impacts_from : str
             Name of the impact database entry from which to use impacts.
 
         Returns
         -------
-        Product Obj.
+        ~pod_lca.materials_screening.Product
             Energy product object created.
         """
         n = len(self.get_products())
@@ -443,18 +441,18 @@ class Model:
 
         Parameters
         ----------
-        name : str.
+        name : str
             Name of the product.
-        stage : str.
+        stage : str
             Life cycle stage: 'A1', 'A2', 'A3'.
         qty : float
             Product quantity.
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Unit of measurement.
     
         Returns
         -------
-        Product Obj.
+        ~pod_lca.materials_screening.Product
             Electricity object created.
         """
         n = len(self.get_products())
@@ -462,63 +460,7 @@ class Model:
         
         self.products.append(electricity)
         
-        return electricity
-    
-    def add_emission(self, name, stage, qty, unit, impacts_from):
-        """ Create and add emission product to the model.
-
-        Parameters
-        ----------
-        name : str.
-            Name of the emission product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
-        qty : float
-            Product quantity.
-        unit : Unit Obj.
-            Unit of measurement.   
-        impacts_from : str
-            Name of the impact database entry from which to use impacts.
-
-        Returns
-        -------
-        Product Obj.
-            Emission object created.
-        """
-        n = len(self.get_products())
-        emission = Emission.new(n, name, self, stage, qty, unit, impacts_from)
-
-        self.products.append(emission)
-        
-        return emission
-
-    def add_waste(self, name, stage, qty, unit, impacts_from):
-        """ Create and add waste product to the model.
-
-        Parameters
-        ----------
-        name : str.
-            Name of the waste product.
-        stage : str.
-            Life cycle stage: 'A1', 'A2', 'A3'.
-        qty : float
-            Product quantity.
-        unit : Unit Obj.
-            Unit of measurement.   
-        impacts_from : str
-            Name of the impact database entry from which to use impacts.
-
-        Returns
-        -------
-        Product Obj.
-            Waste object created.
-        """
-        n = len(self.get_products())
-        waste = Waste.new(n, name, self, stage, qty, unit, impacts_from)
-
-        self.products.append(waste)
-
-        return waste   
+        return electricity 
 
     # ================================
     # Find/Delete items
@@ -529,12 +471,12 @@ class Model:
         
         Parameters
         ----------
-        name : str.
+        name : str
             Product/Process name searched for.
 
         Returns
         -------
-        Master Obj.
+        ~pod_lca.materials_screening.Master
             Product / Process object
         """
         items = [item for item in self.get_products() + self.get_processes() if item.get_name() == name]
@@ -547,18 +489,13 @@ class Model:
     def delete_item(self, obj):
         """ Removes products or processes, along with the impact objects, from the model.
 
-            Parameters
-            ----------
-            obj : Master Obj.
-                Product or process to be removed from the model.
+        Parameters
+        ----------
+        obj : ~pod_lca.materials_screening.Master
+            Product or process to be removed from the model.
         """
         if type(obj) == Product:
             self.get_products().remove(obj)
-            for process in self.get_processes():
-                if type(process) is TransportationProcess:
-                    if obj in process.get_transported_products():
-                        process.get_transported_products().remove(obj)
-                        process.set_transported_weight()
         elif type(obj) == Process:
             self.get_processes().remove(obj)
             
@@ -610,7 +547,7 @@ class Model:
         Returns
         -------
         dict
-            Impacts dictionary where {Life Cycle stage (str) : quantity of impact (float)}.
+            Impacts dictionary where {**Life Cycle stage** (:class:`str`) : **quantity of impact** (:class:`float`)}.
 
         Raises
         ------
@@ -639,7 +576,7 @@ class Model:
         Returns
         -------
         dict
-            Impacts dictionary where {impact_category (str): quantity of impact (float)}.
+            Impacts dictionary where {**Life Cycle stage** (:class:`str`) : **quantity of impact** (:class:`float`)}.
         """
         data ={}
         for impact_category in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():
@@ -652,13 +589,13 @@ class Model:
             
         Parameters
         ----------
-        model : Model Obj
+        model : ~pod_lca.materials_screening.Model
             The model considered.
 
         Returns
         -------
         dict
-            Impacts dictionary where {impact_category (str): quantity of impact (float)}.
+            Impacts dictionary where {**Life Cycle stage** (:class:`str`) : **quantity of impact** (:class:`float`)}.
         """
         IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
         for impact_cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():

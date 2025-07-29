@@ -211,8 +211,8 @@
 <dt class="sig sig-object py" id="pod_lca.impacts.ImpactsDatabase.data">
 <span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#pod_lca.impacts.ImpactsDatabase.data" title="Link to this definition">¶</a></dt>
 <dd><p>Impact data, with following headings.
-- <strong>primary_key</strong> (str): Name of the impact.
-- <strong>qty_key</strong> (str): Impacts per unit of measure.
+- <strong>primary_key (str): Name of the impact.
+- **qty_key</strong> (str): Impacts per unit of measure.
 - <strong>unit_key</strong> (str): The unit of measure.
 - <strong>impact category</strong> (float): Quantity of impact.</p>
 <dl class="field-list simple">
@@ -260,10 +260,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of the CSV file</p></li>
-<li><p><strong>impact_headers_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The headers of the CSV file as they would be mapped to the impacts in the database: {header (str): impact category (str)}.</p></li>
-<li><p><strong>emission_headers_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The headers of the CSV file as they would be mapped to the emission inventories in the database: {header (str): inventory (str)}.</p></li>
-<li><p><strong>carbon_storage_headers_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The headers of the CSV file as they would be mapped to the carbon storage in the database: {header (str): carbon storage (str)}.</p></li>
+<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of the CSV file.</p></li>
+<li><p><strong>impact_headers_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The headers of the CSV file as they would be mapped to the impacts in the database: {<strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>impact category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)}.</p></li>
+<li><p><strong>emission_headers_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The headers of the CSV file as they would be mapped to the emission inventories in the database: {<strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>inventory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)}.</p></li>
+<li><p><strong>carbon_storage_headers_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The headers of the CSV file as they would be mapped to the carbon storage in the database: {<strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>carbon storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)}.</p></li>
 <li><p><strong>grouped_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Prefix used in the grouped data.</p></li>
 <li><p><strong>additional_headers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Headers of the columns to be imported, other than name, unit, and impact categories.</p></li>
 <li><p><strong>multipliers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.</p></li>
@@ -282,10 +282,10 @@
 <li><p><strong>flow</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the flow.</p></li>
 <li><p><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Unit of measurement for which the impacts are applied.</p></li>
-<li><p><strong>impacts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of impacts {impact catergory (str): impact (float)}</p></li>
-<li><p><strong>emissions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of emissions {emission inventory (str): emission (float)}</p></li>
-<li><p><strong>carbon_storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of carbon storage {carbon storage (str): carbon quantity (float)}</p></li>
-<li><p><strong>additional_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of additional data {header (str): value (str / float/ int)}</p></li>
+<li><p><strong>impacts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of impacts {<strong>impact catergory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}.</p></li>
+<li><p><strong>emissions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of emissions {<strong>emission inventory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>emission</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}.</p></li>
+<li><p><strong>carbon_storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of carbon storage {<strong>carbon storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>carbon quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}.</p></li>
+<li><p><strong>additional_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of additional data {<strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> / <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>/ <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)}.</p></li>
 </ul>
 </dd>
 </dl>
@@ -361,7 +361,7 @@
 <dd class="field-odd"><p>Impact data.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Pandas DataFrame Obj.</p>
+<dd class="field-even"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)">pandas.DataFrame</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -378,7 +378,7 @@
 <dd class="field-even"><p>Databse entry corresponding to the flow.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pandas Series</p>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.3.1)">pandas.Series</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -477,7 +477,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the database.</p></li>
 <li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Location of the impact categories json file.</p></li>
-<li><p><strong>geographical_scope</strong> (<em>{'National'</em><em>, </em><em>'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the database..</p></li>
+<li><p><strong>geographical_scope</strong> (<em>{'National'</em><em>, </em><em>'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the database.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -586,14 +586,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.impacts.EOLImpactsDatabase.process_key">
 <span class="sig-name descname"><span class="pre">process_key</span></span><a class="headerlink" href="#pod_lca.impacts.EOLImpactsDatabase.process_key" title="Link to this definition">¶</a></dt>
-<dd><p>Data header corresponding to the end-of-life pathway corresponding to the database entry.
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.</p>
+<dd><p>Data header corresponding to the end-of-life pathway corresponding to the database entry.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>{'Landfill', 'Recycle', 'Compost', 'Incinerate'}</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -604,7 +600,7 @@
 <dd><p>Data header corresponding to the life cycle stage corresponding to the database entry.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>{'C3', 'C4', 'D'}</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,11 +628,7 @@
 <dd><p>Set process key of the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- Data header corresponding to the end-of-life pathway corresponding to the database entry.
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.</p>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Data header corresponding to the end-of-life pathway corresponding to the database entry.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -647,7 +639,7 @@
 <dd><p>Set life cycle stage key of the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Data header corresponding to the life cycle stage corresponding to the database entry.</p>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Data header corresponding to the life cycle stage corresponding to the database entry.</p>
 </dd>
 </dl>
 </dd></dl>

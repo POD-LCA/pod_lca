@@ -134,7 +134,7 @@ class Project:
         
         Returns
         -------
-        str.
+        str
             Name of the project.
         """
         return self.name
@@ -216,7 +216,7 @@ class Project:
 
         Returns
         -------
-        list of str.
+        list of str
             List of model names.
 
         """
@@ -290,7 +290,7 @@ class Project:
         ----------
         impact_category : str
             Name of the Impact category.
-        model_lst : List of str.
+        model_lst : List of str
             List of the names of models.
 
         Returns
@@ -313,7 +313,7 @@ class Project:
             
         Parameters
         ----------
-        model_lst : List of str.
+        model_lst : List of str
             List of the names of models.
 
         Returns
@@ -338,7 +338,7 @@ class Project:
             
         Parameters
         ----------
-        model_lst : List of str.
+        model_lst : List of str
             List of the names of models.
 
         Returns
@@ -367,7 +367,7 @@ class Project:
         ----------
         impact_category : str
             Name of the Impact category.
-        model_lst : List of str.
+        model_lst : List of str
             List of the names of models.
 
         Returns
@@ -404,7 +404,7 @@ class Project:
         ----------
         impact_categories : List of str
             List of impact categories.
-        model_lst : List of str.
+        model_lst : List of str
             List of the names of models.
 
         Returns

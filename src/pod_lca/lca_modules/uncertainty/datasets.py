@@ -19,15 +19,15 @@ class DataDistribution:
 
     Attributes
     ----------
-    name : str.
+    name : str
         Name of the data set.
     data : list of floats (or str)
         The data set.
-    dist_name : str.
+    dist_name : str
         Distribution name as used in scipy.stats.
     dist : rv_continous or rv_discrete (Scipy) Obj.
         Fitted distribution object from Scipy.
-    parent : Object.
+    parent : Object
         Object to which the dataset is attached.
     attr : str
         Attribute to which dataset is attached.
@@ -68,14 +68,14 @@ class DataDistribution:
         ----------
         data : list of floats
             The data set.  
-        name : str.
+        name : str
             Name of the data set.
         is_cts : bool
             If true, the data are from a contrinous variable, otherwise a discrete variable. 
                 
         Returns
         -------
-        DataSet Obj.
+        ~pod_lca.uncertainty.DataSet
             Dataset created.
         """
         dataset = cls()
@@ -99,7 +99,7 @@ class DataDistribution:
         ----------
         dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
             Fitted distribution object from Scipy.  
-        name : str.
+        name : str
             Name of the data set.
         is_cts : bool
             If true, the data are from a contrinous variable, otherwise a discrete variable. 
@@ -137,7 +137,7 @@ class DataDistribution:
         
         Parameters
         ----------
-        name : str.
+        name : str
             Name of the data set.
         """
         self.name = name
@@ -190,7 +190,7 @@ class DataDistribution:
 
         Parameters
         ----------
-        attr : str.
+        attr : str
             Attribute to which the dataset correspond.
         """ 
         self.attribute = attr
@@ -227,7 +227,7 @@ class DataDistribution:
     
         Returns
         ----------
-        str.
+        str
             Name of the data set.
         """
         return self.name
@@ -247,7 +247,7 @@ class DataDistribution:
 
         Returns
         -------
-        str.
+        str
             Attribute to which the dataset correspond.
         """ 
         return self.attribute
@@ -337,7 +337,7 @@ class DataDistribution:
         
         Parameters
         ----------
-        dist_name : str.
+        dist_name : str
             Distribution name as used in scipy.stats.
         params : tuple
             Parameters corresponding to the fit.

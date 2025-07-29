@@ -38,7 +38,7 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         file_path : str
             Location of the impact categories json file.
         geographical_scope : {'National', 'Regional', 'Local'}
-            Geographical scope of the database..
+            Geographical scope of the database.
         
         Returns
         -------

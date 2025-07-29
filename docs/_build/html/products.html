@@ -171,7 +171,7 @@
 <dd><p>An identification number.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,7 +182,7 @@
 <dd><p>Model object to which this product/process belong.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Model Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -204,7 +204,7 @@
 <dd><p>Life cycle stage corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p>{'A1', 'A3'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -215,7 +215,7 @@
 <dd><p>Impacts object corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Impacts Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -226,7 +226,7 @@
 <dd><p>Emissions Inventory object corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>EmissionsInventory Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -237,7 +237,7 @@
 <dd><p>Carbon storage corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Carbon Storage Obj</p>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage" title="pod_lca.impacts.CarbonStorage"><em>CarbonStorage</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -270,7 +270,7 @@
 <dd><p>Unit of measurement corresponding to the quantity of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Unit Obj</p>
+<dd class="field-odd"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -289,7 +289,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Master.data_distribution">
 <span class="sig-name descname"><span class="pre">data_distribution</span></span><a class="headerlink" href="#pod_lca.materials_screening.Master.data_distribution" title="Link to this definition">¶</a></dt>
-<dd><p>Data distributions corresponding to attributes: {attr (str): Dataset Obj}.</p>
+<dd><p>Data distributions corresponding to attributes: {<strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): ~pod_lca.uncertainty.DataDistribution}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict.</p>
@@ -303,7 +303,7 @@
 <dd><p>Data quality indicator for the object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>PedigreeScore Obj</p>
+<dd class="field-odd"><p><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore" title="pod_lca.uncertainty.PedigreeScore"><em>PedigreeScore</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -315,12 +315,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- An identification number.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the item.</p></li>
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
-<li><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- LCA stage.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model in which the item is created.</p></li>
+<li><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A3'}</em>) -- LCA stage.
+- 'A1': Raw materials supply.
+- 'A3': manufacturing.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the item</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit corresponding to the quantity.</p></li>
 <li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
 </ul>
 </dd>
@@ -336,7 +338,7 @@
 <dd class="field-odd"><p>Copy of the object.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Master Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -358,7 +360,7 @@
 <dd><p>Set the model corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model corresponding to the product/process.</p>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model corresponding to the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -369,7 +371,9 @@
 <dd><p>Set life cycle stage of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.</p>
+<dd class="field-odd"><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A3'}</em>) -- Life cycle stage of the product/process.
+- 'A1': Raw materials supply.
+- 'A3': manufacturing.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -394,7 +398,7 @@
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>database_item</strong> (<em>str.</em>) -- The name of the database item which gives the item impacts.</p>
+<dd class="field-odd"><p><strong>database_item</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the database item which gives the item impacts.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -419,7 +423,7 @@
 <dd><p>Set unit of measurement for the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p>
+<dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -431,8 +435,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distribution</strong> (<em>DataDistribution Obj.</em>) -- DataDistribution object to be set</p></li>
-<li><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a>) -- DataDistribution object to be set</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Attribute to which the distribution correspond.</p></li>
 </ul>
 </dd>
 </dl>
@@ -444,7 +448,7 @@
 <dd><p>Set a pedigree score (data quality score) to the Master Obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pedigree_score</strong> (<em>PedigreeScore Obj</em>) -- Data quality indicator for the object</p>
+<dd class="field-odd"><p><strong>pedigree_score</strong> (<a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore" title="pod_lca.uncertainty.PedigreeScore"><em>PedigreeScore</em></a>) -- Data quality indicator for the object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -472,7 +476,7 @@
 <dd class="field-odd"><p>Model corresponding to the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -542,7 +546,7 @@
 <dd class="field-odd"><p>Unit of measurement of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-even"><p><em>Units</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -556,7 +560,7 @@
 <dd class="field-odd"><p>Impacts of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -570,7 +574,7 @@
 <dd class="field-odd"><p>Emissions of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Emissions Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -584,7 +588,7 @@
 <dd class="field-odd"><p>Carbon storage of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>CarbonStorage Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage" title="pod_lca.impacts.CarbonStorage"><em>CarbonStorage</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -595,7 +599,7 @@
 <dd><p>Get data_distribution objects of the Master obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DataDistribution objects corresponding to attributes: {attr (str): Dataset Obj}</p>
+<dd class="field-odd"><p>DataDistribution objects corresponding to attributes: {<strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): ~pod_lca.uncertainty.DataDistribution}</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict.</p>
@@ -609,7 +613,7 @@
 <dd><p>Get data_distribution object corresponding to the given attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p>
+<dd class="field-odd"><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Attribute to which the distribution correspond.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Data distribution.</p>
@@ -626,7 +630,7 @@
 <dd><p>Get pedigree score of the Master Obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.</p>
+<dd class="field-odd"><p>Distributions Datasets corresponding to attributes: {<strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): ~pod_lca.uncertainty.DataDistribution}.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict.</p>
@@ -643,7 +647,7 @@
 <dd class="field-odd"><p>Corresponding project.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Project Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="material_screening_project.html#pod_lca.materials_screening.Project" title="pod_lca.materials_screening.Project"><em>Project</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -665,7 +669,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Remove all inventory records from the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.
+<dd class="field-odd"><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A2'</em><em>, </em><em>'A3'}</em>) -- Life cycle stage of the product/process.
 If None, all stages are checked to find the product/process.</p>
 </dd>
 </dl>
@@ -1131,7 +1135,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd><p>Electricity supplier</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ElectricitySupply Obj</p>
+<dd class="field-odd"><p><a class="reference internal" href="electricity_supply.html#pod_lca.electricity.ElectricitySupply" title="pod_lca.electricity.ElectricitySupply"><em>ElectricitySupply</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1150,10 +1154,10 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Electricity.geographical_scope">
 <span class="sig-name descname"><span class="pre">geographical_scope</span></span><a class="headerlink" href="#pod_lca.materials_screening.Electricity.geographical_scope" title="Link to this definition">¶</a></dt>
-<dd><p>Geographical scope considered for electricity data: 'National'. 'Regional', 'Local'</p>
+<dd><p>Geographical scope considered for electricity data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p>{'National'. 'Regional', 'Local'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1176,12 +1180,14 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- An identification number.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the item.</p></li>
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
-<li><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- LCA stage.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model in which the item is created.</p></li>
+<li><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A3'}</em>) -- LCA stage.
+- 'A1': Raw materials supply.
+- 'A3': manufacturing.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the item</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit corresponding to the quantity.</p></li>
 <li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
 </ul>
 </dd>
@@ -1197,10 +1203,10 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the electricity.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of elctricity consumption.</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of electricity consumption.</p></li>
-<li><p><strong>impacts</strong> (<em>Impacts Obj.</em>) -- Impacts corresponding to electricity consumption.</p></li>
-<li><p><strong>emissions</strong> (<em>Emissions Obj.</em>) -- Emissions corresponding to electricity consumption.</p></li>
-<li><p><strong>carbon_storage</strong> (<em>CarbonStorage Obj.</em>) -- Carbon storage corresponding to electricity consumption.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of electricity consumption.</p></li>
+<li><p><strong>impacts</strong> (<a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a>) -- Impacts corresponding to electricity consumption.</p></li>
+<li><p><strong>emissions</strong> (<a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a>) -- Emissions corresponding to electricity consumption.</p></li>
+<li><p><strong>carbon_storage</strong> (<a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage" title="pod_lca.impacts.CarbonStorage"><em>CarbonStorage</em></a>) -- Carbon storage corresponding to electricity consumption.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1218,7 +1224,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd><p>Set electricity supplier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>supplier</strong> (<em>ElectricitySupply Obj.</em>) -- Electricity supply</p>
+<dd class="field-odd"><p><strong>supplier</strong> (<a class="reference internal" href="electricity_supply.html#pod_lca.electricity.ElectricitySupply" title="pod_lca.electricity.ElectricitySupply"><em>ElectricitySupply</em></a>) -- Electricity supply</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1240,7 +1246,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd><p>Set the spatial resolution of the electricity supply.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Geographical scope of the electricity supply: 'National', 'Regional', 'Local'.</p>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'</em><em>, </em><em>'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the electricity supply.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1251,7 +1257,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd><p>Set scenario name. This will be used with cambium data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.</p>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1271,7 +1277,7 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd class="field-odd"><p>Electricity supplier.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>ElectricitySupply Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="electricity_supply.html#pod_lca.electricity.ElectricitySupply" title="pod_lca.electricity.ElectricitySupply"><em>ElectricitySupply</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1318,13 +1324,13 @@ If None, taken as per unit of parent objects declared unit.</p></li>
 <dd><p>Get data_distribution object corresponding to the given attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p>
+<dd class="field-odd"><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Attribute to which the distribution correspond.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Data distribution.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DataDistribution Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1402,7 +1408,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Copy of the object.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Master Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1416,7 +1422,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Carbon storage of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>CarbonStorage Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.CarbonStorage" title="pod_lca.impacts.CarbonStorage"><em>CarbonStorage</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1427,7 +1433,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Get data_distribution object corresponding to the given attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p>
+<dd class="field-odd"><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Attribute to which the distribution correspond.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Data distribution.</p>
@@ -1444,7 +1450,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Get data_distribution objects of the Master obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DataDistribution objects corresponding to attributes: {attr (str): Dataset Obj}</p>
+<dd class="field-odd"><p>DataDistribution objects corresponding to attributes: {<strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): ~pod_lca.uncertainty.DataDistribution}</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict.</p>
@@ -1461,7 +1467,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Emissions of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Emissions Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1503,7 +1509,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Impacts of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1531,7 +1537,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Model corresponding to the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1556,7 +1562,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Get pedigree score of the Master Obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.</p>
+<dd class="field-odd"><p>Distributions Datasets corresponding to attributes: {<strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): ~pod_lca.uncertainty.DataDistribution}.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict.</p>
@@ -1573,7 +1579,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Corresponding project.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Project Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="material_screening_project.html#pod_lca.materials_screening.Project" title="pod_lca.materials_screening.Project"><em>Project</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1601,7 +1607,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd class="field-odd"><p>Unit of measurement of the product/process.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-even"><p><em>Units</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1613,12 +1619,14 @@ If no database entry is asigned, impacts are not updated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>id</strong> (<em>int.</em>) -- An identification number.</p></li>
+<li><p><strong>id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- An identification number.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the item.</p></li>
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the item is created.</p></li>
-<li><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- LCA stage.</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model in which the item is created.</p></li>
+<li><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A3'}</em>) -- LCA stage.
+- 'A1': Raw materials supply.
+- 'A3': manufacturing.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the item</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj</em>) -- Unit corresponding to the quantity.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit corresponding to the quantity.</p></li>
 <li><p><strong>impacts_from</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the impact database entry from which to use impacts.</p></li>
 </ul>
 </dd>
@@ -1631,7 +1639,7 @@ If no database entry is asigned, impacts are not updated.</p>
 <dd><p>Remove all inventory records from the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.
+<dd class="field-odd"><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A2'</em><em>, </em><em>'A3'}</em>) -- Life cycle stage of the product/process.
 If None, all stages are checked to find the product/process.</p>
 </dd>
 </dl>
@@ -1644,8 +1652,8 @@ If None, all stages are checked to find the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distribution</strong> (<em>DataDistribution Obj.</em>) -- DataDistribution object to be set</p></li>
-<li><p><strong>attr</strong> (<em>str.</em>) -- Attribute to which the distribution correspond.</p></li>
+<li><p><strong>distribution</strong> (<a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a>) -- DataDistribution object to be set</p></li>
+<li><p><strong>attr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Attribute to which the distribution correspond.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1671,7 +1679,7 @@ If None, all stages are checked to find the product/process.</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>database_item</strong> (<em>str.</em>) -- The name of the database item which gives the item impacts.</p>
+<dd class="field-odd"><p><strong>database_item</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the database item which gives the item impacts.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1682,7 +1690,9 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set life cycle stage of the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Life cycle stage of the product/process.</p>
+<dd class="field-odd"><p><strong>stage</strong> (<em>{'A1'</em><em>, </em><em>'A3'}</em>) -- Life cycle stage of the product/process.
+- 'A1': Raw materials supply.
+- 'A3': manufacturing.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1693,7 +1703,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set the model corresponding to the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model corresponding to the product/process.</p>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model corresponding to the product/process.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1715,7 +1725,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set a pedigree score (data quality score) to the Master Obj.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pedigree_score</strong> (<em>PedigreeScore Obj</em>) -- Data quality indicator for the object</p>
+<dd class="field-odd"><p><strong>pedigree_score</strong> (<a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore" title="pod_lca.uncertainty.PedigreeScore"><em>PedigreeScore</em></a>) -- Data quality indicator for the object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1740,7 +1750,7 @@ If None, all stages are checked to find the product/process.</p>
 <dd><p>Set unit of measurement for the product/process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement.</p>
+<dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p>
 </dd>
 </dl>
 </dd></dl>

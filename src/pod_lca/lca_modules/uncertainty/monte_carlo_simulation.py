@@ -20,7 +20,7 @@ class MonteCarloSimulator:
         Model on which the Monte Carlo Simulation is performed.
     iterations : int
         No of iterations.
-    impact_cat : str.
+    impact_cat : str
         Impact category considered for the impact calculation.
     var_param : List
         List of Distribution objects.
@@ -97,7 +97,7 @@ class MonteCarloSimulator:
         
         Parameters
         ----------
-        no_iters : int.
+        no_iters : int
             Number of iterations of the simulations.        
         """
 
@@ -108,7 +108,7 @@ class MonteCarloSimulator:
         
         Parameters
         ----------
-        impact_cat : str.
+        impact_cat : str
             Impact category considered for the impact calculation.    
         """
 
@@ -178,7 +178,7 @@ class MonteCarloSimulator:
         
         Returns
         ----------
-        int.
+        int
             Number of iterations of the simulations.        
         """
         return self.iterations
@@ -188,7 +188,7 @@ class MonteCarloSimulator:
         
         Returns
         ----------
-        str.
+        str
             Impact category considered for the impact calculation.    
         """
         return self.impact_cat

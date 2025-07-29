@@ -19,7 +19,7 @@ class Location:
 
     Attributes
     ----------
-    location_name : str.
+    location_name : str
         Name of the location.
     regionality : str
         Regionality of the location (Local, Regional, National).
@@ -247,7 +247,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location_nominatim : <class 'geopy.location.Location'>
+        geopy_location_nominatim : geopy.location.Location
             Geopy location object from Nominatim
         """
         local_type = ['postcode', 'county', 'municipality', 'city', 'town', 'village', 'city_district', 'district', 'borough', 'suburb', 'subdivision', 'hamlet', 'croft', 'neighbourhood', 'allotments', 'quarter']
@@ -271,7 +271,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location_nominatim : <class 'geopy.location.Location'>
+        geopy_location_nominatim : geopy.location.Location
             Geopy location object from Nominatim
         """
         if geopy_location_nominatim is None:
@@ -293,7 +293,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location : <class 'geopy.location.Location'>
+        geopy_location : geopy.location.Location
             Geopy location object.
         """
         try:
@@ -311,7 +311,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location : <class 'geopy.location.Location'>
+        geopy_location : geopy.location.Location
             Geopy location object.
         """
         try:
@@ -326,7 +326,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location : <class 'geopy.location.Location'>
+        geopy_location : geopy.location.Location
             Geopy location object.
         """
         try:
@@ -344,7 +344,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location_photon : <class 'geopy.location.Location'>
+        geopy_location_photon : geopy.location.Location
             Geopy location object from Photon
         """
         try:
@@ -359,7 +359,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location_photon : <class 'geopy.location.Location'>
+        geopy_location_photon : geopy.location.Location
             Geopy location object from Photon
         """
         try:
@@ -655,7 +655,7 @@ class Location:
         
         Parameters
         ----------
-        destination : Location
+        destination : ~pod_lca.location.Location
             Destination location object.
         states_lst : list of int
             List of states to find the closest ones from.
@@ -692,7 +692,7 @@ class Location:
 
         Parameters
         ----------
-        geopy_location : <class 'geopy.location.Location'>
+        geopy_location : geopy.location.Location
             Geopy location object.
         max_attempts: int
             Maximum number of attempts to find the closest zip code
@@ -728,7 +728,7 @@ class Location:
         
         Parameters
         ----------
-        destination : Location
+        destination : ~pod_lca.location.Location
             Destination location object.
         states_lst : list of int
             List of states to find the closest ones from.
@@ -757,7 +757,7 @@ class Location:
         
         Parameters
         ----------
-        destination : Location
+        destination : ~pod_lca.location.Location
             Destination location object.
         states_lst : list of int
             List of states to find the closest ones from.
@@ -780,19 +780,4 @@ class Location:
 
 
 if __name__ == '__main__':
-
-
-    location_input = "Europe"
-    location_obj = Location.from_str(location_input)
-
-
-    print(f"State: {location_obj.get_state()}")
-    print(f"City: {location_obj.get_city()}")
-    print(f"Zipcode: {location_obj.get_zip()}")
-    print(f"Coordinates: {location_obj.get_cordinates()}")
-    print (f"Country: {location_obj.get_country()}")
-    print (f"CFS Area: {location_obj.get_cfs_area()}")
-    print (f"FAF Foreign Region: {location_obj.get_faf_foreign_region()}")
-    print (f"FAF Domestic Region: {location_obj.get_faf_domestic_region()}")
-    print (f"Marine Region: {location_obj.get_marine_region()}")
-    print (f"US Coast: {location_obj.us_coast}")
+    pass

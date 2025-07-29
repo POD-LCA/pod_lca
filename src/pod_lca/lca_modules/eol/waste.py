@@ -25,10 +25,10 @@ class Waste(Product):
     waste_processes : list of ~pod_lca.eol.WasteProcess
         List of processes the waste will be subjected to. These processes are in parallel.
     process_mix : dict
-        The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+        The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
         Percentage can be in the form of string with a % sign or decimal value.              
     impacts : dict.
-        Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+        Impact objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:~pod_lca.impacts.Impacts}
     bio_based : bool
         True if the material is bio-based.          
     """
@@ -74,7 +74,7 @@ class Waste(Product):
         unit : ~pod_lca.units.Unit
             Unit of measurement corresponding to the quantity of the product/process.
         process_mix : dict
-            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
             Percentage can be in the form of string with a % sign or decimal value.
         bio_based : bool
             True if the material is bio-based.       
@@ -114,7 +114,7 @@ class Waste(Product):
         
         Parameters
         ----------
-        database_item : str.
+        database_item : str
             The name of the database item which gives the item impacts.
         """
         database = self.get_parent().get_building().get_eol_database()
@@ -139,7 +139,7 @@ class Waste(Product):
         Parameters
         ----------
         process_mix : dict
-            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
             Percentage can be in the form of string with a % sign or decimal value. 
         """
         waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
@@ -418,7 +418,7 @@ class Waste(Product):
         Parameters
         ----------
         process_mix : dict
-            The mix of processes the waste product will be subject to: {process name (str): percentage (str or float)}.
+            The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
             Percentage can be in the form of string with a % sign or decimal value.  
         tol : float
             Tolerence checked against

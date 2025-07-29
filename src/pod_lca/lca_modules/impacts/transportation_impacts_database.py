@@ -37,7 +37,7 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
         
         Returns
         -------
-        ImpactsDatabase Obj.
+        ~pod_lca.impacts.ImpactsDatabase
             Database created.
         """
         new_db = cls()
@@ -87,12 +87,12 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        mode : TransportMode Obj.
+        mode : ~pod_lca.transportation.TransportMode
             Transport mode with its name, fuel type, and efficiency.
         
         Returns
         -------
-        Pandas Series
+        pandas.Series
             Databse entry corresponding to the flow.
         """
         mode_name = mode.get_name()

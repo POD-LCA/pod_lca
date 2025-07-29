@@ -23,13 +23,13 @@ class TransportationLeg:
         Refers to the transportation manager.
     name : str
         Name of the logistic leg.
-    material : str.
+    material : str
         name of the material.
-    travel_dist : float.
+    travel_dist : float
         transportation distance
     dist_unit : ~pod_lca.units.Unit
         Unit corresponding to the travel distance.
-    return_trip_factor : float.
+    return_trip_factor : float
         transportation return trip factor.
     shipping_dest : ~pod_lca.location.Location
         shipping destination location.

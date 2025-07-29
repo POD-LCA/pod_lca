@@ -170,12 +170,12 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
-<li><p><strong>ref_unit</strong> (<em>{'Wm-2ppb-1'</em><em>, </em><em>'Wm-2kg-1'}</em>) -- Output unit</p></li>
-<li><p><strong>adjust_for_indirect_effects</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Adjust radiative efficiency to account for indirect effects</p></li>
+<li><p><strong>ref_unit</strong> (<em>{'Wm-2ppb-1'</em><em>, </em><em>'Wm-2kg-1'}</em>) -- Output unit.</p></li>
+<li><p><strong>adjust_for_indirect_effects</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Adjust radiative efficiency to account for indirect effects.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Radiative efficiency, in reference unit</p>
+<dd class="field-even"><p>Radiative efficiency, in the reference unit.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
@@ -186,7 +186,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime">
 <em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pertubation_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime" title="Link to this definition">¶</a></dt>
-<dd><p>Get the pertubation lifetime of the greenhouse_gas in question.</p>
+<dd><p>Get the pertubation lifetime of a greenhouse gas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p>
@@ -206,9 +206,7 @@
 <dd><p>Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ol class="arabic simple">
-<li><p>For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825</p></li>
-</ol>
+<p>For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -257,9 +255,7 @@
 <dd><p>Get the concentration of the greenhouse gas in the atmosphere as a time-series.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ol class="arabic simple">
-<li><p>Noting the behaviour of numpy.arange with floats, the end value of years is checked against time horizon.</p></li>
-</ol>
+<p>Noting the behaviour of numpy.arange with floats, the end value of years is checked against time horizon.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -312,9 +308,7 @@
 <dd><p>Get the Absolute Global Warming Potential (AGWP) of a greenhouse gas, for the given time_horizon.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ol class="arabic simple">
-<li><p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p></li>
-</ol>
+<p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -332,9 +326,7 @@
 <dd><p>Get the Global Warming Potential (GWP) of a greenhouse gas, for the given time_horizon.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ol class="arabic simple">
-<li><p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p></li>
-</ol>
+<p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -16,11 +16,11 @@ class Unit:
 
     Attributes
     ----------
-    name : str.
+    name : str
         Common name of the unit.
-    standard_notation : str.
+    standard_notation : str
         Standard notation of the unit.
-    qty_measured : str.
+    qty_measured : str
         The quantity measured by the unit---e.g., 'length', 'mass', 'time'.
     base_unit : Unit Obj
         Base unit of the Obj. None if itself a base unit.
@@ -132,11 +132,11 @@ class Unit:
 
             Parameters
             ----------
-            name : str.
+            name : str
                 Common name of the unit.
-            standard_notation : str.
+            standard_notation : str
                 Standard notation of the unit.
-            qty_measured : str.
+            qty_measured : str
                 The quantity measured by the unit---e.g., 'length', 'mass', 'time'.
         """
         unit = cls()
@@ -323,11 +323,11 @@ class MetricPrefix:
 
     Attributes
     ----------
-    name : str.
+    name : str
         Standard name of the prefix.
-    symbol : str.
+    symbol : str
         Standard symbol of the unit.
-    power : int.
+    power : int
         Power to the ten corresponding to the prefix.
     """
 

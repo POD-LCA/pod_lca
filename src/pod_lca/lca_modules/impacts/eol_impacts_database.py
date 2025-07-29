@@ -13,13 +13,9 @@ class EOLImpactsDatabase(ImpactsDatabase):
 
     Attributes
     ----------
-    process_key : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+    process_key : str
         Data header corresponding to the end-of-life pathway corresponding to the database entry.
-        - 'Landfill': transporting waste to a landfill.
-        - 'Recycle': transporting waste to a recycler.
-        - 'Compost': transporting to a composting facility.
-        - 'Incinerate': transporting to an incinerator.
-    life_cycle_stage_key : {'C3', 'C4', 'D'}
+    life_cycle_stage_key : str
         Data header corresponding to the life cycle stage corresponding to the database entry.
     """
 
@@ -63,12 +59,8 @@ class EOLImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        key : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+        key : str
             Data header corresponding to the end-of-life pathway corresponding to the database entry.
-            - 'Landfill': transporting waste to a landfill.
-            - 'Recycle': transporting waste to a recycler.
-            - 'Compost': transporting to a composting facility.
-            - 'Incinerate': transporting to an incinerator.
         """
         self.process_key = key
 
@@ -79,7 +71,7 @@ class EOLImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        key : {'C3', 'C4', 'D'}
+        key : str
             Data header corresponding to the life cycle stage corresponding to the database entry.
         """
         self.life_cycle_stage_key = key

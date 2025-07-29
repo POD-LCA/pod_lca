@@ -15,7 +15,7 @@ class ArrayMethods:
         ----------
         objects : List of Obj.
             List of objects.
-        attr_name : str.
+        attr_name : str
             Attribute to be retrieved in a list.
 
         Returns
@@ -33,7 +33,7 @@ class ArrayMethods:
         ----------
         objects : List of Obj.
             List of objects.
-        attr_name : str.
+        attr_name : str
             Attribute to be retrieved in a list.
         descending : bool
             If true, the list is ordered in the descending order of the attribute value.
@@ -53,7 +53,7 @@ class ArrayMethods:
         ----------
         objects : List of Obj.
             List of objects.
-        attr_name : str.
+        attr_name : str
             Attribute to be retrieved in a list.
         value : str/int/float/bool
             Value to be given to the attribute.

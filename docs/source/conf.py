@@ -22,7 +22,8 @@ extensions = ['sphinx.ext.napoleon', 'sphinx.ext.intersphinx']
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
-    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None)
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
+    'geopy': ('https://geopy.readthedocs.io/en/stable/', None)
 }
 
 templates_path = ['_templates']

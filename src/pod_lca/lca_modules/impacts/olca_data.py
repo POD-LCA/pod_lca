@@ -216,7 +216,7 @@ class openLCA:
         
         Parameters
         ----------
-        categories : list or int.
+        categories : list or int
             IDs of categories to be identified. 
             Category IDs from the North American Industry Classification System (NAICS) or International Standard Industrial Classification (ISIC).
         node : utree.Node
@@ -280,7 +280,7 @@ class openLCA:
         
         Parameters
         ----------
-        processes : list or str.
+        processes : list or str
             UUIDs of processess to be identified.
         node : utree.Node
             The node object.

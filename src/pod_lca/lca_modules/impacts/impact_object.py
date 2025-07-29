@@ -23,7 +23,7 @@ class Impacts(Records):
         The product or process object to which this impacts record belong.
     <impact_category> : float
         Impact categories are dynamically set based on the class variable 'record_attr_dict'.
-        Currently, this is set to the IMPACT_CATEGORIES in the config file.
+        This is set to the IMPACT_CATEGORIES in the config file.
     """
     record_type = "Impacts"
     record_attr_dict = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
@@ -45,8 +45,8 @@ class Impacts(Records):
         ----------
         method : {'TRACI_EPA', 'TRACI_NIST'}
             Weightages to be used:
-            - **'TRACI_EPA'**: From Ref [1].
-            - **'TRACI_NIST'**: From Ref [1].
+            - 'TRACI_EPA': From Ref [1].
+            - 'TRACI_NIST': From Ref [1].
             Default is 'TRACI_EPA'.
             
         Returns

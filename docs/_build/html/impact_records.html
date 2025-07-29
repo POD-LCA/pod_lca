@@ -346,7 +346,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">&lt;impact_category&gt;</span></span></dt>
 <dd><p>Impact categories are dynamically set based on the class variable 'record_attr_dict'.
-Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
+This is set to the IMPACT_CATEGORIES in the config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
@@ -365,8 +365,8 @@ Currently, this is set to the IMPACT_CATEGORIES in the config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>method</strong> (<em>{'TRACI_EPA'</em><em>, </em><em>'TRACI_NIST'}</em>) -- Weightages to be used:
-- <strong>'TRACI_EPA'</strong>: From Ref [1].
-- <strong>'TRACI_NIST'</strong>: From Ref [1].
+- 'TRACI_EPA': From Ref [1].
+- 'TRACI_NIST': From Ref [1].
 Default is 'TRACI_EPA'.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -459,7 +459,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd class="field-even"><p>Record created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Record</em></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -470,7 +470,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Create an record object from a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+<dd class="field-odd"><p><strong>record_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records {<strong>record catergory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>record quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Records created.</p>

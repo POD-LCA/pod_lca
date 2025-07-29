@@ -47,7 +47,7 @@ class Emissions(Records):
         
         Returns
         -------
-        ~pod_lca.impacts.Record
+        ~pod_lca.impacts.Emissions
             Record created.
         """
         record_obj = super().from_parent(parent)
@@ -61,7 +61,7 @@ class Emissions(Records):
         Parameters
         ----------
         record_dict : dict
-            Dictionary of records {record catergory (str): record quantity (float)}
+            Dictionary of records {**record catergory** (:class:`str`): **record quantity** (:class:`float`)}
         
         Returns
         -------

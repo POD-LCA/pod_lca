@@ -16,31 +16,31 @@ class Master:
 
     Attributes
     ----------
-    id : int.
+    id : int
         An identification number.
-    model : Model Obj.
+    model : ~pod_lca.materials_screening.Model
         Model object to which this product/process belong.
     name : str
         Name of the product/process.
-    life_cycle_stage : str
+    life_cycle_stage : {'A1', 'A3'}
         Life cycle stage corresponding to the product/process.
-    impacts : Impacts Obj.
+    impacts : ~pod_lca.impacts.Impacts
         Impacts object corresponding to the product/process.
-    emissions : EmissionsInventory Obj.
+    emissions : ~pod_lca.impacts.Emissions
         Emissions Inventory object corresponding to the product/process.
-    carbon_storage : Carbon Storage Obj
+    carbon_storage : ~pod_lca.impacts.CarbonStorage
         Carbon storage corresponding to the product/process.
     impact_database_entry : str
         Flow name corresponding to the database entry which gives the unit impact of the product.
     qty : float
         Quantity of the product/process.
-    unit : Unit Obj
+    unit : ~pod_lca.units.Unit
         Unit of measurement corresponding to the quantity of the product/process.
     is_hotspot : bool
         True, if the object is a hotspot in the model.
     data_distribution : dict.
-        Data distributions corresponding to attributes: {attr (str): Dataset Obj}.
-    pedigree_score : PedigreeScore Obj
+        Data distributions corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}.
+    pedigree_score : ~pod_lca.uncertainty.PedigreeScore
         Data quality indicator for the object
     """
 
@@ -78,17 +78,19 @@ class Master:
         
         Parameters
         ----------
-        id : int.
+        id : int
             An identification number.
         name : str
             Name of the item.
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model in which the item is created.
-        stage : str
+        stage : {'A1', 'A3'}
             LCA stage.
+            - 'A1': Raw materials supply.
+            - 'A3': manufacturing.
         qty : float
             Quantity of the item
-        unit : Unit Obj
+        unit : ~pod_lca.units.Unit
             Unit corresponding to the quantity.
         impacts_from : str
             Name of the impact database entry from which to use impacts.
@@ -118,7 +120,7 @@ class Master:
 
         Returns
         -------
-        Master Obj.
+        ~pod_lca.materials_screening.Master
             Copy of the object.
         """
         new_impact = obj.get_impacts().copy()
@@ -151,7 +153,7 @@ class Master:
 
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model corresponding to the product/process.
         """
         self.model = model
@@ -163,8 +165,10 @@ class Master:
 
         Parameters
         ----------
-        stage : str
+        stage : {'A1', 'A3'}
             Life cycle stage of the product/process.
+            - 'A1': Raw materials supply.
+            - 'A3': manufacturing.
         """
         if self.get_life_cycle_stage() is None:
             self.life_cycle_stage = stage
@@ -195,7 +199,7 @@ class Master:
         
         Parameters
         ----------
-        database_item : str.
+        database_item : str
             The name of the database item which gives the item impacts.
         """
         self.impact_database_entry = database_item
@@ -256,7 +260,7 @@ class Master:
         
         Parameters
         ----------
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Unit of measurement.
         """
         if self.get_unit() is None:
@@ -280,9 +284,9 @@ class Master:
 
         Parameters
         ----------
-        distribution : DataDistribution Obj.
+        distribution : ~pod_lca.uncertainty.DataDistribution
             DataDistribution object to be set
-        attr : str.
+        attr : str
             Attribute to which the distribution correspond.
         """
         if hasattr(self, attr):
@@ -297,7 +301,7 @@ class Master:
 
         Parameters
         ----------
-        pedigree_score : PedigreeScore Obj
+        pedigree_score : ~pod_lca.uncertainty.PedigreeScore
             Data quality indicator for the object
         """
         self.pedigree_score = pedigree_score
@@ -320,7 +324,7 @@ class Master:
 
         Returns
         -------
-        Model Obj.
+        ~pod_lca.materials_screening.Model
             Model corresponding to the product/process.
         """
         return self.model
@@ -370,7 +374,7 @@ class Master:
 
         Returns
         -------
-        str
+        ~pod_lca.units.Units
             Unit of measurement of the product/process.
         """
         return self.unit
@@ -380,7 +384,7 @@ class Master:
 
         Returns
         -------
-        Impacts Obj.
+        ~pod_lca.impacts.Impacts
             Impacts of the product/process.
         """
         self.update_inventory_records()
@@ -392,7 +396,7 @@ class Master:
 
         Returns
         -------
-        Emissions Obj.
+        ~pod_lca.impacts.Emissions
             Emissions of the product/process.
         """
         self.update_inventory_records()
@@ -404,7 +408,7 @@ class Master:
 
         Returns
         -------
-        CarbonStorage Obj.
+        ~pod_lca.impacts.CarbonStorage
             Carbon storage of the product/process.
         """
         self.update_inventory_records()
@@ -417,7 +421,7 @@ class Master:
         Returns
         -------
         dict.
-            DataDistribution objects corresponding to attributes: {attr (str): Dataset Obj}        
+            DataDistribution objects corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}        
         """
         return self.data_distributions
     
@@ -426,7 +430,7 @@ class Master:
 
         Parameters
         ----------
-        attr : str.
+        attr : str
             Attribute to which the distribution correspond.
 
         Returns
@@ -442,7 +446,7 @@ class Master:
         Returns
         -------
         dict.
-            Distributions Datasets corresponding to attributes: {attr (str): Distribution Obj}.
+            Distributions Datasets corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}.
         """
         return self.pedigree_score
 
@@ -451,7 +455,7 @@ class Master:
 
         Returns
         -------
-        Project Obj.
+        ~pod_lca.materials_screening.Project
             Corresponding project.
         """
         return self.get_model().get_project() 
@@ -489,7 +493,7 @@ class Master:
 
         Parameters
         ----------
-        stage : str
+        stage : {'A1', 'A2', 'A3'}
             Life cycle stage of the product/process.
             If None, all stages are checked to find the product/process.
         """

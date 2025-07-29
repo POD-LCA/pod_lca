@@ -30,7 +30,7 @@ class SensitivityAnalysis:
             range : tuple
                 Minimum and maximum value for the parameter.
                 e.g., qty of a product or process.
-            options : list of str.
+            options : list of str
                 A range of options given as strings for the parameter.
                 e.g., database_item name (i.e., to change the impact value)
 
@@ -149,7 +149,7 @@ class SensitivityAnalysis:
                 range : tuple
                     Minimum and maximum value for the parameter, in that order.
                     e.g., qty of a product or process.
-                options : list of str.
+                options : list of str
                     A range of options given as strings for the parameter.
                     e.g., database_item name (i.e., to change the impact value)
 

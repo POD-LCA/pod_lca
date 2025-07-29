@@ -30,14 +30,14 @@ class DynamicRadiativeForcing:
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
             Name of the greenhouse gas.
         ref_unit: {'Wm-2ppb-1', 'Wm-2kg-1'}
-            Output unit
+            Output unit.
         adjust_for_indirect_effects: bool
-            Adjust radiative efficiency to account for indirect effects
+            Adjust radiative efficiency to account for indirect effects.
         
         Returns
         -------
         float
-            Radiative efficiency, in reference unit
+            Radiative efficiency, in the reference unit.
         """
         mass_atmosphere_total = 5.1352 * 10 ** 18 # in kg
         molecular_weight_air_mean = 28.97 # in g mol−1
@@ -76,7 +76,7 @@ class DynamicRadiativeForcing:
 
     @staticmethod
     def get_pertubation_lifetime(greenhouse_gas):
-        """ Get the pertubation lifetime of the greenhouse_gas in question.
+        """ Get the pertubation lifetime of a greenhouse gas.
 
         Parameters
         ----------
@@ -100,7 +100,7 @@ class DynamicRadiativeForcing:
 
         Note
         -----
-        1. For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825
+        For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825
         
         Parameters
         ----------
@@ -196,7 +196,7 @@ class DynamicRadiativeForcing:
 
         Note
         ----
-        1. Noting the behaviour of numpy.arange with floats, the end value of years is checked against time horizon. 
+        Noting the behaviour of numpy.arange with floats, the end value of years is checked against time horizon. 
 
         Parameters
         ----------
@@ -283,7 +283,7 @@ class DynamicRadiativeForcing:
 
         Note
         ----
-        1. For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
+        For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
         
         Parameters
         ----------
@@ -305,7 +305,7 @@ class DynamicRadiativeForcing:
 
         Note
         ----
-        1. For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
+        For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
         
         Parameters
         ----------

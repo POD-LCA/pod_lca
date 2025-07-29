@@ -28,7 +28,7 @@ class ImpactsDatabase:
         Data header corresponding to the quantity of the database entries.
     data : pandas.DataFrame
         Impact data, with following headings.
-        - **primary_key** (str): Name of the impact.
+        - **primary_key (str): Name of the impact.
         - **qty_key** (str): Impacts per unit of measure.
         - **unit_key** (str): The unit of measure.
         - **impact category** (float): Quantity of impact.
@@ -101,16 +101,16 @@ class ImpactsDatabase:
         Parameters
         ----------
         file_path : str
-            Location of the CSV file
+            Location of the CSV file.
 
         Other Parameters
         ----------------
         impact_headers_map : dict
-            The headers of the CSV file as they would be mapped to the impacts in the database: {header (str): impact category (str)}.
+            The headers of the CSV file as they would be mapped to the impacts in the database: {**header** (:class:`str`): **impact category** (:class:`str`)}.
         emission_headers_map : dict
-            The headers of the CSV file as they would be mapped to the emission inventories in the database: {header (str): inventory (str)}.
+            The headers of the CSV file as they would be mapped to the emission inventories in the database: {**header** (:class:`str`): **inventory** (:class:`str`)}.
         carbon_storage_headers_map : dict
-            The headers of the CSV file as they would be mapped to the carbon storage in the database: {header (str): carbon storage (str)}.
+            The headers of the CSV file as they would be mapped to the carbon storage in the database: {**header** (:class:`str`): **carbon storage** (:class:`str`)}.
         grouped_data : str
             Prefix used in the grouped data.
         additional_headers : list of str
@@ -195,13 +195,13 @@ class ImpactsDatabase:
         Other Parameters
         ----------------
         impacts : dict
-            Dictionary of impacts {impact catergory (str): impact (float)}
+            Dictionary of impacts {**impact catergory** (:class:`str`): **impact** (:class:`float`)}.
         emissions : dict
-            Dictionary of emissions {emission inventory (str): emission (float)}
+            Dictionary of emissions {**emission inventory** (:class:`str`): **emission** (:class:`float`)}.
         carbon_storage : dict
-            Dictionary of carbon storage {carbon storage (str): carbon quantity (float)}
+            Dictionary of carbon storage {**carbon storage** (:class:`str`): **carbon quantity** (:class:`float`)}.
         additional_data : dict
-            Dictionary of additional data {header (str): value (str / float/ int)}
+            Dictionary of additional data {**header** (:class:`str`): **value** (:class:`str` / :class:`float`/ :class:`int`)}.
         """
         # check input data
         if flow in self.data[self.get_primary_key()].tolist():
@@ -306,7 +306,7 @@ class ImpactsDatabase:
         
         Returns
         -------
-        Pandas DataFrame Obj.
+        pandas.DataFrame
             Impact data.
         """
 
@@ -322,7 +322,7 @@ class ImpactsDatabase:
         
         Returns
         -------
-        Pandas Series
+        pandas.Series
             Databse entry corresponding to the flow.
         """
 
