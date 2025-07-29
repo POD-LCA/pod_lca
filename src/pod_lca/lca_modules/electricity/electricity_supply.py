@@ -287,11 +287,11 @@ class ElectricitySupply:
             data_dict = impact_database.get_data_entry(region, key)
             declared_qty = data_dict[impact_database.get_qty_key()]
              
-            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in producer.get_impacts().get_categories()}
-            producer.get_impacts().update_qty(impact_data_dict)
+            impact_data_dict = {cat:impact for cat, impact in data_dict.items() if cat in producer.get_unit_impacts().get_categories()}
+            producer.get_unit_impacts().update_qty(impact_data_dict)
 
-            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in producer.get_emissions().get_categories()}
-            producer.get_emissions().update_qty(emissions_data_dict)
+            emissions_data_dict = {cat:emission for cat, emission in data_dict.items() if cat in producer.get_unit_emissions().get_categories()}
+            producer.get_unit_emissions().update_qty(emissions_data_dict)
 
         return self
     
