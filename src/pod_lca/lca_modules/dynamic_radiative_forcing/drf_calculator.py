@@ -19,6 +19,7 @@ from ...utilities import MathFuncs
 class DynamicRadiativeForcing:
     """ Computation methods related to dynamic radiative forcing methods.
     """
+    # TODO: consider moving this methods to module level
 
     @staticmethod
     def get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2ppb-1", adjust_for_indirect_effects=True):
@@ -26,10 +27,10 @@ class DynamicRadiativeForcing:
          
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g.,'CO2', 'CH4'. 'N2O'
-        ref_unit: str
-            Output unit: 'Wm-2ppb-1', 'Wm-2kg-1'
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.
+        ref_unit: {'Wm-2ppb-1', 'Wm-2kg-1'}
+            Output unit
         adjust_for_indirect_effects: bool
             Adjust radiative efficiency to account for indirect effects
         
@@ -79,8 +80,8 @@ class DynamicRadiativeForcing:
 
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O'
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.
 
         Returns
         -------
@@ -97,14 +98,14 @@ class DynamicRadiativeForcing:
     def get_atmospheric_concentration(greenhouse_gas, at_year, cumulative=False):
         """ Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.
 
-        Notes
+        Note
         -----
         1. For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825
         
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas. 
         at_year : int or array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
@@ -144,8 +145,8 @@ class DynamicRadiativeForcing:
         
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.
         at_year : int or array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
@@ -199,8 +200,8 @@ class DynamicRadiativeForcing:
 
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.  
         time_horizon : int
             Time horizon in years.  
         time_step : float
@@ -227,8 +228,8 @@ class DynamicRadiativeForcing:
 
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.
         time_horizon : int
             Time horizon in years.  
         time_step : float
@@ -286,8 +287,8 @@ class DynamicRadiativeForcing:
         
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'CH4 fossil', 'N2O'}
+            Name of the greenhouse gas.
         time_horizon : int
             Time horizon in years.        
         """
@@ -308,8 +309,8 @@ class DynamicRadiativeForcing:
         
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.  
         time_horizon : int
             Time horizon in years.        
         """

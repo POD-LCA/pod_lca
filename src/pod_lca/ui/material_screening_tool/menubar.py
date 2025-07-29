@@ -1,7 +1,7 @@
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
-from ui.material_screening_tool.GUI_outputManager import GUIOutputManager
-from ui.material_screening_tool.popup import Popup
-from ui.material_screening_tool.cell_table import CellTable
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.GUI_outputManager import GUIOutputManager
+from ui.materials_screening_tool.popup import Popup
+from ui.materials_screening_tool.cell_table import CellTable
 
 import os
 import sys

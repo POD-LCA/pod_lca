@@ -16,18 +16,16 @@ class SensitivityAnalysis:
         obj : Master Obj
             Entry on which the sensitivity is tested.
         param : str
-            Parameter varied.
-            This must be an attribute of the object.
+            Parameter varied. This must be an attribute of the object.
         impact_cat : str
-            Impact category considered.
-            Weighted impact, if 'weighted'
-        sensitivity_type : str
+            Impact category considered.  Weighted impact, if 'weighted'
+        sensitivity_type : {'relative', 'symmetric'}
             Type of sensitivity analysis.
-            'relative' - relative percentage change of impact.  (default)
+            'relative' - relative percentage change of impact.
             'symmetric' - symmetric percentage change of impact.
+            Default is 'relative'.
         printout : bool
-            Printout results if true.
-            Default - True
+            Printout results if true. Default is True
         **kwargs
             range : tuple
                 Minimum and maximum value for the parameter.

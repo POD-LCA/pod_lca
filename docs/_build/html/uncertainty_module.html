@@ -1,23 +1,22 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Uncertainty Module &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>Analysis &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Pedigree Score" href="pedigree_score.html" />
-    <link rel="prev" title="Location Module" href="location_module.html" /> 
+    <link rel="next" title="Data Quality Assessment" href="data_quality_assessment.html" />
+    <link rel="prev" title="Emission Profiles" href="emission_profiles.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -31,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,31 +110,35 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="material_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Uncertainty Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Analysis</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html">Datasets</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -153,78 +156,141 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="uncertainty-module">
-<h1>Uncertainty Module<a class="headerlink" href="#uncertainty-module" title="Permalink to this heading">¶</a></h1>
-<p>A brief description...</p>
+  <section id="analysis">
+<h1>Analysis<a class="headerlink" href="#analysis" title="Link to this heading">¶</a></h1>
+<p>This sub-package manage analysis of LCA outputs, including data quality analysis, hotspots analysis, sensitivity analysis and other probablistic analysis methods.</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pedigree_score.html#lca_modules.uncertainty.data_quality_assessment.PedigreeScore"><code class="docutils literal notranslate"><span class="pre">PedigreeScore</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html#lca_modules.uncertainty.data_quality_assessment.PedigreeScore.parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.parent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html#lca_modules.uncertainty.data_quality_assessment.PedigreeScore.calculate_DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.calculate_DQS()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.project"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.project</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.indicators"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.indicators</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.max_score"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.max_score</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.min_score"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.min_score</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.pedigreeScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.pedigreeScores</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.calculate_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.calculate_DQS()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.get_indicators"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_indicators()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.setGeographicalCorrelationScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setGeographicalCorrelationScores()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.setPedigreeScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setPedigreeScores()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.setTemporalCorrelationScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setTemporalCorrelationScores()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis.update_pedigree_scores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.update_pedigree_scores()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore"><code class="docutils literal notranslate"><span class="pre">PedigreeScore</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.DQS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.from_parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.from_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.set_parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.set_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.set_item_DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.set_item_DQS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.get_parent"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.get_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.get_item_DQS"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.get_item_DQS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.PedigreeScore.update_pedigree_scores"><code class="docutils literal notranslate"><span class="pre">PedigreeScore.update_pedigree_scores()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.DQS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.normalised_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.normalised_DQS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.set_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.set_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.get_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.get_model_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_model_DQS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.get_normalised_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_normalised_DQS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.setPedigreeScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setPedigreeScores()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.setTemporalCorrelationScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setTemporalCorrelationScores()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#pod_lca.uncertainty.DataQualityAnalysis.setGeographicalCorrelationScores"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.setGeographicalCorrelationScores()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis.project"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.project</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis.hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.hotspots</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis.get_hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_hotspots()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis.run"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.run()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis.set_hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.set_hotspots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.hotspots</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.from_model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.from_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.set_model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.set_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.set_hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.set_hotspots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.get_model"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.get_hotspots"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_hotspots()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.get_hotspots_by_impact_category"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.get_hotspots_by_impact_category()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="hotspots.html#pod_lca.uncertainty.HotSpotAnalysis.run"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis.run()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet"><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.name"><code class="docutils literal notranslate"><span class="pre">DataSet.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.data"><code class="docutils literal notranslate"><span class="pre">DataSet.data</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.dist_fitted"><code class="docutils literal notranslate"><span class="pre">DataSet.dist_fitted</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.parent"><code class="docutils literal notranslate"><span class="pre">DataSet.parent</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.attr"><code class="docutils literal notranslate"><span class="pre">DataSet.attr</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.find_best_fit"><code class="docutils literal notranslate"><span class="pre">DataSet.find_best_fit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.fit_distribution"><code class="docutils literal notranslate"><span class="pre">DataSet.fit_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.get_dist_fitted"><code class="docutils literal notranslate"><span class="pre">DataSet.get_dist_fitted()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.plot_data"><code class="docutils literal notranslate"><span class="pre">DataSet.plot_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.plot_fit"><code class="docutils literal notranslate"><span class="pre">DataSet.plot_fit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.set_attr"><code class="docutils literal notranslate"><span class="pre">DataSet.set_attr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.set_distribution"><code class="docutils literal notranslate"><span class="pre">DataSet.set_distribution()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet.set_parent"><code class="docutils literal notranslate"><span class="pre">DataSet.set_parent()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sensitivity_analysis.html#pod_lca.uncertainty.SensitivityAnalysis"><code class="docutils literal notranslate"><span class="pre">SensitivityAnalysis</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html#pod_lca.uncertainty.SensitivityAnalysis.compute_sensitivity_of_param"><code class="docutils literal notranslate"><span class="pre">SensitivityAnalysis.compute_sensitivity_of_param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensitivity_analysis.html#pod_lca.uncertainty.SensitivityAnalysis.compute_sensitivity_of_params"><code class="docutils literal notranslate"><span class="pre">SensitivityAnalysis.compute_sensitivity_of_params()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.project"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.project</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.iterations</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.var_param"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.var_param</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.impact_cat</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.get_var_params"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.get_var_params()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.set_distributions"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.set_distributions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.set_scenarios"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.set_scenarios()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation.set_var_params"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation.set_var_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.iterations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.impact_cat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.var_param"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.var_param</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.scenario"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.scenario</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.result"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.result</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.from_model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.from_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.set_model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.set_iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_iterations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.set_impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_impact_cat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.set_var_params"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_var_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.set_scenario"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.set_result"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.set_result()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.get_model"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_model()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.get_iterations"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_iterations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.get_impact_cat"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_impact_cat()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.get_var_params"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_var_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.get_scenario"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.get_result"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.get_result()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.run"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloSimulator.update_all_distributions"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulator.update_all_distributions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="mcs.html#pod_lca.uncertainty.MonteCarloResults"><code class="docutils literal notranslate"><span class="pre">MonteCarloResults</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Data Distributions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.name"><code class="docutils literal notranslate"><span class="pre">DataDistribution.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.data"><code class="docutils literal notranslate"><span class="pre">DataDistribution.data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.dist_name"><code class="docutils literal notranslate"><span class="pre">DataDistribution.dist_name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.dist"><code class="docutils literal notranslate"><span class="pre">DataDistribution.dist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.parent"><code class="docutils literal notranslate"><span class="pre">DataDistribution.parent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.attr"><code class="docutils literal notranslate"><span class="pre">DataDistribution.attr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.scenarios"><code class="docutils literal notranslate"><span class="pre">DataDistribution.scenarios</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.is_cts"><code class="docutils literal notranslate"><span class="pre">DataDistribution.is_cts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.from_data"><code class="docutils literal notranslate"><span class="pre">DataDistribution.from_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.from_distributions"><code class="docutils literal notranslate"><span class="pre">DataDistribution.from_distributions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.set_data"><code class="docutils literal notranslate"><span class="pre">DataDistribution.set_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.set_name"><code class="docutils literal notranslate"><span class="pre">DataDistribution.set_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.set_distribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution.set_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.set_parent"><code class="docutils literal notranslate"><span class="pre">DataDistribution.set_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.set_attr_name"><code class="docutils literal notranslate"><span class="pre">DataDistribution.set_attr_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.set_scenario"><code class="docutils literal notranslate"><span class="pre">DataDistribution.set_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_data"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_name"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_distribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_dist_name"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_dist_name()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_attr"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_attr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_parent"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_parent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.get_scenario"><code class="docutils literal notranslate"><span class="pre">DataDistribution.get_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.delete_data"><code class="docutils literal notranslate"><span class="pre">DataDistribution.delete_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.find_best_fit"><code class="docutils literal notranslate"><span class="pre">DataDistribution.find_best_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.validate_dist_fit"><code class="docutils literal notranslate"><span class="pre">DataDistribution.validate_dist_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.fit_cts_distribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution.fit_cts_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.generate_discrete_distribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution.generate_discrete_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.pick_data_point_from_distribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution.pick_data_point_from_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.pick_data_points_from_distribution"><code class="docutils literal notranslate"><span class="pre">DataDistribution.pick_data_points_from_distribution()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.prob_of"><code class="docutils literal notranslate"><span class="pre">DataDistribution.prob_of()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.percentile"><code class="docutils literal notranslate"><span class="pre">DataDistribution.percentile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution.discrete_from_continous"><code class="docutils literal notranslate"><span class="pre">DataDistribution.discrete_from_continous()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.Uniform"><code class="docutils literal notranslate"><span class="pre">Uniform</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.Uniform.from_params"><code class="docutils literal notranslate"><span class="pre">Uniform.from_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.Norm"><code class="docutils literal notranslate"><span class="pre">Norm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.Norm.from_params"><code class="docutils literal notranslate"><span class="pre">Norm.from_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.LogNorm"><code class="docutils literal notranslate"><span class="pre">LogNorm</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.LogNorm.from_params"><code class="docutils literal notranslate"><span class="pre">LogNorm.from_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.ExponentDecay"><code class="docutils literal notranslate"><span class="pre">ExponentDecay</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#pod_lca.uncertainty.ExponentDecay.from_params"><code class="docutils literal notranslate"><span class="pre">ExponentDecay.from_params()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -246,14 +312,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="location_module.html">
-                    <span class="icon">&lt;</span><span>Location Module</span></a>
+                <a href="emission_profiles.html">
+                    <span class="icon">&lt;</span><span>Emission Profiles</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="pedigree_score.html"><span>Pedigree Score</span><span class="icon">&gt;</span></a>
+                    <a href="data_quality_assessment.html"><span>Data Quality Assessment</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -261,8 +327,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

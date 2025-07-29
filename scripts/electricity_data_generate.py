@@ -1,10 +1,11 @@
 
-from lca_modules.location.location import Location
-from lca_modules.material.project_manager import Project 
-from utilities.data_imports.data_importer import Data_Importer
-from utilities.settings import config
-from utilities.units.common_units import WATT_HOUR
-from utilities.units.metric_prefixes import KILO, MEGA
+
+from pod_lca.location import Location
+from pod_lca.materials_screening import Project 
+from pod_lca.utilities import DataExporter
+from pod_lca.utilities import config
+from pod_lca.units import WATT_HOUR
+from pod_lca.units import MEGA
 
 from tqdm import tqdm
 
@@ -61,4 +62,4 @@ for city in tqdm(city_list):
                 output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + ')'] = emissions.get_record(emission)
             sequence_no += 1
 
-Data_Importer.dict_to_csv(output_dict, output_file)
+DataExporter.dict_to_csv(output_dict, output_file)

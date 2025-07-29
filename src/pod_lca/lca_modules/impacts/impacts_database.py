@@ -26,12 +26,12 @@ class ImpactsDatabase:
         Data header corresponding to the units of the database entries.
     qty_key : str
         Data header corresponding to the quantity of the database entries.
-    data : pandas DataFrame Obj.
+    data : pandas.DataFrame
         Impact data, with following headings.
-            primary_key (str) : name of impact
-            qty_key (str) : impacts per this unit of measure
-            unit_key (str) : the unit of measure
-            impact catergory (float) : quantity of impact
+        - **primary_key** (str): Name of the impact.
+        - **qty_key** (str): Impacts per unit of measure.
+        - **unit_key** (str): The unit of measure.
+        - **impact category** (float): Quantity of impact.
     """
 
     DATA_IMPORTS = {    
@@ -69,7 +69,7 @@ class ImpactsDatabase:
         
         Returns
         -------
-        ImpactsDatabase Obj.
+        ~pod_lca.impacts.ImpactsDatabase
             Database created.
         """
         new_db = cls()
@@ -102,19 +102,21 @@ class ImpactsDatabase:
         ----------
         file_path : str
             Location of the CSV file
-        **kwargs:
-            impact_headers_map : dict
-                The headers of the CSV file as they would be mapped to the impacts in the database: {header (str): impact category (str)}.
-            emission_headers_map : dict
-                The headers of the CSV file as they would be mapped to the emission inventories in the database: {header (str): inventory (str)}.
-            carbon_storage_headers_map : dict
-                The headers of the CSV file as they would be mapped to the carbon storage in the database: {header (str): carbon storage (str)}.
-            grouped_data : str
-                Prefix used in the grouped data.
-            additional_headers : list of str
-                Headers of the columns to be imported, other than name, unit, and impact categories.
-            multipliers : list of float
-                Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.
+
+        Other Parameters
+        ----------------
+        impact_headers_map : dict
+            The headers of the CSV file as they would be mapped to the impacts in the database: {header (str): impact category (str)}.
+        emission_headers_map : dict
+            The headers of the CSV file as they would be mapped to the emission inventories in the database: {header (str): inventory (str)}.
+        carbon_storage_headers_map : dict
+            The headers of the CSV file as they would be mapped to the carbon storage in the database: {header (str): carbon storage (str)}.
+        grouped_data : str
+            Prefix used in the grouped data.
+        additional_headers : list of str
+            Headers of the columns to be imported, other than name, unit, and impact categories.
+        multipliers : list of float
+            Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.
         """
         # map headers
         mapped_headers = []
@@ -189,15 +191,17 @@ class ImpactsDatabase:
             Quantity of the flow.
         unit : str
             Unit of measurement for which the impacts are applied.
-        **kwargs
-            impacts : dict
-                Dictionary of impacts {impact catergory (str): impact (float)}
-            emissions : dict
-                Dictionary of emissions {emission inventory (str): emission (float)}
-            carbon_storage : dict
-                Dictionary of carbon storage {carbon storage (str): carbon quantity (float)}
-            additional_data : dict
-                Dictionary of additional data {header (str): value (str / float/ int)}
+
+        Other Parameters
+        ----------------
+        impacts : dict
+            Dictionary of impacts {impact catergory (str): impact (float)}
+        emissions : dict
+            Dictionary of emissions {emission inventory (str): emission (float)}
+        carbon_storage : dict
+            Dictionary of carbon storage {carbon storage (str): carbon quantity (float)}
+        additional_data : dict
+            Dictionary of additional data {header (str): value (str / float/ int)}
         """
         # check input data
         if flow in self.data[self.get_primary_key()].tolist():

@@ -1,6 +1,7 @@
 **********************
 Utilities
 **********************
+
 These are support features to the LCA modules
 
 -------
@@ -8,6 +9,6 @@ These are support features to the LCA modules
 .. toctree::
    :maxdepth: 4
 
-   plotters
-   units
-   data_imports
+   data_import_export
+   math_funcs
+   array_methods

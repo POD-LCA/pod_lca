@@ -37,13 +37,18 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
             Name of the database.
         file_path : str
             Location of the impact categories json file.
-        geographical_scope : str
-            Geographical scope of the database. Recognized values are 'National' and 'Regional'.
+        geographical_scope : {'National', 'Regional', 'Local'}
+            Geographical scope of the database..
         
         Returns
         -------
-        ImpactsDatabase Obj.
+        ~pod_lca.impacts.ElectricityImpactsDatabase
             Database created.
+
+        Raises
+        ------
+        ValueError
+            If geographical scope is not one of the options given.
         """
         new_db = cls()
         new_db.set_name(name)
@@ -113,6 +118,11 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
 
     def get_required_headers(self):
         """ Get the required headers of the database.
+
+        Returns
+        -------
+        list of str
+            Headers of the database.
         """
         return  [self.get_qty_key(), self.get_unit_key(), self.get_region_key(), self.get_technology_key()]
 
@@ -121,16 +131,14 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         
         Parameters
         ----------
-        material_name : str
-            Name of the material
-        process_name: str
-            End-of-Life process name.
-        life_cycle_stage : str
-            Life cycle stage.
+        region : str
+            Electricity generation region, as appropriate to the regionality used.
+        technology: str
+            Electricity generation technology.
         
         Returns
         -------
-        Pandas Series
+        pandas.Series
             Databse entry corresponding to the flow.
         """
         if self.data is not None:

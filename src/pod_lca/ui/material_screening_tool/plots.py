@@ -2,7 +2,7 @@ from lca_modules.material.calculator import Calculator
 from plotters.plotters.matplotlib_plotter import MatplotlibPlotter
 from plotters.plots.bar_chart import BarChart
 from plotters.plots.radar_chart import RadarChart
-from ui.material_screening_tool.GUI_inputManager import GUIInputManager
+from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import RIGHT, LEFT, Radiobutton, Checkbutton

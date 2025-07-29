@@ -63,9 +63,9 @@ S_TON = Unit.from_basics('short Ton', 'tn', 'mass')
 POUND = Unit.from_basics('pound', 'lb', 'mass')
 OUNCE = Unit.from_basics('ounce', 'oz', 'mass')
 
-UNIT_CONVERSIONS['mass'] = {'short Ton': 1.0, 
-                            'gram': 907184.74, 
-                            'metric Ton': 0.90718474, 
+UNIT_CONVERSIONS['mass'] = {'gram': 907184.74,
+                            'metric Ton': 0.90718474,
+                            'short Ton': 1.0, 
                             'pound': 2000, 
                             'ounce':32000}
 # REF [1] pp. C-19/20
@@ -83,11 +83,11 @@ YARD = Unit.from_basics('yard', 'yd', 'length')
 MILE = Unit.from_basics('mile', 'mi', 'length')
 NAUTICAL_MILE = Unit.from_basics('nautical mile', 'nmi', 'length')
 
-UNIT_CONVERSIONS['length'] = {'inch': 63360, 
+UNIT_CONVERSIONS['length'] = {'meter': 1609.344,
                               'feet': 5280, 
+                              'inch': 63360, 
                               'yard': 1760, 
-                              'mile': 1, 
-                              'meter': 1609.344, 
+                              'mile': 1,
                               'nautical mile': 1.151} 
 # REF [1] pp. C-10
 
@@ -109,9 +109,9 @@ SQUARE_FEET = Unit.from_basics('square feet', 'ft2', 'area')
 ACRE = Unit.from_basics('acre', 'acre', 'area')
 HECTARE = Unit.from_basics('hectare', 'ha', 'area')
 
-UNIT_CONVERSIONS['area'] = {'square feet': 43560, 
-                            'acre': 1.0, 
-                            'square meter': 4046.8564224,  
+UNIT_CONVERSIONS['area'] = {'square meter': 4046.8564224,
+                            'square feet': 43560, 
+                            'acre': 1.0,
                             'hectare': 0.40468564224} 
 # REF [1] pp. C-14/15
 
@@ -124,10 +124,10 @@ US_GALLON = Unit.from_basics('US gallon', 'US gal', 'volume')
 CUBIC_METER = Unit.from_basics('cubic meter', 'm3', 'volume')
 CUBIC_FEET = Unit.from_basics('cubic feet', 'ft3', 'volume')
 
-UNIT_CONVERSIONS['volume'] = {'cubic feet': 1.0,
+UNIT_CONVERSIONS['volume'] = {'liter': 28.316846592,
+                              'US gallon': 28.316846592 / 3.785411784,
                               'cubic meter': 0.028316846592,
-                              'liter': 28.316846592,
-                              'US gallon': 28.316846592 / 3.785411784}
+                              'cubic feet': 1.0}
 # REF [1] pp. C-17/18
 
 # ==================================

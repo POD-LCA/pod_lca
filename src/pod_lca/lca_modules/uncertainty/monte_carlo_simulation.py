@@ -64,7 +64,7 @@ class MonteCarloSimulator:
     def from_model(cls, model, no_iter=10000, impact_cat='GWP'):
         """ Create a Monte Carlo Simulator for a model.
         
-        Attributes
+        Parameters
         ----------
         model : Model Obj.
             Model on which the Monte Carlo Simulation is performed.
@@ -84,7 +84,7 @@ class MonteCarloSimulator:
     def set_model(self, model):
         """ Set a model to the Simulator.
         
-        Attributes
+        Parameters
         ----------
         model : Model Obj.
             Model on which the Monte Carlo Simulation is performed.        
@@ -95,7 +95,7 @@ class MonteCarloSimulator:
     def set_iterations(self, no_iters):
         """ Set the number of iterations of the simulation.
         
-        Attributes
+        Parameters
         ----------
         no_iters : int.
             Number of iterations of the simulations.        
@@ -106,7 +106,7 @@ class MonteCarloSimulator:
     def set_impact_cat(self, impact_cat):
         """ Set the impact category considered for the simulation.
         
-        Attributes
+        Parameters
         ----------
         impact_cat : str.
             Impact category considered for the impact calculation.    

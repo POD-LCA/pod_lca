@@ -222,6 +222,26 @@ class WasteProcess:
 
         return self
 
+    def set_unit_inventories(self):
+        """ Set unit impacts of the waste process.
+        """
+        material = self.get_parent().get_impact_database_entry()
+        process = self.get_process_name()
+        life_cycle_stage = self.get_life_cycle_stage()
+        unit = self.get_unit()
+        database = self.get_parent().get_parent().get_building().get_eol_database()
+
+        database_entry = database.get_data_entry(material, process, life_cycle_stage)
+
+        declared_unit = database_entry[database.get_unit_key()]
+        conversion_factor = declared_unit.get_conversion_factor(unit)
+
+        impacts = {key: database_entry[key]*conversion_factor for key in self.get_unit_impacts().get_categories()}
+        emissions = {key: database_entry[key]*conversion_factor for key in self.get_unit_emissions().get_categories()}
+        
+        self.get_unit_impacts().update_qty(impacts)
+        self.get_unit_emissions().update_qty(emissions)
+
     def set_location(self, location):
         """ Set location of the waste process facility.
 

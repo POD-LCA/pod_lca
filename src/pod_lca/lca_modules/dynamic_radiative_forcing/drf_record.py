@@ -17,7 +17,7 @@ from . import UniformEmissionProfile
 from ..impacts import Emissions
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
-from ...utilities import DataImporter
+from ...utilities import DataExporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
 from ...visualizer import Stackplot
@@ -239,7 +239,7 @@ class DynamicRadiativeForcingRecord:
     def get_emissions_list(self):
         """ Get the list of emissions assigned to the dynamic radiative forcing record.
         
-        Retruns
+        Returns
         -------
         list of Emission Obj.
             List of emissions considered in the record.
@@ -249,7 +249,7 @@ class DynamicRadiativeForcingRecord:
     def get_time_step(self):
         """ Set the time step for time series record.
         
-        Retruns
+        Returns
         -------
         float
             Time step of the record.
@@ -401,7 +401,7 @@ class DynamicRadiativeForcingRecord:
                 headers.append(f'{greenhouse_gas} crf (in W/m^2)')
                 lists_to_write.append(data_array.tolist())
 
-        return DataImporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)
+        return DataExporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)
 
         
 if __name__ == '__main__':

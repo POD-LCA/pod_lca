@@ -6,6 +6,7 @@ __email__ = "etel5501@uw.edu, kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.impacts import openLCA
+from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 from pod_lca.units import JOULE
 from pod_lca.units import MEGA
@@ -65,4 +66,4 @@ results = openLCA.generate_impacts_dir( openLCA_client, process_list_all,
                                         group_by)
 
 save_path = './data/impacts_flcac_categorized-data.csv'
-DataImporter.dict_to_csv(results, save_path) 
+DataExporter.dict_to_csv(results, save_path) 

@@ -1,22 +1,21 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>API Reference &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Material Module" href="material_module.html" />
+    <link rel="next" title="Impacts" href="impacts_module.html" />
     <link rel="prev" title="Smoothie Example" href="smoothie_example.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -31,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,23 +110,28 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="material_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -146,109 +150,73 @@
           <div class="body" role="main">
             
   <section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this heading">¶</a></h1>
-<p>The package is organized into LCA modules</p>
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
+<p>The POD|LCA Python package is organized into Life Cycle Analysis (LCA) modules, as sub-packages (e.g., impacts, electricity, transportation). There are other non-LCA utility sub-packages as well (e.g., units, visualizer, utilities)</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="material_module.html">Material Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project.html">Project</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project.html#lca_modules.material.project_manager.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="impacts_module.html">Impacts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="impact_records.html">Inventory Records</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impact_databases.html">Impacts Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="olca_pipeline.html">OpenLCA Pipeline</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="model.html#lca_modules.material.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="material_screening_project.html">Project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="products.html">Products/Processes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="products.html">Products</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Product"><code class="docutils literal notranslate"><span class="pre">Product</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Fuel"><code class="docutils literal notranslate"><span class="pre">Fuel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Emission"><code class="docutils literal notranslate"><span class="pre">Emission</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="products.html#lca_modules.material.product.Waste"><code class="docutils literal notranslate"><span class="pre">Waste</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="electricity_module.html">Electricity</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="electricity_producer.html">Electricity Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_supply.html">Electricity Supply</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="processess.html">Processes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.Process"><code class="docutils literal notranslate"><span class="pre">Process</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="processess.html#lca_modules.material.process.transportationProcess"><code class="docutils literal notranslate"><span class="pre">transportationProcess</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="transportation.html">Transportation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logistics_link.html">Logistics Link</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_mode.html">Transport Mode</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="calculator.html">Calculator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="calculator.html#lca_modules.material.calculator.Calculator"><code class="docutils literal notranslate"><span class="pre">Calculator</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="end_of_life.html">End-of-life</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="waste.html">Waste Products</a></li>
+<li class="toctree-l2"><a class="reference internal" href="waste_processing.html">Waste Processing</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="drf_calculator.html">Dynamic Radiative Forcing Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drf_record.html">Dynamic Radiative Forcing Record</a></li>
+<li class="toctree-l2"><a class="reference internal" href="emission_profiles.html">Emission Profiles</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="impacts_module.html">Impact Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="impacts.html">Impacts</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="impacts.html#lca_modules.impacts.impacts.Impacts"><code class="docutils literal notranslate"><span class="pre">Impacts</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_database.html">Impacts Database</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="impacts_database.html#lca_modules.impacts.impacts_database.ImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">ImpactsDatabase</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="transportation.html">Transportation Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#lca_modules.transportation.project_logistic_manager.ProjectLogisticManager"><code class="docutils literal notranslate"><span class="pre">ProjectLogisticManager</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="logistics_link.html">Logistic Link</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#lca_modules.transportation.logistics_link.Link"><code class="docutils literal notranslate"><span class="pre">Link</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transport_mode.html">Transport Mode</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#lca_modules.transportation.transport_mode.TransportMode"><code class="docutils literal notranslate"><span class="pre">TransportMode</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="transport_scenarios.html">Transportation Scenarios</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="transport_scenarios.html#lca_modules.transportation.scenarios.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="location_module.html">Location Module</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pedigree_score.html">Pedigree Score</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pedigree_score.html#lca_modules.uncertainty.data_quality_assessment.PedigreeScore"><code class="docutils literal notranslate"><span class="pre">PedigreeScore</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_quality_assessment.html#lca_modules.uncertainty.data_quality_assessment.DataQualityAnalysis"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="hotspots.html#lca_modules.uncertainty.hotspots.HotSpotAnalysis"><code class="docutils literal notranslate"><span class="pre">HotSpotAnalysis</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="datasets.html">Datasets</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#lca_modules.uncertainty.datasets.DataSet"><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="uncertainty_module.html">Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_quality_assessment.html">Data Quality Assessment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hotspots.html">Hotspot Analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sensitivity_analysis.html">Sensitivity Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="mcs.html#lca_modules.uncertainty.monte_carlo_simulation.MonteCarloSimulation"><code class="docutils literal notranslate"><span class="pre">MonteCarloSimulation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="mcs.html">Monte Carlo Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">Data Distributions</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="location_module.html">Location</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html#pod_lca.location.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="visualizer.html">Visualizer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="plots.html">Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plotters.html">Plotters</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="units_module.html">Units</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metric_prefixes.html">Metrix Prefixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common_units.html">Common Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unit_map.html">Units Map</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">Utilities</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="plotters.html">Plotters</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit"><code class="docutils literal notranslate"><span class="pre">Unit</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="data_imports.html">Data Imports</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_imports.html#utilities.data_imports.csv.CSV_Importer"><code class="docutils literal notranslate"><span class="pre">CSV_Importer</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="data_import_export.html">Data Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math_funcs.html">Mathematical Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="array_methods.html">Object Array Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -275,7 +243,7 @@
 
             <div class="right">
                 
-                    <a href="material_module.html"><span>Material Module</span><span class="icon">&gt;</span></a>
+                    <a href="impacts_module.html"><span>Impacts</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -283,8 +251,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

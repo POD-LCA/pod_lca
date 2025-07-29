@@ -1,17 +1,16 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Smoothie Example &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>Smoothie Example &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -31,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,14 +110,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="tutorials.html">Tutorials</a><ul class="current">
@@ -141,13 +140,14 @@
           <div class="body" role="main">
             
   <section id="smoothie-example">
-<h1>Smoothie Example<a class="headerlink" href="#smoothie-example" title="Permalink to this heading">¶</a></h1>
+<h1>Smoothie Example<a class="headerlink" href="#smoothie-example" title="Link to this heading">¶</a></h1>
 <p>The following process is to be modelled and impacts visualised.</p>
-<a class="reference internal image-reference" href="_images/Smoothie_example.png"><img alt="A flow chart indicating the process of making a smoothie. On the left, under A1, are 1kg of sand, 2kg of sprinkles, 1MJ of propane, and 4kg of pickles. Each of those are transported by trucks 40km, 30km, 20km, and 17km, respectively. They are then subjected to three processes taking up energy (13kWh electricit and 1MJ of propane) and produce a smoothie. 0.5kg of CO2, 0.6kg of CH4, and 0.7 kg of NH3 is emitted along with 1kg of waste to landfill." src="_images/Smoothie_example.png" style="width: 1000px;" /></a>
+<a class="reference internal image-reference" href="_images/Smoothie_example.png"><img alt="A flow chart indicating the process of making a smoothie. On the left, under A1, are 1kg of sand, 2kg of sprinkles, 1MJ of propane, and 4kg of pickles. Each of those are transported by trucks 40km, 30km, 20km, and 17km, respectively. They are then subjected to three processes taking up energy (13kWh electricit and 1MJ of propane) and produce a smoothie. 0.5kg of CO2, 0.6kg of CH4, and 0.7 kg of NH3 is emitted along with 1kg of waste to landfill." src="_images/Smoothie_example.png" style="width: 1000px;" />
+</a>
 <p>First the project is built and database imported.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">material</span> <span class="kn">import</span> <span class="n">HOME</span>
-<span class="kn">from</span> <span class="nn">material.projectManager.projectManager</span> <span class="kn">import</span> <span class="n">Project</span>
-<span class="kn">from</span> <span class="nn">material.visualizer.bar_chart</span> <span class="kn">import</span> <span class="n">BarChart</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">material</span><span class="w"> </span><span class="kn">import</span> <span class="n">HOME</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.projectManager.projectManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">Project</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">material.visualizer.bar_chart</span><span class="w"> </span><span class="kn">import</span> <span class="n">BarChart</span>
 
 <span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">()</span>
 <span class="n">project</span><span class="o">.</span><span class="n">get_database</span><span class="p">()</span><span class="o">.</span><span class="n">import_data_from_CSV</span><span class="p">(</span><span class="n">HOME</span> <span class="o">+</span> <span class="s1">&#39;\databaseManager\impact_data_new.csv&#39;</span><span class="p">)</span>
@@ -268,7 +268,8 @@
 </pre></div>
 </div>
 <p>... giving the plot below.</p>
-<a class="reference internal image-reference" href="_images/Bar_chart_Smoothie_example.png"><img alt="A bar chart with x-axis named 'Life cyle stages' and y-axis named 'GWP impact'. Three bars in red: A1 with a value of 51; A2 with a value of 0.253; and A3 with a value of 109.609" src="_images/Bar_chart_Smoothie_example.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="_images/Bar_chart_Smoothie_example.png"><img alt="A bar chart with x-axis named 'Life cyle stages' and y-axis named 'GWP impact'. Three bars in red: A1 with a value of 51; A2 with a value of 0.253; and A3 with a value of 109.609" src="_images/Bar_chart_Smoothie_example.png" style="width: 600px;" />
+</a>
 </section>
 
 
@@ -299,8 +300,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

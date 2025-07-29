@@ -1,23 +1,22 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Utilities &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>Utilities &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Plotters" href="plotters.html" />
-    <link rel="prev" title="Monte Carlo Simulation" href="mcs.html" /> 
+    <link rel="next" title="Data Import/Export" href="data_import_export.html" />
+    <link rel="prev" title="Units Map" href="unit_map.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -31,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,27 +110,32 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="material_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html">Plotters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html">Units</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data_imports.html">Data Imports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html">Data Import/Export</a></li>
+<li class="toctree-l3"><a class="reference internal" href="math_funcs.html">Mathematical Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="array_methods.html">Object Array Methods</a></li>
 </ul>
 </li>
 </ul>
@@ -151,65 +155,41 @@
           <div class="body" role="main">
             
   <section id="utilities">
-<h1>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">¶</a></h1>
+<h1>Utilities<a class="headerlink" href="#utilities" title="Link to this heading">¶</a></h1>
 <p>These are support features to the LCA modules</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="plotters.html">Plotters</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter"><code class="docutils literal notranslate"><span class="pre">Plotter</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.calculator"><code class="docutils literal notranslate"><span class="pre">Plotter.calculator</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.active_models"><code class="docutils literal notranslate"><span class="pre">Plotter.active_models</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.impact_category"><code class="docutils literal notranslate"><span class="pre">Plotter.impact_category</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.lca_stage"><code class="docutils literal notranslate"><span class="pre">Plotter.lca_stage</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.fig"><code class="docutils literal notranslate"><span class="pre">Plotter.fig</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.ax"><code class="docutils literal notranslate"><span class="pre">Plotter.ax</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="plotters.html#plotters.matplotlib_plotter.Plotter.plot_colors"><code class="docutils literal notranslate"><span class="pre">Plotter.plot_colors</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_import_export.html">Data Import/Export</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataImporter"><code class="docutils literal notranslate"><span class="pre">DataImporter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataImporter.csv_to_pandas"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_pandas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataImporter.csv_to_dict"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataImporter.csv_to_list"><code class="docutils literal notranslate"><span class="pre">DataImporter.csv_to_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataImporter.json_to_dict"><code class="docutils literal notranslate"><span class="pre">DataImporter.json_to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataExporter"><code class="docutils literal notranslate"><span class="pre">DataExporter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataExporter.dict_to_csv"><code class="docutils literal notranslate"><span class="pre">DataExporter.dict_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataExporter.list_to_csv"><code class="docutils literal notranslate"><span class="pre">DataExporter.list_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataExporter.lists_to_csv"><code class="docutils literal notranslate"><span class="pre">DataExporter.lists_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_import_export.html#pod_lca.utilities.DataExporter.dict_to_json"><code class="docutils literal notranslate"><span class="pre">DataExporter.dict_to_json()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="units.html">Units</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="units.html#utilities.units.units.Unit"><code class="docutils literal notranslate"><span class="pre">Unit</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.name"><code class="docutils literal notranslate"><span class="pre">Unit.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.standard_notation"><code class="docutils literal notranslate"><span class="pre">Unit.standard_notation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.qty_measured"><code class="docutils literal notranslate"><span class="pre">Unit.qty_measured</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.base_unit"><code class="docutils literal notranslate"><span class="pre">Unit.base_unit</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.prefix"><code class="docutils literal notranslate"><span class="pre">Unit.prefix</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.convert_compound"><code class="docutils literal notranslate"><span class="pre">Unit.convert_compound</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.components"><code class="docutils literal notranslate"><span class="pre">Unit.components</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.compute_conversion_factor"><code class="docutils literal notranslate"><span class="pre">Unit.compute_conversion_factor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.from_basics"><code class="docutils literal notranslate"><span class="pre">Unit.from_basics()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#id0"><code class="docutils literal notranslate"><span class="pre">Unit.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#id1"><code class="docutils literal notranslate"><span class="pre">Unit.standard_notation</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#id2"><code class="docutils literal notranslate"><span class="pre">Unit.qty_measured</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_base"><code class="docutils literal notranslate"><span class="pre">Unit.get_base()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_components"><code class="docutils literal notranslate"><span class="pre">Unit.get_components()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_conversion_factor"><code class="docutils literal notranslate"><span class="pre">Unit.get_conversion_factor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_name"><code class="docutils literal notranslate"><span class="pre">Unit.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_prefix"><code class="docutils literal notranslate"><span class="pre">Unit.get_prefix()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_qty_measured"><code class="docutils literal notranslate"><span class="pre">Unit.get_qty_measured()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.get_standard_notation"><code class="docutils literal notranslate"><span class="pre">Unit.get_standard_notation()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.set_name"><code class="docutils literal notranslate"><span class="pre">Unit.set_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.set_qty_measured"><code class="docutils literal notranslate"><span class="pre">Unit.set_qty_measured()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.Unit.set_standard_notation"><code class="docutils literal notranslate"><span class="pre">Unit.set_standard_notation()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix"><code class="docutils literal notranslate"><span class="pre">MetricPrefix</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.name</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.symbol</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.power</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.get_conversion_factor"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_conversion_factor()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.get_name"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_name()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.get_power"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_power()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="units.html#utilities.units.units.MetricPrefix.get_symbol"><code class="docutils literal notranslate"><span class="pre">MetricPrefix.get_symbol()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="math_funcs.html">Mathematical Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="math_funcs.html#pod_lca.utilities.MathFuncs"><code class="docutils literal notranslate"><span class="pre">MathFuncs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="math_funcs.html#pod_lca.utilities.MathFuncs.round_to_significant"><code class="docutils literal notranslate"><span class="pre">MathFuncs.round_to_significant()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="math_funcs.html#pod_lca.utilities.MathFuncs.integrate_exp"><code class="docutils literal notranslate"><span class="pre">MathFuncs.integrate_exp()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="data_imports.html">Data Imports</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data_imports.html#utilities.data_imports.csv.CSV_Importer"><code class="docutils literal notranslate"><span class="pre">CSV_Importer</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_imports.html#utilities.data_imports.csv.CSV_Importer.import_as_pandas"><code class="docutils literal notranslate"><span class="pre">CSV_Importer.import_as_pandas()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="array_methods.html">Object Array Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="array_methods.html#pod_lca.utilities.ArrayMethods"><code class="docutils literal notranslate"><span class="pre">ArrayMethods</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="array_methods.html#pod_lca.utilities.ArrayMethods.get_attribute_as_list"><code class="docutils literal notranslate"><span class="pre">ArrayMethods.get_attribute_as_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="array_methods.html#pod_lca.utilities.ArrayMethods.sort_by_attribute"><code class="docutils literal notranslate"><span class="pre">ArrayMethods.sort_by_attribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="array_methods.html#pod_lca.utilities.ArrayMethods.set_value"><code class="docutils literal notranslate"><span class="pre">ArrayMethods.set_value()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -231,14 +211,14 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="mcs.html">
-                    <span class="icon">&lt;</span><span>Monte Carlo Simulation</span></a>
+                <a href="unit_map.html">
+                    <span class="icon">&lt;</span><span>Units Map</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="plotters.html"><span>Plotters</span><span class="icon">&gt;</span></a>
+                    <a href="data_import_export.html"><span>Data Import/Export</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -246,8 +226,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

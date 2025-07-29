@@ -1,23 +1,22 @@
-
 <!DOCTYPE html>
 
-<html lang="Python">
+<html lang="Python" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Transport Mode &#8212; POD|LCA Materials Tool v0.1.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <title>Transport Mode &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Transportation Scenarios" href="transport_scenarios.html" />
-    <link rel="prev" title="Logistic Link" href="logistics_link.html" /> 
+    <link rel="next" title="End-of-life" href="end_of_life.html" />
+    <link rel="prev" title="Logistics Link" href="logistics_link.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -31,7 +30,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">POD|LCA Materials Tool v0.1.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -103,7 +102,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -111,29 +110,33 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="API_reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="material_module.html">Material Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impact Module</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="transportation.html">Transportation Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts_module.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials_screening_module.html">Materials Screening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="transportation.html">Transportation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
-<li class="toctree-l3"><a class="reference internal" href="logistics_link.html">Logistic Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html">Logistics Link</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Transport Mode</a></li>
-<li class="toctree-l3"><a class="reference internal" href="transport_scenarios.html">Transportation Scenarios</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Uncertainty Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic_radiative_forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uncertainty_module.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_module.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units_module.html">Units</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
 </ul>
 </li>
@@ -152,38 +155,119 @@
           <div class="body" role="main">
             
   <section id="transport-mode">
-<h1>Transport Mode<a class="headerlink" href="#transport-mode" title="Permalink to this heading">¶</a></h1>
+<h1>Transport Mode<a class="headerlink" href="#transport-mode" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransportMode</span></code></a> class manages various aspects of transportation modes, including their <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a> and <a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>. Electric mode is a specific class abstracted to manage electric vehicles and calls the electricity module to manage the impacts and emissions associated.</p>
+<hr class="docutils" />
 <dl class="py class">
-<dt class="sig sig-object py" id="lca_modules.transportation.transport_mode.TransportMode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lca_modules.transportation.transport_mode.</span></span><span class="sig-name descname"><span class="pre">TransportMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.transport_mode.TransportMode" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.transport_mode.TransportMode.get_efficiency">
-<span class="sig-name descname"><span class="pre">get_efficiency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.transport_mode.TransportMode.get_efficiency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the efficiency of the transportation mode.</p>
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.transportation.</span></span><span class="sig-name descname"><span class="pre">TransportMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feul_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Regular'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the TransportMode object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.transportation.TransportMode.name" title="Link to this definition">¶</a></dt>
+<dd><p>the name of the transportation mode (e.g., 'Truck', 'Rail').</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.efficiency">
+<span class="sig-name descname"><span class="pre">efficiency</span></span><a class="headerlink" href="#pod_lca.transportation.TransportMode.efficiency" title="Link to this definition">¶</a></dt>
+<dd><p>the efficiency level (e.g., 1, 2, 3).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.project">
+<span class="sig-name descname"><span class="pre">project</span></span><a class="headerlink" href="#pod_lca.transportation.TransportMode.project" title="Link to this definition">¶</a></dt>
+<dd><p>an object representing the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Project Obj.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.impacts">
+<span class="sig-name descname"><span class="pre">impacts</span></span><a class="headerlink" href="#pod_lca.transportation.TransportMode.impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Impacts of the transportation mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Impacts Obj</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.limitations">
+<span class="sig-name descname"><span class="pre">limitations</span></span><a class="headerlink" href="#pod_lca.transportation.TransportMode.limitations" title="Link to this definition">¶</a></dt>
+<dd><p>A list of limitations for the transportation mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.faf_mode">
+<span class="sig-name descname"><span class="pre">faf_mode</span></span><a class="headerlink" href="#pod_lca.transportation.TransportMode.faf_mode" title="Link to this definition">¶</a></dt>
+<dd><p>the FAF mode code for the transportation mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.transport_mode.TransportMode.get_faf_mode">
-<span class="sig-name descname"><span class="pre">get_faf_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.transport_mode.TransportMode.get_faf_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the FAF mode code of the transportation mode.</p>
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.set_impact">
+<span class="sig-name descname"><span class="pre">set_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.set_impact" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve and update the environmental impacts for the given transportation mode and efficiency.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.transport_mode.TransportMode.get_impacts">
-<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.transport_mode.TransportMode.get_impacts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve the impacts of the transportation mode.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.transport_mode.TransportMode.get_name">
-<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.transport_mode.TransportMode.get_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.get_name" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve the name of the transportation mode.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="lca_modules.transportation.transport_mode.TransportMode.set_impact">
-<span class="sig-name descname"><span class="pre">set_impact</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lca_modules.transportation.transport_mode.TransportMode.set_impact" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve and update the environmental impacts for the given transportation mode and efficiency.</p>
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.get_efficiency">
+<span class="sig-name descname"><span class="pre">get_efficiency</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.get_efficiency" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the efficiency of the transportation mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.get_impacts">
+<span class="sig-name descname"><span class="pre">get_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.get_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the impacts of the transportation mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.get_faf_mode">
+<span class="sig-name descname"><span class="pre">get_faf_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.get_faf_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the FAF mode code of the transportation mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.get_cfs_mode">
+<span class="sig-name descname"><span class="pre">get_cfs_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.get_cfs_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the CFS mode code of the transportation mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.TransportMode.get_fuel_type">
+<span class="sig-name descname"><span class="pre">get_fuel_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportMode.get_fuel_type" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the fuel type of the transportation mode.</p>
 </dd></dl>
 
 </dd></dl>
@@ -205,12 +289,20 @@
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Transport Mode</a><ul>
-<li><a class="reference internal" href="#lca_modules.transportation.transport_mode.TransportMode"><code class="docutils literal notranslate"><span class="pre">TransportMode</span></code></a><ul>
-<li><a class="reference internal" href="#lca_modules.transportation.transport_mode.TransportMode.get_efficiency"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_efficiency()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.transport_mode.TransportMode.get_faf_mode"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_faf_mode()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.transport_mode.TransportMode.get_impacts"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_impacts()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.transport_mode.TransportMode.get_name"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#lca_modules.transportation.transport_mode.TransportMode.set_impact"><code class="docutils literal notranslate"><span class="pre">TransportMode.set_impact()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode"><code class="docutils literal notranslate"><span class="pre">TransportMode</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.name"><code class="docutils literal notranslate"><span class="pre">TransportMode.name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.efficiency"><code class="docutils literal notranslate"><span class="pre">TransportMode.efficiency</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.project"><code class="docutils literal notranslate"><span class="pre">TransportMode.project</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.impacts"><code class="docutils literal notranslate"><span class="pre">TransportMode.impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.limitations"><code class="docutils literal notranslate"><span class="pre">TransportMode.limitations</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.faf_mode"><code class="docutils literal notranslate"><span class="pre">TransportMode.faf_mode</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.set_impact"><code class="docutils literal notranslate"><span class="pre">TransportMode.set_impact()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.get_name"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.get_efficiency"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_efficiency()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.get_impacts"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.get_faf_mode"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_faf_mode()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.get_cfs_mode"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_cfs_mode()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.TransportMode.get_fuel_type"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_fuel_type()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -228,13 +320,13 @@
             <div class="left">
                 
                 <a href="logistics_link.html">
-                    <span class="icon">&lt;</span><span>Logistic Link</span></a>
+                    <span class="icon">&lt;</span><span>Logistics Link</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="transport_scenarios.html"><span>Transportation Scenarios</span><span class="icon">&gt;</span></a>
+                    <a href="end_of_life.html"><span>End-of-life</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>
@@ -242,8 +334,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2024, POD LCA Team.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

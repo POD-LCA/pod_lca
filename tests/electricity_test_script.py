@@ -10,8 +10,9 @@ __version__ = "0.1.0"
 from tqdm import tqdm
 
 from pod_lca.location import Location
-from pod_lca.material_screening import Project 
+from pod_lca.materials_screening import Project 
 from pod_lca.units import UNITS_MAP
+from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import config
 
@@ -74,4 +75,4 @@ for test in tqdm(test_dict):
 
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
 
-DataImporter.dict_to_csv(output_dict, output_file)
+DataExporter.dict_to_csv(output_dict, output_file)

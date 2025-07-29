@@ -14,7 +14,7 @@ class CarbonStorage(Records):
 
     Attributes
     ----------
-    parent : Master Obj.
+    parent : ~pod_lca.materials_screening.Master
         The product or process object to which this carbon storage record belong.
     <category> : float
         Carbon storage categories are dynamically set based on the class variable 'record_attr_dict'.

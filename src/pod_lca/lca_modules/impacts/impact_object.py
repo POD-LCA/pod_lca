@@ -19,7 +19,7 @@ class Impacts(Records):
 
     Attributes
     ----------
-    parent : Master Obj.
+    parent : ~pod_lca.materials_screening.Master
         The product or process object to which this impacts record belong.
     <impact_category> : float
         Impact categories are dynamically set based on the class variable 'record_attr_dict'.
@@ -36,20 +36,28 @@ class Impacts(Records):
     # ========================
     def get_weighted_impact(self, method='TRACI_EPA'):
         """ Get a normalized and weighted value for impacts.
-            Ref: [1] The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. 
-                     DOI: http://hdl.handle.net/1773/41885
+            
+        Note
+        ----    
+        Reference: The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. DOI: http://hdl.handle.net/1773/41885
         
         Parameters
         ----------
-        method : str
-            Which weightages to be used:
-                'TRACI_EPA' - from Ref [1]
-                'TRACI_NIST' - from Ref [1]
+        method : {'TRACI_EPA', 'TRACI_NIST'}
+            Weightages to be used:
+            - **'TRACI_EPA'**: From Ref [1].
+            - **'TRACI_NIST'**: From Ref [1].
+            Default is 'TRACI_EPA'.
             
         Returns
         -------
         float
             The weighted impact.
+
+        Raises
+        ------
+        ValueError
+            Weightage method not recognized, or incomplete.
         """
         if method == 'TRACI_EPA':
             weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])
@@ -89,8 +97,8 @@ class Impacts(Records):
         key = config['setup']['impacts']['CARBONATION_EFFECTS_IMPACT_CATEGORY']
 
         # check key
-        if key in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
-            if not UNITS_MAP[config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][key]].get_qty_measured() == KG_CARBON_DIOXIDE.get_qty_measured():
+        if key in self.get_categories():
+            if not UNITS_MAP[self.get_categories(units=True)[1][key]].get_qty_measured() == KG_CARBON_DIOXIDE.get_qty_measured():
                 raise KeyError(f"Impact category {key} incompatible to account for carbonation effects.")
         else:
             raise KeyError(f"{key} not in impact categories of config.")

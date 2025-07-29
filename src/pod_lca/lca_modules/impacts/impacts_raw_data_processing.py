@@ -9,7 +9,9 @@ from . import openLCA
 from ...units import JOULE
 from ...units import MEGA
 from ...utilities import config
-from ...utilities import Data_Importer
+from ...utilities import DataExporter
+from ...utilities import DataImporter
+
 
 # ================================================
 # IMPACTS AND EMISSIONS SOURCE DATA
@@ -44,7 +46,7 @@ elif IMPACT_SOURCE_DATABASE == 'ecoinvent391':
     process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 
 # inventories (impacts and emissions)
-impact_categories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_categories.json')
+impact_categories = DataImporter.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_categories.json')
 for impact_category in impact_categories.keys():
     if impact_category not in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']:
         raise ValueError(f"Impact category '{impact_category}' not recognized. Impact category keys recognized: {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']}.")
@@ -52,7 +54,7 @@ for impact_category in impact_categories.keys():
         if config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category] != impact_categories[impact_category]['refUnit']:
             raise ValueError(f"Impact category '{impact_category}' unit mismatch. Expected: {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category]}, Found: {impact_categories[impact_category]['refUnit']}")
 
-emission_inventories = Data_Importer.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_emission-inventories.json')
+emission_inventories = DataImporter.json_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_emission-inventories.json')
 for emission in emission_inventories.keys():
     if emission not in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']:
         raise ValueError(f"Impact category '{emission}' not recognized. Impact category keys recognized: {config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']}.")
@@ -67,9 +69,9 @@ elif IMPACT_SOURCE_DATABASE == 'ecoinvent391':
     impact_method_uuid = '5d5b2a0c-0a99-48d4-93e9-2f2b9d852655'
 
 # impact groupings
-renewable_fuels_process_list = Data_Importer.csv_to_list('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_renewable-fuels-group.csv', column_header='UUID')
-nonrenewable_fuels_process_list = Data_Importer.csv_to_list('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_nonrenewable-fuels-group.csv', column_header='UUID')
-heating_values = Data_Importer.csv_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_heating-values.csv', 'UUID')
+renewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_renewable-fuels-group.csv', column_header='UUID')
+nonrenewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_nonrenewable-fuels-group.csv', column_header='UUID')
+heating_values = DataImporter.csv_to_dict('./data/impacts_' + IMPACT_SOURCE_DATABASE + '_heating-values.csv', 'UUID')
 
 if IMPACT_SOURCE_DATABASE == 'FLCAC':
     group_by = [{'name':'electricity','ids':2211 },
@@ -77,7 +79,7 @@ if IMPACT_SOURCE_DATABASE == 'FLCAC':
                 {'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE,'conversion_map':heating_values}]
 
 elif IMPACT_SOURCE_DATABASE == 'ecoinvent391':
-    electricity_process_list = Data_Importer.csv_to_list('./data/impacts_ecoinvent391_electricity-group.csv', column_header='UUID')
+    electricity_process_list = DataImporter.csv_to_list('./data/impacts_ecoinvent391_electricity-group.csv', column_header='UUID')
     group_by = [{'name':'electricity','ids': electricity_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values},
                 {'name':'nonrenewable fuel combustion','ids':nonrenewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}, 
                 {'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
@@ -91,10 +93,10 @@ results = openLCA.generate_impacts_dir( openLCA_client, process_list,
 # Note: When using ecoinvent391, renewable fuel group contributions need to be recalculated for all processes that use wood chips as a raw material (instead of fuel). 
 # wood chips: (uuids: d47a4435-3089-4263-af99-8611eed2698c, 7fe99768-d571-4bc2-a272-7df585bd0d48) 
 if IMPACT_SOURCE_DATABASE == 'ecoinvent391':
-    uuid_list_with_wood_chips = Data_Importer.csv_to_list('./data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv', column_header='UUID')
+    uuid_list_with_wood_chips = DataImporter.csv_to_list('./data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv', column_header='UUID')
     process_list = openLCA.get_process_list(openLCA_client, uuid_list_with_wood_chips)
 
-    renewable_fuels_process_list = Data_Importer.csv_to_list('./data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv', column_header='UUID')
+    renewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv', column_header='UUID')
 
     group_by = [{'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
     
@@ -110,4 +112,4 @@ if IMPACT_SOURCE_DATABASE == 'ecoinvent391':
 
 # save results
 save_path = './data/impacts_' + IMPACT_SOURCE_DATABASE + '_categorized-data.csv'
-Data_Importer.dict_to_csv(results, save_path)
+DataExporter.dict_to_csv(results, save_path)

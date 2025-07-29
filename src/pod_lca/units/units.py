@@ -130,7 +130,7 @@ class Unit:
     def from_basics(cls, name, standard_notation, qty_measured):
         """ Create a unit from basic data.
 
-            Attributes
+            Parameters
             ----------
             name : str.
                 Common name of the unit.

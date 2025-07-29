@@ -1,8 +1,8 @@
 
 from pod_lca.impacts import ImpactsDatabase
 from pod_lca.location import Location
-from pod_lca.material_screening import Project
-from pod_lca.material_screening import Model
+from pod_lca.materials_screening import Project
+from pod_lca.materials_screening import Model
 from pod_lca.visualizer import BarChart
 from pod_lca.visualizer import MatplotlibPlotter
 

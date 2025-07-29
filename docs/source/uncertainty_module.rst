@@ -1,16 +1,17 @@
 **********************
-Uncertainty Module
+Analysis
 **********************
-A brief description... 
+
+This sub-package manage analysis of LCA outputs, including data quality analysis, hotspots analysis, sensitivity analysis and other probablistic analysis methods. 
 
 -------
 
 .. toctree::
    :maxdepth: 4
 
-   pedigree_score
    data_quality_assessment
    hotspots
-   datasets
    sensitivity_analysis
    mcs
+   datasets
+   
