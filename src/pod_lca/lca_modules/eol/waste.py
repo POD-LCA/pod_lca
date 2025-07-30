@@ -176,18 +176,19 @@ class Waste(Product):
         ----------
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
             End-of-life pathway:
-            - 'Landfill': transporting waste to a landfill.
-            - 'Recycle': transporting waste to a recycler.
-            - 'Compost': transporting to a composting facility.
-            - 'Incinerate': transporting to an incinerator.
+
+            - `'Landfill'`: transporting waste to a landfill.
+            - `'Recycle'`: transporting waste to a recycler.
+            - `'Compost'`: transporting to a composting facility.
+            - `'Incinerate'`: transporting to an incinerator.
         process_qty : float
             Quantity of waste subjected to this process
 
         Returns
         -------
-        ~pod_lca.eol.WasteProcess
+        :class:`~pod_lca.eol.WasteProcess`
             If the process is not cutoff
-        float
+        :class:`float`
             If the process is cutoff, the balance waste quantity to be processed
         """
         waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
@@ -310,14 +311,16 @@ class Waste(Product):
         ----------
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
             End-of-life pathway:
-            - 'Landfill': transporting waste to a landfill.
-            - 'Recycle': transporting waste to a recycler.
-            - 'Compost': transporting to a composting facility.
-            - 'Incinerate': transporting to an incinerator.
+
+            - `'Landfill'`: transporting waste to a landfill.
+            - `'Recycle'`: transporting waste to a recycler.
+            - `'Compost'`: transporting to a composting facility.
+            - `'Incinerate'`: transporting to an incinerator.
         mode : {'assigned', 'actual'}
             Mode of calculation used for process mix;
-            - 'assigned': the prescribed process mix.
-            - 'actual': realized process mix. The differences due to cut-off distances are considered.
+
+            - `'assigned'`: the prescribed process mix.
+            - `'actual'`: realized process mix. The differences due to cut-off distances are considered.
             Default is 'assigned'
         
         Returns

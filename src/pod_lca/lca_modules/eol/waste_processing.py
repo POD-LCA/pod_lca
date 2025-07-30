@@ -18,10 +18,11 @@ class WasteProcess:
         Waste object for which the waste processing belong.
     process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
             End-of-life pathway:
-            - 'Landfill': transporting waste to a landfill.
-            - 'Recycle': transporting waste to a recycler.
-            - 'Compost': transporting to a composting facility.
-            - 'Incinerate': transporting to an incinerator.
+
+            - `'Landfill'`: transporting waste to a landfill.
+            - `'Recycle'`: transporting waste to a recycler.
+            - `'Compost'`: transporting to a composting facility.
+            - `'Incinerate'`: transporting to an incinerator.
             Default to 'Incinerate'. 
     qty : float
         Quantity of the parent object subjected to this process.
@@ -72,10 +73,11 @@ class WasteProcess:
             Waste object for which the waste processing belong.
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
                 End-of-life pathway:
-                - 'Landfill': transporting waste to a landfill.
-                - 'Recycle': transporting waste to a recycler.
-                - 'Compost': transporting to a composting facility.
-                - 'Incinerate': transporting to an incinerator.
+
+                - `'Landfill'`: transporting waste to a landfill.
+                - `'Recycle'`: transporting waste to a recycler.
+                - `'Compost'`: transporting to a composting facility.
+                - `'Incinerate'`: transporting to an incinerator.
                 Default to 'Incinerate'. 
         qty : float
             Quantity of the parent object subjected to this process.
@@ -136,10 +138,11 @@ class WasteProcess:
         ----------
         name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
                 End-of-life pathway:
-                - 'Landfill': transporting waste to a landfill.
-                - 'Recycle': transporting waste to a recycler.
-                - 'Compost': transporting to a composting facility.
-                - 'Incinerate': transporting to an incinerator.
+
+                - `'Landfill'`: transporting waste to a landfill.
+                - `'Recycle'`: transporting waste to a recycler.
+                - `'Compost'`: transporting to a composting facility.
+                - `'Incinerate'`: transporting to an incinerator.
         """
         self.process_name = name
 

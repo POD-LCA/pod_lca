@@ -35,5 +35,5 @@ language = 'Python'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'piccolo_theme'  # https://piccolo-theme.readthedocs.io/en/latest/index.html
+html_theme =  'piccolo_theme'  # https://piccolo-theme.readthedocs.io/en/latest/index.html
 html_static_path = ['../_static']

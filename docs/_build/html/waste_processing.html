@@ -175,12 +175,14 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.process_name">
 <span class="sig-name descname"><span class="pre">process_name</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.process_name" title="Link to this definition">¶</a></dt>
-<dd><p>End-of-life pathway:
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.
-Default to 'Incinerate'.</p>
+<dd><p>End-of-life pathway:</p>
+<ul class="simple">
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+<p>Default to 'Incinerate'.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>{'Landfill', 'Recycle', 'Compost', 'Incinerate'}</p>
@@ -295,12 +297,15 @@ Default to 'Incinerate'.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parent</strong> (<a class="reference internal" href="waste.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a>) -- Waste object for which the waste processing belong.</p></li>
-<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.
-Default to 'Incinerate'.</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul>
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+<p>Default to 'Incinerate'.</p>
+</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the parent object subjected to this process.</p></li>
 <li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p></li>
 <li><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage of this process.</p></li>
@@ -333,11 +338,14 @@ Default to 'Incinerate'.</p></li>
 <dd><p>Set the process name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.</p>
+<dd class="field-odd"><p><strong>name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul class="simple">
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>

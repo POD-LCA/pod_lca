@@ -298,18 +298,21 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul>
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+</p></li>
 <li><p><strong>process_qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of waste subjected to this process</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>~pod_lca.eol.WasteProcess</em> -- If the process is not cutoff</p></li>
-<li><p><em>float</em> -- If the process is cutoff, the balance waste quantity to be processed</p></li>
+<li><p><a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">WasteProcess</span></code></a> -- If the process is not cutoff</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> -- If the process is cutoff, the balance waste quantity to be processed</p></li>
 </ul>
 </p>
 </dd>
@@ -380,15 +383,21 @@ Percentage can be in the form of string with a % sign or decimal value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.</p></li>
-<li><p><strong>mode</strong> (<em>{'assigned'</em><em>, </em><em>'actual'}</em>) -- Mode of calculation used for process mix;
-- 'assigned': the prescribed process mix.
-- 'actual': realized process mix. The differences due to cut-off distances are considered.
-Default is 'assigned'</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul>
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+</p></li>
+<li><p><strong>mode</strong> (<em>{'assigned'</em><em>, </em><em>'actual'}</em>) -- <p>Mode of calculation used for process mix;</p>
+<ul>
+<li><p><cite>'assigned'</cite>: the prescribed process mix.</p></li>
+<li><p><cite>'actual'</cite>: realized process mix. The differences due to cut-off distances are considered.</p></li>
+</ul>
+<p>Default is 'assigned'</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

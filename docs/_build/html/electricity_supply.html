@@ -160,7 +160,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.electricity.</span></span><span class="sig-name descname"><span class="pre">ElectricitySupply</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply" title="Link to this definition">¶</a></dt>
-<dd><p>A class to represent an electricity supply authority.</p>
+<dd><p>Electricity supplier manages the distribution of electricity from the electricity producers to the consumers.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.name" title="Link to this definition">¶</a></dt>
@@ -175,10 +175,12 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.geographical_scope">
 <span class="sig-name descname"><span class="pre">geographical_scope</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.geographical_scope" title="Link to this definition">¶</a></dt>
-<dd><p>Geographical scope of the electricity supply.
-- 'National': US average
-- 'Regional': FERC region
-- 'Local': Balancing Authority.</p>
+<dd><p>Geographical scope of the electricity supply.</p>
+<ul class="simple">
+<li><p><cite>'National'</cite>: US average</p></li>
+<li><p><cite>'Regional'</cite>: FERC region</p></li>
+<li><p><cite>'Local'</cite>: Balancing Authority.</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>{'National', 'Regional', 'Local'}</p>
@@ -200,7 +202,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.consumption_mix">
 <span class="sig-name descname"><span class="pre">consumption_mix</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.consumption_mix" title="Link to this definition">¶</a></dt>
-<dd><p>The consumption mix of the electricity supply authority.</p>
+<dd><p>The consumption mix of the electricity supply authority: {<strong>technology</strong>: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -230,17 +232,15 @@
 </dl>
 </dd></dl>
 
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="rubric">Notes</p>
 <ol class="arabic simple">
 <li><p>Location, regionality, and year determines the consumption mix.</p></li>
-<li><p>location and regionality determines the impact by technology.</p></li>
+<li><p>Location and regionality determines the impact by technology.</p></li>
 </ol>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricitySupply.from_location">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricitySupply.from_location" title="Link to this definition">¶</a></dt>
-<dd><p>Create a new ElectricitySupplyAuthority object with the given location</p>
+<dd><p>Create a new Electricity supplier for the given location.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -249,10 +249,10 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A new ElectricitySupplyAuthority object with the given location.</p>
+<dd class="field-even"><p>Electricity supplier for the given location.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ElectricitySupplyAuthority</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.electricity.ElectricitySupply" title="pod_lca.electricity.ElectricitySupply"><em>ElectricitySupply</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,10 +274,13 @@
 <dd><p>Set the geographical cope of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'. 'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the electricity supply.
-- 'National': US average
-- 'Regional': FERC region
-- 'Local': Balancing Authority.</p>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'. 'Regional'</em><em>, </em><em>'Local'}</em>) -- <p>Geographical scope of the electricity supply.</p>
+<ul class="simple">
+<li><p><cite>'National'</cite>: US average</p></li>
+<li><p><cite>'Regional'</cite>: FERC region</p></li>
+<li><p><cite>'Local'</cite>: Balancing Authority.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -299,7 +302,7 @@
 <dd><p>Set the consumption mix of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>consumption_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The consumption mix of the electricity supply authority.</p>
+<dd class="field-odd"><p><strong>consumption_mix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The consumption mix of the electricity supply authority: {<strong>technology</strong>: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>}.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,10 +349,19 @@
 <dd><p>Set the electricity producers for a given technology mix and corresponding impact data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'. 'Regional'</em><em>, </em><em>'Local'}</em>) -- Geographical scope of the electricity supply.
-- 'National': US average
-- 'Regional': FERC region
-- 'Local': Balancing Authority.</p>
+<dd class="field-odd"><p><strong>geographical_scope</strong> (<em>{'National'. 'Regional'</em><em>, </em><em>'Local'}</em>) -- <p>Geographical scope of the electricity supply.</p>
+<ul class="simple">
+<li><p><cite>'National'</cite>: US average</p></li>
+<li><p><cite>'Regional'</cite>: FERC region</p></li>
+<li><p><cite>'Local'</cite>: Balancing Authority.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- FERC region not found for location.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Geographical scope of electricity supply is not recognized.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -402,7 +414,7 @@
 <dd><p>Get the consumption mix of the electricity supply authority.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The consumption mix of the electricity supply authority.</p>
+<dd class="field-odd"><p>The consumption mix of the electricity supply authority: {<strong>technology</strong>: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>}.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -506,10 +518,13 @@
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
-<li><p><em>list of ~pod_lca.impacts.Impact</em> -- Impact objects representing the distribution of the impacts.</p></li>
-<li><p><em>list of int</em> -- List of weights for each impact object in the distribution.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a> -- Impact objects representing the distribution of the impacts.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> -- List of weights for each impact object in the distribution.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Geographical scope of electricity supply is not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -544,6 +559,12 @@ If a string is provided, it should be the country code for national level data,
 region name for regional level data, or REEDS balancing authority for local level data.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Location is not a string or Location object.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Geographical scope not recognized.</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -558,11 +579,14 @@ region name for regional level data, or REEDS balancing authority for local leve
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
 <li><p><strong>technologies</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of electricity generation technoclogies to be classified by.</p></li>
-<li><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered.</p></li>
-<li><p><strong>interpolate</strong> (<em>{'values'</em><em>, </em><em>'percentages'}</em>) -- Linear interpolation of electricity consumption between two years.
-- 'values': interpolate values
-- 'percentages': interpolate percentages
-Default is by 'values'.</p></li>
+<li><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered. Default is 'MidCase'</p></li>
+<li><p><strong>interpolate</strong> (<em>{'values'</em><em>, </em><em>'percentages'}</em>) -- <p>Linear interpolation of electricity consumption between two years.</p>
+<ul>
+<li><p><cite>'values'</cite>: interpolate values</p></li>
+<li><p><cite>'percentages'</cite>: interpolate percentages</p></li>
+</ul>
+<p>Default is by 'values'.</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -570,6 +594,9 @@ Default is by 'values'.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Interpolation method not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -582,7 +609,7 @@ Default is by 'values'.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of electricity consumption.</p></li>
-<li><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered.</p></li>
+<li><p><strong>scenario</strong> (<em>{'MidCase'</em><em>, </em><em>'LowRECost'</em><em>, </em><em>'HighRECost'</em><em>, </em><em>'HighDemandGrowth'</em><em>, </em><em>'LowNGPrice'</em><em>, </em><em>'HighNGPrice'</em><em>, </em><em>'Decarb95by2050'</em><em>, </em><em>'Decarb100by2035'}</em>) -- Electricity consmuption scenario considered. Default is 'MidCase'.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

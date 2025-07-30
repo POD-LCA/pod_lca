@@ -160,22 +160,89 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.electricity.</span></span><span class="sig-name descname"><span class="pre">ElectricityProducer</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer" title="Link to this definition">¶</a></dt>
-<dd><dl class="py method">
+<dd><p>Electricity generation facility (i.e., power station)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.name" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the power station / facility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.technology">
+<span class="sig-name descname"><span class="pre">technology</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.technology" title="Link to this definition">¶</a></dt>
+<dd><p>Power generation technology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.year">
+<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.year" title="Link to this definition">¶</a></dt>
+<dd><p>Year of power generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.unit_impacts">
+<span class="sig-name descname"><span class="pre">unit_impacts</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.unit_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Impacts per declared unit of power generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.unit_emissions">
+<span class="sig-name descname"><span class="pre">unit_emissions</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.unit_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Emissions per declared unit of power generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.declared_unit">
+<span class="sig-name descname"><span class="pre">declared_unit</span></span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.declared_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Unit of power generation for which the impacts and emissions are declared.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.from_technology_year">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_technology_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">technology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.from_technology_year" title="Link to this definition">¶</a></dt>
 <dd><p>Create a new ElectricityProducer object with the given location</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>technology</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the electricity technology.</p></li>
-<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The year of electricity production.</p></li>
+<li><p><strong>technology</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Power generation technology.</p></li>
+<li><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of power generation.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A new ElectricityProducer object with the given location.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer" title="pod_lca.electricity.ElectricityProducer">ElectricityProducer</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer" title="pod_lca.electricity.ElectricityProducer"><em>ElectricityProducer</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -192,12 +259,12 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_energy_source">
-<span class="sig-name descname"><span class="pre">set_energy_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">energy_source</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_energy_source" title="Link to this definition">¶</a></dt>
-<dd><p>Set the energy source of the electricity producer.</p>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_technology">
+<span class="sig-name descname"><span class="pre">set_technology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">technology</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_technology" title="Link to this definition">¶</a></dt>
+<dd><p>Set the power generation technology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>energy_source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The energy source of the electricity producer.</p>
+<dd class="field-odd"><p><strong>technology</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Power generation technology.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,32 +272,32 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_year">
 <span class="sig-name descname"><span class="pre">set_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_year" title="Link to this definition">¶</a></dt>
-<dd><p>Set the year of the electricity producer.</p>
+<dd><p>Set the year of the power generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The year of the electricity producer.</p>
+<dd class="field-odd"><p><strong>year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Year of power generation.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_unit_impacts">
-<span class="sig-name descname"><span class="pre">set_unit_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impacts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_unit_impacts" title="Link to this definition">¶</a></dt>
-<dd><p>Set the impacts of the electricity producer.</p>
+<span class="sig-name descname"><span class="pre">set_unit_impacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">impacts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_unit_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Set the impacts of the electricity producer, per unit of power generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>impacts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The impacts of the electricity producer.</p>
+<dd class="field-odd"><p><strong>impacts</strong> (<a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a>) -- Impacts per declared unit of power generation.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_unit_emissions">
-<span class="sig-name descname"><span class="pre">set_unit_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emissions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_unit_emissions" title="Link to this definition">¶</a></dt>
-<dd><p>Set the emissions of the electricity producer.</p>
+<span class="sig-name descname"><span class="pre">set_unit_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">emissions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_unit_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Set the emissions of the electricity producer, per unit of power generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>emissions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- The emissions of the electricity producer.</p>
+<dd class="field-odd"><p><strong>emissions</strong> (<a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a>) -- Emissions per declared unit of power generation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -244,12 +311,6 @@
 <dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Declared unit.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.set_invetories">
-<span class="sig-name descname"><span class="pre">set_invetories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.set_invetories" title="Link to this definition">¶</a></dt>
-<dd><p>Set the impacts and emissions inventories of the electricity producer.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -267,12 +328,12 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_energy_source">
-<span class="sig-name descname"><span class="pre">get_energy_source</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_energy_source" title="Link to this definition">¶</a></dt>
-<dd><p>Get the energy source of the electricity producer.</p>
+<dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_technology">
+<span class="sig-name descname"><span class="pre">get_technology</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_technology" title="Link to this definition">¶</a></dt>
+<dd><p>Get the power generation technology.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The energy source of the electricity producer.</p>
+<dd class="field-odd"><p>Power generation technology.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
@@ -283,7 +344,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.electricity.ElectricityProducer.get_year">
 <span class="sig-name descname"><span class="pre">get_year</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.electricity.ElectricityProducer.get_year" title="Link to this definition">¶</a></dt>
-<dd><p>Get the year of the electricity producer.</p>
+<dd><p>Get the year of the power generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The year of the electricity producer.</p>
@@ -300,10 +361,10 @@
 <dd><p>Get the impacts of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The impacts of the electricity producer.</p>
+<dd class="field-odd"><p>Impacts per declared unit of power generation.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -314,10 +375,10 @@
 <dd><p>Get the emissions of the electricity producer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The emissions of the electricity producer.</p>
+<dd class="field-odd"><p>Emissions per declared unit of power generation.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -356,16 +417,21 @@
                 <ul>
 <li><a class="reference internal" href="#">Electricity Generation</a><ul>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.technology"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.technology</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.year</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.unit_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.unit_impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.unit_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.unit_emissions</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.declared_unit"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.declared_unit</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.from_technology_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.from_technology_year()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_name()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_energy_source"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_energy_source()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_technology"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_technology()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_year()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_unit_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_unit_impacts()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_unit_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_unit_emissions()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_declared_unit"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_declared_unit()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.set_invetories"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.set_invetories()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_name"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_energy_source"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_energy_source()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_technology"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_technology()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_year"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_year()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_unit_impacts"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_unit_impacts()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.electricity.ElectricityProducer.get_unit_emissions"><code class="docutils literal notranslate"><span class="pre">ElectricityProducer.get_unit_emissions()</span></code></a></li>

@@ -40,6 +40,13 @@ class CambiumData:
             Location of electricity supply.
             If a string is provided, it should be the country code for national level data,
             region name for regional level data, or REEDS balancing authority for local level data.
+
+        Raises
+        ------
+        TypeError
+            Location is not a string or Location object.
+        KeyError
+            Geographical scope not recognized.
         """
         cambium_data = cls()
         
@@ -99,17 +106,23 @@ class CambiumData:
         technologies : list
             List of electricity generation technoclogies to be classified by.
         scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
-            Electricity consmuption scenario considered.
+            Electricity consmuption scenario considered. Default is 'MidCase'
         interpolate : {'values', 'percentages'}
             Linear interpolation of electricity consumption between two years.
-            - 'values': interpolate values
-            - 'percentages': interpolate percentages
+
+            - `'values'`: interpolate values
+            - `'percentages'`: interpolate percentages
             Default is by 'values'.
 
         Returns
         -------
         dict
             Dictionary of electricity generation technology in percentages.
+
+        Raises
+        ------
+        KeyError
+            Interpolation method not recognized.
         """
         # match year with years available in dataset.
         cambium_yrs = config['setup']['electricity']['CAMBIUM_DATA_YEARS']
@@ -175,7 +188,7 @@ class CambiumData:
         year : int
             Year of electricity consumption.
         scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
-            Electricity consmuption scenario considered.
+            Electricity consmuption scenario considered. Default is 'MidCase'.
 
         Returns
         -------

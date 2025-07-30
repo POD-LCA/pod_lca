@@ -12,10 +12,28 @@ from ...utilities import config
 
 
 class ElectricityProducer:
+    """
+    Electricity generation facility (i.e., power station)
+
+    Attributes
+    ----------
+    name : str
+        Name of the power station / facility.
+    technology : str
+        Power generation technology.
+    year : int
+        Year of power generation.
+    unit_impacts : ~pod_lca.impacts.Impacts
+        Impacts per declared unit of power generation.
+    unit_emissions : ~pod_lca.impacts.Emissions
+        Emissions per declared unit of power generation.    
+    declared_unit : ~pod_lca.units.Unit
+        Unit of power generation for which the impacts and emissions are declared.
+    """
 
     def __init__(self):
         self.name = None
-        self.energy_source = None
+        self.technology = None
         self.year = None
         self.unit_impacts = None
         self.unit_emissions = None
@@ -28,20 +46,19 @@ class ElectricityProducer:
         Parameters
         ----------
         technology : str
-            The name of the electricity technology.
+            Power generation technology.
         year : int
-            The year of electricity production.
+            Year of power generation.
         
         Returns
         -------
-        ElectricityProducer
+        ~pod_lca.electricity.ElectricityProducer
             A new ElectricityProducer object with the given location.
         """
         elec_producer = cls()
 
-        elec_producer.set_energy_source(technology)
+        elec_producer.set_technology(technology)
         elec_producer.set_year(year)
-        elec_producer.set_invetories()
 
         elec_producer.unit_impacts = Impacts.from_parent(elec_producer)
         elec_producer.unit_emissions = Emissions.from_parent(elec_producer)
@@ -63,55 +80,51 @@ class ElectricityProducer:
 
         return self
     
-    def set_energy_source(self, energy_source):
-        """ Set the energy source of the electricity producer.
+    def set_technology(self, technology):
+        """ Set the power generation technology.
         
         Parameters
         ----------
-        energy_source : str
-            The energy source of the electricity producer.
+        technology : str
+            Power generation technology.
         """
-        self.energy_source = energy_source
+        self.technology = technology
 
         return self
     
     def set_year(self, year):
-        """ Set the year of the electricity producer.
+        """ Set the year of the power generation.
         
         Parameters
         ----------
         year : int
-            The year of the electricity producer.
+            Year of power generation.
         """
         self.year = year
-        self.set_invetories()
 
         return self
     
-    def set_unit_impacts(self, impacts=None):
-        """ Set the impacts of the electricity producer.
+    def set_unit_impacts(self, impacts):
+        """ Set the impacts of the electricity producer, per unit of power generation.
         
         Parameters
         ----------
-        impacts : dict
-            The impacts of the electricity producer.
+        impacts : ~pod_lca.impacts.Impacts
+            Impacts per declared unit of power generation.
         """
         self.unit_impacts = impacts
 
         return self
     
-    def set_unit_emissions(self, emissions=None):
-        """ Set the emissions of the electricity producer.
+    def set_unit_emissions(self, emissions):
+        """ Set the emissions of the electricity producer, per unit of power generation.
         
         Parameters
         ----------
-        emissions : dict
-            The emissions of the electricity producer.
+        emissions : ~pod_lca.impacts.Emissions
+            Emissions per declared unit of power generation.
         """
-        if emissions is None:
-            emissions = {}
-        else:
-            self.unit_emissions = emissions
+        self.unit_emissions = emissions
 
         return self
     
@@ -124,14 +137,6 @@ class ElectricityProducer:
             Declared unit.
         """
         self.declared_unit = unit
-
-        return self
-    
-    def set_invetories(self):
-        """ Set the impacts and emissions inventories of the electricity producer.
-        """
-        self.set_unit_impacts()
-        self.set_unit_emissions()
 
         return self
     
@@ -148,18 +153,18 @@ class ElectricityProducer:
         """
         return self.name
     
-    def get_energy_source(self):
-        """ Get the energy source of the electricity producer.
+    def get_technology(self):
+        """ Get the power generation technology.
         
         Returns
         -------
         str
-            The energy source of the electricity producer.
+            Power generation technology.
         """
-        return self.energy_source
+        return self.technology
     
     def get_year(self):
-        """ Get the year of the electricity producer.
+        """ Get the year of the power generation.
         
         Returns
         -------
@@ -173,8 +178,8 @@ class ElectricityProducer:
         
         Returns
         -------
-        dict
-            The impacts of the electricity producer.
+        ~pod_lca.impacts.Impacts
+            Impacts per declared unit of power generation.
         """
         return self.unit_impacts
     
@@ -183,8 +188,8 @@ class ElectricityProducer:
         
         Returns
         -------
-        dict
-            The emissions of the electricity producer.
+        ~pod_lca.impacts.Emissions
+            Emissions per declared unit of power generation.
         """
         return self.unit_emissions
 

@@ -20,7 +20,7 @@ from ...utilities import log
 
 
 class ElectricitySupply:
-    """ A class to represent an electricity supply authority.
+    """ Electricity supplier manages the distribution of electricity from the electricity producers to the consumers.
     
     Attributes
     ----------
@@ -28,22 +28,23 @@ class ElectricitySupply:
         The name of the electricity supply authority.
     geographical_scope : {'National', 'Regional', 'Local'}
         Geographical scope of the electricity supply.
-        - 'National': US average
-        - 'Regional': FERC region
-        - 'Local': Balancing Authority.
+
+        - `'National'`: US average
+        - `'Regional'`: FERC region
+        - `'Local'`: Balancing Authority.
     location : ~pod_lca.location.Location
         The location of the electricity supply authority.
     consumption_mix : dict
-        The consumption mix of the electricity supply authority.
+        The consumption mix of the electricity supply authority: {**technology**: :class:`str`}.
     year : int
         The year of the electricity supply authority.
     impacts : ~pod_lca.impacts.Impacts
         The impacts of the electricity supply authority.
 
-    Note
+    Notes
     -----
     1. Location, regionality, and year determines the consumption mix.
-    2. location and regionality determines the impact by technology.
+    2. Location and regionality determines the impact by technology.
     """
 
     def __init__(self):
@@ -109,7 +110,7 @@ class ElectricitySupply:
     # ========================
     @classmethod
     def from_location(cls, location, year=None):
-        """ Create a new ElectricitySupplyAuthority object with the given location 
+        """ Create a new Electricity supplier for the given location.
         
         Parameters
         ----------
@@ -120,8 +121,8 @@ class ElectricitySupply:
     
         Returns
         -------
-        ElectricitySupplyAuthority
-            A new ElectricitySupplyAuthority object with the given location.
+        ~pod_lca.electricity.ElectricitySupply
+            Electricity supplier for the given location.
         """
         elec_supp_authority = cls()
         elec_supp_authority.unit_impacts = Impacts.from_parent(elec_supp_authority)
@@ -162,9 +163,10 @@ class ElectricitySupply:
         ----------
         geographical_scope : {'National'. 'Regional', 'Local'}
             Geographical scope of the electricity supply.
-            - 'National': US average
-            - 'Regional': FERC region
-            - 'Local': Balancing Authority.
+
+            - `'National'`: US average
+            - `'Regional'`: FERC region
+            - `'Local'`: Balancing Authority.
         """
         location_resolution = self.get_location().get_regionality() if self.get_location() is not None else config['setup']['electricity']['DEFAULT_REIGIONAL_RESOLUTION']
         if ((location_resolution == 'National') and (geographical_scope == 'Local' or geographical_scope == 'Regional')) or ((location_resolution == 'Regional') and (geographical_scope == 'Local')):
@@ -193,7 +195,7 @@ class ElectricitySupply:
         Parameters
         ----------
         consumption_mix : dict
-            The consumption mix of the electricity supply authority.
+            The consumption mix of the electricity supply authority: {**technology**: :class:`str`}.
         """
         self.consumption_mix.clear()
         self.consumption_mix.update(consumption_mix)
@@ -244,9 +246,17 @@ class ElectricitySupply:
         ----------
         geographical_scope : {'National'. 'Regional', 'Local'}
             Geographical scope of the electricity supply.
-            - 'National': US average
-            - 'Regional': FERC region
-            - 'Local': Balancing Authority.        
+
+            - `'National'`: US average
+            - `'Regional'`: FERC region
+            - `'Local'`: Balancing Authority.   
+
+        Raises
+        ------
+        KeyError
+            FERC region not found for location.
+        ValueError
+            Geographical scope of electricity supply is not recognized.    
         """
         # Get regionalised impact data
         if (geographical_scope== 'National'):
@@ -334,7 +344,7 @@ class ElectricitySupply:
         Returns
         -------
         dict
-            The consumption mix of the electricity supply authority.
+            The consumption mix of the electricity supply authority: {**technology**: :class:`str`}.
         """
         return self.consumption_mix
     
@@ -452,10 +462,15 @@ class ElectricitySupply:
         
         Returns
         -------
-        list of ~pod_lca.impacts.Impact
+        :class:`list` of :class:`~pod_lca.impacts.Impacts`
             Impact objects representing the distribution of the impacts.
-        list of int
+        :class:`list` of :class:`int`
             List of weights for each impact object in the distribution.
+
+        Raises
+        ------
+        ValueError
+            Geographical scope of electricity supply is not recognized.
         """
         year = self.get_year()
 
