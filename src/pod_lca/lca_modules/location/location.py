@@ -21,8 +21,8 @@ class Location:
     ----------
     location_name : str
         Name of the location.
-    regionality : str
-        Regionality of the location (Local, Regional, National).
+    regionality : {'Local', 'Regional', 'National'}
+        Regionality of the location.
     coords : tuple
         Location coordinate using WGS-84 coordinate system.
     zipcode : str
@@ -31,10 +31,30 @@ class Location:
         Name of the city the location is in.
     state : str
         Name of the state the location is in.
+    state_abbr : str
+        Standard abbreviation of the state name.
     country : str
         Name of the country the location is in.
     country_code : str
         Country code from ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country code
+    cfs_area : int
+        Code of the Comodity Flow Survey (CFS) area.
+    faf_foreign_name : str
+        Name of the Freight Analysis Framework (FAF) region (foreign) corresponding to the location.
+    faf_foreign_code : str
+        Code of the Freight Analysis Framework (FAF) region (foreign) corresponding to the location.
+    faf_domestic_codes : list of int
+        Codes of the Freight Analysis Framework (FAF) region (domestic) corresponding to the location.
+    us_coast : str
+        US coast closest to the location.
+    ferc_region : str
+        Federal Energy Regulatory Commission (FERC) Region corresponding to the location.
+    balancing_authority : str
+        Balancing authority corresponding to the location. 
+    cambium_gea_region : str
+        Cambium Generation and Emissions Assessment (GEA) region corresponding to the location. 
+    reeds_balancing_area : str
+        Regional Energy Deployment System (ReEDS) balancing area corresponding to the location.
     """
 
     def __init__(self):
@@ -48,15 +68,14 @@ class Location:
         self.country = None
         self.country_code =None
         self.cfs_area = None
-        self.faf_foreign_code = None
         self.faf_foreign_name = None
+        self.faf_foreign_code = None
         self.faf_domestic_codes = None
         self.us_coast = None
         self.ferc_region = None
         self.balancing_authority = None
         self.cambium_gea_region = None
         self.reeds_balancing_area = None
-
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -107,12 +126,14 @@ class Location:
     @classmethod
     def from_US_zip(cls, zipcode, set_all_location_data=False):
         """ Create location from US zipcode.
-            The location data populated based on the centroid of the area represented by the zipcode.
+            The location data populated based on the centroid of the area represented by the ZIP code.
         
         Parameters
         ----------
         zipcode : str
-            Zipcode of the location.
+            ZIP code of the location.
+        set_all_location_data : bool
+            If true, set location properties other than country and ZIP code.
         """
         location = cls()
 
@@ -145,13 +166,20 @@ class Location:
 
     @classmethod
     def from_US_state(cls, state, set_all_location_data=False):
-        """ Create location from US zipcode.
+        """ Create location from US state.
             The location data populated based on the centroid of the area represented by the zipcode.
         
         Parameters
         ----------
-        zipcode : str
-            Zipcode of the location.
+        state : str
+            US state name.
+        set_all_location_data : bool
+            If true, set location properties other than country, state, coast, CFS area, and FAF region.
+        
+        Raises
+        ------
+        ValueError
+            State name not recognized as a US state.
         """
         location = cls()
 
@@ -193,19 +221,24 @@ class Location:
         
         Parameters
         ----------
-        faf_region : {'Rest of Americas', 'Europe', 'Africa', 'SW & Central Asia', 'Eastern Asia', 'SE Asia & Oceania'}
+        faf_region : str
             FAF region name.
-        country : str
-            Country name.
+        set_all_location_data : bool
+            If true, set location properties based on location coordinate.
+
+        Raises
+        ------
+        ValueError
+            FAF region not recognized
         """
-        if faf_region not in [None, 'Rest of Americas', 'Europe', 'Africa', 'SW & Central Asia', 'Eastern Asia', 'SE Asia & Oceania']:
-            raise ValueError('FAF region not recognized.')
-
-        location = cls()
-
         faf_foreign_regions = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
         faf_foreign_regions_city = DataImporter.json_to_dict(config['file_paths']['location']['FAF_CITY_REPRESENTATION'])
 
+        if faf_region not in [None] + list(faf_foreign_regions.keys()):
+            raise ValueError('FAF region not recognized.')
+        
+        location = cls()
+        
         location.faf_foreign_code = faf_foreign_regions[faf_region]
         location.faf_foreign_name = faf_region
         location.location_name = faf_foreign_regions_city[location.faf_foreign_code]
@@ -488,7 +521,7 @@ class Location:
         return self
 
     def set_us_coast(self):
-        """ Set the US coast of the location.
+        """ Set the US coast closest to the location.
         """
         us_coast = DataImporter.json_to_dict(config['file_paths']['location']['US_COAST'])
         state = self.get_state()
@@ -543,7 +576,7 @@ class Location:
         Returns
         -------
         str
-            Name of the zipcode.
+            Name of the ZIP code.
         """
         return self.zipcode
     
@@ -573,7 +606,7 @@ class Location:
         Returns
         -------
         str
-            Name of the state.
+            Standard abbreviation of the state name.
         """
         return self.state_abbr
 
@@ -593,7 +626,7 @@ class Location:
         Returns
         -------
         str
-            Country code from IS) 3166-1.
+            Country code from ISO 3166-1.
         """
         return self.country_code
 
@@ -602,8 +635,8 @@ class Location:
 
         Returns
         -------
-        str
-            Name of the Comodity Flow Survey (CFS) area.        
+        int
+            Code of the Comodity Flow Survey (CFS) area.        
         """          
         return self.cfs_area
 
@@ -614,6 +647,17 @@ class Location:
         ----------
         type : {'code', 'name'}
             FAF foreign region code or name
+        Returns
+        -------
+        :class:`str`
+            Code of the Freight Analysis Framework (FAF) region (foreign).
+        :class:`str`
+            Name of the Freight Analysis Framework (FAF) region (foreign).
+
+        Raises
+        ------
+        ValueError
+            Request type not recognized.
         """  
         if type == 'code':
             return self.faf_foreign_code
@@ -623,26 +667,63 @@ class Location:
             raise ValueError('Request type not recognized.')
     
     def get_faf_domestic_region(self):
+        """ Get the Freight Analysis Framework (FAF) region (domestic) of the location.
+
+        Returns
+        -------
+        list of int
+            Codes of the Freight Analysis Framework (FAF) region (domestic).
+        """
 
         return self.faf_domestic_codes
 
+    def get_us_coast(self):
+        """ Get the US coast closest to the location.
+
+        Returns
+        -------
+        str
+            US coast closest to the location.
+        """
+        return self.us_coast
+    
     def get_ferc_region(self):
         """ Get the Federal Energy Regulatory Commission (FERC) Region.
+
+        Returns
+        -------
+        str
+            Federal Energy Regulatory Commission (FERC) Region corresponding to the location.        
         """
         return self.ferc_region
 
     def get_balancing_authority(self):
         """ Get the balancing authority.
+
+        Returns
+        -------
+        str
+            Balancing authority corresponding to the location.        
         """
         return self.balancing_authority
     
     def get_cambium_gea_region(self):
         """ Get Cambium Generation and Emissions Assessment (GEA) region.
+
+        Returns
+        -------
+        str
+            Cambium Generation and Emissions Assessment (GEA) region corresponding to the location.       
         """
         return self.cambium_gea_region
     
     def get_reeds_balancing_area(self):
         """ Get the Regional Energy Deployment System (ReEDS) balancing area.
+
+        Returns
+        -------
+        str
+            Regional Energy Deployment System (ReEDS) balancing area corresponding to the location.
         """
         return self.reeds_balancing_area
 
@@ -688,7 +769,7 @@ class Location:
 
     @staticmethod
     def get_closest_zip(geopy_location, max_attempts=10, step=1):
-        """ Get the zipcode of the location.
+        """ Get the closest ZIP code of the location.
 
         Parameters
         ----------
@@ -735,9 +816,9 @@ class Location:
         
         Returns
         -------
-        str
+        :class:`str`
             The closest state to the destination.
-        int
+        :class:`int`
             CFS code of the closest state.
         """        
         codes_lst = list(set(codes_lst))
@@ -764,9 +845,9 @@ class Location:
         
         Returns
         -------
-        str
+        :class:`str`
             The closest state to the destination.
-        int
+        :class:`int`
             FAF code of the closest state.
         """
         faf_domestic_data = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])      
