@@ -188,10 +188,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.units.Unit.qty_measured">
 <span class="sig-name descname"><span class="pre">qty_measured</span></span><a class="headerlink" href="#pod_lca.units.Unit.qty_measured" title="Link to this definition">¶</a></dt>
-<dd><p>The quantity measured by the unit---e.g., 'length', 'mass', 'time'.</p>
+<dd><p>The quantity measured by the unit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-odd"><p>{'time', 'mass', 'length', 'area', 'volume', 'power', 'energy', 'count', 'carbon storage'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,7 +202,7 @@
 <dd><p>Base unit of the Obj. None if itself a base unit.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Unit Obj</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,7 +213,7 @@
 <dd><p>Metric prefix. None if a base unit or non-metric.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>MetricPrefix Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="metric_prefixes.html#pod_lca.units.MetricPrefix" title="pod_lca.units.MetricPrefix"><em>MetricPrefix</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -235,7 +235,7 @@
 <dd><p>List of components the unit is made up of. None if not a compound unit</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of Unit Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -249,7 +249,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Common name of the unit.</p></li>
 <li><p><strong>standard_notation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Standard notation of the unit.</p></li>
-<li><p><strong>qty_measured</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The quantity measured by the unit---e.g., 'length', 'mass', 'time'.</p></li>
+<li><p><strong>qty_measured</strong> (<em>{'time'</em><em>, </em><em>'mass'</em><em>, </em><em>'length'</em><em>, </em><em>'area'</em><em>, </em><em>'volume'</em><em>, </em><em>'power'</em><em>, </em><em>'energy'</em><em>, </em><em>'count'</em><em>, </em><em>'carbon storage'}</em>) -- The quantity measured by the unit.</p></li>
 </ul>
 </dd>
 </dl>
@@ -325,7 +325,7 @@
 <dd class="field-odd"><p>Quantity measured by the unit of measurement.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>str.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -339,7 +339,7 @@
 <dd class="field-odd"><p>Base unit of measurement, or None if itself a base unit of measurement.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Unit Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -353,7 +353,7 @@
 <dd class="field-odd"><p>Metric prefix of the unit of measurement, or None if no prefix.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>MetricPrefix Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="metric_prefixes.html#pod_lca.units.MetricPrefix" title="pod_lca.units.MetricPrefix"><em>MetricPrefix</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -367,7 +367,7 @@
 <dd class="field-odd"><p>List of component units, or None if not a compound unit.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of Unit Obj.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -378,13 +378,16 @@
 <dd><p>Returns conversion factor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>to_unit</strong> (<em>Unit Obj.</em>) -- Unit of measurement to which the value will be converted to (from the current unit of measuremnt).</p>
+<dd class="field-odd"><p><strong>to_unit</strong> (<a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement to which the value will be converted to (from the current unit of measuremnt).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Conversion factor to be applied on the value.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Incompatible units for conversion.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -401,8 +404,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>unit_in</strong> (<em>Unit Obj.</em>) -- Unit of measurement from which the value will be converted.</p></li>
-<li><p><strong>unit_out</strong> (<em>Unit Obj.</em>) -- Unit of measurement to which the value will be converted.</p></li>
+<li><p><strong>unit_in</strong> (<a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement from which the value will be converted.</p></li>
+<li><p><strong>unit_out</strong> (<a class="reference internal" href="#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement to which the value will be converted.</p></li>
 <li><p><strong>qty_measured</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Quantity measured by the units of measruements considered.</p></li>
 </ul>
 </dd>

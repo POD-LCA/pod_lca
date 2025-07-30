@@ -20,15 +20,15 @@ class Unit:
         Common name of the unit.
     standard_notation : str
         Standard notation of the unit.
-    qty_measured : str
-        The quantity measured by the unit---e.g., 'length', 'mass', 'time'.
-    base_unit : Unit Obj
+    qty_measured : {'time', 'mass', 'length', 'area', 'volume', 'power', 'energy', 'count', 'carbon storage'}
+        The quantity measured by the unit.
+    base_unit : ~pod_lca.units.Unit
         Base unit of the Obj. None if itself a base unit.
-    prefix : MetricPrefix Obj.
+    prefix : ~pod_lca.units.MetricPrefix
         Metric prefix. None if a base unit or non-metric.
     convert_compound : bool
         If True, unit conversion assuming the unit to be a compound unit.
-    components : List of Unit Obj.
+    components : list of ~pod_lca.units.Unit
         List of components the unit is made up of. None if not a compound unit
     """
 
@@ -130,14 +130,14 @@ class Unit:
     def from_basics(cls, name, standard_notation, qty_measured):
         """ Create a unit from basic data.
 
-            Parameters
-            ----------
-            name : str
-                Common name of the unit.
-            standard_notation : str
-                Standard notation of the unit.
-            qty_measured : str
-                The quantity measured by the unit---e.g., 'length', 'mass', 'time'.
+        Parameters
+        ----------
+        name : str
+            Common name of the unit.
+        standard_notation : str
+            Standard notation of the unit.
+        qty_measured : {'time', 'mass', 'length', 'area', 'volume', 'power', 'energy', 'count', 'carbon storage'}
+            The quantity measured by the unit.
         """
         unit = cls()
         unit.set_name(name)
@@ -156,6 +156,8 @@ class Unit:
         """
         self.name = name
 
+        return self
+
     def set_standard_notation(self, standard_notatoion):
         """ Set the standard notation of the unit of measurement.
         
@@ -165,6 +167,8 @@ class Unit:
             Standard notation of the unit of measurement.
         """
         self.standard_notation = standard_notatoion
+
+        return self
 
     def set_qty_measured(self, qty_measured):
         """ Set the quantity measured by the unit of measurement.
@@ -176,6 +180,7 @@ class Unit:
         """
         self.qty_measured = qty_measured
 
+        return self
 
     def get_name(self):
         """ Get the name of the unit of measurement.
@@ -202,7 +207,7 @@ class Unit:
 
         Returns
         -------
-        str.
+        str
             Quantity measured by the unit of measurement.
         """
         return self.qty_measured
@@ -212,7 +217,7 @@ class Unit:
 
         Returns
         -------
-        Unit Obj.
+        ~pod_lca.units.Unit
             Base unit of measurement, or None if itself a base unit of measurement.
         """
         return self.base_unit
@@ -222,7 +227,7 @@ class Unit:
 
         Returns
         -------
-        MetricPrefix Obj.
+        ~pod_lca.units.MetricPrefix
             Metric prefix of the unit of measurement, or None if no prefix.
         """
         return self.prefix
@@ -232,7 +237,7 @@ class Unit:
 
         Returns
         -------
-        List of Unit Obj.
+        list of ~pod_lca.units.Unit
             List of component units, or None if not a compound unit.
         """
         return self.components
@@ -242,13 +247,18 @@ class Unit:
 
         Parameters
         ----------
-        to_unit : Unit Obj.
+        to_unit : ~pod_lca.units.Unit
             Unit of measurement to which the value will be converted to (from the current unit of measuremnt).
 
         Returns
         -------
         float
             Conversion factor to be applied on the value.
+
+        Raises
+        ------
+        TypeError
+            Incompatible units for conversion.
         """
         if self.get_qty_measured() == to_unit.get_qty_measured():
             if not self.convert_compound:
@@ -279,9 +289,9 @@ class Unit:
 
         Parameters
         ----------
-        unit_in : Unit Obj.
+        unit_in : ~pod_lca.units.Unit
             Unit of measurement from which the value will be converted.
-        unit_out : Unit Obj.
+        unit_out : ~pod_lca.units.Unit
             Unit of measurement to which the value will be converted.
         qty_measured : str
             Quantity measured by the units of measruements considered.
@@ -442,7 +452,7 @@ class MetricPrefix:
         
         Parameters
         ----------
-        to_prefix : MetricPrefix Obj.
+        to_prefix : ~pod_lca.units.MetricPrefix
             Metric prefix to which the value will be converted to (from the current metric prefix).
 
         Returns
