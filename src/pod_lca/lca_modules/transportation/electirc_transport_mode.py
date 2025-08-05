@@ -67,9 +67,9 @@ class ElectricTransportMode(TransportMode):
 
         Returns
         -------
-        float
+        :class:`float`
             Electricity consumption.
-        ~pod_lca.units.Unit
+        :class:`~pod_lca.units.Unit`
             Corresponding unit of measurement.
         """
         if self.electricity_consumption is None:
@@ -95,11 +95,11 @@ class ElectricTransportMode(TransportMode):
 
         Returns
         -------
-        ~pod_lca.impacts.Impacts
+        :class:`~pod_lca.impacts.Impacts`
             Unit electricity impacts.
-        ~pod_lca.impacts.Emissions
+        :class:`~pod_lca.impacts.Emissions`
             Unit electricity emissions.
-        ~pod_lca.units.Unit
+        :class:`~pod_lca.units.Unit`
             Corresponding electricity supply unit.
         """
         electricity_supply = ElectricitySupply.from_location(self.get_location())

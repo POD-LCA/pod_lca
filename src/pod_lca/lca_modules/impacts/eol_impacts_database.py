@@ -120,17 +120,27 @@ class EOLImpactsDatabase(ImpactsDatabase):
             Name of the material
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
             End-of-life pathway:
+
             - 'Landfill': transporting waste to a landfill.
             - 'Recycle': transporting waste to a recycler.
             - 'Compost': transporting to a composting facility.
             - 'Incinerate': transporting to an incinerator.
         life_cycle_stage : {'C3', 'C4', 'D'}
             Life cycle stage.
+
+            - 'C3': waste processing
+            - 'C4': disposal
+            - 'D': reuse
         
         Returns
         -------
         pandas.Series
             Databse entry corresponding to the flow.
+
+        Raises
+        ------
+        ImportError
+            Data not in database or multiple matching entries.
         """
         if self.data is not None:
             row_id = self.data.index[(self.data[self.get_primary_key()] == material_name) & (self.data[self.get_process_key()] == process_name) & (self.data[self.get_life_cycle_stage_key()] == life_cycle_stage)]

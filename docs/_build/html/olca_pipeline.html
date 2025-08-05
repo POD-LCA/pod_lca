@@ -172,6 +172,9 @@
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>olca_ipc.Client</p>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -192,6 +195,9 @@
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>schema.Ref</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -208,6 +214,9 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>schema.ImpactMethod</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,6 +237,12 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Invalid uuid.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -250,6 +265,9 @@
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -269,17 +287,20 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The level of the node in the tree.</p></li>
 <li><p><strong>impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The impact from the category.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The declared quantity of the category.</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- The declared unit of the category.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- The declared unit of the category.</p></li>
 <li><p><strong>max_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The maximum number of levels to expand the tree.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>float</em> -- The electricity impact.</p></li>
-<li><p><em>float</em> -- The electricity required sum.</p></li>
-<li><p><em>Unit Obj.</em> -- The declared unit of the category.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> -- The electricity impact.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> -- The electricity required sum.</p></li>
+<li><p><em>~pod_lca.units.Unit</em> -- The declared unit of the category.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -299,26 +320,26 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The level of the node in the tree.</p></li>
 <li><p><strong>impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The impact from the category.</p></li>
 <li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The declared quantity of the category.</p></li>
-<li><p><strong>unit</strong> (<em>Unit Obj.</em>) -- The declared unit of the category.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- The declared unit of the category.</p></li>
 <li><p><strong>max_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- The maximum number of levels to expand the tree.</p></li>
-<li><p><strong>conversion_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
-{uuid (str): {'name' : name of the process (str),</p>
-<blockquote>
-<div><p>'declared_qty': declared quantity of the process (str or float),
-'declared_unit': standard notation of the declared units of the process (str),
-'conversion_factor': conversion factor (str or float),
-'converted_unit': standard notation of the unit to which the process quantity is converted (str)}}</p>
-</div></blockquote>
-</p></li>
+<li><p><strong>conversion_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
+{<strong>uuid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>'name'</strong> : name of the process (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>),
+<strong>'declared_qty'</strong>: declared quantity of the process (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>),
+<strong>'declared_unit'</strong>: standard notation of the declared units of the process (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>),
+<strong>'conversion_factor'</strong>: conversion factor (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>),
+<strong>'converted_unit'</strong>: standard notation of the unit to which the process quantity is converted (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)}}</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>float</em> -- The electricity impact.</p></li>
-<li><p><em>float</em> -- The electricity required sum.</p></li>
-<li><p><em>Unit Obj.</em> -- The declared unit of the category.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> -- The electricity impact.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> -- The electricity required sum.</p></li>
+<li><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Unit</span></code></a> -- The declared unit of the category.</p></li>
 </ul>
 </p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -385,6 +406,12 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of UUIDs of the processess to be tested</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The client object for the openLCA server.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>olca_ipc.Client</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -395,7 +422,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>Schema.Process Obj</em>) -- List of processes.</p></li>
+<li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>Schema.Process</em>) -- List of processes.</p></li>
 <li><p><strong>filter_by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- NAICS or ISIC ids of Categories to be filter by.</p></li>
 </ul>
 </dd>
@@ -403,7 +430,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dd class="field-even"><p>List of processess.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of Schema.Process Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of Schema.Process</p>
 </dd>
 </dl>
 </dd></dl>
@@ -417,7 +444,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
 <li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The path to the zip file.</p></li>
-<li><p><strong>duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
+<li><p><strong>duplicates</strong> (<em>{overwrite'</em><em>, </em><em>'update'</em><em>, </em><em>'never'}</em>) -- The action to take if a duplicate item is found. Default is 'overwrite'.</p></li>
 </ul>
 </dd>
 </dl>
@@ -433,7 +460,7 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <li><p><strong>client</strong> (<em>olca_ipc.Client</em>) -- The client object for the openLCA server.</p></li>
 <li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The name of the file.</p></li>
 <li><p><strong>data</strong> (<em>ZipExtFile</em>) -- The data from the file.</p></li>
-<li><p><strong>duplicates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.</p></li>
+<li><p><strong>duplicates</strong> (<em>{'overwrite'</em><em>, </em><em>'update'</em><em>, </em><em>'never'}</em>) -- The action to take if a duplicate item is found.</p></li>
 </ul>
 </dd>
 </dl>
@@ -478,15 +505,15 @@ Category IDs from the North American Industry Classification System (NAICS) or I
 <li><p><strong>process_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of UUIDs of the processess to be tested</p></li>
 <li><p><strong>impact_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of impact categories.</p></li>
 <li><p><strong>impact_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- UUID of the impact method.</p></li>
-<li><p><strong>group_by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <dl class="simple">
-<dt>Dictionary of group categorization: {'name'<span class="classifier">category name (str),</span></dt><dd><p>'ids' : [category id (int) or product uuid (str)],
-'unit': unit to be reported - optional (Unit Obj),
-'conversion_map': conversion map - optional (dict)}</p>
+<li><p><strong>group_by</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <dl>
+<dt>Dictionary of group categorization: {<strong>'name'</strong><span class="classifier"><strong>category name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>),</span></dt><dd><p><strong>'ids'</strong> : [<strong>category id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) or product uuid (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>)],
+<strong>'unit'</strong>: unit to be reported - optional (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Unit</span></code></a>),
+<strong>'conversion_map'</strong>: conversion map - optional (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>)}</p>
 </dd>
 </dl>
 <p>Category IDs are from the North American Industry Classification System (NAICS).
 When unit is not given the default unit of the first item in the group is used.
-Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.</p>
+Conversion map needs the following keys: <strong>'UUID'</strong>, <strong>'declared_unit'</strong>, <strong>'declared_qty'</strong>, <strong>'conversion_factor'</strong>, <strong>'converted_unit'</strong>.</p>
 </p></li>
 </ul>
 </dd>
@@ -495,6 +522,12 @@ Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty'
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- olca-ipc package not installed.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- uuids not recognized.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

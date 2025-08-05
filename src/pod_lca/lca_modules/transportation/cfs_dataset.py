@@ -27,13 +27,13 @@ class CFSDataset(TransportDataset):
         
         Parameters
         ----------
-        material : ~pod_lca.materials_screening.Master
+        material : ~pod_lca.materials_screening.Product
             The Standard Classification of Transported Goods (SCTG) code to filter by.
-        destination : ~pod_lca.location.Location, optional
+        destination : ~pod_lca.location.Location
             The destination location to filter by.
-        origin : ~pod_lca.location.Location, optional
+        origin : ~pod_lca.location.Location
             The origin location to filter by.
-        mode : ~pod_lca.transportation.TransportMode, optional
+        mode : ~pod_lca.transportation.TransportMode
             The transportation mode to filter by.
         
         Returns

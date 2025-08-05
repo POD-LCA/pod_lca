@@ -177,21 +177,10 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Project.models">
 <span class="sig-name descname"><span class="pre">models</span></span><a class="headerlink" href="#pod_lca.materials_screening.Project.models" title="Link to this definition">¶</a></dt>
-<dd><p>All models created/compared in the current project.</p>
+<dd><p>All models created/compared in the current project: {<strong>model name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a>}.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pod_lca.materials_screening.Project.database">
-<span class="sig-name descname"><span class="pre">database</span></span><a class="headerlink" href="#pod_lca.materials_screening.Project.database" title="Link to this definition">¶</a></dt>
-<dd><p>Maintains input impact data.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Database Obj.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,7 +191,29 @@
 <dd><p>Location of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Location Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Project.impact_database">
+<span class="sig-name descname"><span class="pre">impact_database</span></span><a class="headerlink" href="#pod_lca.materials_screening.Project.impact_database" title="Link to this definition">¶</a></dt>
+<dd><p>Maintains input impact data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em></em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Project.transport_mode_impact_database">
+<span class="sig-name descname"><span class="pre">transport_mode_impact_database</span></span><a class="headerlink" href="#pod_lca.materials_screening.Project.transport_mode_impact_database" title="Link to this definition">¶</a></dt>
+<dd><p>Maintains impact data of transportation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em></em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,7 +230,7 @@
 <dd class="field-even"><p>Project created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Project Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.materials_screening.Project" title="pod_lca.materials_screening.Project"><em>Project</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -237,22 +248,28 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Project.set_impact_database">
-<span class="sig-name descname"><span class="pre">set_impact_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase" title="pod_lca.lca_modules.impacts.impacts_database.ImpactsDatabase"><span class="pre">ImpactsDatabase</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.set_impact_database" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_impact_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.set_impact_database" title="Link to this definition">¶</a></dt>
 <dd><p>Set the impacts database of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>database</strong> (<em>ImpactsDatabase Obj</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Impact database object or if a string, filepath to the corresponding csv file containing impact data.</p>
+<dd class="field-odd"><p><strong>database</strong> (<a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><em>ImpactsDatabase</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Impact database object or if a string, filepath to the corresponding csv file containing impact data.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Database input not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Project.set_transportation_mode_impact_database">
-<span class="sig-name descname"><span class="pre">set_transportation_mode_impact_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TranportationModeImpactsDatabase</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.set_transportation_mode_impact_database" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_transportation_mode_impact_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.set_transportation_mode_impact_database" title="Link to this definition">¶</a></dt>
 <dd><p>Set the impacts database for transportation impacts by mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>database</strong> (<em>ImpactsDatabase Obj</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Impact database object or if a string, filepath to the corresponding csv file containing impact data.</p>
+<dd class="field-odd"><p><strong>database</strong> (<a class="reference internal" href="impact_databases.html#pod_lca.impacts.TranportationModeImpactsDatabase" title="pod_lca.impacts.TranportationModeImpactsDatabase"><em>TranportationModeImpactsDatabase</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Impact database object or if a string, filepath to the corresponding csv file containing impact data.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Database input not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -263,7 +280,7 @@
 <dd><p>Set the location of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>location</strong> (<em>Location Obj.</em>) -- Location of the project.</p>
+<dd class="field-odd"><p><strong>location</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Location of the project.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -291,7 +308,7 @@
 <dd class="field-odd"><p>Impact database of the project.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>DatabaseManager Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><em>ImpactsDatabase</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -305,7 +322,7 @@
 <dd class="field-odd"><p>Impact database of the tranportation modes.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>DatabaseManager Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="impact_databases.html#pod_lca.impacts.TranportationModeImpactsDatabase" title="pod_lca.impacts.TranportationModeImpactsDatabase"><em>TranportationModeImpactsDatabase</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,14 +336,14 @@
 <dd class="field-odd"><p>Location of the project.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Location Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Project.add_model">
-<span class="sig-name descname"><span class="pre">add_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.add_model" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">add_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.add_model" title="Link to this definition">¶</a></dt>
 <dd><p>Create and add a model to the current project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -337,7 +354,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.materials_screening.Project.get_model">
-<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.get_model" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Project.get_model" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve a model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -347,7 +364,7 @@
 <dd class="field-even"><p>Current working model.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Model Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- A model by such name does not exist in the current project.</p>
@@ -419,11 +436,11 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the Impact category.</p></li>
-<li><p><strong>model_lst</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p></li>
+<li><p><strong>model_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- list of the names of models.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts dictionary where {model_name (str): { stage (str): quantity of impact (float)}}.</p>
+<dd class="field-even"><p>Impacts dictionary where {<strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>quantity of impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}}.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -437,10 +454,10 @@
 <dd><p>Returns impact data by impact category for given multiple models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model_lst</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p>
+<dd class="field-odd"><p><strong>model_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.</p>
+<dd class="field-even"><p>Impacts dictionary where {<strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : <strong>quantity of impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}}.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -454,10 +471,10 @@
 <dd><p>Returns impact data by impact category for given multiple models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model_lst</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p>
+<dd class="field-odd"><p><strong>model_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.</p>
+<dd class="field-even"><p>Impacts dictionary where {<strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : <strong>quantity of impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}}.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -476,11 +493,11 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the Impact category.</p></li>
-<li><p><strong>model_lst</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p></li>
+<li><p><strong>model_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts dictionary where {model_name (str): {stage (str): {item_name (str): quantity of impact (float)}}.</p>
+<dd class="field-even"><p>Impacts dictionary where {<strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>item_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>quantity of impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}}.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -495,12 +512,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>impact_categories</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of impact categories.</p></li>
-<li><p><strong>model_lst</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p></li>
+<li><p><strong>impact_categories</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of impact categories.</p></li>
+<li><p><strong>model_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of the names of models.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Impacts dictionary where {model_name (str): {impact_category (str): {stage (str): quantity of impact (float)}}.</p>
+<dd class="field-even"><p>Impacts dictionary where {<strong>model_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>impact_category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): {<strong>stage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>quantity of impact</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}}.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a></p>
@@ -530,8 +547,9 @@
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project.name"><code class="docutils literal notranslate"><span class="pre">Project.name</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project.models"><code class="docutils literal notranslate"><span class="pre">Project.models</span></code></a></li>
-<li><a class="reference internal" href="#pod_lca.materials_screening.Project.database"><code class="docutils literal notranslate"><span class="pre">Project.database</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project.location"><code class="docutils literal notranslate"><span class="pre">Project.location</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Project.impact_database"><code class="docutils literal notranslate"><span class="pre">Project.impact_database</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Project.transport_mode_impact_database"><code class="docutils literal notranslate"><span class="pre">Project.transport_mode_impact_database</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project.new"><code class="docutils literal notranslate"><span class="pre">Project.new()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project.set_name"><code class="docutils literal notranslate"><span class="pre">Project.set_name()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Project.set_impact_database"><code class="docutils literal notranslate"><span class="pre">Project.set_impact_database()</span></code></a></li>

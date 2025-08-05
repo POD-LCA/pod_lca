@@ -7,8 +7,12 @@ __version__ = "0.1.0"
 
 
 class AbstractPlot():
-    """ An abstract class for specific implementation of graphs and charts.
-        A plot is a set of instructions for plotting the graph.
+    """ An abstract class for specific implementation of graphs and charts. A plot is a set of instructions for plotting the graph.
+
+    Attributes
+    ----------
+    plot : ~pod_lca.visualizer.AbstractPlot
+        Plot.
     """
 
     def __init__(self):
@@ -23,12 +27,12 @@ class AbstractPlot():
         
         Parameters
         ----------
-        plotter : AbstractPlotter Obj.
+        plotter : ~pod_lca.visualizer.AbstractPlotter
             Plotter.
 
         Returns
         -------
-        BarChart Obj.
+        ~pod_lca.visualizer.AbstractPlot
             Plot created.
         """
         chart = cls()
@@ -43,12 +47,12 @@ class AbstractPlot():
         
         Parameters
         ----------
-        plot : Object
-            Plot created by an AbstractPlotter Obj.
+        plot : ~pod_lca.visualizer.AbstractPlot
+            Reference plot
 
         Returns
         -------
-        BarChart Obj.
+        ~pod_lca.visualizer.AbstractPlot
             Plot created.        
         """
         chart = cls()
@@ -65,7 +69,7 @@ class AbstractPlot():
         
         Parameters
         ----------
-        plotter : AbstractPlotter Obj.
+        plotter : ~pod_lca.visualizer.AbstractPlotter
             Plotter.        
         """
         self.plot = plotter.create_plot()
@@ -77,7 +81,7 @@ class AbstractPlot():
         
         Returns
         ----------
-        AbstractPlotter Obj.
+        ~pod_lca.visualizer.AbstractPlot
             Plotter.        
         """
         return self.plot

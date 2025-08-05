@@ -27,10 +27,9 @@ class Stackplot(AbstractPlot):
         x_data : list or array
             X data.
         y_data : dict or list
-            Data to be plotted, given in one of the following dictionaries:
-            list of lists - [[y1], [y2], ... , [yn]];
-            dict - {data label (str): [y1], ... , data label (str): [yn]}
-            The length of each list should match the dimensions of x_data list.
+            Data to be plotted, given in one of the following dictionaries. The length of each list should match the dimensions of **x_data** list. \n
+            - list of lists - [[y1], [y2], ... , [yn]];
+            - dict - {**data label** (:class:`str`): [y1], ... , **data label** (:class:`str`): [yn]}
         title : str
             Title of the barchart.
         x_label : str

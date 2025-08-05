@@ -27,7 +27,7 @@ class RadarChart(AbstractPlot):
     
         Parameters
         ----------
-        plotter : AbstractPlotter Obj.
+        plotter : ~pod_lca.visualizer.AbstractPlotter
             Plotter.        
         """
         self.plot = plotter.create_plot(polar=True)
@@ -43,9 +43,9 @@ class RadarChart(AbstractPlot):
         Parameters
         ----------
         data : dict
-            Data to be plotted, given in one of the following dictionaries:
-            single radar - {category (str) : value (float)};
-            multiple_radars - {group (str) : {category (str) : value (float)}};
+            Data to be plotted, given in one of the following dictionaries: \n
+            - single radar - {**category** (:class:`str`) : **value** (:class:`float`)};
+            - multiple_radars - {**group** (:class:`str`) : {category (:class:`str`) : **value** (:class:`float`)}};
         title : str
             Title of the radar plot.
         """

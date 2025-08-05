@@ -157,7 +157,7 @@
   <section id="impacts-database">
 <h1>Impacts Database<a class="headerlink" href="#impacts-database" title="Link to this heading">¶</a></h1>
 <p>Impact databases manages importing (<a class="reference internal" href="#pod_lca.impacts.ImpactsDatabase.set_data" title="pod_lca.impacts.ImpactsDatabase.set_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_data()</span></code></a>) and retrieval (<a class="reference internal" href="#pod_lca.impacts.ImpactsDatabase.get_data_entry" title="pod_lca.impacts.ImpactsDatabase.get_data_entry"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data_entry()</span></code></a>) of LCA data.</p>
-<p>Specialized databases, <a class="reference internal" href="#pod_lca.impacts.ElectricityImpactsDatabase" title="pod_lca.impacts.ElectricityImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase</span></code></a> and <a class="reference internal" href="#pod_lca.impacts.EOLImpactsDatabase" title="pod_lca.impacts.EOLImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">EOLImpactsDatabase</span></code></a>, are inherited from the base class <a class="reference internal" href="#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImpactsDatabase</span></code></a> to account for additional classifiers present in those databases (e.g., <cite>region</cite> and <cite>technology type</cite> used in <cite>ElectricityImpactsDatabase</cite>).</p>
+<p>Specialized databases, <a class="reference internal" href="#pod_lca.impacts.ElectricityImpactsDatabase" title="pod_lca.impacts.ElectricityImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricityImpactsDatabase</span></code></a>, <a class="reference internal" href="#pod_lca.impacts.EOLImpactsDatabase" title="pod_lca.impacts.EOLImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">EOLImpactsDatabase</span></code></a>, and <a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase" title="pod_lca.impacts.TranportationModeImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase</span></code></a>, are inherited from the base class <a class="reference internal" href="#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImpactsDatabase</span></code></a> to account for additional classifiers present in those databases (e.g., <cite>region</cite> and <cite>technology type</cite> used in <cite>ElectricityImpactsDatabase</cite>).</p>
 <hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.impacts.ImpactsDatabase">
@@ -210,11 +210,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.impacts.ImpactsDatabase.data">
 <span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#pod_lca.impacts.ImpactsDatabase.data" title="Link to this definition">¶</a></dt>
-<dd><p>Impact data, with following headings.
-- <strong>primary_key (str): Name of the impact.
-- **qty_key</strong> (str): Impacts per unit of measure.
-- <strong>unit_key</strong> (str): The unit of measure.
-- <strong>impact category</strong> (float): Quantity of impact.</p>
+<dd><p>Impact data, with following headings;
+- <strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): Name of the impact.
+- <strong>qty_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): Impacts per unit of measure.
+- <strong>unit_key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): The unit of measure.
+- <strong>impact category</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>): Quantity of impact.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.3.1)">pandas.DataFrame</a></p>
@@ -269,6 +269,9 @@
 <li><p><strong>multipliers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Category not recognized.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -287,6 +290,9 @@
 <li><p><strong>carbon_storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of carbon storage {<strong>carbon storage</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>carbon quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}.</p></li>
 <li><p><strong>additional_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of additional data {<strong>header</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> / <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>/ <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>)}.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Category not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -379,6 +385,9 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.3.1)">pandas.Series</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- Multiple matching entries.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -694,13 +703,127 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>material_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the material</p></li>
-<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- End-of-life pathway:
-- 'Landfill': transporting waste to a landfill.
-- 'Recycle': transporting waste to a recycler.
-- 'Compost': transporting to a composting facility.
-- 'Incinerate': transporting to an incinerator.</p></li>
-<li><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage.</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul>
+<li><p>'Landfill': transporting waste to a landfill.</p></li>
+<li><p>'Recycle': transporting waste to a recycler.</p></li>
+<li><p>'Compost': transporting to a composting facility.</p></li>
+<li><p>'Incinerate': transporting to an incinerator.</p></li>
 </ul>
+</p></li>
+<li><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- <p>Life cycle stage.</p>
+<ul>
+<li><p>'C3': waste processing</p></li>
+<li><p>'C4': disposal</p></li>
+<li><p>'D': reuse</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Databse entry corresponding to the flow.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.3.1)">pandas.Series</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- Data not in database or multiple matching entries.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.impacts.</span></span><span class="sig-name descname"><span class="pre">TranportationModeImpactsDatabase</span></span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.impacts.ImpactsDatabase" title="pod_lca.lca_modules.impacts.impacts_database.ImpactsDatabase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImpactsDatabase</span></code></a></p>
+<p>Database manager to handle End-of-Life impacts.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.fuel_type_key">
+<span class="sig-name descname"><span class="pre">fuel_type_key</span></span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.fuel_type_key" title="Link to this definition">¶</a></dt>
+<dd><p>Data header corresponding to the fuel type corresponding to the database entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.mode_efficiency_key">
+<span class="sig-name descname"><span class="pre">mode_efficiency_key</span></span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.mode_efficiency_key" title="Link to this definition">¶</a></dt>
+<dd><p>Data header corresponding to the mode efficiency corresponding to the database entry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.new">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.new" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the database.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Database created.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><em>ImpactsDatabase</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.set_mode_efficiency_key">
+<span class="sig-name descname"><span class="pre">set_mode_efficiency_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.set_mode_efficiency_key" title="Link to this definition">¶</a></dt>
+<dd><p>Set the mode efficiency key of the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Data header corresponding to the mode efficiency corresponding to the database entry.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.get_mode_efficiency_key">
+<span class="sig-name descname"><span class="pre">get_mode_efficiency_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.get_mode_efficiency_key" title="Link to this definition">¶</a></dt>
+<dd><p>Get the mode efficiency key of the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data header corresponding to the mode efficiency corresponding to the database entry.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.get_required_headers">
+<span class="sig-name descname"><span class="pre">get_required_headers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.get_required_headers" title="Link to this definition">¶</a></dt>
+<dd><p>Get the required headers of the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Database headers.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.impacts.TranportationModeImpactsDatabase.get_data_entry">
+<span class="sig-name descname"><span class="pre">get_data_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.impacts.TranportationModeImpactsDatabase.get_data_entry" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve impacts for given flow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><em>TransportMode</em></a>) -- Transport mode with its name, fuel type, and efficiency.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Databse entry corresponding to the flow.</p>
@@ -775,6 +898,16 @@
 <li><a class="reference internal" href="#pod_lca.impacts.EOLImpactsDatabase.get_life_cycle_stage_key"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_life_cycle_stage_key()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.EOLImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_required_headers()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.impacts.EOLImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">EOLImpactsDatabase.get_data_entry()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.fuel_type_key"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.fuel_type_key</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.mode_efficiency_key"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.mode_efficiency_key</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.new"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.new()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.set_mode_efficiency_key"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.set_mode_efficiency_key()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.get_mode_efficiency_key"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.get_mode_efficiency_key()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.get_required_headers"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.get_required_headers()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.impacts.TranportationModeImpactsDatabase.get_data_entry"><code class="docutils literal notranslate"><span class="pre">TranportationModeImpactsDatabase.get_data_entry()</span></code></a></li>
 </ul>
 </li>
 </ul>

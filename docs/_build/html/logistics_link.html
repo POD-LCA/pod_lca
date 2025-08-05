@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Logistics Link &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <title>Logistics Leg &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
     <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
     <script src="_static/documentation_options.js?v=13b99a09"></script>
@@ -127,8 +127,9 @@
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="transportation.html">Transportation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Logistics Link</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Logistics Leg</a></li>
 <li class="toctree-l3"><a class="reference internal" href="transport_mode.html">Transport Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html">Transport Datasets</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
@@ -154,8 +155,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="logistics-link">
-<h1>Logistics Link<a class="headerlink" href="#logistics-link" title="Link to this heading">¶</a></h1>
+  <section id="logistics-leg">
+<h1>Logistics Leg<a class="headerlink" href="#logistics-leg" title="Link to this heading">¶</a></h1>
 <p><a class="reference internal" href="#pod_lca.transportation.TransportationLeg" title="pod_lca.transportation.TransportationLeg"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransportationLeg</span></code></a> manages individual leg of transportation, including the travel distance. Domestic link and foreign link are abstracted classes</p>
 <hr class="docutils" />
 <dl class="py class">
@@ -168,7 +169,7 @@
 <dd><p>Refers to the transportation manager.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager">pod_lca.transportation.TransportationManager</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager"><em>TransportationManager</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -256,7 +257,7 @@
 <dd><p>transportation mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>TransportationMode</em></p>
+<dd class="field-odd"><p><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><em>TransportMode</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -312,9 +313,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>good</strong> (<em>Product</em>) -- Product being transported.</p></li>
+<li><p><strong>good</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- Product being transported.</p></li>
 <li><p><strong>manager</strong> (<a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager"><em>TransportationManager</em></a>) -- The project to which the transportation leg belongs.</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) -- Name of the transportation leg (default is None).</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the transportation leg (default is None).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -332,7 +333,7 @@
 <dd><p>Set the project the transportation leg belongs to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager"><em>pod_lca.transportation.TransportationManager</em></a>) -- The project to which the transportation leg belong.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager"><em>TransportationManager</em></a>) -- The project to which the transportation leg belong.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -354,7 +355,7 @@
 <dd><p>Set the material being transported.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>material</strong> (<em>Product</em>) -- Material being transported.</p>
+<dd class="field-odd"><p><strong>material</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- Material being transported.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -367,9 +368,12 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>travel_dist</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Travel distance of the transportation leg.</p></li>
-<li><p><strong>dist_unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a><em>, </em><em>optional</em>) -- Unit of the travel distance. Defualt is KILOMETER</p></li>
-<li><p><strong>return_trip_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) -- Return trip factor of the transportation leg.</p></li>
+<li><p><strong>dist_unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of the travel distance. Defualt is KILOMETER</p></li>
+<li><p><strong>return_trip_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Return trip factor of the transportation leg.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Travel distance is not a number.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -382,6 +386,9 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>shipping_dest</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Name of the shipping destination location.</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Shipping destination not recognized.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -393,6 +400,9 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>shipping_org</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Name of the shipping origin location.</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Shipping origin not recognized.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -400,11 +410,13 @@
 <dt class="sig sig-object py" id="pod_lca.transportation.TransportationLeg.set_mode">
 <span class="sig-name descname"><span class="pre">set_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportationLeg.set_mode" title="Link to this definition">¶</a></dt>
 <dd><p>Set the transportation mode of the transportation leg.</p>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>Prefix '<a href="#id1"><span class="problematic" id="id2">E_</span></a>' in the mode_name is used as the identifier of an electricity based transportation mode.</p></li>
+<li><p>Prefix <cite>'E_'</cite> in the mode_name is used as the identifier of an electricity based transportation mode.</p></li>
 <li><p>Electric vehicles takes electricity based on origin location.</p></li>
 </ol>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -438,7 +450,7 @@
 <dd class="field-odd"><p>The project of the transportation leg.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager">pod_lca.transportation.TransportationManager</a></p>
+<dd class="field-even"><p><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager" title="pod_lca.transportation.TransportationManager"><em>TransportationManager</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -519,10 +531,10 @@
 <dd><p>Retrieve the shipping destination of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Name of the shipping destination location.</p>
+<dd class="field-odd"><p>Shipping destination location.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-even"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -606,7 +618,7 @@
 <dd class="field-odd"><p>The emissions of the transportation leg.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Emissionbs</em></p>
+<dd class="field-even"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -629,6 +641,698 @@
 <dt class="sig sig-object py" id="pod_lca.transportation.TransportationLeg.update_inventory_records">
 <span class="sig-name descname"><span class="pre">update_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.TransportationLeg.update_inventory_records" title="Link to this definition">¶</a></dt>
 <dd><p>Compute and update all invetories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ImportError" title="(in Python v3.13)"><strong>ImportError</strong></a> -- Incompatible units.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.transportation.</span></span><span class="sig-name descname"><span class="pre">DomesticLeg</span></span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg" title="Link to this definition">¶</a></dt>
+<dd><p>A leg of domestic US transportation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.transport_scenario">
+<span class="sig-name descname"><span class="pre">transport_scenario</span></span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>A discriptor of the tranportation scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{'National', 'Regional', 'Regional_c', 'Local', 'Average'}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.set_transport_scenario">
+<span class="sig-name descname"><span class="pre">set_transport_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.set_transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Set the transport scenario of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transport_scenario</strong> (<em>{'National'</em><em>, </em><em>'Regional'</em><em>, </em><em>'Regional_c'</em><em>, </em><em>'Local'</em><em>, </em><em>'Average'}</em>) -- Transport scenario of the transportation leg.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Transportation scenario not recognized.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Transportation scenario is not None or a string.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.set_material">
+<span class="sig-name descname"><span class="pre">set_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.set_material" title="Link to this definition">¶</a></dt>
+<dd><p>Set the material being transported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- Material being transported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.set_shipping_destination">
+<span class="sig-name descname"><span class="pre">set_shipping_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shipping_dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.set_shipping_destination" title="Link to this definition">¶</a></dt>
+<dd><p>Set the shipping destination of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shipping_dest</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Shipping destination location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.set_shipping_origin">
+<span class="sig-name descname"><span class="pre">set_shipping_origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shipping_org</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.set_shipping_origin" title="Link to this definition">¶</a></dt>
+<dd><p>Set the shipping origin of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shipping_org</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Shipping origin location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.set_mode">
+<span class="sig-name descname"><span class="pre">set_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.set_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Set the transportation mode of the transportation leg.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Prefix <cite>'E_'</cite> in the mode_name is used as the identifier of an electricity based transportation mode.</p></li>
+<li><p>Electric vehicles takes electricity based on origin location.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><em>TransportMode</em></a>) -- transportation mode of the transportation leg.</p></li>
+<li><p><strong>efficiency</strong> (<em>{'High'</em><em>, </em><em>'Median'</em><em>, </em><em>'Low'}</em>) -- efficiency of the transportation mode.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.set_travel_dist">
+<span class="sig-name descname"><span class="pre">set_travel_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_trip_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.set_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Set the travel distance of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>travel_dist</strong> (<em>None</em>) -- For travel distance are autogenerated from CFS data.</p></li>
+<li><p><strong>dist_unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of the travel distance.</p></li>
+<li><p><strong>return_trip_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Return trip factor of the transportation leg.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.get_transport_scenario">
+<span class="sig-name descname"><span class="pre">get_transport_scenario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.get_transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the transport scenario of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The transport scenario of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.get_travel_dist">
+<span class="sig-name descname"><span class="pre">get_travel_dist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.get_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Set the travel distance of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>travel distance of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Transport scenario not recognized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.get_return_trip_factor">
+<span class="sig-name descname"><span class="pre">get_return_trip_factor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.get_return_trip_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the return trip factor of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The return trip factor of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.get_dataset">
+<span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.get_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Get the dataset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.DomesticLeg.get_distance_from_datset">
+<span class="sig-name descname"><span class="pre">get_distance_from_datset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.DomesticLeg.get_distance_from_datset" title="Link to this definition">¶</a></dt>
+<dd><p>Get the average distance from the CFS dataset based on the scenario.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>CFS dataset gives distances in kilometres.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- The scenario to filter the distances by.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The distance estimate for the specified scenario.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.transportation.</span></span><span class="sig-name descname"><span class="pre">ForeignLeg</span></span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg" title="Link to this definition">¶</a></dt>
+<dd><p>A leg of Global transportation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.transport_scenario">
+<span class="sig-name descname"><span class="pre">transport_scenario</span></span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>A discriptor of the tranportation scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{'Global'}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.in_project">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">in_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">good</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.in_project" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new transportation leg in the project. Also create a corresponding domestic transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>good</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- Product being transported.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="material_screening_project.html#pod_lca.materials_screening.Project" title="pod_lca.materials_screening.Project"><em>Project</em></a>) -- The project to which the transportation leg belongs.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the transportation leg (default is None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Transportation leg created in the project.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.transportation.TransportationLeg" title="pod_lca.transportation.TransportationLeg"><em>TransportationLeg</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.set_transport_scenario">
+<span class="sig-name descname"><span class="pre">set_transport_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.set_transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Set the transport scenario of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transport_scenario</strong> (<em>{'Global'}</em>) -- Transport scenario of the transportation leg.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Transportation scenario not recognized.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Transportation scenario is not None or a string.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.set_material">
+<span class="sig-name descname"><span class="pre">set_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.set_material" title="Link to this definition">¶</a></dt>
+<dd><p>Set the material being transported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- Material being transported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.set_shipping_destination">
+<span class="sig-name descname"><span class="pre">set_shipping_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shipping_dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.set_shipping_destination" title="Link to this definition">¶</a></dt>
+<dd><p>Set the shipping destination of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shipping_dest</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Name of the shipping destination location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.set_shipping_origin">
+<span class="sig-name descname"><span class="pre">set_shipping_origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shipping_org</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.set_shipping_origin" title="Link to this definition">¶</a></dt>
+<dd><p>Set the shipping origin of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shipping_org</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Name of the shipping origin location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.set_mode">
+<span class="sig-name descname"><span class="pre">set_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.set_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Set the transportation mode of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><em>TransportMode</em></a>) -- Transportation mode of the transportation leg.</p></li>
+<li><p><strong>efficiency</strong> (<em>{'High'</em><em>, </em><em>'Median'</em><em>, </em><em>'Low'}</em>) -- Efficiency of the transportation mode.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Transportation mode not recognized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.set_travel_dist">
+<span class="sig-name descname"><span class="pre">set_travel_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_trip_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.set_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Set the travel distance of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>travel_dist</strong> (<em>None</em>) -- For ForeignLink objects travel distance are autogenerated using a dataset.</p></li>
+<li><p><strong>dist_unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of the travel distance.</p></li>
+<li><p><strong>return_trip_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Return trip factor of the transportation leg (default is None).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.get_domestic_leg">
+<span class="sig-name descname"><span class="pre">get_domestic_leg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.get_domestic_leg" title="Link to this definition">¶</a></dt>
+<dd><p>Get the corresponding domestic leg of transportation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Domestic transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pod_lca.transportation.TransportationLeg" title="pod_lca.transportation.TransportationLeg"><em>TransportationLeg</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.get_transport_scenario">
+<span class="sig-name descname"><span class="pre">get_transport_scenario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.get_transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the transport scenario of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The transport scenario of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.get_travel_dist">
+<span class="sig-name descname"><span class="pre">get_travel_dist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.get_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Get the travel distance of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>travel distance of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.get_return_trip_factor">
+<span class="sig-name descname"><span class="pre">get_return_trip_factor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.get_return_trip_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the return trip factor of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The return trip factor of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.get_dataset">
+<span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.get_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Get the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset used.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.TransportDataset" title="pod_lca.transportation.TransportDataset"><em>TransportDataset</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.get_distance_from_dataset">
+<span class="sig-name descname"><span class="pre">get_distance_from_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.get_distance_from_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Get the average distance from the CFS dataset based on the scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>{'Global'}</em>) -- The tranportation scenario.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The distance estimate for the specified scenario.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- The transportation origin and transportation mode are inconsistant.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ForeignLeg.check_mode_origin_compatibility">
+<span class="sig-name descname"><span class="pre">check_mode_origin_compatibility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ForeignLeg.check_mode_origin_compatibility" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the mode and origin combinations are realistic.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.transportation.</span></span><span class="sig-name descname"><span class="pre">WasteTransportLeg</span></span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg" title="Link to this definition">¶</a></dt>
+<dd><p>A leg of waste transportation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.transport_scenario">
+<span class="sig-name descname"><span class="pre">transport_scenario</span></span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>A discriptor of the tranportation scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.eol_pathway">
+<span class="sig-name descname"><span class="pre">eol_pathway</span></span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.eol_pathway" title="Link to this definition">¶</a></dt>
+<dd><p>End-of-life pathway:</p>
+<ul class="simple">
+<li><p>'Landfill': transporting waste to a landfill.</p></li>
+<li><p>'Recycle': transporting waste to a recycler.</p></li>
+<li><p>'Compost': transporting to a composting facility.</p></li>
+<li><p>'Incinerate': transporting to an incinerator.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{'Landfill', 'Recycle', 'Compost', 'Incinerate'}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.distance_cut_off">
+<span class="sig-name descname"><span class="pre">distance_cut_off</span></span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.distance_cut_off" title="Link to this definition">¶</a></dt>
+<dd><p>cut-off length for the waste transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.from_object">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eol_pathway</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'High'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.from_object" title="Link to this definition">¶</a></dt>
+<dd><p>Create.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>material</strong> (<a class="reference internal" href="waste_processing.html#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a>) -- Material keeping quantity and unit record.</p></li>
+<li><p><strong>manager</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a><em> or </em><em>Building</em>) -- Manager keeping the end-of-life transport datasets.</p></li>
+<li><p><strong>eol_pathway</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul>
+<li><p>'Landfill': transporting waste to a landfill.</p></li>
+<li><p>'Recycle': transporting waste to a recycler.</p></li>
+<li><p>'Compost': transporting to a composting facility.</p></li>
+<li><p>'Incinerate': transporting to an incinerator.</p></li>
+</ul>
+</p></li>
+<li><p><strong>transport_scenario</strong> (<em>{'Min'</em><em>, </em><em>'Average'</em><em>, </em><em>'High'}</em>) -- Transport scenario of the transportation leg. Default is 'High'.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_transport_scenario">
+<span class="sig-name descname"><span class="pre">set_transport_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Set the transport scenario of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transport_scenario</strong> (<em>{'Min'</em><em>, </em><em>'Average'</em><em>, </em><em>'High'}</em>) -- Transport scenario of the transportation leg.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Transportation scenario not recognized.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Transportation scenario is not None or a string.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_eol_pathway">
+<span class="sig-name descname"><span class="pre">set_eol_pathway</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eol_pathway</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_eol_pathway" title="Link to this definition">¶</a></dt>
+<dd><p>Set the end-of-life pathway corresponding to the waste transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eol_pathway</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul class="simple">
+<li><p>'Landfill': transporting waste to a landfill.</p></li>
+<li><p>'Recycle': transporting waste to a recycler.</p></li>
+<li><p>'Compost': transporting to a composting facility.</p></li>
+<li><p>'Incinerate': transporting to an incinerator.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_material">
+<span class="sig-name descname"><span class="pre">set_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_material" title="Link to this definition">¶</a></dt>
+<dd><p>Set the material being transported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Product" title="pod_lca.materials_screening.Product"><em>Product</em></a>) -- Material name of the transportation leg.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_shipping_destination">
+<span class="sig-name descname"><span class="pre">set_shipping_destination</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shipping_dest</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_shipping_destination" title="Link to this definition">¶</a></dt>
+<dd><p>Set the shipping destination of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shipping_dest</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Name of the shipping destination location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_shipping_origin">
+<span class="sig-name descname"><span class="pre">set_shipping_origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shipping_org</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_shipping_origin" title="Link to this definition">¶</a></dt>
+<dd><p>Set the shipping origin of the project.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>shipping_org</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Name of the shipping origin location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_mode">
+<span class="sig-name descname"><span class="pre">set_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">efficiency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_mode" title="Link to this definition">¶</a></dt>
+<dd><p>Set the transportation mode of the transportation leg.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Prefix <cite>'E_'</cite> in the mode_name is used as the identifier of an electricity based transportation mode.</p></li>
+<li><p>Electric vehicles takes electricity based on origin location.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><em>TransportMode</em></a>) -- transportation mode of the transportation leg.</p></li>
+<li><p><strong>efficiency</strong> (<em>{'High'</em><em>, </em><em>'Median'</em><em>, </em><em>'Low'}</em>) -- efficiency of the transportation mode. Default is 'Median'.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_cutoff_distance">
+<span class="sig-name descname"><span class="pre">set_cutoff_distance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_cutoff_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Set the cut-off length for the waste transportation leg.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.set_travel_dist">
+<span class="sig-name descname"><span class="pre">set_travel_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">travel_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_trip_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.set_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Set the travel distance of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>travel_dist</strong> (<em>None</em>) -- For DomesticLink objects travel distance are autogenerated from CFS data.</p></li>
+<li><p><strong>dist_unit</strong> (<a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of the travel distance.</p></li>
+<li><p><strong>return_trip_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Return trip factor of the transportation leg (default is None).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_transport_scenario">
+<span class="sig-name descname"><span class="pre">get_transport_scenario</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_transport_scenario" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the transport scenario of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The transport scenario of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_travel_dist">
+<span class="sig-name descname"><span class="pre">get_travel_dist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_travel_dist" title="Link to this definition">¶</a></dt>
+<dd><p>Set the travel distance of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>travel distance of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Transport scenario not recognized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_return_trip_factor">
+<span class="sig-name descname"><span class="pre">get_return_trip_factor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_return_trip_factor" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the return trip factor of the transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The return trip factor of the transportation leg.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_eol_pathway">
+<span class="sig-name descname"><span class="pre">get_eol_pathway</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_eol_pathway" title="Link to this definition">¶</a></dt>
+<dd><p>Get the end-of-life pathway corresponding to the waste transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>End-of-life pathway.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_cutoff_distance">
+<span class="sig-name descname"><span class="pre">get_cutoff_distance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_cutoff_distance" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the cut-off length for the waste transportation leg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Cut-off distance</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a> or <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_dataset">
+<span class="sig-name descname"><span class="pre">get_dataset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Get the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.TransportDataset" title="pod_lca.transportation.TransportDataset"><em>TransportDataset</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_impact_database">
+<span class="sig-name descname"><span class="pre">get_impact_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_impact_database" title="Link to this definition">¶</a></dt>
+<dd><p>Get the impact database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Impacts database</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="impact_databases.html#pod_lca.impacts.ImpactsDatabase" title="pod_lca.impacts.ImpactsDatabase"><em>ImpactsDatabase</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.WasteTransportLeg.get_distance_from_dataset">
+<span class="sig-name descname"><span class="pre">get_distance_from_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transport_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.WasteTransportLeg.get_distance_from_dataset" title="Link to this definition">¶</a></dt>
+<dd><p>Get the average distance from the CFS dataset based on the scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>{'Min'</em><em>, </em><em>'Average'</em><em>, </em><em>'High'}</em>) -- The scenario to filter the distances by.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The distance estimate for the specified scenario.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -649,7 +1353,7 @@
             <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
-<li><a class="reference internal" href="#">Logistics Link</a><ul>
+<li><a class="reference internal" href="#">Logistics Leg</a><ul>
 <li><a class="reference internal" href="#pod_lca.transportation.TransportationLeg"><code class="docutils literal notranslate"><span class="pre">TransportationLeg</span></code></a><ul>
 <li><a class="reference internal" href="#pod_lca.transportation.TransportationLeg.manager"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.manager</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.transportation.TransportationLeg.name"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.name</span></code></a></li>
@@ -688,6 +1392,62 @@
 <li><a class="reference internal" href="#pod_lca.transportation.TransportationLeg.get_emissions"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.get_emissions()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.transportation.TransportationLeg.get_impact_database"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.get_impact_database()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.transportation.TransportationLeg.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.update_inventory_records()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg"><code class="docutils literal notranslate"><span class="pre">DomesticLeg</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.transport_scenario"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.transport_scenario</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.set_transport_scenario"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_transport_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.set_material"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_material()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.set_shipping_destination"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_shipping_destination()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.set_shipping_origin"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_shipping_origin()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.set_mode"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_mode()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.set_travel_dist"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.get_transport_scenario"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_transport_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_return_trip_factor()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.get_dataset"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_dataset()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.DomesticLeg.get_distance_from_datset"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_distance_from_datset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg"><code class="docutils literal notranslate"><span class="pre">ForeignLeg</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.transport_scenario"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.transport_scenario</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.in_project"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.in_project()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.set_transport_scenario"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_transport_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.set_material"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_material()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.set_shipping_destination"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_shipping_destination()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.set_shipping_origin"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_shipping_origin()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.set_mode"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_mode()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.set_travel_dist"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.get_domestic_leg"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_domestic_leg()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.get_transport_scenario"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_transport_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_return_trip_factor()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.get_dataset"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_dataset()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.get_distance_from_dataset"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_distance_from_dataset()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ForeignLeg.check_mode_origin_compatibility"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.check_mode_origin_compatibility()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.transport_scenario"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.transport_scenario</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.eol_pathway"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.eol_pathway</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.distance_cut_off"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.distance_cut_off</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.from_object"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.from_object()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_transport_scenario"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_transport_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_eol_pathway"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_eol_pathway()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_material"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_material()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_shipping_destination"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_shipping_destination()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_shipping_origin"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_shipping_origin()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_mode"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_mode()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_cutoff_distance"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_cutoff_distance()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.set_travel_dist"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_transport_scenario"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_transport_scenario()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_travel_dist()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_return_trip_factor()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_eol_pathway"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_eol_pathway()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_cutoff_distance"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_cutoff_distance()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_dataset"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_dataset()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_impact_database"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_impact_database()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.WasteTransportLeg.get_distance_from_dataset"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_distance_from_dataset()</span></code></a></li>
 </ul>
 </li>
 </ul>

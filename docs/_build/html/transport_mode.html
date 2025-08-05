@@ -15,8 +15,8 @@
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="End-of-life" href="end_of_life.html" />
-    <link rel="prev" title="Logistics Link" href="logistics_link.html" /> 
+    <link rel="next" title="Transport Datasets" href="transport_datasets.html" />
+    <link rel="prev" title="Logistics Leg" href="logistics_link.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -127,8 +127,9 @@
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="transportation.html">Transportation</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
-<li class="toctree-l3"><a class="reference internal" href="logistics_link.html">Logistics Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html">Logistics Leg</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Transport Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html">Transport Datasets</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
@@ -156,7 +157,7 @@
             
   <section id="transport-mode">
 <h1>Transport Mode<a class="headerlink" href="#transport-mode" title="Link to this heading">¶</a></h1>
-<p><a class="reference internal" href="#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransportMode</span></code></a> class manages various aspects of transportation modes, including their <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a> and <a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>. Electric mode is a specific class abstracted to manage electric vehicles and calls the electricity module to manage the impacts and emissions associated.</p>
+<p><a class="reference internal" href="#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransportMode</span></code></a> class manages various aspects of transportation modes, including their <a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a> and <a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>. <a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode" title="pod_lca.transportation.ElectricTransportMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricTransportMode</span></code></a> is a specific class abstracted to manage electric vehicles and calls the electricity module to manage the impacts and emissions associated.</p>
 <hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.transportation.TransportMode">
@@ -179,7 +180,7 @@
 <dd><p>The name of the transportation mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>{'Truck', 'E_Truck', 'Rail', 'Barge' 'Ocean', 'Air'}</p>
+<dd class="field-odd"><p>{'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}</p>
 </dd>
 </dl>
 </dd></dl>
@@ -201,7 +202,7 @@
 <dd><p>Impacts from the transportation mode, per unit of declared quantity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em></em></p>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -212,7 +213,7 @@
 <dd><p>Emissions from the transportation mode, per unit of declared quantity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em></em></p>
+<dd class="field-odd"><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -223,7 +224,7 @@
 <dd><p>The declared unit corresponding to inventories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em></em></p>
+<dd class="field-odd"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -257,15 +258,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mode_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- the name of the transportation mode (e.g., 'Truck', 'Rail').</p></li>
-<li><p><strong>efficiency</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- the efficiency level (e.g., 1, 2, 3).</p></li>
+<li><p><strong>mode_name</strong> (<em>{'Truck'</em><em>, </em><em>'E_Truck'</em><em>, </em><em>'Rail'</em><em>, </em><em>'Barge'</em><em>, </em><em>'Ocean'</em><em>, </em><em>'Air'}</em>) -- The name of the transportation mode.</p></li>
+<li><p><strong>efficiency</strong> (<em>{'High'</em><em>, </em><em>'Median'</em><em>, </em><em>'Low'}</em>) -- The efficiency level.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>An instance of the TransportMode class with the specified parameters.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode">TransportMode</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.transportation.TransportMode" title="pod_lca.transportation.TransportMode"><em>TransportMode</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -287,7 +288,7 @@
 <dd><p>Set the name of the transportation mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mode_name</strong> (<em>{'Truck'</em><em>, </em><em>'E_Truck'</em><em>, </em><em>'Rail'</em><em>, </em><em>'Barge' 'Ocean'</em><em>, </em><em>'Air'}</em>) -- The name of the transportation mode.</p>
+<dd class="field-odd"><p><strong>mode_name</strong> (<em>{'Truck'</em><em>, </em><em>'E_Truck'</em><em>, </em><em>'Rail'</em><em>, </em><em>'Barge'</em><em>, </em><em>'Ocean'</em><em>, </em><em>'Air'}</em>) -- The name of the transportation mode.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -409,6 +410,124 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.transportation.</span></span><span class="sig-name descname"><span class="pre">ElectricTransportMode</span></span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode" title="Link to this definition">¶</a></dt>
+<dd><p>Transportation mode using electricity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.location">
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.location" title="Link to this definition">¶</a></dt>
+<dd><p>Location where the electricity consumption occurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.year">
+<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.year" title="Link to this definition">¶</a></dt>
+<dd><p>The year of electricity consumption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.electricity_consumption">
+<span class="sig-name descname"><span class="pre">electricity_consumption</span></span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.electricity_consumption" title="Link to this definition">¶</a></dt>
+<dd><p>Electricity consumption by the transportation mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.electricity_consumption_units">
+<span class="sig-name descname"><span class="pre">electricity_consumption_units</span></span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.electricity_consumption_units" title="Link to this definition">¶</a></dt>
+<dd><p>Unit corresponding to electricity consumption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.set_location">
+<span class="sig-name descname"><span class="pre">set_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.set_location" title="Link to this definition">¶</a></dt>
+<dd><p>Set the location of electricity consumption (i.e., where the vehcile is charged).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Location of electricity consumption.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.get_location">
+<span class="sig-name descname"><span class="pre">get_location</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.get_location" title="Link to this definition">¶</a></dt>
+<dd><p>Get the location of electricity consumption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Location of electricity consumption.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="location_module.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.get_electricity_consumption">
+<span class="sig-name descname"><span class="pre">get_electricity_consumption</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.get_electricity_consumption" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the electricity consumption of the transportation mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> -- Electricity consumption.</p></li>
+<li><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Unit</span></code></a> -- Corresponding unit of measurement.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.get_electricity_inventories">
+<span class="sig-name descname"><span class="pre">get_electricity_inventories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.get_electricity_inventories" title="Link to this definition">¶</a></dt>
+<dd><p>Get electricity impacts and emission for the transportation mode.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>Uses 'National' average electricity consumption, at the 'MidCase' scenario for the calculation of the electricity impacts.</p></li>
+</ol>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a> -- Unit electricity impacts.</p></li>
+<li><p><a class="reference internal" href="impact_records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a> -- Unit electricity emissions.</p></li>
+<li><p><a class="reference internal" href="units.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><code class="xref py py-class docutils literal notranslate"><span class="pre">Unit</span></code></a> -- Corresponding electricity supply unit.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.transportation.ElectricTransportMode.set_inventory_records">
+<span class="sig-name descname"><span class="pre">set_inventory_records</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.transportation.ElectricTransportMode.set_inventory_records" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit inventory records of impacts and emissions for the transportation mode.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -449,6 +568,18 @@
 <li><a class="reference internal" href="#pod_lca.transportation.TransportMode.set_inventory_records"><code class="docutils literal notranslate"><span class="pre">TransportMode.set_inventory_records()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.location"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.location</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.year"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.year</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.electricity_consumption"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.electricity_consumption</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.electricity_consumption_units"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.electricity_consumption_units</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.set_location"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.set_location()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.get_location"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.get_location()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.get_electricity_consumption"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.get_electricity_consumption()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.get_electricity_inventories"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.get_electricity_inventories()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.transportation.ElectricTransportMode.set_inventory_records"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.set_inventory_records()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -464,13 +595,13 @@
             <div class="left">
                 
                 <a href="logistics_link.html">
-                    <span class="icon">&lt;</span><span>Logistics Link</span></a>
+                    <span class="icon">&lt;</span><span>Logistics Leg</span></a>
                 
             </div>
 
             <div class="right">
                 
-                    <a href="end_of_life.html"><span>End-of-life</span><span class="icon">&gt;</span></a>
+                    <a href="transport_datasets.html"><span>Transport Datasets</span><span class="icon">&gt;</span></a>
                 
             </div>
         </div>

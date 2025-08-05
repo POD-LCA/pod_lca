@@ -19,7 +19,7 @@ class TransportationLeg:
 
     Attributes
     ----------
-    manager : pod_lca.transportation.TransportationManager
+    manager : ~pod_lca.transportation.TransportationManager
         Refers to the transportation manager.
     name : str
         Name of the logistic leg.
@@ -35,7 +35,7 @@ class TransportationLeg:
         shipping destination location.
     shipping_org : ~pod_lca.location.Location
         shipping origin location.
-    mode : ~pod_lca.transportation.TransportationMode
+    mode : ~pod_lca.transportation.TransportMode
         transportation mode.
     impacts : ~pod_lca.impacts.Impacts
         Environmental impacts of the transportation leg.
@@ -76,11 +76,11 @@ class TransportationLeg:
 
         Parameters
         ----------
-        good : ~pod_lca.material_screening.Product
+        good : ~pod_lca.materials_screening.Product
             Product being transported.
         manager :  ~pod_lca.transportation.TransportationManager
             The project to which the transportation leg belongs.
-        name : str, optional
+        name : str
             Name of the transportation leg (default is None).
 
         Returns
@@ -108,14 +108,14 @@ class TransportationLeg:
 
         Parameters
         ----------
-        project : pod_lca.transportation.TransportationManager
+        project : ~pod_lca.transportation.TransportationManager
             The project to which the transportation leg belong.
         """
         self.manager = manager
 
         return self
 
-    def set_name (self, name):
+    def set_name(self, name):
         """ Set the name of the transportation leg.
 
         Parameters
@@ -132,7 +132,7 @@ class TransportationLeg:
 
         Parameters
         ----------
-        material : ~pod_lca.material_screening.Product
+        material : ~pod_lca.materials_screening.Product
             Material being transported.
         """
         self.material = material
@@ -151,15 +151,20 @@ class TransportationLeg:
         ----------
         travel_dist : float
             Travel distance of the transportation leg.
-        dist_unit : ~pod_lca.units.Unit, optional
+        dist_unit : ~pod_lca.units.Unit
             Unit of the travel distance. Defualt is KILOMETER
-        return_trip_factor : float, optional
+        return_trip_factor : float
             Return trip factor of the transportation leg.
+
+        Raises
+        ------
+        TypeError
+            Travel distance is not a number.
         """
         if isinstance(travel_dist, (float, int)):
             self.travel_dist = travel_dist
         else:
-            raise ValueError("Travel distance must be a number.")
+            raise TypeError("Travel distance must be a number.")
 
         self.dist_unit = KILOMETER if dist_unit is None else dist_unit
         self.return_trip_factor = return_trip_factor
@@ -173,13 +178,18 @@ class TransportationLeg:
         ----------
         shipping_dest : ~pod_lca.location.Location
             Name of the shipping destination location.
+
+        Raises
+        ------
+        TypeError
+            Shipping destination not recognized.
         """
         if shipping_dest is None:
             self.shipping_destination = None
         elif isinstance(shipping_dest, Location):
             self.shipping_destination = shipping_dest
         else:
-            raise ValueError("Shipping destination must be a Location object.")
+            raise TypeError("Shipping destination must be a Location object.")
 
         return self
 
@@ -190,22 +200,28 @@ class TransportationLeg:
         ----------
         shipping_org : ~pod_lca.location.Location
             Name of the shipping origin location.
+
+        Raises
+        ------
+        TypeError
+            Shipping origin not recognized.
         """
         if shipping_org is None:
             self.shipping_origin = None
         elif isinstance(shipping_org, Location):
             self.shipping_origin = shipping_org
         else:
-            raise ValueError("Shipping origin must be a Location object.")
+            raise TypeError("Shipping origin must be a Location object.")
 
         return self
 
     def set_mode(self, mode=None, efficiency=None):
         """ Set the transportation mode of the transportation leg.
 
-        Notes
-        -----
-        1. Prefix 'E_' in the mode_name is used as the identifier of an electricity based transportation mode.
+        Note
+        ----
+        1. Prefix `'E_'` in the mode_name is used as the identifier of an electricity based transportation mode.
+        
         2. Electric vehicles takes electricity based on origin location.
         
         Parameters
@@ -253,7 +269,7 @@ class TransportationLeg:
 
         Returns
         -------
-        pod_lca.transportation.TransportationManager
+        ~pod_lca.transportation.TransportationManager
             The project of the transportation leg.
         """
         return self.manager 
@@ -313,8 +329,8 @@ class TransportationLeg:
 
         Returns
         -------
-        str
-            Name of the shipping destination location.
+        ~pod_lca.location.Location
+            Shipping destination location.
         """
         return self.shipping_destination
 
@@ -374,7 +390,7 @@ class TransportationLeg:
 
         Returns
         -------
-        ~pod_lca.impacts.Emissionbs
+        ~pod_lca.impacts.Emissions
             The emissions of the transportation leg.
         """
         self.update_inventory_records()
@@ -395,6 +411,11 @@ class TransportationLeg:
     # ================================ 
     def update_inventory_records(self):
         """ Compute and update all invetories.
+
+        Raises
+        ------
+        ImportError
+            Incompatible units.
         """
         inventories_declared_unit = self.get_mode().get_declared_unit()
         computed_unit = self.get_material().get_unit() * self.get_dist_unit()

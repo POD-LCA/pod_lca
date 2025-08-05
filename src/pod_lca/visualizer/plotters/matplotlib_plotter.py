@@ -141,7 +141,7 @@ class MatplotlibPlotter(AbstractPlotter):
         x_data : list
             List of x values.
         y_data : list
-            f(x) for all the y values.
+            `f(x)` for all the `y` values.
         label : str
             label for the function plotted
         color : str
@@ -169,7 +169,7 @@ class MatplotlibPlotter(AbstractPlotter):
         colors : list of str or tuples
             Colors of named, hex string, or RGB tuples.
         """
-        self.ax.stackplot( x_data, *y_data, labels=labels, colors=colors)
+        self.ax.stackplot(x_data, *y_data, labels=labels, colors=colors)
 
     def draw_boxplot(self, data):
         """ Draw a boxplot.
@@ -226,7 +226,7 @@ class MatplotlibPlotter(AbstractPlotter):
         x_label : str
             X-axis label.
         y_label : str
-            Y-axis labe
+            Y-axis label.
         """
         self.ax.set_xlabel(x_label)
         self.ax.set_ylabel(y_label)
@@ -244,6 +244,11 @@ class MatplotlibPlotter(AbstractPlotter):
             List of labels, if patches are being used.
         title : str
             Title of the legend.
+
+        Raises
+        ------
+        IndexError
+            Number of colors and labels does not match.
         """
         if (colors is None) and (labels is None):
             self.ax.legend(title=title)
@@ -252,7 +257,7 @@ class MatplotlibPlotter(AbstractPlotter):
                 legend_patches = [Patch(color=colors[i], label=labels[i]) for i in range(len(labels))]
                 self.ax.legend(handles=legend_patches, title=title)
             else:
-                raise IndexError("Number of colors and labels should match")
+                raise IndexError("Number of colors and labels does not match.")
 
     def set_xticks(self, ticks, labels=None):
         """Set and label ticks along the x-axis of the plot.

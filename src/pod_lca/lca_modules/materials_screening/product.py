@@ -29,20 +29,19 @@ class Product(Master):
     production_year : int
         The year the product was produced.
     electricity : dict
-        Dictionary containing A3 electricity impacts of the production of the material. 
-            'from_database' contains unit electricity impacts retrieved from the database; 
-            'by_location' contains corresponding electricity impacts by location, retrieved from electricity sub-package. 
-            '_current' indicates which of the above is in use for impacts.
-            '_tag' prefix used in the database to identify grouped impacts of electricity.
+        Dictionary containing A3 electricity impacts of the production of the material. Keys as follows;
+
+        - `'from_database'`: contains unit electricity impacts retrieved from the database; 
+        - `'by_location'`: contains corresponding electricity impacts by location, retrieved from electricity sub-package. 
+        - `'_current'`: indicates which of the above is in use for impacts.
+        - `'_tag'`: prefix used in the database to identify grouped impacts of electricity.
     weight : float
         Mass of the product.
     weight_unit : str
-        Unit of measurement of mass. Default is set as 'kg'.
+        Unit of measurement of mass.
     density : float
-        The mass of product in weight units per unit of product's unit of measurement.
-    trnasporter : TransportationProcess Obj.
-        Transportation process, if the product is being transported, else None.
-    sctg_code : int
+        The mass of product in weight units per unit of product's unit of measurement. Default is 1.0.
+    sctg_code : str
         Standard Classification of Transported Goods (SCTG) code.
     mineral_carbonation_potential : bool
         Mineral carbonation potential of the product.
@@ -74,7 +73,6 @@ class Product(Master):
     # ================================
     def set_qty(self, qty):
         """ Update the qty of the product.
-            This will also re-calculate the corresponding impact quantities.
             
         Parameters
         ----------
@@ -93,7 +91,7 @@ class Product(Master):
         
         Parameters
         ----------
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             Unit of measurement.
         """
         super().set_unit(unit)
@@ -124,8 +122,8 @@ class Product(Master):
 
         Parameters
         ----------
-        str
-            Unit of measurement of mass.
+        unit : ~pod_lca.units.Unit
+            Unit of measurement. of mass.
         """
         self.weight_unit = unit
 
@@ -162,7 +160,7 @@ class Product(Master):
         ----------
         travel_dist : float
             Transportation distance for goods
-        dist_unit : Unit Obj
+        dist_unit : ~pod_lca.units.Unit Obj
             Unit of measurement of distances.
         transportation_scenario : str
             Transportation scenario considered.
@@ -199,7 +197,7 @@ class Product(Master):
         
         Parameters
         ----------
-        source : str
+        source : {'from_database', 'by_location'}
             Source of electricity inventories data: 'from_database', or 'by_location'.
         """
         if source in [key for key in self.electricity if not key.startswith('_')]:
@@ -245,11 +243,11 @@ class Product(Master):
         ----------
         qty : float
             Quantity of accelerated carbonation uptake.
-        unit : Unit Obj
+        unit : ~pod_lca.units.Unit
             Unit of accelerated carbonation uptake.
-        per : dict or Unit Obj
+        per : dict or ~pod_lca.units.Unit
             Parent quantity for which the mineral carbon intensity is declared.
-            If dict, {'per': {'qty': (int or float), 'unit': (Unit Obj.)}}
+            If dict, {'per': {'qty': (:class:`int` or :class:`float`), 'unit': (:class:`~pod_lca.units.Unit`)}}
             If Unit object only, the quantity is taken as 1.0; 
             If None, taken as per unit of parent objects declared unit.
         """
@@ -313,7 +311,7 @@ class Product(Master):
         
         Returns
         -------
-        Electricity Obj.
+        ~pod_lca.electricity.Electricity
             Electricity used in the production of the item.
         """
         return self.electricity[self.get_electricity_source()]
@@ -362,7 +360,7 @@ class Product(Master):
         
         Returns
         -------
-        str
+        int or float
             Mass of the product.
         """
         return self.weight
@@ -373,7 +371,7 @@ class Product(Master):
 
         Returns
         -------
-        str
+        ~pod_lca.units.Unit
             Unit of measurement of mass of the product.
         """
         return self.weight_unit
@@ -394,7 +392,7 @@ class Product(Master):
 
         Returns
         -------
-        List of ~pod_lca.transportation.LogisticLink
+        list of ~pod_lca.transportation.TransportationLeg
             Transportation legs the product is subject to.
         """
         transportation_manager = self.get_model().get_transportation_manager()
@@ -418,6 +416,11 @@ class Product(Master):
         ----------
         digits : int
             Significant digits of the Standard Classification of Transported Goods (SCTG) code of the material
+
+        Raises
+        ------
+        ValueError
+            SCTG code length shorter that digits requested.
         """
         if not self.sctg_code is None:
             if digits <= len(str(self.sctg_code)):
@@ -429,8 +432,13 @@ class Product(Master):
 
     def get_eol_manager(self):
         """ Return the place where end-of-life transport dataset reside.
+
+        Returns
+        -------
+        ~pod_lca.materials_screening.Project
+            End-of-life transport data for materials screening project is at project level.
         """
-        return self.get_model()
+        return self.get_project()
     
     # ================================
     # Methods
@@ -440,7 +448,8 @@ class Product(Master):
 
         Raises
         ------
-        ImportError : Incompatible units of Master object and database entry.
+        ValueError
+            Mineral carbonation potential not recognized.
         """
         super().update_inventory_records()
         self.update_electricity_records()
@@ -466,7 +475,12 @@ class Product(Master):
         return self
     
     def update_electricity_records(self):
-        """ Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of 'Electricity_', 'electricity_', 'elec_', or 'Elec_'.
+        """ Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of **'Electricity_'**, **'electricity_'**, **'elec_'**, or **'Elec_'**.
+        
+        Raises
+        ------
+        KeyError
+            Inventory type not recognized.
         """
         if self.get_impact_database_entry() is not None:
             if self.get_electricity_database_tag() is None:
@@ -542,7 +556,7 @@ class Product(Master):
 
 
 class Fuel(Product):
-    """ Fuel product object, inheriting from the product object.
+    """ Fuel product.
 
     Attributes
     ----------

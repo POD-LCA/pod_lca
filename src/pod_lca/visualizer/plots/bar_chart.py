@@ -28,10 +28,10 @@ class BarChart(AbstractPlot):
         Parameters
         ----------
         data : dict
-            Data to be plotted, given in one of the following dictionaries:
-            standard bar chart - {category (str) : value (float)};
-            grouped bar chart - {category (str) : {group (str) : value (float)}};
-            grouped bar chart with components - {category (str) : {group (str) : {component (str) : value (float)}}}.
+            Data to be plotted, given in one of the following dictionaries: \n
+            - standard bar chart - {**category** (:class:`str`) : **value** (:class:`float`)};
+            - grouped bar chart - {**category** (:class:`str`) : {group (:class:`str`) : value (:class:`float`)}};
+            - grouped bar chart with components - {category (:class:`str`) : {group (:class:`str`) : {component (:class:`str`) : value (:class:`float`)}}}.
         title : str
             Title of the barchart.
         x_label : str

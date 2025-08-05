@@ -7,14 +7,14 @@ from pod_lca.units import KILOMETER
 from pod_lca.units import M_TON
 from pod_lca.units import WATT_HOUR
 from pod_lca.location import Location
-from pod_lca.material_screening import Product
+from pod_lca.materials_screening import Product
 from pod_lca.transportation import USDomesticTransportationManager
 from pod_lca.transportation import ElectricTransportMode
 from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
+from pod_lca.utilities import DataExporter
 
-
-output_file = "save_files\\transportation_dataset_temp.csv"
+output_file = "save_files\\transportation_dataset_domestic.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 
@@ -38,7 +38,6 @@ emission_inventories = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES'
 
 last_save_time = time.time()
 
-output_dict = {}
 sequence_no = 1
 for sctg_code, material in Material_names.items():
     material = material['material']
@@ -49,6 +48,7 @@ for sctg_code, material in Material_names.items():
     product.set_unit(unit)
     product.set_sctg_code(sctg_code)
 
+    output_dict = {}
     for origin_state in tqdm(origin_states):
         for destination_state in destination_states:
             origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
@@ -87,29 +87,35 @@ for sctg_code, material in Material_names.items():
                             electricity_consumption = 'NO DATA'
 
                         output_dict[str(sequence_no)] = {  
-                            'material': material,
+                            'SCTG description': material,
                             'scenario': scenario,
                             'destination state':destination_state, 
                             'origin state': origin_state,
+                            'FAF foreign zone': 'N/A',
+                            'dms_orig_port': 'N/A',
                             'SCTG code': product.get_sctg_code(digits=2), 
                             'domestic mode': travel_mode, 
                             'domestic mode efficiency': eff,
                             'domestic distance (km)': distance,
+                            'foreign mode': 'N/A', 
+                            'foreign mode efficiency': 'N/A',
+                            'foreign distance (km)': 'N/A',
                             'return trip factor': RTT,
                             f'electricity consumption ({electricity_report_unit.get_standard_notation()})': electricity_consumption}
                         
                         for impact_cat in impact_categories:
-                            output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + ')'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
+                            output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + '/ tonne)'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
                         for emission in emission_inventories:
-                            output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + ')'] = 'NO DATA' if emissions is None else  emissions.get_record(emission)
+                            output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + '/ tonne)'] = 'NO DATA' if emissions is None else  emissions.get_record(emission)
+
+                        for impact_cat in impact_categories:
+                            output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + '/ km * tonne)'] = 'NO DATA' if impacts is None else transport_leg.get_mode().get_unit_impacts().get_record(impact_cat)
+                        for emission in emission_inventories:
+                            output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + '/ km *  tonne)'] = 'NO DATA' if emissions is None else  transport_leg.get_mode().get_unit_emissions().get_record(emission)
 
                         sequence_no += 1
 
-                        # Periodically save to file every 10 minutes
-                        current_time = time.time()
-                        if current_time - last_save_time >= 600: 
-                            DataImporter.dict_to_csv(output_dict, output_file)
-                            print(f"\n Backup written at {time.strftime('%H:%M:%S')}")
-                            last_save_time = current_time
+    DataExporter.dict_to_csv(output_dict, output_file, append=True)
+    print(f"\n Backup written at {time.strftime('%H:%M:%S')}")
 
-DataImporter.dict_to_csv(output_dict, output_file)
+DataExporter.dict_to_csv(output_dict, output_file)

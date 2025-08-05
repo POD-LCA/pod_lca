@@ -28,7 +28,7 @@ class AbstractPlotter:
     def clear_plot(self):
         """ Clear the plot.
         """
-        return self
+        pass
 
     def show(self):
         """Display the plot.
@@ -41,7 +41,7 @@ class AbstractPlotter:
     def draw_bar(self, pos, height, width, bottom=0., label='', label_type='center'):
         """ draw a bar in a bar chart.
         """
-        return self
+        pass
 
     # ================================
     # Set plot components
@@ -49,42 +49,42 @@ class AbstractPlotter:
     def set_title(self, title):
         """ Set title of the plot.
         """
-        return self
+        pass
 
     def set_labels(self, x_label, y_label):
         """Set axis labels of the plot.
         """
-        return self
+        pass
 
     def set_legend(self):
         """Set the legend of the plot.
         """
-        return self
+        pass
 
     def set_xlim(self, min, max):
         """Set limits of the x-axis of the plot.
         """
-        return self
+        pass
 
     def set_ylim(self, min, max):
         """Set limits of the y-axis of the plot.
         """
-        return self
+        pass
         
     def set_xticks(self, tick, labels):
         """Set and label ticks along the x-axis of the plot.
         """
-        return self
+        pass
     
     def set_yticks(self, tick, labels):
         """Set and label ticks along the y-axis of the plot.
         """
-        return self
+        pass
     
     def set_grid(self):
         """Set grid lines of the plot.
         """
-        return self
+        pass
 
 
 if __name__ == '__main__':

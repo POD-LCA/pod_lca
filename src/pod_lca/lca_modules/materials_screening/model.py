@@ -37,14 +37,14 @@ class Model:
         Processes in the model.
     products : list of ~pod_lca.materials_screening.Product
         Products in the model.
-    transportation_manager : ~pod_lca.transportation.ProjectLogisticManager
+    transportation_manager : ~pod_lca.transportation.TransportationManager
         Logistics manager for the model.
     impacts : dict
-        :class:`~pod_lca.impacts.Impacts` objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
+        Impacts of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Impacts`}
     emissions : dict
-        :class:`~pod_lca.impacts.Emissions` objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
+        Emissions of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Emissions`}
     carbon_storage :
-        :class:`~pod_lca.impacts.CarbonStorage` objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.CarbonStorage`}
+        Carbon storage of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.CarbonStorage`}
     """
 
     def __init__(self):
@@ -119,7 +119,12 @@ class Model:
         name : str
             Name of the model to be created.   
         project : ~pod_lca.materials_screening.Project
-            Project to which the model belong.    
+            Project to which the model belong.
+
+        Raises
+        ------
+        TypeError
+            Item type not recognized.
         """        
         model = cls()
 
@@ -147,16 +152,10 @@ class Model:
                     item = model.add_product(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Process':
                     item = model.add_process(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
-                elif item_type == 'Transportation':
-                    item = model.add_transportation_process(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Energy':
                     item = model.add_energy(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
                 elif item_type == 'Electricity':
-                    item = model.add_electricity(name, life_cycle_stage, qty, UNITS_MAP[unit])
-                elif item_type == 'Emission':
-                    item = model.add_emission(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)
-                elif item_type == 'Waste':
-                    item = model.add_waste(name, life_cycle_stage, qty, UNITS_MAP[unit], database_item)                    
+                    item = model.add_electricity(name, life_cycle_stage, qty, UNITS_MAP[unit])                
                 else:
                     raise TypeError(f"Item type of {item_type} is undefined.")
 
@@ -223,6 +222,11 @@ class Model:
         ----------
         logistic_type : {'local', 'global'}
             Transportation scope of the model.
+
+        Raises
+        ------
+        ValueError
+            Logistic type not recognized.
         """
         if self.get_project().get_location() is None:
             self.transportation_manager = TransportationManager.new('transportation')
@@ -305,7 +309,7 @@ class Model:
         Returns
         -------
         dict
-            :class:`~pod_lca.impacts.Impacts` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
+            Impacts of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Impacts`}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
@@ -320,7 +324,7 @@ class Model:
         Returns
         -------
         dict
-            :class:`~pod_lca.impacts.Emissions` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
+            Emissions of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Emissions`}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
@@ -335,7 +339,7 @@ class Model:
         Returns
         -------
         dict
-            :class:`~pod_lca.impacts.CarbonStorage` categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.CarbonStorage`}
+            Carbon Storage of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.CarbonStorage`}
         """
         for item in self.get_all_items():
             item.update_inventory_records()
@@ -426,7 +430,7 @@ class Model:
 
         Returns
         -------
-        ~pod_lca.materials_screening.Product
+        ~pod_lca.materials_screening.Fuel
             Energy product object created.
         """
         n = len(self.get_products())
@@ -452,7 +456,7 @@ class Model:
     
         Returns
         -------
-        ~pod_lca.materials_screening.Product
+        ~pod_lca.materials_screening.Electricity
             Electricity object created.
         """
         n = len(self.get_products())
@@ -520,6 +524,11 @@ class Model:
         -------
         float
             Total impact value.
+
+        Raises
+        ------
+        AttributeError
+            Impact category not recognized.
         """
         impacts_dict = self.get_impacts()
         impacts_lst = []
@@ -551,7 +560,8 @@ class Model:
 
         Raises
         ------
-            AttributeError : impact category doe not exist in the current project
+        AttributeError
+            impact category doe not exist in the current project
         """
         impacts_dict = self.get_impacts()
 
@@ -596,6 +606,11 @@ class Model:
         -------
         dict
             Impacts dictionary where {**Life Cycle stage** (:class:`str`) : **quantity of impact** (:class:`float`)}.
+        
+        Raises
+        ------
+        KeyError
+            Impact category not recognized.
         """
         IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
         for impact_cat in config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'].keys():

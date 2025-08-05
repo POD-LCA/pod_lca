@@ -17,15 +17,15 @@ class TransportMode:
     ----------
     parent : ~pod_lca.transportation.TransportationLeg 
         Transportation leg to which the transportation mode correspond to.
-    mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge' 'Ocean', 'Air'}
+    mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
         The name of the transportation mode.
     efficiency: {'High', 'Median', 'Low'}
         The efficiency level.
-    unit_impacts : ~pod_lca.impacts.Impacts Obj.
+    unit_impacts : ~pod_lca.impacts.Impacts
         Impacts from the transportation mode, per unit of declared quantity.
-    unit_emissions : ~pod_lca.impacts.Emissions Obj.
+    unit_emissions : ~pod_lca.impacts.Emissions
         Emissions from the transportation mode, per unit of declared quantity.
-    declared_unit : ~pod_lca.units.Unit Obj.
+    declared_unit : ~pod_lca.units.Unit
         The declared unit corresponding to inventories.
     faf_mode: int
         FAF mode code for the transportation mode.
@@ -57,14 +57,14 @@ class TransportMode:
 
         Parameters
         ----------
-        mode_name: str
-            the name of the transportation mode (e.g., 'Truck', 'Rail').
-        efficiency: int
-            the efficiency level (e.g., 1, 2, 3).
+        mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
+            The name of the transportation mode.
+        efficiency: {'High', 'Median', 'Low'}
+            The efficiency level.
 
         Returns
         -------
-        TransportMode
+        ~pod_lca.transportation.TransportMode
             An instance of the TransportMode class with the specified parameters.
         """
         mode = cls()
@@ -96,7 +96,7 @@ class TransportMode:
 
         Parameters
         ----------
-        mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge' 'Ocean', 'Air'}
+        mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
             The name of the transportation mode.
         """
         self.mode_name = mode_name

@@ -10,7 +10,7 @@ import pickle
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import TranportationModeImpactsDatabase
-from . import TransportationLeg, ForeignLeg, DomesticLeg, CFSDataset
+from . import TransportationLeg, ForeignLeg, DomesticLeg
 from ...units import KILOMETER
 
 
@@ -22,7 +22,7 @@ class TransportationManager:
     name : str
         name of the project.
     transport_legs : dict
-        Dictionary mapping products to their corresponding transportation legs.
+        Dictionary mapping products to their corresponding transportation legs: {**product** (:class:`~pod_lca.materials_screening.Product`) : **transport leg** (:class:`~pod_lca.transportation.TransportationLeg`)}.
     mode_impact_database : ~pod_lca.impacts.TranportationModeImpactsDatabase
         Database containing unit impacts for transportation modes.
     """
@@ -84,6 +84,11 @@ class TransportationManager:
         ----------
         database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
             Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+        
+        Raises
+        ------
+        TypeError
+            Database input not recognized
         """
         if isinstance(database, TranportationModeImpactsDatabase):
             self.mode_impact_database = database
@@ -156,8 +161,8 @@ class TransportationManager:
 
         Returns
         -------
-        list of ~pod_lca.transportation.TransportationLeg
-            List of transportation legs.        
+        ~pod_lca.transportation.TransportationLeg
+            Transportation leg.        
         """
         if product in self.transport_legs:
             return self.transport_legs[product]
@@ -194,6 +199,11 @@ class TransportationManager:
         -------
         ~pod_lca.impacts.Impacts
             Impacts of the project.
+
+        Raises
+        ------
+        ValueError
+            Product not found in the project.
         """
         if product is None:
             impact = Impacts.from_parent(self)
@@ -217,13 +227,18 @@ class TransportationManager:
 
         Parameters
         ----------
-        product : ~pod_lca.materials_screening.Product or list of ~pod_lca.materials_screening.Product
+        product : ~pod_lca.materials_screening.Product
             Product for which the transportation impacts rquested
 
         Returns
         -------
         ~pod_lca.impacts.Emissions
             Emissions of the product/process.
+
+        Raises
+        ------
+        ValueError
+            Product not found in the project.        
         """
         if product is None:
             impact = Emissions.from_parent(self)
@@ -270,14 +285,19 @@ class TransportationManager:
             Shipping origin
         transportation_scenario : {'Local', 'Regional', 'Regional_c', 'National', 'Global'}
             Transportation scenario considered.
-        distance_unit : ~pod_lca.units.Unit Obj
+        distance_unit : ~pod_lca.units.Unit
             Unit of measurement of distances.
         return_trip_factor : float
             Return trip factor.
-        mode_name : {'Truck', 'E_Truck', 'Rail', 'Barge','Ocean', 'Air'}
+        mode_name : {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
             Name of the transportation mode.
         mode_efficiency : {'High', 'Median', 'Low'}
             Efficiency of the transportation mode.
+
+        Raises
+        ------
+        ValueError
+            Transport scenario not recognized.
         """
         self.transport_legs[good] = []
 

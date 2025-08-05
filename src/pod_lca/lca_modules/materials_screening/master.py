@@ -24,22 +24,32 @@ class Master:
         Name of the product/process.
     life_cycle_stage : {'A1', 'A3'}
         Life cycle stage corresponding to the product/process.
-    impacts : ~pod_lca.impacts.Impacts
-        Impacts object corresponding to the product/process.
-    emissions : ~pod_lca.impacts.Emissions
-        Emissions Inventory object corresponding to the product/process.
-    carbon_storage : ~pod_lca.impacts.CarbonStorage
-        Carbon storage corresponding to the product/process.
     impact_database_entry : str
         Flow name corresponding to the database entry which gives the unit impact of the product.
     qty : float
         Quantity of the product/process.
     unit : ~pod_lca.units.Unit
         Unit of measurement corresponding to the quantity of the product/process.
+    impacts : ~pod_lca.impacts.Impacts
+        Total impacts of the product/process.
+    emissions : ~pod_lca.impacts.Emissions
+        Total emissions of the product/process.
+    carbon_storage : ~pod_lca.impacts.CarbonStorage
+        Total carbon storage of the product/process.
+    unit_impacts : ~pod_lca.impacts.Impacts
+        Unit impacts of the product/process.
+    unit_emissions : ~pod_lca.impacts.Emissions
+        Unit emissions of the product/process.
+    unit_carbon_storage : ~pod_lca.impacts.CarbonStorage
+        Carbon storage corresponding to the product/process.
+    inventories_declared_unit : ~pod_lca.units.Unit
+        Declared unit of impacts
+    inventories_declared_qty : float
+        Declared quantity of impacts
     is_hotspot : bool
         True, if the object is a hotspot in the model.
     data_distribution : dict
-        Data distributions corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}.
+        Data distributions corresponding to attributes: {**attr** (:class:`str`): :class:`~pod_lca.uncertainty.DataDistribution`}.
     pedigree_score : ~pod_lca.uncertainty.PedigreeScore
         Data quality indicator for the object
     """
@@ -136,7 +146,7 @@ class Master:
     # ================================
     # Setters
     # ================================
-    def set_id(self, id:int):
+    def set_id(self, id):
         """ Set the product/process id.
     
         Parameters
@@ -193,7 +203,7 @@ class Master:
 
         return self
 
-    def set_impact_database_entry(self, database_item:str):
+    def set_impact_database_entry(self, database_item):
         """ Sets the database (impacts) entry corresponding to the item.
             This method will also update the corresponding impact quanitities.
         
@@ -236,7 +246,7 @@ class Master:
 
         return self
         
-    def set_qty(self, qty:float):
+    def set_qty(self, qty):
         """ Update the qty of the item.
             This will also re-calculate the corresponding impact quantities.
             
@@ -244,6 +254,11 @@ class Master:
         ----------
         qty : float
             Production quantity.
+
+        Raises
+        ------
+        TypeError
+            Qunatity should be a number.
         """
         if isinstance(qty, str):
             try:
@@ -262,6 +277,11 @@ class Master:
         ----------
         unit : ~pod_lca.units.Unit
             Unit of measurement.
+
+        Raises
+        ------
+        ValueError
+            Incompatible units.
         """
         if self.get_unit() is None:
             self.unit = unit
@@ -296,6 +316,8 @@ class Master:
         else:
             log(f"Object {type(self)} does not have an attribute {attr}", "Warn")
 
+        return self
+
     def set_pedigree_score(self, pedigree_score):
         """ Set a pedigree score (data quality score) to the Master Obj.
 
@@ -305,6 +327,8 @@ class Master:
             Data quality indicator for the object
         """
         self.pedigree_score = pedigree_score
+
+        return self
 
     # ================================
     # Getters
@@ -421,7 +445,7 @@ class Master:
         Returns
         -------
         dict
-            DataDistribution objects corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}        
+            DataDistribution objects corresponding to attributes: {**attr** (:class:`str`): :class:`~pod_lca.uncertainty.DataDistribution`}        
         """
         return self.data_distributions
     
@@ -435,18 +459,18 @@ class Master:
 
         Returns
         -------
-        DataDistribution Obj.
+        ~pod_lca.uncertainty.DataDistribution
             Data distribution.        
         """
         return self.data_distributions[attr]
     
     def get_pedigree_score(self):
-        """ Get pedigree score of the Master Obj.
+        """ Get pedigree score of the product/process.
 
         Returns
         -------
         dict
-            Distributions Datasets corresponding to attributes: {**attr** (:class:`str`): ~pod_lca.uncertainty.DataDistribution}.
+            Distributions Datasets corresponding to attributes: {**attr** (:class:`str`): :class:`~pod_lca.uncertainty.DataDistribution`}.
         """
         return self.pedigree_score
 
@@ -470,7 +494,8 @@ class Master:
 
         Raises
         ------
-        ImportError : Incompatible units of Master object and database entry.
+        ImportError
+            Incompatible units of Master object and database entry.
         """
         conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit)
 
@@ -494,8 +519,7 @@ class Master:
         Parameters
         ----------
         stage : {'A1', 'A2', 'A3'}
-            Life cycle stage of the product/process.
-            If None, all stages are checked to find the product/process.
+            Life cycle stage of the product/process. If None, all stages are checked to find the product/process.
         """
         impact_obj = self.get_impacts()
         emission_obj = self.get_emissions()

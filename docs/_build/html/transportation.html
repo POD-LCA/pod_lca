@@ -127,8 +127,9 @@
 <li class="toctree-l2"><a class="reference internal" href="electricity_module.html">Electricity</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Transportation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html">Project Logistics Manager</a></li>
-<li class="toctree-l3"><a class="reference internal" href="logistics_link.html">Logistics Link</a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html">Logistics Leg</a></li>
 <li class="toctree-l3"><a class="reference internal" href="transport_mode.html">Transport Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html">Transport Datasets</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="end_of_life.html">End-of-life</a></li>
@@ -183,9 +184,25 @@
 <li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.TransportationManager.load"><code class="docutils literal notranslate"><span class="pre">TransportationManager.load()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USDomesticTransportationManager"><code class="docutils literal notranslate"><span class="pre">USDomesticTransportationManager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USDomesticTransportationManager.dataset"><code class="docutils literal notranslate"><span class="pre">USDomesticTransportationManager.dataset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USDomesticTransportationManager.new"><code class="docutils literal notranslate"><span class="pre">USDomesticTransportationManager.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USDomesticTransportationManager.set_dataset"><code class="docutils literal notranslate"><span class="pre">USDomesticTransportationManager.set_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USDomesticTransportationManager.get_dataset"><code class="docutils literal notranslate"><span class="pre">USDomesticTransportationManager.get_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USDomesticTransportationManager.add_good"><code class="docutils literal notranslate"><span class="pre">USDomesticTransportationManager.add_good()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="logistics_link.html">Logistics Link</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USGlobalTransportationManager"><code class="docutils literal notranslate"><span class="pre">USGlobalTransportationManager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USGlobalTransportationManager.dataset"><code class="docutils literal notranslate"><span class="pre">USGlobalTransportationManager.dataset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USGlobalTransportationManager.new"><code class="docutils literal notranslate"><span class="pre">USGlobalTransportationManager.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USGlobalTransportationManager.set_dataset"><code class="docutils literal notranslate"><span class="pre">USGlobalTransportationManager.set_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USGlobalTransportationManager.get_dataset"><code class="docutils literal notranslate"><span class="pre">USGlobalTransportationManager.get_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="project_logistic_manager.html#pod_lca.transportation.USGlobalTransportationManager.add_good"><code class="docutils literal notranslate"><span class="pre">USGlobalTransportationManager.add_good()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logistics_link.html">Logistics Leg</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.TransportationLeg"><code class="docutils literal notranslate"><span class="pre">TransportationLeg</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.TransportationLeg.manager"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.manager</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.TransportationLeg.name"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.name</span></code></a></li>
@@ -226,6 +243,62 @@
 <li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.TransportationLeg.update_inventory_records"><code class="docutils literal notranslate"><span class="pre">TransportationLeg.update_inventory_records()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg"><code class="docutils literal notranslate"><span class="pre">DomesticLeg</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.transport_scenario"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.transport_scenario</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.set_transport_scenario"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_transport_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.set_material"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_material()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.set_shipping_destination"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_shipping_destination()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.set_shipping_origin"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_shipping_origin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.set_mode"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.set_travel_dist"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.set_travel_dist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.get_transport_scenario"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_transport_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_travel_dist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_return_trip_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.get_dataset"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.DomesticLeg.get_distance_from_datset"><code class="docutils literal notranslate"><span class="pre">DomesticLeg.get_distance_from_datset()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg"><code class="docutils literal notranslate"><span class="pre">ForeignLeg</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.transport_scenario"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.transport_scenario</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.in_project"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.in_project()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.set_transport_scenario"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_transport_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.set_material"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_material()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.set_shipping_destination"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_shipping_destination()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.set_shipping_origin"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_shipping_origin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.set_mode"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.set_travel_dist"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.set_travel_dist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.get_domestic_leg"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_domestic_leg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.get_transport_scenario"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_transport_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_travel_dist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_return_trip_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.get_dataset"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.get_distance_from_dataset"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.get_distance_from_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.ForeignLeg.check_mode_origin_compatibility"><code class="docutils literal notranslate"><span class="pre">ForeignLeg.check_mode_origin_compatibility()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.transport_scenario"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.transport_scenario</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.eol_pathway"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.eol_pathway</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.distance_cut_off"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.distance_cut_off</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.from_object"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.from_object()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_transport_scenario"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_transport_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_eol_pathway"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_eol_pathway()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_material"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_material()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_shipping_destination"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_shipping_destination()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_shipping_origin"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_shipping_origin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_mode"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_cutoff_distance"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_cutoff_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.set_travel_dist"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.set_travel_dist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_transport_scenario"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_transport_scenario()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_travel_dist"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_travel_dist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_return_trip_factor"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_return_trip_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_eol_pathway"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_eol_pathway()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_cutoff_distance"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_cutoff_distance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_dataset"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_dataset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_impact_database"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_impact_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="logistics_link.html#pod_lca.transportation.WasteTransportLeg.get_distance_from_dataset"><code class="docutils literal notranslate"><span class="pre">WasteTransportLeg.get_distance_from_dataset()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="transport_mode.html">Transport Mode</a><ul>
@@ -250,6 +323,44 @@
 <li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode.get_declared_unit"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_declared_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode.get_impact_database"><code class="docutils literal notranslate"><span class="pre">TransportMode.get_impact_database()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.TransportMode.set_inventory_records"><code class="docutils literal notranslate"><span class="pre">TransportMode.set_inventory_records()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.location"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.location</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.year"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.year</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.electricity_consumption"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.electricity_consumption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.electricity_consumption_units"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.electricity_consumption_units</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.set_location"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.set_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.get_location"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.get_location()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.get_electricity_consumption"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.get_electricity_consumption()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.get_electricity_inventories"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.get_electricity_inventories()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_mode.html#pod_lca.transportation.ElectricTransportMode.set_inventory_records"><code class="docutils literal notranslate"><span class="pre">ElectricTransportMode.set_inventory_records()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transport_datasets.html">Transport Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.TransportDataset"><code class="docutils literal notranslate"><span class="pre">TransportDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.TransportDataset.filter_datasets"><code class="docutils literal notranslate"><span class="pre">TransportDataset.filter_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.TransportDataset.get_distance_estimate"><code class="docutils literal notranslate"><span class="pre">TransportDataset.get_distance_estimate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.CFSDataset"><code class="docutils literal notranslate"><span class="pre">CFSDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.CFSDataset.filter_datasets"><code class="docutils literal notranslate"><span class="pre">CFSDataset.filter_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.CFSDataset.get_distance_estimate"><code class="docutils literal notranslate"><span class="pre">CFSDataset.get_distance_estimate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.USGlobalDataset"><code class="docutils literal notranslate"><span class="pre">USGlobalDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.USGlobalDataset.filter_datasets"><code class="docutils literal notranslate"><span class="pre">USGlobalDataset.filter_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.USGlobalDataset.filter_faf"><code class="docutils literal notranslate"><span class="pre">USGlobalDataset.filter_faf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.USGlobalDataset.filter_cfaf"><code class="docutils literal notranslate"><span class="pre">USGlobalDataset.filter_cfaf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.USGlobalDataset.filter_marine"><code class="docutils literal notranslate"><span class="pre">USGlobalDataset.filter_marine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.USGlobalDataset.get_distance_estimate"><code class="docutils literal notranslate"><span class="pre">USGlobalDataset.get_distance_estimate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.EOLTransportDataset"><code class="docutils literal notranslate"><span class="pre">EOLTransportDataset</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.EOLTransportDataset.filter_datasets"><code class="docutils literal notranslate"><span class="pre">EOLTransportDataset.filter_datasets()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="transport_datasets.html#pod_lca.transportation.EOLTransportDataset.get_distance_estimate"><code class="docutils literal notranslate"><span class="pre">EOLTransportDataset.get_distance_estimate()</span></code></a></li>
 </ul>
 </li>
 </ul>

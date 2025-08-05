@@ -27,11 +27,11 @@ class ImpactsDatabase:
     qty_key : str
         Data header corresponding to the quantity of the database entries.
     data : pandas.DataFrame
-        Impact data, with following headings.
-        - **primary_key (str): Name of the impact.
-        - **qty_key** (str): Impacts per unit of measure.
-        - **unit_key** (str): The unit of measure.
-        - **impact category** (float): Quantity of impact.
+        Impact data, with following headings;
+        - **primary_key** (:class:`str`): Name of the impact.
+        - **qty_key** (:class:`str`): Impacts per unit of measure.
+        - **unit_key** (:class:`str`): The unit of measure.
+        - **impact category** (:class:`float`): Quantity of impact.
     """
 
     DATA_IMPORTS = {    
@@ -117,6 +117,11 @@ class ImpactsDatabase:
             Headers of the columns to be imported, other than name, unit, and impact categories.
         multipliers : list of float
             Values of each column of the CSV will be multiplied by these values, in the order given in impact headers first and then additional headers.
+        
+        Raises
+        ------
+        KeyError
+            Category not recognized.
         """
         # map headers
         mapped_headers = []
@@ -202,6 +207,11 @@ class ImpactsDatabase:
             Dictionary of carbon storage {**carbon storage** (:class:`str`): **carbon quantity** (:class:`float`)}.
         additional_data : dict
             Dictionary of additional data {**header** (:class:`str`): **value** (:class:`str` / :class:`float`/ :class:`int`)}.
+        
+        Raises
+        ------
+        KeyError
+            Category not recognized.
         """
         # check input data
         if flow in self.data[self.get_primary_key()].tolist():
@@ -283,7 +293,6 @@ class ImpactsDatabase:
         str
             Name of the database.
         """
-
         return self.name
     
     def get_impact_category_units(self):
@@ -294,7 +303,6 @@ class ImpactsDatabase:
         list of str
             List of units of the impact categories.
         """
-
         units = []
         for key, value in config['setup']['impacts']['IMPACT_CATEGORIES'].items():
             units.append(value['refUnit'])
@@ -309,7 +317,6 @@ class ImpactsDatabase:
         pandas.DataFrame
             Impact data.
         """
-
         return self.data
 
     def get_data_entry(self, flow_name):
@@ -324,8 +331,12 @@ class ImpactsDatabase:
         -------
         pandas.Series
             Databse entry corresponding to the flow.
-        """
 
+        Raises
+        ------
+        ImportError
+            Multiple matching entries.
+        """
         if self.data is not None:
             row_id = self.data.index[self.data[self.get_primary_key()] == flow_name]
             if len(row_id) == 1:

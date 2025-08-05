@@ -39,7 +39,7 @@ class ForeignLeg(TransportationLeg):
             Product being transported.
         project : ~pod_lca.materials_screening.Project
             The project to which the transportation leg belongs.
-        name : str, optional
+        name : str
             Name of the transportation leg (default is None).
 
         Returns
@@ -68,7 +68,9 @@ class ForeignLeg(TransportationLeg):
         Raises
         ------
         ValueError
-            If transportation scenario is not a string or not recognized.
+            Transportation scenario not recognized.
+        TypeError
+            Transportation scenario is not None or a string.
         """
         if transport_scenario is None:
             self.transport_scenario = None
@@ -78,7 +80,7 @@ class ForeignLeg(TransportationLeg):
             else:
                 raise ValueError("Transportation scenario not recognized")
         else:
-            raise ValueError("Transport scenario must be a string.")
+            raise TypeError("Transport scenario must be a string.")
 
         self._invalidate_cache()
         return self
@@ -128,6 +130,11 @@ class ForeignLeg(TransportationLeg):
             Transportation mode of the transportation leg.
         efficiency : {'High', 'Median', 'Low'}
             Efficiency of the transportation mode.
+
+        Raises
+        ------
+        ValueError
+            Transportation mode not recognized.
         """
         if isinstance(mode, TransportMode):
             self.mode = mode
@@ -177,6 +184,11 @@ class ForeignLeg(TransportationLeg):
     # ================================
     def get_domestic_leg(self):
         """ Get the corresponding domestic leg of transportation.
+
+        Returns
+        -------
+        ~pod_lca.transportation.TransportationLeg
+            Domestic transportation leg.
         """
         return self.next
 
@@ -193,8 +205,8 @@ class ForeignLeg(TransportationLeg):
     def get_travel_dist(self):
         """ Get the travel distance of the transportation leg.
 
-        Parameters
-        ----------
+        Returns
+        -------
         float
             travel distance of the transportation leg.
         """
@@ -203,6 +215,8 @@ class ForeignLeg(TransportationLeg):
                           self.get_shipping_origin(), 
                           self.get_mode().get_name(),
                           self.get_mode().get_efficiency(),
+                          self.get_domestic_leg().get_mode().get_name(),
+                          self.get_domestic_leg().get_mode().get_efficiency(),
                           self.get_transport_scenario(), 
                           self.get_dist_unit())
 
@@ -232,6 +246,11 @@ class ForeignLeg(TransportationLeg):
  
     def get_dataset(self):
         """ Get the dataset.
+
+        Returns
+        -------
+        ~pod_lca.transportation.TransportDataset
+            Dataset used.
         """
         return self.get_manager().get_dataset()
     
@@ -250,6 +269,11 @@ class ForeignLeg(TransportationLeg):
         -------
         float
             The distance estimate for the specified scenario.
+
+        Raises
+        ------
+        ValueError
+            The transportation origin and transportation mode are inconsistant.
         """
         dataset = self.get_dataset()
 

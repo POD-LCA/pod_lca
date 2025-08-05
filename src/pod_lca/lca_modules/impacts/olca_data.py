@@ -35,6 +35,11 @@ class openLCA:
         -------
         olca_ipc.Client
             The client object for the openLCA server.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -115,6 +120,11 @@ class openLCA:
         -------
         schema.Ref
             Reference to the product system object.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -139,6 +149,11 @@ class openLCA:
         -------
         schema.ImpactMethod
             The impact method object.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -161,6 +176,13 @@ class openLCA:
         -------
         list
             List of processes reference objects from the openLCA server.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
+        ValueError
+            Invalid uuid.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -194,6 +216,11 @@ class openLCA:
         -------
         dict
             Dictionary of impact results.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -227,19 +254,24 @@ class openLCA:
             The impact from the category.
         qty : float
             The declared quantity of the category.
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             The declared unit of the category.
         max_levels : int
             The maximum number of levels to expand the tree.
 
         Returns
         -------
-        float
+        :class:`float`
             The electricity impact.
-        float   
+        :class:`float`   
             The electricity required sum.
-        Unit Obj.
+        ~pod_lca.units.Unit
             The declared unit of the category.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -290,26 +322,31 @@ class openLCA:
             The impact from the category.
         qty : float
             The declared quantity of the category.
-        unit : Unit Obj.
+        unit : ~pod_lca.units.Unit
             The declared unit of the category.
         max_levels : int
             The maximum number of levels to expand the tree.
         conversion_map: dict
             A mapping for conversion of declared units of a given set of processes (e.g., fuel group unit conversion to energy units)
-            {uuid (str): {'name' : name of the process (str), 
-                            'declared_qty': declared quantity of the process (str or float),
-                            'declared_unit': standard notation of the declared units of the process (str),
-                            'conversion_factor': conversion factor (str or float),
-                            'converted_unit': standard notation of the unit to which the process quantity is converted (str)}}
+            {**uuid** (:class:`str`): {**'name'** : name of the process (:class:`str`), 
+            **'declared_qty'**: declared quantity of the process (:class:`str` or :class:`float`),
+            **'declared_unit'**: standard notation of the declared units of the process (:class:`str`),
+            **'conversion_factor'**: conversion factor (:class:`str` or :class:`float`),
+            **'converted_unit'**: standard notation of the unit to which the process quantity is converted (:class:`str`)}}
 
         Returns
         -------
-        float
+        :class:`float`
             The electricity impact.
-        float   
+        :class:`float`   
             The electricity required sum.
-        Unit Obj.
+        :class:`~pod_lca.units.Unit`
             The declared unit of the category.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -421,6 +458,11 @@ class openLCA:
             The client object for the openLCA server.
         process_list : list
             List of UUIDs of the processess to be tested
+
+        Returns
+        -------
+        olca_ipc.Client
+            The client object for the openLCA server.
         """
         if OLCA_IMPORTED:
             import olca_ipc.utree as utree
@@ -454,14 +496,14 @@ class openLCA:
         
         Parameters
         ----------
-        process_list : list of Schema.Process Obj
+        process_list : list of Schema.Process
             List of processes.
         filter_by : str, int, or list of str, int
             NAICS or ISIC ids of Categories to be filter by.
 
         Returns
         -------
-        list of Schema.Process Obj.
+        list of Schema.Process
             List of processess.
         """
         if not isinstance(filter_by, list):
@@ -497,8 +539,8 @@ class openLCA:
             The client object for the openLCA server.
         path : str
             The path to the zip file.
-        duplicates : str
-            The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
+        duplicates : {overwrite', 'update', 'never'}
+            The action to take if a duplicate item is found. Default is 'overwrite'.
         """
         if not OLCA_IMPORTED:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
@@ -552,8 +594,8 @@ class openLCA:
             The name of the file.
         data : ZipExtFile
             The data from the file.
-        duplicates : str
-            The action to take if a duplicate item is found. Options are 'overwrite', 'update', 'never'.
+        duplicates : {'overwrite', 'update', 'never'}
+            The action to take if a duplicate item is found.
         """
         if file_name.startswith('actors/'):         
             obj = schema.Actor()
@@ -682,18 +724,25 @@ class openLCA:
         impact_method : str
             UUID of the impact method.
         group_by : dict or list of dict
-            Dictionary of group categorization: {'name' : category name (str),
-                                                    'ids' : [category id (int) or product uuid (str)], 
-                                                    'unit': unit to be reported - optional (Unit Obj), 
-                                                    'conversion_map': conversion map - optional (dict)}
+            Dictionary of group categorization: {**'name'** : **category name** (:class:`str`),
+                                                 **'ids'** : [**category id** (:class:`int`) or product uuid (:class:`str`)], 
+                                                 **'unit'**: unit to be reported - optional (:class:`~pod_lca.units.Unit`), 
+                                                 **'conversion_map'**: conversion map - optional (:class:`dict`)}
             Category IDs are from the North American Industry Classification System (NAICS).
             When unit is not given the default unit of the first item in the group is used.
-            Conversion map needs the following keys: 'UUID', 'declared_unit', 'declared_qty', 'conversion_factor', 'converted_unit'.
+            Conversion map needs the following keys: **'UUID'**, **'declared_unit'**, **'declared_qty'**, **'conversion_factor'**, **'converted_unit'**.
         
         Returns
         -------
         dict
             Dictionary of impact results.
+
+        Raises
+        ------
+        ImportError
+            olca-ipc package not installed.
+        ValueError
+            uuids not recognized.
         """
         if OLCA_IMPORTED:
             import olca_ipc.utree as utree

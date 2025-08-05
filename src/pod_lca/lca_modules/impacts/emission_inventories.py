@@ -42,7 +42,7 @@ class Emissions(Records):
         
         Parameters
         ----------
-        parent : ~pod_lca.materials_screening.Master.
+        parent : ~pod_lca.materials_screening.Master
             The product or process object to which this record belong.
         
         Returns
@@ -82,11 +82,16 @@ class Emissions(Records):
         ----------
         time_profile : ~pod_lca.uncertainty.DataDistribution
             Function describing the dynamic emission profile.
+
+        Raises
+        ------
+        TypeError
+            Data distribution type not recognized.
         """
         if isinstance(time_profile, DataDistribution):
             self.temporal_emission_profile = time_profile
         else:
-            raise not NotImplementedError
+            raise TypeError("Data distribution type not recognized.")
 
         return self
 

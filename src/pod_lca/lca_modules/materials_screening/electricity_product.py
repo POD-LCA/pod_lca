@@ -41,6 +41,25 @@ class Electricity(Master):
     # ================================
     @classmethod
     def new(cls, id, name, model, stage, qty, unit):
+        """ Create a new electricity product in a model.
+        
+        Parameters
+        ----------
+        id : int
+            An identification number.
+        name : str
+            Name of the item.
+        model : ~pod_lca.materials_screening.Model
+            Model in which the item is created.
+        stage : {'A1', 'A3'}
+            LCA stage.
+            - 'A1': Raw materials supply.
+            - 'A3': manufacturing.
+        qty : float
+            Quantity of the item
+        unit : ~pod_lca.units.Unit
+            Unit corresponding to the quantity.
+        """
         item = cls()
 
         item.set_id(id)
@@ -159,6 +178,11 @@ class Electricity(Master):
         ----------
         scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
             Electricity consmuption scenario considered.
+
+        Raises
+        ------
+        ValueError
+            Scenario is not recognized.
         """
         self.scenario = scenario
 
@@ -254,13 +278,7 @@ class Electricity(Master):
     # Methods
     # ================================
     def update_inventory_records(self):
-        """ Sets impacts quantities, based on database item asigned to the product/process 
-            and the product/process quantity.
-            If no database entry is asigned, impacts are not updated.
-
-        Raises
-        ------
-        ImportError : Incompatible units of Master object and database entry.
+        """ Sets impacts quantities, based on database item asigned to the product/process and the product/process quantity. If no database entry is asigned, impacts are not updated.
         """
         if not self.get_supplier() is None:
             supplier = self.get_supplier()

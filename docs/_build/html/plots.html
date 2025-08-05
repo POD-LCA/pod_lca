@@ -160,21 +160,31 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlot">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.visualizer.</span></span><span class="sig-name descname"><span class="pre">AbstractPlot</span></span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlot" title="Link to this definition">¶</a></dt>
-<dd><p>An abstract class for specific implementation of graphs and charts.
-A plot is a set of instructions for plotting the graph.</p>
+<dd><p>An abstract class for specific implementation of graphs and charts. A plot is a set of instructions for plotting the graph.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlot.plot">
+<span class="sig-name descname"><span class="pre">plot</span></span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlot.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot" title="pod_lca.visualizer.AbstractPlot"><em>AbstractPlot</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlot.from_plotter">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_plotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plotter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.AbstractPlot.from_plotter" title="Link to this definition">¶</a></dt>
 <dd><p>Create a plot from a plotter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>plotter</strong> (<em>AbstractPlotter Obj.</em>) -- Plotter.</p>
+<dd class="field-odd"><p><strong>plotter</strong> (<a class="reference internal" href="plotters.html#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.AbstractPlotter"><em>AbstractPlotter</em></a>) -- Plotter.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Plot created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>BarChart Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot" title="pod_lca.visualizer.AbstractPlot"><em>AbstractPlot</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -185,13 +195,13 @@ A plot is a set of instructions for plotting the graph.</p>
 <dd><p>Create a plot from an existing plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>plot</strong> (<em>Object</em>) -- Plot created by an AbstractPlotter Obj.</p>
+<dd class="field-odd"><p><strong>plot</strong> (<a class="reference internal" href="#pod_lca.visualizer.AbstractPlot" title="pod_lca.visualizer.AbstractPlot"><em>AbstractPlot</em></a>) -- Reference plot</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Plot created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>BarChart Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot" title="pod_lca.visualizer.AbstractPlot"><em>AbstractPlot</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,7 +212,7 @@ A plot is a set of instructions for plotting the graph.</p>
 <dd><p>Set the plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>plotter</strong> (<em>AbstractPlotter Obj.</em>) -- Plotter.</p>
+<dd class="field-odd"><p><strong>plotter</strong> (<a class="reference internal" href="plotters.html#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.AbstractPlotter"><em>AbstractPlotter</em></a>) -- Plotter.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -216,7 +226,7 @@ A plot is a set of instructions for plotting the graph.</p>
 <dd class="field-odd"><p>Plotter.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>AbstractPlotter Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot" title="pod_lca.visualizer.AbstractPlot"><em>AbstractPlot</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -247,10 +257,13 @@ A plot is a set of instructions for plotting the graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Data to be plotted, given in one of the following dictionaries:
-standard bar chart - {category (str) : value (float)};
-grouped bar chart - {category (str) : {group (str) : value (float)}};
-grouped bar chart with components - {category (str) : {group (str) : {component (str) : value (float)}}}.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>Data to be plotted, given in one of the following dictionaries:</p>
+<ul>
+<li><p>standard bar chart - {<strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : <strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)};</p></li>
+<li><p>grouped bar chart - {<strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : {group (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : value (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}};</p></li>
+<li><p>grouped bar chart with components - {category (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : {group (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : {component (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : value (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}}}.</p></li>
+</ul>
+</p></li>
 <li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the barchart.</p></li>
 <li><p><strong>x_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- X-label of the barchart.</p></li>
 <li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Y-label of the barchart.</p></li>
@@ -336,14 +349,17 @@ If 2D, each column will be plotted as a separate boxplot.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.visualizer.LinePlot.draw">
 <span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.visualizer.LinePlot.draw" title="Link to this definition">¶</a></dt>
-<dd><p>Draw the bar chart.</p>
+<dd><p>Draw the line plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- Data to be plotted, given in one of the following dictionaries:
-standard line plot - [(x_value (float), y_value (float))];
-multiple line plot - {category (str) : [(x_value (float), y_value (float))]};
-if list, [[x_values (float)], [y_values (float)]]</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- <p>Data to be plotted, given in one of the following dictionaries:</p>
+<ul>
+<li><p>standard line plot, in pairs - [(<strong>x_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>), <strong>y_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>))];</p></li>
+<li><p>standard line plot, in lists - [[<strong>x_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)], [<strong>y_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)]]</p></li>
+<li><p>multiple line plot - {<strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : [(<strong>x_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>), <strong>y_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>))]};</p></li>
+</ul>
+</p></li>
 <li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the barchart.</p></li>
 <li><p><strong>x_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- X-label of the barchart.</p></li>
 <li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Y-label of the barchart.</p></li>
@@ -366,7 +382,7 @@ if list, [[x_values (float)], [y_values (float)]]</p></li>
 <dd><p>Set the plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>plotter</strong> (<em>AbstractPlotter Obj.</em>) -- Plotter.</p>
+<dd class="field-odd"><p><strong>plotter</strong> (<a class="reference internal" href="plotters.html#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.AbstractPlotter"><em>AbstractPlotter</em></a>) -- Plotter.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -378,9 +394,12 @@ if list, [[x_values (float)], [y_values (float)]]</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Data to be plotted, given in one of the following dictionaries:
-single radar - {category (str) : value (float)};
-multiple_radars - {group (str) : {category (str) : value (float)}};</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>Data to be plotted, given in one of the following dictionaries:</p>
+<ul>
+<li><p>single radar - {<strong>category</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : <strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)};</p></li>
+<li><p>multiple_radars - {<strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : {category (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) : <strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}};</p></li>
+</ul>
+</p></li>
 <li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the radar plot.</p></li>
 </ul>
 </dd>
@@ -402,10 +421,12 @@ multiple_radars - {group (str) : {category (str) : value (float)}};</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> or </em><em>array</em>) -- X data.</p></li>
-<li><p><strong>y_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- Data to be plotted, given in one of the following dictionaries:
-list of lists - [[y1], [y2], ... , [yn]];
-dict - {data label (str): [y1], ... , data label (str): [yn]}
-The length of each list should match the dimensions of x_data list.</p></li>
+<li><p><strong>y_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- <p>Data to be plotted, given in one of the following dictionaries. The length of each list should match the dimensions of <strong>x_data</strong> list.</p>
+<ul>
+<li><p>list of lists - [[y1], [y2], ... , [yn]];</p></li>
+<li><p>dict - {<strong>data label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): [y1], ... , <strong>data label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): [yn]}</p></li>
+</ul>
+</p></li>
 <li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the barchart.</p></li>
 <li><p><strong>x_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- X-label of the barchart.</p></li>
 <li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Y-label of the barchart.</p></li>
@@ -460,6 +481,7 @@ If 2D, each column will be plotted as a separate boxplot.</p></li>
                 <ul>
 <li><a class="reference internal" href="#">Plots</a><ul>
 <li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot"><code class="docutils literal notranslate"><span class="pre">AbstractPlot</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot.plot"><code class="docutils literal notranslate"><span class="pre">AbstractPlot.plot</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot.from_plotter"><code class="docutils literal notranslate"><span class="pre">AbstractPlot.from_plotter()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot.from_plot"><code class="docutils literal notranslate"><span class="pre">AbstractPlot.from_plot()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.visualizer.AbstractPlot.set_plot"><code class="docutils literal notranslate"><span class="pre">AbstractPlot.set_plot()</span></code></a></li>

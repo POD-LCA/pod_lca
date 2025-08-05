@@ -45,6 +45,7 @@ class Impacts(Records):
         ----------
         method : {'TRACI_EPA', 'TRACI_NIST'}
             Weightages to be used:
+
             - 'TRACI_EPA': From Ref [1].
             - 'TRACI_NIST': From Ref [1].
             Default is 'TRACI_EPA'.
@@ -56,15 +57,15 @@ class Impacts(Records):
 
         Raises
         ------
-        ValueError
-            Weightage method not recognized, or incomplete.
+        KeyError
+            Weighing method not recognied.
         """
         if method == 'TRACI_EPA':
             weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])
         elif method == 'TRACI_NIST':
             weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_NIST"])
         else:
-            raise NotImplementedError
+            raise KeyError("Weighing method not recognized")
         
         normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTORS"])
         
@@ -93,6 +94,11 @@ class Impacts(Records):
         -------
         float
             Adjusted GWP value
+
+        Raises
+        ------
+        KeyError
+            Impact category not recognied.        
         """
         key = config['setup']['impacts']['CARBONATION_EFFECTS_IMPACT_CATEGORY']
 

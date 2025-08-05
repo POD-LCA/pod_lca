@@ -208,7 +208,7 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 <dd><p>Create an record object from a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records {record catergory (str): record quantity (float)}</p>
+<dd class="field-odd"><p><strong>record_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- Dictionary of records {<strong>record catergory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>): <strong>record quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>)}</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Record created.</p>
@@ -268,8 +268,8 @@ Class variable 'record_attr_dict' keep track of the record category names and co
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>list</em> -- List of categories.</p></li>
-<li><p><em>dict</em> -- Dictionary of units, keyed by category name.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> -- list of categories.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> -- Dictionary of units, keyed by category name.</p></li>
 </ul>
 </p>
 </dd>
@@ -364,10 +364,13 @@ This is set to the IMPACT_CATEGORIES in the config file.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>method</strong> (<em>{'TRACI_EPA'</em><em>, </em><em>'TRACI_NIST'}</em>) -- Weightages to be used:
-- 'TRACI_EPA': From Ref [1].
-- 'TRACI_NIST': From Ref [1].
-Default is 'TRACI_EPA'.</p>
+<dd class="field-odd"><p><strong>method</strong> (<em>{'TRACI_EPA'</em><em>, </em><em>'TRACI_NIST'}</em>) -- <p>Weightages to be used:</p>
+<ul class="simple">
+<li><p>'TRACI_EPA': From Ref [1].</p></li>
+<li><p>'TRACI_NIST': From Ref [1].</p></li>
+</ul>
+<p>Default is 'TRACI_EPA'.</p>
+</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The weighted impact.</p>
@@ -376,7 +379,7 @@ Default is 'TRACI_EPA'.</p>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Weightage method not recognized, or incomplete.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Weighing method not recognied.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -391,6 +394,9 @@ Default is 'TRACI_EPA'.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Impact category not recognied.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -453,7 +459,7 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dd><p>Create an record object from a parent object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> (<em></em>) -- The product or process object to which this record belong.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- The product or process object to which this record belong.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Record created.</p>
@@ -488,6 +494,9 @@ Currently, this is set to the EMISSION_INVENTORIES in the config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>time_profile</strong> (<a class="reference internal" href="datasets.html#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a>) -- Function describing the dynamic emission profile.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- Data distribution type not recognized.</p>
 </dd>
 </dl>
 </dd></dl>

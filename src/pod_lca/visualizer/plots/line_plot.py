@@ -20,15 +20,15 @@ class LinePlot(AbstractPlot):
     # Methods
     # ================================ 
     def draw(self, data, title, x_label, y_label, colors=None):
-        """ Draw the bar chart.
+        """ Draw the line plot.
         
         Parameters
         ----------
         data : dict or list
-            Data to be plotted, given in one of the following dictionaries:
-            standard line plot - [(x_value (float), y_value (float))];
-            multiple line plot - {category (str) : [(x_value (float), y_value (float))]};
-            if list, [[x_values (float)], [y_values (float)]]
+            Data to be plotted, given in one of the following dictionaries: \n
+            - standard line plot, in pairs - [(**x_value** (:class:`float`), **y_value** (:class:`float`))];
+            - standard line plot, in lists - [[**x_values** (:class:`float`)], [**y_values** (:class:`float`)]]
+            - multiple line plot - {**category** (:class:`str`) : [(**x_value** (:class:`float`), **y_value** (:class:`float`))]};
         title : str
             Title of the barchart.
         x_label : str

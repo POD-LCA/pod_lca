@@ -13,7 +13,7 @@ class ArrayMethods:
             
         Parameters
         ----------
-        objects : List of Obj.
+        objects : list of object
             List of objects.
         attr_name : str
             Attribute to be retrieved in a list.
@@ -31,7 +31,7 @@ class ArrayMethods:
             
         Parameters
         ----------
-        objects : List of Obj.
+        objects : list of object
             List of objects.
         attr_name : str
             Attribute to be retrieved in a list.
@@ -51,11 +51,11 @@ class ArrayMethods:
             
         Parameters
         ----------
-        objects : List of Obj.
+        objects : list of object
             List of objects.
         attr_name : str
             Attribute to be retrieved in a list.
-        value : str/int/float/bool
+        value : str or int or float or bool
             Value to be given to the attribute.
         """
         for obj in objects:

@@ -24,6 +24,14 @@ class WasteTransportLeg(TransportationLeg):
     ----------
     transport_scenario : str
         A discriptor of the tranportation scenario.
+    eol_pathway : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
+            End-of-life pathway: \n
+            - 'Landfill': transporting waste to a landfill.
+            - 'Recycle': transporting waste to a recycler.
+            - 'Compost': transporting to a composting facility.
+            - 'Incinerate': transporting to an incinerator.
+    distance_cut_off: str
+        cut-off length for the waste transportation leg.
     """
 
     def __init__(self):
@@ -40,7 +48,7 @@ class WasteTransportLeg(TransportationLeg):
     # ================================
     @classmethod
     def from_object(cls, material, manager, eol_pathway, transport_scenario='High'):
-        """ Create
+        """ Create.
         
         Parameters
         ----------
@@ -49,12 +57,11 @@ class WasteTransportLeg(TransportationLeg):
         manager : ~pod_lca.materials_screening.Model or ~pod_lca.buildings.Building
             Manager keeping the end-of-life transport datasets.
         eol_pathway : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
-            End-of-life pathway:
+            End-of-life pathway: \n
             - 'Landfill': transporting waste to a landfill.
             - 'Recycle': transporting waste to a recycler.
             - 'Compost': transporting to a composting facility.
             - 'Incinerate': transporting to an incinerator.
-            Default to 'Incinerate'. 
         transport_scenario : {'Min', 'Average', 'High'}
             Transport scenario of the transportation leg. Default is 'High'.
         """
@@ -90,7 +97,9 @@ class WasteTransportLeg(TransportationLeg):
         Raises
         ------
         ValueError
-            If transportation scenario is not a string or not recognized.
+            Transportation scenario not recognized.
+        TypeError
+            Transportation scenario is not None or a string.
         """
         if transport_scenario is None:
             self.transport_scenario = None
@@ -100,7 +109,7 @@ class WasteTransportLeg(TransportationLeg):
             else:
                 raise ValueError("Transportation scenario not recognized")
         else:
-            raise ValueError("Transport scenario must be a string.")
+            raise TypeError("Transport scenario must be a string.")
 
         self._invalidate_cache()
         return self
@@ -111,10 +120,11 @@ class WasteTransportLeg(TransportationLeg):
         Parameters
         ----------
         eol_pathway : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
-            End-of-life pathway:
+            End-of-life pathway: \n
             - 'Landfill': transporting waste to a landfill.
             - 'Recycle': transporting waste to a recycler.
             - 'Compost': transporting to a composting facility.
+            - 'Incinerate': transporting to an incinerator.
         """
         self.eol_pathway = eol_pathway
 
@@ -159,14 +169,14 @@ class WasteTransportLeg(TransportationLeg):
     def set_mode(self, mode=None, efficiency=None):
         """ Set the transportation mode of the transportation leg.
 
-        Notes
-        -----
-        1. Prefix 'E_' in the mode_name is used as the identifier of an electricity based transportation mode.
+        Note
+        ----
+        1. Prefix `'E_'` in the mode_name is used as the identifier of an electricity based transportation mode.
         2. Electric vehicles takes electricity based on origin location.
         
         Parameters
         ----------
-        mode : str or ~pod_lca.transportation.TransportMode Obj
+        mode : str or ~pod_lca.transportation.TransportMode
             transportation mode of the transportation leg.
         efficiency : {'High', 'Median', 'Low'}
             efficiency of the transportation mode. Default is 'Median'.
@@ -238,6 +248,11 @@ class WasteTransportLeg(TransportationLeg):
         -------
         float or str
             travel distance of the transportation leg.
+
+        Raises
+        ------
+        ValueError
+            Transport scenario not recognized.
         """
         current_params = (self.get_material(), 
                           self.get_shipping_destination(), 

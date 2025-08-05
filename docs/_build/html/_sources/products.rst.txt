@@ -19,7 +19,6 @@ Furthermore, they keep track of advanced analysis options such as :attr:`~pod_lc
    :show-inheritance:
    :members:
    
-
 .. autoclass:: pod_lca.materials_screening.Electricity
    :show-inheritance:
    :members:
@@ -31,5 +30,4 @@ Furthermore, they keep track of advanced analysis options such as :attr:`~pod_lc
 .. autoclass:: pod_lca.materials_screening.Process
    :show-inheritance:
    :members:
-   :inherited-members:
    

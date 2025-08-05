@@ -75,19 +75,13 @@ class USDomesticTransportationManager(TransportationManager):
             return self.dataset
         elif isinstance(self.database, dict) and isinstance(name, str):
             return self.dataset[name] 
+
     # ================================
     # Model Methods
     # ================================
-    def add_good(self, 
-                  good, 
-                  travel_dist=None,
-                  shipping_dest=None, 
-                  shipping_org=None,
-                  transport_scenario=None,
-                  distance_unit= KILOMETER, 
-                  return_trip_factor=None, 
-                  mode_name=None,
-                  mode_efficiency="Median"):
+    def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None, 
+                 transport_scenario=None, distance_unit= KILOMETER, return_trip_factor=None, 
+                 mode_name=None, mode_efficiency='Median'):
         """ Add goods to the project. This method creates the appropriate transportation legs based on the data provided
 
         Parameters
@@ -102,14 +96,19 @@ class USDomesticTransportationManager(TransportationManager):
             Shipping origin
         transport_scenario : {'Local', 'Regional', 'Regional_c', 'National'}
             Transportation scenario considered.
-        distance_unit : ~pod_lca.units.Unit Obj
+        distance_unit : ~pod_lca.units.Unit
             Unit of measurement of distances.
         return_trip_factor : float
             Return trip factor.
         mode_name : {'Truck', 'E_Truck', 'Rail', 'Barge'}
             Name of the transportation mode.
         mode_efficiency : {'High', 'Median', 'Low'}
-            Efficiency of the transportation mode.
+            Efficiency of the transportation mode. Default is 'Median'
+
+        Raises
+        ------
+        ValueError
+            Transport scenario not recognized.
         """
         self.transport_legs[good] = []
 

@@ -9,11 +9,11 @@ from . import Master
 
 
 class Process(Master):
-    """ Process object, inheriting from the Master object, represent a process.
+    """ A process taking products as input.
 
     Attributes
     ----------
-    inputs : list of Master Obj.
+    inputs : list of ~pod_lca.materials_screening.Product
         Input products and processes.
     """
 

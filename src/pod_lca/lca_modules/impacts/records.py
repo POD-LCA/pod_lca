@@ -149,7 +149,7 @@ class Records:
         Parameters
         ----------
         record_dict : dict
-            Dictionary of records {record catergory (str): record quantity (float)}
+            Dictionary of records {**record catergory** (:class:`str`): **record quantity** (:class:`float`)}
         
         Returns
         -------
@@ -211,9 +211,9 @@ class Records:
 
         Returns
         -------
-        list
-            List of categories.
-        dict
+        :class:`list`
+            list of categories.
+        :class:`dict`
             Dictionary of units, keyed by category name.
         """
         if units:

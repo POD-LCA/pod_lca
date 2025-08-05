@@ -24,7 +24,7 @@ def log(str, level="Info"):
     str : str
         The message to log.
     level : str, optional
-        The log level of the message. The default is 0.
+        The log level of the message. The default is 0.\n
             #   Log Level	Importance
             0   Fatal	One or more key business functionalities are not working and the whole system doesn’t fulfill the business functionalities.
             1   Error	One or more functionalities are not working, preventing some functionalities from working correctly.

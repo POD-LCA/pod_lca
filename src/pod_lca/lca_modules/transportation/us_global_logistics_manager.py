@@ -79,36 +79,36 @@ class USGlobalTransportationManager(TransportationManager):
     # ================================
     # Model Methods
     # ================================
-    def add_good(self, 
-                  good, 
-                  travel_dist=None,
-                  shipping_dest=None, 
-                  shipping_org=None,
-                  transport_scenario=None,
-                  distance_unit= KILOMETER, 
-                  return_trip_factor=None, 
-                  mode_name=None,
-                  mode_efficiency="Median"):
+    def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None,
+                 transport_scenario=None, distance_unit= KILOMETER, return_trip_factor=None, 
+                 mode_name=None, mode_efficiency='Median'):
         """ Add good to the project. This method creates the appropriate tranportation leg based on the data provided
 
+        Parameters
+        ----------
         good : list of ~pod_lca.materials_screening.Product
             Good to be transported.
         travel_dist : float
-            Transportation distance for goods
+            Transportation distance for goods.
         shipping_dest : ~pod_lca.location.Location
             Shipping destination.
         shipping_org : ~pod_lca.location.Location
             Shipping origin
         transport_scenario : {'Global'}
             Transportation scenario considered.
-        distance_unit : ~pod_lca.units.Unit Obj
+        distance_unit : ~pod_lca.units.Unit
             Unit of measurement of distances.
         return_trip_factor : float
             Return trip factor.
         mode_name : {'Truck', 'E_Truck', 'Rail', 'Ocean', 'Air'}
             Name of the transportation mode.
         mode_efficiency : {'High', 'Median', 'Low'}
-            Efficiency of the transportation mode.
+            Efficiency of the transportation mode. Default is 'Median'.
+
+        Raises
+        ------
+        ValueError
+            Transport scenario not recognized.
         """
         self.transport_legs[good] = []
 

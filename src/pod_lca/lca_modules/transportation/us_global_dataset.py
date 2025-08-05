@@ -16,7 +16,7 @@ from ...utilities import log
 
 
 class USGlobalDataset(TransportDataset):
-    """ A class to filter the FAF dataset based on the given parameters.
+    """ A class to handle transportation of goods to US from global origins.
     """
 
     def __init__(self):
@@ -31,22 +31,22 @@ class USGlobalDataset(TransportDataset):
         ----------
         material : ~pod_lca.materials_screening.Master
             The Standard Classification of Transported Goods (SCTG) code to filter by.
-        destination : ~pod_lca.location.Location, optional
+        destination : ~pod_lca.location.Location
             The destination location to filter by.
-        origin : ~pod_lca.location.Location, optional
+        origin : ~pod_lca.location.Location
             The origin location to filter by.
-        mode_domestic : ~pod_lca.transportation.TransportMode, optional
+        mode_domestic : ~pod_lca.transportation.TransportMode
             The foreign transportation mode to filter by.
-        mode_foreign :  ~pod_lca.transportation.TransportMode, optional
+        mode_foreign :  ~pod_lca.transportation.TransportMode
             The domestic transportation mode to filter by.
 
         Returns
         -------
-        pandas.DataFrame
+        :class:`pandas.DataFrame`
             The filtered FAF dataset.
-        pandas.DataFrame
+        :class:`pandas.DataFrame`
             The filtered marine dataset.
-        pandas.DataFrame
+        :class:`pandas.DataFrame`
             The filtered cfaf dataset.     
         """
         sctg_code = material.get_sctg_code(digits=2)
@@ -83,15 +83,15 @@ class USGlobalDataset(TransportDataset):
 
         Parameters
         ----------
-        sctg : int, optional
+        sctg : int
             The Standard Classification of Transported Goods (SCTG) code to filter by.
-        destination : ~pod_lca.location.Location, optional
+        destination : ~pod_lca.location.Location
             The destination location to filter by.
-        origin : ~pod_lca.location.Location, optional
+        origin : ~pod_lca.location.Location
             The origin location to filter by.
-        mode_domestic :  ~pod_lca.transportation.TransportMode, optional
+        mode_domestic :  ~pod_lca.transportation.TransportMode
             The foreign transportation mode to filter by.
-        mode_foreign :  ~pod_lca.transportation.TransportMode, optional
+        mode_foreign :  ~pod_lca.transportation.TransportMode
             The domestic transportation mode to filter by.
 
         Returns
@@ -158,6 +158,11 @@ class USGlobalDataset(TransportDataset):
         -------
         pandas.DataFrame
             Filtered CFAF dataset.
+
+        Raises
+        ------
+        ValueError
+            Material not found in cfaf dataset.
         """
         cfaf = self.cfaf
         if isinstance(sctg, int):
@@ -183,14 +188,19 @@ class USGlobalDataset(TransportDataset):
         -------
         pandas.DataFrame
             Filtered marine dataset.
+
+        Raises
+        ------
+        ValueError
+            No data for the selected origin in marine dataset
         """
         marine = self.marine
         
         # Destination
         if isinstance(destination, Location):
-            marine = marine[marine["Coast"] == destination.us_coast]
+            marine = marine[marine["Coast"] == destination.get_us_coast()]
             if marine.empty:
-                raise ValueError("no data for the selected destination in Marine dataset")
+                raise ValueError("No data for the selected destination in marine dataset")
         else:
             pass
 
@@ -198,7 +208,7 @@ class USGlobalDataset(TransportDataset):
         if isinstance(origin, Location):
             marine = marine[marine["Region"] == origin.get_faf_foreign_region(type='name')]
             if marine.empty:
-                raise ValueError("no data for the selected origin in Marine dataset")
+                raise ValueError("No data for the selected origin in marine dataset")
         
         return marine
     
@@ -219,10 +229,15 @@ class USGlobalDataset(TransportDataset):
 
         Returns
         -------
-        float
+        :class:`float`
             Travel distance of the domestic leg of travel.
-        float
+        :class:`float`
             Travel distance of the foreign leg of travel.
+
+        Raises
+        ------
+        ValueError
+            Invalid mode of transportation.
         """
         faf, marine, cfaf = fltered_datasets
 

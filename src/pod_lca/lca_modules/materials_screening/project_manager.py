@@ -23,19 +23,21 @@ class Project:
     name : str
         Name of the project.
     models : dict
-        All models created/compared in the current project.
-    database : Database Obj.
-        Maintains input impact data.
-    location : Location Obj.
+        All models created/compared in the current project: {**model name** (:class:`str`): :class:`~pod_lca.materials_screening.Model`}.
+    location : ~pod_lca.location.Location
         Location of the project.
+    impact_database : ~pod_lca.impacts.ImpactsDatabase.
+        Maintains input impact data.
+    transport_mode_impact_database : ~pod_lca.impacts.TranportationModeImpactsDatabase.
+        Maintains impact data of transportation.
     """
 
     def __init__(self):
         self.name = None
-        self.impact_database = None
-        self.transport_mode_impact_database = None
         self.models = {}
         self.location = None
+        self.impact_database = None
+        self.transport_mode_impact_database = None
 
     def __str__(self):
         str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
@@ -59,7 +61,7 @@ class Project:
         
         Returns
         -------
-        Project Obj.
+        ~pod_lca.materials_screening.Project
             Project created.
         """
         new_project = cls()
@@ -83,13 +85,18 @@ class Project:
 
         return self
     
-    def set_impact_database(self, database:(ImpactsDatabase)):
+    def set_impact_database(self, database):
         """ Set the impacts database of the project.
     
         Parameters
         ----------
-        database : ImpactsDatabase Obj or str
+        database : ~pod_lca.impacts.ImpactsDatabase or str
             Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+
+        Raises
+        ------
+        TypeError
+            Database input not recognized.
         """
         if isinstance(database, ImpactsDatabase):
             self.impact_database = database
@@ -100,13 +107,19 @@ class Project:
         else:
             raise TypeError("Database input not recognized")
         
-    def set_transportation_mode_impact_database(self, database:(TranportationModeImpactsDatabase)):
+        return self
+        
+    def set_transportation_mode_impact_database(self, database):
         """ Set the impacts database for transportation impacts by mode.
     
         Parameters
         ----------
-        database : ImpactsDatabase Obj or str
+        database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
             Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+        Raises
+        ------
+        TypeError
+            Database input not recognized.
         """
         if isinstance(database, TranportationModeImpactsDatabase):
             self.transport_mode_impact_database = database
@@ -116,14 +129,16 @@ class Project:
             self.set_transportation_mode_impact_database(transport_impact_database)
         else:
             raise TypeError("Database input not recognized")
+        
+        return self
     
     def set_location(self, location):
         """ Set the location of the project.
         
-            Parameters
-            ----------
-            location : Location Obj.
-                Location of the project.
+        Parameters
+        ----------
+        location : ~pod_lca.location.Location
+            Location of the project.
         """
         self.location = location
 
@@ -144,7 +159,7 @@ class Project:
         
         Returns
         -------
-        DatabaseManager Obj.
+        ~pod_lca.impacts.ImpactsDatabase
             Impact database of the project.
         """
         return self.impact_database
@@ -154,7 +169,7 @@ class Project:
         
         Returns
         -------
-        DatabaseManager Obj.
+        ~pod_lca.impacts.TranportationModeImpactsDatabase
             Impact database of the tranportation modes.
         """
         return self.transport_mode_impact_database
@@ -162,17 +177,17 @@ class Project:
     def get_location(self):
         """ Retrieve the location of the project.
         
-            Returns
-            -------
-            Location Obj.
-                Location of the project.
+        Returns
+        -------
+        ~pod_lca.location.Location
+            Location of the project.
         """
         return self.location
     
     # ================================
     # Model Methods
     # ================================
-    def add_model(self, model_name:(str), file_path=None):
+    def add_model(self, model_name, file_path=None):
         """ Create and add a model to the current project.
 
         Parameters
@@ -188,7 +203,7 @@ class Project:
 
         return model
     
-    def get_model(self, model_name:(str)):
+    def get_model(self, model_name):
         """ Retrieve a model.
         
         Parameters
@@ -198,7 +213,7 @@ class Project:
 
         Returns
         -------
-        Model Obj.
+        ~pod_lca.materials_screening.Model
             Current working model.
 
         Raises
@@ -290,13 +305,13 @@ class Project:
         ----------
         impact_category : str
             Name of the Impact category.
-        model_lst : List of str
-            List of the names of models.
+        model_lst : list of str
+            list of the names of models.
 
         Returns
         -------
         dict
-            Impacts dictionary where {model_name (str): { stage (str): quantity of impact (float)}}.
+            Impacts dictionary where {**model_name** (:class:`str`): {**stage** (:class:`str`): **quantity of impact** (:class:`float`)}}.
         """
         if model_lst is None:
             model_lst = self.get_model_names()
@@ -313,13 +328,13 @@ class Project:
             
         Parameters
         ----------
-        model_lst : List of str
+        model_lst : list of str
             List of the names of models.
 
         Returns
         -------
         dict
-            Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
+            Impacts dictionary where {**model_name** (:class:`str`): {**impact_category** (:class:`str`) : **quantity of impact** (:class:`float`)}}.
         """
         if model_lst is None:
             model_lst = self.get_model_names()
@@ -338,13 +353,13 @@ class Project:
             
         Parameters
         ----------
-        model_lst : List of str
+        model_lst : list of str
             List of the names of models.
 
         Returns
         -------
         dict
-            Impacts dictionary where {model_name (str): {impact_category (str) : quantity of impact (float)}}.
+            Impacts dictionary where {**model_name** (:class:`str`): {**impact_category** (:class:`str`) : **quantity of impact** (:class:`float`)}}.
         """
         if model_lst is None:
             model_lst = self.get_model_names()
@@ -367,13 +382,13 @@ class Project:
         ----------
         impact_category : str
             Name of the Impact category.
-        model_lst : List of str
+        model_lst : list of str
             List of the names of models.
 
         Returns
         -------
         dict
-            Impacts dictionary where {model_name (str): {stage (str): {item_name (str): quantity of impact (float)}}.
+            Impacts dictionary where {**model_name** (:class:`str`): {**stage** (:class:`str`): {**item_name** (:class:`str`): **quantity of impact** (:class:`float`)}}.
         """
         if model_lst is None:
             model_lst = self.get_model_names()
@@ -402,15 +417,15 @@ class Project:
             
         Parameters
         ----------
-        impact_categories : List of str
+        impact_categories : list of str
             List of impact categories.
-        model_lst : List of str
+        model_lst : list of str
             List of the names of models.
 
         Returns
         -------
         dict
-            Impacts dictionary where {model_name (str): {impact_category (str): {stage (str): quantity of impact (float)}}.
+            Impacts dictionary where {**model_name** (:class:`str`): {**impact_category** (:class:`str`): {**stage** (:class:`str`): **quantity of impact** (:class:`float`)}}.
         """
         if model_lst is None:
             model_lst = self.get_model_names()

@@ -19,6 +19,13 @@ class MathFuncs:
     @staticmethod
     def round_to_significant(values, sig_figs=3):
         """ Round a list of numbers to the given number of significant figures.
+
+        Parameters
+        ----------
+        values : list of float
+            Numbers to be rounded off.
+        sig_fig : int
+            Number of significant digits.
         """
         return [
             0 if val == 0 else round(val, sig_figs - int(floor(log10(abs(val))))) if isfinite(val) else val
@@ -31,10 +38,14 @@ class MathFuncs:
         
         Parameters
         ----------
-        a,b : float
-            Start and end of integral evaluation.
-        coeff, pow_coeff : float
-            Coeffecient on the exponent and its power.
+        a : float
+            Start of integral evaluation.
+        b : float
+            End of integral evaluation.
+        coeff : float
+            Coeffecient on the exponent.
+        pow_coeff : float
+            Power of the exponent.
         """
         if isinstance(a, (int, float)) and isinstance(b, (int, float)):
             return (coeff / pow_coeff) * (exp(b * pow_coeff) - exp(a * pow_coeff))

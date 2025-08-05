@@ -79,6 +79,11 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
     
     def get_required_headers(self):
         """ Get the required headers of the database.
+
+        Returns
+        -------
+        list of str
+            Database headers.
         """
         return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_mode_efficiency_key()] 
     

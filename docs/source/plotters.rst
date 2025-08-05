@@ -2,7 +2,7 @@
 Plotters
 **********
 
-:py:class:`Plots <pod_lca.visualizer.AbstractPlotter>` is an abstract object for plots. :py:class:`~pod_lca.visualizer.MatplotlibPlotter` is a concrete implementation of a Plotter.
+:py:class:`Plotter <pod_lca.visualizer.AbstractPlotter>` is an abstract object for plots. :py:class:`~pod_lca.visualizer.MatplotlibPlotter` is a concrete implementation of a Plotter.
 
 -----
 

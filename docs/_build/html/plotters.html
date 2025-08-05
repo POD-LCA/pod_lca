@@ -155,7 +155,7 @@
             
   <section id="plotters">
 <h1>Plotters<a class="headerlink" href="#plotters" title="Link to this heading">¶</a></h1>
-<p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.AbstractPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plots</span></code></a> is an abstract object for plots. <a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter" title="pod_lca.visualizer.MatplotlibPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">MatplotlibPlotter</span></code></a> is a concrete implementation of a Plotter.</p>
+<p><a class="reference internal" href="#pod_lca.visualizer.AbstractPlotter" title="pod_lca.visualizer.AbstractPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Plotter</span></code></a> is an abstract object for plots. <a class="reference internal" href="#pod_lca.visualizer.MatplotlibPlotter" title="pod_lca.visualizer.MatplotlibPlotter"><code class="xref py py-class docutils literal notranslate"><span class="pre">MatplotlibPlotter</span></code></a> is a concrete implementation of a Plotter.</p>
 <hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.visualizer.AbstractPlotter">
@@ -246,7 +246,7 @@
 <dd><p>Figure being plotted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>matplotlib.figure.Figure</p>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.10.5)">matplotlib.figure.Figure</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -257,7 +257,7 @@
 <dd><p>Axes of the figure being plotted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>matplotlib.axes.Axes</p>
+<dd class="field-odd"><p><a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.10.5)">matplotlib.axes.Axes</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,7 +346,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- List of x values.</p></li>
-<li><p><strong>y_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- f(x) for all the y values.</p></li>
+<li><p><strong>y_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- <cite>f(x)</cite> for all the <cite>y</cite> values.</p></li>
 <li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- label for the function plotted</p></li>
 <li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Color of the radar plot as a named or hex string.</p></li>
 </ul>
@@ -419,7 +419,7 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- X-axis label.</p></li>
-<li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Y-axis labe</p></li>
+<li><p><strong>y_label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Y-axis label.</p></li>
 </ul>
 </dd>
 </dl>
@@ -436,6 +436,9 @@
 <li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- List of labels, if patches are being used.</p></li>
 <li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Title of the legend.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IndexError" title="(in Python v3.13)"><strong>IndexError</strong></a> -- Number of colors and labels does not match.</p>
 </dd>
 </dl>
 </dd></dl>
