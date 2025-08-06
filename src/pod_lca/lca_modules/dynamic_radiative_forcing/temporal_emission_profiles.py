@@ -170,9 +170,31 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
 class NormEmissionProfile(TemporalEmissionProfiles, Norm):
     """ A normal data distribution.
     """
+    @classmethod
+    def from_cherubini_2011(cls, rotation_period):
+        """ Create a normal distribution following Cherubini et al 2011.
+        
+        Note
+        ----
+        Refers to Cherubini, Francesco; Peters, Glen Philip; Berntsen, Terje Koren; Strømman, Anders Hammer; Hertwich, Edgar G. (2011) CO2 emissions from biomass combustion for bioenergy: atmospheric decay and contribution to global warming. Global Change Biology Bioenergy. 3 (5), pp. 413-426. DOI: 10.1111/j.1757-1707.2011.01102.x
+        
+        Parameters
+        ----------
+        rotation_period : int or float
+            Rotation period of biomass.
+        """
+        start = 0.
+        mean = rotation_period / 2
+        std_dev = mean/2
+
+        cherub_norm = cls.from_params(mean, std_dev, name='Cherubini')
+        cherub_norm.set_start(start)
+        cherub_norm.set_duration(rotation_period)
+
+        return cherub_norm
 
     @classmethod
-    def from_range(cls, start, range, area_covered=0.95, name='unspecified'):
+    def from_range(cls, start, range, area_covered=0.9544, name='unspecified'):
         """ Create a normal distribution from start and range specified. 
             The distribution is fitted so that area under the curve within [start, start + range] is greater than specified.
         
@@ -183,7 +205,7 @@ class NormEmissionProfile(TemporalEmissionProfiles, Norm):
         range : int or float
             Range (central) of the variable to cover the distribution.
         area_covered : flat
-            Percentage of area under the curve covered within the range (central coverage).
+            Percentage of area under the curve covered within the range (central coverage). Default is 0.9544 for 2 * standard deviations.
         name : str
             Name of the data distribution.
         """

@@ -13,6 +13,8 @@ from pod_lca.dynamic_radiative_forcing import UniformEmissionProfile
 from pod_lca.dynamic_radiative_forcing import NormEmissionProfile
 from pod_lca.impacts import Emissions
 from pod_lca.utilities import DataImporter
+from pod_lca.visualizer import LinePlot
+from pod_lca.visualizer import MatplotlibPlotter
 
 test_data = r'tests/drf_test_gwpbio-cherubini2011-test-values.csv'
 output_file = r'tests/drf_test_gwpbio-cherubini2011-report.csv'
@@ -30,6 +32,7 @@ for time_horizon in time_horizon_list:
 # print(agwp_ref_dict) # test if ref_agwp dictionary worked
 
 output_dict = {}
+plot_dict = {}
 for rotation_period in tqdm(rotation_dict):
     output_dict[rotation_period] = {}
 
@@ -44,6 +47,7 @@ for rotation_period in tqdm(rotation_dict):
         
         # calculate agwp of 1 kg CO2 removal w/ normal profile, start at year 0, duration = rotation
         biomass_uptake = Emissions.from_dict(record_dict={'CO2': -1})
+        # norm = NormEmissionProfile.from_cherubini_2011(float(rotation_period))
         norm = NormEmissionProfile.from_range(start=0, range=float(rotation_period))
         biomass_uptake.set_temporal_emission_profile(norm)
 
@@ -85,6 +89,14 @@ for rotation_period in tqdm(rotation_dict):
         output_dict[rotation_period]['diff. GWPbio' + str(time_horizon) + '(%)'] = sym_diff_gwpbio
         output_dict[rotation_period]['test status' + str(time_horizon)] = test_status
     
+        if time_horizon == time_horizon_list[-1]:
+            if int(rotation_period) in [1,10,20,50,100]:
+                plot_dict[rotation_period] = drf_record.get_data('atmospheric concentration')['CO2']
+
 # print(agwp_ref_dict)
 
 DataImporter.dict_to_csv(output_dict, output_file)
+
+graph = LinePlot.from_plotter(MatplotlibPlotter)
+graph.draw(plot_dict, "Atmospheric CO2 Record", "Time (years)", "CO2 gas in atmosphere (kg)")
+graph.show()
