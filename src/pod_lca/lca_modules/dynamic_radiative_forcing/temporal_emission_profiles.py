@@ -172,7 +172,6 @@ class NormEmissionProfile(TemporalEmissionProfiles, Norm):
     """
 
     @classmethod
-    #def from_range(cls, start, range, area_covered=0.999, name='unspecified'):
     def from_range(cls, start, range, area_covered=0.95, name='unspecified'):
         """ Create a normal distribution from start and range specified. 
             The distribution is fitted so that area under the curve within [start, start + range] is greater than specified.
@@ -182,14 +181,14 @@ class NormEmissionProfile(TemporalEmissionProfiles, Norm):
         start : int or float
             Start value of the range.
         range : int or float
-            Range of the variable to cover the distribution.
+            Range (central) of the variable to cover the distribution.
         area_covered : flat
-            Percentage of area under the curve covered within the range.
+            Percentage of area under the curve covered within the range (central coverage).
         name : str
             Name of the data distribution.
         """
         mean = start + (range / 2)
-        std_dev = range / (2 * stats.norm.ppf(area_covered))
+        std_dev = range / (2 * stats.norm.ppf((1 +area_covered)/2))
 
         norm = cls.from_params(mean, std_dev, name)
         norm.set_start(start)
