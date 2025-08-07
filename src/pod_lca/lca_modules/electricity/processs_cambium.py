@@ -108,8 +108,7 @@ class CambiumData:
         scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
             Electricity consmuption scenario considered. Default is 'MidCase'
         interpolate : {'values', 'percentages'}
-            Linear interpolation of electricity consumption between two years.
-
+            Linear interpolation of electricity consumption between two years. \n
             - `'values'`: interpolate values
             - `'percentages'`: interpolate percentages
             Default is by 'values'.

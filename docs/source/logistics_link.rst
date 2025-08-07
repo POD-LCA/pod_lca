@@ -11,9 +11,12 @@ Logistics Leg
 
 .. autoclass:: pod_lca.transportation.DomesticLeg
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.transportation.ForeignLeg
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.transportation.WasteTransportLeg
     :members:
+    :show-inheritance:

@@ -15,12 +15,16 @@ A selected set of distributions of known distribution parameters are available f
 
 .. autoclass:: pod_lca.uncertainty.Uniform
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.uncertainty.Norm
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.uncertainty.LogNorm
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.uncertainty.ExponentDecay
     :members:
+    :show-inheritance:

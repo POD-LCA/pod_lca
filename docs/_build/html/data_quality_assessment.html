@@ -171,7 +171,7 @@
 <dd><p>Product/Process object for which the data quality is related.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Master Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -204,7 +204,7 @@
 <dd><p>Create pedigree score object from parent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj.</strong> -- Parent object.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- Parent object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -215,7 +215,7 @@
 <dd><p>Set parent of the pedigree score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> (<em>Master Obj.</em>) -- Object to which the pedigree score correspond.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- Object to which the pedigree score correspond.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -243,7 +243,7 @@
 <dd class="field-odd"><p>Object to which the pedigree score correspond.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Master Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -268,11 +268,14 @@
 <dd><p>Update the pedigree score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>*args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- An (indicator, score) pair or a dictionary of indicator-score pairs.</p>
+<dd class="field-odd"><p><strong>*args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- An (<strong>indicator</strong> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <strong>score</strong> <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) pair or a dictionary of indicator-score pairs.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- If the scores are not within the score ranges specified.
-    If the input are not in expected format.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- The scores are not within the score ranges specified.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> -- The scores are not in expected format.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Indicator not recognized</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -289,7 +292,7 @@
 <dd><p>Model on which the hotspot analysis is performed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Model Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -317,12 +320,23 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.from_model">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.from_model" title="Link to this definition">¶</a></dt>
+<dd><p>Create a data quality analysis for a model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model for whcih the analysis is created.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataQualityAnalysis.set_model">
 <span class="sig-name descname"><span class="pre">set_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataQualityAnalysis.set_model" title="Link to this definition">¶</a></dt>
 <dd><p>Set a model to the Analyser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>Model Obj.</em>) -- Model on which the Data Quality Analysis is performed.</p>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model on which the Data Quality Analysis is performed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -336,7 +350,7 @@
 <dd class="field-odd"><p>Model on which the Data Quality Analysis is performed.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model Obj.</p>
+<dd class="field-even"><p><a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -427,6 +441,7 @@
 <li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.model</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.DQS</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.normalised_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.normalised_DQS</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.from_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.from_model()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.set_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.set_model()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.get_model"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_model()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.uncertainty.DataQualityAnalysis.get_model_DQS"><code class="docutils literal notranslate"><span class="pre">DataQualityAnalysis.get_model_DQS()</span></code></a></li>

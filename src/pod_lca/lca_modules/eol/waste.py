@@ -175,8 +175,7 @@ class Waste(Product):
         Parameters
         ----------
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
-            End-of-life pathway:
-
+            End-of-life pathway: \n
             - `'Landfill'`: transporting waste to a landfill.
             - `'Recycle'`: transporting waste to a recycler.
             - `'Compost'`: transporting to a composting facility.
@@ -310,15 +309,13 @@ class Waste(Product):
         Parameters
         ----------
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
-            End-of-life pathway:
-
+            End-of-life pathway: \n
             - `'Landfill'`: transporting waste to a landfill.
             - `'Recycle'`: transporting waste to a recycler.
             - `'Compost'`: transporting to a composting facility.
             - `'Incinerate'`: transporting to an incinerator.
         mode : {'assigned', 'actual'}
-            Mode of calculation used for process mix;
-
+            Mode of calculation used for process mix; \n
             - `'assigned'`: the prescribed process mix.
             - `'actual'`: realized process mix. The differences due to cut-off distances are considered.
             Default is 'assigned'

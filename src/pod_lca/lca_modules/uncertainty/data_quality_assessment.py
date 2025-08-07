@@ -14,7 +14,7 @@ class PedigreeScore:
 
     Attributes
     ----------
-    parent : Master Obj.
+    parent : ~pod_lca.materials_screening.Master
         Product/Process object for which the data quality is related.
     DQS : float
         Data quality score of the object.
@@ -44,7 +44,7 @@ class PedigreeScore:
         
         Parameters
         ----------
-        obj.
+        parent : ~pod_lca.materials_screening.Master
             Parent object.
         """
         pedigree_score = cls()
@@ -65,7 +65,7 @@ class PedigreeScore:
 
         Parameters
         ----------
-        obj : Master Obj.
+        obj : ~pod_lca.materials_screening.Master
             Object to which the pedigree score correspond.
         """ 
         self.parent = obj
@@ -95,7 +95,7 @@ class PedigreeScore:
 
         Returns
         ----------
-        Master Obj.
+        ~pod_lca.materials_screening.Master
             Object to which the pedigree score correspond.
         """ 
         return self.parent
@@ -116,13 +116,16 @@ class PedigreeScore:
         Parameters
         ----------
         *args : tuple or dict
-            An (indicator, score) pair or a dictionary of indicator-score pairs.
+            An (**indicator** :class:`str`, **score** :class:`float`) pair or a dictionary of indicator-score pairs.
 
         Raises
         ------
-        ValueError
-            If the scores are not within the score ranges specified.
-            If the input are not in expected format.
+        ValueError 
+            The scores are not within the score ranges specified. 
+        TypeError
+            The scores are not in expected format.
+        KeyError
+            Indicator not recognized
         """
         max = config['setup']['uncertainty']['MAX_DQS']
         min = config['setup']['uncertainty']['MIN_DQS']
@@ -141,7 +144,7 @@ class PedigreeScore:
             else:
                 raise ValueError(f"Pedigree score should be between {min} and {max}.")
         else:
-            raise ValueError("Invalid input. Provide a (indicator, score) pair or a dictionary of indicator-score pairs.")
+            raise TypeError("Invalid input. Provide a (indicator, score) pair or a dictionary of indicator-score pairs.")
 
         return self
     
@@ -151,7 +154,7 @@ class DataQualityAnalysis:
 
     Attributes
     ----------
-    model : Model Obj.
+    model : ~pod_lca.materials_screening.Model
         Model on which the hotspot analysis is performed.
     DQS : float
         Data Quality Score of the model.
@@ -171,6 +174,13 @@ class DataQualityAnalysis:
         
     @classmethod
     def from_model(cls, model):
+        """ Create a data quality analysis for a model.
+        
+        Parameters
+        ----------
+        model : ~pod_lca.materials_screening.Model
+            Model for whcih the analysis is created.
+        """
         data_quality_analysis = cls()
         data_quality_analysis.set_model(model)
         
@@ -185,17 +195,19 @@ class DataQualityAnalysis:
         
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model on which the Data Quality Analysis is performed.        
         """
         self.model = model
+
+        return self
 
     def get_model(self):
         """ Get the model for which the analysis will be run.
         
         Returns
         ----------
-        Model Obj.
+        ~pod_lca.materials_screening.Model
             Model on which the Data Quality Analysis is performed.        
         """
         return self.model

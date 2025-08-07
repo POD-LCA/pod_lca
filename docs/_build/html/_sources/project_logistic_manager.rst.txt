@@ -10,6 +10,8 @@ Project Logistics Manager
 
 .. autoclass:: pod_lca.transportation.USDomesticTransportationManager
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.transportation.USGlobalTransportationManager
     :members:
+    :show-inheritance:

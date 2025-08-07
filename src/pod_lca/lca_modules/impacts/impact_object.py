@@ -44,8 +44,7 @@ class Impacts(Records):
         Parameters
         ----------
         method : {'TRACI_EPA', 'TRACI_NIST'}
-            Weightages to be used:
-
+            Weightages to be used: \n
             - 'TRACI_EPA': From Ref [1].
             - 'TRACI_NIST': From Ref [1].
             Default is 'TRACI_EPA'.

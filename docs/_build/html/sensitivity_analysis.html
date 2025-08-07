@@ -170,22 +170,31 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> (<em>Master Obj</em>) -- Entry on which the sensitivity is tested.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- Entry on which the sensitivity is tested.</p></li>
 <li><p><strong>param</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Parameter varied. This must be an attribute of the object.</p></li>
 <li><p><strong>impact_cat</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Impact category considered.  Weighted impact, if 'weighted'</p></li>
-<li><p><strong>sensitivity_type</strong> (<em>{'relative'</em><em>, </em><em>'symmetric'}</em>) -- Type of sensitivity analysis.
-'relative' - relative percentage change of impact.
-'symmetric' - symmetric percentage change of impact.
-Default is 'relative'.</p></li>
+<li><p><strong>sensitivity_type</strong> (<em>{'relative'</em><em>, </em><em>'symmetric'}</em>) -- <p>Type of sensitivity analysis.</p>
+<ul>
+<li><p>'relative' - relative percentage change of impact.</p></li>
+<li><p>'symmetric' - symmetric percentage change of impact.</p></li>
+</ul>
+<p>Default is 'relative'.</p>
+</p></li>
 <li><p><strong>printout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Printout results if true. Default is True</p></li>
-<li><p><strong>**kwargs</strong> -- <dl class="simple">
-<dt>range<span class="classifier">tuple</span></dt><dd><p>Minimum and maximum value for the parameter.
+<li><p><strong>**kwargs</strong> -- <ul>
+<li><dl class="simple">
+<dt>range - <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a></dt><dd><p>Minimum and maximum value for the parameter.
 e.g., qty of a product or process.</p>
 </dd>
-<dt>options<span class="classifier">list of str</span></dt><dd><p>A range of options given as strings for the parameter.
+</dl>
+</li>
+<li><dl class="simple">
+<dt>options - <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>A range of options given as strings for the parameter.
 e.g., database_item name (i.e., to change the impact value)</p>
 </dd>
 </dl>
+</li>
+</ul>
 </p></li>
 </ul>
 </dd>
@@ -194,6 +203,13 @@ e.g., database_item name (i.e., to change the impact value)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Range of parameter does not include base value.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Invalid sensitivity type.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Keyword arguments not recognized.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -208,26 +224,35 @@ e.g., database_item name (i.e., to change the impact value)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Model Obj.</em>) -- Model in which the sensitivity is considered.</p></li>
-<li><p><strong>groups</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>[{'obj': Master Obj, 'param': str, 'range': tuple},
-{'obj': Master Obj, 'param': str, 'options': list of str},
+<li><p><strong>model</strong> (<a class="reference internal" href="model.html#pod_lca.materials_screening.Model" title="pod_lca.materials_screening.Model"><em>Model</em></a>) -- Model in which the sensitivity is considered.</p></li>
+<li><p><strong>groups</strong> (<em>List</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) -- <p>[{<strong>'obj'</strong>: <a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a>, <strong>'param'</strong>: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <strong>'range'</strong>: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>},
+{<strong>'obj'</strong>: <a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a>,**'param'<strong>: :class:`str`, **'options'</strong>: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>},
 ...
 ]
 where;</p>
 <blockquote>
-<div><dl class="simple">
-<dt>obj<span class="classifier">Master Obj</span></dt><dd><p>Entry on which the sensitivity is tested.</p>
-</dd>
-<dt>param<span class="classifier">str</span></dt><dd><p>Parameter varied.
-This must be an attribute of the object.</p>
-</dd>
-<dt>range<span class="classifier">tuple</span></dt><dd><p>Minimum and maximum value for the parameter, in that order.
-e.g., qty of a product or process.</p>
-</dd>
-<dt>options<span class="classifier">list of str</span></dt><dd><p>A range of options given as strings for the parameter.
-e.g., database_item name (i.e., to change the impact value)</p>
+<div><ul>
+<li><dl class="simple">
+<dt>obj - <a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><code class="xref py py-class docutils literal notranslate"><span class="pre">Master</span></code></a></dt><dd><p>Entry on which the sensitivity is tested.</p>
 </dd>
 </dl>
+</li>
+<li><dl class="simple">
+<dt>param - <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>Parameter varied. This must be an attribute of the object.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>range - tuple</dt><dd><p>Minimum and maximum value for the parameter, in that order.e.g., qty of a product or process.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>options - list of str</dt><dd><p>A range of options given as strings for the parameter. e.g., database_item name (i.e., to change the impact value)</p>
+</dd>
+</dl>
+</li>
+</ul>
 </div></blockquote>
 </p></li>
 </ul>
@@ -237,6 +262,12 @@ e.g., database_item name (i.e., to change the impact value)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Range of parameter does not include base value.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.13)"><strong>KeyError</strong></a> -- Keyword arguments not recognized.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

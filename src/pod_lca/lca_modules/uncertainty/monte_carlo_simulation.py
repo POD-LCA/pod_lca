@@ -16,18 +16,20 @@ class MonteCarloSimulator:
 
     Attributes
     ----------
-    model : Model Obj.
+    model : ~pod_lca.materials_screening.Model
         Model on which the Monte Carlo Simulation is performed.
     iterations : int
         No of iterations.
     impact_cat : str
         Impact category considered for the impact calculation.
-    var_param : List
+    var_param : list of ~pod_lca.uncertainty.DataDistribution
         List of Distribution objects.
     scenario : dict
-        Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+        Dictionary of objects and the scenario set to them; {**object** (:class:`~pod_lca.materials_screening.Master`): **scenario** (:class:`str`)}.
         Scenario values are 'low', 'med', and 'high'.
-    result : result Obj.
+    run_time : float
+        CPU time of the simulation.
+    result : ~pod_lca.uncertainty.MonteCarloResults
         Data from the Monte Carlo Simulation
     """
 
@@ -66,8 +68,13 @@ class MonteCarloSimulator:
         
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model on which the Monte Carlo Simulation is performed.
+
+        Returns
+        -------
+        ~pod_lca.uncertainty.MonteCarloSimulator
+            Simulator object.
         """
         monte_carlo_simulator = cls()
         monte_carlo_simulator.set_model(model)
@@ -86,11 +93,12 @@ class MonteCarloSimulator:
         
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model on which the Monte Carlo Simulation is performed.        
         """
-
         self.model = model
+
+        return self
 
     def set_iterations(self, no_iters):
         """ Set the number of iterations of the simulation.
@@ -100,8 +108,9 @@ class MonteCarloSimulator:
         no_iters : int
             Number of iterations of the simulations.        
         """
-
         self.iterations = no_iters
+
+        return self
 
     def set_impact_cat(self, impact_cat):
         """ Set the impact category considered for the simulation.
@@ -111,8 +120,9 @@ class MonteCarloSimulator:
         impact_cat : str
             Impact category considered for the impact calculation.    
         """
-
         self.impact_cat = impact_cat
+
+        return self
 
     def set_var_params(self, params=None, set_all=True):
         """Find and set the variable parameters within the model.
@@ -123,6 +133,11 @@ class MonteCarloSimulator:
             List of distributions to be considered in the MCS.
         set_all : bool
             If true, set all the parameters in the model with a distribution.
+
+        Raises
+        ------
+        NotImplementedError
+            No parameters set to vary.
         """
         if params is not None:
             self.var_params = params
@@ -133,7 +148,7 @@ class MonteCarloSimulator:
         else:
             raise NotImplementedError
 
-        return self.var_params
+        return self
     
     def set_scenario(self, dict):
         """ Set scenarios for a simulation.
@@ -141,11 +156,12 @@ class MonteCarloSimulator:
         Parameters
         ----------
         scenario : dict
-            Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+            Dictionary of objects and the scenario set to them; {**object** (:class:`~pod_lca.materials_screening.Master`): **scenario** (:class:`str`)}.
             Scenario values are 'low', 'med', and 'high'.
         """
-
         self.scenario = dict
+
+        return self
 
     def set_result(self, results, is_cts):
         """ Sets the results of the Monte Carlo Simulation.
@@ -157,8 +173,9 @@ class MonteCarloSimulator:
         is_cts : bool
             True, if the results are in a continous scale.
         """
-
         self.result = MonteCarloResults.from_data(results, name='MonteCarloSimualation', is_cts=is_cts, set_dist=False)
+
+        return self
 
     # ================================
     # Getters
@@ -168,7 +185,7 @@ class MonteCarloSimulator:
         
         Returns
         ----------
-        Model Obj.
+        ~pod_lca.materials_screening.Model
             Model on which the Monte Carlo Simulation is performed.        
         """
         return self.model
@@ -196,7 +213,6 @@ class MonteCarloSimulator:
     def get_var_params(self):
         """ Get variable parameters within the model.
         """
-
         return self.var_params
     
     def get_scenario(self):
@@ -205,7 +221,7 @@ class MonteCarloSimulator:
         Returns
         ----------
         dict
-            Dictionary of objects and the scenario set to them---{object (Master Obj): scenario (str)}
+            Dictionary of objects and the scenario set to them; {**object** (:class:`~pod_lca.materials_screening.Master`): **scenario** (:class:`str`)}.
             Scenario values are 'low', 'med', and 'high'.
         """
         return self.scenario
@@ -215,7 +231,7 @@ class MonteCarloSimulator:
         
         Returns
         ----------
-        MonteCarlo_reults Obj.
+        ~pod_lca.uncertainty.MonteCarloResults
             Data from the Monte Carlo Simulation.
         """
         return self.result
@@ -320,7 +336,10 @@ class MonteCarloSimulator:
         for object in objects:
             for dataset in object.get_data_distributions().values():
                 if dataset.get_distribution() is None:
-                    dataset.set_distribution()               
+                    dataset.set_distribution()     
+
+        return self
+              
 
 class MonteCarloResults(DataDistribution):
 

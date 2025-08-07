@@ -185,7 +185,7 @@
 <dd><p>The data set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of floats (or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a> (or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -193,7 +193,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.dist_name">
 <span class="sig-name descname"><span class="pre">dist_name</span></span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.dist_name" title="Link to this definition">¶</a></dt>
-<dd><p>Distribution name as used in scipy.stats.</p>
+<dd><p>Distribution name as used in <code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
@@ -207,7 +207,7 @@
 <dd><p>Fitted distribution object from Scipy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>rv_continous or rv_discrete (Scipy) Obj.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="(in SciPy v1.16.1)">scipy.stats.rv_continuous</a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_discrete.html#scipy.stats.rv_discrete" title="(in SciPy v1.16.1)">scipy.stats.rv_discrete</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -218,7 +218,7 @@
 <dd><p>Object to which the dataset is attached.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Object</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)">object</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,16 +264,16 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>floats</em>) -- The data set.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The data set.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data set.</p></li>
 <li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, the data are from a contrinous variable, otherwise a discrete variable.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dataset created.</p>
+<dd class="field-even"><p>Data distribution created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DataSet</em></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -285,16 +285,16 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dist</strong> (<em>scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.</em>) -- Fitted distribution object from Scipy.</p></li>
+<li><p><strong>dist</strong> (<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="(in SciPy v1.16.1)"><em>scipy.stats.rv_continuous</em></a>) -- Fitted distribution object from Scipy.</p></li>
 <li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data set.</p></li>
 <li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, the data are from a contrinous variable, otherwise a discrete variable.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dataset created.</p>
+<dd class="field-even"><p>Data distribution created.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>DataSet Obj.</p>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.uncertainty.DataDistribution"><em>DataDistribution</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -302,10 +302,10 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.set_data">
 <span class="sig-name descname"><span class="pre">set_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.set_data" title="Link to this definition">¶</a></dt>
-<dd><p>Set data to the DataSet Obj.</p>
+<dd><p>Set data to the Data distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>floats</em>) -- The data set.</p>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- The data set.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -313,7 +313,7 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.set_name">
 <span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.set_name" title="Link to this definition">¶</a></dt>
-<dd><p>Set name to the DataSet Obj.</p>
+<dd><p>Set name to the data distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the data set.</p>
@@ -324,10 +324,13 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.set_distribution">
 <span class="sig-name descname"><span class="pre">set_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.set_distribution" title="Link to this definition">¶</a></dt>
-<dd><p>Set a Distribution Obj to the DataSet Obj.</p>
+<dd><p>Set a distribution function to the data distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dist</strong> (<em>rv_continuous</em><em> or </em><em>rv_discrete</em><em> (</em><em>Scipy</em><em>) </em><em>Obj.</em>) -- Fitted distribution object from Scipy.</p>
+<dd class="field-odd"><p><strong>dist</strong> (<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="(in SciPy v1.16.1)"><em>scipy.stats.rv_continuous</em></a><em> or </em><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_discrete.html#scipy.stats.rv_discrete" title="(in SciPy v1.16.1)"><em>scipy.stats.rv_discrete</em></a>) -- Fitted distribution.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- A valid distribution could not be fitted.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -338,7 +341,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Set parent of the dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> (<em>Master Obj.</em>) -- Object to which the dataset correspond.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><em>object</em></a>) -- Object to which the dataset correspond.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -361,7 +364,7 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Scenario name given as 'high', 'med', or 'low'.</p></li>
+<li><p><strong>scenario_name</strong> (<em>{'high'</em><em>, </em><em>'med'</em><em>, </em><em>'low'}</em>) -- Scenario.</p></li>
 <li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Scenario value given as a value between 0 and 1.</p></li>
 </ul>
 </dd>
@@ -377,7 +380,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd class="field-odd"><p>The data set.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of floats</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -385,10 +388,10 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.get_name">
 <span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.get_name" title="Link to this definition">¶</a></dt>
-<dd><p>Get the name of the Dataset.</p>
+<dd><p>Get the name of the data distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Name of the data set.</p>
+<dd class="field-odd"><p>Name of the data distribution.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
@@ -400,12 +403,28 @@ For continous variables values are numbers between 0-1.</p>
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.get_distribution">
 <span class="sig-name descname"><span class="pre">get_distribution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.get_distribution" title="Link to this definition">¶</a></dt>
 <dd><p>Get the distribution fitted to the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Fitted distribution.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="(in SciPy v1.16.1)">scipy.stats.rv_continuous</a> or <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_discrete.html#scipy.stats.rv_discrete" title="(in SciPy v1.16.1)">scipy.stats.rv_discrete</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.DataDistribution.get_dist_name">
 <span class="sig-name descname"><span class="pre">get_dist_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.get_dist_name" title="Link to this definition">¶</a></dt>
 <dd><p>Get the name of the distribution fitted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Distribution name as used in <code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats</span></code>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -427,8 +446,11 @@ For continous variables values are numbers between 0-1.</p>
 <span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.DataDistribution.get_parent" title="Link to this definition">¶</a></dt>
 <dd><p>Get parent of the dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Obj.</strong> (<a class="reference internal" href="products.html#pod_lca.materials_screening.Master" title="pod_lca.materials_screening.Master"><em>Master</em></a>) -- Object to which the dataset correspond.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Object to which the dataset correspond.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)">object</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -459,7 +481,12 @@ For continous variables values are numbers between 0-1.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) -- Data to be fitted.</p></li>
 <li><p><strong>is_cts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- True, if the data comes from a continous variable.</p></li>
-<li><p><strong>fit_methods</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- 'MLE', 'MSE'</p></li>
+<li><p><strong>fit_methods</strong> (<em>{'MLE'</em><em>, </em><em>'MSE'}</em>) -- <p>Best fitting method:</p>
+<ul>
+<li><p>'MLE' - Maximum Likelihood Estimate</p></li>
+<li><p>'MSE' - Mean Squared Error</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -467,6 +494,9 @@ For continous variables values are numbers between 0-1.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> -- Could not discrimenate between eaqually good best-fits.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -478,7 +508,7 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dist_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Distribution name as used in scipy.stats.</p></li>
+<li><p><strong>dist_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Distribution name as used in <code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats</span></code>.</p></li>
 <li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) -- Parameters corresponding to the fit.</p></li>
 </ul>
 </dd>
@@ -499,13 +529,18 @@ For continous variables values are numbers between 0-1.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dist_fit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the distribution fitted to the data set, following Scipy.stats module.</p></li>
-<li><p><strong>fit_methods</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- 'MLE', 'MSE'</p></li>
+<li><p><strong>fit_methods</strong> (<em>{'MLE'</em><em>, </em><em>'MSE'}</em>) -- <p>Best fitting method:</p>
+<ul>
+<li><p>'MLE' - Maximum Likelihood Estimate</p></li>
+<li><p>'MSE' - Mean Squared Error</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
-<li><p><em>scipy.stats._continuous_distns Obj.</em> -- The fitted distribtuion to the data set.</p></li>
-<li><p><em>tuple</em> -- Parameters of the fitted distribution.</p></li>
+<li><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_continuous.html#scipy.stats.rv_continuous" title="(in SciPy v1.16.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">scipy.stats.rv_continuous</span></code></a> -- The fitted distribtuion to the data set.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a> -- Parameters of the fitted distribution.</p></li>
 </ul>
 </p>
 </dd>
@@ -521,7 +556,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd class="field-odd"><p>Scipy discrete distribution.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>rv_discrete (Scipy) Obj.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.rv_discrete.html#scipy.stats.rv_discrete" title="(in SciPy v1.16.1)">scipy.stats.rv_discrete</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -546,7 +581,7 @@ For continous variables values are numbers between 0-1.</p>
 <dd><p>Pick a random variate from the distibution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Number of points to pick</p>
+<dd class="field-odd"><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Number of points to pick.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A list of random variates from the distribution.</p>
@@ -601,14 +636,17 @@ For continous variables values are numbers between 0-1.</p>
 <li><p><strong>start</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Starting value of the discrete data set.</p></li>
 <li><p><strong>range</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Range of the data set.</p></li>
 <li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Step of the discrete data series.</p></li>
-<li><p><strong>integrate_point</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Point to which the data is grouped: 'left', 'middle', 'right'</p></li>
+<li><p><strong>integrate_point</strong> (<em>{'left'</em><em>, </em><em>'middle'</em><em>, </em><em>'right'}</em>) -- Point to which the data is grouped.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Discrete sequence of data.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)">numpy.ndarray</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Integrate point not recognized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -618,7 +656,8 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.Uniform">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">Uniform</span></span><a class="headerlink" href="#pod_lca.uncertainty.Uniform" title="Link to this definition">¶</a></dt>
-<dd><p>A uniform data distribution.</p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.lca_modules.uncertainty.datasets.DataDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></a></p>
+<p>A uniform data distribution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.Uniform.from_params">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unspecified'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.Uniform.from_params" title="Link to this definition">¶</a></dt>
@@ -639,7 +678,8 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.Norm">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">Norm</span></span><a class="headerlink" href="#pod_lca.uncertainty.Norm" title="Link to this definition">¶</a></dt>
-<dd><p>A normal data distribution.</p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.lca_modules.uncertainty.datasets.DataDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></a></p>
+<p>A normal data distribution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.Norm.from_params">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_dev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unspecified'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.Norm.from_params" title="Link to this definition">¶</a></dt>
@@ -660,14 +700,12 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.LogNorm">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">LogNorm</span></span><a class="headerlink" href="#pod_lca.uncertainty.LogNorm" title="Link to this definition">¶</a></dt>
-<dd><p>A log-normal data distribution.</p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.lca_modules.uncertainty.datasets.DataDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></a></p>
+<p>A log-normal data distribution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.LogNorm.from_params">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std_dev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unspecified'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.LogNorm.from_params" title="Link to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>Create a log-normal distribution from parameters specified.</dt><dd><p>Parameters specified are the mean and standard deviation of the corresponding normal distribution, and the starting point of the log-normal distribution.</p>
-</dd>
-</dl>
+<dd><p>Create a log-normal distribution from parameters specified. Parameters specified are the mean and standard deviation of the corresponding normal distribution, and the starting point of the log-normal distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -685,7 +723,8 @@ For continous variables values are numbers between 0-1.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.ExponentDecay">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.uncertainty.</span></span><span class="sig-name descname"><span class="pre">ExponentDecay</span></span><a class="headerlink" href="#pod_lca.uncertainty.ExponentDecay" title="Link to this definition">¶</a></dt>
-<dd><p>A exponential decay distribution.</p>
+<dd><p>Bases: <a class="reference internal" href="#pod_lca.uncertainty.DataDistribution" title="pod_lca.lca_modules.uncertainty.datasets.DataDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataDistribution</span></code></a></p>
+<p>A exponential decay distribution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.uncertainty.ExponentDecay.from_params">
 <em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unspecified'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.uncertainty.ExponentDecay.from_params" title="Link to this definition">¶</a></dt>

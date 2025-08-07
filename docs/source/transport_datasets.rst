@@ -22,9 +22,12 @@ Transport Datasets
 
 .. autoclass:: pod_lca.transportation.CFSDataset
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.transportation.USGlobalDataset
     :members:
+    :show-inheritance:
 
 .. autoclass:: pod_lca.transportation.EOLTransportDataset
     :members:
+    :show-inheritance:

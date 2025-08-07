@@ -15,10 +15,10 @@ class HotSpotAnalysis:
 
     Attributes
     ----------
-    model : Model Obj.
+    model : ~pod_lca.materials_screening.Model
         Model on which the hotspot analysis is performed.
     hotspots : dict of list
-        {impact_category (str): list (Master Obj)} .
+        {**impact_category** (:class:`str`): :class:`list` of :class:`~pod_lca.materials_screening.Master`}.
     """
 
     def __init__(self):
@@ -50,7 +50,7 @@ class HotSpotAnalysis:
         
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model on which the hotspot analysis is performed.
         """
         hotspot_analysis = cls()
@@ -68,17 +68,19 @@ class HotSpotAnalysis:
         
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model on which the hotspot analysis is performed.        
         """
         self.model = model
+
+        return self
 
     def set_hotspots(self, hotspots, impact_category):
         """ Set attribute in hotspots to identify as hotspots.
 
         Parameters
         ----------
-        hotspots : list of Master Objs.
+        hotspots : list of ~pod_lca.materials_screening.Master
             List of hotspot object of the model.
         impact_category : str
             Impact category for which the hotspot analysis was run.
@@ -90,12 +92,14 @@ class HotSpotAnalysis:
         ArrayMethods.set_value(all_items, 'is_hotspot', False)
         ArrayMethods.set_value(hotspots, 'is_hotspot', True)
 
+        return self
+
     def get_model(self):
         """ Get the model for which the analsysis will be run.
     
         Returns
         ----------
-        Model Obj.
+        ~pod_lca.materials_screening.Model
             Model on which the hotspot analysis is performed.        
         """
         return self.model
@@ -106,7 +110,7 @@ class HotSpotAnalysis:
         Returns
         ----------
         dict
-            {impact_category (str): list (Master Obj)} .
+            {**impact_category** (:class:`str`): :class:`list` of :class:`~pod_lca.materials_screening.Master`} 
         """
         return self.hotspots
 
@@ -120,9 +124,8 @@ class HotSpotAnalysis:
 
         Returns
         ----------
-        list of Master Objs.
-            List of hotspot object of the model.
-            None if hotspots are not set.
+        list of ~pod_lca.materials_screening.Master
+            List of hotspot object of the model.None if hotspots are not set.
         """
         if not impact_category in self.hotspots:
             self.run(impact_category)
@@ -134,8 +137,9 @@ class HotSpotAnalysis:
     # ================================
     def run(self, impact_category= "GWP"):
         """ Determines the hotspot of the model.
-            The hotspots are the largest group out of (a) top 20% contributors to the impact or 
-            (b) the smallest group of contributors to the 80% (or more) of the impact category specified.
+            The hotspots are the largest group out of \n 
+            - top 20% contributors to the impact or 
+            - the smallest group of contributors to the 80% (or more) of the impact category specified.
 
         Parameters
         ----------
@@ -144,9 +148,9 @@ class HotSpotAnalysis:
         impact_category : str
             Impact category considered.
         
-        Retrurn
+        Return
         -------
-        List of Master Obj.
+        list of ~pod_lca.materials_screening.Master
             Hotspot objects.
         """           
         impacts = self.model.get_impacts()

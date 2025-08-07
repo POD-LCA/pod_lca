@@ -66,8 +66,7 @@ class LogNorm(DataDistribution):
 
     @classmethod
     def from_params(cls, mean, std_dev, start, name='unspecified'):
-        """ Create a log-normal distribution from parameters specified.
-            Parameters specified are the mean and standard deviation of the corresponding normal distribution, and the starting point of the log-normal distribution.
+        """ Create a log-normal distribution from parameters specified. Parameters specified are the mean and standard deviation of the corresponding normal distribution, and the starting point of the log-normal distribution.
         
         Parameters
         ----------

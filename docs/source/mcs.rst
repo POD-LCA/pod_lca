@@ -11,5 +11,5 @@ Monte Carlo Simulation
 
 .. autoclass:: pod_lca.uncertainty.MonteCarloResults
     :members:
-
+    :show-inheritance:
     

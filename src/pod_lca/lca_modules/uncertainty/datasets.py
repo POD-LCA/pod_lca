@@ -21,13 +21,13 @@ class DataDistribution:
     ----------
     name : str
         Name of the data set.
-    data : list of floats (or str)
+    data : list of float (or str)
         The data set.
     dist_name : str
-        Distribution name as used in scipy.stats.
-    dist : rv_continous or rv_discrete (Scipy) Obj.
+        Distribution name as used in :class:`scipy.stats`.
+    dist : scipy.stats.rv_continuous or scipy.stats.rv_discrete
         Fitted distribution object from Scipy.
-    parent : Object
+    parent : object
         Object to which the dataset is attached.
     attr : str
         Attribute to which dataset is attached.
@@ -66,7 +66,7 @@ class DataDistribution:
         
         Parameters
         ----------
-        data : list of floats
+        data : list of float
             The data set.  
         name : str
             Name of the data set.
@@ -75,8 +75,8 @@ class DataDistribution:
                 
         Returns
         -------
-        ~pod_lca.uncertainty.DataSet
-            Dataset created.
+        ~pod_lca.uncertainty.DataDistribution
+            Data distribution created.
         """
         dataset = cls()
         dataset.set_data(data)
@@ -97,7 +97,7 @@ class DataDistribution:
         
         Parameters
         ----------
-        dist : scipy.stats._distn_infrastructure.rv_continuous_frozen Obj.
+        dist : scipy.stats.rv_continuous
             Fitted distribution object from Scipy.  
         name : str
             Name of the data set.
@@ -106,8 +106,8 @@ class DataDistribution:
 
         Returns
         -------
-        DataSet Obj.
-            Dataset created.
+        ~pod_lca.uncertainty.DataDistribution
+            Data distribution created.
         """
         dataset = cls()
         dataset.set_name(name)
@@ -121,11 +121,11 @@ class DataDistribution:
     # Setters
     # ================================
     def set_data(self, data):
-        """ Set data to the DataSet Obj.
+        """ Set data to the Data distribution.
         
         Parameters
         ----------
-        data : list of floats
+        data : list of float
             The data set.  
         """
         self.data = data
@@ -133,7 +133,7 @@ class DataDistribution:
         return self
     
     def set_name(self, name):
-        """ Set name to the DataSet Obj.
+        """ Set name to the data distribution.
         
         Parameters
         ----------
@@ -145,12 +145,17 @@ class DataDistribution:
         return self
 
     def set_distribution(self, dist=None):
-        """ Set a Distribution Obj to the DataSet Obj.
+        """ Set a distribution function to the data distribution.
 
         Parameters
         ----------
-        dist : rv_continuous or rv_discrete (Scipy) Obj.
-            Fitted distribution object from Scipy.
+        dist : scipy.stats.rv_continuous or scipy.stats.rv_discrete
+            Fitted distribution.
+
+        Raises
+        ------
+        ValueError
+            A valid distribution could not be fitted.
         """
         if dist is None:
             if self.is_cts:
@@ -178,7 +183,7 @@ class DataDistribution:
 
         Parameters
         ----------
-        obj : Master Obj.
+        obj : object
             Object to which the dataset correspond.
         """ 
         self.parent = obj
@@ -202,8 +207,8 @@ class DataDistribution:
         
         Parameters
         ----------
-        scenario_name : str
-            Scenario name given as 'high', 'med', or 'low'.
+        scenario_name : {'high', 'med', 'low'}
+            Scenario.
         value: float
             Scenario value given as a value between 0 and 1.
         """
@@ -217,28 +222,38 @@ class DataDistribution:
         
         Returns
         ----------
-        list of floats
+        list of float
             The data set.  
         """
         return self.data
     
     def get_name(self):
-        """ Get the name of the Dataset.
+        """ Get the name of the data distribution.
     
         Returns
         ----------
         str
-            Name of the data set.
+            Name of the data distribution.
         """
         return self.name
 
     def get_distribution(self):
         """ Get the distribution fitted to the dataset.
+
+        Returns
+        ----------
+        scipy.stats.rv_continuous or scipy.stats.rv_discrete
+            Fitted distribution.
         """
         return self.distribution
 
     def get_dist_name(self):
         """ Get the name of the distribution fitted.
+
+        Returns
+        ----------
+        str
+            Distribution name as used in :class:`scipy.stats`.
         """
         return self.dist_name   
 
@@ -255,9 +270,9 @@ class DataDistribution:
     def get_parent(self):
         """ Get parent of the dataset.
 
-        Parameters
-        ----------
-        Master Obj.
+        Returns
+        -------
+        object
             Object to which the dataset correspond.
         """ 
         return self.parent
@@ -294,13 +309,20 @@ class DataDistribution:
             Data to be fitted.
         is_cts : bool
             True, if the data comes from a continous variable.
-        fit_methods : str
-            'MLE', 'MSE'
+        fit_methods : {'MLE', 'MSE'}
+            Best fitting method: \n
+            - 'MLE' - Maximum Likelihood Estimate
+            - 'MSE' - Mean Squared Error
 
         Returns
         -------
         str
             Name of the selected distribution.
+
+        Raises
+        ------
+        NotImplementedError
+            Could not discrimenate between eaqually good best-fits.
         """
         if is_cts:
             full_dists_lst = UncertainityUtils.get_all_cts_distributions()
@@ -338,7 +360,7 @@ class DataDistribution:
         Parameters
         ----------
         dist_name : str
-            Distribution name as used in scipy.stats.
+            Distribution name as used in :class:`scipy.stats`.
         params : tuple
             Parameters corresponding to the fit.
 
@@ -364,14 +386,16 @@ class DataDistribution:
         ----------
         dist_fit : str
             Name of the distribution fitted to the data set, following Scipy.stats module.
-        fit_methods : str
-            'MLE', 'MSE'
+        fit_methods : {'MLE', 'MSE'}
+            Best fitting method: \n
+            - 'MLE' - Maximum Likelihood Estimate
+            - 'MSE' - Mean Squared Error
         
         Returns
         -------
-        scipy.stats._continuous_distns Obj.
+        :class:`scipy.stats.rv_continuous`
             The fitted distribtuion to the data set.
-        tuple
+        :class:`tuple`
             Parameters of the fitted distribution.
         """
         dist_tmp = getattr(stats, dist_fit)
@@ -385,7 +409,7 @@ class DataDistribution:
 
         Returns
         -------
-        rv_discrete (Scipy) Obj.
+        scipy.stats.rv_discrete
             Scipy discrete distribution.
         """
         freq = Counter(self.data)
@@ -414,7 +438,7 @@ class DataDistribution:
         Parameters
         ----------
         n : int
-            Number of points to pick
+            Number of points to pick.
 
         Returns
         -------
@@ -481,13 +505,18 @@ class DataDistribution:
             Range of the data set.
         step : float
             Step of the discrete data series.
-        integrate_point : str
-            Point to which the data is grouped: 'left', 'middle', 'right'
+        integrate_point : {'left', 'middle', 'right'}
+            Point to which the data is grouped.
 
         Returns
         -------
         numpy.ndarray
             Discrete sequence of data.
+
+        Raises
+        ------
+        ValueError
+            Integrate point not recognized.
         """
         t = np.arange(start, start + range + step, step)
         if t[-1] > start + range:
@@ -502,7 +531,7 @@ class DataDistribution:
             interval_starts = t - step
             interval_ends = t
         else:
-            raise ValueError("Integrate point not recognized")
+            raise ValueError("Integrate point not recognized.")
 
         if self.is_cts:
             return t, np.asarray(self.distribution.cdf(interval_ends) - self.distribution.cdf(interval_starts))

@@ -24,7 +24,9 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable/', None),
     'geopy': ('https://geopy.readthedocs.io/en/stable/', None),
-    'matplotlib': ('https://matplotlib.org/stable/', None)
+    'matplotlib': ('https://matplotlib.org/stable/', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
+    'numpy': ('https://numpy.org/doc/stable/', None)
 }
 
 templates_path = ['_templates']

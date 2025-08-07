@@ -11,3 +11,4 @@ Transport Mode
 
 .. autoclass:: pod_lca.transportation.ElectricTransportMode
     :members:
+    :show-inheritance:

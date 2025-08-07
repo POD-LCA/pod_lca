@@ -13,24 +13,24 @@ class SensitivityAnalysis:
 
         Parameters
         ----------
-        obj : Master Obj
+        obj : ~pod_lca.materials_screening.Master
             Entry on which the sensitivity is tested.
         param : str
             Parameter varied. This must be an attribute of the object.
         impact_cat : str
             Impact category considered.  Weighted impact, if 'weighted'
         sensitivity_type : {'relative', 'symmetric'}
-            Type of sensitivity analysis.
-            'relative' - relative percentage change of impact.
-            'symmetric' - symmetric percentage change of impact.
+            Type of sensitivity analysis.\n
+            - 'relative' - relative percentage change of impact.
+            - 'symmetric' - symmetric percentage change of impact.\n
             Default is 'relative'.
         printout : bool
             Printout results if true. Default is True
         **kwargs
-            range : tuple
+            - range - :class:`tuple`
                 Minimum and maximum value for the parameter.
                 e.g., qty of a product or process.
-            options : list of str
+            - options - :class:`list` of :class:`str`
                 A range of options given as strings for the parameter.
                 e.g., database_item name (i.e., to change the impact value)
 
@@ -38,6 +38,15 @@ class SensitivityAnalysis:
         -------
         tuple
             Minimum and maximum percentage change of impact.
+
+        Raises
+        ------
+        ValueError
+            Range of parameter does not include base value.
+        ValueError
+            Invalid sensitivity type.
+        KeyError
+            Keyword arguments not recognized.
         """
         model = obj.get_model()
 
@@ -133,33 +142,35 @@ class SensitivityAnalysis:
 
         Parameters
         ----------
-        model : Model Obj.
+        model : ~pod_lca.materials_screening.Model
             Model in which the sensitivity is considered.
         groups : List of dict
-            [{'obj': Master Obj, 'param': str, 'range': tuple}, 
-            {'obj': Master Obj, 'param': str, 'options': list of str},
+            [{**'obj'**: :class:`~pod_lca.materials_screening.Master`, **'param'**: :class:`str`, **'range'**: :class:`tuple`}, 
+            {**'obj'**: :class:`~pod_lca.materials_screening.Master`,**'param'**: :class:`str`, **'options'**: :class:`list` of :class:`str`},
             ...
             ]
-            where;
-                obj : Master Obj
+            where;\n
+                - obj - :class:`~pod_lca.materials_screening.Master`
                     Entry on which the sensitivity is tested.
-                param : str
-                    Parameter varied.
-                    This must be an attribute of the object.
-                range : tuple
-                    Minimum and maximum value for the parameter, in that order.
-                    e.g., qty of a product or process.
-                options : list of str
-                    A range of options given as strings for the parameter.
-                    e.g., database_item name (i.e., to change the impact value)
+                - param - :class:`str`
+                    Parameter varied. This must be an attribute of the object.
+                - range - tuple
+                    Minimum and maximum value for the parameter, in that order.e.g., qty of a product or process.
+                - options - list of str
+                    A range of options given as strings for the parameter. e.g., database_item name (i.e., to change the impact value)
 
         Returns
         -------
         tuple
             Minimum and maximum percentage change of impact.
-        """
-        project =  model.get_project()
 
+        Raises
+        ------
+        ValueError
+            Range of parameter does not include base value.
+        KeyError
+            Keyword arguments not recognized.
+        """
         base_impact = model.get_total_impact(impact_cat)
 
         for group in groups:
