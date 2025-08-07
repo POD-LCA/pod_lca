@@ -118,8 +118,9 @@ class TemporalEmissionProfiles(DataDistribution):
                 record[after_ids] = 0.0
 
         if unitize:
-            area_under_curve = self.dist.cdf(self.get_duration() + self.get_start()) - self.dist.cdf(self.get_start())
-            record /= area_under_curve
+            if not self.get_dist_name() in ['expon']:
+                area_under_curve = self.dist.cdf(self.get_duration() + self.get_start()) - self.dist.cdf(self.get_start())
+                record /= area_under_curve
 
         return t, record
         
