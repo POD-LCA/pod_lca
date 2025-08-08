@@ -104,7 +104,7 @@ class TemporalEmissionProfiles(DataDistribution):
 
         Returns
         -------
-        numpy.array
+        numpy.ndarray
             Discrete sequence of data.
         """
         t, record = super().discrete_from_continous(start, range, step, integrate_point)

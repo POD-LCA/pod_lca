@@ -111,7 +111,7 @@ class DynamicRadiativeForcing:
         ----------
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
             Name of the greenhouse gas. 
-        at_year : int or numpy.array
+        at_year : int or numpy.ndarray
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
             Cumulative values if true, else instantaneous values.  
@@ -152,7 +152,7 @@ class DynamicRadiativeForcing:
         ----------
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
             Name of the greenhouse gas.
-        at_year : int or numpy.array
+        at_year : int or numpy.ndarray
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
             Cumulative values if true, else instantaneous values.
@@ -221,9 +221,9 @@ class DynamicRadiativeForcing:
 
         Returns
         -------
-        :class:`numpy.array`
+        :class:`numpy.ndarray`
             years of the time series
-        :class:`numpy.array`
+        :class:`numpy.ndarray`
             concentration values at the end of the year #TODO: double check this    
         """
         years = np_arange(0, time_horizon + time_step, time_step)
@@ -253,11 +253,11 @@ class DynamicRadiativeForcing:
 
         Returns
         -------
-        :class:`numpy.array`
+        :class:`numpy.ndarray`
             Years of the time series
-        :class:`numpy.array`
+        :class:`numpy.ndarray`
             Atmospheric concentration values at the end of the year #TODO: double check this 
-        :class:`numpy.array`
+        :class:`numpy.ndarray`
             Radiative forcing values at the end of the year
 
         Raises
