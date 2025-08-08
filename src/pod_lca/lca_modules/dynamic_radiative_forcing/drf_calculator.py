@@ -5,6 +5,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu; etel5501@uw.edu"
 __version__ = "0.1.0"
 
+import os
+
 from numpy import arange as np_arange
 from numpy import cumsum
 from numpy import exp as np_exp
@@ -44,7 +46,10 @@ class DynamicRadiativeForcing:
         f1 = 0.5 # increased effect due to ozone
         f2 = 0.15 # increased effect due to stratospheric H2O 
 
-        radiative_efficiency_dict = DataImporter.json_to_dict(config['file_paths']['drf']['RADIATIVE_EFFICIENCY'])
+        IPCC_report_version = config['setup']['drf']['IPCC_REPORT_VERSION']
+        root, ext = os.path.splitext(config['file_paths']['drf']['RADIATIVE_EFFICIENCY'])
+
+        radiative_efficiency_dict = DataImporter.json_to_dict(root + '_' + IPCC_report_version + ext)
         
         if greenhouse_gas in radiative_efficiency_dict:
             radiative_efficiency = radiative_efficiency_dict[greenhouse_gas]['val']
@@ -87,7 +92,10 @@ class DynamicRadiativeForcing:
         float
             Pertubation lifetime in years.
         """
-        pertubation_lifetimes_dict = DataImporter.json_to_dict(config['file_paths']['drf']['PERTUBATION_LIFETIMES'])
+        IPCC_report_version = config['setup']['drf']['IPCC_REPORT_VERSION']
+        root, ext = os.path.splitext(config['file_paths']['drf']['PERTUBATION_LIFETIMES'])
+
+        pertubation_lifetimes_dict = DataImporter.json_to_dict(root + '_' + IPCC_report_version + ext)
         if greenhouse_gas in pertubation_lifetimes_dict:
             return pertubation_lifetimes_dict[greenhouse_gas]
         else:
