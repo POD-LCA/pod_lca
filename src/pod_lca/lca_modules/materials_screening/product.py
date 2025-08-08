@@ -29,8 +29,7 @@ class Product(Master):
     production_year : int
         The year the product was produced.
     electricity : dict
-        Dictionary containing A3 electricity impacts of the production of the material. Keys as follows;
-
+        Dictionary containing A3 electricity impacts of the production of the material. Keys as follows; \n
         - `'from_database'`: contains unit electricity impacts retrieved from the database; 
         - `'by_location'`: contains corresponding electricity impacts by location, retrieved from electricity sub-package. 
         - `'_current'`: indicates which of the above is in use for impacts.
@@ -198,7 +197,7 @@ class Product(Master):
         Parameters
         ----------
         source : {'from_database', 'by_location'}
-            Source of electricity inventories data: 'from_database', or 'by_location'.
+            Source of electricity inventories data. Default 'from_database'.
         """
         if source in [key for key in self.electricity if not key.startswith('_')]:
             self.electricity["_current"] = source
@@ -506,11 +505,15 @@ class Product(Master):
                                                             model=self.get_model(), 
                                                             stage=None, 
                                                             qty=electricity_qty, 
-                                                            unit=electricity_unit)
+                                                            unit=electricity_unit,
+                                                            year=self.get_project().get_year())
                     self.electricity['by_location'] = electricity_by_location
+
                 else:
                     self.electricity['by_location'].set_qty(electricity_qty)
                     self.electricity['by_location'].set_unit(electricity_unit)
+                    if self.get_model().get_year() is not None:
+                        self.electricity['by_location'].set_year(self.get_project().get_year())
                 
                 # electricity from database
                 if self.electricity['from_database'] is None:

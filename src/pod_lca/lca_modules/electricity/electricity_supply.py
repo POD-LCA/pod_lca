@@ -27,8 +27,7 @@ class ElectricitySupply:
     name : str
         The name of the electricity supply authority.
     geographical_scope : {'National', 'Regional', 'Local'}
-        Geographical scope of the electricity supply.
-
+        Geographical scope of the electricity supply. \n
         - `'National'`: US average
         - `'Regional'`: FERC region
         - `'Local'`: Balancing Authority.
@@ -162,8 +161,7 @@ class ElectricitySupply:
         Parameters
         ----------
         geographical_scope : {'National'. 'Regional', 'Local'}
-            Geographical scope of the electricity supply.
-
+            Geographical scope of the electricity supply. \n
             - `'National'`: US average
             - `'Regional'`: FERC region
             - `'Local'`: Balancing Authority.
@@ -245,8 +243,7 @@ class ElectricitySupply:
         Parameters
         ----------
         geographical_scope : {'National'. 'Regional', 'Local'}
-            Geographical scope of the electricity supply.
-
+            Geographical scope of the electricity supply. \n
             - `'National'`: US average
             - `'Regional'`: FERC region
             - `'Local'`: Balancing Authority.   

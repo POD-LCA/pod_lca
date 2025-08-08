@@ -24,6 +24,8 @@ class Project:
         Name of the project.
     models : dict
         All models created/compared in the current project: {**model name** (:class:`str`): :class:`~pod_lca.materials_screening.Model`}.
+    year : int
+        Year of material production project.    
     location : ~pod_lca.location.Location
         Location of the project.
     impact_database : ~pod_lca.impacts.ImpactsDatabase.
@@ -36,6 +38,7 @@ class Project:
         self.name = None
         self.models = {}
         self.location = None
+        self.year = None
         self.impact_database = None
         self.transport_mode_impact_database = None
 
@@ -144,6 +147,18 @@ class Project:
 
         return self
 
+    def set_year(self, year):
+        """ Set manufacturing year.
+        
+        Parameters
+        ----------
+        year : int
+            Year of material production process.
+        """
+        self.year = year
+
+        return self
+    
     def get_name(self):
         """ Retrieve the name of the project.
         
@@ -184,6 +199,16 @@ class Project:
         """
         return self.location
     
+    def get_year(self):
+        """ Retrieve manufacturing year.
+        
+        Returns
+        -------
+        int
+            Year of material production process.
+        """
+        return self.year
+        
     # ================================
     # Model Methods
     # ================================

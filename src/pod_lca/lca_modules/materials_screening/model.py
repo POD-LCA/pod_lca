@@ -13,6 +13,7 @@ from . import Electricity
 from . import Fuel
 from . import Process
 from . import Product
+from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ..transportation import TransportationManager
 from ..transportation import USDomesticTransportationManager
 from ..transportation import USGlobalTransportationManager
@@ -50,6 +51,7 @@ class Model:
     def __init__(self):
         self.project = None
         self.name = None
+        self.year = None
         self.processes = []
         self.products = []
         self.transportation_manager = None
@@ -214,7 +216,7 @@ class Model:
         self.name = name
 
         return self
-
+    
     def set_transportation_manager(self, logistic_type='local'):
         """ Set the logistics manager of the model.
         
@@ -623,6 +625,43 @@ class Model:
             data[impact_category] = sum(self.get_impacts_by_LCstages(impact_category).values()) / IMPACT_NORMALIZATION_FACTOR[impact_category]
         
         return data
+
+    # ================================
+    # Interaction Methods
+    # ================================
+    def set_products_electricity_source(self, source):
+        """ Assign source for all products of the model.
+        
+        Parameters
+        ----------
+        source : {'from_database', 'by_location'}
+            Source of electricity inventories data. Default 'from_database'
+        """
+        for product in self.get_products():
+            if not isinstance(product, Electricity):
+                product.set_electricity_source(source)
+
+        return self
+    
+    def get_drf_record(self, time_horizon=100, time_step=1/12):
+        """ Get the dynamic radiative forcing record for all the products and procesess in the model.
+        
+        Parameters
+        ----------
+        time_horizon : int
+            Time horizon in years.
+        time_step : int or float
+            Time step of the record. The same time step is used for both for integration and for reporting.
+
+        Returns
+        -------
+        ~pod_lca.drf.DynamicRadiativeForcingRecord
+            Dynamic Radiative Forcing Record
+        """
+        return DynamicRadiativeForcingRecord.from_products(self.get_all_items(), 
+                                                           self.get_project().get_year(), 
+                                                           time_horizon, 
+                                                           time_step)
 
 
 if __name__ == '__main__':

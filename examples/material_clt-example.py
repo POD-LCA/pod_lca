@@ -23,6 +23,7 @@ project = Project()
 
 factory = Location.from_str("Seattle, Washington")
 project.set_location(factory)
+# project.set_year('2025')
 
 project.set_impact_database(r'data/impacts_podlca_material-data.csv')
 project.set_transportation_mode_impact_database(r'data/transportation_podlca_emission.csv')
@@ -42,6 +43,10 @@ natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, uni
 
 print(CLT_model)
 print(project)
+
+# CLT_model.set_products_electricity_source('by_location')
+# drf_record = CLT_model.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('instantaneous radiative forcing')
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)

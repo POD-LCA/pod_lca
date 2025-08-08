@@ -40,7 +40,7 @@ class Electricity(Master):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, id, name, model, stage, qty, unit):
+    def new(cls, id, name, model, stage, qty, unit, year=None):
         """ Create a new electricity product in a model.
         
         Parameters
@@ -72,7 +72,7 @@ class Electricity(Master):
         item.emissions = Emissions.from_parent(item)
         item.carbon_storage = CarbonStorage.from_parent(item)
 
-        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location())
+        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location(), year)
         item.set_supplier(electricity_supplier)
 
         return item

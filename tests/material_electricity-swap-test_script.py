@@ -50,6 +50,7 @@ for test in tqdm(test_dict):
                                     unit=UNITS_MAP[test_dict[test]['unit']], 
                                     impacts_from=test_dict[test]['material'])
 
+    # my_manufacturing_project.set_year(year)
     product.set_production_year(year)
     product.set_electricity_source(source=test_dict[test]['electricity_source'])
     if product.electricity['by_location'] is not None:
