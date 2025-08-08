@@ -73,6 +73,11 @@ class DynamicRadiativeForcingRecord:
             Time horizon of the record, in years.
         time_step : int or float
             Time step of the record, in years.
+
+        Returns
+        -------
+        ~pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord
+            DRF record object.
         """
         record = cls()
 
@@ -97,6 +102,11 @@ class DynamicRadiativeForcingRecord:
             Time horizon of the record, in years.
         time_step : int or float
             Time step of the record, in years.
+
+        Returns
+        -------
+        ~pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord
+            DRF record object.
         """
         emissions_lst = [item.get_emissions() for item in products]
 
@@ -144,9 +154,9 @@ class DynamicRadiativeForcingRecord:
         
         Returns
         -------
-        list of int
+        :class:`list` of :class:`int`
             Time steps in the record.
-        list of float
+        :class:`list` of :class:`float`
             Radiative forcing values at the time steps.        
         """
         time_step = self.get_time_step()
@@ -238,7 +248,7 @@ class DynamicRadiativeForcingRecord:
         
         Returns
         -------
-        list of Emission Obj.
+        list of ~pod_lca.impacts.Emissions
             List of emissions considered in the record.
         """
         return self.emissions_lst
@@ -262,6 +272,11 @@ class DynamicRadiativeForcingRecord:
             Category of data to be reported. Default is 'radiative forcing'.
         xy_pairs : bool
             If true, provide data as xy pairs, else as sperate lists. Default is True.
+
+        Raises
+        ------
+        ValueError
+            Data category is not recognized.
         """
         if self.data_years is None:
             self.set_data()
@@ -325,6 +340,13 @@ class DynamicRadiativeForcingRecord:
             Time step for ticks along x axis.
         colors : list of str
             Colors of each line or stack.
+
+        Raises
+        ------
+        ValueError
+            Parameter to be plotted is not recognized.
+        ValueError
+            Plot type is not recognized.
         """
         if to_plot == 'emission intensity':
             title = "Greenhouse Gas Emission Record"

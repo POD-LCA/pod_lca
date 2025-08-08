@@ -104,7 +104,7 @@ class TemporalEmissionProfiles(DataDistribution):
 
         Returns
         -------
-        numpy.ndarray
+        numpy.array
             Discrete sequence of data.
         """
         t, record = super().discrete_from_continous(start, range, step, integrate_point)
@@ -271,6 +271,11 @@ class ExponentDecayEmissionProfile(TemporalEmissionProfiles, ExponentDecay):
             Percentage of area under the curve covered within the range.
         name : str
             Name of the data distribution.
+
+        Raises
+        ------
+        RuntimeError
+            Parameter could not be determined.
         """ 
         optim_decay_rate_result = optimize.minimize_scalar(lambda lmbda: exp(-lmbda * start) * (1 - exp(-lmbda * range)) - area_covered,
                                                        bracket=(0.01, 2 * log(1 / (1 - area_covered)) / range),
@@ -283,7 +288,7 @@ class ExponentDecayEmissionProfile(TemporalEmissionProfiles, ExponentDecay):
 
             return expon
         else:
-            raise RuntimeError("Parameter could not be determined")
+            raise RuntimeError("Parameter could not be determined.")
 
 
 if __name__ == '__main__':

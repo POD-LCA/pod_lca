@@ -38,6 +38,11 @@ class DynamicRadiativeForcing:
         -------
         float
             Radiative efficiency, in the reference unit.
+
+        Raises
+        ------
+        ValueError
+            Reference unit not recognized.
         """
         mass_atmosphere_total = 5.1352 * 10 ** 18 # in kg
         molecular_weight_air_mean = 28.97 # in g mol−1
@@ -106,7 +111,7 @@ class DynamicRadiativeForcing:
         ----------
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
             Name of the greenhouse gas. 
-        at_year : int or array
+        at_year : int or numpy.array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
             Cumulative values if true, else instantaneous values.  
@@ -147,7 +152,7 @@ class DynamicRadiativeForcing:
         ----------
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
             Name of the greenhouse gas.
-        at_year : int or array
+        at_year : int or numpy.array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
             Cumulative values if true, else instantaneous values.
@@ -161,7 +166,12 @@ class DynamicRadiativeForcing:
         Returns
         -------
         float
-            radiative forcing, in W/m2.       
+            radiative forcing, in W/m2. 
+
+        Raises
+        ------
+        ValueError  
+            Reference unit not recognized.
         """
         if greenhouse_gas == 'CH4':
             molecular_weight_dict = DataImporter.json_to_dict(config['file_paths']['drf']['MOLECULER_WEIGHT'])
@@ -211,9 +221,9 @@ class DynamicRadiativeForcing:
 
         Returns
         -------
-        numpy.array
+        :class:`numpy.array`
             years of the time series
-        numpy.array
+        :class:`numpy.array`
             concentration values at the end of the year #TODO: double check this    
         """
         years = np_arange(0, time_horizon + time_step, time_step)
@@ -243,12 +253,17 @@ class DynamicRadiativeForcing:
 
         Returns
         -------
-        numpy.array
+        :class:`numpy.array`
             Years of the time series
-        numpy.array
+        :class:`numpy.array`
             Atmospheric concentration values at the end of the year #TODO: double check this 
-        numpy.array
+        :class:`numpy.array`
             Radiative forcing values at the end of the year
+
+        Raises
+        ------
+        ValueError  
+            Reference unit not recognized.
         """
         radiative_efficiency = DynamicRadiativeForcing.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1")
         years, concentrations = DynamicRadiativeForcing.get_concentration_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
@@ -290,7 +305,12 @@ class DynamicRadiativeForcing:
         greenhouse_gas: {'CO2', 'CH4', 'CH4 fossil', 'N2O'}
             Name of the greenhouse gas.
         time_horizon : int
-            Time horizon in years.        
+            Time horizon in years.  
+
+        Returns
+        -------
+        float
+            AGWP value.      
         """
         if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
             agwp = DynamicRadiativeForcing.get_radiative_forcing('CH4', time_horizon, cumulative=True, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01)
@@ -312,7 +332,12 @@ class DynamicRadiativeForcing:
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
             Name of the greenhouse gas.  
         time_horizon : int
-            Time horizon in years.        
+            Time horizon in years.   
+
+        Returns
+        -------
+        float
+            GWP value.     
         """
         agwp_CO2 = DynamicRadiativeForcing.get_AGWP('CO2', time_horizon)
         agwp_gas = DynamicRadiativeForcing.get_AGWP(greenhouse_gas, time_horizon)
