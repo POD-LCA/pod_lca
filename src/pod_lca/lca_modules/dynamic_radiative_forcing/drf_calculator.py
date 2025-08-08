@@ -136,17 +136,17 @@ class DynamicRadiativeForcing:
             
         else:
             if greenhouse_gas == 'CO2':
-                # IPCC AR5 CO2 IRF Parameters:
-                # term_1 = 0.2173
-                # term_2 = 0.2240 * np_exp(-1 * at_year / 394.4)
-                # term_3 = 0.2824 * np_exp(-1 * at_year / 36.54)
-                # term_4 = 0.2763 * np_exp(-1 * at_year / 4.304)
+                # IPCC AR5 and AR6 CO2 IRF Parameters:
+                term_1 = 0.2173
+                term_2 = 0.2240 * np_exp(-1 * at_year / 394.4)
+                term_3 = 0.2824 * np_exp(-1 * at_year / 36.54)
+                term_4 = 0.2763 * np_exp(-1 * at_year / 4.304)
 
                 # IPCC AR4 CO2 IRF Parameters:
-                term_1 = 0.217
-                term_2 = 0.259 * np_exp(-1 * at_year / 172.9)
-                term_3 = 0.338 * np_exp(-1 * at_year / 18.51)
-                term_4 = 0.186 * np_exp(-1 * at_year / 1.186)
+                # term_1 = 0.217
+                # term_2 = 0.259 * np_exp(-1 * at_year / 172.9)
+                # term_3 = 0.338 * np_exp(-1 * at_year / 18.51)
+                # term_4 = 0.186 * np_exp(-1 * at_year / 1.186)
 
                 return (term_1 + term_2 + term_3 + term_4)
             
