@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from math import exp
+from math import log
 
 from numpy import log
 from numpy import where
@@ -263,8 +264,27 @@ class ExponentDecayEmissionProfile(TemporalEmissionProfiles, ExponentDecay):
     """
 
     @classmethod
-    def from_params(cls, start, decay_rate, name='unspecified'):
-        """ Create a exponential distribution from parameters specified.
+    def from_half_life(cls, start, half_life, name='unspecified'):
+        """ Create a exponential distribution from half-life specified.
+        
+        Parameters
+        ----------
+        start : int or float
+            Starting point of the exponential decay function.
+        half_life : int or float
+            Half-life of the exponential function.
+        name : str
+            Name of the data distribution.
+        """
+        decay_rate = log(2) / half_life
+        expon = super().from_params(start, decay_rate, name)
+        expon.set_start(start)
+
+        return expon
+        
+    @classmethod
+    def from_decay_rate(cls, start, decay_rate, name='unspecified'):
+        """ Create a exponential distribution from decay rate specified.
         
         Parameters
         ----------
