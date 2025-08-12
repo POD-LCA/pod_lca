@@ -30,6 +30,8 @@ from .lca_modules import eol
 from .lca_modules import building
 from .lca_modules import dynamic_radiative_forcing
 from .lca_modules import operational
+from .lca_modules import building_structure
+from .lca_modules import building_envelope
 
 import sys
 sys.modules['pod_lca.location'] = location
@@ -42,5 +44,7 @@ sys.modules['pod_lca.eol'] = eol
 sys.modules['pod_lca.transportation'] = transportation
 sys.modules['pod_lca.dynamic_radiative_forcing'] = dynamic_radiative_forcing
 sys.modules['pod_lca.operational'] = operational
+sys.modules['pod_lca.building_structure'] = building_structure
+sys.modules['pod_lca.building_envelope'] = building_envelope
 
 __all__ = [ "building", "dynamic_radiative_forcing",  "electricity", "eol", "impacts", "location", "materials_screening", "transportation",  "uncertainty", "units", "utilities", "visualizer"]

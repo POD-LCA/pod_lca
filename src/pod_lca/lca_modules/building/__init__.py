@@ -5,7 +5,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from .building_structure import Building
+from .end_of_life_mixins import EndOfLifeMixins
+from .floor import Floor
 from .components import BuildingComponent
+from .building import Building
 
-__all__ = ["Building","BuildingComponent"]
+
+__all__ = ["Building", "BuildingComponent"]
