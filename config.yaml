@@ -38,6 +38,10 @@ setup:
     CARBONATION_EFFECTS_IMPACT_CATEGORY: GWP
     ACCELERATED_CARBONATION_INVENTORY: Mineral C
     ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
+  operational:
+    EPLUS_VERSION: '25.1.0' # Version of Energy + used in this release of POD_LCA
+    TERRAIN: 'city'
+    NUM_TIMESTEPS: 1
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
@@ -45,50 +49,51 @@ setup:
   utilities:
     LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
 
+
 file_paths:
   transportation:
-    CFS_DATA_PATH: data\\transportation_cfs_dataset.csv
-    CFAF_DATA_PATH: data\\transportation_cfaf_dataset.csv
-    FAF_DATA_PATH: data\\transportation_faf_dataset.csv
-    CFS_STATE_CODE: data\\transportation_cfs_state-code.json
-    CFS_SCTG_CODE: data\\transportation_bt_material-sctg.csv
-    MARINE_DATA_PATH: data\\transportation_podlca_marine.csv
-    CFS_MODE_CODE: data\\transportation_cfs_mode-codes.json
-    FAF_MODE_CODE: data\\transportation_faf_mode-codes.json
-    ELECTRIC_VEHICLES: data\\transportation_podlca_electric-vehicles.csv
-    WASTE_TRANSPORT: data\\transportation_podlca_waste-transport.csv
+    CFS_DATA_PATH: data/transportation_cfs_dataset.csv
+    CFAF_DATA_PATH: data/transportation_cfaf_dataset.csv
+    FAF_DATA_PATH: data/transportation_faf_dataset.csv
+    CFS_STATE_CODE: data/transportation_cfs_state-code.json
+    CFS_SCTG_CODE: data/transportation_bt_material-sctg.csv
+    MARINE_DATA_PATH: data/transportation_podlca_marine.csv
+    CFS_MODE_CODE: data/transportation_cfs_mode-codes.json
+    FAF_MODE_CODE: data/transportation_faf_mode-codes.json
+    ELECTRIC_VEHICLES: data/transportation_podlca_electric-vehicles.csv
+    WASTE_TRANSPORT: data/transportation_podlca_waste-transport.csv
   electricity:
-    CAMBIUM_NATIONAL_DATA: data\\electricity_cambium_consumption-national.csv
-    CAMBIUM_REGIONAL_DATA: data\\electricity_cambium_consumption-regional.csv
-    CAMBIUM_LOCAL_DATA: data\\electricity_cambium_consumption-local.csv
-    CAMBIUM_HEADER_MAP: data\\electricity_cambium_technology-headers.json
-    CAMBIUM_TECHNOLOGY_MAP: data\\electricity_cambium_technology-map.json
-    CAMBIUM_REGIONS_MAP: data\\electricity_cambium_regions-map.json
-    ELECTRICITY_IMPACT_NATIONAL_DATA: data\\electricity_netl_national-consumption-impacts-by-technology.csv
-    ELECTRICITY_IMPACT_REGIONAL_DATA: data\\electricity_netl_regional-consumption-impacts-by-technology.csv
-    ELECTRICITY_TECHNOLOGIES: data\\electricity_netl_electricity-technologies.csv
+    CAMBIUM_NATIONAL_DATA: data/electricity_cambium_consumption-national.csv
+    CAMBIUM_REGIONAL_DATA: data/electricity_cambium_consumption-regional.csv
+    CAMBIUM_LOCAL_DATA: data/electricity_cambium_consumption-local.csv
+    CAMBIUM_HEADER_MAP: data/electricity_cambium_technology-headers.json
+    CAMBIUM_TECHNOLOGY_MAP: data/electricity_cambium_technology-map.json
+    CAMBIUM_REGIONS_MAP: data/electricity_cambium_regions-map.json
+    ELECTRICITY_IMPACT_NATIONAL_DATA: data/electricity_netl_national-consumption-impacts-by-technology.csv
+    ELECTRICITY_IMPACT_REGIONAL_DATA: data/electricity_netl_regional-consumption-impacts-by-technology.csv
+    ELECTRICITY_TECHNOLOGIES: data/electricity_netl_electricity-technologies.csv
   eol:
-    EOL_DEFAULT_MIXES: data\eol_podlca_default-mixes.csv
+    EOL_DEFAULT_MIXES: data/eol_podlca_default-mixes.csv
   impacts:
-    IMPACT_NORMALIZATION_FACTORS: data\\impacts_clf_normalization-factors.csv
-    IMPACT_WEIGHTING_FACTOR_EPA: data\\impacts_epa_weighting-factors.csv
-    IMPACT_WEIGHTING_FACTOR_NIST: data\\impacts_nist_weighting-factors.csv
+    IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
+    IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv
+    IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.csv
   location:
-    US_STATES: data\\location_faa_us-states.json
-    US_STATE_COORDS: data\\location_podlca_us-state-coords.csv
-    FAF_DOMESTIC_REGION: data\\transportation_faf_domestic-region.json
-    FAF_FOREIGN_REGION: data\\transportation_faf_foreign-region.json
-    FAF_CITY_REPRESENTATION: data\\transportation_podlca_faf-city-representation.json
-    US_COAST: data\\transportation_podlca_us-coast.json
-    FAF_FOREIGN_REGION_COUNTRY: data\\transportation_faf_foreign-region-countries.json
-    FERC_ZIPCODE_MAP_PATH: data\\location_netl_ferc-ba-mapping.csv
-    FERC_BA_ZIPCODE_MAP_PATH: data\\location_doe_ba-zip-mapping.csv
-    GEA_ZIPCODE_MAP_PATH: data\\location_cambium_gea-reeds-zip-mapping.csv
-    REEDS_BA_ZIPCODE_MAP_PATH: data\\location_cambium_gea-reeds-zip-mapping.csv
+    US_STATES: data/location_faa_us-states.json
+    US_STATE_COORDS: data/location_podlca_us-state-coords.csv
+    FAF_DOMESTIC_REGION: data/transportation_faf_domestic-region.json
+    FAF_FOREIGN_REGION: data/transportation_faf_foreign-region.json
+    FAF_CITY_REPRESENTATION: data/transportation_podlca_faf-city-representation.json
+    US_COAST: data/transportation_podlca_us-coast.json
+    FAF_FOREIGN_REGION_COUNTRY: data/transportation_faf_foreign-region-countries.json
+    FERC_ZIPCODE_MAP_PATH: data/location_netl_ferc-ba-mapping.csv
+    FERC_BA_ZIPCODE_MAP_PATH: data/location_doe_ba-zip-mapping.csv
+    GEA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
+    REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
   drf:
-    PERTUBATION_LIFETIMES: data\\drf_ipcc_pertubation-lifetimes.json
-    RADIATIVE_EFFICIENCY: data\\drf_ipcc_radiative-efficiency.json
-    MOLECULER_WEIGHT: data\\drf_none_moleculer-weight.json
+    PERTUBATION_LIFETIMES: data/drf_ipcc_pertubation-lifetimes.json
+    RADIATIVE_EFFICIENCY: data/drf_ipcc_radiative-efficiency.json
+    MOLECULER_WEIGHT: data/drf_none_moleculer-weight.json
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 

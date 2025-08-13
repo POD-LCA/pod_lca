@@ -7,11 +7,13 @@ __version__ = "0.1.0"
 
 from pathlib import Path
 import yaml
+import os
 
 def load_config():
     """  Load the configuration file.
     """
-    path = 'config.yaml'
+    path = Path(__file__).resolve().parents[3] / 'config.yaml'
+
     with open(path, "r") as f:
         config = yaml.safe_load(f)
     
