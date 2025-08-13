@@ -159,24 +159,57 @@ def write_run_period():
     fh.close()
 
 
-# def write_zones(building):
-#     """
-#     Writes all zones to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
+def write_zones(building):
+    """
+    Writes all zones to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
     
-#     Returns
-#     -------
-#     None
-#     """
-#     for zkey in building.zones:
-#         zone = building.zones[zkey]
-#         write_zone(building, zone)
-#         write_zone_surfaces(building, zone)
-#     write_all_zone_list(building)
-#     write_zone_lists(building)
+    Returns
+    -------
+    None
+    """
+    for zkey in building.zones:
+        zone = building.zones[zkey]
+        write_zone(building, zone)
+    #     write_zone_surfaces(building, zone)
+    # write_all_zone_list(building)
+    # write_zone_lists(building)
+
+
+def write_zone(building, zone):
+    """
+    Writes a single zone to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    zone: object
+        The zone object to be written
+    
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('Zone,\n')
+    fh.write('  {},         !- Name\n'.format(zone.name))
+    fh.write('  0,          !- Direction of Relative North (deg)\n')
+    fh.write('  {},          !- X Origin (m)\n'.format(zone.origin[0]))
+    fh.write('  {},          !- Y Origin (m)\n'.format(zone.origin[1]))
+    fh.write('  {},          !- Z Origin (m)\n'.format(zone.origin[2]))
+    fh.write('  1,          !- Type\n')
+    fh.write('  1,          !- Multiplier\n')
+    fh.write('  {},           !- Ceiling Height (m)\n'.format(zone.height))
+    fh.write('  {},           !- Volume (m3)\n'.format(zone.volume))
+    fh.write('  ,           !- Floor Area (m2)\n')
+    fh.write('  ,           !- Zone Inside Convection Algorithm\n')
+    fh.write('  ,           !- Zone Outside Convection Algorithm\n')
+    fh.write('  Yes;        !- Part of Total Floor Area\n')
+    fh.write('\n')
+    fh.close()
 
 
 # def write_all_zone_list(building):
@@ -209,39 +242,6 @@ def write_run_period():
 #             else:
 #                 sep = ','
 #             fh.write('  {}{}        !- Zone Name {}\n'.format(zones[zk], sep, i + 1))
-#     fh.write('\n')
-#     fh.close()
-
-
-# def write_zone(building, zone):
-#     """
-#     Writes a single zone to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     zone: object
-#         The zone object to be written
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('Zone,\n')
-#     fh.write('  {},         !- Name\n'.format(zone.name))
-#     fh.write('  0,          !- Direction of Relative North (deg)\n')
-#     fh.write('  {},          !- X Origin (m)\n'.format(zone.origin[0]))
-#     fh.write('  {},          !- Y Origin (m)\n'.format(zone.origin[1]))
-#     fh.write('  {},          !- Z Origin (m)\n'.format(zone.origin[2]))
-#     fh.write('  1,          !- Type\n')
-#     fh.write('  1,          !- Multiplier\n')
-#     fh.write('  {},           !- Ceiling Height (m)\n'.format(zone.height))
-#     fh.write('  {},           !- Volume (m3)\n'.format(zone.volume))
-#     fh.write('  ,           !- Floor Area (m2)\n')
-#     fh.write('  ,           !- Zone Inside Convection Algorithm\n')
-#     fh.write('  ,           !- Zone Outside Convection Algorithm\n')
-#     fh.write('  Yes;        !- Part of Total Floor Area\n')
 #     fh.write('\n')
 #     fh.close()
 

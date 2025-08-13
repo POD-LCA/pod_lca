@@ -37,6 +37,7 @@ class Floor:
         self.geometry_unit = METER
         self.is_below_grade = None
         self.is_on_ground = None
+        self.zone = None
 
     # ================================
     # Constructors
@@ -220,6 +221,8 @@ class Floor:
         """
         return self.get_height() * self.get_floor_plan().area()
     
+    def get_zone(self):
+        pass
 
 if __name__ == '__main__':
     pass  
