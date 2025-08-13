@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 
 import os
 import pod_lca
+from pod_lca.utilities import config
 
 
 def write_idf_from_building(building):
@@ -24,11 +25,11 @@ def write_idf_from_building(building):
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'w')
     fh.close()
-    write_pre(building)
-#     write_building(building)
-#     write_global_vars(building)
-#     write_run_period(building)
-#     write_zones(building)
+    write_pre()
+    write_building()
+    write_global_vars()
+    write_run_period()
+    write_zones(building)
 #     write_windows(building)
 #     write_layers(building)
 #     write_constructions(building)
@@ -50,7 +51,7 @@ def write_idf_from_building(building):
 #     write_output_items(building)
 
 
-def write_pre(building):
+def write_pre():
     """
     Writes the preamble to the .idf file from the building data.
     Parameters
@@ -62,94 +63,100 @@ def write_pre(building):
     -------
     None
     """
+    ep_version = config['setup']['operational']['EPLUS_VERSION']
+    num_timesteps = config['setup']['operational']['NUM_TIMESTEPS']
+
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'w')
     fh.write('\n') 
     fh.write('Version,\n')
-    fh.write('  {};\t\t\t\t\t!- Version Identifier\n'.format(pod_lca.operational.EPLUS_VERSION))
+    fh.write('  {};\t\t\t\t\t!- Version Identifier\n'.format(ep_version))
     fh.write('\n')
     fh.write('Timestep,\n')
-    fh.write('  {};\t\t\t\t\t!- Number of Timesteps per Hour\n'.format(building.num_timesteps))  
+    fh.write('  {};\t\t\t\t\t!- Number of Timesteps per Hour\n'.format(num_timesteps))  
     fh.write('\n')
     fh.close()
 
 
-# def write_building(building):
-#     """
-#     Writes the building basic data to the .idf file from the building datastructure.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
+def write_building():
+    """
+    Writes the building basic data to the .idf file from the building datastructure.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
     
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('Building,\n')
-#     fh.write('  {},\t\t\t\t\t!- Name\n'.format(building.name))
-#     fh.write('  0,\t\t\t\t\t !- North Axis (deg)\n')
-#     fh.write('  {},\t\t\t\t\t!- Terrain\n'.format(building.terrain))
-#     fh.write('  ,\t\t\t\t\t !- Loads Convergence Tolerance Value (W)\n')
-#     fh.write('  ,\t\t\t\t\t !- Temperature Convergence Tolerance Value (deltaC)\n')
-#     fh.write('  {},\t\t\t\t\t!- Solar Distribution\n'.format(building.solar_distribution))
-#     fh.write('  ,\t\t\t\t\t !- Maximum Number of Warmup Days\n')
-#     fh.write('  ;\t\t\t\t\t !- Minimum Number of Warmup Days\n')
-#     fh.write('\n')
-#     fh.close()
+    Returns
+    -------
+    None
+    """
+    terrain = config['setup']['operational']['TERRAIN']
+    solar_distribution = config['setup']['operational']['SOLAR_DISTRIBUTION']
+
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('Building,\n')
+    fh.write('  {},\t\t\t\t\t!- Name\n'.format('pod_lca_building'))
+    fh.write('  0,\t\t\t\t\t !- North Axis (deg)\n')
+    fh.write('  {},\t\t\t\t\t!- Terrain\n'.format(terrain))
+    fh.write('  ,\t\t\t\t\t !- Loads Convergence Tolerance Value (W)\n')
+    fh.write('  ,\t\t\t\t\t !- Temperature Convergence Tolerance Value (deltaC)\n')
+    fh.write('  {},\t\t\t\t\t!- Solar Distribution\n'.format(solar_distribution))
+    fh.write('  ,\t\t\t\t\t !- Maximum Number of Warmup Days\n')
+    fh.write('  ;\t\t\t\t\t !- Minimum Number of Warmup Days\n')
+    fh.write('\n')
+    fh.close()
 
 
-# def write_global_vars(building):
-#     """
-#     Writes the global variables to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
+def write_global_vars():
+    """
+    Writes the global variables to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
     
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n') 
-#     fh.write('GlobalGeometryRules,\n')
-#     fh.write('  UpperLeftCorner,\t\t\t\t\t!- Starting Vertex Position\n')
-#     fh.write('  CounterClockWise,\t\t\t\t\t!- Vertex Entry Direction\n')
-#     fh.write('  World;\t\t\t\t\t!- Coordinate System\n')
-#     fh.write('\n')           
-#     fh.close()
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n') 
+    fh.write('GlobalGeometryRules,\n')
+    fh.write('  UpperLeftCorner,\t\t\t\t\t!- Starting Vertex Position\n')
+    fh.write('  CounterClockWise,\t\t\t\t\t!- Vertex Entry Direction\n')
+    fh.write('  World;\t\t\t\t\t!- Coordinate System\n')
+    fh.write('\n')           
+    fh.close()
 
 
-# def write_run_period(building):
-#     """
-#     Writes the run period  to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
+def write_run_period():
+    """
+    Writes the run period  to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
     
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('  RunPeriod,\n')
-#     fh.write('    Run Period 1,            !- Name\n')
-#     fh.write('    1,                       !- Begin Month\n')
-#     fh.write('    1,                       !- Begin Day of Month\n')
-#     fh.write('    ,                        !- Begin Year\n')
-#     fh.write('    12,                      !- End Month\n')
-#     fh.write('    31,                      !- End Day of Month\n')
-#     fh.write('    ,                        !- End Year\n')
-#     fh.write('    Tuesday,                 !- Day of Week for Start Day\n')
-#     fh.write('    Yes,                     !- Use Weather File Holidays and Special Days\n')
-#     fh.write('    Yes,                     !- Use Weather File Daylight Saving Period\n')
-#     fh.write('    No,                      !- Apply Weekend Holiday Rule\n')
-#     fh.write('    Yes,                     !- Use Weather File Rain Indicators\n')
-#     fh.write('    Yes;                     !- Use Weather File Snow Indicators\n')
-#     fh.write('\n')
-#     fh.close()
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('  RunPeriod,\n')
+    fh.write('    Run Period 1,            !- Name\n')
+    fh.write('    1,                       !- Begin Month\n')
+    fh.write('    1,                       !- Begin Day of Month\n')
+    fh.write('    ,                        !- Begin Year\n')
+    fh.write('    12,                      !- End Month\n')
+    fh.write('    31,                      !- End Day of Month\n')
+    fh.write('    ,                        !- End Year\n')
+    fh.write('    Tuesday,                 !- Day of Week for Start Day\n')
+    fh.write('    Yes,                     !- Use Weather File Holidays and Special Days\n')
+    fh.write('    Yes,                     !- Use Weather File Daylight Saving Period\n')
+    fh.write('    No,                      !- Apply Weekend Holiday Rule\n')
+    fh.write('    Yes,                     !- Use Weather File Rain Indicators\n')
+    fh.write('    Yes;                     !- Use Weather File Snow Indicators\n')
+    fh.write('\n')
+    fh.close()
 
 
 # def write_zones(building):

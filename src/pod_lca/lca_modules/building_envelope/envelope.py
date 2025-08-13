@@ -21,17 +21,9 @@ if __name__ == '__main__':
     import pod_lca
     from pod_lca.lca_modules.building import Building
     from pod_lca.lca_modules.operational.read_write.write import write_idf_from_building
-    
-    from pod_lca.utilities import config
-    from pod_lca.utilities import DataImporter
 
-    molecular_weight_dict = DataImporter.json_to_dict(config['file_paths']['drf']['MOLECULER_WEIGHT'])
-    print(molecular_weight_dict)
+    for i in range(50): print('')
 
-
-
-    # for i in range(50): print('')
-
-    # b = Building()
-    # write_idf_from_building(b)
+    b = Building()
+    write_idf_from_building(b)
     

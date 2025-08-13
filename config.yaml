@@ -42,6 +42,7 @@ setup:
     EPLUS_VERSION: '25.1.0' # Version of Energy + used in this release of POD_LCA
     TERRAIN: 'city'
     NUM_TIMESTEPS: 1
+    SOLAR_DISTRIBUTION: 'FullExteriorWithReflections'
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
