@@ -31,5 +31,7 @@ if __name__ == '__main__':
     b = Building()
     floor_plan = [[0,0,0], [x,0,0], [x,y,0], [0,y,0]]
     b.add_floor(floor_no=1, floor_plan=floor_plan, geometry_unit=METER, floor_height=3., below_grade=False, on_ground=True)
+
     write_idf_from_building(b)
-    
+
+    #TODO: Continue with zone surfaces, will have to start defining envelope stuff, layers etc. 

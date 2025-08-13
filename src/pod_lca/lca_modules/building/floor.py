@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from shapely.affinity import scale
 from shapely.geometry import box
+from pod_lca.lca_modules.operational.zone import Zone
 
 from ...units import METER
 
@@ -222,7 +223,7 @@ class Floor:
         return self.get_height() * self.get_floor_plan().area()
     
     def get_zone(self):
-        pass
+        self.zone = Zone.from_floor(self)
 
 if __name__ == '__main__':
     pass  

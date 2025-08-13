@@ -171,10 +171,11 @@ def write_zones(building):
     -------
     None
     """
-    for zkey in building.zones:
-        zone = building.zones[zkey]
+    for fkey in building.floors:
+        building.floors[fkey].get_zone()
+        zone = building.floors[fkey].zone
         write_zone(building, zone)
-    #     write_zone_surfaces(building, zone)
+        # write_zone_surfaces(building, zone)
     # write_all_zone_list(building)
     # write_zone_lists(building)
 
@@ -208,6 +209,89 @@ def write_zone(building, zone):
     fh.write('  ,           !- Zone Inside Convection Algorithm\n')
     fh.write('  ,           !- Zone Outside Convection Algorithm\n')
     fh.write('  Yes;        !- Part of Total Floor Area\n')
+    fh.write('\n')
+    fh.close()
+
+
+
+def write_zone_surfaces(building, zone):
+    """
+    Writes all zone surfaces to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    zone: object
+        The zone object to be written
+    
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    for fk in zone.surfaces.faces:
+        write_building_surface(building, zone, fk)
+    fh.close()
+
+
+def write_building_surface(building, zone, fk):
+    """
+    Writes a building surface to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    zone: object
+        The zone object to be written
+    fk: int
+        The face key of the surface to the written
+    
+    Returns
+    -------
+    None
+    """
+    st  = zone.surfaces.get_face_attribute(fk, 'surface_type')
+    ct  = zone.surfaces.get_face_attribute(fk, 'construction')
+    ob  = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition')
+    obo = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition_object')
+
+    if ob =='Adiabatic' or ob == 'Surface' or ob  == 'Ground':
+        se = 'NoSun'
+        we = 'NoWind'
+    else:
+        se = 'SunExposed'
+        we = 'WindExposed'
+    
+    if not obo:
+        obo == ''
+    
+    num_vert = len(zone.surfaces.face_vertices(fk))
+
+    sname = zone.surfaces.get_face_attribute(fk, 'name')
+
+    fh = open(building.idf_filepath, 'a')
+    fh.write('\n')
+    fh.write('BuildingSurface:Detailed,\n')
+    fh.write('  {},                    !- Name\n'.format(sname))
+    # fh.write('  {},                    !- Name\n'.format(zone.name))
+    fh.write('  {},                       !- Surface Type\n'.format(st))
+    fh.write('  {},                       !- Construction Name\n'.format(ct))
+    fh.write('  {},                       !- Zone Name\n'.format(zone.name))
+    fh.write('  ,                         !- Space Name\n')
+    fh.write('  {},                       !- Outside Boundary Condition\n'.format(ob))
+    fh.write('  {},                         !- Outside Boundary Condition Object\n'.format(obo))
+    fh.write('  {},                       !- Sun Exposure\n'.format(se))
+    fh.write('  {},                       !- Wind Exposure\n'.format(we))
+    fh.write('  0.0,                      !- View Factor to Ground\n')
+    fh.write('  {},                       !- Number of Vertices\n'.format(num_vert))
+
+    for i, vk in enumerate(zone.surfaces.face_vertices(fk)):
+        x, y, z = zone.surfaces.vertex_xyz(vk)
+        if i == num_vert - 1:
+            sep = ';'
+        else:
+            sep = ','
+        fh.write('  {:.3f}, {:.3f}, {:.3f}{}            !- X,Y,Z Vertex {}\n'.format(x, y, z, sep, i))
     fh.write('\n')
     fh.close()
 
@@ -419,88 +503,6 @@ def write_zone(building, zone):
 #         fh.write('\n')
 #         fh.write('\n')
 #         fh.close()
-
-
-# def write_zone_surfaces(building, zone):
-#     """
-#     Writes all zone surfaces to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     zone: object
-#         The zone object to be written
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     for fk in zone.surfaces.faces:
-#         write_building_surface(building, zone, fk)
-#     fh.close()
-
-
-# def write_building_surface(building, zone, fk):
-#     """
-#     Writes a building surface to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     zone: object
-#         The zone object to be written
-#     fk: int
-#         The face key of the surface to the written
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     st  = zone.surfaces.get_face_attribute(fk, 'surface_type')
-#     ct  = zone.surfaces.get_face_attribute(fk, 'construction')
-#     ob  = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition')
-#     obo = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition_object')
-
-#     if ob =='Adiabatic' or ob == 'Surface' or ob  == 'Ground':
-#         se = 'NoSun'
-#         we = 'NoWind'
-#     else:
-#         se = 'SunExposed'
-#         we = 'WindExposed'
-    
-#     if not obo:
-#         obo == ''
-    
-#     num_vert = len(zone.surfaces.face_vertices(fk))
-
-#     sname = zone.surfaces.get_face_attribute(fk, 'name')
-
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n')
-#     fh.write('BuildingSurface:Detailed,\n')
-#     fh.write('  {},                    !- Name\n'.format(sname))
-#     # fh.write('  {},                    !- Name\n'.format(zone.name))
-#     fh.write('  {},                       !- Surface Type\n'.format(st))
-#     fh.write('  {},                       !- Construction Name\n'.format(ct))
-#     fh.write('  {},                       !- Zone Name\n'.format(zone.name))
-#     fh.write('  ,                         !- Space Name\n')
-#     fh.write('  {},                       !- Outside Boundary Condition\n'.format(ob))
-#     fh.write('  {},                         !- Outside Boundary Condition Object\n'.format(obo))
-#     fh.write('  {},                       !- Sun Exposure\n'.format(se))
-#     fh.write('  {},                       !- Wind Exposure\n'.format(we))
-#     fh.write('  0.0,                      !- View Factor to Ground\n')
-#     fh.write('  {},                       !- Number of Vertices\n'.format(num_vert))
-
-#     for i, vk in enumerate(zone.surfaces.face_vertices(fk)):
-#         x, y, z = zone.surfaces.vertex_xyz(vk)
-#         if i == num_vert - 1:
-#             sep = ';'
-#         else:
-#             sep = ','
-#         fh.write('  {:.3f}, {:.3f}, {:.3f}{}            !- X,Y,Z Vertex {}\n'.format(x, y, z, sep, i))
-#     fh.write('\n')
-#     fh.close()
 
 
 # def write_windows(building):
