@@ -8,6 +8,8 @@ __version__ = "0.1.0"
 from shapely.affinity import scale
 from shapely.geometry import box
 
+from ...units import METER
+
 
 class Floor:
     """ A floor of a building.
@@ -32,7 +34,7 @@ class Floor:
         self.floor_no = None
         self.height = None
         self.floor_plan = None
-        self.geometry_unit = None
+        self.geometry_unit = METER
         self.is_below_grade = None
         self.is_on_ground = None
 
@@ -142,8 +144,10 @@ class Floor:
         old_unit = self.get_geometry_unit()
 
         conversion_factor = old_unit.convert_to(geometry_unit)
-        self.height *= conversion_factor
-        self.set_floor_plan(scale(self.get_floor_plan(), xfact=conversion_factor, yfact=conversion_factor, origin=(0, 0)))
+        if self.get_height() is not None:
+            self.height *= conversion_factor
+        if self.get_floor_plan() is not None:
+            self.set_floor_plan(scale(self.get_floor_plan(), xfact=conversion_factor, yfact=conversion_factor, origin=(0, 0)))
 
         self.geometry_unit = geometry_unit
         

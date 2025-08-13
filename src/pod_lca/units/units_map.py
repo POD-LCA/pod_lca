@@ -18,6 +18,7 @@ from ..units import KILOGRAM
 from ..units import KILOMETER
 from ..units import LITER
 from ..units import MEGA
+from ..units import METER
 from ..units import SQUARE_METER
 from ..units import M_TON
 from ..units import TON_KILOMETER
@@ -35,6 +36,7 @@ UNITS_MAP.update({
                     'kg': KILOGRAM,
                     't': M_TON,
                     'km': KILOMETER,
+                    'm': METER,
                     't': M_TON,
                     'tonne': M_TON,
                     'tkm': TON_KILOMETER,

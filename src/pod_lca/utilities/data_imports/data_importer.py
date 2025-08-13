@@ -43,7 +43,7 @@ class DataImporter:
 
         return data_frame
 
-    def csv_to_dict(file_path, primary_key):
+    def csv_to_dict(file_path, primary_key=None):
         """ Import data to dictionary from a CSV file.
         
         Parameters
@@ -61,8 +61,8 @@ class DataImporter:
         data = {}
         with open(file_path, mode='r', encoding="utf-8-sig") as file:
             reader = csv.DictReader(file)
-            for row in reader:
-                id = row[primary_key]
+            for row_num, row in enumerate(reader, start=1):
+                id = row_num if primary_key is None else row[primary_key]
                 data[id] = {key: value for key, value in row.items()} 
 
         return data

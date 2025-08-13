@@ -9,8 +9,10 @@ from shapely import Polygon
 
 from . import EndOfLifeMixins
 from . import Floor
+from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ...units import METER
+from ...units import UNITS_MAP
 
 
 class Building (EndOfLifeMixins):
@@ -145,10 +147,9 @@ class Building (EndOfLifeMixins):
         building.set_location(location)
         building.set_built_year(built_year)
 
-        building.add_floors(building_data['no_floors'], building_data['f2f_height'], building_data['floor_plan'], building_data['floors_below_grade'], building_data['geometry_units'])
-        # TODO ask for building meta data
+        building.add_floors(building_data['no_floors'], building_data['f2f_height'], building_data['floor_plan'], building_data['floors_below_grade'], UNITS_MAP[building_data['geometry_units']])
 
-        building.make_structure('from template')
+        building.make_structure('from template', template_bom=file_path)
         building.make_envelope()
 
         return building
@@ -163,7 +164,7 @@ class Building (EndOfLifeMixins):
             Name of the building.
         type : {'Commercial', 'Residential'}
             Type of building.
-        location : Location Obj.
+        location : ~pod_lca.location.Location
             Location of the building site.
         built_year: int
             Built year of the building.
@@ -172,7 +173,7 @@ class Building (EndOfLifeMixins):
 
         Returns
         -------
-        Building Obj.
+        ~pod_lca.building.Building
             Building built.
         """
         building = cls()
@@ -289,7 +290,7 @@ class Building (EndOfLifeMixins):
         
         Returns
         -------
-        Location Obj.
+        ~pod_lca.location.Location
             Location of the building site.
         """
         return self.location
@@ -370,29 +371,34 @@ class Building (EndOfLifeMixins):
         if on_ground:
             floor.set_floor_on_ground()
 
-        self.floors.append(floor)
+        self.floors[str(floor_no)] = floor
         
         return self
 
-    def make_structure(self, method):
+    def make_structure(self, method, **kwargs):
         """ Create the structure of the building.
         
         Parameters
         ----------
         method : {'from geometry', 'from template'}
             Method of structure generation.
+
+        Other Parameters
+        ----------------
+        template_bom : str
+            File path to the bill-of-materials of the template model.            
         """
         structure_type = self.get_structure_type()
 
         if structure_type == 'Concrete':
             structure_obj = ConcreteStructure
         else:
-            raise NotImplementedError
+            structure_obj = BuildingStructure
 
         if method == 'from geometry':
             structure = structure_obj.from_geometry(self)
         elif method == 'from template':
-            structure = structure_obj.from_template(self)
+            structure = structure_obj.from_template(kwargs['template_bom'])
         else:
             raise ValueError('Method of creating structure is not recognized.')
         
@@ -400,7 +406,7 @@ class Building (EndOfLifeMixins):
 
         return self
 
-    def make_envelope():
+    def make_envelope(self):
 
         pass
 

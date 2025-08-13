@@ -33,12 +33,13 @@ class BuildingComponent:
         self.building = None
         self.materials = []
         self.deconstructed_to = []
+        self.service_life = None
 
     # ================================
     # Constructors
     # ================================        
     @classmethod
-    def create(cls, name, materials):
+    def create(cls, name, materials=None):
         """ Create a building component from its constituent materials.
         
         Parameters
@@ -56,7 +57,8 @@ class BuildingComponent:
         component = cls()
 
         component.set_name(name)
-        component.set_materials(materials)
+        if materials is not None:
+            component.set_materials(materials)
 
         return component
 

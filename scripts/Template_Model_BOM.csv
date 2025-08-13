@@ -1,0 +1,35 @@
+Building Component,Building element,service life,qty,unit,material
+Enclosure,Curtainwall Mullions,60,1.302837136,m3,"Aluminum extrusion, mill-finished, Kawneer - EPD"
+Enclosure,Curtainwall Mullions,60,1.302837136,m3,"Powder coating, metal stock"
+Enclosure,Curtainwall Panels,40,23.79873641,m3,"Glazing, double, insulated (air)"
+Superstructure,Floors,60,0,m3,"Lightweight concrete, 3000 psi, 20% fly ash"
+Superstructure,Floors,60,0,m3,"Steel, reinforcing rod"
+Superstructure,Floors,60,0,m3,CLT (Cross laminated timber)
+Superstructure,Floors,20,0,m3,"PVC membrane, sheet"
+Superstructure,Floors,20,0,m3,"Adhesive, polychloroprene (neoprene)"
+Superstructure,Floors,60,0,m3,"PIR rigid foam insulation, roof, R=15, PIMA - EPD"
+Superstructure,Floors,60,0,m3,"Lightweight concrete, 3000 psi, 20% fly ash"
+Superstructure,Floors,60,0,m3,"Steel, reinforcing rod"
+Superstructure,Floors,60,0,m3,CLT (Cross laminated timber)
+Substructure,Floors,60,0,m3,"Structural concrete, 4000 psi, 20% fly ash"
+Substructure,Floors,60,0,m3,"Steel, reinforcing rod"
+Substructure,Floors,60,0,m3,"Expanded polystyrene (EPS), board"
+Superstructure,Structural Columns,60,77.95539377,m3,"Glue laminated timber (Glulam), AWC - EPD"
+Substructure,Structural Foundations,60,79.28717046,m3,"Structural concrete, 4000 psi, 20% fly ash"
+Substructure,Structural Foundations,60,79.28717046,m3,"Steel, reinforcing rod"
+Substructure,Structural Foundations,60,55.50101932,m3,"Structural concrete, 4000 psi, 20% fly ash"
+Substructure,Structural Foundations,60,55.50101932,m3,"Steel, reinforcing rod"
+Superstructure,Structural Framing,60,495.8232367,m3,"Glue laminated timber (Glulam), AWC - EPD"
+Superstructure,Structural Framing,60,210.3742599,m3,"Glue laminated timber (Glulam), AWC - EPD"
+Enclosure,Walls,60,0,m3,"Structural concrete, 6000 psi, Pacific Southwest regional average"
+Enclosure,Walls,60,0,m3,"Steel, reinforcing rod"
+Enclosure,Walls,60,0,m3,"Aluminum, sheet"
+Enclosure,Walls,60,0,m3,"Powder coating, metal stock"
+Enclosure,Walls,60,0,m3,Polyurethane foam (PUR) rigid board
+Enclosure,Walls,60,0,m3,"Steel, sheet"
+Enclosure,Walls,60,0,m3,"Fasteners, stainless steel"
+Enclosure,Walls,60,0,m3,Fiberglass mat gypsum sheathing board
+Enclosure,Walls,60,0,m3,Cold formed structural steel
+Enclosure,Walls,60,0,m3,"Cellulose insulation, boards"
+Enclosure,Walls,30,0,m3,"Wall board, gypsum, natural"
+Enclosure,Walls,7,0,m3,"Paint, interior acrylic latex"
