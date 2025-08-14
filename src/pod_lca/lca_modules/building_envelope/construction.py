@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-
+from pod_lca.lca_modules.building_envelope.layer import Layer
 from pod_lca.lca_modules.operational.read_write import find_constructions
 
 
@@ -26,12 +26,9 @@ class Construction(object):
         return construction
     
     def get_layers(self):
-        #TODO: Continue here!!!
-        mat_name = c.layers['0']
-        path = config['file_paths']['operational']['MATERIALS']
-        m = BuildingMaterial.new_enclosure_material_from_idf(mat_name, path)
+        
+        layer = Layer.from_idf()
 
-        pass
 
 
 if __name__ == '__main__':

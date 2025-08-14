@@ -1063,6 +1063,7 @@ def find_outdoor_air(filepath, data):
     #   0,                                      !- Outdoor Air Flow per Zone {m3/s}
     #   0.35;                                   !- Outdoor Air Flow Air Changes per Hour {1/hr}
 
+
 def find_spaces(filepath, data):
     fh = open(filepath, 'r')
     lines = fh.readlines()
@@ -1117,6 +1118,7 @@ def find_space_lists(filepath, data):
                 spaces[str(j)] = space
         data['space_lists'][name] = {'name': name,
                                      'spaces': spaces,}
+
 
 if __name__ == '__main__':
     import os

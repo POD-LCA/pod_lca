@@ -9,7 +9,7 @@ from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..materials_screening import Master
-from pod_lca.lca_modules.operational.read_write.read_idf import find_materials
+from ..operational import find_materials
 
 
 class BuildingMaterial(Master):
@@ -60,8 +60,25 @@ class BuildingMaterial(Master):
         return material
 
     @classmethod
-    def new_enclosure_material(cls, name, ):
-        pass
+    def new_enclosure_material(cls,
+                               name,
+                               roughness,
+                               conductivity,
+                               density,
+                               specific_heat,
+                               thermal_absorptance,
+                               solar_absorptance,
+                               visible_absorptance):
+        material = cls()
+        material.name                = name               
+        material.roughness           = roughness          
+        material.conductivity        = conductivity       
+        material.density             = density            
+        material.specific_heat       = specific_heat      
+        material.thermal_absorptance = thermal_absorptance
+        material.solar_absorptance   = solar_absorptance  
+        material.visible_absorptance = visible_absorptance
+        return material
 
     @classmethod
     def new_enclosure_material_from_idf(cls, name, path):
@@ -69,9 +86,8 @@ class BuildingMaterial(Master):
         find_materials(path, data)
         data = data['materials'][name]
         material = cls()
-        material.name = data['name']
+        material.name                = data['name']
         material.roughness           = data['roughness']
-        # material.thickness           = data['thickness']
         material.conductivity        = data['conductivity']
         material.density             = data['density']
         material.specific_heat       = data['specific_heat']
