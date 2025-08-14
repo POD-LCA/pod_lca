@@ -9,6 +9,7 @@ from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..materials_screening import Master
+from pod_lca.lca_modules.operational.read_write.read_idf import find_materials
 
 
 class BuildingMaterial(Master):
@@ -61,6 +62,24 @@ class BuildingMaterial(Master):
     @classmethod
     def new_enclosure_material(cls, name, ):
         pass
+
+    @classmethod
+    def new_enclosure_material_from_idf(cls, name, path):
+        data = {}
+        find_materials(path, data)
+        data = data['materials'][name]
+        material = cls()
+        material.name = data['name']
+        material.roughness           = data['roughness']
+        # material.thickness           = data['thickness']
+        material.conductivity        = data['conductivity']
+        material.density             = data['density']
+        material.specific_heat       = data['specific_heat']
+        material.thermal_absorptance = data['thermal_absorptance']
+        material.solar_absorptance   = data['solar_absorptance']
+        material.visible_absorptance = data['visible_absorptance']
+        return material
+        
 
 
     # TODO add getters and setters ---  Should this inherit from Master Object

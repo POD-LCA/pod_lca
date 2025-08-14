@@ -18,7 +18,6 @@ if __name__ == '__main__':
 
     for i in range(50): print('')
 
-    import pod_lca
     from pod_lca.lca_modules.building import Building
     from pod_lca.lca_modules.operational.read_write.write import write_idf_from_building
     from pod_lca.units import METER

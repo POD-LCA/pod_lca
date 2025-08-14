@@ -5,7 +5,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-from pod_lca.lca_modules.operational.read_write import get_idf_data
+from pod_lca.lca_modules.operational.read_write import find_constructions
 
 
 class Construction(object):
@@ -15,21 +15,33 @@ class Construction(object):
 
     @classmethod
     def from_idf(cls, name, path):
-        data = get_idf_data(path)
+        data = {}
+        find_constructions(path, data)
         data = data['constructions'][name]
 
         construction = cls()
         construction.name = data['name']
         construction.layers = data['layers']
+        construction.get_layers()
         return construction
+    
+    def get_layers(self):
+        #TODO: Continue here!!!
+        mat_name = c.layers['0']
+        path = config['file_paths']['operational']['MATERIALS']
+        m = BuildingMaterial.new_enclosure_material_from_idf(mat_name, path)
+
+        pass
 
 
 if __name__ == '__main__':
     from pod_lca.utilities import config
+
+    from pod_lca.lca_modules.building import BuildingMaterial
 
     for i in range(50): print('')
 
     name = 'Typical Insulated Steel Framed Exterior Wall-R16'
     path = config['file_paths']['operational']['CONSTRUCTIONS']
     c = Construction.from_idf(name, path)
-    print(c.layers)
+
