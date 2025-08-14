@@ -22,14 +22,14 @@ class Construction(object):
         construction = cls()
         construction.name = data['name']
         construction.layers = data['layers']
-        construction.get_layers()
+        construction.get_layers_from_idf(path)
         return construction
     
-    def get_layers(self):
-        
-        layer = Layer.from_idf()
-
-
+    def get_layers_from_idf(self, path):
+        for mk in self.layers:
+            name = self.layers[mk]
+            layer = Layer.from_idf(name, path)
+            self.layers[mk] = layer
 
 if __name__ == '__main__':
     from pod_lca.utilities import config
@@ -38,7 +38,11 @@ if __name__ == '__main__':
 
     for i in range(50): print('')
 
+
+    #TODO: Fix the issue of different material types, start at layer!!!!
+
     name = 'Typical Insulated Steel Framed Exterior Wall-R16'
     path = config['file_paths']['operational']['CONSTRUCTIONS']
     c = Construction.from_idf(name, path)
 
+    print(c.layers['0'].material.roughness)

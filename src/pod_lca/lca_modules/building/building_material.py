@@ -10,6 +10,9 @@ from ..impacts import Emissions
 from ..impacts import Impacts
 from ..materials_screening import Master
 from ..operational import find_materials
+from ..operational import find_no_mass_materials
+from ..operational import find_gas_materials
+from ..operational import find_glazing_materials
 
 
 class BuildingMaterial(Master):
@@ -84,6 +87,13 @@ class BuildingMaterial(Master):
     def new_enclosure_material_from_idf(cls, name, path):
         data = {}
         find_materials(path, data)
+        if name not in data:
+            find_no_mass_materials(path, data)
+        if name not in data:
+            find_gas_materials(path, data)
+        if name not in data:
+            find_glazing_materials(path, data)
+
         data = data['materials'][name]
         material = cls()
         material.name                = data['name']

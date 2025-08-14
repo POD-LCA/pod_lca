@@ -93,7 +93,6 @@ file_paths:
     REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
   operational:
     CONSTRUCTIONS: data/operational_constructions.idf
-    MATERIALS: data/operational_materials.idf
   drf:
     PERTUBATION_LIFETIMES: data/drf_ipcc_pertubation-lifetimes.json
     RADIATIVE_EFFICIENCY: data/drf_ipcc_radiative-efficiency.json
