@@ -1,0 +1,156 @@
+Construction,
+  Generic Context,                        !- Name
+  Material 2;                             !- Layer 1
+
+Construction,
+  Generic Ext wall variable_insulation,   !- Name
+  25mm Stucco,                            !- Layer 1
+  5/8 in. Gypsum Board,                   !- Layer 2
+  variable_insulation,                    !- Layer 3
+  5/8 in. Gypsum Board;                   !- Layer 4
+
+Construction,
+  Generic Double Pane,                    !- Name
+  Generic Low-e Glass,                    !- Layer 1
+  Generic Window Air Gap,                 !- Layer 2
+  Generic Clear Glass;                    !- Layer 3
+
+Construction,
+  Generic Exposed Floor,                  !- Name
+  Generic Painted Metal,                  !- Layer 1
+  Generic Ceiling Air Gap,                !- Layer 2
+  Generic 50mm Insulation,                !- Layer 3
+  Generic LW Concrete;                    !- Layer 4
+
+Construction,
+  Generic Exterior Door,                  !- Name
+  Generic Painted Metal,                  !- Layer 1
+  Generic 25mm Insulation,                !- Layer 2
+  Generic Painted Metal;                  !- Layer 3
+
+Construction,
+  Generic Exterior Wall,                  !- Name
+  Generic Brick,                          !- Layer 1
+  Generic LW Concrete,                    !- Layer 2
+  Generic 50mm Insulation,                !- Layer 3
+  Generic Wall Air Gap,                   !- Layer 4
+  Generic Gypsum Board;                   !- Layer 5
+
+Construction,
+  Generic Ground Slab,                    !- Name
+  Generic 50mm Insulation,                !- Layer 1
+  Generic HW Concrete;                    !- Layer 2
+
+Construction,
+  Generic Interior Ceiling,               !- Name
+  Generic LW Concrete,                    !- Layer 1
+  Generic Ceiling Air Gap,                !- Layer 2
+  Generic Acoustic Tile;                  !- Layer 3
+
+Construction,
+  Generic Interior Door,                  !- Name
+  Generic 25mm Wood;                      !- Layer 1
+
+Construction,
+  Generic Interior Floor,                 !- Name
+  Generic Acoustic Tile,                  !- Layer 1
+  Generic Ceiling Air Gap,                !- Layer 2
+  Generic LW Concrete;                    !- Layer 3
+
+Construction,
+  Generic Interior Wall,                  !- Name
+  Generic Gypsum Board,                   !- Layer 1
+  Generic Wall Air Gap,                   !- Layer 2
+  Generic Gypsum Board;                   !- Layer 3
+
+Construction,
+  Generic Roof,                           !- Name
+  Generic Roof Membrane,                  !- Layer 1
+  Generic 50mm Insulation,                !- Layer 2
+  Generic LW Concrete,                    !- Layer 3
+  Generic Ceiling Air Gap,                !- Layer 4
+  Generic Acoustic Tile;                  !- Layer 5
+
+Construction,
+  Generic Shade,                          !- Name
+  Material 1;                             !- Layer 1
+
+Construction,
+  Generic Single Pane,                    !- Name
+  Generic Clear Glass;                    !- Layer 1
+
+Construction,
+  Generic Underground Roof,               !- Name
+  Generic 50mm Insulation,                !- Layer 1
+  Generic HW Concrete,                    !- Layer 2
+  Generic Ceiling Air Gap,                !- Layer 3
+  Generic Acoustic Tile;                  !- Layer 4
+
+Construction,
+  Generic Underground Wall,               !- Name
+  Generic 50mm Insulation,                !- Layer 1
+  Generic HW Concrete,                    !- Layer 2
+  Generic Wall Air Gap,                   !- Layer 3
+  Generic Gypsum Board;                   !- Layer 4
+
+Construction,
+  Typical IEAD Roof-R32,                  !- Name
+  Roof Membrane,                          !- Layer 1
+  Typical Insulation-R31,                 !- Layer 2
+  Metal Roof Surface;                     !- Layer 3
+
+Construction,
+  Typical Insulated Basement Mass Wall-R8, !- Name
+  Typical Insulation-R7,                  !- Layer 1
+  8 in. Concrete Block Basement Wall;     !- Layer 2
+
+Construction,
+  Typical Insulated Carpeted 8in Slab Floor-R5, !- Name
+  Typical Insulation-R4,                  !- Layer 1
+  8 in. Normalweight Concrete Floor,      !- Layer 2
+  Typical Carpet Pad;                     !- Layer 3
+
+Construction,
+  Typical Insulated Metal Door-R3,        !- Name
+  F08 Metal surface,                      !- Layer 1
+  Typical Insulation-R3;                  !- Layer 2
+
+Construction,
+  Typical Insulated Steel Framed Exterior Floor-R27, !- Name
+  25mm Stucco,                            !- Layer 1
+  5/8 in. Gypsum Board,                   !- Layer 2
+  Typical Insulation-R24,                 !- Layer 3
+  5/8 in. Gypsum Board,                   !- Layer 4
+  Typical Carpet Pad;                     !- Layer 5
+
+Construction,
+  Typical Insulated Steel Framed Exterior Wall-R16, !- Name
+  25mm Stucco,                            !- Layer 1
+  5/8 in. Gypsum Board,                   !- Layer 2
+  Typical Insulation-R15,                 !- Layer 3
+  5/8 in. Gypsum Board;                   !- Layer 4
+
+Construction,
+  Typical Overhead Door-R4,               !- Name
+  Typical Insulation-R4;                  !- Layer 1
+
+Construction,
+  U 0.36 SHGC 0.36 Simple Glazing Window, !- Name
+  U 0.36 SHGC 0.36 Simple Glazing;        !- Layer 1
+
+Construction,
+  U 0.44 SHGC 0.26 Dbl Ref-B-H Clr 6mm/13mm Air, !- Name
+  REF B CLEAR HI 6MM,                     !- Layer 1
+  AIR 13MM,                               !- Layer 2
+  CLEAR 6MM;                              !- Layer 3
+
+Construction,
+  U 0.5 SHGC 0.4 Simple Glazing Skylight, !- Name
+  U 0.5 SHGC 0.4 Simple Glazing;          !- Layer 1
+
+Construction:AirBoundary,
+  Generic Air Boundary,                   !- Name
+  None,                                   !- Air Exchange Method
+  0,                                      !- Simple Mixing Air Changes per Hour {1/hr}
+  ;                                       !- Simple Mixing Schedule Name
+

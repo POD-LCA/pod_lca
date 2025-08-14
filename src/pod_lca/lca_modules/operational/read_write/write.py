@@ -175,7 +175,7 @@ def write_zones(building):
         building.floors[fkey].get_zone()
         zone = building.floors[fkey].zone
         write_zone(building, zone)
-        # write_zone_surfaces(building, zone)
+        write_zone_surfaces(building, zone)
     # write_all_zone_list(building)
     # write_zone_lists(building)
 
@@ -213,7 +213,6 @@ def write_zone(building, zone):
     fh.close()
 
 
-
 def write_zone_surfaces(building, zone):
     """
     Writes all zone surfaces to the .idf file from the building data.
@@ -229,12 +228,14 @@ def write_zone_surfaces(building, zone):
     None
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
-    for fk in zone.surfaces.faces:
-        write_building_surface(building, zone, fk)
+    sks = zone.surfaces.keys()
+    for sk in sks:
+        print(sk)
+        write_building_surface(building, zone, sk)
     fh.close()
 
 
-def write_building_surface(building, zone, fk):
+def write_building_surface(building, zone, sk):
     """
     Writes a building surface to the .idf file from the building data.
     Parameters
@@ -250,10 +251,10 @@ def write_building_surface(building, zone, fk):
     -------
     None
     """
-    st  = zone.surfaces.get_face_attribute(fk, 'surface_type')
-    ct  = zone.surfaces.get_face_attribute(fk, 'construction')
-    ob  = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition')
-    obo = zone.surfaces.get_face_attribute(fk, 'outside_boundary_condition_object')
+    st  = zone.surfaces[sk]['surface_type']
+    ct  = zone.surfaces[sk]['construction']
+    ob  = zone.surfaces[sk]['outside_boundary_condition']
+    obo = zone.surfaces[sk]['outside_boundary_condition_object']
 
     if ob =='Adiabatic' or ob == 'Surface' or ob  == 'Ground':
         se = 'NoSun'
@@ -269,7 +270,7 @@ def write_building_surface(building, zone, fk):
 
     sname = zone.surfaces.get_face_attribute(fk, 'name')
 
-    fh = open(building.idf_filepath, 'a')
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('\n')
     fh.write('BuildingSurface:Detailed,\n')
     fh.write('  {},                    !- Name\n'.format(sname))

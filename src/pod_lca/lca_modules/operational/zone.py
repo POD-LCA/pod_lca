@@ -24,13 +24,10 @@ class Zone(object):
     
     """
     def __init__(self):
-        self.name =  ''
-        self.surfaces = None
-        self.origin = [0., 0., 0.]
-        self.height = None
-        self.floor = None
-        self.cieling = None
-        self.walls = {}
+        self.name     =  ''
+        self.surfaces = {}
+        self.origin   = [0., 0., 0.]
+        self.height   = None
 
     @classmethod
     def from_floor(cls, floor):
@@ -51,18 +48,29 @@ class Zone(object):
         zone = cls()
         zone.name = 'POD_LCA Building Floor - {}'.format(floor.floor_no)
         fp = floor.floor_plan
-        zone.floor = fp
+        zone.surfaces['floor'] = Surface()
+        zone.surfaces['floor'].polygon = fp
+
         h = floor.height
         zone.height = h
-        zone.cieling = [[p[0], p[1], p[2]+h] for p in fp]
+        zone.surfaces['cieling'].polygon = [[p[0], p[1], p[2]+h] for p in fp]
         for i in range(len(fp)):
             a = fp[i]
             if i == len(fp)-1:
                 b = fp[0]
             else:
                 b = fp[i+1]
-            zone.walls[i] = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
+            zone.surfaces['wall_{}'.format(i)].polygon = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
         return zone
+
+
+    @property
+    def area(self):
+        return area_polygon(self.surfaces['floor'].area)
+    
+    @property
+    def volume(self):
+        return self.area * self.height
 
 
     # def to_json(self, filepath):
@@ -82,13 +90,6 @@ class Zone(object):
     #     with open(filepath, 'w+') as fp:
     #         json.dump(self.data, fp)
 
-    @property
-    def area(self):
-        return area_polygon(self.floor)
-    
-    @property
-    def volume(self):
-        return self.area * self.height
 
     # @property
     # def centroid_xy(self):
