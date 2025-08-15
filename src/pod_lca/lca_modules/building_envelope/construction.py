@@ -45,4 +45,4 @@ if __name__ == '__main__':
     path = config['file_paths']['operational']['CONSTRUCTIONS']
     c = Construction.from_idf(name, path)
 
-    print(c.layers['0'].material.roughness)
+    print(c.layers['3'].material.name)

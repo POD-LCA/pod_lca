@@ -8,6 +8,8 @@ __version__ = "0.1.0"
 from .end_of_life_mixins import EndOfLifeMixins
 from .floor import Floor
 from .building_material import BuildingMaterial
+from .building_material import BuildingEnvelopeMaterial
+from .building_material import BuildingEnvelopeMaterialNoMass
 from .components import BuildingComponent
 from .building import Building
 

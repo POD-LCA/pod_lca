@@ -28,13 +28,13 @@ class BuildingMaterial(Master):
         self.sctg_code = None
         self.eol_product = None
 
-        # Operational Energy attributes
-        self.roughness = None
-        self.conductivity = None
-        self.specific_heat = None
-        self.thermal_absorptance = None
-        self.solar_absorptance = None
-        self.visible_absorptance = None
+        # # Operational Energy attributes
+        # self.roughness = None
+        # self.conductivity = None
+        # self.specific_heat = None
+        # self.thermal_absorptance = None
+        # self.solar_absorptance = None
+        # self.visible_absorptance = None
 
         # impacts
         self.unit_impacts = None
@@ -62,49 +62,49 @@ class BuildingMaterial(Master):
 
         return material
 
-    @classmethod
-    def new_enclosure_material(cls,
-                               name,
-                               roughness,
-                               conductivity,
-                               density,
-                               specific_heat,
-                               thermal_absorptance,
-                               solar_absorptance,
-                               visible_absorptance):
-        material = cls()
-        material.name                = name               
-        material.roughness           = roughness          
-        material.conductivity        = conductivity       
-        material.density             = density            
-        material.specific_heat       = specific_heat      
-        material.thermal_absorptance = thermal_absorptance
-        material.solar_absorptance   = solar_absorptance  
-        material.visible_absorptance = visible_absorptance
-        return material
+    # @classmethod
+    # def new_enclosure_material(cls,
+    #                            name,
+    #                            roughness,
+    #                            conductivity,
+    #                            density,
+    #                            specific_heat,
+    #                            thermal_absorptance,
+    #                            solar_absorptance,
+    #                            visible_absorptance):
+    #     material = cls()
+    #     material.name                = name               
+    #     material.roughness           = roughness          
+    #     material.conductivity        = conductivity       
+    #     material.density             = density            
+    #     material.specific_heat       = specific_heat      
+    #     material.thermal_absorptance = thermal_absorptance
+    #     material.solar_absorptance   = solar_absorptance  
+    #     material.visible_absorptance = visible_absorptance
+    #     return material
 
-    @classmethod
-    def new_enclosure_material_from_idf(cls, name, path):
-        data = {}
-        find_materials(path, data)
-        if name not in data:
-            find_no_mass_materials(path, data)
-        if name not in data:
-            find_gas_materials(path, data)
-        if name not in data:
-            find_glazing_materials(path, data)
+    # @classmethod
+    # def new_enclosure_material_from_idf(cls, name, path):
+    #     data = {}
+    #     find_materials(path, data)
+    #     if name not in data:
+    #         find_no_mass_materials(path, data)
+    #     if name not in data:
+    #         find_gas_materials(path, data)
+    #     if name not in data:
+    #         find_glazing_materials(path, data)
 
-        data = data['materials'][name]
-        material = cls()
-        material.name                = data['name']
-        material.roughness           = data['roughness']
-        material.conductivity        = data['conductivity']
-        material.density             = data['density']
-        material.specific_heat       = data['specific_heat']
-        material.thermal_absorptance = data['thermal_absorptance']
-        material.solar_absorptance   = data['solar_absorptance']
-        material.visible_absorptance = data['visible_absorptance']
-        return material
+    #     data = data['materials'][name]
+    #     material = cls()
+    #     material.name                = data['name']
+    #     material.roughness           = data['roughness']
+    #     material.conductivity        = data['conductivity']
+    #     material.density             = data['density']
+    #     material.specific_heat       = data['specific_heat']
+    #     material.thermal_absorptance = data['thermal_absorptance']
+    #     material.solar_absorptance   = data['solar_absorptance']
+    #     material.visible_absorptance = data['visible_absorptance']
+    #     return material
         
 
 
@@ -113,3 +113,47 @@ class BuildingMaterial(Master):
         pass
 
 
+class BuildingEnvelopeMaterial(BuildingMaterial):
+    def __init__(self):
+        super().__init__()  
+        # Operational Energy attributes
+        self.roughness = None
+        self.conductivity = None
+        self.specific_heat = None
+        self.thermal_absorptance = None
+        self.solar_absorptance = None
+        self.visible_absorptance = None
+
+    @classmethod
+    def from_idf_data(cls, data):
+        material = cls()
+        material.name                = data['name']
+        material.roughness           = data['roughness']
+        material.thickness           = data['thickness']
+        material.conductivity        = data['conductivity']
+        material.density             = data['density']
+        material.specific_heat       = data['specific_heat']
+        material.thermal_absorptance = data['thermal_absorptance']
+        material.solar_absorptance   = data['solar_absorptance']
+        material.visible_absorptance = data['visible_absorptance']
+        return material
+
+class BuildingEnvelopeMaterialNoMass(BuildingMaterial):
+    def __init__(self):
+        super().__init__()  
+        self.name                = None
+        self.roughness           = None
+        self.thermal_resistance  = None
+        self.solar_absorptance   = None
+        self.visible_absorptance = None
+
+
+    @classmethod
+    def from_idf_data(cls, data):
+        material = cls()
+        material.name                = data['name']
+        material.roughness           = data['roughness']
+        material.thermal_resistance  = data['thermal_resistance'] 
+        material.solar_absorptance   = data['solar_absorptance']
+        material.visible_absorptance = data['visible_absorptance']
+        return material
