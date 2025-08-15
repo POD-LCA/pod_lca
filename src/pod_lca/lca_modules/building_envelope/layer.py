@@ -20,8 +20,6 @@ class Layer(object):
 
     @classmethod
     def from_idf(cls, name, path):
-
-        #TODO: Fix the issue of different material types!!!!
         data = {}
         find_materials(path, data)
         if name not in data:

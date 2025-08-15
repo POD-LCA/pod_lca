@@ -5,7 +5,6 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-import json
 from pod_lca.utilities.geometry import area_polygon
 
 
@@ -18,14 +17,14 @@ class Surface(object):
         # self.outside_boundary_condition         = None
         # self.outside_boundary_condition_object  = None
 
-
     @property
     def area(self):
         return area_polygon(self.polygon)
 
 
     @classmethod
-    def from_polygon(cls, polygon):
+    def from_polygon(cls, name, polygon):
         srf = cls()
+        srf.name = name
         srf.polygon = polygon
         return srf

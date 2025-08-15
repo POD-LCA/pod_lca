@@ -4,10 +4,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from .surface import Surface
 from .envelope import Envelope
 from .layer import Layer
 from .construction import Construction
-from .surface import Surface
 from .window import Window
 
 __all__ = ["Envelope"]
