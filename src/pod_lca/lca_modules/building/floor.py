@@ -38,7 +38,7 @@ class Floor:
         self.geometry_unit = METER
         self.is_below_grade = None
         self.is_on_ground = None
-        self.zone = None
+        self.envelope = None
 
     # ================================
     # Constructors
@@ -222,8 +222,11 @@ class Floor:
         """
         return self.get_height() * self.get_floor_plan().area()
     
-    def get_zone(self):
-        self.zone = Zone.from_floor(self)
+    # ================================
+    # Add
+    # ================================
+    def add_envelope(self, envelope):
+        self.envelope = envelope
 
 if __name__ == '__main__':
     pass  

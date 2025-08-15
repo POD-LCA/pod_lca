@@ -6,6 +6,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from ..building_envelope import Surface
+from pod_lca.utilities import area_polygon
 
 
 class Envelope:
@@ -17,6 +18,7 @@ class Envelope:
         self.constructions = {}
         self.windows = {}
         self.wall_surface_keys = []
+        self.origin = [0, 0, 0]
 
     @classmethod
     def from_floor(cls, floor):
@@ -32,6 +34,14 @@ class Envelope:
     @property
     def floor_plan(self):
         return self.floor.floor_plan
+    
+    @property
+    def area(self):
+        return area_polygon(self.floor_plan)
+
+    @property
+    def volume(self):
+        return self.height * self.area
     
     def update_envelope_surfaces(self):
         fp = self.floor_plan

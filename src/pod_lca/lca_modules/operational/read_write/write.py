@@ -172,15 +172,14 @@ def write_zones(building):
     None
     """
     for fkey in building.floors:
-        building.floors[fkey].get_zone()
-        zone = building.floors[fkey].zone
-        write_zone(building, zone)
-        write_zone_surfaces(building, zone)
+        envelope = building.floors[fkey].envelope
+        write_zone(envelope)
+        write_zone_surfaces(envelope)
     # write_all_zone_list(building)
     # write_zone_lists(building)
 
 
-def write_zone(building, zone):
+def write_zone(envelope):
     """
     Writes a single zone to the .idf file from the building data.
     Parameters
@@ -196,15 +195,15 @@ def write_zone(building, zone):
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('Zone,\n')
-    fh.write('  {},         !- Name\n'.format(zone.name))
+    fh.write('  {},         !- Name\n'.format(envelope.name))
     fh.write('  0,          !- Direction of Relative North (deg)\n')
-    fh.write('  {},          !- X Origin (m)\n'.format(zone.origin[0]))
-    fh.write('  {},          !- Y Origin (m)\n'.format(zone.origin[1]))
-    fh.write('  {},          !- Z Origin (m)\n'.format(zone.origin[2]))
+    fh.write('  {},          !- X Origin (m)\n'.format(envelope.origin[0]))
+    fh.write('  {},          !- Y Origin (m)\n'.format(envelope.origin[1]))
+    fh.write('  {},          !- Z Origin (m)\n'.format(envelope.origin[2]))
     fh.write('  1,          !- Type\n')
     fh.write('  1,          !- Multiplier\n')
-    fh.write('  {},           !- Ceiling Height (m)\n'.format(zone.height))
-    fh.write('  {},           !- Volume (m3)\n'.format(zone.volume))
+    fh.write('  {},           !- Ceiling Height (m)\n'.format(envelope.height))
+    fh.write('  {},           !- Volume (m3)\n'.format(envelope.volume))
     fh.write('  ,           !- Floor Area (m2)\n')
     fh.write('  ,           !- Zone Inside Convection Algorithm\n')
     fh.write('  ,           !- Zone Outside Convection Algorithm\n')
@@ -213,7 +212,7 @@ def write_zone(building, zone):
     fh.close()
 
 
-def write_zone_surfaces(building, zone):
+def write_zone_surfaces(envelope):
     """
     Writes all zone surfaces to the .idf file from the building data.
     Parameters
@@ -228,14 +227,14 @@ def write_zone_surfaces(building, zone):
     None
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
-    sks = zone.surfaces.keys()
+    sks = envelope.surfaces.keys()
     for sk in sks:
         print(sk)
-        write_building_surface(building, zone, sk)
+        write_building_surface(envelope, sk)
     fh.close()
 
 
-def write_building_surface(building, zone, sk):
+def write_building_surface(envelope, sk):
     """
     Writes a building surface to the .idf file from the building data.
     Parameters
@@ -251,10 +250,10 @@ def write_building_surface(building, zone, sk):
     -------
     None
     """
-    st  = zone.surfaces[sk]['surface_type']
-    ct  = zone.surfaces[sk]['construction']
-    ob  = zone.surfaces[sk]['outside_boundary_condition']
-    obo = zone.surfaces[sk]['outside_boundary_condition_object']
+    st  = envelope.surfaces[sk].surface_type
+    ct  = envelope.surfaces[sk].construction
+    ob  = envelope.surfaces[sk].outside_boundary_condition
+    obo = envelope.surfaces[sk].outside_boundary_condition_object
 
     if ob =='Adiabatic' or ob == 'Surface' or ob  == 'Ground':
         se = 'NoSun'
@@ -266,9 +265,9 @@ def write_building_surface(building, zone, sk):
     if not obo:
         obo == ''
     
-    num_vert = len(zone.surfaces.face_vertices(fk))
+    num_vert = len(envelope.surfaces.face_vertices(fk))
 
-    sname = zone.surfaces.get_face_attribute(fk, 'name')
+    sname = envelope.surfaces.get_face_attribute(fk, 'name')
 
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('\n')
@@ -277,7 +276,7 @@ def write_building_surface(building, zone, sk):
     # fh.write('  {},                    !- Name\n'.format(zone.name))
     fh.write('  {},                       !- Surface Type\n'.format(st))
     fh.write('  {},                       !- Construction Name\n'.format(ct))
-    fh.write('  {},                       !- Zone Name\n'.format(zone.name))
+    fh.write('  {},                       !- Zone Name\n'.format(envelope.name))
     fh.write('  ,                         !- Space Name\n')
     fh.write('  {},                       !- Outside Boundary Condition\n'.format(ob))
     fh.write('  {},                         !- Outside Boundary Condition Object\n'.format(obo))
@@ -286,8 +285,8 @@ def write_building_surface(building, zone, sk):
     fh.write('  0.0,                      !- View Factor to Ground\n')
     fh.write('  {},                       !- Number of Vertices\n'.format(num_vert))
 
-    for i, vk in enumerate(zone.surfaces.face_vertices(fk)):
-        x, y, z = zone.surfaces.vertex_xyz(vk)
+    for i, vk in enumerate(envelope.surfaces.face_vertices(fk)):
+        x, y, z = envelope.surfaces.vertex_xyz(vk)
         if i == num_vert - 1:
             sep = ';'
         else:

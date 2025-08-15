@@ -22,6 +22,7 @@ floor = b.floors['1']
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 e = Envelope.from_floor(floor)
+floor.add_envelope(e)
 
 # add constructions - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -39,9 +40,5 @@ ciel = 'Generic Interior Ceiling'
 ciel = Construction.from_idf(ciel, path)
 e.add_construction(ciel, 'cieling')
 
-print(e.constructions)
 
-#TODO: Contine the idf writing from here!!!
-
-
-# write_idf_from_building(b)
+write_idf_from_building(b)
