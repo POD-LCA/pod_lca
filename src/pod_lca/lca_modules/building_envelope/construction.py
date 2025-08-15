@@ -4,8 +4,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from pod_lca.lca_modules.building_envelope.layer import Layer
-from pod_lca.lca_modules.operational.read_write import find_constructions
+from ..building_envelope import Layer
+from ..operational import find_constructions
 
 
 class Construction(object):
@@ -32,17 +32,16 @@ class Construction(object):
             self.layers[mk] = layer
 
 if __name__ == '__main__':
-    from pod_lca.utilities import config
+    pass
 
-    from pod_lca.lca_modules.building import BuildingMaterial
-
-    for i in range(50): print('')
+    # from pod_lca.utilities import config
 
 
-    #TODO: Fix the issue of different material types, start at layer!!!!
+    # for i in range(50): print('')
 
-    name = 'Typical Insulated Steel Framed Exterior Wall-R16'
-    path = config['file_paths']['operational']['CONSTRUCTIONS']
-    c = Construction.from_idf(name, path)
 
-    print(c.layers['3'].material.name)
+    # name = 'Typical Insulated Steel Framed Exterior Wall-R16'
+    # path = config['file_paths']['operational']['CONSTRUCTIONS']
+    # c = Construction.from_idf(name, path)
+
+    # print(c.layers['3'].material.name)

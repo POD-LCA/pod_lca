@@ -4,7 +4,6 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from ..building import BuildingMaterial
 from ..building import BuildingEnvelopeMaterial
 from ..building import BuildingEnvelopeMaterialNoMass
 from ..operational import find_materials
