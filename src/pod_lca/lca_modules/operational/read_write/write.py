@@ -229,7 +229,6 @@ def write_zone_surfaces(envelope):
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     sks = envelope.surfaces.keys()
     for sk in sks:
-        print(sk)
         write_building_surface(envelope, sk)
     fh.close()
 
@@ -250,8 +249,9 @@ def write_building_surface(envelope, sk):
     -------
     None
     """
-    st  = envelope.surfaces[sk].surface_type
-    ct  = envelope.surfaces[sk].construction
+    
+    st  = sk.capitalize()
+    ct  = envelope.constructions[sk].name
     ob  = envelope.surfaces[sk].outside_boundary_condition
     obo = envelope.surfaces[sk].outside_boundary_condition_object
 

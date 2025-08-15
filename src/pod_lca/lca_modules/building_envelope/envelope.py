@@ -55,17 +55,17 @@ class Envelope:
                 b = fp[0]
             else:
                 b = fp[i+1]
-                wp = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
-                wk = 'wall_{}'.format(i)
+            wp = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
+            wk = 'wall_{}'.format(i)
             self.surfaces[wk] = Surface.from_polygon(wk, wp)
             self.wall_surface_keys.append(wk)
 
-    def add_construction(self, construction, surface_types):
-        if 'floor' in surface_types:
+    def add_construction(self, construction, surface_type):
+        if surface_type == 'floor':
             self.constructions['floor'] = construction
-        if 'cieling' in surface_types:
+        elif surface_type == 'cieling':
             self.constructions['cieling'] = construction
-        if 'wall' in surface_types:
+        elif surface_type == 'wall' or surface_type == 'walls':
             for sk in self.wall_surface_keys:
                 self.constructions[sk] = construction
 

@@ -30,15 +30,20 @@ path = config['file_paths']['operational']['CONSTRUCTIONS']
 
 walls = 'Typical Insulated Steel Framed Exterior Wall-R16'
 walls = Construction.from_idf(walls, path)
-e.add_construction(walls, 'walls')
+e.add_construction(walls, 'wall')
 
 gslab = 'Generic Ground Slab'
-glab = Construction.from_idf(gslab, path)
+gslab = Construction.from_idf(gslab, path)
 e.add_construction(gslab, 'floor')
 
 ciel = 'Generic Interior Ceiling'
 ciel = Construction.from_idf(ciel, path)
 e.add_construction(ciel, 'cieling')
 
+# print(e.constructions)
+
+#TODO: Continue HERE, envelopes/surfaces need to know boundary condition:
+# Outdoors, or Adiabatic or Ground
+# Probably needs to be computed at the building level
 
 write_idf_from_building(b)
