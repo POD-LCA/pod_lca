@@ -2,6 +2,7 @@
     "CO2": {"val": 1.33e-05, "unit":"Wm-2ppb-1"},
     "CH4": {"val": 2.0048e-13, "unit":"Wm-2kg-1"},
     "N2O": {"val": 3.5892e-13, "unit":"Wm-2kg-1"},
+    "_corrected": true,
     "_ref": {
                 "authors": "Forster, P., T. Storelvmo, K. Armour, W. Collins, J.-L. Dufresne, D. Frame, D.J. Lunt, T. Mauritsen, M.D. Palmer, M. Watanabe, M. Wild, and H. Zhang",
                 "year": 2021,

@@ -43,8 +43,10 @@ class DynamicRadiativeForcing:
         mass_atmosphere_total = 5.1352 * 10 ** 18 # in kg
         molecular_weight_air_mean = 28.97 # in g mol−1
 
-        f1 = 0.5 # increased effect due to ozone
-        f2 = 0.15 # increased effect due to stratospheric H2O 
+        IPCC_report_version = config['setup']['drf']['IPCC_REPORT_VERSION']
+        root, ext = os.path.splitext(config['file_paths']['drf']['INDIRECT_EFFECTS_FACTORS'])
+
+        indirect_factors = DataImporter.json_to_dict(root + '_' + IPCC_report_version + ext)
 
         IPCC_report_version = config['setup']['drf']['IPCC_REPORT_VERSION']
         root, ext = os.path.splitext(config['file_paths']['drf']['RADIATIVE_EFFICIENCY'])
@@ -68,11 +70,15 @@ class DynamicRadiativeForcing:
                 else:
                     raise ValueError(f"Reference unit {ref_unit} not recognized.")
             
-            if adjust_for_indirect_effects:
+            if adjust_for_indirect_effects and not radiative_efficiency_dict["_corrected"]:
                 if greenhouse_gas == 'CH4':
-                    radiative_efficiency *= (1 + f1 + f2)
+                    if indirect_factors["_relative"]:
+                        radiative_efficiency *= (1 + indirect_factors['f1'] + indirect_factors['f2'])
+                    else:
+                        radiative_efficiency += (indirect_factors['f1'] + indirect_factors['f2'])
                 elif greenhouse_gas == 'N2O':
-                    radiative_efficiency *= (1 - 0.36 * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / DynamicRadiativeForcing.get_radiative_efficiency('N2O', 'Wm-2ppb-1', adjust_for_indirect_effects=False))
+                    radiative_efficiency *= (1 - indirect_factors['factor_CH4_to_N20'] * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / 
+                                             DynamicRadiativeForcing.get_radiative_efficiency('N2O', 'Wm-2ppb-1', adjust_for_indirect_effects=False))
         
             return radiative_efficiency
         else:
@@ -123,12 +129,16 @@ class DynamicRadiativeForcing:
         float
             Concentration of the greenhouse gas, in kg (if not cumulative) or in kg-yrs (if cumulative). 
         """
+        IPCC_report_version = config['setup']['drf']['IPCC_REPORT_VERSION']
+        root, ext = os.path.splitext(config['file_paths']['drf']['CO2_IRF_PARAMETERS'])
+        params = DataImporter.json_to_dict(root + '_' + IPCC_report_version + ext)
+
         if cumulative:
             if greenhouse_gas == 'CO2':
-                term_1 = 0.2173 *  at_year
-                term_2 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2240, pow_coeff=-1 / 394.4)
-                term_3 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2824, pow_coeff=-1 / 36.54)
-                term_4 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=0.2763, pow_coeff=-1 / 4.304)
+                term_1 = params['a_0'] *  at_year
+                term_2 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=params['a_1'], pow_coeff=-1 / params['tau_1'])
+                term_3 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=params['a_2'], pow_coeff=-1 / params['tau_2'])
+                term_4 = MathFuncs.integrate_exp(a=0, b=at_year, coeff=params['a_3'], pow_coeff=-1 / params['tau_3'])
                 return (term_1 + term_2 + term_3 + term_4)
             else:
                 life_time = DynamicRadiativeForcing.get_pertubation_lifetime(greenhouse_gas)
@@ -136,17 +146,10 @@ class DynamicRadiativeForcing:
             
         else:
             if greenhouse_gas == 'CO2':
-                # IPCC AR5 and AR6 CO2 IRF Parameters:
-                term_1 = 0.2173
-                term_2 = 0.2240 * np_exp(-1 * at_year / 394.4)
-                term_3 = 0.2824 * np_exp(-1 * at_year / 36.54)
-                term_4 = 0.2763 * np_exp(-1 * at_year / 4.304)
-
-                # IPCC AR4 CO2 IRF Parameters:
-                # term_1 = 0.217
-                # term_2 = 0.259 * np_exp(-1 * at_year / 172.9)
-                # term_3 = 0.338 * np_exp(-1 * at_year / 18.51)
-                # term_4 = 0.186 * np_exp(-1 * at_year / 1.186)
+                term_1 = params['a_0']
+                term_2 = params['a_1'] * np_exp(-1 * at_year / params['tau_1'])
+                term_3 = params['a_2'] * np_exp(-1 * at_year / params['tau_2'])
+                term_4 = params['a_3'] * np_exp(-1 * at_year / params['tau_3'])
 
                 return (term_1 + term_2 + term_3 + term_4)
             

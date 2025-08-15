@@ -1,0 +1,17 @@
+{
+    "a_0":0.2173,
+    "a_1":0.2240,
+    "a_2":0.2824,
+    "a_3":0.2763,
+    "tau_1":394.4,
+    "tau_2":36.54,
+    "tau_3":4.304,
+    "_ref":{
+                "authors": "Joos, F., et al.",
+                "year": 2013,
+                "title": "Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis",
+                "journal": "Atmos. Chem. Phys",
+                "vol":13,
+                "pp": "2793–2825"
+    }
+} 
