@@ -9,6 +9,8 @@ from pod_lca.utilities import config
 
 for i in range(50): print('')
 
+# Create Building - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
 x = 10
 y = 20
 
@@ -17,14 +19,29 @@ floor_plan = [[0,0,0], [x,0,0], [x,y,0], [0,y,0]]
 b.add_floor(floor_no=1, floor_plan=floor_plan, geometry_unit=METER, floor_height=3., below_grade=False, on_ground=True)
 floor = b.floors['1']
 
+# Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
 e = Envelope.from_floor(floor)
 
-# add constructions - - - - - 
+# add constructions - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-name = 'Typical Insulated Steel Framed Exterior Wall-R16'
 path = config['file_paths']['operational']['CONSTRUCTIONS']
-c = Construction.from_idf(name, path)
-e.add_construction(c, 'walls')
+
+walls = 'Typical Insulated Steel Framed Exterior Wall-R16'
+walls = Construction.from_idf(walls, path)
+e.add_construction(walls, 'walls')
+
+gslab = 'Generic Ground Slab'
+glab = Construction.from_idf(gslab, path)
+e.add_construction(gslab, 'floor')
+
+ciel = 'Generic Interior Ceiling'
+ciel = Construction.from_idf(ciel, path)
+e.add_construction(ciel, 'cieling')
+
 print(e.constructions)
+
+#TODO: Contine the idf writing from here!!!
+
 
 # write_idf_from_building(b)
