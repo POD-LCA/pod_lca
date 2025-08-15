@@ -83,9 +83,25 @@ class DynamicRadiativeForcing:
                         else:
                             ValueError(f"Reference unit {ref_unit} not recognized.")
                 elif greenhouse_gas == 'N2O':
-                    radiative_efficiency *= (1 - indirect_factors['factor_CH4_to_N20'] * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / 
+                    radiative_efficiency *= (1 + indirect_factors['factor_CH4_to_N20'] * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / 
                                              DynamicRadiativeForcing.get_radiative_efficiency('N2O', 'Wm-2ppb-1', adjust_for_indirect_effects=False))
-        
+
+            if not adjust_for_indirect_effects and radiative_efficiency_dict["_corrected"]:
+                if greenhouse_gas == 'CH4':
+                    if indirect_factors["_relative"]:
+                        radiative_efficiency /= (1 + indirect_factors['f1'] + indirect_factors['f2'])
+                    else:
+                        if ref_unit == 'Wm-2ppb-1':
+                            radiative_efficiency -= (indirect_factors['f1'] + indirect_factors['f2'])
+                        elif ref_unit == 'Wm-2kg-1':
+                            molecular_weight = 16.04
+                            radiative_efficiency -= (indirect_factors['f1'] + indirect_factors['f2']) * (molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total) #FIXME
+                        else:
+                            ValueError(f"Reference unit {ref_unit} not recognized.")
+                elif greenhouse_gas == 'N2O':
+                    radiative_efficiency /= (1 + indirect_factors['factor_CH4_to_N20'] * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / 
+                                             DynamicRadiativeForcing.get_radiative_efficiency('N2O', 'Wm-2ppb-1')) # FIXME EE - I removed ", adjust_for_indirect_effects=False" parameter because this causes an error if only the corrected RE_N2O value was given
+            
             return radiative_efficiency
         else:
             return None
@@ -288,6 +304,7 @@ class DynamicRadiativeForcing:
             RF_CH4 = radiative_efficiency * concentrations
             if CH4_oxidation:
                 pertubation_life_time_CH4 = DynamicRadiativeForcing.get_pertubation_lifetime('CH4')
+                #oxidation_life_time_CH4 = 9.7 # (for IPCC AR6 only, see equation 7.SM.5.8)
 
                 _, CH4_concentration = DynamicRadiativeForcing.get_concentration_time_series('CH4', time_horizon, time_step, cumulative=False)
                 _, CO2_concentration_unit_pulse = DynamicRadiativeForcing.get_concentration_time_series('CO2', time_horizon, time_step, cumulative)
