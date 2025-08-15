@@ -75,7 +75,13 @@ class DynamicRadiativeForcing:
                     if indirect_factors["_relative"]:
                         radiative_efficiency *= (1 + indirect_factors['f1'] + indirect_factors['f2'])
                     else:
-                        radiative_efficiency += (indirect_factors['f1'] + indirect_factors['f2'])
+                        if ref_unit == 'Wm-2ppb-1':
+                            radiative_efficiency += (indirect_factors['f1'] + indirect_factors['f2'])
+                        elif ref_unit == 'Wm-2kg-1':
+                            molecular_weight = 16.04
+                            radiative_efficiency += (indirect_factors['f1'] + indirect_factors['f2']) * (molecular_weight_air_mean/molecular_weight) * (10 ** 9 /mass_atmosphere_total) #FIXME
+                        else:
+                            ValueError(f"Reference unit {ref_unit} not recognized.")
                 elif greenhouse_gas == 'N2O':
                     radiative_efficiency *= (1 - indirect_factors['factor_CH4_to_N20'] * DynamicRadiativeForcing.get_radiative_efficiency('CH4', 'Wm-2ppb-1') / 
                                              DynamicRadiativeForcing.get_radiative_efficiency('N2O', 'Wm-2ppb-1', adjust_for_indirect_effects=False))
@@ -310,8 +316,13 @@ class DynamicRadiativeForcing:
         time_horizon : int
             Time horizon in years.        
         """
+        IPCC_report_version = config['setup']['drf']['IPCC_REPORT_VERSION']
+        root, ext = os.path.splitext(config['file_paths']['drf']['INDIRECT_EFFECTS_FACTORS'])
+
+        indirect_factors = DataImporter.json_to_dict(root + '_' + IPCC_report_version + ext)
+
         if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
-            agwp = DynamicRadiativeForcing.get_radiative_forcing('CH4', time_horizon, cumulative=True, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01)
+            agwp = DynamicRadiativeForcing.get_radiative_forcing('CH4', time_horizon, cumulative=True, CH4_oxidation=True, alpha=indirect_factors['alpha'], convolution_time_step=0.01)
         else:
             agwp = DynamicRadiativeForcing.get_radiative_forcing(greenhouse_gas, time_horizon, cumulative=True)
         
