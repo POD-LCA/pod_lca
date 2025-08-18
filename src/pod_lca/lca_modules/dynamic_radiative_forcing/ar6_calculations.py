@@ -16,7 +16,7 @@ from ...utilities import DataImporter
 
 
 class AR6Calculations(ARXCalculation):
-    """ Computation methods related to dynamic radiative forcing methods.
+    """ Computation methods related to dynamic radiative forcing methods, following IPCC AR6.
     """
     _ipcc_annual_report = 'AR6'
 
@@ -26,10 +26,10 @@ class AR6Calculations(ARXCalculation):
          
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g.,'CO2', 'CH4'. 'N2O'
-        ref_unit: str
-            Output unit: 'Wm-2ppb-1', 'Wm-2kg-1'
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the gas.
+        ref_unit: {'Wm-2ppb-1', 'Wm-2kg-1'}
+            Output unit.
         adjust_for_indirect_effects: bool
             Adjust radiative efficiency to account for indirect effects
         
@@ -99,21 +99,21 @@ class AR6Calculations(ARXCalculation):
             return None
 
     @classmethod
-    def get_radiative_forcing(cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5, convolution_time_step = 0.01):
+    def get_radiative_forcing(cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.75, convolution_time_step = 0.01):
         """ Get the radiative forcing (in W/m^2) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
         
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the gas. 
         at_year : int or array
             Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.
         cumulative : bool
             Cumulative values if true, else instantaneous values.
         CH4_oxidation : bool
-            If true, account for oxidation of CH4 to CO2
+            If true, account for oxidation of CH4 to CO2.
         alpha : float
-            Fraction of CH4 oxidized: 0.5-1.0
+            Fraction of CH4 oxidized: 0.5-1.0.
         convolution_time_step : float
             Time step for CH4 oxidation.    
 
@@ -154,8 +154,8 @@ class AR6Calculations(ARXCalculation):
 
         Parameters
         ----------
-        greenhouse_gas: str
-            Name of the gas: e.g., 'CO2', 'CH4'. 'N2O' 
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the gas.
         time_horizon : int
             Time horizon in years.  
         time_step : float
@@ -163,16 +163,16 @@ class AR6Calculations(ARXCalculation):
         cumulative : bool
             Cumulative radiative forcing if true, else instantaneous values.
         CH4_oxidation : bool
-            If true, account for oxidation of CH4 to CO2
+            If true, account for oxidation of CH4 to CO2.
         alpha : float
-            Fraction of CH4 oxidized: 0.5-1.0
+            Fraction of CH4 oxidized: 0.5-1.0.
 
         Returns
         -------
         numpy.array
             Years of the time series
         numpy.array
-            Atmospheric concentration values at the end of the year #TODO: double check this 
+            Atmospheric concentration values at the end of the year
         numpy.array
             Radiative forcing values at the end of the year
         """

@@ -9,7 +9,7 @@ from . import ARXCalculation
 
 
 class AR5Calculations(ARXCalculation):
-    """ Computation methods related to dynamic radiative forcing methods.
+    """ Computation methods related to dynamic radiative forcing methods, following IPCC AR5.
     """
     _ipcc_annual_report = 'AR5'
 

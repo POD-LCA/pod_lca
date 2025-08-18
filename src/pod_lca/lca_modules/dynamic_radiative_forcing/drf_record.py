@@ -37,13 +37,13 @@ class DynamicRadiativeForcingRecord:
     data_years : numpy.array of int or float
         Years in the record.
     data_emission_intensity : dict
-        Emission intensity (in kg/yr); {greenhous gas (str): [emission intensity (float)]}.
+        Emission intensity (in kg/yr); {**greenhous gas** (:class:`str`): [**emission intensity** (:class:`float`)]}.
     data_concentrations : dict
-        Atmospheric concentration (in kg); {greenhous gas (str): [atmospheric concenration (float)]}.
+        Atmospheric concentration (in kg); {**greenhous gas** (:class:`str`): [**atmospheric concenration** (:class:`float`)]}.
     data_irf : dict
-        Instantaneous radiative forcing values at the time steps (in W/m^2); {greenhous gas (str): [irf (float)]}.
+        Instantaneous radiative forcing values at the time steps (in W/m^2); {**greenhous gas** (:class:`str`): [**irf** (:class:`float`)]}.
     data_crf : dict
-        Cumulative radiative forcing values at the time steps (in W/m^2); {greenhous gas (str): [crf (float)]}.
+        Cumulative radiative forcing values at the time steps (in W/m^2); {**greenhous gas** (:class:`str`): [**crf** (:class:`float`)]}.
     """
 
     def __init__(self):
@@ -66,7 +66,7 @@ class DynamicRadiativeForcingRecord:
         
         Parameters
         ----------
-        emissions : list of Emissions Obj. or str
+        emissions : list of ~pod_lca.impacts.Emissions or str
             Emissions in the record.
         start_year : int
             Start year of the record.
@@ -90,7 +90,7 @@ class DynamicRadiativeForcingRecord:
         
         Parameters
         ----------
-        products : list of Master Obj. or str
+        products : list of ~pod_lca.materials_screening.Product or str
             Products in the record.
         start_year : int
             Start year of the record.
@@ -240,7 +240,7 @@ class DynamicRadiativeForcingRecord:
         
         Retruns
         -------
-        list of Emission Obj.
+        list of ~pod_lca.impacts.Emission
             List of emissions considered in the record.
         """
         return self.emissions_lst
@@ -260,8 +260,8 @@ class DynamicRadiativeForcingRecord:
 
         Parameters
         ----------
-        data_category : str
-            Category of data to be reported; 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'
+        data_category : {'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'}
+            Category of data to be reported. Default is 'radiative forcing'.
         xy_pairs : bool
             If true, provide data as xy pairs, else as sperate lists.
         """
@@ -297,7 +297,7 @@ class DynamicRadiativeForcingRecord:
         
         Parameters
         ----------
-        emissions : list or Emissions Obj.        
+        emissions : list or ~pod_lac.impacts.Emissions        
             Emission(s) to be assigned to the record
         """
         if isinstance(emissions, list):
@@ -319,10 +319,10 @@ class DynamicRadiativeForcingRecord:
 
         Parameters
         ----------
-        to_plot : str
-            Parameter to be ploted: 'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record'.        
-        plot_type : str
-            Type of the plot: 'lineplot', 'stackplot'.
+        to_plot : {'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record'}
+            Parameter to be ploted.        
+        plot_type : {'lineplot', 'stackplot'}
+            Type of the plot.
         plot_time_step : int or float   
             Time step for ticks along x axis.
         colors : list of str

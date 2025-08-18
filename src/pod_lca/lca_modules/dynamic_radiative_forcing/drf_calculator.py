@@ -80,11 +80,7 @@ class DynamicRadiativeForcing:
     
     def get_atmospheric_concentration(self, greenhouse_gas, at_year, cumulative=False):
         """ Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.
-
-        Notes
-        -----
-        1. For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825
-        
+      
         Parameters
         ----------
         greenhouse_gas: {'CO2', 'CH4', 'N2O'}
@@ -115,9 +111,9 @@ class DynamicRadiativeForcing:
         cumulative : bool
             Cumulative values if true, else instantaneous values.
         CH4_oxidation : bool
-            If true, account for oxidation of CH4 to CO2
+            If true, account for oxidation of CH4 to CO2.
         alpha : float
-            Fraction of CH4 oxidized: 0.5-1.0
+            Fraction of CH4 oxidized: 0.5-1.0.
         convolution_time_step : float
             Time step for CH4 oxidation.    
 
@@ -160,7 +156,7 @@ class DynamicRadiativeForcing:
         numpy.array
             years of the time series
         numpy.array
-            concentration values at the end of the year #TODO: double check this    
+            concentration values at the end of the year.    
         """
         years = np_arange(0, time_horizon + time_step, time_step)
         if years[-1] > time_horizon:
@@ -191,7 +187,7 @@ class DynamicRadiativeForcing:
         numpy.array
             Years of the time series
         numpy.array
-            Atmospheric concentration values at the end of the year #TODO: double check this 
+            Atmospheric concentration values at the end of the year 
         numpy.array
             Radiative forcing values at the end of the year
         """
@@ -211,7 +207,7 @@ class DynamicRadiativeForcing:
         
         Parameters
         ----------
-        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+        greenhouse_gas: {'CO2', 'CH4', 'N2O', 'CH4 fossil'}
             Name of the gas. 
         time_horizon : int
             Time horizon in years.        
@@ -227,7 +223,7 @@ class DynamicRadiativeForcing:
         
         Parameters
         ----------
-        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+        greenhouse_gas: {'CO2', 'CH4', 'N2O', 'CH4 fossil'}
             Name of the gas. 
         time_horizon : int
             Time horizon in years.        
