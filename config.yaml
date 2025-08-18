@@ -39,7 +39,7 @@ setup:
     ACCELERATED_CARBONATION_INVENTORY: Mineral C
     ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
   drf:
-    IPCC_REPORT_VERSION: AR6
+    IPCC_REPORT_VERSION: AR5
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5

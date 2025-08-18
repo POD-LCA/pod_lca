@@ -6,10 +6,7 @@ __email__ = "kiun@uw.edu; etel5501@uw.edu"
 __version__ = "0.1.0"
 
 from numpy import arange as np_arange
-from numpy import concatenate
 from numpy import convolve
-from numpy import int16
-from numpy import where
 from numpy import zeros
 
 from . import DynamicRadiativeForcing
@@ -17,6 +14,7 @@ from . import UniformEmissionProfile
 from ..impacts import Emissions
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
+from ...utilities import config
 from ...utilities import DataImporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
@@ -175,6 +173,7 @@ class DynamicRadiativeForcingRecord:
             self.data_crf[greenhouse_gas] = zeros(len(self.data_years))
                     
         # set data
+        drf_calculator = DynamicRadiativeForcing(config['setup']['drf']['IPCC_REPORT_VERSION'])
         for emission in self.get_emissions_list():
             # emission time profile
             time_profile = emission.get_temporal_emission_profile()
@@ -193,11 +192,11 @@ class DynamicRadiativeForcingRecord:
                 if greenhouse_gas_emission_qty != 0: # EE: changed from > to != so negative emissions (removals) are included
                     # get emission records for unit pulse
                     if greenhouse_gas in ['CH4fossil', 'CH4_fossil', 'CH4 fossil']:
-                        _, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=False, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
-                        _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
+                        _, concentrations, irf = drf_calculator.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=False, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
+                        _, _, crf = drf_calculator.get_radiative_forcing_time_series('CH4', emission_time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=emission.methane_bio_oxidation)
                     else:
-                        _, concentrations, irf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=False)
-                        _, _, crf = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=True)
+                        _, concentrations, irf = drf_calculator.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=False)
+                        _, _, crf = drf_calculator.get_radiative_forcing_time_series(greenhouse_gas, emission_time_horizon, time_step, cumulative=True)
                 
                     # convolve with emission temporal profile
                     emission_profile =  unit_emission_profile * greenhouse_gas_emission_qty

@@ -25,8 +25,8 @@ for test_name in tqdm(test_dict):
     test_agwp = float(test_dict[test_name]['AGWP'])
     test_gwp = int(test_dict[test_name]['GWP'])
 
-    agwp = DynamicRadiativeForcing.get_AGWP(greenhouse_gas, time_horizon)
-    gwp = round(DynamicRadiativeForcing.get_GWP(greenhouse_gas, time_horizon))
+    agwp = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon)
+    gwp = round(DynamicRadiativeForcing().get_GWP(greenhouse_gas, time_horizon))
 
     sym_diff_agwp = 2 * abs(agwp - test_agwp) / abs(agwp + test_agwp)
 

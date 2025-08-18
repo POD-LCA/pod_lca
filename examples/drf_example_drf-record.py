@@ -25,7 +25,7 @@ lognorm = LogNormEmissionProfile.from_range(start=2075, range=10)
 emission_04.set_temporal_emission_profile(lognorm)
 
 emission_05 = Emissions.from_dict(record_dict={'CH4': 0.01})
-expon = ExponentDecayEmissionProfile.from_params(start=2085, decay_rate=10)
+expon = ExponentDecayEmissionProfile.from_decay_rate(start=2085, decay_rate=10)
 # expon = ExponentDecay.from_range(start=2085, range=10)
 emission_05.set_temporal_emission_profile(expon)
 

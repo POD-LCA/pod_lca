@@ -25,7 +25,7 @@ time_horizon = 100 # set time horizon in years, 100 or 500
 
 greenhouse_gas = 'CO2'
 agwp_ref_dict = {}
-agwp_ref = DynamicRadiativeForcing.get_AGWP(greenhouse_gas, time_horizon)
+agwp_ref = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon)
 
 storage_periods_list = [0,10,20,30,40,50,60,70,80,90,100] # storage periods in years
 

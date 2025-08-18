@@ -3,5 +3,5 @@
     "f2":4.00e-5,
     "factor_CH4_to_N20": -1.7,
     "alpha": 0.75,
-    "_relative": false
+    "CH4_oxidation_life_time":9.7
 }

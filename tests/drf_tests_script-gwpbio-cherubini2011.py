@@ -26,7 +26,7 @@ time_horizon_list = [20, 100, 500]
 greenhouse_gas = 'CO2'
 agwp_ref_dict = {}
 for time_horizon in time_horizon_list:
-    agwp_ref = DynamicRadiativeForcing.get_AGWP(greenhouse_gas, time_horizon)
+    agwp_ref = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon)
     agwp_ref_dict[time_horizon] = agwp_ref
 
 # print(agwp_ref_dict) # test if ref_agwp dictionary worked

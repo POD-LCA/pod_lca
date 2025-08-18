@@ -2,6 +2,5 @@
     "f1":0.50,
     "f2":0.15,
     "factor_CH4_to_N20": -0.36,
-    "alpha": 0.5,
-    "_relative":true
+    "alpha": 0.5
 }
