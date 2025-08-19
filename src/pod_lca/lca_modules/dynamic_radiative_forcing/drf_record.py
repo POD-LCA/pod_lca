@@ -15,7 +15,7 @@ from ..impacts import Emissions
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config
-from ...utilities import DataImporter
+from ...utilities import DataExporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
 from ...visualizer import Stackplot
