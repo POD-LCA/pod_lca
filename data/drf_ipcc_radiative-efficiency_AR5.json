@@ -5,6 +5,7 @@
     "CFC-11": {"val": 0.26, "unit":"Wm-2ppb-1"},
     "CFC-12": {"val": 0.32, "unit":"Wm-2ppb-1"},
     "CFC-13": {"val": 0.25, "unit":"Wm-2ppb-1"},
+    "_corrected": false,
     "_ref": {
                 "authors": "Myhre, G., D. Shindell, F.-M. Bréon, W. Collins, J. Fuglestvedt, J. Huang, D. Koch, J.-F. Lamarque, D. Lee, B. Mendoza, T. Nakajima, A. Robock, G. Stephens, T. Takemura and H. Zhang",
                 "year": 2013,

@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from math import exp
+from math import log
 
 from numpy import log
 from numpy import where
@@ -79,7 +80,7 @@ class TemporalEmissionProfiles(DataDistribution):
         Returns
         -------
         int or float
-            starting point of the temporal emission profile.
+            duration of the temporal emission profile in years.
         """        
         return self.duration
 
@@ -118,7 +119,9 @@ class TemporalEmissionProfiles(DataDistribution):
                 record[after_ids] = 0.0
 
         if unitize:
-            record /=sum(record)
+            if not self.get_dist_name() in ['expon']:
+                area_under_curve = self.dist.cdf(self.get_duration() + self.get_start()) - self.dist.cdf(self.get_start())
+                record /= area_under_curve
 
         return t, record
         
@@ -169,9 +172,31 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
 class NormEmissionProfile(TemporalEmissionProfiles, Norm):
     """ A normal data distribution.
     """
+    @classmethod
+    def from_cherubini_2011(cls, rotation_period):
+        """ Create a normal distribution following Cherubini et al 2011.
+        
+        Note
+        ----
+        Refers to Cherubini, Francesco; Peters, Glen Philip; Berntsen, Terje Koren; Strømman, Anders Hammer; Hertwich, Edgar G. (2011) CO2 emissions from biomass combustion for bioenergy: atmospheric decay and contribution to global warming. Global Change Biology Bioenergy. 3 (5), pp. 413-426. DOI: 10.1111/j.1757-1707.2011.01102.x
+        
+        Parameters
+        ----------
+        rotation_period : int or float
+            Rotation period of biomass.
+        """
+        start = 0.
+        mean = rotation_period / 2
+        std_dev = mean/2
+
+        cherub_norm = cls.from_params(mean, std_dev, name='Cherubini')
+        cherub_norm.set_start(start)
+        cherub_norm.set_duration(rotation_period)
+
+        return cherub_norm
 
     @classmethod
-    def from_range(cls, start, range, area_covered=0.999, name='unspecified'):
+    def from_range(cls, start, range, area_covered=0.9544, name='unspecified'):
         """ Create a normal distribution from start and range specified. 
             The distribution is fitted so that area under the curve within [start, start + range] is greater than specified.
         
@@ -180,14 +205,14 @@ class NormEmissionProfile(TemporalEmissionProfiles, Norm):
         start : int or float
             Start value of the range.
         range : int or float
-            Range of the variable to cover the distribution.
+            Range (central) of the variable to cover the distribution.
         area_covered : flat
-            Percentage of area under the curve covered within the range.
+            Percentage of area under the curve covered within the range (central coverage). Default is 0.9544 for 2 * standard deviations.
         name : str
             Name of the data distribution.
         """
         mean = start + (range / 2)
-        std_dev = range / (2 * stats.norm.ppf(area_covered))
+        std_dev = range / (2 * stats.norm.ppf((1 +area_covered)/2))
 
         norm = cls.from_params(mean, std_dev, name)
         norm.set_start(start)
@@ -239,8 +264,27 @@ class ExponentDecayEmissionProfile(TemporalEmissionProfiles, ExponentDecay):
     """
 
     @classmethod
-    def from_params(cls, start, decay_rate, name='unspecified'):
-        """ Create a exponential distribution from parameters specified.
+    def from_half_life(cls, start, half_life, name='unspecified'):
+        """ Create a exponential distribution from half-life specified.
+        
+        Parameters
+        ----------
+        start : int or float
+            Starting point of the exponential decay function.
+        half_life : int or float
+            Half-life of the exponential function.
+        name : str
+            Name of the data distribution.
+        """
+        decay_rate = log(2) / half_life
+        expon = super().from_params(start, decay_rate, name)
+        expon.set_start(start)
+
+        return expon
+        
+    @classmethod
+    def from_decay_rate(cls, start, decay_rate, name='unspecified'):
+        """ Create a exponential distribution from decay rate specified.
         
         Parameters
         ----------
