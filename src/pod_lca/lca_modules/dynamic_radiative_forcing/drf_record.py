@@ -250,7 +250,7 @@ class DynamicRadiativeForcingRecord:
         
         Returns
         -------
-        list of ~pod_lca.impacts.Emission
+        list of ~pod_lca.impacts.Emissions
             List of emissions considered in the record.
         """
         return self.emissions_lst

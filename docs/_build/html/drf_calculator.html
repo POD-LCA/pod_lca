@@ -160,11 +160,22 @@
 <hr class="docutils" />
 <dl class="py class">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.dynamic_radiative_forcing.</span></span><span class="sig-name descname"><span class="pre">DynamicRadiativeForcing</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.dynamic_radiative_forcing.</span></span><span class="sig-name descname"><span class="pre">DynamicRadiativeForcing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipcc_ar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing" title="Link to this definition">¶</a></dt>
 <dd><p>Computation methods related to dynamic radiative forcing methods.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.calculator">
+<span class="sig-name descname"><span class="pre">calculator</span></span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.calculator" title="Link to this definition">¶</a></dt>
+<dd><p>Methods specified in IPCC Annual Reports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ARXCalculator</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radiative_efficiency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Wm-2ppb-1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_for_indirect_effects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_radiative_efficiency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_unit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Wm-2ppb-1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_for_indirect_effects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency" title="Link to this definition">¶</a></dt>
 <dd><p>Get the radiative efficiency of given greenhouse_gas.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -188,8 +199,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pertubation_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime" title="Link to this definition">¶</a></dt>
-<dd><p>Get the pertubation lifetime of a greenhouse gas.</p>
+<span class="sig-name descname"><span class="pre">get_pertubation_lifetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime" title="Link to this definition">¶</a></dt>
+<dd><p>Get the pertubation lifetime of the greenhouse_gas in question.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p>
@@ -205,12 +216,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_atmospheric_concentration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_atmospheric_concentration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration" title="Link to this definition">¶</a></dt>
 <dd><p>Get the concentration of the greenhouse gas in the atmosphere at a given year, given that a 1kg of gas emitted on start of year 0.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For CO2, calculation based on Joos, F., et al., 2013: Carbon dioxide and climate impulse response functions for the computation of greenhouse gas metrics: A multi-model analysis. Atmos. Chem. Phys., 13, 2793–2825</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -230,7 +237,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radiative_forcing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CH4_oxidation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convolution_time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_radiative_forcing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">at_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CH4_oxidation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convolution_time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing" title="Link to this definition">¶</a></dt>
 <dd><p>Get the radiative forcing (in W/m^2) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -238,8 +245,8 @@
 <li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
 <li><p><strong>at_year</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><em>numpy.ndarray</em></a>) -- Year(s) at which concentration computed, given that a 1kg of gas emitted on start of year 0.</p></li>
 <li><p><strong>cumulative</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- Cumulative values if true, else instantaneous values.</p></li>
-<li><p><strong>CH4_oxidation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, account for oxidation of CH4 to CO2</p></li>
-<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Fraction of CH4 oxidized: 0.5-1.0</p></li>
+<li><p><strong>CH4_oxidation</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, account for oxidation of CH4 to CO2.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Fraction of CH4 oxidized: 0.5-1.0.</p></li>
 <li><p><strong>convolution_time_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Time step for CH4 oxidation.</p></li>
 </ul>
 </dd>
@@ -249,15 +256,12 @@
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Reference unit not recognized.</p>
-</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_concentration_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_concentration_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_concentration_time_series" title="Link to this definition">¶</a></dt>
 <dd><p>Get the concentration of the greenhouse gas in the atmosphere as a time-series.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -275,6 +279,7 @@
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- years of the time series</p></li>
+<li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- concentration values at the end of the year.</p></li>
 <li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- concentration values at the end of the year #TODO: double check this</p></li>
 </ul>
 </p>
@@ -284,7 +289,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_radiative_forcing_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CH4_oxidation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_radiative_forcing_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CH4_oxidation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_forcing_time_series" title="Link to this definition">¶</a></dt>
 <dd><p>Get the daynamic radiative forcing values (in W/m^2) as a time-series, given that a 1kg of gas emitted on start year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -300,7 +305,7 @@
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- Years of the time series</p></li>
-<li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- Atmospheric concentration values at the end of the year #TODO: double check this</p></li>
+<li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- Atmospheric concentration values at the end of the year</p></li>
 <li><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> -- Radiative forcing values at the end of the year</p></li>
 </ul>
 </p>
@@ -313,40 +318,34 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_AGWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_AGWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_AGWP" title="Link to this definition">¶</a></dt>
 <dd><p>Get the Absolute Global Warming Potential (AGWP) of a greenhouse gas, for the given time_horizon.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p>
+<p>Convolution time step of 0.01 is used.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'CH4 fossil'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
+<li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'</em><em>, </em><em>'CH4 fossil'}</em>) -- Name of the greenhouse gas.</p></li>
 <li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>AGWP value.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_GWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_GWP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">greenhouse_gas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_GWP" title="Link to this definition">¶</a></dt>
 <dd><p>Get the Global Warming Potential (GWP) of a greenhouse gas, for the given time_horizon.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.</p>
+<p>Convolution time step of 0.01 is used.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'}</em>) -- Name of the greenhouse gas.</p></li>
+<li><p><strong>greenhouse_gas</strong> (<em>{'CO2'</em><em>, </em><em>'CH4'</em><em>, </em><em>'N2O'</em><em>, </em><em>'CH4 fossil'}</em>) -- Name of the greenhouse gas.</p></li>
 <li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
 </ul>
 </dd>
@@ -379,6 +378,7 @@
                 <ul>
 <li><a class="reference internal" href="#">Dynamic Radiative Forcing Calculator</a><ul>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.calculator"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.calculator</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_radiative_efficiency"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_radiative_efficiency()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_pertubation_lifetime"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_pertubation_lifetime()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcing.get_atmospheric_concentration"><code class="docutils literal notranslate"><span class="pre">DynamicRadiativeForcing.get_atmospheric_concentration()</span></code></a></li>

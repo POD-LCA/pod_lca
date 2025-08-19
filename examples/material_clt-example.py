@@ -30,6 +30,7 @@ project.set_transportation_mode_impact_database(r'data/transportation_podlca_emi
 
 CLT_model = project.add_model("CLT_01")
 
+# TODO integrate materials without weight... use density
 lumber = CLT_model.add_product(name="Lumber", stage="A1", qty=1.21, unit=KILOGRAM, 
                                impacts_from="Roundwood; softwood; debarked; at plywood mill; PNW", sctg_code=26)
 meth_diphenyl_d = CLT_model.add_product(name="Methylene diphenyl diisocyanate resin", stage="A1", qty=3.22, unit=KILOGRAM, 
@@ -48,7 +49,7 @@ natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, uni
 print(CLT_model)
 print(project)
 
-# CLT_model.set_products_electricity_source('by_location')
+# CLT_model.set_products_electricity_source('by_location') # TODO: integrate electricity
 drf_record = CLT_model.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('instantaneous radiative forcing')
 

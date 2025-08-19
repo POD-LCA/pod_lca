@@ -215,7 +215,7 @@ class DynamicRadiativeForcing:
 
         Note
         ----
-        1. For the calculation convolution time step of 0.01 is used.
+        Convolution time step of 0.01 is used.
         
         Parameters
         ----------
@@ -231,7 +231,7 @@ class DynamicRadiativeForcing:
 
         Note
         ----
-        For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
+        Convolution time step of 0.01 is used.
         
         Parameters
         ----------

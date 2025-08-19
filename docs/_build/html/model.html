@@ -652,6 +652,37 @@ Quantity in the transportation process should be the distance.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.set_products_electricity_source">
+<span class="sig-name descname"><span class="pre">set_products_electricity_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.set_products_electricity_source" title="Link to this definition">¶</a></dt>
+<dd><p>Assign source for all products of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<em>{'from_database'</em><em>, </em><em>'by_location'}</em>) -- Source of electricity inventories data. Default 'from_database'</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.materials_screening.Model.get_drf_record">
+<span class="sig-name descname"><span class="pre">get_drf_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_horizon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08333333333333333</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.materials_screening.Model.get_drf_record" title="Link to this definition">¶</a></dt>
+<dd><p>Get the dynamic radiative forcing record for all the products and procesess in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_horizon</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Time horizon in years.</p></li>
+<li><p><strong>time_step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Time step of the record. The same time step is used for both for integration and for reporting.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dynamic Radiative Forcing Record</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DynamicRadiativeForcingRecord</em></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -704,6 +735,8 @@ Quantity in the transportation process should be the distance.</p>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_impacts_by_LCstages"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts_by_LCstages()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_impacts_by_category"><code class="docutils literal notranslate"><span class="pre">Model.get_impacts_by_category()</span></code></a></li>
 <li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_normalized_impacts_by_category"><code class="docutils literal notranslate"><span class="pre">Model.get_normalized_impacts_by_category()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.set_products_electricity_source"><code class="docutils literal notranslate"><span class="pre">Model.set_products_electricity_source()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.materials_screening.Model.get_drf_record"><code class="docutils literal notranslate"><span class="pre">Model.get_drf_record()</span></code></a></li>
 </ul>
 </li>
 </ul>
