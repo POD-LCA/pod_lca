@@ -14,6 +14,7 @@ from . import Fuel
 from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
+from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..transportation import TransportationManager
 from ..transportation import USDomesticTransportationManager
 from ..transportation import USGlobalTransportationManager
@@ -51,7 +52,6 @@ class Model:
     def __init__(self):
         self.project = None
         self.name = None
-        self.year = None
         self.processes = []
         self.products = []
         self.transportation_manager = None
@@ -407,8 +407,12 @@ class Model:
         """
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
+
         product.set_sctg_code(sctg_code)
         product.set_transportation()
+
+        pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
+        product.get_emissions().set_temporal_emission_profile(pulse)
 
         self.products.append(product)
         
@@ -438,6 +442,9 @@ class Model:
         n = len(self.get_products())
         energy = Fuel.new(n, name, self, stage, qty, unit, impacts_from)
 
+        pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
+        energy.get_emissions().set_temporal_emission_profile(pulse)
+
         self.products.append(energy)
         
         return energy
@@ -464,6 +471,9 @@ class Model:
         n = len(self.get_products())
         electricity = Electricity.new(n, name, self, stage, qty, unit)
         
+        pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
+        electricity.get_emissions().set_temporal_emission_profile(pulse)
+
         self.products.append(electricity)
         
         return electricity 
