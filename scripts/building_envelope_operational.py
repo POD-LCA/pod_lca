@@ -6,44 +6,63 @@ from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.operational import write_idf_from_building
 from pod_lca.units import METER
 from pod_lca.utilities import config
+from pod_lca.visualizer.plotters.building_plotter import plot_building
 
 for i in range(50): print('')
+
+#TODO: What happens if I make many floors?
+#TODO: How do we make it easier to many stacked floors?
 
 # Create Building - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 x = 10
 y = 20
+floor_to_floor = 3
+num_floors = 5
+
 
 b = Building()
-floor_plan = [[0,0,0], [x,0,0], [x,y,0], [0,y,0]]
-b.add_floor(floor_no=1, floor_plan=floor_plan, geometry_unit=METER, floor_height=3., below_grade=False, on_ground=True)
-floor = b.floors['1']
+for i in range(num_floors):
+    z = floor_to_floor * i
+    floor_plan = [[0,0,z], [x,0,z], [x,y,z], [0,y,z]]
+    b.add_floor(floor_no=i + 1, 
+                floor_plan=floor_plan, 
+                geometry_unit=METER, 
+                floor_height=floor_to_floor, 
+                below_grade=False, 
+                on_ground=(i==0))
+
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-e = Envelope.from_floor(floor)
-floor.add_envelope(e)
+for fk in b.floors:
+    floor = b.floors[fk]
+    e = Envelope.from_floor(floor)
+    floor.add_envelope(e)
 
-# add constructions - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # add constructions - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-path = config['file_paths']['operational']['CONSTRUCTIONS']
+    path = config['file_paths']['operational']['CONSTRUCTIONS']
 
-walls = 'Typical Insulated Steel Framed Exterior Wall-R16'
-walls = Construction.from_idf(walls, path)
-e.add_construction(walls, 'wall')
+    walls = 'Generic Exterior Wall'
+    walls = Construction.from_idf(walls, path)
+    e.add_construction(walls, 'wall')
 
-gslab = 'Generic Ground Slab'
-gslab = Construction.from_idf(gslab, path)
-e.add_construction(gslab, 'floor')
+    gslab = 'Generic Ground Slab'
+    gslab = Construction.from_idf(gslab, path)
+    e.add_construction(gslab, 'floor')
 
-ciel = 'Generic Interior Ceiling'
-ciel = Construction.from_idf(ciel, path)
-e.add_construction(ciel, 'cieling')
+    ciel = 'Generic Interior Ceiling'
+    ciel = Construction.from_idf(ciel, path)
+    e.add_construction(ciel, 'cieling')
+
+
+plot_building(b)
 
 # print(e.constructions)
 
-#TODO: Continue HERE, envelopes/surfaces need to know boundary condition:
+# TODO: Continue HERE, envelopes/surfaces need to know boundary condition:
 # Outdoors, or Adiabatic or Ground
 # Probably needs to be computed at the building level
 
-write_idf_from_building(b)
+# write_idf_from_building(b)
