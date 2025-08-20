@@ -6,7 +6,6 @@ from pod_lca.dynamic_radiative_forcing import UniformEmissionProfile
 from pod_lca.dynamic_radiative_forcing import NormEmissionProfile
 from pod_lca.dynamic_radiative_forcing import LogNormEmissionProfile
 
-# TODO: seperate example with products, directly reading their emissions
 emission_01 = Emissions.from_dict(record_dict={'CO2': 1})
 pulse = UniformEmissionProfile.unit_pulse(at=2035)
 emission_01.set_temporal_emission_profile(pulse)

@@ -1,33 +1,22 @@
-from __future__ import print_function
 
-import os
+import pathlib
+from invoke import task
 
-from compas_invocations import build
-from compas_invocations import docs
-from compas_invocations import style
-from compas_invocations import tests
-from invoke import Collection
+@task
+def docs(c):
+    """Build Sphinx HTML docs"""
+    c.run("sphinx-build -b html docs/source docs/_build/html")
 
-ns = Collection(
-    docs.help,
-    style.check,
-    style.lint,
-    style.format,
-    docs.docs,
-    docs.linkcheck,
-    tests.test,
-    tests.testdocs,
-    build.build_ghuser_components,
-    build.prepare_changelog,
-    build.clean,
-    build.release,
-)
-ns.configure(
-    {
-        "base_folder": os.path.dirname(__file__),
-        "ghuser": {
-            "source_dir": "src/pod_lca/ghpython/components",
-            "target_dir": "src/pod_lca/ghpython/components/ghuser",
-        },
-    }
-)
+@task
+def tests(c):
+    """Run test files"""
+    test_dir = pathlib.Path("tests")
+    scripts = sorted(test_dir.glob("*_test_script.py"))
+
+    if not scripts:
+        print("No test scripts found.")
+        return
+
+    for script in scripts:
+        print(f"Running {script}...")
+        c.run(f"python {script}")
