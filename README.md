@@ -48,7 +48,7 @@ Documentation is generated automatically out of docstrings and [RST](https://www
 
         invoke docs
 
-2. Open docs in your browser (file explorer -> `pod_lca/docs/source docs/_build/html/index.html`)
+2. Open docs in your browser (file explorer -> `pod_lca/docs/_build/html/index.html`)
 
 
 ### Testing
