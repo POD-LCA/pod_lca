@@ -25,14 +25,22 @@ factory = Location.from_str("Seattle, Washington")
 project.set_location(factory)
 project.set_year(2025)
 
-project.set_impact_database(r'data/impacts_podlca_data.csv')
+pod_lca_impact_database = ImpactsDatabase.new("pod_lca_impact_database")
+pod_lca_impact_database.set_data(r'data/impacts_podlca_data.csv', 
+                                 grouped_data='Electricity', 
+                                 density_headers=["Density (dry basis)", "Density unit"])
+project.set_impact_database(pod_lca_impact_database)
+
 project.set_transportation_mode_impact_database(r'data/transportation_podlca_emission.csv')
 
 CLT_model = project.add_model("CLT_01")
 
 # TODO integrate materials without weight... use density
-lumber = CLT_model.add_product(name="Lumber", stage="A1", qty=1.21, unit=KILOGRAM, 
-                               impacts_from="Roundwood; softwood; debarked; at plywood mill; PNW", sctg_code=26)
+lumber = CLT_model.add_product(name="Lumber", stage="A1", qty=1.21, unit=CUBIC_METER, 
+                               impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW", sctg_code=26)
+print(lumber.get_weight_unit())
+print(lumber.get_weight_unit(), lumber.get_unit())
+print(lumber.get_density_unit())
 meth_diphenyl_d = CLT_model.add_product(name="Methylene diphenyl diisocyanate resin", stage="A1", qty=3.22, unit=KILOGRAM, 
                                         impacts_from="Methylene diphenyl diisocyanate, MDI, at plant, US PNW", sctg_code=28)
 prop_glycol = CLT_model.add_product(name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, 
