@@ -106,11 +106,11 @@ class Unit:
                                     self_copy.convert_compound = False if len(self_copy.components) > 0 else True
 
                         if return_self:
-                            if not self.convert_compound:
+                            if not self_copy.convert_compound:
                                 return self_copy.components[0] 
                             return self_copy
                         elif return_other:
-                            if not other.convert_compound:
+                            if not other_copy.convert_compound:
                                 return other_copy.components[0]
                             return other_copy
 

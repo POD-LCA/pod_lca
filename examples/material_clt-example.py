@@ -35,12 +35,8 @@ project.set_transportation_mode_impact_database(r'data/transportation_podlca_emi
 
 CLT_model = project.add_model("CLT_01")
 
-# TODO integrate materials without weight... use density
 lumber = CLT_model.add_product(name="Lumber", stage="A1", qty=1.21, unit=CUBIC_METER, 
                                impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW", sctg_code=26)
-print(lumber.get_weight_unit())
-print(lumber.get_weight_unit(), lumber.get_unit())
-print(lumber.get_density_unit())
 meth_diphenyl_d = CLT_model.add_product(name="Methylene diphenyl diisocyanate resin", stage="A1", qty=3.22, unit=KILOGRAM, 
                                         impacts_from="Methylene diphenyl diisocyanate, MDI, at plant, US PNW", sctg_code=28)
 prop_glycol = CLT_model.add_product(name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, 

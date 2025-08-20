@@ -377,7 +377,10 @@ class Product(Master):
         int or float
             Mass of the product.
         """
-        return self.get_qty() * self.get_density()
+        if self.get_unit().get_qty_measured() == 'mass':
+            return self.get_qty()
+        else:
+            return self.get_qty() * self.get_density()
 
     def get_weight_unit(self):
         """ Retrieve the unit of measurement of mass of the product.
@@ -388,7 +391,10 @@ class Product(Master):
         ~pod_lca.units.Unit
             Unit of measurement of mass of the product.
         """
-        return self.get_unit() * self.get_density_unit()
+        if self.get_unit().get_qty_measured() == 'mass':
+            return self.get_unit()
+        else:
+            return self.get_unit() * self.get_density_unit()
         
     def get_density(self):
         """ Retrieve density of the product.
