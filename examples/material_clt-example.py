@@ -14,7 +14,6 @@ from pod_lca.uncertainty import HotSpotAnalysis
 from pod_lca.units import CUBIC_METER
 from pod_lca.units import KILO
 from pod_lca.units import KILOGRAM
-from pod_lca.units import KILOMETER
 from pod_lca.units import WATT_HOUR
 from pod_lca.visualizer import BarChart
 from pod_lca.visualizer import MatplotlibPlotter
@@ -53,7 +52,7 @@ natural_gas = CLT_model.add_energy(name="Natural gas", stage="A3", qty=2.63, uni
 print(CLT_model)
 print(project)
 
-# CLT_model.set_products_electricity_source('by_location') # TODO: integrate electricity
+CLT_model.set_products_electricity_source('by_location')
 drf_record = CLT_model.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('instantaneous radiative forcing')
 

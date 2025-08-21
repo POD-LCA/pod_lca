@@ -215,9 +215,18 @@ class Product(Master):
             Source of electricity inventories data. Default 'from_database'.
         """
         if source in [key for key in self.electricity if not key.startswith('_')]:
-            self.electricity["_current"] = source
+            if self.electricity['from_database'] is None:
+                original_source = self.electricity["_current"]
+                try:
+                    self.electricity["_current"] = source
+                    self.get_impacts()
+                except:
+                    self.electricity["_current"] = original_source
+                    log(f"Cannont set electricity data to '{source}'. Electricity source reveted to '{self.electricity['_current']}'.", "Warn")
         else:
             raise KeyError(f"Source of electricty ({source} not recognized.)")
+        
+        return self
 
     def set_electricity_database_tag(self):
         """ Find the tag used to identify electricity data in the database.

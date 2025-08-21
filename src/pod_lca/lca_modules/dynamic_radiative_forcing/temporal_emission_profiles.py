@@ -196,7 +196,7 @@ class NormEmissionProfile(TemporalEmissionProfiles, Norm):
         return cherub_norm
 
     @classmethod
-    def from_range(cls, start, range, area_covered=0.9544, name='unspecified'):
+    def from_range(cls, start, range, area_covered=0.9545, name='unspecified'):
         """ Create a normal distribution from start and range specified. 
             The distribution is fitted so that area under the curve within [start, start + range] is greater than specified.
         
@@ -226,7 +226,7 @@ class LogNormEmissionProfile(TemporalEmissionProfiles, LogNorm):
     """
 
     @classmethod
-    def from_range(cls, start, range, area_covered=0.999, name='unspecified'):
+    def from_range(cls, start, range, area_covered=0.9545, name='unspecified'):
         """ Create a log-normal distribution from start and range specified. 
             The distribution is fitted so that area under the curve within [start, start + range] is closer to specified.
         
