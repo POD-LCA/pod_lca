@@ -48,6 +48,9 @@ class ImpactsDatabase:
         self.required_headers = None
         self.data = None
 
+        self.density_key = None
+        self.density_unit_key = None
+
     def __str__(self):
         str = "="*75 + "\n" + f"Impact Database: {self.get_name()}\n" + "="*75 + "\n"
         str += f"{self.get_data_all()}"
@@ -113,6 +116,8 @@ class ImpactsDatabase:
             The headers of the CSV file as they would be mapped to the carbon storage in the database: {**header** (:class:`str`): **carbon storage** (:class:`str`)}.
         grouped_data : str
             Prefix used in the grouped data.
+        density_headers : str
+            Headers corresponding to density value, and the units respectively.
         additional_headers : list of str
             Headers of the columns to be imported, other than name, unit, and impact categories.
         multipliers : list of float
@@ -136,12 +141,20 @@ class ImpactsDatabase:
                 mapped_headers.extend(list(DATA_HEADERS_DICT.keys()))
 
         data_headers = self.get_required_headers() + mapped_headers
+        if 'density_headers' in kwargs:
+            if isinstance(kwargs['density_headers'], list):
+                data_headers = data_headers + kwargs['density_headers']
+                self.density_key = kwargs['density_headers'][0]
+                self.density_unit_key = kwargs['density_headers'][1]
+            elif isinstance(kwargs['density_headers'], str):
+                raise ValueError('Density headers should be a list of two; density value, and the units respectively.')
+
         if 'additional_headers' in kwargs:
             if isinstance(kwargs['additional_headers'], list):
                 data_headers = data_headers + kwargs['additional_headers']
             elif isinstance(kwargs['additional_headers'], str):
                 data_headers = data_headers + [kwargs['additional_headers']]
-                
+
         if 'grouped_data' in kwargs:
             new_headers = []
             for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
@@ -163,6 +176,8 @@ class ImpactsDatabase:
         data = DataImporter.csv_to_pandas(file_path, data_headers, multipliers)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
+        if self.get_density_unit_key() is not None:
+            data[self.get_density_unit_key()] = data[self.get_density_unit_key()].map(UNITS_MAP)
 
         # rename mapped headers
         for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
@@ -319,13 +334,15 @@ class ImpactsDatabase:
         """
         return self.data
 
-    def get_data_entry(self, flow_name):
+    def get_data_entry(self, flow_name, header=None):
         """ Retrieve impacts for given flow.
         
         Parameters
         ----------
         flow_name : str
-            Name of the flow
+            Name of the flow.
+        header : str
+            Name of the header. If None, the full data row is returned.
         
         Returns
         -------
@@ -340,7 +357,10 @@ class ImpactsDatabase:
         if self.data is not None:
             row_id = self.data.index[self.data[self.get_primary_key()] == flow_name]
             if len(row_id) == 1:
-                return self.data.iloc[row_id[0]]
+                if header is None:
+                    return self.data.iloc[row_id[0]]
+                else:
+                    return self.data.iloc[row_id[0]][header]
             else:
                 raise ImportError("Multiple matching entries exist...")
 
@@ -374,6 +394,26 @@ class ImpactsDatabase:
         """
         return self.qty_key
     
+    def get_density_key(self):
+        """ Get the density key of the database.
+
+        Returns
+        -------
+        str
+            Data header corresponding to the density of the database entries.        
+        """
+        return self.density_key
+    
+    def get_density_unit_key(self):
+        """ Get the density unit key of the database.
+
+        Returns
+        -------
+        str
+            Data header corresponding to the unit of density of the database entries.        
+        """
+        return self.density_unit_key
+    
     def get_required_headers(self):
         """ Get the required headers of the database.
         
@@ -383,7 +423,6 @@ class ImpactsDatabase:
             Headers of the columns to be imported, other than name, unit, and impact categories.
         """
         return [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()]
-
 
 if __name__ == '__main__':
     pass

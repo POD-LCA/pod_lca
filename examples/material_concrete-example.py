@@ -43,6 +43,8 @@ print(concrete_model)
 print(project)
 print(electricity)
 
+concrete_model.set_products_electricity_source('by_location')
+
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)
 hot_spots_GWP = hotspot_analysis.run(impact_category= "GWP")
