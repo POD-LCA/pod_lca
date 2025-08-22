@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 from pod_lca.utilities.geometry import Mesh
+from pod_lca.utilities.geometry import centroid
 
 
 def plot_building(building):
@@ -10,13 +11,13 @@ def plot_building(building):
     data = []
     for i, fk in enumerate(fks):
         floor = building.floors[fk]
-        add_floor(data, floor, i)
+        add_floor(data, building, floor, i)
 
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     fig.show()
 
-def add_floor(data, floor, key):
+def add_floor(data, building, floor, key):
 
     env = floor.envelope
     srfs = env.surfaces
@@ -42,15 +43,21 @@ def add_floor(data, floor, key):
                             legendgroup=f'{zname}',
                             )]
     
-    #############################################################################
-    # TODO: triangulate faces?
-    # This assumes all faces are quads, some floors , cielings will not be
+
     triangles = []
     for face in faces:
-        triangles.append(face[:3])
-        if len(face) == 4:
+        if len(face) == 3:
+            triangles.append(face[:3])
+        elif len(face) == 4:
+            triangles.append(face[:3])
             triangles.append([face[2], face[3], face[0]])
-    #############################################################################
+        else:
+            pass
+            f_xyz = [mesh.vertex_xyz(fk) for fk in face]
+            cpt = centroid(f_xyz)
+            vertices.append(cpt)
+            for fi in range(len(face)):
+                triangles.append([len(vertices)-1, face[-fi], face[-fi - 1]])
 
     i = [v[0] for v in triangles]
     j = [v[1] for v in triangles]
@@ -61,11 +68,9 @@ def add_floor(data, floor, key):
     z = [v[2] for v in vertices]
 
 
-    # colorscales = dir(plotly.colors.sequential)[::2]
-    colors = plotly.colors.qualitative.Pastel
-    # attrs = ['name', 'surface_type', 'outside_boundary_condition', 'construction']
+    # colors = plotly.colors.qualitative.Pastel
     text = []
-    # intensity = []
+    intensity = []
     for sk in srfs:
         con = env.constructions[sk]
         layers = con.layers
@@ -79,10 +84,16 @@ def add_floor(data, floor, key):
         string += 'Construction: {}<br>'.format(con.name)
         for lk, layer in enumerate(layers):
             string += 'layer {}: {}<br>'.format(lk, layer)
-        text.append(string)
-        # intensity.append(key)
-        text.append(string)
-        # intensity.append(key)
+        if len(srfs[sk].polygon) == 3:
+            num_strings = 1
+        elif len(srfs[sk].polygon) == 4:
+            num_strings = 2
+        else:
+            num_strings = len(srfs[sk].polygon)
+        for _ in range(num_strings):
+            text.append(string)
+            intensity.append(key)
+
 
     faces = [go.Mesh3d(name='Zone',
                        x=x,
@@ -98,11 +109,12 @@ def add_floor(data, floor, key):
                        hoverinfo='text',
                        legendgroup=f'{zname}',
                        lighting={'ambient':1.0},
-                    #    intensitymode='cell',
-                    #    intensity=intensity,
                        showscale=False,
-                    #    colorscale=colorscales[0],
-                    color = colors[key]
+                    #    color = colors[key],
+                       intensitymode='cell',
+                       intensity=intensity,
+                       cmin=0,
+                       cmax=len(building.floors),
             )]
     data.extend(lines)
     data.extend(faces)

@@ -18,13 +18,14 @@ for i in range(50): print('')
 x = 10
 y = 20
 floor_to_floor = 3
-num_floors = 5
-
+num_floors = 10
 
 b = Building()
 for i in range(num_floors):
     z = floor_to_floor * i
-    floor_plan = [[0,0,z], [x,0,z], [x,y,z], [0,y,z]]
+    # floor_plan = [[0,0,z], [x,0,z], [x/2,y/2,z]]
+    # floor_plan = [[0,0,z], [x,0,z], [x,y,z], [0,y,z]]
+    floor_plan = [[0,0,z], [x/2, -y/4, z], [x,0,z], [x,y,z], [0,y,z]]
     b.add_floor(floor_no=i + 1, 
                 floor_plan=floor_plan, 
                 geometry_unit=METER, 
