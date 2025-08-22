@@ -4,5 +4,5 @@ Here is a list of examples
 
 ---
 
-* [Concrete Example](concrete_example.md)
-* [CLT Example](clt_example.md)
+* [Concrete Example](concrete-example.md)
+* [CLT Example](clt-example.md)

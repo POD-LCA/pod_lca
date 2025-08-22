@@ -3,9 +3,14 @@ import pathlib
 from invoke import task
 
 @task
-def docs(c):
+def docs_html(c):
     """Build Sphinx HTML docs"""
     c.run("sphinx-build -b html docs/source docs/_build/html")
+
+@task
+def docs_md(c):
+    """Build Sphinx HTML docs"""
+    c.run("sphinx-build -b markdown docs/source docs/_build/md")
 
 @task
 def tests(c):

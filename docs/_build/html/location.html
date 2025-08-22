@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+
+<html lang="Python" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Location &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Visualizer" href="visualizer.html" />
+    <link rel="prev" title="Data Distributions" href="data-distributions.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api-reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="impacts.html">Impacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="materials-screening.html">Materials Screening</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electricity.html">Electricity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transportation.html">Transportation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dynamic-radiative-forcing.html">Dynamic Radiative Forcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visualizer.html">Visualizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="units.html">Units</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="location">
+<h1>Location<a class="headerlink" href="#location" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a> object maintains a record of location and is used by other classes to store and retrieve location specific data (e.g., <a class="reference internal" href="#pod_lca.location.Location.get_ferc_region" title="pod_lca.location.Location.get_ferc_region"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_ferc_region()</span></code></a> in <a class="reference internal" href="electricity-supply.html#pod_lca.electricity.ElectricitySupply" title="pod_lca.electricity.ElectricitySupply"><code class="xref py py-class docutils literal notranslate"><span class="pre">ElectricitySupply</span></code></a>).</p>
+<hr class="docutils" />
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.location.Location">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.location.</span></span><span class="sig-name descname"><span class="pre">Location</span></span><a class="headerlink" href="#pod_lca.location.Location" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Location object updates the location into subcategores.</dt><dd><p>The geocoding is done using Nominatim (<a class="reference external" href="https://nominatim.org/release-docs/develop/">https://nominatim.org/release-docs/develop/</a>) which looks up OpenStreetMap (<a class="reference external" href="https://www.openstreetmap.org/">https://www.openstreetmap.org/</a>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.location_name">
+<span class="sig-name descname"><span class="pre">location_name</span></span><a class="headerlink" href="#pod_lca.location.Location.location_name" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.regionality">
+<span class="sig-name descname"><span class="pre">regionality</span></span><a class="headerlink" href="#pod_lca.location.Location.regionality" title="Link to this definition">¶</a></dt>
+<dd><p>Regionality of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{'Local', 'Regional', 'National'}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.coords">
+<span class="sig-name descname"><span class="pre">coords</span></span><a class="headerlink" href="#pod_lca.location.Location.coords" title="Link to this definition">¶</a></dt>
+<dd><p>Location coordinate using WGS-84 coordinate system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.zipcode">
+<span class="sig-name descname"><span class="pre">zipcode</span></span><a class="headerlink" href="#pod_lca.location.Location.zipcode" title="Link to this definition">¶</a></dt>
+<dd><p>ZIP code of the location (in the corresponding local system).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.city">
+<span class="sig-name descname"><span class="pre">city</span></span><a class="headerlink" href="#pod_lca.location.Location.city" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the city the location is in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.state">
+<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#pod_lca.location.Location.state" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the state the location is in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.state_abbr">
+<span class="sig-name descname"><span class="pre">state_abbr</span></span><a class="headerlink" href="#pod_lca.location.Location.state_abbr" title="Link to this definition">¶</a></dt>
+<dd><p>Standard abbreviation of the state name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.country">
+<span class="sig-name descname"><span class="pre">country</span></span><a class="headerlink" href="#pod_lca.location.Location.country" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the country the location is in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.country_code">
+<span class="sig-name descname"><span class="pre">country_code</span></span><a class="headerlink" href="#pod_lca.location.Location.country_code" title="Link to this definition">¶</a></dt>
+<dd><p>Country code from ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country code</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.cfs_area">
+<span class="sig-name descname"><span class="pre">cfs_area</span></span><a class="headerlink" href="#pod_lca.location.Location.cfs_area" title="Link to this definition">¶</a></dt>
+<dd><p>Code of the Comodity Flow Survey (CFS) area.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.faf_foreign_name">
+<span class="sig-name descname"><span class="pre">faf_foreign_name</span></span><a class="headerlink" href="#pod_lca.location.Location.faf_foreign_name" title="Link to this definition">¶</a></dt>
+<dd><p>Name of the Freight Analysis Framework (FAF) region (foreign) corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.faf_foreign_code">
+<span class="sig-name descname"><span class="pre">faf_foreign_code</span></span><a class="headerlink" href="#pod_lca.location.Location.faf_foreign_code" title="Link to this definition">¶</a></dt>
+<dd><p>Code of the Freight Analysis Framework (FAF) region (foreign) corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.faf_domestic_codes">
+<span class="sig-name descname"><span class="pre">faf_domestic_codes</span></span><a class="headerlink" href="#pod_lca.location.Location.faf_domestic_codes" title="Link to this definition">¶</a></dt>
+<dd><p>Codes of the Freight Analysis Framework (FAF) region (domestic) corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.us_coast">
+<span class="sig-name descname"><span class="pre">us_coast</span></span><a class="headerlink" href="#pod_lca.location.Location.us_coast" title="Link to this definition">¶</a></dt>
+<dd><p>US coast closest to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.ferc_region">
+<span class="sig-name descname"><span class="pre">ferc_region</span></span><a class="headerlink" href="#pod_lca.location.Location.ferc_region" title="Link to this definition">¶</a></dt>
+<dd><p>Federal Energy Regulatory Commission (FERC) Region corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.balancing_authority">
+<span class="sig-name descname"><span class="pre">balancing_authority</span></span><a class="headerlink" href="#pod_lca.location.Location.balancing_authority" title="Link to this definition">¶</a></dt>
+<dd><p>Balancing authority corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.cambium_gea_region">
+<span class="sig-name descname"><span class="pre">cambium_gea_region</span></span><a class="headerlink" href="#pod_lca.location.Location.cambium_gea_region" title="Link to this definition">¶</a></dt>
+<dd><p>Cambium Generation and Emissions Assessment (GEA) region corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.location.Location.reeds_balancing_area">
+<span class="sig-name descname"><span class="pre">reeds_balancing_area</span></span><a class="headerlink" href="#pod_lca.location.Location.reeds_balancing_area" title="Link to this definition">¶</a></dt>
+<dd><p>Regional Energy Deployment System (ReEDS) balancing area corresponding to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.from_str">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.from_str" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Create location from name.</dt><dd><p>The location data populated based on the centroid of the location prescribed.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>string</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Free-form textual description or address (or part thereof) of the location.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.from_US_zip">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_US_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipcode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_all_location_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.from_US_zip" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Create location from US zipcode.</dt><dd><p>The location data populated based on the centroid of the area represented by the ZIP code.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zipcode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- ZIP code of the location.</p></li>
+<li><p><strong>set_all_location_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, set location properties other than country and ZIP code.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.from_US_state">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_US_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_all_location_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.from_US_state" title="Link to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Create location from US state.</dt><dd><p>The location data populated based on the centroid of the area represented by the zipcode.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- US state name.</p></li>
+<li><p><strong>set_all_location_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, set location properties other than country, state, coast, CFS area, and FAF region.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- State name not recognized as a US state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.from_faf_regions">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_faf_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">faf_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_all_location_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.from_faf_regions" title="Link to this definition">¶</a></dt>
+<dd><p>Create location from Freight Analysis Framework (FAF) region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>faf_region</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- FAF region name.</p></li>
+<li><p><strong>set_all_location_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If true, set location properties based on location coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- FAF region not recognized</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_name">
+<span class="sig-name descname"><span class="pre">set_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_name" title="Link to this definition">¶</a></dt>
+<dd><p>Set name of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) -- Name of the location</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_regionality">
+<span class="sig-name descname"><span class="pre">set_regionality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location_nominatim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_regionality" title="Link to this definition">¶</a></dt>
+<dd><p>Set the regionality of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location_nominatim</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object from Nominatim</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_cordinates">
+<span class="sig-name descname"><span class="pre">set_cordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location_nominatim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_cordinates" title="Link to this definition">¶</a></dt>
+<dd><p>Set the coordinates of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location_nominatim</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object from Nominatim</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_zip">
+<span class="sig-name descname"><span class="pre">set_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_zip" title="Link to this definition">¶</a></dt>
+<dd><p>Set the zipcode of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_city">
+<span class="sig-name descname"><span class="pre">set_city</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_city" title="Link to this definition">¶</a></dt>
+<dd><p>Set the city of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_state" title="Link to this definition">¶</a></dt>
+<dd><p>Set the state of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_country">
+<span class="sig-name descname"><span class="pre">set_country</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location_photon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_country" title="Link to this definition">¶</a></dt>
+<dd><p>Set the country of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location_photon</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object from Photon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_country_code">
+<span class="sig-name descname"><span class="pre">set_country_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location_photon</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_country_code" title="Link to this definition">¶</a></dt>
+<dd><p>Set the country code of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>geopy_location_photon</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object from Photon</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_cfs_area">
+<span class="sig-name descname"><span class="pre">set_cfs_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_cfs_area" title="Link to this definition">¶</a></dt>
+<dd><p>Set the state code from the Comodity Flow Survey (CFS).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_faf_foreign_region">
+<span class="sig-name descname"><span class="pre">set_faf_foreign_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_faf_foreign_region" title="Link to this definition">¶</a></dt>
+<dd><p>Set the FAF region (foreign) of the location.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_faf_domestic_region">
+<span class="sig-name descname"><span class="pre">set_faf_domestic_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_faf_domestic_region" title="Link to this definition">¶</a></dt>
+<dd><p>Set the FAF region (domestic) of the location.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_ferc_region">
+<span class="sig-name descname"><span class="pre">set_ferc_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_ferc_region" title="Link to this definition">¶</a></dt>
+<dd><p>Set the Federal Energy Regulatory Commission (FERC) Region.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_balancing_authority">
+<span class="sig-name descname"><span class="pre">set_balancing_authority</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_balancing_authority" title="Link to this definition">¶</a></dt>
+<dd><p>Set the Balancing Authority.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_cambium_gea_region">
+<span class="sig-name descname"><span class="pre">set_cambium_gea_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_cambium_gea_region" title="Link to this definition">¶</a></dt>
+<dd><p>Set the Cambium Generation and Emissions Assessment (GEA) region.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_reeds_balancing_area">
+<span class="sig-name descname"><span class="pre">set_reeds_balancing_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_reeds_balancing_area" title="Link to this definition">¶</a></dt>
+<dd><p>Set the Balancing Area under the Get the Regional Energy Deployment System (ReEDS).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.set_us_coast">
+<span class="sig-name descname"><span class="pre">set_us_coast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.set_us_coast" title="Link to this definition">¶</a></dt>
+<dd><p>Set the US coast closest to the location.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_location_name">
+<span class="sig-name descname"><span class="pre">get_location_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_location_name" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the location name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_regionality">
+<span class="sig-name descname"><span class="pre">get_regionality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_regionality" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the regionality of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Regionality of the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_cordinates">
+<span class="sig-name descname"><span class="pre">get_cordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_cordinates" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the coordinates of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(latitude, longitude).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_zip">
+<span class="sig-name descname"><span class="pre">get_zip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_zip" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the zipcode of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the ZIP code.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_city">
+<span class="sig-name descname"><span class="pre">get_city</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_city" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the city of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the city.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_state" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the state of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_state_abbr">
+<span class="sig-name descname"><span class="pre">get_state_abbr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_state_abbr" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the state abbreviation of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Standard abbreviation of the state name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_country">
+<span class="sig-name descname"><span class="pre">get_country</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_country" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the country of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the country.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_country_code">
+<span class="sig-name descname"><span class="pre">get_country_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_country_code" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the country code of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Country code from ISO 3166-1.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_cfs_area">
+<span class="sig-name descname"><span class="pre">get_cfs_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_cfs_area" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Comodity Flow Survey (CFS) area of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Code of the Comodity Flow Survey (CFS) area.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_faf_foreign_region">
+<span class="sig-name descname"><span class="pre">get_faf_foreign_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'code'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_faf_foreign_region" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Freight Analysis Framework (FAF) region (foreign) of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> (<em>{'code'</em><em>, </em><em>'name'}</em>) -- FAF foreign region code or name</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> -- Code of the Freight Analysis Framework (FAF) region (foreign).</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> -- Name of the Freight Analysis Framework (FAF) region (foreign).</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- Request type not recognized.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_faf_domestic_region">
+<span class="sig-name descname"><span class="pre">get_faf_domestic_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_faf_domestic_region" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Freight Analysis Framework (FAF) region (domestic) of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Codes of the Freight Analysis Framework (FAF) region (domestic).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_us_coast">
+<span class="sig-name descname"><span class="pre">get_us_coast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_us_coast" title="Link to this definition">¶</a></dt>
+<dd><p>Get the US coast closest to the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>US coast closest to the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_ferc_region">
+<span class="sig-name descname"><span class="pre">get_ferc_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_ferc_region" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Federal Energy Regulatory Commission (FERC) Region.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Federal Energy Regulatory Commission (FERC) Region corresponding to the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_balancing_authority">
+<span class="sig-name descname"><span class="pre">get_balancing_authority</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_balancing_authority" title="Link to this definition">¶</a></dt>
+<dd><p>Get the balancing authority.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Balancing authority corresponding to the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_cambium_gea_region">
+<span class="sig-name descname"><span class="pre">get_cambium_gea_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_cambium_gea_region" title="Link to this definition">¶</a></dt>
+<dd><p>Get Cambium Generation and Emissions Assessment (GEA) region.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Cambium Generation and Emissions Assessment (GEA) region corresponding to the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_reeds_balancing_area">
+<span class="sig-name descname"><span class="pre">get_reeds_balancing_area</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_reeds_balancing_area" title="Link to this definition">¶</a></dt>
+<dd><p>Get the Regional Energy Deployment System (ReEDS) balancing area.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Regional Energy Deployment System (ReEDS) balancing area corresponding to the location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_states">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_closest_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_lst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_states" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest states to the destination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Destination location object.</p></li>
+<li><p><strong>states_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- List of states to find the closest ones from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The closest state to the destination.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_zip">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_closest_zip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geopy_location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_zip" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest ZIP code of the location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geopy_location</strong> (<a class="reference external" href="https://geopy.readthedocs.io/en/stable/index.html#geopy.location.Location" title="(in GeoPy v2.4.1)"><em>geopy.location.Location</em></a>) -- Geopy location object.</p></li>
+<li><p><strong>max_attempts</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- Maximum number of attempts to find the closest zip code</p></li>
+<li><p><strong>step</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Step size in km (approx.)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_state_CFS">
+<span class="sig-name descname"><span class="pre">get_closest_state_CFS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">codes_lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_state_CFS" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest states to the destination, where states are given in CFS codes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Destination location object.</p></li>
+<li><p><strong>states_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- List of states to find the closest ones from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> -- The closest state to the destination.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> -- CFS code of the closest state.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.location.Location.get_closest_regions_FAF">
+<span class="sig-name descname"><span class="pre">get_closest_regions_FAF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_lst</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.location.Location.get_closest_regions_FAF" title="Link to this definition">¶</a></dt>
+<dd><p>Get the closest states to the destination, where states are given in Freight Analysis Framework (FAF) domestic region codes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>destination</strong> (<a class="reference internal" href="#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Destination location object.</p></li>
+<li><p><strong>states_lst</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) -- List of states to find the closest ones from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> -- The closest state to the destination.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> -- FAF code of the closest state.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Location</a><ul>
+<li><a class="reference internal" href="#pod_lca.location.Location"><code class="docutils literal notranslate"><span class="pre">Location</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.location.Location.location_name"><code class="docutils literal notranslate"><span class="pre">Location.location_name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.regionality"><code class="docutils literal notranslate"><span class="pre">Location.regionality</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.coords"><code class="docutils literal notranslate"><span class="pre">Location.coords</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.zipcode"><code class="docutils literal notranslate"><span class="pre">Location.zipcode</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.city"><code class="docutils literal notranslate"><span class="pre">Location.city</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.state"><code class="docutils literal notranslate"><span class="pre">Location.state</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.state_abbr"><code class="docutils literal notranslate"><span class="pre">Location.state_abbr</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.country"><code class="docutils literal notranslate"><span class="pre">Location.country</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.country_code"><code class="docutils literal notranslate"><span class="pre">Location.country_code</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.cfs_area"><code class="docutils literal notranslate"><span class="pre">Location.cfs_area</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.faf_foreign_name"><code class="docutils literal notranslate"><span class="pre">Location.faf_foreign_name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.faf_foreign_code"><code class="docutils literal notranslate"><span class="pre">Location.faf_foreign_code</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.faf_domestic_codes"><code class="docutils literal notranslate"><span class="pre">Location.faf_domestic_codes</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.us_coast"><code class="docutils literal notranslate"><span class="pre">Location.us_coast</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.ferc_region"><code class="docutils literal notranslate"><span class="pre">Location.ferc_region</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.balancing_authority</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.cambium_gea_region</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.reeds_balancing_area</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.from_str"><code class="docutils literal notranslate"><span class="pre">Location.from_str()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.from_US_zip"><code class="docutils literal notranslate"><span class="pre">Location.from_US_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.from_US_state"><code class="docutils literal notranslate"><span class="pre">Location.from_US_state()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.from_faf_regions"><code class="docutils literal notranslate"><span class="pre">Location.from_faf_regions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_name"><code class="docutils literal notranslate"><span class="pre">Location.set_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_regionality"><code class="docutils literal notranslate"><span class="pre">Location.set_regionality()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_cordinates"><code class="docutils literal notranslate"><span class="pre">Location.set_cordinates()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_zip"><code class="docutils literal notranslate"><span class="pre">Location.set_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_city"><code class="docutils literal notranslate"><span class="pre">Location.set_city()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_state"><code class="docutils literal notranslate"><span class="pre">Location.set_state()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_country"><code class="docutils literal notranslate"><span class="pre">Location.set_country()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_country_code"><code class="docutils literal notranslate"><span class="pre">Location.set_country_code()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_cfs_area"><code class="docutils literal notranslate"><span class="pre">Location.set_cfs_area()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_faf_foreign_region"><code class="docutils literal notranslate"><span class="pre">Location.set_faf_foreign_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_faf_domestic_region"><code class="docutils literal notranslate"><span class="pre">Location.set_faf_domestic_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_ferc_region"><code class="docutils literal notranslate"><span class="pre">Location.set_ferc_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.set_balancing_authority()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.set_cambium_gea_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.set_reeds_balancing_area()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.set_us_coast"><code class="docutils literal notranslate"><span class="pre">Location.set_us_coast()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_location_name"><code class="docutils literal notranslate"><span class="pre">Location.get_location_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_regionality"><code class="docutils literal notranslate"><span class="pre">Location.get_regionality()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_cordinates"><code class="docutils literal notranslate"><span class="pre">Location.get_cordinates()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_zip"><code class="docutils literal notranslate"><span class="pre">Location.get_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_city"><code class="docutils literal notranslate"><span class="pre">Location.get_city()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_state"><code class="docutils literal notranslate"><span class="pre">Location.get_state()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_state_abbr"><code class="docutils literal notranslate"><span class="pre">Location.get_state_abbr()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_country"><code class="docutils literal notranslate"><span class="pre">Location.get_country()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_country_code"><code class="docutils literal notranslate"><span class="pre">Location.get_country_code()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_cfs_area"><code class="docutils literal notranslate"><span class="pre">Location.get_cfs_area()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_faf_foreign_region"><code class="docutils literal notranslate"><span class="pre">Location.get_faf_foreign_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_faf_domestic_region"><code class="docutils literal notranslate"><span class="pre">Location.get_faf_domestic_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_us_coast"><code class="docutils literal notranslate"><span class="pre">Location.get_us_coast()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_ferc_region"><code class="docutils literal notranslate"><span class="pre">Location.get_ferc_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_balancing_authority"><code class="docutils literal notranslate"><span class="pre">Location.get_balancing_authority()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_cambium_gea_region"><code class="docutils literal notranslate"><span class="pre">Location.get_cambium_gea_region()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_reeds_balancing_area"><code class="docutils literal notranslate"><span class="pre">Location.get_reeds_balancing_area()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_states"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_states()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_zip"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_zip()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_state_CFS"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_state_CFS()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.location.Location.get_closest_regions_FAF"><code class="docutils literal notranslate"><span class="pre">Location.get_closest_regions_FAF()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="data-distributions.html">
+                    <span class="icon">&lt;</span><span>Data Distributions</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="visualizer.html"><span>Visualizer</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

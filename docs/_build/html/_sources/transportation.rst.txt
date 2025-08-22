@@ -9,7 +9,7 @@ This sub-package handles transportation. :py:class:`~pod_lca.transportation.Tran
 .. toctree::
    :maxdepth: 3
 
-   project_logistic_manager
-   logistics_link
-   transport_mode
+   project-logistic-manager
+   logistics-leg
+   transport-mode
    transport_datasets

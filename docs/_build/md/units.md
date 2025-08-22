@@ -1,169 +1,48 @@
 # Units
 
-[`Unit`](#pod_lca.units.Unit) and [`MetricPrefix`](metric_prefixes.md#pod_lca.units.MetricPrefix) objects manage unit multiplication/division and unit conversions.
+This sub-package manage [`Unit`](units-object.md#pod_lca.units.Unit) objects, which are units of measurements
 
 ---
 
-### *class* pod_lca.units.Unit
-
-Unit object from which units are created.
-
-#### name
-
-Common name of the unit.
-
-* **Type:**
-  [str](https://docs.python.org/3/library/stdtypes.html#str)
-
-#### standard_notation
-
-Standard notation of the unit.
-
-* **Type:**
-  [str](https://docs.python.org/3/library/stdtypes.html#str)
-
-#### qty_measured
-
-The quantity measured by the unit.
-
-* **Type:**
-  {'time', 'mass', 'length', 'area', 'volume', 'power', 'energy', 'count', 'carbon storage'}
-
-#### base_unit
-
-Base unit of the Obj. None if itself a base unit.
-
-* **Type:**
-  [*Unit*](#pod_lca.units.Unit)
-
-#### prefix
-
-Metric prefix. None if a base unit or non-metric.
-
-* **Type:**
-  [*MetricPrefix*](metric_prefixes.md#pod_lca.units.MetricPrefix)
-
-#### convert_compound
-
-If True, unit conversion assuming the unit to be a compound unit.
-
-* **Type:**
-  [bool](https://docs.python.org/3/library/functions.html#bool)
-
-#### components
-
-List of components the unit is made up of. None if not a compound unit
-
-* **Type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Unit*](#pod_lca.units.Unit)
-
-#### *classmethod* from_basics(name, standard_notation, qty_measured)
-
-Create a unit from basic data.
-
-* **Parameters:**
-  * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Common name of the unit.
-  * **standard_notation** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Standard notation of the unit.
-  * **qty_measured** ( *{'time'* *,*  *'mass'* *,*  *'length'* *,*  *'area'* *,*  *'volume'* *,*  *'power'* *,*  *'energy'* *,*  *'count'* *,*  *'carbon storage'}*) -- The quantity measured by the unit.
-
-#### set_name(name)
-
-Set the name of the unit of measurement.
-
-* **Parameters:**
-  **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the unit of measurement.
-
-#### set_standard_notation(standard_notatoion)
-
-Set the standard notation of the unit of measurement.
-
-* **Parameters:**
-  **standard_notatoion** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Standard notation of the unit of measurement.
-
-#### set_qty_measured(qty_measured)
-
-Set the quantity measured by the unit of measurement.
-
-* **Parameters:**
-  **qty_measured** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Quantity measured by the unit of measurement.
-
-#### get_name()
-
-Get the name of the unit of measurement.
-
-* **Returns:**
-  Name of the unit of measurement.
-* **Return type:**
-  [str](https://docs.python.org/3/library/stdtypes.html#str)
-
-#### get_standard_notation()
-
-Retrieve the standard notation of the unit of measurement.
-
-* **Returns:**
-  Standard notation of the unit of measurement.
-* **Return type:**
-  [str](https://docs.python.org/3/library/stdtypes.html#str)
-
-#### get_qty_measured()
-
-Get the quantity measured by the unit of measurement.
-
-* **Returns:**
-  Quantity measured by the unit of measurement.
-* **Return type:**
-  [str](https://docs.python.org/3/library/stdtypes.html#str)
-
-#### get_base()
-
-Retrieve the base unit of the unit of measurement, if exist.
-
-* **Returns:**
-  Base unit of measurement, or None if itself a base unit of measurement.
-* **Return type:**
-  [*Unit*](#pod_lca.units.Unit)
-
-#### get_prefix()
-
-Retrieve the metric prefix of the unit of measurement, if exist.
-
-* **Returns:**
-  Metric prefix of the unit of measurement, or None if no prefix.
-* **Return type:**
-  [*MetricPrefix*](metric_prefixes.md#pod_lca.units.MetricPrefix)
-
-#### get_components()
-
-Retrieve components of the unit of measurement, if a compound unit.
-
-* **Returns:**
-  List of component units, or None if not a compound unit.
-* **Return type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Unit*](#pod_lca.units.Unit)
-
-#### convert_to(to_unit)
-
-Returns conversion factor.
-
-* **Parameters:**
-  **to_unit** ([*Unit*](#pod_lca.units.Unit)) -- Unit of measurement to which the value will be converted to (from the current unit of measuremnt).
-* **Returns:**
-  Conversion factor to be applied on the value.
-* **Return type:**
-  [float](https://docs.python.org/3/library/functions.html#float)
-* **Raises:**
-  [**TypeError**](https://docs.python.org/3/library/exceptions.html#TypeError) -- Incompatible units for conversion.
-
-#### *static* compute_conversion_factor(unit_in, unit_out, qty_measured)
-
-Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and
-: 1. they are not compound units.
-
-* **Parameters:**
-  * **unit_in** ([*Unit*](#pod_lca.units.Unit)) -- Unit of measurement from which the value will be converted.
-  * **unit_out** ([*Unit*](#pod_lca.units.Unit)) -- Unit of measurement to which the value will be converted.
-  * **qty_measured** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Quantity measured by the units of measruements considered.
-* **Returns:**
-  Conversion factor to be applied on the value.
-* **Return type:**
-  [float](https://docs.python.org/3/library/functions.html#float)
+* [Units Object](units-object.md)
+  * [`Unit`](units-object.md#pod_lca.units.Unit)
+    * [`Unit.name`](units-object.md#pod_lca.units.Unit.name)
+    * [`Unit.standard_notation`](units-object.md#pod_lca.units.Unit.standard_notation)
+    * [`Unit.qty_measured`](units-object.md#pod_lca.units.Unit.qty_measured)
+    * [`Unit.base_unit`](units-object.md#pod_lca.units.Unit.base_unit)
+    * [`Unit.prefix`](units-object.md#pod_lca.units.Unit.prefix)
+    * [`Unit.convert_compound`](units-object.md#pod_lca.units.Unit.convert_compound)
+    * [`Unit.components`](units-object.md#pod_lca.units.Unit.components)
+    * [`Unit.from_basics()`](units-object.md#pod_lca.units.Unit.from_basics)
+    * [`Unit.set_name()`](units-object.md#pod_lca.units.Unit.set_name)
+    * [`Unit.set_standard_notation()`](units-object.md#pod_lca.units.Unit.set_standard_notation)
+    * [`Unit.set_qty_measured()`](units-object.md#pod_lca.units.Unit.set_qty_measured)
+    * [`Unit.get_name()`](units-object.md#pod_lca.units.Unit.get_name)
+    * [`Unit.get_standard_notation()`](units-object.md#pod_lca.units.Unit.get_standard_notation)
+    * [`Unit.get_qty_measured()`](units-object.md#pod_lca.units.Unit.get_qty_measured)
+    * [`Unit.get_base()`](units-object.md#pod_lca.units.Unit.get_base)
+    * [`Unit.get_prefix()`](units-object.md#pod_lca.units.Unit.get_prefix)
+    * [`Unit.get_components()`](units-object.md#pod_lca.units.Unit.get_components)
+    * [`Unit.convert_to()`](units-object.md#pod_lca.units.Unit.convert_to)
+    * [`Unit.compute_conversion_factor()`](units-object.md#pod_lca.units.Unit.compute_conversion_factor)
+* [Metrix Prefixes](metrix-prefixes.md)
+  * [`MetricPrefix`](metrix-prefixes.md#pod_lca.units.MetricPrefix)
+    * [`MetricPrefix.name`](metrix-prefixes.md#pod_lca.units.MetricPrefix.name)
+    * [`MetricPrefix.symbol`](metrix-prefixes.md#pod_lca.units.MetricPrefix.symbol)
+    * [`MetricPrefix.power`](metrix-prefixes.md#pod_lca.units.MetricPrefix.power)
+    * [`MetricPrefix.get_name()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.get_name)
+    * [`MetricPrefix.get_symbol()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.get_symbol)
+    * [`MetricPrefix.get_power()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.get_power)
+    * [`MetricPrefix.convert_to()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.convert_to)
+* [Common Units](common-units.md)
+  * [Time](common-units.md#time)
+  * [Mass](common-units.md#mass)
+  * [Length](common-units.md#length)
+  * [Transportation](common-units.md#transportation)
+  * [Area](common-units.md#area)
+  * [Volume](common-units.md#volume)
+  * [Power](common-units.md#power)
+  * [Energy](common-units.md#energy)
+  * [Count](common-units.md#count)
+  * [Carbon Storage](common-units.md#carbon-storage)
+* [Units Map](units-map.md)
