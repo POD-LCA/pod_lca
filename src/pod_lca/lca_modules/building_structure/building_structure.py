@@ -5,7 +5,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from . import StructuralElement
 from . import Foundation
 from . import Beam
 from . import Column
@@ -20,6 +19,8 @@ class BuildingStructure:
     
     Attributes
     ----------
+    parent : ~pod_lca.building.Building
+        The building to which the structure belong.
     structural_system :
         Major vertical gravity system of the structure.
     structural_material : {'Concrete', 'Steel', 'CLT'}
@@ -35,6 +36,7 @@ class BuildingStructure:
     """
 
     def __init__(self):
+        self.parent = None
         self.structural_system = None
         self.structural_material = None
         self.foundations = []
@@ -42,13 +44,17 @@ class BuildingStructure:
         self.columns = []
         self.slabs = []
 
-
+    # ================================
+    # Constructors
+    # ================================
     @classmethod
-    def from_template(cls, bom_file_path):
+    def from_template(cls, building, bom_file_path):
         """ Create a structure from a template model.
         
         Parameters
         ----------
+        building : ~pod_lca.building.Building
+            Building for which the structure belong.
         bom_file_path : str
             File path to bill of materials
 
@@ -58,6 +64,7 @@ class BuildingStructure:
             Structure created.
         """
         structure = cls()
+        structure.set_parent(building)
 
         bill_of_materials = DataImporter.csv_to_dict(bom_file_path)
 
@@ -71,11 +78,12 @@ class BuildingStructure:
             item = bill_of_materials[key]
             if item['Building Component'] in ['Structure', 'Superstructure', 'Substructure']:
                 building_element = item['Building element']
-                building_material = BuildingMaterial.new_structural_material(name=item['material'] + '_in_' + building_element, 
-                                                                             qty=item['qty'],
+                building_material = BuildingMaterial.new_structural_material(parent=structure,
+                                                                             name=item['material'] + '_in_' + building_element, 
+                                                                             qty=float(item['qty']),
                                                                              unit=UNITS_MAP[item['unit']],
                                                                              material_database_entry=item['material'])
-
+                
                 if building_element in ['Structural Foundations']:
                     component_obj = foundation
                 elif building_element in ["Structural Framing"]:
@@ -100,8 +108,44 @@ class BuildingStructure:
     def from_geometry(cls, building):
         pass
 
+    # ================================
+    # Setters
+    # ================================
+    def set_parent(self, parent):
+        """ Set the parent building of the structure.
+        
+        Parameters
+        ----------
+        parent : ~pod_lca.building.Building
+            The building to which the structure belong.
+        """
+        self.parent = parent
 
+        return self
 
+    # ================================
+    # Getters
+    # ================================
+    def get_parent(self):
+        """ Get the parent building of the structure.
+        
+        Returns
+        -------
+        ~pod_lca.building.Building
+            The building to which the structure belong.
+        """
+        return self.parent
+    
+    def get_components(self):
+        """ Get a list of all structural elements (i.e., structural components) of the building.
+        
+        Returns
+        -------
+        list of ~pod_lca.building_structure.StructuralElement
+            All the structural elements in the structure.
+        """
+        return  self.foundations + self.beams + self.columns + self.slabs
+    
 
 if __name__ == '__main__':
     pass    

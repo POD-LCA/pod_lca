@@ -214,7 +214,7 @@ class Master:
         """
         self.impact_database_entry = database_item
 
-        database = self.get_project().get_impact_database()
+        database = self.get_impact_database()
 
         if database_item is None:
             self.inventories_declared_unit = self.get_unit()
@@ -414,6 +414,17 @@ class Master:
         self.update_inventory_records()
 
         return self.impacts
+    
+    def get_impact_database(self):
+        """ Get the impacts database of the project.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            Impact database of the project.
+        """
+        return self.get_project().get_impact_database()
+
     
     def get_emissions(self):
         """ Retrieve the emissions of the product/process.

@@ -18,6 +18,7 @@ from ..operational import find_glazing_materials
 class BuildingMaterial(Master):
 
     def __init__(self):
+        super().__init__()
         self.name = None
 
         # LCA attributes
@@ -42,7 +43,7 @@ class BuildingMaterial(Master):
 
 
     @classmethod
-    def new_structural_material(cls, name, qty, unit, material_database_entry):
+    def new_structural_material(cls, parent, name, qty, unit, material_database_entry):
         """ Create new structural material.
         
         Parameters
@@ -51,16 +52,51 @@ class BuildingMaterial(Master):
         """
         material = cls()
         
+        material.set_parent(parent)
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
+        material.impacts = Impacts.from_parent(material)
+        material.emissions = Emissions.from_parent(material)
+        material.carbon_storage = CarbonStorage.from_parent(material)
         material.unit_impacts = Impacts.from_parent(material)
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
-        # material.set_impact_database_entry(material_database_entry)
-        # TODO: set impact database
+        material.set_impact_database_entry(material_database_entry)
 
         return material
+
+    def set_parent(self, parent):
+        self.parent = parent
+
+        return self
+
+    def get_parent(self):
+
+        return self.parent    
+
+    def get_building(self):
+        """ Get the building to which this building material belong.
+
+        Returns
+        -------
+        ~pod_lca.building.Building
+            Building to which this building material belong.       
+        """
+
+        return self.get_parent().get_parent()
+    
+    def get_impact_database(self):
+        """ Get the impact database giving the A1-A3 impacts of the building materials.
+
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            Impact database object.
+        """
+        return self.get_building().get_material_impact_database()
+
+
 
     # @classmethod
     # def new_enclosure_material(cls,
@@ -108,9 +144,9 @@ class BuildingMaterial(Master):
         
 
 
-    # TODO add getters and setters ---  Should this inherit from Master Object
-    def set_qty(self, qty ):
-        pass
+    # # TODO add getters and setters ---  Should this inherit from Master Object
+    # def set_qty(self, qty):
+    #     pass
 
 
 class BuildingEnvelopeMaterial(BuildingMaterial):

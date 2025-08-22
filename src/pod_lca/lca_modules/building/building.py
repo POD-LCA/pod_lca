@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 from shapely import Polygon
 
 from . import EndOfLifeMixins
+from . import ProductScopeMixins
 from . import Floor
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
@@ -15,7 +16,7 @@ from ...units import METER
 from ...units import UNITS_MAP
 
 
-class Building (EndOfLifeMixins):
+class Building (EndOfLifeMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
@@ -56,6 +57,7 @@ class Building (EndOfLifeMixins):
         self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
         self.emissions = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
 
+        self.material_impact_database = None
         self.transport_impact_database = None
         self.eol_impact_database = None
         self.eol_transport_dataset = None
@@ -142,15 +144,7 @@ class Building (EndOfLifeMixins):
         """
         building = cls()
 
-        building.set_name(name)
-        building.set_building_type(type)
-        building.set_location(location)
-        building.set_built_year(built_year)
-
-        building.add_floors(building_data['no_floors'], building_data['f2f_height'], building_data['floor_plan'], building_data['floors_below_grade'], UNITS_MAP[building_data['geometry_units']])
-
-        building.make_structure('from template', template_bom=file_path)
-        building.make_envelope()
+        building.set_template_model(name, type, location, built_year, file_path, building_data)
 
         return building
 
@@ -187,7 +181,7 @@ class Building (EndOfLifeMixins):
         building.make_envelope()
 
         return building
-
+    
     # ================================
     # Setters
     # ================================     
@@ -251,6 +245,36 @@ class Building (EndOfLifeMixins):
 
         return self
     
+    def set_template_model(self, name, type, location, built_year, file_path, building_data):
+        """ Set attributes to an existing building.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the building.
+        type : {'Commercial', 'Residential'}
+            Type of building.
+        location : ~pod_lca.location.Location
+            Location of the building site.
+        built_year: int
+            Built year of the building.  
+        """
+        self.set_name(name)
+        self.set_building_type(type)
+        self.set_location(location)
+        self.set_built_year(built_year)
+
+        self.add_floors(building_data['no_floors'], 
+                        building_data['f2f_height'], 
+                        building_data['floor_plan'], 
+                        building_data['floors_below_grade'], 
+                        UNITS_MAP[building_data['geometry_units']])
+
+        self.make_structure('from template', template_bom=file_path)
+        self.make_envelope()    
+
+        return self
+    
     # ================================
     # Getters
     # ================================
@@ -272,7 +296,6 @@ class Building (EndOfLifeMixins):
         str
             Type of building.
         """
-
         self.building_type = type
 
     def get_structure_type(self):
@@ -308,6 +331,15 @@ class Building (EndOfLifeMixins):
     
     def get_floor(self, floor_no):
         """ Get the floor """
+        pass
+
+    def get_structure(self):
+
+        return self.structure
+    
+    def get_envelope(self):
+
+        return self.envelope
 
     def get_components(self):
         """ Get a list of building components.
@@ -317,7 +349,7 @@ class Building (EndOfLifeMixins):
         list of BuildingComponent Objs.
             Structural and Fascade elements that make up the building.
         """
-        return self.components
+        return self.get_structure().get_components() # + self.get_envelope().get_components() # TODO add envelop components
 
     # ================================
     # Assembly Methods
@@ -398,7 +430,7 @@ class Building (EndOfLifeMixins):
         if method == 'from geometry':
             structure = structure_obj.from_geometry(self)
         elif method == 'from template':
-            structure = structure_obj.from_template(kwargs['template_bom'])
+            structure = structure_obj.from_template(self, kwargs['template_bom'])
         else:
             raise ValueError('Method of creating structure is not recognized.')
         
@@ -423,6 +455,45 @@ class Building (EndOfLifeMixins):
         component.set_building(self)
 
         return self
+
+    # ================================
+    # LCA Methods
+    # ================================ 
+    def get_impacts(self, scope='all'):
+        """ Get impacts.
+         
+        Parameters
+        ----------
+        scope : {'all', 'product', 'construction', 'use', 'end of life'}
+            Scope of impacts
+            - 'all': from A-C
+            - 'product': from A1-A3
+            - 'construction': from A4-A5
+            - 'use': from B1-B7
+            - 'end of life': C1-C4
+        """
+        if scope == 'all':
+            pass
+        elif scope == 'product':
+            return self.get_product_impacts()
+
+    def get_emissions(self, scope='all'):
+        """ Get emissions.
+         
+        Parameters
+        ----------
+        scope : {'all', 'product', 'construction', 'use', 'end of life'}
+            Scope of impacts
+            - 'all': from A-C
+            - 'product': from A1-A3
+            - 'construction': from A4-A5
+            - 'use': from B1-B7
+            - 'end of life': C1-C4
+        """
+        if scope == 'all':
+            pass
+        elif scope == 'product':
+            return self.get_product_emissions()
 
 
 if __name__ == '__main__':
