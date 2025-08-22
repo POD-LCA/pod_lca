@@ -111,6 +111,11 @@ Construction,
   Typical Carpet Pad;                     !- Layer 3
 
 Construction,
+  Insulated 8in Slab Floor,        !- Name
+  Generic 25mm Insulation,                  !- Layer 1
+  8 in. Normalweight Concrete Floor;      !- Layer 2
+
+Construction,
   Typical Insulated Metal Door-R3,        !- Name
   F08 Metal surface,                      !- Layer 1
   Typical Insulation-R3;                  !- Layer 2

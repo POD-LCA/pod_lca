@@ -12,8 +12,7 @@ class Surface(object):
     def __init__(self):
         self.polygon                            = None
         self.name                               = None
-        # self.construction                       = None
-        # self.surface_type                       = None
+        self.surface_type                       = None
         # self.outside_boundary_condition         = None
         # self.outside_boundary_condition_object  = None
 

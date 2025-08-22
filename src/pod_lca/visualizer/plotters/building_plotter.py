@@ -11,13 +11,13 @@ def plot_building(building):
     data = []
     for i, fk in enumerate(fks):
         floor = building.floors[fk]
-        add_floor(data, building, floor, i)
+        add_floor(data, building, floor)
 
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     fig.show()
 
-def add_floor(data, building, floor, key):
+def add_floor(data, building, floor):
 
     env = floor.envelope
     srfs = env.surfaces
@@ -92,8 +92,7 @@ def add_floor(data, building, floor, key):
             num_strings = len(srfs[sk].polygon)
         for _ in range(num_strings):
             text.append(string)
-            intensity.append(key)
-
+            intensity.append(floor.floor_no)
 
     faces = [go.Mesh3d(name='Zone',
                        x=x,

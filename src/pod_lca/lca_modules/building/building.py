@@ -456,6 +456,9 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
 
         return self
 
+    def update_envelope_surfaces(self):
+        pass
+
     # ================================
     # LCA Methods
     # ================================ 
