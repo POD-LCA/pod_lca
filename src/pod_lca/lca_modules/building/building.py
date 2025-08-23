@@ -378,7 +378,7 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
 
         return self
 
-    def add_floor(self, floor_no, floor_plan, floor_height, geometry_unit, below_grade, on_ground):
+    def add_floor(self, floor_no, floor_plan, floor_height, geometry_unit, below_grade, on_ground, is_last):
         """ Add a floor to the building.
 
         Parameters
@@ -397,6 +397,7 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
             True, if the floor is on the ground.
         """
         floor = Floor.from_floor_plan(floor_no, floor_plan, floor_height, geometry_unit)
+        floor.is_last = is_last
 
         if below_grade:
             floor.set_floor_below_grade()

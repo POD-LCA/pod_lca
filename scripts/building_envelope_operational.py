@@ -10,7 +10,6 @@ from pod_lca.visualizer.plotters.building_plotter import plot_building
 
 for i in range(50): print('')
 
-#TODO: What happens if I make many floors?
 #TODO: How do we make it easier to many stacked floors?
 
 # Create Building - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -32,7 +31,9 @@ for i in range(num_floors):
                 geometry_unit=METER, 
                 floor_height=floor_to_floor, 
                 below_grade=False, 
-                on_ground=(i==0))
+                on_ground=(i==0),
+                is_last=(i==num_floors-1),
+                )
 
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -59,16 +60,21 @@ for fk in b.floors:
     walls = Construction.from_idf(walls, path)
     e.add_construction(walls, 'wall')
 
-    ciel = 'Generic Interior Ceiling'
-    ciel = Construction.from_idf(ciel, path)
-    e.add_construction(ciel, 'cieling')
+    if floor.is_last:
+        roof = 'Generic Roof'
+        roof = Construction.from_idf(roof, path)
+        e.add_construction(roof, 'cieling')
+    else:
+        ciel = 'Generic Interior Ceiling'
+        ciel = Construction.from_idf(ciel, path)
+        e.add_construction(ciel, 'cieling')
 
 # TODO: Continue HERE, envelopes/surfaces need to know boundary condition:
 # Outdoors, or Adiabatic or Ground
 # Probably needs to be computed at the building level
 
-b.update_envelope_surfaces()
-print(b.floors['1'].envelope.surfaces['wall_0'].surface_type)
+# b.update_envelope_surfaces()
+# print(b.floors['1'].envelope.surfaces['wall_0'].surface_type)
 
-# plot_building(b)
+plot_building(b)
 # write_idf_from_building(b)

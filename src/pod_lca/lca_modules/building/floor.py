@@ -39,6 +39,7 @@ class Floor:
         self.is_below_grade = None
         self.is_on_ground = None
         self.envelope = None
+        self.is_last = None
 
     # ================================
     # Constructors
