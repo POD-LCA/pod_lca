@@ -14,7 +14,7 @@ class Surface(object):
         self.name                               = None
         self.surface_type                       = None
         self.outside_boundary_condition         = None
-        # self.outside_boundary_condition_object  = ''
+        self.outside_boundary_condition_object  = None
 
     @property
     def area(self):

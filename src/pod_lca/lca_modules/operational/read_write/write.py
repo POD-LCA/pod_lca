@@ -30,7 +30,7 @@ def write_idf_from_building(building):
     write_global_vars()
     write_run_period()
     write_zones(building)
-#     write_windows(building)
+    write_windows(building)
 #     write_layers(building)
 #     write_constructions(building)
 #     write_shadings(building)
@@ -175,7 +175,7 @@ def write_zones(building):
         envelope = building.floors[fkey].envelope
         write_zone(envelope)
         write_zone_surfaces(envelope)
-    # write_all_zone_list(building)
+    write_all_zone_list(building)
     # write_zone_lists(building)
 
 
@@ -265,9 +265,9 @@ def write_building_surface(envelope, sk):
     if not obo:
         obo == ''
     
-    num_vert = len(envelope.surfaces.face_vertices(fk))
+    num_vert = len(envelope.surfaces[sk].polygon)
 
-    sname = envelope.surfaces.get_face_attribute(fk, 'name')
+    sname = '{}_{}'.format(envelope.name, sk)
 
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('\n')
@@ -285,8 +285,8 @@ def write_building_surface(envelope, sk):
     fh.write('  0.0,                      !- View Factor to Ground\n')
     fh.write('  {},                       !- Number of Vertices\n'.format(num_vert))
 
-    for i, vk in enumerate(envelope.surfaces.face_vertices(fk)):
-        x, y, z = envelope.surfaces.vertex_xyz(vk)
+    for i, xyz in enumerate(envelope.surfaces[sk].polygon):
+        x, y, z = xyz
         if i == num_vert - 1:
             sep = ';'
         else:
@@ -296,24 +296,65 @@ def write_building_surface(envelope, sk):
     fh.close()
 
 
-# def write_all_zone_list(building):
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('ZoneList,\n')
-#     fh.write('  all_zones_list, !- Name\n')
-#     for i, zkey in enumerate(building.zones):
-#         zone = building.zones[zkey]
-#         if i == len(building.zones) - 1:
-#             divider = ';'
-#         else:
-#             divider = ','
-#         fh.write('  {}{} !- Zone {} Name\n'.format(zone.name, divider, i))
-#     fh.write('\n')
-#     fh.write('\n')
-#     fh.close()
+def write_all_zone_list(building):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('ZoneList,\n')
+    fh.write('  all_zones_list, !- Name\n')
+    for i, fkey in enumerate(building.floors):
+        env = building.floors[fkey].envelope
+        if i == len(building.floors) - 1:
+            divider = ';'
+        else:
+            divider = ','
+        fh.write('  {}{} !- Zone {} Name\n'.format(env.name, divider, i))
+    fh.write('\n')
+    fh.write('\n')
+    fh.close()
+
+
+def write_windows(building):
+    """
+    Writes all windows  to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    for wk in building.windows:
+        win = building.windows[wk]
+        con = win.construction
+        bsn = win.building_surface
+
+        fh.write('\n')
+        fh.write('FenestrationSurface:Detailed,\n')
+        fh.write('  {},                       !- Name\n'.format(win.name))
+        fh.write('  Window,                   !- Surface Type\n')
+        fh.write('  {},                       !- Construction Name\n'.format(con))
+        fh.write('  {},                       !- Building Surface Name\n'.format(bsn))
+        fh.write('  ,                         !- Outside Boundary Condition Object\n')
+        fh.write('  ,                         !- View Factor to Ground\n')
+        fh.write('  ,                         !- Frame and Divider Name\n')
+        fh.write('  ,                         !- Multiplier\n')
+        fh.write('  {},                         !- Number of Vertices\n'.format(len(win.nodes)))
+        for i, nodes in enumerate(win.nodes):
+            x, y, z = nodes
+            if i == len(win.nodes) - 1:
+                sep = ';'
+            else:
+                sep = ','
+            fh.write('  {:.3f}, {:.3f}, {:.3f}{}            !- X,Y,Z Vertex {} (m)\n'.format(x, y, z, sep, i))
+        fh.write('\n')
+    fh.write('\n')
+    fh.close()
 
 
 # def write_zone_lists(building):
-#     fh = open(building.idf_filepath, 'a')
+#     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
 
 #     for zlk in building.zone_lists:
 #         zl = building.zone_lists[zlk]
@@ -505,45 +546,6 @@ def write_building_surface(envelope, sk):
 #         fh.close()
 
 
-# def write_windows(building):
-#     """
-#     Writes all windows  to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     for wk in building.windows:
-#         win = building.windows[wk]
-#         con = win.construction
-#         bsn = win.building_surface
-
-#         fh.write('\n')
-#         fh.write('FenestrationSurface:Detailed,\n')
-#         fh.write('  {},                       !- Name\n'.format(win.name))
-#         fh.write('  Window,                   !- Surface Type\n')
-#         fh.write('  {},                       !- Construction Name\n'.format(con))
-#         fh.write('  {},                       !- Building Surface Name\n'.format(bsn))
-#         fh.write('  ,                         !- Outside Boundary Condition Object\n')
-#         fh.write('  ,                         !- View Factor to Ground\n')
-#         fh.write('  ,                         !- Frame and Divider Name\n')
-#         fh.write('  ,                         !- Multiplier\n')
-#         fh.write('  {},                         !- Number of Vertices\n'.format(len(win.nodes)))
-#         for i, nodes in enumerate(win.nodes):
-#             x, y, z = nodes
-#             if i == len(win.nodes) - 1:
-#                 sep = ';'
-#             else:
-#                 sep = ','
-#             fh.write('  {:.3f}, {:.3f}, {:.3f}{}            !- X,Y,Z Vertex {} (m)\n'.format(x, y, z, sep, i))
-#         fh.write('\n')
-#     fh.write('\n')
-#     fh.close()
 
 
 # def write_constructions(building):

@@ -70,12 +70,10 @@ for fk in b.floors:
         ciel = Construction.from_idf(ciel, path)
         e.add_construction(ciel, 'cieling')
 
-# TODO: Continue HERE, envelopes/surfaces need to know boundary condition:
-# Outdoors, or Adiabatic or Ground
-# Probably needs to be computed at the building level
+# TODO: Continue HERE, add windows
 
 # b.update_envelope_surfaces()
 # print(b.floors['1'].envelope.surfaces['wall_0'].surface_type)
 
-plot_building(b)
-# write_idf_from_building(b)
+# plot_building(b)
+write_idf_from_building(b)

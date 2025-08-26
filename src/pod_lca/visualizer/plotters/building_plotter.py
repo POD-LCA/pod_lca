@@ -51,18 +51,23 @@ def add_ground(building, data):
     y = [v[1] for v in vertices]
     z = [v[2] for v in vertices]
 
-
+    intensity = [None, None]
+    text = ['Ground', 'Ground']
     faces = [go.Mesh3d(name='Ground',
-                    x=x,
-                    y=y,
-                    z=z,
-                    i=i,
-                    j=j,
-                    k=k,
-                    opacity=.3,
-                    legendgroup='ground',
-                    lighting={'ambient':1.0},
-                    color = 'black',
+                       x=x,
+                       y=y,
+                       z=z,
+                       i=i,
+                       j=j,
+                       k=k,
+                       opacity=.8,
+                       text=text,
+                       legendgroup='ground',
+                       showscale=False,
+                       lighting={'ambient':1.0},
+                       color = 'black',
+                       intensitymode='cell',
+                       intensity=intensity,
             )]
     data.extend(faces)
 
@@ -85,13 +90,13 @@ def add_floor(data, building, floor):
 
     zname = 'floor_{}'.format(floor.floor_no)
     lines = [go.Scatter3d(name=f'{zname}',
-                            x=x,
-                            y=y,
-                            z=z,
-                            mode='lines',
-                            line=line_marker,
-                            legendgroup=f'{zname}',
-                            )]
+                          x=x,
+                          y=y,
+                          z=z,
+                          mode='lines',
+                          line=line_marker,
+                          legendgroup=f'{zname}',
+                          )]
     
 
     triangles = []
