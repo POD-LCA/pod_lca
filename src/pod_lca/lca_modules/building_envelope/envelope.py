@@ -73,6 +73,8 @@ class Envelope:
         # TODO implement method to return all constructions as a list
         return []
 
+    def add_window(self, window):
+        self.windows[len(self.windows)] = window
 
 if __name__ == '__main__':
 

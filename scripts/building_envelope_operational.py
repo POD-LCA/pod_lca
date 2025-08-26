@@ -3,6 +3,7 @@ for i in range(50): print('')
 from pod_lca.lca_modules.building import Building
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Construction
+from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.operational import write_idf_from_building
 from pod_lca.units import METER
 from pod_lca.utilities import config
@@ -70,10 +71,22 @@ for fk in b.floors:
         ciel = Construction.from_idf(ciel, path)
         e.add_construction(ciel, 'cieling')
 
-# TODO: Continue HERE, add windows
+
+# TODO: Continue HERE, plot windows
+# add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+for fk in b.floors:
+    env = b.floors[fk].envelope
+    wall_key = 'wall_1'
+    wwr = .4
+    construction = 'Generic Double Pane'
+    construction = Construction.from_idf(construction, path)
+    w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+    env.add_window(w)
+
 
 # b.update_envelope_surfaces()
 # print(b.floors['1'].envelope.surfaces['wall_0'].surface_type)
 
-# plot_building(b)
-write_idf_from_building(b)
+plot_building(b)
+# write_idf_from_building(b)

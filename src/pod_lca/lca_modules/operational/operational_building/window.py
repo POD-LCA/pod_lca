@@ -1,7 +1,5 @@
-from __future__ import print_function
-
-__author__ = ["Tomas Mendez Echenagucia"]
-__copyright__ = "Tomas Mendez Echenagucia - University of Washington"
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
@@ -86,7 +84,6 @@ class Window(object):
         window.construction = construction
         return window
     
-
     def to_json(self, filepath):
         """
         Serialize the data representation of the window to a JSON file
@@ -113,7 +110,6 @@ class Window(object):
                 }
         return data
     
-
     @property
     def area(self):
         pts = self.nodes
@@ -191,37 +187,4 @@ class Window(object):
         return window
 
 if __name__ == '__main__':
-    from compas.datastructures import Mesh
-    from compas_eplus.building import Zone
-
-    for i in range(50): print('')
-
-    w = 20
-    l = 10
-    h = 4
-
-    vertices = [[0, 0, 0],
-                [w, 0, 0],
-                [w, l, 0],
-                [0, l, 0],
-                [0, 0, h],
-                [w, 0, h],
-                [w, l, h],
-                [0, l, h]]
-    faces = [[0, 1, 2, 3],
-            [4, 7, 6, 5],
-            [0, 4, 5, 1],
-            [1, 5, 6, 2],
-            [2, 6, 7, 3],
-         [3, 7, 4, 0]]
-
-    mesh = Mesh.from_vertices_and_faces(vertices, faces)
-    zone = Zone.from_mesh(mesh, 'zone_0')
-
-    points = [[w / 4., 0, h / 4.],
-              [w / 2., 0, h / 4. ],
-              [w / 2., 0, h / 2.],
-              [w / 4., 0, w / 2.]
-             ]
-
-    w = Window.from_points_and_zone(points, zone)
+    pass

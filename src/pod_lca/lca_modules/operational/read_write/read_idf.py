@@ -242,7 +242,6 @@ def find_glazing_materials(filepath, data):
         if line[0].lower() == 'windowmaterial:glazing':
             i_lines.append(i)
 
-    # data['materials_glazing'] = {}
     for i in i_lines:
         name = lines[i + 1].split(',')[0].strip()
         odtype = lines[i + 2].split(',')[0].strip()

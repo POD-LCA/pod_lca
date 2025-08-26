@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -7,17 +6,83 @@ __version__ = "0.1.0"
 
 import json
 
-# from pod_lca.utilities.geometry import area_polygon
+from pod_lca.utilities.geometry import centroid
+from pod_lca.utilities.geometry import subtract_vectors
+from pod_lca.utilities.geometry import scale_vector
+from pod_lca.utilities.geometry import add_vectors
+from pod_lca.utilities.geometry import normalize_vector
+from pod_lca.utilities.geometry import distance_point_point
+from pod_lca.utilities.geometry import is_point_on_plane
+from pod_lca.utilities.geometry import area_polygon
 
+class Window(object):
+    """
+    Window datastructure for energy+ analysis. 
 
-class Window:
-
+    Parameters
+    ----------
+    name: str, optional
+        The name of the window
+    nodes: list,
+        List of x, y, z corrdinates for the corners of the window
+    building_surface: str
+        The name of the building surface the window is attached to
+    construction: str
+        The name of the window construction
+    
+    """
     def __init__(self):
         self.name = None
         self.nodes = None
         self.building_surface = None
         self.construction = None
+    
+    @classmethod
+    def from_wall_and_wwr(cls, envelope, wall_key, wwr, construction=None):
+        """
+        Creates a window instance from a wall and window-to-wall ratio.
 
+        Parameters
+        ----------
+        envelope: object
+            The envelope object the window is to be places
+        wall_key: int
+            The key of the wall the window is to be attached to
+        wwr: float
+            The window-to-wall ratio for the window
+        construction: str
+            The window construction name
+
+        Returns
+        -------
+        Window
+            The instance of the created window object
+        
+        """
+        if wwr > .95:
+            wwr = .95
+        pts = envelope.surfaces[wall_key].polygon
+        cpt = centroid(pts)
+        area = envelope.surfaces[wall_key].area * wwr
+        lx = distance_point_point(pts[0], pts[1]) - .1
+        ly = area / lx
+        vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.)
+        vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.)
+        vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.)
+        vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.)
+
+        p0 = add_vectors(cpt, add_vectors(vx_, vy_))
+        p1 = add_vectors(cpt, add_vectors(vx, vy_))
+        p2 = add_vectors(cpt, add_vectors(vx, vy))
+        p3 = add_vectors(cpt, add_vectors(vx_, vy))
+
+        window = cls()
+        window.name = f'win_{envelope.name}_{wall_key}'
+        window.nodes = [p0, p1, p2, p3]
+        window.building_surface = f'{envelope.name}_wall_{wall_key}' 
+        window.construction = construction
+        return window
+    
     def to_json(self, filepath):
         """
         Serialize the data representation of the window to a JSON file
@@ -76,6 +141,7 @@ class Window:
         window.data = data
         return window
 
+
     @classmethod
     def from_json(cls, filepath):
         """
@@ -98,13 +164,26 @@ class Window:
         window.data = data
         return window
 
+    @classmethod
+    def from_points_and_zone(cls, points, zone):
+        cpt = centroid(points)
+        mesh = zone.surfaces
+        for fk in mesh.faces:
+            # pl = [mesh.vertex_coordinates(vk) for vk in mesh.face_vertices(fk)]
+            normal = mesh.face_normal(fk)
+            fcpt = mesh.face_centroid(fk)
+            check = is_point_on_plane(cpt, [fcpt, normal])
+            if check:
+                wall_key = fk
+                break
 
-if __name__ == "__main__":
+        
+        window = cls()
+        window.name = 'win_{}_{}'.format(zone.name, wall_key)
+        window.nodes = points
+        window.building_surface = '{}_wall_{}'.format(zone.name, wall_key) 
+        window.construction = None
+        return window
 
-    for i in range(50): print('')
-
-    w = Window()
-    width = 1.
-    length = 1.
-    w.nodes = [[0,0,0], [width,0,0], [width, length, 0], [0,length, 0]]
-    print(w)
+if __name__ == '__main__':
+    pass

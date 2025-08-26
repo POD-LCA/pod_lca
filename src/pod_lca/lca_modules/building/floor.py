@@ -7,7 +7,6 @@ __version__ = "0.1.0"
 
 from shapely.affinity import scale
 from shapely.geometry import box
-from pod_lca.lca_modules.operational.zone import Zone
 
 from ...units import METER
 

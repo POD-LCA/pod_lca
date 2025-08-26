@@ -6,6 +6,8 @@ __version__ = "0.1.0"
 
 from ..building import BuildingEnvelopeMaterial
 from ..building import BuildingEnvelopeMaterialNoMass
+from ..building import WindowMaterialGlazing
+from ..building import WindowMaterialGas
 from ..operational import find_materials
 from ..operational import find_no_mass_materials
 from ..operational import find_gas_materials
@@ -45,6 +47,13 @@ class Layer(object):
             material = BuildingEnvelopeMaterial.from_idf_data(data)
         elif mtype == 'MaterialNoMass':
             material = BuildingEnvelopeMaterialNoMass.from_idf_data(data)
+        elif mtype == 'WindowMaterialGlazing':
+            material = WindowMaterialGlazing.from_idf_data(data)
+        elif mtype == 'WindowMaterialGas':
+            material = WindowMaterialGas.from_idf_data(data)
+        else:
+            raise ValueError('Material type {} has not been implemented yet'.format(mtype))
+
 
         return material
 

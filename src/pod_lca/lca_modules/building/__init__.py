@@ -11,6 +11,8 @@ from .floor import Floor
 from .building_material import BuildingMaterial
 from .building_material import BuildingEnvelopeMaterial
 from .building_material import BuildingEnvelopeMaterialNoMass
+from .building_material import WindowMaterialGlazing
+from .building_material import WindowMaterialGas
 from .components import BuildingComponent
 from .building import Building
 
