@@ -35,10 +35,10 @@ class Floor:
         self.height = None
         self.floor_plan = None
         self.geometry_unit = METER
-        self.is_below_grade = None
-        self.is_on_ground = None
+        self.is_below_grade = False
+        self.is_on_ground = False
         self.envelope = None
-        self.is_last = None
+        self.is_last = False
 
     # ================================
     # Constructors

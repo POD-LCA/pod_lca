@@ -32,11 +32,10 @@ for i in range(num_floors):
                 floor_plan=floor_plan, 
                 geometry_unit=METER, 
                 floor_height=floor_to_floor, 
-                below_grade= i >= num_below_grade, 
+                below_grade= (i < num_below_grade), 
                 on_ground=(i==0),
                 is_last=(i==num_floors-1),
                 )
-
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -72,21 +71,34 @@ for fk in b.floors:
         e.add_construction(ciel, 'cieling')
 
 
-# TODO: Continue HERE, plot windows
 # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 for fk in b.floors:
-    env = b.floors[fk].envelope
-    wall_key = 'wall_1'
-    wwr = .4
-    construction = 'Generic Double Pane'
-    construction = Construction.from_idf(construction, path)
-    w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
-    env.add_window(w)
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wall_key = 'wall_1'
+        wwr = .4
+        construction = 'Generic Double Pane'
+        construction = Construction.from_idf(construction, path)
+        w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+        env.add_window(w)
+
+for fk in b.floors:
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wall_key = 'wall_3'
+        wwr = .9
+        construction = 'Generic Double Pane'
+        construction = Construction.from_idf(construction, path)
+        w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+        env.add_window(w)
 
 
-# b.update_envelope_surfaces()
-# print(b.floors['1'].envelope.surfaces['wall_0'].surface_type)
+b.update_envelope_surfaces()
+
+###############################################
+# TODO: Continue HERE, fix window plotter , write windows...
+
 
 plot_building(b)
 # write_idf_from_building(b)

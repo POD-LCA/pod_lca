@@ -470,8 +470,18 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
                         srf.outside_boundary_condition = 'Ground'
                     else:
                         srf.outside_boundary_condition = 'Outdoors'
-                # cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
-                # self.surface_cpt_dict[geometric_key(cpt)] = {}
+                elif sk == 'floor':
+                    if floor.is_on_ground:
+                        srf.outside_boundary_condition = 'Ground'
+                    else:
+                        srf.outside_boundary_condition = 'Zone'
+                elif sk == 'cieling':
+                    if floor.is_last:
+                        srf.outside_boundary_condition = 'Outdoors'
+                    else:
+                        srf.outside_boundary_condition = 'Zone'
+                cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
+                self.surface_cpt_dict[geometric_key(cpt)] = {}
 
     # ================================
     # LCA Methods

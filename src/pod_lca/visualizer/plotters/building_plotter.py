@@ -11,18 +11,80 @@ def plot_building(building):
     data = []
     for i, fk in enumerate(fks):
         floor = building.floors[fk]
-        add_floor(data, building, floor)
+        add_floor(building, data, floor)
 
     add_ground(building, data)
+    add_windows(building, data)
 
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     fig.show()
 
+def add_windows(building, data):
+    vertices = []
+    triangles = []
+    count = 0
+    for fk in building.floors:
+        env = building.floors[fk].envelope
+        for wk in env.windows:
+            vertices.extend(env.windows[wk].nodes)
+            triangles.append([count, count+1, count+2])
+            triangles.append([count+2, count+3, count])
+            count += 4
+
+    i = [v[0] for v in triangles]
+    j = [v[1] for v in triangles]
+    k = [v[2] for v in triangles]
+
+    x = [v[0] for v in vertices]
+    y = [v[1] for v in vertices]
+    z = [v[2] for v in vertices]
+
+    intensity = [None, None]
+    text = ['Window', 'Window']
+    faces = [go.Mesh3d(name='Window',
+                       x=x,
+                       y=y,
+                       z=z,
+                       i=i,
+                       j=j,
+                       k=k,
+                       opacity=.3,
+                    #    text=text,
+                       legendgroup='windows',
+                       showscale=False,
+                       lighting={'ambient':1.0},
+                       color = 'cyan',
+                       intensitymode='cell',
+                       intensity=intensity,
+            )]
+    
+    edges = [[vertices[-i], vertices[-i-1]] for i in range(len(vertices))]
+    del edges[4-1::4]
+    line_marker = dict(color='rgb(0,0,0)', width=1.5)
+    lines = []
+    x, y, z = [], [],  []
+    for u, v in edges:
+        x.extend([u[0], v[0], [None]])
+        y.extend([u[1], v[1], [None]])
+        z.extend([u[2], v[2], [None]])
+
+    lines = [go.Scatter3d(name='windows',
+                          x=x,
+                          y=y,
+                          z=z,
+                          mode='lines',
+                          line=line_marker,
+                          legendgroup='windows',
+                          )]
+    data.extend(lines)
+    data.extend(faces)
+
+
 
 def add_ground(building, data):
     for fk in building.floors:
-        if building.floors[fk].is_below_grade:
+        if not building.floors[fk].is_below_grade:
             pl = building.floors[fk].envelope.surfaces['floor'].polygon
             fz = pl[0][2]
             break
@@ -72,7 +134,7 @@ def add_ground(building, data):
     data.extend(faces)
 
 
-def add_floor(data, building, floor):
+def add_floor(building, data, floor):
 
     env = floor.envelope
     srfs = env.surfaces
@@ -135,7 +197,7 @@ def add_floor(data, building, floor):
         string = 'Zone: {}<br>'.format(zname)
         string += 'Name: {}<br>'.format(con.name)
         string += 'Surface Type: {}<br>'.format(srfs[sk].name)
-        # string += 'Outside Boundary Consition: {}<br>'.format(srfs[sk].outside_boundary_condition)
+        string += 'Outside Boundary Condition: {}<br>'.format(srfs[sk].outside_boundary_condition)
         string += 'Construction: {}<br>'.format(con.name)
         for lk, layer in enumerate(layers):
             string += 'layer {}: {}<br>'.format(lk, layer)
