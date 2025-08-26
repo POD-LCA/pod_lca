@@ -18,10 +18,11 @@ x = 20
 y = 10
 floor_to_floor = 3
 num_floors = 10
+num_below_grade = 4
 
 b = Building()
 for i in range(num_floors):
-    z = floor_to_floor * i
+    z = (floor_to_floor * i) - (num_below_grade * floor_to_floor)
     # floor_plan = [[0,0,z], [x,0,z], [x/2,y/2,z]]
     # floor_plan = [[0,0,z], [x,0,z], [x,y,z], [0,y,z]]
     # floor_plan = [[0,0,z], [x/2, -y/4, z], [x,0,z], [x,y,z], [0,y,z]]
@@ -30,7 +31,7 @@ for i in range(num_floors):
                 floor_plan=floor_plan, 
                 geometry_unit=METER, 
                 floor_height=floor_to_floor, 
-                below_grade=False, 
+                below_grade= i >= num_below_grade, 
                 on_ground=(i==0),
                 is_last=(i==num_floors-1),
                 )

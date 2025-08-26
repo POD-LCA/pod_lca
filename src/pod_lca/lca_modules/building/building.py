@@ -14,6 +14,8 @@ from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ...units import METER
 from ...units import UNITS_MAP
+from ...utilities import centroid
+from ...utilities import geometric_key
 
 
 class Building (EndOfLifeMixins, ProductScopeMixins):
@@ -53,6 +55,7 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
         self.envelope = None
         self.operational_object = None
         self.components = []
+        self.surface_cpt_dict = {}
 
         self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
         self.emissions = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
@@ -458,7 +461,17 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
         return self
 
     def update_envelope_surfaces(self):
-        pass
+        for fk in self.floors:
+            floor = self.floors[fk]
+            for sk in floor.envelope.surfaces:
+                srf = floor.envelope.surfaces[sk]
+                if 'wall' in sk:
+                    if floor.is_below_grade:
+                        srf.outside_boundary_condition = 'Ground'
+                    else:
+                        srf.outside_boundary_condition = 'Outdoors'
+                # cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
+                # self.surface_cpt_dict[geometric_key(cpt)] = {}
 
     # ================================
     # LCA Methods

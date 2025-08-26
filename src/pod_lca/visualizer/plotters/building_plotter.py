@@ -13,9 +13,59 @@ def plot_building(building):
         floor = building.floors[fk]
         add_floor(data, building, floor)
 
+    add_ground(building, data)
+
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     fig.show()
+
+
+def add_ground(building, data):
+    for fk in building.floors:
+        if building.floors[fk].is_below_grade:
+            pl = building.floors[fk].envelope.surfaces['floor'].polygon
+            fz = pl[0][2]
+            break
+
+    
+    minx = min([pt[0] for pt in pl])
+    miny = min([pt[1] for pt in pl])
+    maxx = max([pt[0] for pt in pl])
+    maxy = max([pt[1] for pt in pl])
+
+    x_ = (maxx - minx) * .4
+    y_ = (maxy - miny) * .4
+    
+    vertices = [[minx - x_, miny - y_, fz],
+                [maxx + x_, miny - y_, fz],
+                [maxx + x_, maxy + y_, fz],
+                [minx - x_, maxy + y_, fz],
+                ]
+    triangles = [[0,1,2], [2,3,0]]
+
+    i = [v[0] for v in triangles]
+    j = [v[1] for v in triangles]
+    k = [v[2] for v in triangles]
+
+    x = [v[0] for v in vertices]
+    y = [v[1] for v in vertices]
+    z = [v[2] for v in vertices]
+
+
+    faces = [go.Mesh3d(name='Ground',
+                    x=x,
+                    y=y,
+                    z=z,
+                    i=i,
+                    j=j,
+                    k=k,
+                    opacity=.3,
+                    legendgroup='ground',
+                    lighting={'ambient':1.0},
+                    color = 'black',
+            )]
+    data.extend(faces)
+
 
 def add_floor(data, building, floor):
 

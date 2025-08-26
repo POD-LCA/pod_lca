@@ -13,8 +13,8 @@ class Surface(object):
         self.polygon                            = None
         self.name                               = None
         self.surface_type                       = None
-        # self.outside_boundary_condition         = None
-        # self.outside_boundary_condition_object  = None
+        self.outside_boundary_condition         = None
+        # self.outside_boundary_condition_object  = ''
 
     @property
     def area(self):
