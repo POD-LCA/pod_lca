@@ -32,7 +32,7 @@ def write_idf_from_building(building):
     write_zones(building)
     write_windows(building)
     write_layers(building)
-#     write_constructions(building)
+    write_constructions(building)
 #     write_shadings(building)
 #     write_spaces(building)
 #     write_space_lists(building)
@@ -405,10 +405,9 @@ def write_layers(building):
         elif mat.__type__ == 'WindowMaterialGlazing':
             write_material_glazing(mat, thick, lay_name)
         elif mat.__type__ == 'WindowMaterialGas':
-            write_material_gas(building, mat, thick, lay_name)
-        elif mat.__type__ == 'WindowMaterialGlazingSimple':
-            write_materials_glazing_simple(building, mat)
-
+            write_material_gas(mat, thick, lay_name)
+        # elif mat.__type__ == 'WindowMaterialGlazingSimple':
+        #     write_materials_glazing_simple(building, mat)
 
 
 def write_material(mat, thickness, layer_name):
@@ -445,6 +444,7 @@ def write_material(mat, thickness, layer_name):
         fh.write('\n')
         fh.write('\n')
         fh.close()
+
 
 def write_material_glazing(mat, thickness, layer_name):
     """
@@ -487,6 +487,32 @@ def write_material_glazing(mat, thickness, layer_name):
     fh.close()
 
 
+def write_material_gas(mat, thickness, layer_name):
+    """
+    Writes a gas material to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    mat: object
+        The material object to be written
+    thickness: float
+        The thickness of the material layer
+    layer_name: str
+        The name of the material layer, including the thickness modifier
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    fh.write('WindowMaterial:Gas,\n')
+    fh.write('  {},         !- Name\n'.format(layer_name))
+    fh.write('  {},         !- Gas Type\n'.format(mat.gas_type ))
+    fh.write('  {};         !- Thickness (m)\n'.format(thickness))
+    fh.write('\n')
+    fh.close()
+
 
 # def write_zone_lists(building):
 #     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
@@ -520,31 +546,7 @@ def write_material_glazing(mat, thickness, layer_name):
 
 
 
-# def write_material_gas(building, mat, thickness, layer_name):
-#     """
-#     Writes a gas material to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     mat: object
-#         The material object to be written
-#     thickness: float
-#         The thickness of the material layer
-#     layer_name: str
-#         The name of the material layer, including the thickness modifier
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n')
-#     fh.write('WindowMaterial:Gas,\n')
-#     fh.write('  {},         !- Name\n'.format(layer_name))
-#     fh.write('  {},         !- Gas Type\n'.format(mat.gas_type ))
-#     fh.write('  {};         !- Thickness (m)\n'.format(thickness))
-#     fh.write('\n')
-#     fh.close()
+
 
 
 # def write_materials_nomass(building, mat):

@@ -54,7 +54,6 @@ class Layer(object):
         else:
             raise ValueError('Material type {} has not been implemented yet'.format(mtype))
 
-
         return material
 
 if __name__ == '__main__':

@@ -268,3 +268,5 @@ class WindowMaterialGas(object):
         material.name               = data.get('name') or {}
         material.gas_type           = data.get('gas_type') or {}
 
+        return material
+
