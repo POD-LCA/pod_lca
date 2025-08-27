@@ -97,8 +97,9 @@ for fk in b.floors:
 b.update_envelope_surfaces()
 
 ###############################################
-# TODO: Continue HERE, fix window plotter , write windows...
+# TODO: Continue HERE, fix window plotter
+#TODO: Wite layers
 
 
-plot_building(b)
-# write_idf_from_building(b)
+# plot_building(b)
+write_idf_from_building(b)

@@ -31,7 +31,7 @@ def write_idf_from_building(building):
     write_run_period()
     write_zones(building)
     write_windows(building)
-#     write_layers(building)
+    write_layers(building)
 #     write_constructions(building)
 #     write_shadings(building)
 #     write_spaces(building)
@@ -325,9 +325,15 @@ def write_windows(building):
     None
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
-    for wk in building.windows:
-        win = building.windows[wk]
-        con = win.construction
+
+    windows = []
+    for fk in building.floors:
+        if building.floors[fk].envelope.windows:
+            for wk in building.floors[fk].envelope.windows:
+                windows.append(building.floors[fk].envelope.windows[wk])
+
+    for win in windows:
+        con = win.construction.name
         bsn = win.building_surface
 
         fh.write('\n')
@@ -353,6 +359,38 @@ def write_windows(building):
     fh.close()
 
 
+def write_layers(building):
+    """
+    Writes all layers to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    
+    Returns
+    -------
+    None
+    """
+    
+    for lk in building.layers:
+        lay_name = building.layers[lk]['layer_name']
+        mat_name = building.layers[lk]['material_name']
+        mk = building.material_key_dict[mat_name]
+        mat = building.materials[mk]
+        thick = building.layers[lk]['thickness']
+        if mat.__type__ == 'Material':
+            write_material(building, mat, thick, lay_name)
+        elif mat.__type__ == 'MaterialNoMass':
+            write_materials_nomass(building, mat)
+        elif mat.__type__ == 'WindowMaterialGlazing':
+            write_material_glazing(building, mat, thick, lay_name)
+        elif mat.__type__ == 'WindowMaterialGas':
+            write_material_gas(building, mat, thick, lay_name)
+        elif mat.__type__ == 'WindowMaterialGlazingSimple':
+            write_materials_glazing_simple(building, mat)
+
+
+
 # def write_zone_lists(building):
 #     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
 
@@ -369,38 +407,6 @@ def write_windows(building):
 #             fh.write('  {}{}        !- Zone Name {}\n'.format(zones[zk], sep, i + 1))
 #     fh.write('\n')
 #     fh.close()
-
-
-# def write_layers(building):
-#     """
-#     Writes all layers to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-    
-#     Returns
-#     -------
-#     None
-#     """
-    
-#     for lk in building.layers:
-#         lay_name = building.layers[lk]['layer_name']
-#         mat_name = building.layers[lk]['material_name']
-#         mk = building.material_key_dict[mat_name]
-#         mat = building.materials[mk]
-#         thick = building.layers[lk]['thickness']
-#         if mat.__type__ == 'Material':
-#             write_material(building, mat, thick, lay_name)
-#         elif mat.__type__ == 'MaterialNoMass':
-#             write_materials_nomass(building, mat)
-#         elif mat.__type__ == 'WindowMaterialGlazing':
-#             write_material_glazing(building, mat, thick, lay_name)
-#         elif mat.__type__ == 'WindowMaterialGas':
-#             write_material_gas(building, mat, thick, lay_name)
-#         elif mat.__type__ == 'WindowMaterialGlazingSimple':
-#             write_materials_glazing_simple(building, mat)
-
 
 # def write_materials_glazing_simple(building, mat):
 #     fh = open(building.idf_filepath, 'a')

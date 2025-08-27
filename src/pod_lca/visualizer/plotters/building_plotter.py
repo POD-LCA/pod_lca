@@ -50,7 +50,7 @@ def add_windows(building, data):
                        j=j,
                        k=k,
                        opacity=.3,
-                    #    text=text,
+                       text=text,
                        legendgroup='windows',
                        showscale=False,
                        lighting={'ambient':1.0},
@@ -59,7 +59,7 @@ def add_windows(building, data):
                        intensity=intensity,
             )]
     
-    edges = [[vertices[-i], vertices[-i-1]] for i in range(len(vertices))]
+    edges = [[vertices[i], vertices[i+1]] for i in range(len(vertices)-1)]
     del edges[4-1::4]
     line_marker = dict(color='rgb(0,0,0)', width=1.5)
     lines = []
