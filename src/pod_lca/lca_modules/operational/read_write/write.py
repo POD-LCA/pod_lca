@@ -514,6 +514,60 @@ def write_material_gas(mat, thickness, layer_name):
     fh.close()
 
 
+def write_constructions(building):
+    """
+    Writes all constructions to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    
+    Returns
+    -------
+    None
+    """
+    constructions = {}
+    for fk in building.floors:
+        env = building.floors[fk].envelope
+        for ck in env.constructions:
+            con = env.constructions[ck]
+            constructions[con.name] = con
+
+    for fk in building.floors:
+        if building.floors[fk].envelope.windows:
+            for wk in building.floors[fk].envelope.windows:
+                win = building.floors[fk].envelope.windows[wk]
+                con = win.construction
+                constructions[con.name] = con
+
+
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    for ck in constructions:
+        name = constructions[ck].name
+        layers = [constructions[ck].layers[lk] for lk in constructions[ck].layers]
+        types = [layer.material.__type__ for layer in layers]
+        thicks = [layer.thickness for layer in layers] 
+        lnames = [layer.name for layer in layers]
+        fh.write('Construction,\n')
+        fh.write('  {},\t\t\t\t\t!- Name\n'.format(name))
+        for i, layer in enumerate(lnames):
+            if i == len(layers) - 1:
+                sep = ';'
+            else:
+                sep = ','
+            if thicks[i] > 0:
+                lname = '{} {}mm'.format(layer, round(thicks[i]*1000, 1))
+            elif thicks[i] <= 0 and types[i] == 'Material':
+                    continue
+            else:
+                lname = '{}'.format(layer)
+            fh.write('  {}{}\t\t\t\t\t!- Layer {}\n'.format(lname, sep, i))
+        fh.write('\n')
+    fh.write('\n')
+    fh.close()
+
+
 # def write_zone_lists(building):
 #     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
 
@@ -579,43 +633,6 @@ def write_material_gas(mat, thickness, layer_name):
 
 
 
-
-# def write_constructions(building):
-#     """
-#     Writes all constructions to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n')
-#     for ck in building.constructions:
-#         name = building.constructions[ck].name
-#         layers = [building.constructions[ck].layers[lk]['name'] for lk in building.constructions[ck].layers]
-#         types = [building.materials[building.material_key_dict[lname]].__type__ for lname in layers]
-#         thicks = [building.constructions[ck].layers[lk]['thickness'] for lk in building.constructions[ck].layers] 
-#         fh.write('Construction,\n')
-#         fh.write('  {},\t\t\t\t\t!- Name\n'.format(name))
-#         for i, layer in enumerate(layers):
-#             if i == len(layers) - 1:
-#                 sep = ';'
-#             else:
-#                 sep = ','
-#             if thicks[i] > 0:
-#                 lname = '{} {}mm'.format(layer, round(thicks[i]*1000, 1))
-#             elif thicks[i] <= 0 and types[i] == 'Material':
-#                     continue
-#             else:
-#                 lname = '{}'.format(layer)
-#             fh.write('  {}{}\t\t\t\t\t!- Layer {}\n'.format(lname, sep, i))
-#         fh.write('\n')
-#     fh.write('\n')
-#     fh.close()
 
 
 # def write_shadings(building):

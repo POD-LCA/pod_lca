@@ -98,7 +98,7 @@ b.update_envelope_surfaces()
 
 ###############################################
 # TODO: Continue HERE, fix window plotter
-#TODO: Wite layers
+#TODO: Wite constructions
 
 
 # plot_building(b)
