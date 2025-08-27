@@ -153,6 +153,7 @@ class BuildingEnvelopeMaterial(BuildingMaterial):
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
+        self.__type__ = 'Material'
         self.roughness = None
         self.conductivity = None
         self.specific_heat = None
@@ -163,6 +164,7 @@ class BuildingEnvelopeMaterial(BuildingMaterial):
     @classmethod
     def from_idf_data(cls, data):
         material = cls()
+        material.__type__            = 'Material'
         material.name                = data['name']
         material.roughness           = data['roughness']
         material.thickness           = data['thickness']
@@ -179,6 +181,7 @@ class BuildingEnvelopeMaterialNoMass(BuildingMaterial):
     def __init__(self):
         super().__init__()  
         self.name                = None
+        self.__type__            = 'MaterialNoMass'
         self.roughness           = None
         self.thermal_resistance  = None
         self.solar_absorptance   = None
@@ -187,6 +190,7 @@ class BuildingEnvelopeMaterialNoMass(BuildingMaterial):
     @classmethod
     def from_idf_data(cls, data):
         material = cls()
+        material.__type__            = 'MaterialNoMass'
         material.name                = data['name']
         material.roughness           = data['roughness']
         material.thermal_resistance  = data['thermal_resistance'] 

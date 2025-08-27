@@ -371,15 +371,24 @@ def write_layers(building):
     -------
     None
     """
-    
-    for lk in building.layers:
-        lay_name = building.layers[lk]['layer_name']
-        mat_name = building.layers[lk]['material_name']
-        mk = building.material_key_dict[mat_name]
-        mat = building.materials[mk]
-        thick = building.layers[lk]['thickness']
+    layers = {}
+    for fk in building.floors:
+        env = building.floors[fk].envelope
+        cons = env.constructions
+        for ck in cons:
+            l = cons[ck].layers
+            for lk in l:
+                layers[l[lk].name] = l[lk]
+        
+
+    for lk in layers:
+        l = layers[lk]
+        lay_name = l.name
+        # mat_name = l.material.name
+        mat = l.material
+        thick = l.thickness
         if mat.__type__ == 'Material':
-            write_material(building, mat, thick, lay_name)
+            write_material(mat, thick, lay_name)
         elif mat.__type__ == 'MaterialNoMass':
             write_materials_nomass(building, mat)
         elif mat.__type__ == 'WindowMaterialGlazing':
@@ -388,6 +397,43 @@ def write_layers(building):
             write_material_gas(building, mat, thick, lay_name)
         elif mat.__type__ == 'WindowMaterialGlazingSimple':
             write_materials_glazing_simple(building, mat)
+
+
+
+def write_material(mat, thickness, layer_name):
+    """
+    Writes a material to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    mat: object
+        The material object to be written
+    thickness: float
+        The thickness of the material layer
+    layer_name: str
+        The name of the material layer, including the thickness modifier
+    
+    Returns
+    -------
+    None
+    """
+    if thickness:
+        fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+        fh.write('\n')
+        fh.write('Material,\n')
+        fh.write('  {},     !- Name\n'.format(layer_name))
+        fh.write('  {},     !- Roughness\n'.format(mat.roughness))
+        fh.write('  {},     !- Thickness (m)\n'.format(thickness))
+        fh.write('  {},     !- Conductivity (W/m-K)\n'.format(mat.conductivity))
+        fh.write('  {},     !- Density (kg/m3)\n'.format(mat.density))
+        fh.write('  {},     !- Specific Heat (J/kg-K)\n'.format(mat.specific_heat))    
+        fh.write('  {},     !- Thermal Absorptance\n'.format(mat.thermal_absorptance))
+        fh.write('  {},     !- Solar Absorptance\n'.format(mat.solar_absorptance))
+        fh.write('  {};     !- Visible Absorptance\n'.format(mat.visible_absorptance))
+        fh.write('\n')
+        fh.write('\n')
+        fh.close()
 
 
 
@@ -515,41 +561,6 @@ def write_layers(building):
 #     fh.write('\n')
 #     fh.close()
 
-
-# def write_material(building, mat, thickness, layer_name):
-#     """
-#     Writes a material to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     mat: object
-#         The material object to be written
-#     thickness: float
-#         The thickness of the material layer
-#     layer_name: str
-#         The name of the material layer, including the thickness modifier
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     if thickness:
-#         fh = open(building.idf_filepath, 'a')
-#         fh.write('\n')
-#         fh.write('Material,\n')
-#         fh.write('  {},     !- Name\n'.format(layer_name))
-#         fh.write('  {},     !- Roughness\n'.format(mat.roughness))
-#         fh.write('  {},     !- Thickness (m)\n'.format(thickness))
-#         fh.write('  {},     !- Conductivity (W/m-K)\n'.format(mat.conductivity))
-#         fh.write('  {},     !- Density (kg/m3)\n'.format(mat.density))
-#         fh.write('  {},     !- Specific Heat (J/kg-K)\n'.format(mat.specific_heat))    
-#         fh.write('  {},     !- Thermal Absorptance\n'.format(mat.thermal_absorptance))
-#         fh.write('  {},     !- Solar Absorptance\n'.format(mat.solar_absorptance))
-#         fh.write('  {};     !- Visible Absorptance\n'.format(mat.visible_absorptance))
-#         fh.write('\n')
-#         fh.write('\n')
-#         fh.close()
 
 
 
