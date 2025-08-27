@@ -372,13 +372,24 @@ def write_layers(building):
     None
     """
     layers = {}
+    constructions = {}
     for fk in building.floors:
         env = building.floors[fk].envelope
-        cons = env.constructions
-        for ck in cons:
-            l = cons[ck].layers
-            for lk in l:
-                layers[l[lk].name] = l[lk]
+        for ck in env.constructions:
+            con = env.constructions[ck]
+            constructions[con.name] = con
+
+    for fk in building.floors:
+        if building.floors[fk].envelope.windows:
+            for wk in building.floors[fk].envelope.windows:
+                win = building.floors[fk].envelope.windows[wk]
+                con = win.construction
+                constructions[con.name] = con
+
+    for ck in constructions:
+        l = constructions[ck].layers
+        for lk in l:
+            layers[l[lk].name] = l[lk]
         
 
     for lk in layers:
@@ -389,10 +400,10 @@ def write_layers(building):
         thick = l.thickness
         if mat.__type__ == 'Material':
             write_material(mat, thick, lay_name)
-        elif mat.__type__ == 'MaterialNoMass':
-            write_materials_nomass(building, mat)
+        # elif mat.__type__ == 'MaterialNoMass':
+        #     write_materials_nomass(building, mat)
         elif mat.__type__ == 'WindowMaterialGlazing':
-            write_material_glazing(building, mat, thick, lay_name)
+            write_material_glazing(mat, thick, lay_name)
         elif mat.__type__ == 'WindowMaterialGas':
             write_material_gas(building, mat, thick, lay_name)
         elif mat.__type__ == 'WindowMaterialGlazingSimple':
@@ -435,6 +446,46 @@ def write_material(mat, thickness, layer_name):
         fh.write('\n')
         fh.close()
 
+def write_material_glazing(mat, thickness, layer_name):
+    """
+    Writes a glazing material to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    mat: object
+        The material object to be written
+    thickness: float
+        The thickness of the material layer
+    layer_name: str
+        The name of the material layer, including the thickness modifier
+    
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    fh.write('WindowMaterial:Glazing,\n')
+    fh.write('  {},         !- Name\n'.format(layer_name))
+    fh.write('  {},         !- Optical Data Type\n'.format(mat.optical_data_type))
+    fh.write('  {},         !- Window Glass Spectral Data Set Name\n'.format(mat.win_glass_spectral_data_name))
+    fh.write('  {},         !- Thickness (m)\n'.format(thickness))
+    fh.write('  {},         !- Solar Transmittance at Normal Incidence\n'.format(mat.solar_transmittance))
+    fh.write('  {},         !- Front Side Solar Reflectance at Normal Incidence\n'.format(mat.front_solar_reflectance))
+    fh.write('  {},         !- Back Side Solar Reflectance at Normal Incidence\n'.format(mat.back_solar_reflectance))
+    fh.write('  {},         !- Visible Transmittance at Normal Incidence\n'.format(mat.visible_transmittance))
+    fh.write('  {},         !- Front Side Visible Reflectance at Normal Incidence\n'.format(mat.front_visible_reflectance))
+    fh.write('  {},         !- Back Side Visible Reflectance at Normal Incidence\n'.format(mat.back_visible_reflectance))
+    fh.write('  {},         !- Infrared Transmittance at Normal Incidence\n'.format(mat.infrared_transmittance))
+    fh.write('  {},         !- Front Side Infrared Hemispherical Emissivity\n'.format(mat.front_infrared_hemispherical_emissivity))
+    fh.write('  {},         !- Back Side Infrared Hemispherical Emissivity\n'.format(mat.back_infrared_hemispherical_emissivity))
+    fh.write('  {},         !- Conductivity (W/m-K)\n'.format(mat.conductivity))
+    fh.write('  {},         !- Dirt Correction Factor for Solar and Visible Transmittance\n'.format(mat.dirt_correction_factor))
+    fh.write('  {};         !- Solar Diffusing\n'.format(mat.solar_diffusing))
+    fh.write('\n')
+    fh.close()
+
 
 
 # def write_zone_lists(building):
@@ -466,45 +517,7 @@ def write_material(mat, thickness, layer_name):
 #     fh.close()
 
 
-# def write_material_glazing(building, mat, thickness, layer_name):
-#     """
-#     Writes a glazing material to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     mat: object
-#         The material object to be written
-#     thickness: float
-#         The thickness of the material layer
-#     layer_name: str
-#         The name of the material layer, including the thickness modifier
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n')
-#     fh.write('WindowMaterial:Glazing,\n')
-#     fh.write('  {},         !- Name\n'.format(layer_name))
-#     fh.write('  {},         !- Optical Data Type\n'.format(mat.optical_data_type))
-#     fh.write('  {},         !- Window Glass Spectral Data Set Name\n'.format(mat.win_glass_spectral_data_name))
-#     fh.write('  {},         !- Thickness (m)\n'.format(thickness))
-#     fh.write('  {},         !- Solar Transmittance at Normal Incidence\n'.format(mat.solar_transmittance))
-#     fh.write('  {},         !- Front Side Solar Reflectance at Normal Incidence\n'.format(mat.front_solar_reflectance))
-#     fh.write('  {},         !- Back Side Solar Reflectance at Normal Incidence\n'.format(mat.back_solar_reflectance))
-#     fh.write('  {},         !- Visible Transmittance at Normal Incidence\n'.format(mat.visible_transmittance))
-#     fh.write('  {},         !- Front Side Visible Reflectance at Normal Incidence\n'.format(mat.front_visible_reflectance))
-#     fh.write('  {},         !- Back Side Visible Reflectance at Normal Incidence\n'.format(mat.back_visible_reflectance))
-#     fh.write('  {},         !- Infrared Transmittance at Normal Incidence\n'.format(mat.infrared_transmittance))
-#     fh.write('  {},         !- Front Side Infrared Hemispherical Emissivity\n'.format(mat.front_infrared_hemispherical_emissivity))
-#     fh.write('  {},         !- Back Side Infrared Hemispherical Emissivity\n'.format(mat.back_infrared_hemispherical_emissivity))
-#     fh.write('  {},         !- Conductivity (W/m-K)\n'.format(mat.conductivity))
-#     fh.write('  {},         !- Dirt Correction Factor for Solar and Visible Transmittance\n'.format(mat.dirt_correction_factor))
-#     fh.write('  {};         !- Solar Diffusing\n'.format(mat.solar_diffusing))
-#     fh.write('\n')
-#     fh.close()
+
 
 
 # def write_material_gas(building, mat, thickness, layer_name):
