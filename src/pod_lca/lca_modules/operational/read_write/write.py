@@ -33,7 +33,7 @@ def write_idf_from_building(building):
     write_windows(building)
     write_layers(building)
     write_constructions(building)
-#     write_shadings(building)
+    write_shadings(building)
 #     write_spaces(building)
 #     write_space_lists(building)
 
@@ -568,6 +568,60 @@ def write_constructions(building):
     fh.close()
 
 
+def write_shadings(building):
+    """
+    Writes all shading devices to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    
+    Returns
+    -------
+    None
+    """
+
+    for fk in building.floors:
+        env = building.floors[fk].envelope
+        for sk in env.shadings:
+            write_shading(env.shadings[sk])
+
+
+def write_shading(shading):
+    """
+    Writes a single shading device to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    shading: object
+        The shading object to be written
+    
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    sname = shading.name
+    mesh = shading.mesh
+    for fk in mesh.faces:
+        fh.write('Shading:Building:Detailed,\n')
+        fh.write('  Shading {}-{}, !- Detached Shading\n'.format(sname, fk))
+        fh.write('  , !- Shadowing Transmittance & Schedule\n')
+        vertices = mesh.face_vertices(fk)
+        fh.write('  {}, !-Number of verrices\n'.format(len(vertices)))
+        for i, vk in enumerate(vertices):
+            if i == len(vertices) - 1:
+                sep = ';'
+            else:
+                sep = ','
+            x, y, z = mesh.vertex_xyz(vk)
+            fh.write('  {}, {}, {}{} ! Vertex {}\n'.format(x, y, z, sep, i))
+        fh.write('\n')
+    fh.write('\n')
+    fh.close()
+
 # def write_zone_lists(building):
 #     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
 
@@ -633,58 +687,6 @@ def write_constructions(building):
 
 
 
-
-
-# def write_shadings(building):
-#     """
-#     Writes all shading devices to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     for sk in building.shadings:
-#         write_shading(building, building.shadings[sk])
-
-
-# def write_shading(building, shading):
-#     """
-#     Writes a single shading device to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     shading: object
-#         The shading object to be written
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n')
-#     sname = shading.name
-#     mesh = shading.mesh
-#     for fk in mesh.faces:
-#         fh.write('Shading:Building:Detailed,\n')
-#         fh.write('  Shading {}-{}, !- Detached Shading\n'.format(sname, fk))
-#         fh.write('  , !- Shadowing Transmittance & Schedule\n')
-#         vertices = mesh.face_vertices(fk)
-#         fh.write('  {}, !-Number of verrices\n'.format(len(vertices)))
-#         for i, vk in enumerate(vertices):
-#             if i == len(vertices) - 1:
-#                 sep = ';'
-#             else:
-#                 sep = ','
-#             x, y, z = mesh.vertex_xyz(vk)
-#             fh.write('  {}, {}, {}{} ! Vertex {}\n'.format(x, y, z, sep, i))
-#         fh.write('\n')
-#     fh.write('\n')
-#     fh.close()
 
 
 # def write_simulation_control(building):

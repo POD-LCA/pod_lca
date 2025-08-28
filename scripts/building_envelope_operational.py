@@ -111,5 +111,5 @@ for fk in b.floors:
 # TODO: Write shading devices
 
 
-plot_building(b)
-# write_idf_from_building(b)
+# plot_building(b)
+write_idf_from_building(b)
