@@ -9,5 +9,6 @@ from .envelope import Envelope
 from .layer import Layer
 from .construction import Construction
 from .window import Window
+from .shading import Shading
 
 __all__ = ["Envelope"]

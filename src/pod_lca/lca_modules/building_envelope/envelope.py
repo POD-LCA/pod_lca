@@ -17,6 +17,7 @@ class Envelope:
         self.surfaces = {}
         self.constructions = {}
         self.windows = {}
+        self.shadings = {}
         self.wall_surface_keys = []
         self.origin = [0, 0, 0]
 
@@ -75,6 +76,9 @@ class Envelope:
 
     def add_window(self, window):
         self.windows[len(self.windows)] = window
+
+    def add_shading(self, shading):
+        self.shadings[len(self.shadings)] = shading
 
 if __name__ == '__main__':
 

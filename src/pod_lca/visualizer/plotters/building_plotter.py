@@ -15,10 +15,87 @@ def plot_building(building):
 
     add_ground(building, data)
     add_windows(building, data)
+    add_shadings(building, data)
 
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
     fig.show()
+
+
+def add_shadings(building, data):
+    x, y, z = [], [],  []
+    triangles = []
+    vertices = []
+    count = 0
+    for fk in building.floors:
+        env = building.floors[fk].envelope
+        count1 = 0
+        for sk in env.shadings:
+            sh = env.shadings[sk]
+            mesh = sh.mesh
+            vertices_, faces = mesh.to_vertices_and_faces()
+            edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
+            line_marker = dict(color='rgb(0,0,0)', width=1.5)
+
+            for u, v in edges:
+                x.extend([u[0], v[0], [None]])
+                y.extend([u[1], v[1], [None]])
+                z.extend([u[2], v[2], [None]])
+
+            for face in faces:
+                triangles.append([face[0] + count + count1, face[1] + count + count1, face[2] + count + count1])
+                if len(face) == 4:
+                    triangles.append([face[2] + count + count1, face[3] + count + count1, face[0] + count + count1])
+            count1 += len(vertices_)
+            vertices.extend(vertices_)
+        count += count1
+
+
+    sname = 'Shading'
+    lines = [go.Scatter3d(name=f'{sname}',
+                        x=x,
+                        y=y,
+                        z=z,
+                        mode='lines',
+                        line=line_marker,
+                        legendgroup=f'{sname}',
+                        )]
+    
+    i = [v[0] for v in triangles]
+    j = [v[1] for v in triangles]
+    k = [v[2] for v in triangles]
+
+    x = [v[0] for v in vertices]
+    y = [v[1] for v in vertices]
+    z = [v[2] for v in vertices]
+
+    # text = []
+    # intensity = []
+
+    faces = [go.Mesh3d(name='Zone',
+                    x=x,
+                    y=y,
+                    z=z,
+                    i=i,
+                    j=j,
+                    k=k,
+                    color= 'rgb(255,255,255)',
+                    opacity=.8,
+                    legendgroup=f'{sname}',
+                    lighting={'ambient':1.},
+                    #    colorbar_title='is_rad',
+                    #    colorbar_thickness=10,
+                    #    text=text,
+                    #    hoverinfo='text',
+                    #    intensitymode='cell',
+                    #    intensity=intensity,
+                    #    showscale=False,
+                    #    colorscale='gnbu',
+
+            )]
+    data.extend(lines)
+    data.extend(faces)
+
 
 def add_windows(building, data):
     vertices = []
@@ -79,7 +156,6 @@ def add_windows(building, data):
                           )]
     data.extend(lines)
     data.extend(faces)
-
 
 
 def add_ground(building, data):

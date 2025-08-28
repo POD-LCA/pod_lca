@@ -4,6 +4,7 @@ from pod_lca.lca_modules.building import Building
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Window
+from pod_lca.lca_modules.building_envelope import Shading
 from pod_lca.lca_modules.operational import write_idf_from_building
 from pod_lca.units import METER
 from pod_lca.utilities import config
@@ -70,6 +71,7 @@ for fk in b.floors:
         ciel = Construction.from_idf(ciel, path)
         e.add_construction(ciel, 'cieling')
 
+b.update_envelope_surfaces()
 
 # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -94,12 +96,20 @@ for fk in b.floors:
         env.add_window(w)
 
 
-b.update_envelope_surfaces()
+# add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+for fk in b.floors:
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wks = env.windows
+        for wk in wks:
+            sh = Shading.from_window(env.windows[wk], 1.5, 1.5, 1.5)
+            env.add_shading(sh)
 
 ###############################################
 # TODO: Continue HERE, fix window plotter
-#TODO: Wite constructions
+# TODO: Write shading devices
 
 
-# plot_building(b)
-write_idf_from_building(b)
+plot_building(b)
+# write_idf_from_building(b)
