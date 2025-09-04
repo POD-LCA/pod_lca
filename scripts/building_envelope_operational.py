@@ -108,7 +108,8 @@ for fk in b.floors:
 
 ###############################################
 # TODO: Continue HERE, fix window plotter
-# TODO: Write shading devices
+# TODO: Add construction to shading devices
+# TODO: Write spaces
 
 
 # plot_building(b)

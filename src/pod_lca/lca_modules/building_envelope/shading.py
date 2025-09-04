@@ -31,6 +31,7 @@ class Shading(object):
     def __init__(self):
         self.name =  'Shading'
         self.mesh = None
+        self.construction = None
 
     def to_json(self, filepath):
         """

@@ -56,6 +56,7 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
         self.operational_object = None
         self.components = []
         self.surface_cpt_dict = {}
+        self.constructions = {}
 
         self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
         self.emissions = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}

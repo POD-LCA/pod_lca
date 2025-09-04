@@ -34,7 +34,7 @@ def write_idf_from_building(building):
     write_layers(building)
     write_constructions(building)
     write_shadings(building)
-#     write_spaces(building)
+    write_spaces(building)
 #     write_space_lists(building)
 
 #     write_simulation_control(building)
