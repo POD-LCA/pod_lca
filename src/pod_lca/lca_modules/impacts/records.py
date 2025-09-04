@@ -264,15 +264,24 @@ class Records:
         """
         return getattr(self, attr, None)
     
-    def get_record_dict(self):
+    def get_record_dict(self, units=False):
         """ Get the record as a dictionary.
+
+        Parameters
+        ----------
+        units : bool
+            If true, returns corresponding units as well.
         
         Returns
         -------
         dict
             Dictionary of impacts - { **impact catergory** (:class:`str`): **impact quantity** (:class:`float`)}
+            or { **impact catergory** (:class:`str`): (**impact quantity** (:class:`float`), **unit** (:class:`str`))}
         """
-        record = {record: getattr(self, record, 0.0) for record in self.__class__.record_attr_dict.keys()}
+        if units:
+            record = {record: (getattr(self, record, 0.0), self.__class__.record_attr_dict[record]) for record in self.__class__.record_attr_dict.keys()}
+        else:
+            record = {record: getattr(self, record, 0.0) for record in self.__class__.record_attr_dict.keys()}
 
         return record
 
