@@ -1,0 +1,13 @@
+{
+    "CO2": {"val": 1.41e-5, "unit":"Wm-2ppb-1"},
+    "CH4": {"val": 3.70e-4, "unit":"Wm-2ppb-1"},
+    "N2O": {"val": 3.03e-3, "unit":"Wm-2ppb-1"},
+    "_corrected": false,
+    "_ref": {
+             "authors": "Solomon, S., D. Qin, M. Manning, R.B. Alley, T. Berntsen, N.L. Bindoff, Z. Chen, A. Chidthaisong, J.M. Gregory, G.C. Hegerl, M. Heimann, B. Hewitson, B.J. Hoskins, F. Joos, J. Jouzel, V. Kattsov, U. Lohmann, T. Matsuno, M. Molina, N. Nicholls, J. Overpeck, G. Raga, V. Ramaswamy, J. Ren, M. Rusticucci, R. Somerville, T.F. Stocker, P. Whetton, R.A. Wood and D. Wratt",
+                "year": 2007,
+                "title": "Technical Summary. In: Climate Change 2007: The Physical Science Basis. Contribution of Working Group I to the Fourth Assessment Report of the Intergovernmental Panel on Climate Change",
+                "eds": "Solomon, S., D. Qin, M. Manning, Z. Chen, M. Marquis, K.B. Averyt, M. Tignor and H.L. Miller",
+                "publisher": "Cambridge University Press, Cambridge, United Kingdom and New York, NY, USA."
+            }
+}

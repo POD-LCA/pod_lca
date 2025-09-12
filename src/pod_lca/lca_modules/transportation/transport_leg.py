@@ -418,11 +418,11 @@ class TransportationLeg:
             Incompatible units.
         """
         inventories_declared_unit = self.get_mode().get_declared_unit()
-        computed_unit = self.get_material().get_unit() * self.get_dist_unit()
+        computed_unit = self.get_material().get_weight_unit() * self.get_dist_unit()
         conversion_factor = computed_unit.convert_to(inventories_declared_unit)
 
         travel_dist = self.get_travel_dist()
-        transport_material_qty = self.get_material().get_qty()
+        transport_material_qty = self.get_material().get_weight()
         return_trip_factor = self.get_return_trip_factor()
 
         if conversion_factor is None:

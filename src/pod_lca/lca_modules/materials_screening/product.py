@@ -12,8 +12,10 @@ from . import Electricity
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOMETER
+from ...units import KILOGRAM
 from ...units import Unit
 from ...units import UNITS_MAP
 from ...utilities import config
@@ -125,14 +127,16 @@ class Product(Master):
 
         return self
 
-    def set_density(self, density):
+    def set_density(self, density=None, density_unit=CUBIC_METER/KILOGRAM):
         """ Set density of the product.
             Density is defined here as mass per unit measurement of product (not necessarily volume)
     
         Parameters
         ----------
-        density : float
+        density : str or float
             Denisty of product (mass per unit mesurement of product).
+        density_unit : ~pod_lca.units.unit
+            Unit of measurement of density.
 
         Raises
         ------
@@ -141,14 +145,23 @@ class Product(Master):
         """
         if isinstance(density, str):
             try:
-                density = float(density)
+                self.density = float(density)
+                self.density_unit = density_unit
             except:
                 raise TypeError(f"Density of {self.get_name()} should be a numerical value.")
+        elif isinstance(density, (float, int)):
+            self.density = density
+            self.density_unit = density_unit
+        elif density is None:
+            database = self.get_project().get_impact_database()
+            unit_inventories = database.get_data_entry(self.get_impact_database_entry())
+            self.density_unit = unit_inventories[database.get_density_unit_key()]
+            self.density = unit_inventories[database.get_density_key()]
+        else:
+            raise ValueError("Density input not recognized.")
     
-        self.density = density
-
         return self
-
+    
     def set_transportation(self, travel_dist=None, dist_unit=None, transport_scenario=None, return_trip_factor=None, mode_name=None, mode_efficiency=None):
         """ Set transport processes the product is subject to.
 
@@ -167,6 +180,9 @@ class Product(Master):
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
+        if not self.get_unit().get_qty_measured() == 'mass':
+            self.set_density()
+
         if travel_dist is None:
             transport_scenario = 'Local' if transport_scenario is None else transport_scenario
             mode_efficiency = 'Median' if mode_efficiency is None else mode_efficiency
@@ -197,9 +213,18 @@ class Product(Master):
             Source of electricity inventories data. Default 'from_database'.
         """
         if source in [key for key in self.electricity if not key.startswith('_')]:
-            self.electricity["_current"] = source
+            if self.electricity['from_database'] is None:
+                original_source = self.electricity["_current"]
+                try:
+                    self.electricity["_current"] = source
+                    self.get_impacts()
+                except:
+                    self.electricity["_current"] = original_source
+                    log(f"Cannont set electricity data to '{source}'. Electricity source reveted to '{self.electricity['_current']}'.", "Warn")
         else:
             raise KeyError(f"Source of electricty ({source} not recognized.)")
+        
+        return self
 
     def set_electricity_database_tag(self):
         """ Find the tag used to identify electricity data in the database.
@@ -268,7 +293,7 @@ class Product(Master):
                 raise Warning(f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override.")
 
         return self
-    
+
     def set_sctg_code(self, code=None):
         """ Set the Standard Classification of Transported Goods (SCTG) code for the material.
         
@@ -359,7 +384,10 @@ class Product(Master):
         int or float
             Mass of the product.
         """
-        return self.weight * self.density
+        if self.get_unit().get_qty_measured() == 'mass':
+            return self.get_qty()
+        else:
+            return self.get_qty() * self.get_density()
 
     def get_weight_unit(self):
         """ Retrieve the unit of measurement of mass of the product.
@@ -370,8 +398,11 @@ class Product(Master):
         ~pod_lca.units.Unit
             Unit of measurement of mass of the product.
         """
-        return self.unit * self.density_unit
-    
+        if self.get_unit().get_qty_measured() == 'mass':
+            return self.get_unit()
+        else:
+            return self.get_unit() * self.get_density_unit()
+        
     def get_density(self):
         """ Retrieve density of the product.
             Density is defined here as mass per unit measurement of product (not necessarily volume)
@@ -382,7 +413,17 @@ class Product(Master):
             Denisty of product (mass per unit mesurement of product).
         """
         return self.density 
-       
+
+    def get_density_unit(self):
+        """ Retrieve density unit of the product.
+        
+        Returns
+        -------
+        ~pod_lca.units.Unit
+            Unit of measurement of the denisty of product.
+        """
+        return self.density_unit
+      
     def get_transportation(self):
         """ Retrieve transport processes the product is subject to, if any.
 
@@ -509,7 +550,7 @@ class Product(Master):
                 else:
                     self.electricity['by_location'].set_qty(electricity_qty)
                     self.electricity['by_location'].set_unit(electricity_unit)
-                    if self.get_model().get_year() is not None:
+                    if self.get_project().get_year() is not None:
                         self.electricity['by_location'].set_year(self.get_project().get_year())
                 
                 # electricity from database

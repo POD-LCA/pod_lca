@@ -2,10 +2,15 @@
 Units
 **********
 
-:py:class:`~pod_lca.units.Unit` and :py:class:`~pod_lca.units.MetricPrefix` objects manage unit multiplication/division and unit conversions.
+This sub-package manage :py:class:`~pod_lca.units.Unit` objects, which are units of measurements
 
 -------
 
-.. autoclass:: pod_lca.units.Unit
-   :members:
-    
+.. toctree::
+   :maxdepth: 4
+
+   units-object
+   metrix-prefixes
+   common-units
+   units-map
+   

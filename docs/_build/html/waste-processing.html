@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html lang="Python" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Waste Processing &#8212; POD|LCA Python Framework v0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <script src="_static/documentation_options.js?v=13b99a09"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage">POD|LCA Python Framework v0.1.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acknowledgements.html">Acknowledgements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="waste-processing">
+<h1>Waste Processing<a class="headerlink" href="#waste-processing" title="Link to this heading">¶</a></h1>
+<p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">WasteProcess</span></code></a> maintains data relevant to the end-of-life pathways, including their <a class="reference internal" href="inventory-records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><code class="xref py py-class docutils literal notranslate"><span class="pre">Impacts</span></code></a> and <a class="reference internal" href="inventory-records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><code class="xref py py-class docutils literal notranslate"><span class="pre">Emissions</span></code></a>.</p>
+<hr class="docutils" />
+<dl class="py class">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pod_lca.eol.</span></span><span class="sig-name descname"><span class="pre">WasteProcess</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess" title="Link to this definition">¶</a></dt>
+<dd><p>Waste process a waste object is subjected to.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.parent" title="Link to this definition">¶</a></dt>
+<dd><p>Waste object for which the waste processing belong.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="waste-products.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.process_name">
+<span class="sig-name descname"><span class="pre">process_name</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.process_name" title="Link to this definition">¶</a></dt>
+<dd><p>End-of-life pathway:</p>
+<ul class="simple">
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+<p>Default to 'Incinerate'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{'Landfill', 'Recycle', 'Compost', 'Incinerate'}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.qty">
+<span class="sig-name descname"><span class="pre">qty</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.qty" title="Link to this definition">¶</a></dt>
+<dd><p>Quantity of the parent object subjected to this process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.unit">
+<span class="sig-name descname"><span class="pre">unit</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.unit" title="Link to this definition">¶</a></dt>
+<dd><p>Unit of measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="units-object.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.life_cycle_stage">
+<span class="sig-name descname"><span class="pre">life_cycle_stage</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Life cycle stage of this process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>{'C3', 'C4', 'D'}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.unit_impacts">
+<span class="sig-name descname"><span class="pre">unit_impacts</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.unit_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Unit impacts of the process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="inventory-records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.unit_emissions">
+<span class="sig-name descname"><span class="pre">unit_emissions</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.unit_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Unit emissions of the process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="inventory-records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.location">
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.location" title="Link to this definition">¶</a></dt>
+<dd><p>Location where the process occurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="location.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.transporation_leg">
+<span class="sig-name descname"><span class="pre">transporation_leg</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.transporation_leg" title="Link to this definition">¶</a></dt>
+<dd><p>Transportation of the waste object from parent's location to process location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="logistics-leg.html#pod_lca.transportation.TransportationLeg" title="pod_lca.transportation.TransportationLeg"><em>TransportationLeg</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.linked_to">
+<span class="sig-name descname"><span class="pre">linked_to</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.linked_to" title="Link to this definition">¶</a></dt>
+<dd><p>A follow up process. e.g, Recycle processing (C3) and Reuse (D).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.linked_from">
+<span class="sig-name descname"><span class="pre">linked_from</span></span><a class="headerlink" href="#pod_lca.eol.WasteProcess.linked_from" title="Link to this definition">¶</a></dt>
+<dd><p>A previous end-of-life process. e.g, Recycle processing (C3) and Reuse (D).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.new">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">life_cycle_stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linked_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.new" title="Link to this definition">¶</a></dt>
+<dd><p>Create new waste process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<a class="reference internal" href="waste-products.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a>) -- Waste object for which the waste processing belong.</p></li>
+<li><p><strong>process_name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul>
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+<p>Default to 'Incinerate'.</p>
+</p></li>
+<li><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the parent object subjected to this process.</p></li>
+<li><p><strong>unit</strong> (<a class="reference internal" href="units-object.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p></li>
+<li><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage of this process.</p></li>
+<li><p><strong>linked_process</strong> (<em>{None</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Linked waste process.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Waste process object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_parent">
+<span class="sig-name descname"><span class="pre">set_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_parent" title="Link to this definition">¶</a></dt>
+<dd><p>Set parent Waste object of the Waste Processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="waste-products.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a>) -- Waste object for which the waste processing belong.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_process_name">
+<span class="sig-name descname"><span class="pre">set_process_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_process_name" title="Link to this definition">¶</a></dt>
+<dd><p>Set the process name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>{'Landfill'</em><em>, </em><em>'Recycle'</em><em>, </em><em>'Compost'</em><em>, </em><em>'Incinerate'}</em>) -- <p>End-of-life pathway:</p>
+<ul class="simple">
+<li><p><cite>'Landfill'</cite>: transporting waste to a landfill.</p></li>
+<li><p><cite>'Recycle'</cite>: transporting waste to a recycler.</p></li>
+<li><p><cite>'Compost'</cite>: transporting to a composting facility.</p></li>
+<li><p><cite>'Incinerate'</cite>: transporting to an incinerator.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_qty">
+<span class="sig-name descname"><span class="pre">set_qty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qty</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Set quantity of the parent subjected to this waste process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>qty</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) -- Quantity of the parent object subjected to this process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_unit">
+<span class="sig-name descname"><span class="pre">set_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit of measurement for the waste amount processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> (<a class="reference internal" href="units-object.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a>) -- Unit of measurement.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> -- New unit incompatible with the existing units.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_life_cycle_stage">
+<span class="sig-name descname"><span class="pre">set_life_cycle_stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">life_cycle_stage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Set life cycle stage of the product/process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>life_cycle_stage</strong> (<em>{'C3'</em><em>, </em><em>'C4'</em><em>, </em><em>'D'}</em>) -- Life cycle stage of the product/process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_unit_inventories">
+<span class="sig-name descname"><span class="pre">set_unit_inventories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_unit_inventories" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit impacts of the waste process.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_location">
+<span class="sig-name descname"><span class="pre">set_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_location" title="Link to this definition">¶</a></dt>
+<dd><p>Set location of the waste process facility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<a class="reference internal" href="location.html#pod_lca.location.Location" title="pod_lca.location.Location"><em>Location</em></a>) -- Location of the waster process facility.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.set_linked_process">
+<span class="sig-name descname"><span class="pre">set_linked_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.set_linked_process" title="Link to this definition">¶</a></dt>
+<dd><p>Set a linked process to the current process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>process</strong> (<a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a>) -- Secondary process following the current process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_parent">
+<span class="sig-name descname"><span class="pre">get_parent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_parent" title="Link to this definition">¶</a></dt>
+<dd><p>Get parent Waste object of the Waste Processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Waste object for which the waste processing belong.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="waste-products.html#pod_lca.eol.Waste" title="pod_lca.eol.Waste"><em>Waste</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_process_name">
+<span class="sig-name descname"><span class="pre">get_process_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_process_name" title="Link to this definition">¶</a></dt>
+<dd><p>Get the process name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_name" title="Link to this definition">¶</a></dt>
+<dd><p>Get name of the process identifying the parent and process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name identifyer.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_qty">
+<span class="sig-name descname"><span class="pre">get_qty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_qty" title="Link to this definition">¶</a></dt>
+<dd><p>Get quantity of the parent subjected to this waste process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Quantity of the parent object subjected to this process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_unit">
+<span class="sig-name descname"><span class="pre">get_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_unit" title="Link to this definition">¶</a></dt>
+<dd><p>Get unit of measurement for the waste amount processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit of measurement.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="units-object.html#pod_lca.units.Unit" title="pod_lca.units.Unit"><em>Unit</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_life_cycle_stage">
+<span class="sig-name descname"><span class="pre">get_life_cycle_stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_life_cycle_stage" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the life cycle stage corresponding to the waste process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Corresponding life cycle stage.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_unit_impacts">
+<span class="sig-name descname"><span class="pre">get_unit_impacts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_unit_impacts" title="Link to this definition">¶</a></dt>
+<dd><p>Get unit impacts of the waste process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit impacts of the process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="inventory-records.html#pod_lca.impacts.Impacts" title="pod_lca.impacts.Impacts"><em>Impacts</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_unit_emissions">
+<span class="sig-name descname"><span class="pre">get_unit_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_unit_emissions" title="Link to this definition">¶</a></dt>
+<dd><p>Get unit emissions of the waste process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Unit emissions of the process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="inventory-records.html#pod_lca.impacts.Emissions" title="pod_lca.impacts.Emissions"><em>Emissions</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_linked_process">
+<span class="sig-name descname"><span class="pre">get_linked_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_linked_process" title="Link to this definition">¶</a></dt>
+<dd><p>Get the linked process to the current process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>to</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) -- If True, return the process linked to, else linked from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Secondary process following the current process.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pod_lca.eol.WasteProcess" title="pod_lca.eol.WasteProcess"><em>WasteProcess</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.get_transportation_leg">
+<span class="sig-name descname"><span class="pre">get_transportation_leg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.get_transportation_leg" title="Link to this definition">¶</a></dt>
+<dd><p>Get the transportation leg corresponding to the end-of-life pathway.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Secondary process following the current process.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="logistics-leg.html#pod_lca.transportation.TransportationLeg" title="pod_lca.transportation.TransportationLeg"><em>TransportationLeg</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pod_lca.eol.WasteProcess.update_unit_inventories">
+<span class="sig-name descname"><span class="pre">update_unit_inventories</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pod_lca.eol.WasteProcess.update_unit_inventories" title="Link to this definition">¶</a></dt>
+<dd><p>Set unit impacts of the waste process.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Waste Processing</a><ul>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess"><code class="docutils literal notranslate"><span class="pre">WasteProcess</span></code></a><ul>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.parent</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.process_name</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.qty</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.life_cycle_stage</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit_impacts</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.unit_emissions"><code class="docutils literal notranslate"><span class="pre">WasteProcess.unit_emissions</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.location"><code class="docutils literal notranslate"><span class="pre">WasteProcess.location</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.transporation_leg"><code class="docutils literal notranslate"><span class="pre">WasteProcess.transporation_leg</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.linked_to"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_to</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.linked_from"><code class="docutils literal notranslate"><span class="pre">WasteProcess.linked_from</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.new"><code class="docutils literal notranslate"><span class="pre">WasteProcess.new()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_parent()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_process_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_life_cycle_stage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_unit_inventories"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_unit_inventories()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_location"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_location()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.set_linked_process"><code class="docutils literal notranslate"><span class="pre">WasteProcess.set_linked_process()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_parent"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_parent()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_process_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_process_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_name"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_qty"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_qty()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_unit"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_life_cycle_stage"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_life_cycle_stage()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_unit_impacts"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit_impacts()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_unit_emissions"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_unit_emissions()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_linked_process"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_linked_process()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.get_transportation_leg"><code class="docutils literal notranslate"><span class="pre">WasteProcess.get_transportation_leg()</span></code></a></li>
+<li><a class="reference internal" href="#pod_lca.eol.WasteProcess.update_unit_inventories"><code class="docutils literal notranslate"><span class="pre">WasteProcess.update_unit_inventories()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+            </div>
+
+            <div class="right">
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2025, POD LCA Team.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

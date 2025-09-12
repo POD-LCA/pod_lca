@@ -5,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from copy import deepcopy
 from math import log10
 
 from ..units import UNIT_CONVERSIONS, ALL_PREFIXES
@@ -40,21 +41,87 @@ class Unit:
         self.prefix = None
         self.convert_compound = False
         self.components = None
+        self.denominator = None
 
     def __str__(self):
         return f"Unit {self.get_name()} ({self.get_standard_notation()}) measuring {self.get_qty_measured()}."
 
+    def __eq__(self, other):
+        if isinstance(other, Unit):
+            test_1 = other.get_name() == self.get_name()
+            test_2 = self.get_standard_notation() == other.get_standard_notation()
+            test_3 = self.get_qty_measured() == other.get_qty_measured()
+            return bool(test_1 * test_2 * test_3)
+        return NotImplemented
+    
     def __mul__(self, other):
         """ Multiplication of units by other units.
         """
         if isinstance(other, Unit):
-            name = self.get_name() + '-' + other.get_name()
-            standard_notation = self.get_standard_notation() + other.get_standard_notation()
-            qty_measured = self.get_qty_measured() + '-' + other.get_qty_measured()
+            # check for cancelling units
+            other_copy = deepcopy(other)
+            self_copy = deepcopy(self)
+            parts_self = self.get_components() if self_copy.convert_compound else [self_copy] 
+            parts_other = other_copy.get_components() if other_copy.convert_compound else [other_copy]
+            for component_self in parts_self:
+                for component_other in parts_other:
+                    if component_self == component_other:
+                        return_self = False
+                        return_other = False
+                        # update other
+                        if other_copy == component_other:
+                            return_self = True
+                        else:
+                            if other_copy.denominator is not None:
+                                if component_other in other_copy.denominator:
+                                    other_copy.name = other_copy.get_name().replace(' per ' + component_other.get_name(), '')
+                                    other_copy.standard_notation = other_copy.get_standard_notation().replace('/' + component_other.get_standard_notation(), '')
+                                    other_copy.qty_measured = other_copy.get_qty_measured().replace(' per ' + component_other.get_qty_measured(), '')
+                                    other_copy.components.remove(component_other)
+                                    other_copy.convert_compound = False if len(other_copy.components) > 0 else True
+                                    other_copy.denominator = None
+                                else:
+                                    other_copy.name = other_copy.get_name().replace('-' + component_other.get_name(), '')
+                                    other_copy.standard_notation = other_copy.get_standard_notation().replace(component_other.get_standard_notation(), '')
+                                    other_copy.qty_measured = other_copy.get_qty_measured().replace('-' + component_other.get_qty_measured(), '')
+                                    other_copy.components.remove(component_other)
+                                    other_copy.convert_compound = False if len(other_copy.components) > 0 else True
+                        # update self
+                        if self_copy == component_self:
+                            return_other = True
+                        else:
+                            if self_copy.denominator is not None:
+                                if component_self in self_copy.denominator:
+                                    self_copy.name = self_copy.get_name().replace(' per ' + component_self.get_name(), '')
+                                    self_copy.standard_notation = self_copy.get_standard_notation().replace('/' + component_self.get_standard_notation(), '')
+                                    self_copy.qty_measured = self_copy.get_qty_measured().replace(' per ' + component_self.get_qty_measured(), '')
+                                    self_copy.components.remove(component_self)
+                                    self_copy.convert_compound = False if len(self_copy.components) > 0 else True
+                                    self_copy.denominator = None
+                                else:
+                                    self_copy.name = self_copy.get_name().replace('-' + component_self.get_name(), '')
+                                    self_copy.standard_notation = self_copy.get_standard_notation().replace(component_self.get_standard_notation(), '')
+                                    self_copy.qty_measured = self_copy.get_qty_measured().replace('-' + component_self.get_qty_measured(), '')
+                                    self_copy.components.remove(component_self)
+                                    self_copy.convert_compound = False if len(self_copy.components) > 0 else True
+
+                        if return_self:
+                            if not self_copy.convert_compound:
+                                return self_copy.components[0] 
+                            return self_copy
+                        elif return_other:
+                            if not other_copy.convert_compound:
+                                return other_copy.components[0]
+                            return other_copy
+
+            # parts post cancellation being added      
+            name = self_copy.get_name() + '-' + other_copy.get_name()
+            standard_notation = self_copy.get_standard_notation() + other_copy.get_standard_notation()
+            qty_measured = self_copy.get_qty_measured() + '-' + other_copy.get_qty_measured()
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
             newUnit.convert_compound = True
-            newUnit.components = [self, other]
+            newUnit.components = [self_copy, other_copy]
 
             return newUnit
 
@@ -100,7 +167,8 @@ class Unit:
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
             newUnit.convert_compound = True
-            newUnit.components = [self, 1/ other]
+            newUnit.components = [self, other]
+            newUnit.denominator = [other]
 
             return newUnit
 
@@ -111,15 +179,21 @@ class Unit:
         """ Reflexive division of units by unit value (1).
         """
         if other == 1:
-            name = 'per ' + self.get_name()
-            standard_notation = self.get_standard_notation() + '-1'
-            qty_measured =  'per ' + self.get_qty_measured()
+            if self.get_name().startswith('per '):
+                name = self.get_name()[4:]
+                standard_notation = self.get_standard_notation()[:-2]
+                qty_measured =  self.get_qty_measured()[4:]
+            else:
+                name = 'per ' + self.get_name()
+                standard_notation = self.get_standard_notation() + '-1'
+                qty_measured =  'per ' + self.get_qty_measured()
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
             newUnit.base_unit = self.get_base()
             newUnit.prefix = self.get_prefix()
             newUnit.convert_compound = self.convert_compound
-            newUnit.components = self.get_components()
+            newUnit.components = [self] if self.get_components() is None else self.get_components()
+            newUnit.denominator = [self]
 
             return newUnit
         else:

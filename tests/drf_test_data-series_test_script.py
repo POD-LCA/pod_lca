@@ -36,9 +36,9 @@ data = vstack((array(['year']), years.reshape((-1, 1))))
 for greenhouse_gas in greenhouse_gases:
     for cumulative in [True, False]:
         if greenhouse_gas == 'CH4fossil':
-            _, concentrations, y_data = DynamicRadiativeForcing.get_radiative_forcing_time_series('CH4', time_horizon, time_step, cumulative, CH4_oxidation=True, alpha=1.0)
+            _, concentrations, y_data = DynamicRadiativeForcing().get_radiative_forcing_time_series('CH4', time_horizon, time_step, cumulative, CH4_oxidation=True, alpha=1.0)
         else:
-            _, concentrations, y_data = DynamicRadiativeForcing.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
+            _, concentrations, y_data = DynamicRadiativeForcing().get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
 
         if not cumulative:
             series_name = greenhouse_gas + '_concentration in atm'

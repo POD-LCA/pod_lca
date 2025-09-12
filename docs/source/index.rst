@@ -19,7 +19,7 @@ This python module is written in Python 3.11.9. The other dependendent packages 
 
    installation
    tutorials
-   API_reference
+   api-reference
    license
    acknowledgements
    developer

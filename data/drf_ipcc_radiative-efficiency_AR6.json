@@ -1,0 +1,13 @@
+{
+    "CO2": {"val": 1.33e-05, "unit":"Wm-2ppb-1"},
+    "CH4": {"val": 2.0048e-13, "unit":"Wm-2kg-1"},
+    "N2O": {"val": 3.5892e-13, "unit":"Wm-2kg-1"},
+    "_corrected": true,
+    "_ref": {
+                "authors": "Forster, P., T. Storelvmo, K. Armour, W. Collins, J.-L. Dufresne, D. Frame, D.J. Lunt, T. Mauritsen, M.D. Palmer, M. Watanabe, M. Wild, and H. Zhang",
+                "year": 2021,
+                "title": "The Earth's Energy Budget, Climate Feedbacks, and Climate Sensitivity. In Climate Change 2021: The Physical Science Basis. Contribution of Working Group I to the Sixth Assessment Report of the Intergovernmental Panel on Climate Change",
+                "eds": "Masson-Delmotte, V., P. Zhai, A. Pirani, S.L. Connors, C. Péan, S. Berger, N. Caud, Y. Chen, L. Goldfarb, M.I. Gomis, M. Huang, K. Leitzell, E. Lonnoy, J.B.R. Matthews, T.K. Maycock, T. Waterfield, O. Yelekçi, R. Yu, and B. Zhou",
+                "publisher": "Cambridge University Press, Cambridge, United Kingdom and New York, NY, USA."
+            }
+}

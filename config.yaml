@@ -38,6 +38,8 @@ setup:
     CARBONATION_EFFECTS_IMPACT_CATEGORY: GWP
     ACCELERATED_CARBONATION_INVENTORY: Mineral C
     ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
+  drf:
+    IPCC_REPORT_VERSION: AR5
   operational:
     EPLUS_VERSION: '25.1.0' # Version of Energy + used in this release of POD_LCA
     TERRAIN: 'city'
@@ -97,6 +99,8 @@ file_paths:
     PERTUBATION_LIFETIMES: data/drf_ipcc_pertubation-lifetimes.json
     RADIATIVE_EFFICIENCY: data/drf_ipcc_radiative-efficiency.json
     MOLECULER_WEIGHT: data/drf_none_moleculer-weight.json
+    CO2_IRF_PARAMETERS: data\\drf_ipcc_co2-irf-parameters.json
+    INDIRECT_EFFECTS_FACTORS: data\\drf_ipcc_indirect-contributions.json
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 
