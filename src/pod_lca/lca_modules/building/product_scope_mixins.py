@@ -14,20 +14,18 @@ class ProductScopeMixins:
     """ Methods for calculation of A1-A3 impacts
     """
 
-    def set_material_database(self, database):
+    def set_material_database(self, file_path):
         """ Set the impact database for materials (A1-A3).
         
         Parameters
         ----------
-        database : ~pod_lca.impacts.ImpactsDatabase or str
-            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+        file_path : str
+            Filepath to the csv file containing impact data. The csv file must contain headers 'sctg code' and 'eol material' in addition to the 
         """
-        if isinstance(database, ImpactsDatabase):
-            self.material_impact_database = database
-        elif isinstance(database, str):
+        if isinstance(file_path, str):
             impact_database = ImpactsDatabase.new("impact database")
-            impact_database.set_data(database)
-            self.set_material_database(impact_database)
+            impact_database.set_data(file_path, additional_headers=['sctg code','eol material', 'Density', 'Density unit'])
+            self.material_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")
         

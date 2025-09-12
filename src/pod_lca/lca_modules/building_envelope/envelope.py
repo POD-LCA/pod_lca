@@ -71,7 +71,7 @@ class Envelope:
                 self.constructions[sk] = construction
 
     def get_components(self):
-        # TODO implement method to return all constructions as a list
+        # TODO implement method to return all envelop elements as a list
         return []
 
     def add_window(self, window):

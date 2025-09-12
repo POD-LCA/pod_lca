@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from shapely import Polygon
 
+from . import ConstructionMixins
 from . import EndOfLifeMixins
 from . import ProductScopeMixins
 from . import Floor
@@ -18,7 +19,7 @@ from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (EndOfLifeMixins, ProductScopeMixins):
+class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
@@ -353,7 +354,8 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
         list of BuildingComponent Objs.
             Structural and Fascade elements that make up the building.
         """
-        return self.get_structure().get_components() # + self.get_envelope().get_components() # TODO add envelop components
+        return self.components
+        # return self.get_structure().get_components() # + self.get_envelope().get_components() # TODO add envelop components
 
     # ================================
     # Assembly Methods
@@ -378,7 +380,8 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
             floor_no = num +1
             below_grade = True if floor_no <= floors_below_grade else False
             on_ground = True if floor_no == floors_below_grade + 1 else False
-            self.add_floor(floor_no, floor_plan, f2f_height, geometry_units, below_grade, on_ground)
+            is_last = True if floor_no == no_floors else False
+            self.add_floor(floor_no, floor_plan, f2f_height, geometry_units, below_grade, on_ground, is_last)
 
         return self
 
@@ -399,6 +402,8 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
             True, if the floor is above grade.
         on_ground : bool
             True, if the floor is on the ground.
+        is_last : bool
+
         """
         floor = Floor.from_floor_plan(floor_no, floor_plan, floor_height, geometry_unit)
         floor.is_last = is_last
@@ -455,7 +460,6 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
         component : BuildingComponent Objs.
             Structural or fascade element to be added to the building.
         """
-
         self.get_components().append(component)
         component.set_building(self)
 
@@ -504,6 +508,14 @@ class Building (EndOfLifeMixins, ProductScopeMixins):
             pass
         elif scope == 'product':
             return self.get_product_impacts()
+        elif scope == 'construction':
+            pass
+        elif scope == 'use':
+            pass
+        elif scope == 'end of life':
+            return self.get_eol_impacts()
+        else:
+            raise ValueError('LCA scope not recognized')
 
     def get_emissions(self, scope='all'):
         """ Get emissions.

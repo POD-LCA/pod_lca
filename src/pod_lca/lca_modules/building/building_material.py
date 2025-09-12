@@ -8,14 +8,14 @@ __version__ = "0.1.0"
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..materials_screening import Master
+from ..materials_screening import Product
 from ..operational import find_materials
 from ..operational import find_no_mass_materials
 from ..operational import find_gas_materials
 from ..operational import find_glazing_materials
 
 
-class BuildingMaterial(Master):
+class BuildingMaterial(Product):
 
     def __init__(self):
         super().__init__()
@@ -54,6 +54,7 @@ class BuildingMaterial(Master):
         
         material.set_parent(parent)
         material.set_name(name)
+        material.set_density(material_database_entry)
         material.set_qty(qty)
         material.set_unit(unit)
         material.impacts = Impacts.from_parent(material)
@@ -63,6 +64,8 @@ class BuildingMaterial(Master):
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
         material.set_impact_database_entry(material_database_entry)
+        material.set_sctg_code(material_database_entry)
+        material.set_eol_material(material_database_entry)
 
         return material
 
@@ -70,10 +73,40 @@ class BuildingMaterial(Master):
         self.parent = parent
 
         return self
+    
+    def set_density(self, material_database_entry):
+
+        database = self.get_impact_database()
+        data_entry = database.get_data_entry(material_database_entry)
+
+        density = data_entry['Density']   
+        super().set_density(density)
+
+        return self
+    
+    def set_sctg_code(self, material_database_entry):
+
+        database = self.get_impact_database()
+        data_entry = database.get_data_entry(material_database_entry)
+        self.sctg_code = data_entry['sctg code']
+
+    def set_eol_material(self, material_database_entry):
+
+        database = self.get_impact_database()
+        data_entry = database.get_data_entry(material_database_entry)
+        self.eol_product = data_entry['eol material']
 
     def get_parent(self):
 
-        return self.parent    
+        return self.parent  
+
+    def get_sctg_code(self):
+
+        return self.sctg_code
+
+    def get_eol_material(self):
+
+        return self.eol_product  
 
     def get_building(self):
         """ Get the building to which this building material belong.

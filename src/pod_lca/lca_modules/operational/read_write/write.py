@@ -23,7 +23,7 @@ def write_idf_from_building(building):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'w')
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'w') # TODO: if temp folder not existing
     fh.close()
     write_pre()
     write_building()

@@ -5,47 +5,51 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..impacts import Emissions
 from ..impacts import EOLImpactsDatabase
+from ..impacts import Impacts
 from ..impacts import TranportationModeImpactsDatabase
+from ..transportation import EOLTransportDataset
 
 
 class EndOfLifeMixins:
-
-    def set_transportation_impact_database(self, database):
+    
+    def set_eol_database(self, file_path, **kwargs):
         """ Set the impact database for end-of-life impacts.
         
         Parameters
         ----------
-        database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
-            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+        file_path : str
+            Filepath of the csv file containing impact data.
+
+        Other Parameters
+        ----------------
+        primary_key : str
+            Header of the primary identifier column in the csv file. Default is 'Material'.
+        process_key : str
+            Header of the process identifier column in the csv file. Default is 'Process'.
+        lc_stage_key : str
+            Header of the life cycle stage identifier column in the csv file. Default is 'LCA Stage'.
+        transport_dataset : ~pod_lca.transportation.TransportDataset
+            Transportation dataset corresponding to the end-of-life impacts.
         """
-        if isinstance(database, TranportationModeImpactsDatabase):
-            self.transport_impact_database = database
-        elif isinstance(database, str):
-            impact_database = TranportationModeImpactsDatabase.new("impact database")
-            impact_database.set_data(database)
-            self.set_transportation_impact_database(impact_database)
-        else:
-            raise TypeError("Database input not recognized")
+        primary_key = kwargs['primary_key'] if 'primary_key' in kwargs else 'Material'
+        process_key = kwargs['process_key'] if 'process_key' in kwargs else 'Process'
+        lc_stage_key = kwargs['lc_stage_key'] if 'lc_stage_key' in kwargs else 'LCA Stage'
+        transport_dataset = kwargs['transport_dataset'] if 'transport_dataset' in kwargs else EOLTransportDataset()
+
+        eol_impact_database = EOLImpactsDatabase.new("EOL database")
+
+        eol_impact_database.set_primary_key(primary_key)
+        eol_impact_database.set_process_key(process_key)
+        eol_impact_database.set_life_cycle_stage_key(lc_stage_key)
+        eol_impact_database.set_data(file_path)
+
+        self.eol_impact_database = eol_impact_database
+
+        self.set_eol_transport_dataset(transport_dataset)
 
         return self
-    
-    def set_eol_database(self, database):
-        """ Set the impact database for end-of-life impacts.
-        
-        Parameters
-        ----------
-        database : ~pod_lca.impacts.EOLImpactsDatabase or str
-            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
-        """
-        if isinstance(database, EOLImpactsDatabase):
-            self.eol_impact_database = database
-        elif isinstance(database, str):
-            impact_database = EOLImpactsDatabase.new("impact database")
-            impact_database.set_data(database)
-            self.set_eol_database(impact_database)
-        else:
-            raise TypeError("Database input not recognized")
     
     def set_eol_transport_dataset(self, dataset):
         """ Set transportation dataset for the end-of-life impacts.
@@ -88,17 +92,54 @@ class EndOfLifeMixins:
             End-of-life transportation dataset.
         """
         return self.eol_transport_dataset
-    
+
     # ================================
     # EOL Methods
     # ================================ 
-    def deconstruct(self):
 
-        pass # TODO: write method to deconstruct the building and add C1 impacts
+    def get_eol_impacts(self, lc_stage=None):
+        """ Get C2-C4 impacts of the building.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            C2-C4 impacts of the building.
+        """
+        impacts = Impacts.from_parent(self)
+        for component in self.get_components():
+            component.deconstruct(component.get_deconstruct_map())
+            for waste in component.get_waste_products():
+                if lc_stage is None:
+                    for impact in waste.get_impacts().values():
+                        impacts += impact
+                else:
+                    impacts += waste.get_impacts()[lc_stage]
+                            
+        # TODO: test with the envelope components
 
-    def demolish(self):
+        return impacts
 
-        pass # TODO: write method to demolish the building and add C1 impacts
+    def get_eol_emissions(self, lc_stage=None):
+        """ Get C2-C4 emissions of the building.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            C2-C4 emissions of the building.
+        """        
+        emissions = Emissions.from_parent(self)
+        for component in self.get_components():
+            component.deconstruct(component.get_deconstruct_map())
+            for waste in component.get_waste_products():
+                if lc_stage is None:
+                    for emission in waste.get_emissions().values():
+                        emissions += emission
+                else:
+                    emissions += waste.get_emissions()[lc_stage]
+                    
+        # TODO: test with the envelope components
+
+        return emissions
 
 
 if __name__ == '__main__':

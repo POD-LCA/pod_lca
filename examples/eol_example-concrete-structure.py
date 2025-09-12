@@ -16,7 +16,7 @@ from pod_lca.units import KILOGRAM
 # create building
 my_land_plot = Location.from_str("98126, Seattle")
 
-my_building = Building.build(name='My Shopping Mall', type='Commercial', location=my_land_plot, built_year=2025, geometry=None) # Dealing with geometry is not within the scope of EOL
+my_building = Building()
 
 eol_impact_database = EOLImpactsDatabase.new("EOL database")
 eol_impact_database.set_primary_key('Material')
@@ -29,8 +29,9 @@ my_building.set_eol_transport_dataset(EOLTransportDataset())
 my_building.set_transportation_impact_database(r'data/transportation_podlca_emission.csv')
 
 # add a window to the building
-my_concrete_structure = BuildingComponent.create(name='Structure', materials=[None]) # Making a building component from materials not within the scope of EOL
-my_building.add_component(my_concrete_structure)
+my_concrete_structure = BuildingComponent.create(name='Structure', 
+                                                 building=my_building, 
+                                                 materials=[None]) # Making a building component from materials not within the scope of EOL
 
 # deconstruct window
 deconstruction_map = {'Concrete':{'qty': 100000, 'unit': KILOGRAM}}

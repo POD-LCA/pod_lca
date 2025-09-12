@@ -39,14 +39,16 @@ class BuildingComponent:
     # Constructors
     # ================================        
     @classmethod
-    def create(cls, name, materials=None):
+    def create(cls, name, building, materials=None):
         """ Create a building component from its constituent materials.
         
         Parameters
         ----------
         name : str
             Name of the component.
-        materials : list of material.Model Objs. or Product Objs
+        building : ~pod_lca.building.Building
+            Building to which the component belong
+        materials : list of material.Model  or Product Objs
             Materials making up the component.
 
         Returns
@@ -59,6 +61,8 @@ class BuildingComponent:
         component.set_name(name)
         if materials is not None:
             component.set_materials(materials)
+
+        building.add_component(component)
 
         return component
 
@@ -174,6 +178,20 @@ class BuildingComponent:
     # ================================
     # EOL Methods
     # ================================ 
+    def get_deconstruct_map(self):
+        """ Get the materials and quantites the component deconstruct to at the end of life stage.
+        
+        Returns
+        -------
+        dict
+            Deconstruction map in the form of {**End-of-Life product** (:class:`str`) : {**qty**: (:class:`float`), **unit**: (:class:`~pod_lca.units.Unit`)}}
+        """
+        map = {}
+        for material in self.get_materials():
+            map[material.get_eol_material()] = {'qty': material.get_qty(), 'unit': material.get_unit()}
+
+        return map
+
     def deconstruct(self, deconstruction_map):
         """ Deconstruct the building component to waste products as specified in the deconstruction map.
         

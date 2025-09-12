@@ -6,15 +6,15 @@ from pod_lca.units import METER
 from pod_lca.utilities import DataImporter
 
 
-my_location = Location.from_US_zip('98102')
+my_location = Location.from_str("98126, Seattle")
 template_model_path = 'scripts\Template_Model_BOM.csv'
 template_model_data = DataImporter.json_to_dict('scripts\Template_Model_data.json')
 
-database = ImpactsDatabase.new('pod_lca building database')
-database.set_data('data\impacts_podlca_building-materials-data.csv')
-
 my_building = Building()
-my_building.set_material_database(database)
+
+my_building.set_material_database(file_path='data\impacts_podlca_building-materials-data.csv')
+my_building.set_eol_database(file_path='data/impacts_podlca_eol-impacts.csv')
+my_building.set_transportation_impact_database(file_path='data/transportation_podlca_emission.csv')
 
 my_building = my_building.set_template_model(name='template building', 
                                            type='Commercial', 

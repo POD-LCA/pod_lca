@@ -1,7 +1,10 @@
 {
+    "building_type":"commercial",
+    "structure_type":"concrete",
     "no_floors":5,
     "f2f_height":3.5,
     "floor_plan":[[0.0 , 0.0], [0.0, 80.0], [30.0, 80.0], [30.0, 0.0]],
     "floors_below_grade":1,
+    "wwr":0.7,
     "geometry_units":"m"
 }

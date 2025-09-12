@@ -38,7 +38,7 @@ class Foundation(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        foundation_element = super().create(name, materials)
+        foundation_element = super().create(name, structure.get_parent(), materials)
         structure.foundations.append(foundation_element)
 
         return foundation_element
@@ -56,7 +56,7 @@ class Beam(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        beam = super().create(name, materials)
+        beam = super().create(name, structure.get_parent(), materials)
         structure.beams.append(beam)
 
         return beam
@@ -69,7 +69,7 @@ class Column(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        column = super().create(name, materials)
+        column = super().create(name, structure.get_parent(), materials)
         structure.columns.append(column)
 
         return column
@@ -82,7 +82,7 @@ class Slab(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        slab = super().create(name, materials)
+        slab = super().create(name, structure.get_parent(), materials)
         structure.slabs.append(slab)
 
         return slab

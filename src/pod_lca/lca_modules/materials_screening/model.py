@@ -177,7 +177,7 @@ class Model:
                     if not (row[header_map['density']] == ''):
                         item.set_density(row[header_map['density']])        
                     if not (row[header_map['weight unit']] == ''):
-                        item.set_weight_unit(UNITS_MAP[row[header_map['weight unit']]])  
+                        item.set_density_unit(UNITS_MAP[row[header_map['weight unit']]])  
 
                     if name in tmp_transportation_map:
                         tmp_transportation_map[name]['product'] = item
@@ -382,7 +382,7 @@ class Model:
         
         return process
     
-    def add_product(self, name, stage, qty, unit, impacts_from, sctg_code=None):
+    def add_product(self, name, stage, qty, unit, impacts_from, **kwargs):
         """ Create and add product to the model.
 
         Parameters
@@ -397,8 +397,15 @@ class Model:
             Unit of measurement.            
         impacts_from : str
             Name of the impact database entry from which to use impacts.
+
+        Other Parameters
+        ----------------
         sctg_code : int
-            Standard Classification of Transported Goods (SCTG) code of the material        
+            Standard Classification of Transported Goods (SCTG) code of the material.
+        density : float
+            Density of the material.
+        density_unit : ~pod_lca.units.Unit
+            Units corresponding to material density.              
 
         Returns
         -------
@@ -407,7 +414,13 @@ class Model:
         """
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
-        product.set_sctg_code(sctg_code)
+
+        if 'sctg_code' in kwargs:
+            product.set_sctg_code(kwargs['sctg_code'])
+        if 'density' in kwargs:
+            product.set_density(kwargs['density'])
+            product.set_density_unit(kwargs['density_unit'])
+            
         product.set_transportation()
 
         self.products.append(product)

@@ -123,7 +123,7 @@ class Waste(Product):
         database_item : str
             The name of the database item which gives the item impacts.
         """
-        database = self.get_parent().get_building().get_eol_database()
+        database = self.get_eol_database()
         row_id = database.data.index[(database.data[database.get_primary_key()] == database_item)]
         if len(row_id) == 0:
             if self.get_bio_based():
@@ -356,6 +356,16 @@ class Waste(Product):
             True, if the material is bio-based.
         """
         return self.bio_based
+    
+    def get_eol_database(self):
+        """ Get the end-of-life product database corresponding to the project.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.EOLImpactsDatabase
+            True, if the material is bio-based.        
+        """
+        return self.get_parent().get_building().get_eol_database()
 
     # ================================
     # Methods

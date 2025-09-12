@@ -57,9 +57,8 @@ class Product(Master):
                             'by_location': None, 
                             '_current': None, 
                             '_tag':None}
-        self.weight = 0.0
-        self.weight_unit = None
         self.density = 1.0 # the weight of 1 unit of prodcut
+        self.density_unit = None
         self.mineral_carbonation_potential = None
         self.is_material = True
         self.sctg_code = None
@@ -80,8 +79,6 @@ class Product(Master):
         """
         super().set_qty(qty)
 
-        self.weight = self.qty * self.density
-
         return self
 
     def set_unit(self, unit):
@@ -96,7 +93,7 @@ class Product(Master):
         super().set_unit(unit)
 
         if unit.get_qty_measured() == 'mass':
-            self.set_weight_unit(unit)
+            self.set_density_unit(unit/unit)
             self.density = 1.0
 
         return self
@@ -116,7 +113,7 @@ class Product(Master):
 
         return self
     
-    def set_weight_unit(self, unit):
+    def set_density_unit(self, unit):
         """ Set unit of measurement for the mass of the product.
 
         Parameters
@@ -124,7 +121,7 @@ class Product(Master):
         unit : ~pod_lca.units.Unit
             Unit of measurement. of mass.
         """
-        self.weight_unit = unit
+        self.density_unit = unit
 
         return self
 
@@ -362,7 +359,7 @@ class Product(Master):
         int or float
             Mass of the product.
         """
-        return self.weight
+        return self.weight * self.density
 
     def get_weight_unit(self):
         """ Retrieve the unit of measurement of mass of the product.
@@ -373,7 +370,7 @@ class Product(Master):
         ~pod_lca.units.Unit
             Unit of measurement of mass of the product.
         """
-        return self.weight_unit
+        return self.unit * self.density_unit
     
     def get_density(self):
         """ Retrieve density of the product.
