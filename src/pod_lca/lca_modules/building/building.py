@@ -455,15 +455,24 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
     def add_component(self, component):
         """ Add a component to the building.
         
-        Returns
-        -------
+        Parameters
+        ----------
         component : BuildingComponent Objs.
-            Structural or fascade element to be added to the building.
+            Structural or envelope element to be added to the building.
         """
         self.get_components().append(component)
         component.set_building(self)
 
         return self
+    
+    def remove_component(self, component):
+        """ Remove component from a building.
+
+        Parameters
+        ----------
+        component : BuildingComponent Objs.
+            Structural or envelope element to be removed from the building."""
+        self.get_components().remove(component)
 
     def update_envelope_surfaces(self):
         for fk in self.floors:
@@ -491,7 +500,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
     # ================================
     # LCA Methods
     # ================================ 
-    def get_impacts(self, scope='all'):
+    def get_impacts(self, scope='all', lc_stage=None):
         """ Get impacts.
          
         Parameters
@@ -503,6 +512,15 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             - 'construction': from A4-A5
             - 'use': from B1-B7
             - 'end of life': C1-C4
+        lc_stage: {'A4', 'A5', 'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
+            Life cycle stage for which the impacts to be calculated. 
+            If None, gives impacts for all the relevant life cycle stages. 
+            Default is None.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Impact
+            LCA Impacts.
         """
         if scope == 'all':
             pass
@@ -513,11 +531,11 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
         elif scope == 'use':
             pass
         elif scope == 'end of life':
-            return self.get_eol_impacts()
+            return self.get_eol_impacts(lc_stage)
         else:
             raise ValueError('LCA scope not recognized')
 
-    def get_emissions(self, scope='all'):
+    def get_emissions(self, scope='all', lc_stage=None):
         """ Get emissions.
          
         Parameters
@@ -529,11 +547,28 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             - 'construction': from A4-A5
             - 'use': from B1-B7
             - 'end of life': C1-C4
+        lc_stage: {'A4', 'A5', 'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
+            Life cycle stage for which the impacts to be calculated. 
+            If None, gives impacts for all the relevant life cycle stages. 
+            Default is None.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            LCA emissions.
         """
         if scope == 'all':
             pass
         elif scope == 'product':
             return self.get_product_emissions()
+        elif scope == 'construction':
+            pass
+        elif scope == 'use':
+            pass
+        elif scope == 'end of life':
+            return self.get_eol_emissions(lc_stage)
+        else:
+            raise ValueError('LCA scope not recognized')
 
 
 if __name__ == '__main__':

@@ -425,7 +425,6 @@ class Master:
         """
         return self.get_project().get_impact_database()
 
-    
     def get_emissions(self):
         """ Retrieve the emissions of the product/process.
 

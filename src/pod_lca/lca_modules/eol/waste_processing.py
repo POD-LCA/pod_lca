@@ -79,10 +79,6 @@ class WasteProcess:
                 - `'Compost'`: transporting to a composting facility.
                 - `'Incinerate'`: transporting to an incinerator.
                 Default to 'Incinerate'. 
-        qty : float
-            Quantity of the parent object subjected to this process.
-        unit : ~pod_lca.units.Unit
-            Unit of measurement.
         life_cycle_stage : {'C3', 'C4', 'D'}
             Life cycle stage of this process.
         linked_process : {None, 'C4', 'D'}  
@@ -97,9 +93,7 @@ class WasteProcess:
 
         waste_process.set_parent(parent)
         waste_process.set_life_cycle_stage(life_cycle_stage)
-        waste_process.set_unit(unit)
         waste_process.set_process_name(process_name)
-        waste_process.set_qty(qty)
 
         parent.get_waste_processes().append(waste_process)
 
@@ -145,54 +139,6 @@ class WasteProcess:
                 - `'Incinerate'`: transporting to an incinerator.
         """
         self.process_name = name
-
-        return self
-            
-    def set_qty(self, qty):
-        """ Set quantity of the parent subjected to this waste process.
-        
-        Parameters
-        ----------
-        qty : float
-            Quantity of the parent object subjected to this process.
-        """
-        self.qty = qty
-
-        if not (self.get_linked_process() is None):
-            if self.get_unit() == self.get_linked_process().get_unit():
-                self.get_linked_process().set_qty(qty)
-            else:
-                self.get_linked_process().set_unit(self.get_unit())
-                self.get_linked_process().set_qty(qty)
-        
-        return self
-
-    def set_unit(self, unit):
-        """ Set unit of measurement for the waste amount processed.
-        
-        Parameters
-        ----------
-        unit : ~pod_lca.units.Unit
-            Unit of measurement.
-
-        Raises
-        ------
-        ValueError
-            New unit incompatible with the existing units.
-        """
-        if self.get_unit() is None:
-            self.unit = unit
-        else:
-            value_in = self.get_qty()
-            unit_in = self.get_unit()
-
-            conversion_factor = unit_in.convert_to(unit)
-
-            if conversion_factor is not None:
-                self.unit = unit
-                self.set_qty(value_in * conversion_factor)
-            else:
-                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 
         return self
 
@@ -301,7 +247,7 @@ class WasteProcess:
             Name identifyer.
         """
         return self.get_parent().get_parent().get_name() + '_' + self.get_process_name()
-        
+
     def get_qty(self):
         """ Get quantity of the parent subjected to this waste process.
         
@@ -310,7 +256,10 @@ class WasteProcess:
         float
             Quantity of the parent object subjected to this process.
         """
-        return self.qty
+        total_waste_quantity = self.get_parent().get_qty()
+        percentage_in_process = self.get_parent().get_process_mix()[self.get_process_name()]
+
+        return total_waste_quantity * percentage_in_process
     
     def get_unit(self):
         """ Get unit of measurement for the waste amount processed.
@@ -320,7 +269,30 @@ class WasteProcess:
         ~pod_lca.units.Unit
             Unit of measurement.
         """        
-        return self.unit
+        return self.get_parent().get_unit()
+      
+    def get_weight(self):
+        """ Get weight of the parent subjected to this waste process.
+        
+        Returns
+        -------
+        float
+            Quantity of the parent object subjected to this process.
+        """
+        total_waste_quantity = self.get_parent().get_weight()
+        percentage_in_process = self.get_parent().get_process_mix()[self.get_process_name()]
+        
+        return total_waste_quantity * percentage_in_process
+    
+    def get_weight_unit(self):
+        """ Get unit of measurement for the weight of waste processed.
+        
+        Returns
+        -------
+        ~pod_lca.units.Unit
+            Unit of measurement.
+        """        
+        return self.get_parent().get_weight_unit()
     
     def get_life_cycle_stage(self):
         """ Retrieve the life cycle stage corresponding to the waste process.

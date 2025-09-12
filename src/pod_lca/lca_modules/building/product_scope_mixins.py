@@ -14,6 +14,9 @@ class ProductScopeMixins:
     """ Methods for calculation of A1-A3 impacts
     """
 
+    # ================================
+    # Database Methods
+    # ================================
     def set_material_database(self, file_path):
         """ Set the impact database for materials (A1-A3).
         
@@ -24,7 +27,12 @@ class ProductScopeMixins:
         """
         if isinstance(file_path, str):
             impact_database = ImpactsDatabase.new("impact database")
-            impact_database.set_data(file_path, additional_headers=['sctg code','eol material', 'Density', 'Density unit'])
+            impact_database.set_data(file_path, additional_headers=['sctg code',
+                                                                    'eol material', 
+                                                                    'bio-based',
+                                                                    'random test',
+                                                                    'Density', 
+                                                                    'Density unit'])
             self.material_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")
@@ -38,7 +46,10 @@ class ProductScopeMixins:
             Impact database object.
         """
         return self.material_impact_database
-        
+
+    # ================================
+    # Inventory Records Methods
+    # ================================        
     def get_product_impacts(self):
         """ Get A1-A3 impacts of the building.
         

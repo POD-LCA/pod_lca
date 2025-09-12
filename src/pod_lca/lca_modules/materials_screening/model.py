@@ -405,7 +405,9 @@ class Model:
         density : float
             Density of the material.
         density_unit : ~pod_lca.units.Unit
-            Units corresponding to material density.              
+            Units corresponding to material density.
+        ignore_transport : bool
+            If true, ignore setting transportation.             
 
         Returns
         -------
@@ -421,7 +423,8 @@ class Model:
             product.set_density(kwargs['density'])
             product.set_density_unit(kwargs['density_unit'])
             
-        product.set_transportation()
+        if not kwargs.get('ignore_transport', False):
+            product.set_transportation()
 
         pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
         product.get_emissions().set_temporal_emission_profile(pulse)

@@ -24,4 +24,4 @@ my_building = my_building.set_template_model(name='template building',
                                            building_data=template_model_data)
 
 print(my_building.get_impacts(scope='product'))
-print(my_building.get_emissions(scope='product'))
+print(my_building.get_emissions(scope='end of life', lc_stage='C3'))

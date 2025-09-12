@@ -78,11 +78,13 @@ class BuildingStructure:
             item = bill_of_materials[key]
             if item['Building Component'] in ['Structure', 'Superstructure', 'Substructure']:
                 building_element = item['Building element']
-                building_material = BuildingMaterial.new_structural_material(parent=structure,
-                                                                             name=item['material'] + '_in_' + building_element, 
-                                                                             qty=float(item['qty']),
-                                                                             unit=UNITS_MAP[item['unit']],
-                                                                             material_database_entry=item['material'])
+                building_material = BuildingMaterial.new_structural_material(
+                    parent=structure,
+                    name=item['material'] + '_in_' + building_element, 
+                    qty=float(item['qty']),
+                    unit=UNITS_MAP[item['unit']],
+                    material_database_entry=item['material']
+                )
                 
                 if building_element in ['Structural Foundations']:
                     component_obj = foundation
@@ -101,6 +103,11 @@ class BuildingStructure:
                     raise NotImplementedError
                     
                 component_obj.add_material(building_material)
+
+        # remove unused component
+        del_list = [comp for comp in building.get_components() if not comp.get_materials()]
+        for component in del_list:
+            building.remove_component(component)
 
         return structure
 

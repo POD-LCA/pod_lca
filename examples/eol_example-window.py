@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from pod_lca.building import Building
 from pod_lca.building import BuildingComponent
+from pod_lca.building import BuildingMaterial
 from pod_lca.impacts import Emissions
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
@@ -20,25 +21,20 @@ my_building.set_eol_database('data/impacts_podlca_eol-impacts.csv')
 my_building.set_transportation_impact_database('data/transportation_podlca_emission.csv')
 
 # add a window to the building
+# TODO try with the database
+wood = BuildingMaterial()
+wood.qty = 4.2
+wood.unit = KILOGRAM
+wood.eol_product = 'Wood'
+
+glass = BuildingMaterial()
+glass.qty = 0.5
+glass.unit = KILOGRAM
+glass.eol_product = 'Glass'
+
 my_timber_window = BuildingComponent.create(name='Window',
                                             building=my_building,
-                                            materials=[None]) # Making a building component from materials not within the scope of EOL
-
-# deconstruct window
-deconstruction_map = {
-                        'Wood':{'qty': 4.2, 'unit': KILOGRAM},
-                        'Glass': {'qty': 0.5, 'unit': KILOGRAM, 'bio_based': False}
-                     }
-my_timber_window.deconstruct(deconstruction_map)
-
-# impacts by material and life cycle stage
-# for waste in my_timber_window.get_waste_products():
-#    print(waste)
-#    for lc_stage, impacts_lst in waste.get_impacts().items():
-#       if impacts_lst:
-#          print(f"Life cycle stage: {lc_stage}")
-#          for impact in impacts_lst:
-#             print(impact) 
+                                            materials=[wood, glass])
 
 # impacts by life cycle stage
 impact_dict = {'C2':Impacts.from_parent(my_timber_window),

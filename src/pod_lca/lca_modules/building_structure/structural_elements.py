@@ -1,8 +1,29 @@
 
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
+
 from ..building import BuildingComponent
 
 
 class StructuralElement(BuildingComponent):
+    """ Super class for all types of structural elements.
+    
+    Attributes
+    ----------
+    floor :
+        Floor to which the element belong.
+    material : list of ~pod_lca.building.BuildingMaterial
+        List of materials the building component made up of.
+    geometry :
+        Geometry of the structural element.
+    supports :
+        Supports of the structural element.
+    loading : 
+        Loading on the structural element.
+    """
 
     def __init__(self):
         super().__init__()

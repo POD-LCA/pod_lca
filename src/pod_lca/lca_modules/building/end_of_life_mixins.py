@@ -13,7 +13,10 @@ from ..transportation import EOLTransportDataset
 
 
 class EndOfLifeMixins:
-    
+
+    # ================================
+    # Database Methods
+    # ================================    
     def set_eol_database(self, file_path, **kwargs):
         """ Set the impact database for end-of-life impacts.
         
@@ -94,11 +97,17 @@ class EndOfLifeMixins:
         return self.eol_transport_dataset
 
     # ================================
-    # EOL Methods
+    # Inventory Records Methods
     # ================================ 
-
     def get_eol_impacts(self, lc_stage=None):
         """ Get C2-C4 impacts of the building.
+
+        Parameters
+        ----------
+        lc_stage: {'C1', 'C2', 'C3', 'C4', None}
+            Life cycle stage for which the impacts to be calculated. 
+            If None, gives impacts for all the relevant life cycle stages. 
+            Default is None.
         
         Returns
         -------
@@ -107,13 +116,14 @@ class EndOfLifeMixins:
         """
         impacts = Impacts.from_parent(self)
         for component in self.get_components():
-            component.deconstruct(component.get_deconstruct_map())
             for waste in component.get_waste_products():
                 if lc_stage is None:
-                    for impact in waste.get_impacts().values():
-                        impacts += impact
+                    for impact_lst in waste.get_impacts().values():
+                        for impact in impact_lst:
+                            impacts += impact
                 else:
-                    impacts += waste.get_impacts()[lc_stage]
+                    for impact in waste.get_impacts()[lc_stage]:
+                        impacts += impact
                             
         # TODO: test with the envelope components
 
@@ -122,6 +132,13 @@ class EndOfLifeMixins:
     def get_eol_emissions(self, lc_stage=None):
         """ Get C2-C4 emissions of the building.
         
+        Parameters
+        ----------
+        lc_stage: {'C1', 'C2', 'C3', 'C4', None}
+            Life cycle stage for which the emissions to be calculated. 
+            If None, gives emissions for all the relevant life cycle stages. 
+            Default is None.
+
         Returns
         -------
         ~pod_lca.impacts.Emissions
@@ -129,14 +146,15 @@ class EndOfLifeMixins:
         """        
         emissions = Emissions.from_parent(self)
         for component in self.get_components():
-            component.deconstruct(component.get_deconstruct_map())
             for waste in component.get_waste_products():
                 if lc_stage is None:
-                    for emission in waste.get_emissions().values():
-                        emissions += emission
+                    for emissions_lst in waste.get_emissions().values():
+                        for emission in emissions_lst:
+                            emissions += emission
                 else:
-                    emissions += waste.get_emissions()[lc_stage]
-                    
+                    for emission in waste.get_emissions()[lc_stage]:
+                        emissions += emission
+                        
         # TODO: test with the envelope components
 
         return emissions

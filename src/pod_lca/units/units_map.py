@@ -54,6 +54,7 @@ UNITS_MAP.update({
                     'kg C': KG_CARBON,
                     'kg CO2': KG_CARBON_DIOXIDE,
                     'kg CO2 eq': KG_CARBON_DIOXIDE,
+                    'kg/m': KILOGRAM / METER,
                     'kg/m3': KILOGRAM / CUBIC_METER,
                     'kg/item': KILOGRAM / ITEM
                 })

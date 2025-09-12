@@ -230,7 +230,7 @@ class Product(Master):
         """ Find the tag used to identify electricity data in the database.
         """
         if self.get_impact_database_entry() is not None:
-            database = self.get_project().get_impact_database()
+            database = self.get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
             
             electricity_tag = None
@@ -492,7 +492,7 @@ class Product(Master):
         self.update_electricity_records()
 
         if self.get_mineral_carbonation_potential() is None and self.get_impact_database_entry() is not None:
-            data_entry = self.get_project().get_impact_database().get_data_entry(self.get_impact_database_entry())
+            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
             key = config['setup']['impacts']['ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER']
             if key in data_entry.index:
                 if isinstance(data_entry[key], (bool, np_bool)):
@@ -523,7 +523,7 @@ class Product(Master):
             if self.get_electricity_database_tag() is None:
                 self.set_electricity_database_tag()
             
-            database = self.get_project().get_impact_database()
+            database = self.get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
 
             electricity_tag = self.get_electricity_database_tag()

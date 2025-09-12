@@ -13,48 +13,61 @@ from ..operational import find_materials
 from ..operational import find_no_mass_materials
 from ..operational import find_gas_materials
 from ..operational import find_glazing_materials
+from ...units import UNITS_MAP
 
 
 class BuildingMaterial(Product):
-
+    """ Subordinate level of construction for building components.
+    
+    Attributes
+    ----------
+    name : str
+        Name of the building material.
+    material_database_entry : str
+        Identifier of LCA database entry corresponding to the material.
+    sctg_code : int
+        SCTG code mapped to the material.
+    eol_product : str
+        End-of-life product name corresponding to the material.
+    density : float
+        Density of the material.
+    
+    """
+    
     def __init__(self):
         super().__init__()
         self.name = None
 
         # LCA attributes
         self.material_database_entry = None
-        self.qty = None
-        self.unit = None
-        self.density = None
         self.sctg_code = None
         self.eol_product = None
+        self.bio_based = None
 
-        # # Operational Energy attributes
-        # self.roughness = None
-        # self.conductivity = None
-        # self.specific_heat = None
-        # self.thermal_absorptance = None
-        # self.solar_absorptance = None
-        # self.visible_absorptance = None
-
-        # impacts
-        self.unit_impacts = None
-        self.unit_emission_inventories = None
-
-
+    # ================================
+    # Constructors
+    # ================================
     @classmethod
     def new_structural_material(cls, parent, name, qty, unit, material_database_entry):
         """ Create new structural material.
         
         Parameters
         ----------
-        
+        parent : ~pod_lca.building.BuildingComponent
+            Building component to whcih the material belong.
+        name : str
+            Name of the product.
+        qty : float
+            Product quantity.
+        unit : ~pod_lca.units.Unit
+            Unit of measurement.            
+        material_database_entry : str
+            Name of the impact database entry from which to use impacts.
         """
         material = cls()
         
         material.set_parent(parent)
         material.set_name(name)
-        material.set_density(material_database_entry)
         material.set_qty(qty)
         material.set_unit(unit)
         material.impacts = Impacts.from_parent(material)
@@ -66,47 +79,108 @@ class BuildingMaterial(Product):
         material.set_impact_database_entry(material_database_entry)
         material.set_sctg_code(material_database_entry)
         material.set_eol_material(material_database_entry)
+        material.set_density(material_database_entry)
 
         return material
 
+    # ================================
+    # Setters
+    # ================================
     def set_parent(self, parent):
+        """ Set the parent building component of the material.
+        
+        Parameters
+        ----------
+        parent : ~pod_lca.building.BuildingComponent
+            Building componet to which the material belong.
+        """
         self.parent = parent
 
         return self
     
     def set_density(self, material_database_entry):
-
+        """ Set the density of the material.
+        
+        Parameters
+        ----------
+        material_database_entry : str
+            Name of the impact database entry from which to use impacts.        
+        """
         database = self.get_impact_database()
         data_entry = database.get_data_entry(material_database_entry)
 
-        density = data_entry['Density']   
-        super().set_density(density)
+        super().set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
 
         return self
     
     def set_sctg_code(self, material_database_entry):
+        """ Set the Standard Classification of Transported Goods (SCTG) code of the material.
 
+        Parameters
+        ----------
+        material_database_entry : str
+            Name of the impact database entry from which to use impacts.        
+        """
         database = self.get_impact_database()
         data_entry = database.get_data_entry(material_database_entry)
         self.sctg_code = data_entry['sctg code']
 
     def set_eol_material(self, material_database_entry):
+        """ Set the end-of-life product corresponding to the material.
 
+        Parameters
+        ----------
+        material_database_entry : str
+            Name of the impact database entry from which to use impacts.        
+        """
         database = self.get_impact_database()
         data_entry = database.get_data_entry(material_database_entry)
         self.eol_product = data_entry['eol material']
+        if 'bio-based' in data_entry:
+            self.bio_based = data_entry['bio-based']
 
+    # ================================
+    # Getters
+    # ================================
     def get_parent(self):
-
+        """ Get the parent building component of the material.
+        
+        Returns
+        -------
+        ~pod_lca.building.BuildingComponent
+            Building componet to which the material belong.
+        """
         return self.parent  
 
     def get_sctg_code(self):
+        """ Get the Standard Classification of Transported Goods (SCTG) code of the material.
 
+        Returns
+        -------
+        str
+            Standard Classification of Transported Goods (SCTG) code.     
+        """
         return self.sctg_code
 
     def get_eol_material(self):
+        """ Get the end-of-life product corresponding to the material.
 
+        Returns
+        -------
+        str
+            End-of-life product name corresponding to the material.      
+        """
         return self.eol_product  
+    
+    def get_bio_based(self):
+        """ Get the bio-based nature of the material.
+        
+        Returns
+        -------
+        bool
+            True if the material is bio-based.   
+        """
+        return self.bio_based
 
     def get_building(self):
         """ Get the building to which this building material belong.
@@ -128,8 +202,6 @@ class BuildingMaterial(Product):
             Impact database object.
         """
         return self.get_building().get_material_impact_database()
-
-
 
     # @classmethod
     # def new_enclosure_material(cls,
@@ -174,12 +246,6 @@ class BuildingMaterial(Product):
     #     material.solar_absorptance   = data['solar_absorptance']
     #     material.visible_absorptance = data['visible_absorptance']
     #     return material
-        
-
-
-    # # TODO add getters and setters ---  Should this inherit from Master Object
-    # def set_qty(self, qty):
-    #     pass
 
 
 class BuildingEnvelopeMaterial(BuildingMaterial):

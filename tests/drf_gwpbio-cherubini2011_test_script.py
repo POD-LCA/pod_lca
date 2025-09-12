@@ -13,6 +13,7 @@ from pod_lca.dynamic_radiative_forcing import UniformEmissionProfile
 from pod_lca.dynamic_radiative_forcing import NormEmissionProfile
 from pod_lca.impacts import Emissions
 from pod_lca.utilities import DataImporter
+from pod_lca.utilities import DataExporter
 from pod_lca.visualizer import LinePlot
 from pod_lca.visualizer import MatplotlibPlotter
 
@@ -95,7 +96,7 @@ for rotation_period in tqdm(rotation_dict):
 
 # print(agwp_ref_dict)
 
-DataImporter.dict_to_csv(output_dict, output_file)
+DataExporter.dict_to_csv(output_dict, output_file)
 
 graph = LinePlot.from_plotter(MatplotlibPlotter)
 graph.draw(plot_dict, "Atmospheric CO2 Record", "Time (years)", "CO2 gas in atmosphere (kg)")

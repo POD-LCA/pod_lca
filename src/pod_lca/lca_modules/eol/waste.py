@@ -205,15 +205,11 @@ class Waste(Product):
                                             lc_stage,
                                             linked_process)
 
-        waste_process_obj.transporation_leg = WasteTransportLeg.from_object(material=waste_process_obj,
-                                                                    manager=self.get_parent().get_eol_manager(),
-                                                                    eol_pathway=process_name)
-
-        if waste_process_obj.transporation_leg.get_travel_dist() > waste_process_obj.transporation_leg.get_cutoff_distance():
-            waste_process_obj.set_qty(0.0)
-            log(f"Waste process {process_name} quantity for {waste_process_obj.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
-
-            return process_qty
+        waste_process_obj.transporation_leg = WasteTransportLeg.from_object(
+            material=waste_process_obj,
+            manager=self.get_parent().get_eol_manager(),
+            eol_pathway=process_name
+        )
 
         return waste_process_obj
         
@@ -337,7 +333,7 @@ class Waste(Product):
             else:
                 return self.process_mix[process_name]
         elif mode == 'actual':
-            self.update_waste_processess()
+            self.update_waste_process_mix()
             process_mix = {}
             for process in self.get_waste_processes():
                 if process.get_linked_process(to=False) is None:
@@ -373,7 +369,7 @@ class Waste(Product):
     def update_inventory_records(self):
         """ Update the transportation and processing impacts of the waste (C2-C4).
         """
-        self.update_waste_processess()
+        self.update_waste_process_mix()
         if self.get_waste_processes():
 
             impacts = self.impacts
@@ -396,8 +392,8 @@ class Waste(Product):
 
         return self
 
-    def update_waste_processess(self):
-        """ Update the waste processess.
+    def update_waste_process_mix(self):
+        """ Update the waste process mix based on cutoof distances.
 
         Notes
         -----
@@ -405,17 +401,16 @@ class Waste(Product):
         """
         process_mix = self.get_process_mix()
 
-        transfer_to_landfill_quantity = 0.0
+        transfer_to_landfill_percentage = 0.0
         landfill_process = None
         existing_processes = []
         # update existing processes
         for process in self.get_waste_processes():
             process_name = process.get_process_name()
             if (process_name in process_mix.keys()) and not (process_name == 'Landfill') and (process.get_linked_process(to=False) is None):
-                new_qty = self.get_qty() * process_mix[process_name]
                 if process.transporation_leg.get_travel_dist() > process.transporation_leg.get_cutoff_distance():
-                    transfer_to_landfill_quantity += new_qty
-                    process.set_qty(0.0)
+                    transfer_to_landfill_percentage += process_mix[process_name]
+                    process_mix[process_name] = 0.0
                     log(f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
             elif process_name == 'Landfill':
                 landfill_process = process
@@ -430,12 +425,11 @@ class Waste(Product):
             if process_qty:
                 result = self.set_waste_process(process_name, process_qty)
                 if isinstance(result, (float, int)):
-                    transfer_to_landfill_quantity += result
+                    transfer_to_landfill_percentage += result
 
         # set landfill process
         if not landfill_process is None:
-            new_qty = self.get_qty() * process_mix['Landfill'] + transfer_to_landfill_quantity
-            landfill_process.set_qty(new_qty)
+            process_mix['Landfill'] += transfer_to_landfill_percentage
 
         return self
     

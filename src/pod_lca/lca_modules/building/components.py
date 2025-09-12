@@ -22,17 +22,16 @@ class BuildingComponent:
         Name of the building.
     building : Building Obj.
         Building to which the component belong.
-    materials : list of material.Model Objs. or Product Objs
+    materials : list of ~pod_lca.building.BuildingMaterial
         Materials making up the component.
-    deconstructed_to : list of Waste Obj.
-        Waste objects to which the component converted to at deconstruction and/or demolition.
+    service_life : float
+        Service life of the component in years.
     """
 
     def __init__(self):
         self.name = None
         self.building = None
         self.materials = []
-        self.deconstructed_to = []
         self.service_life = None
 
     # ================================
@@ -53,7 +52,7 @@ class BuildingComponent:
 
         Returns
         -------
-        BuildingComponent Obj.
+        ~pod_lca.building.BuildingComponent
             Building component created.
         """
         component = cls()
@@ -86,7 +85,7 @@ class BuildingComponent:
         
         Parameters
         ----------
-        building : Building Obj.
+        building : ~pod_lca.building.Building
             Building to which the component belong.
         """
         self.building = building
@@ -98,7 +97,7 @@ class BuildingComponent:
         
         Parameters
         ----------
-        materials : list of material.Model Objs. or Product Objs
+        materials : list of ~pod_lca.building.BuildingMaterial
             Materials making up the component.
         """
         for material in materials:
@@ -123,7 +122,7 @@ class BuildingComponent:
         
         Returns
         -------
-        Building Obj.
+        ~pod_lca.building.Building
             Building to which the component belong.
         """
         return self.building
@@ -133,29 +132,22 @@ class BuildingComponent:
         
         Returns
         -------
-        list of material.Model Objs. or Product Objs
+        list of ~pod_lca.building.BuildingMaterial
             Materials making up the component.
         """
         return self.materials
-    
-    def get_waste_products(self):
-        """ Get the waste products the component was deconstructed/demolished to.
-        """
-        if self.deconstructed_to:
-            return self.deconstructed_to
-        else:
-            raise ValueError(f"The component is not deconstructed and therefore no waste products exist.")
-        
-    def get_eol_manager(self):
-        """ Return the place where end-of-life transport dataset reside.
-        """
-        return self.get_building()
     
     # ================================
     # Methods
     # ================================
     def add_material(self, material):
-
+        """ Add a material to the building component.
+        
+        Parameters
+        ----------
+        material : ~pod_lca.building.BuildingMaterial
+            Material from whcih the component is composed of.
+        """
         self.materials.append(material)
 
         # TODO set A1-A3 impacts / material could be a Model object or a product
@@ -178,50 +170,48 @@ class BuildingComponent:
     # ================================
     # EOL Methods
     # ================================ 
-    def get_deconstruct_map(self):
-        """ Get the materials and quantites the component deconstruct to at the end of life stage.
-        
-        Returns
-        -------
-        dict
-            Deconstruction map in the form of {**End-of-Life product** (:class:`str`) : {**qty**: (:class:`float`), **unit**: (:class:`~pod_lca.units.Unit`)}}
+    def get_eol_manager(self):
+        """ Return the place where end-of-life transport dataset reside.
         """
-        map = {}
-        for material in self.get_materials():
-            map[material.get_eol_material()] = {'qty': material.get_qty(), 'unit': material.get_unit()}
+        return self.get_building()
 
-        return map
-
-    def deconstruct(self, deconstruction_map):
+    def get_waste_products(self):
         """ Deconstruct the building component to waste products as specified in the deconstruction map.
-        
-        Parameters
-        ----------
-        deconstruction_map : dict
-            Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
-        
         """
         eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
-        
-        for key, value in deconstruction_map.items():
-            if eol_mix_data['Material'].isin([key]).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== key].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
+        waste_products = []
+        for material in self.get_materials():
+            eol_material = material.get_eol_material()
+            waste_qty = material.get_weight()
+            waste_unit = material.get_weight_unit()
+            
+            if eol_mix_data['Material'].isin([eol_material]).any():
+                eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
             elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
                 eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
             else:
-                log("A mix doesnt exist", 0) # TODO: test this sequence / shall a hardcode default set here
+                log("A mix doesnt exist", 0)
 
-            if 'bio_based' in value.keys():
-                waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix, bio_based=value['bio_based'])
+            if material.get_bio_based() is not None:
+                waste_obj = Waste.new(self, 
+                                      database_item=eol_material, 
+                                      qty=waste_qty, 
+                                      unit=waste_unit, 
+                                      process_mix=eol_mix, 
+                                      bio_based=material.get_bio_based())
             else:
-                waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix)
-            self.deconstructed_to.append(waste_obj)
+                waste_obj = Waste.new(self, 
+                                        database_item=eol_material, 
+                                        qty=waste_qty, 
+                                        unit=waste_unit, 
+                                        process_mix=eol_mix)
+            waste_products.append(waste_obj)
 
         # delete data
         del eol_mix_data
         gc.collect()
 
-        return self
+        return waste_products
 
 
 if __name__ == '__main__':
