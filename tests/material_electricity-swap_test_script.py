@@ -48,7 +48,8 @@ for test in tqdm(test_dict):
                                     stage="A1", 
                                     qty=qty, 
                                     unit=UNITS_MAP[test_dict[test]['unit']], 
-                                    impacts_from=test_dict[test]['material'])
+                                    impacts_from=test_dict[test]['material'],
+                                    ignore_transport=True)
 
     # my_manufacturing_project.set_year(year)
     product.set_production_year(year)
