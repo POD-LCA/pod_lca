@@ -6,6 +6,7 @@ from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
 from pod_lca.lca_modules.operational import write_idf_from_building
+from pod_lca.lca_modules.location import Location
 from pod_lca.units import METER
 from pod_lca.utilities import config
 from pod_lca.visualizer.plotters.building_plotter import plot_building
@@ -22,21 +23,32 @@ floor_to_floor = 3
 num_floors = 10
 num_below_grade = 4
 
-b = Building()
-for i in range(num_floors):
-    z = (floor_to_floor * i) - (num_below_grade * floor_to_floor)
-    # floor_plan = [[0,0,z], [x,0,z], [x/2,y/2,z]]
-    # floor_plan = [[0,0,z], [x,0,z], [x,y,z], [0,y,z]]
-    # floor_plan = [[0,0,z], [x/2, -y/4, z], [x,0,z], [x,y,z], [0,y,z]]
-    floor_plan = [[0,0,z], [x/2, -y/4, z], [x,0,z], [x,y,z], [x/2, y+(y/4), z], [0,y,z]]
-    b.add_floor(floor_no=i + 1, 
-                floor_plan=floor_plan, 
-                geometry_unit=METER, 
-                floor_height=floor_to_floor, 
-                below_grade= (i < num_below_grade), 
-                on_ground=(i==0),
-                is_last=(i==num_floors-1),
-                )
+my_location = Location.from_str('Seattle, USA')
+b = Building.from_parameters(name='test',
+                             type='commercial',
+                             location=my_location,
+                             built_year=2025,
+                             no_floors=num_floors, 
+                             f2f_height=floor_to_floor, 
+                             floor_plan=[[0,0], [x/2, -y/4], [x,0], [x,y], [x/2, y+(y/4)], [0,y]], 
+                             floors_below_grade=num_below_grade, 
+                             geometry_units=METER)
+
+# b = Building()
+# for i in range(num_floors):
+#     z = (floor_to_floor * i) - (num_below_grade * floor_to_floor)
+#     # floor_plan = [[0,0,z], [x,0,z], [x/2,y/2,z]]
+#     # floor_plan = [[0,0,z], [x,0,z], [x,y,z], [0,y,z]]
+#     # floor_plan = [[0,0,z], [x/2, -y/4, z], [x,0,z], [x,y,z], [0,y,z]]
+#     floor_plan = [[0,0,z], [x/2, -y/4, z], [x,0,z], [x,y,z], [x/2, y+(y/4), z], [0,y,z]]
+#     b.add_floor(floor_no=i + 1, 
+#                 floor_plan=floor_plan, 
+#                 geometry_unit=METER, 
+#                 floor_height=floor_to_floor, 
+#                 below_grade= (i < num_below_grade), 
+#                 on_ground=(i==0),
+#                 is_last=(i==num_floors-1),
+#                 )
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -112,5 +124,5 @@ for fk in b.floors:
 # TODO: Write spaces
 
 
-# plot_building(b)
+plot_building(b)
 write_idf_from_building(b)

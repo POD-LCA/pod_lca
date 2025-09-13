@@ -5,8 +5,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from shapely import Polygon
-
 from . import ConstructionMixins
 from . import EndOfLifeMixins
 from . import ProductScopeMixins
@@ -89,8 +87,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             Number of floors in the building.
         f2f_height : float
             Floor to floor height.
-        floor_plan : shapely.Polygon or list of tuples of float
-            A polygon defining the floor plan geometry.
+        floor_plan : list of tuples of float
+            A polygon defining the floor plan geometry [(x1, y1), (x2, y2), ... , (xn, yn)].
         floors_below_grade : int
             Number of floors below grade.
         geometry_units : ~pod_lca.units.Unit
@@ -108,8 +106,6 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
         building.set_location(location)
         building.set_built_year(built_year)
 
-        if not isinstance(floor_plan, Polygon):
-            floor_no = Polygon(floor_plan)
         if floors_below_grade is None:
             if no_floors > 2:
                 floors_below_grade = 1
@@ -369,19 +365,22 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             Number of floors in the building.
         f2f_height : float
             Floor to floor height.
-        floor_plan : shapely.Polygon or list of tuples of float
-            A polygon defining the floor plan geometry.
+        floor_plan : list of tuples of float
+            A polygon defining the floor plan geometry [(x1, y1), (x2, y2), ... , (xn, yn)].
         floors_below_grade : int
             Number of floors below grade.
         geometry_units : ~pod_lca.units.Unit
             Unit of measurement used in geometry definitions.        
         """
         for num in range(no_floors):
+            z = (f2f_height * num) - (floors_below_grade * f2f_height)
+            floor_plan_poly = [(coords[0], coords[1], z) for coords in floor_plan]
+
             floor_no = num +1
             below_grade = True if floor_no <= floors_below_grade else False
             on_ground = True if floor_no == floors_below_grade + 1 else False
             is_last = True if floor_no == no_floors else False
-            self.add_floor(floor_no, floor_plan, f2f_height, geometry_units, below_grade, on_ground, is_last)
+            self.add_floor(floor_no, floor_plan_poly, f2f_height, geometry_units, below_grade, on_ground, is_last)
 
         return self
 
@@ -392,8 +391,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
         ----------      
         floor_no : int
             Floor number. 
-        floor_plan : shapely.Polygon
-            Floor plan.   
+        floor_plan : list of tuples of float
+            A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].  
         floor_height : float
             Floor height.   
         geometry_unit : ~pod_lca.units.Unit

@@ -20,8 +20,8 @@ class Floor:
         Floor number.
     height : float
         Floor height.   
-    floor_plan : shapely.Polygon
-        Floor plan.    
+    floor_plan : list of tuples of float
+        A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].    
     geometry_unit : ~pod_lca.units.Unit
         Unit of measurement
     is_below_grade : bool
