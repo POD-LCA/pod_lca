@@ -14,7 +14,7 @@ product.set_qty(1)
 product.set_unit(M_TON)
 product.set_sctg_code('01')
 
-destination_state = Location.from_US_state('Arkansas')
+destination_state = Location.from_US_state('Utah')
 origin = Location.from_str('Canada')
 # origin = Location.from_faf_regions(faf_region='Africa')
 

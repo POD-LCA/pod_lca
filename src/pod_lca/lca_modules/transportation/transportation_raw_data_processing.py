@@ -133,7 +133,7 @@ def cfs_preprocessing (input_path, output_path):
     
     cfs = cfs[cfs["EXPORT_YN"] == "N"]
     cfs = cfs[cfs["MODE"].isin([3, 4, 5, 6, 7, 8, 9, 10, 101, 11])]
-    cfs ["SHIPMT_DIST_ROUTED"] = cfs ["SHIPMT_DIST_ROUTED"]* 1.60934
+    cfs ["SHIPMT_DIST_ROUTED"] = cfs ["SHIPMT_DIST_ROUTED"] * 1.60934
 
     cfs.to_csv(output_path, index=False)
     return cfs

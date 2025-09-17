@@ -17,9 +17,21 @@ from ...utilities import log
 
 class USGlobalDataset(TransportDataset):
     """ A class to handle transportation of goods to US from global origins.
+    
+    Attributes
+    ----------
+    force_location : bool
+        If true, when location (origin/destination) not found in the dataset, use closest location.
+    faf : ~pandas.DataFrame
+        Pre-processed dataset from FAF.
+    cfaf : ~pandas.DataFrame
+        Pre-processed dataset from CFAF.
+    marine : ~pandas.DataFrame
+        Marine dataset.
     """
 
     def __init__(self):
+        self.force_location = False
         self.faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
         self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH']) 
         self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_DATA_PATH'])
@@ -139,9 +151,12 @@ class USGlobalDataset(TransportDataset):
         if isinstance(destination, Location):
             faf_filtered = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
             if faf_filtered.empty:
-                closest_state_name, closest_faf_region_codes = Location.get_closest_regions_FAF(origin, faf["dms_dest"].tolist())
-                faf_filtered = faf[faf["dms_dest"].isin(closest_faf_region_codes)]
-                log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+                if self.force_location:
+                    closest_state_name, closest_faf_region_codes = Location.get_closest_regions_FAF(origin, faf["dms_dest"].tolist())
+                    faf_filtered = faf[faf["dms_dest"].isin(closest_faf_region_codes)]
+                    log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+                else:
+                    raise ValueError("Destination not in CFS Dataset.")
             faf = faf_filtered
 
         return faf

@@ -45,7 +45,7 @@ setup:
     MAX_DQS: 5
     MIN_DQS: 1
   utilities:
-    LOG_LEVEL: Warn # Options: Fatal, Error, Warn, Info, Debug, Trace
+    LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
 
 file_paths:
   transportation:

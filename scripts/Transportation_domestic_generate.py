@@ -17,12 +17,25 @@ from pod_lca.utilities import DataExporter
 output_file = "save_files\\transportation_dataset_domestic.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
-
 origin_states = [None] + states_list
 destination_states = [None] + states_list
 
 tranpsort_scenarios = ["National", "Regional_c", "Regional", "Local", "Average"]
-Material_names = DataImporter.csv_to_dict(r'data/transportation_cf_sctg-codes.csv', primary_key='SCTG code')
+Material_names = {
+    '10': {'SCTG code': '10', 'material': 'monumental or building stone'}, 
+    '11': {'SCTG code': '11', 'material': 'natural sands'}, 
+    '12': {'SCTG code': '12', 'material': 'gravel and crushed stone (excludes dolomite and slate)'}, 
+    '13': {'SCTG code': '13', 'material': 'other non-metallic minerals not elsewhere classified'}, 
+    '19': {'SCTG code': '19', 'material': 'other coal and petroleum products, not elsewhere classified'}, 
+    '23': {'SCTG code': '23', 'material': 'other chemical products and preparations'}, 
+    '24': {'SCTG code': '24', 'material': 'plastics and rubber'}, 
+    '25': {'SCTG code': '25', 'material': 'logs and other wood in the rough'}, 
+    '26': {'SCTG code': '26', 'material': 'wood products'}, 
+    '31': {'SCTG code': '31', 'material': 'non-metallic mineral products'}, 
+    '32': {'SCTG code': '32', 'material': 'base metal in primary or semi-finished forms and in finished basic shapes'}, 
+    '33': {'SCTG code': '33', 'material': 'articles of base metal'}, 
+    '34': {'SCTG code': '34', 'material': 'machinery'}
+}
 qty = 1
 unit = M_TON
 
@@ -30,6 +43,7 @@ travel_modes = ["Truck", "Rail", "Air", "Barge", "E_Truck"]
 travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USDomesticTransportationManager.new("Building A")
+project.get_dataset().force_location = False # Stops defaulting to closest state
 project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
@@ -53,7 +67,10 @@ for sctg_code, material in Material_names.items():
         for destination_state in destination_states:
             origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
             destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
-            scenarios = tranpsort_scenarios if (destination_state is None or  origin_state_obj is None) else ["Average"]
+            scenarios = tranpsort_scenarios if origin_state_obj is None else ["Average"]
+
+            if destination_state_obj is None:
+                continue
             
             project.add_good(product, 
                             None,
@@ -80,20 +97,22 @@ for sctg_code, material in Material_names.items():
                             else:
                                 electricity_consumption = 0.0
                         except:
-                            distance = 'NO DATA'
-                            RTT = 'NO DATA'
-                            impacts = None
-                            emissions = None
-                            electricity_consumption = 'NO DATA'
+                            continue
+                            # distance = 'NO DATA'
+                            # RTT = 'NO DATA'
+                            # impacts = None
+                            # emissions = None
+                            # electricity_consumption = 'NO DATA'
 
                         output_dict[str(sequence_no)] = {  
-                            'SCTG description': material,
-                            'scenario': scenario,
+                            'Material': material,
+                            'SCTG code': product.get_sctg_code(digits=2),
+                            'Scenario scope': 'Domestic',
+                            'scenario': 'US_Average' if scenario == 'Average' else scenario,
                             'destination state':destination_state, 
                             'origin state': origin_state,
                             'FAF foreign zone': 'N/A',
                             'dms_orig_port': 'N/A',
-                            'SCTG code': product.get_sctg_code(digits=2), 
                             'domestic mode': travel_mode, 
                             'domestic mode efficiency': eff,
                             'domestic distance (km)': distance,
