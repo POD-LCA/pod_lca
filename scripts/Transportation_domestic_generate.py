@@ -18,7 +18,7 @@ output_file = "save_files\\transportation_dataset_domestic.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 origin_states = [None] + states_list
-destination_states = [None] + states_list
+destination_states = states_list
 
 tranpsort_scenarios = ["National", "Regional_c", "Regional", "Local", "Average"]
 Material_names = {
@@ -68,9 +68,6 @@ for sctg_code, material in Material_names.items():
             origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
             destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
             scenarios = tranpsort_scenarios if origin_state_obj is None else ["Average"]
-
-            if destination_state_obj is None:
-                continue
             
             project.add_good(product, 
                             None,

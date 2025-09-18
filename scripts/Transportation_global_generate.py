@@ -15,7 +15,7 @@ from pod_lca.utilities import DataImporter
 from pod_lca.utilities import DataExporter
 
 
-output_file = "save_files\\transportation_dataset_global_temp.csv"
+output_file = "save_files\\transportation_dataset_global.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 
@@ -27,10 +27,24 @@ origin_locations = ['Canada',
                     'SW & Central Asia', 
                     'Eastern Asia', 
                     'SE Asia & Oceania']
-destination_states = [None] + states_list
+destination_states = states_list
 
 tranpsort_scenarios = ["Global"]
-Material_names = DataImporter.csv_to_dict(r'data/transportation_cf_sctg-codes.csv', primary_key='SCTG code')
+Material_names = {
+    '10': {'SCTG code': '10', 'material': 'monumental or building stone'}, 
+    '11': {'SCTG code': '11', 'material': 'natural sands'}, 
+    '12': {'SCTG code': '12', 'material': 'gravel and crushed stone (excludes dolomite and slate)'}, 
+    '13': {'SCTG code': '13', 'material': 'other non-metallic minerals not elsewhere classified'}, 
+    '19': {'SCTG code': '19', 'material': 'other coal and petroleum products, not elsewhere classified'}, 
+    '23': {'SCTG code': '23', 'material': 'other chemical products and preparations'}, 
+    '24': {'SCTG code': '24', 'material': 'plastics and rubber'}, 
+    '25': {'SCTG code': '25', 'material': 'logs and other wood in the rough'}, 
+    '26': {'SCTG code': '26', 'material': 'wood products'}, 
+    '31': {'SCTG code': '31', 'material': 'non-metallic mineral products'}, 
+    '32': {'SCTG code': '32', 'material': 'base metal in primary or semi-finished forms and in finished basic shapes'}, 
+    '33': {'SCTG code': '33', 'material': 'articles of base metal'}, 
+    '34': {'SCTG code': '34', 'material': 'machinery'}
+}
 qty = 1
 unit = M_TON
 
@@ -38,6 +52,7 @@ travel_modes = ["Truck", "Rail", "Ocean", "Air"]
 travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USGlobalTransportationManager.new("Building A")
+project.get_dataset().force_location = False # Stops defaulting to closest state
 project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
@@ -99,21 +114,23 @@ for sctg_code, material in Material_names.items():
                                     else:
                                         electricity_consumption = 0.0
                                 except:
-                                    foreign_distance = 'NO DATA'
-                                    domestic_distance = 'NO DATA'
-                                    RTT = 'NO DATA'
-                                    impacts = None
-                                    emissions = None
-                                    electricity_consumption = 'NO DATA'
+                                    continue
+                                    # foreign_distance = 'NO DATA'
+                                    # domestic_distance = 'NO DATA'
+                                    # RTT = 'NO DATA'
+                                    # impacts = None
+                                    # emissions = None
+                                    # electricity_consumption = 'NO DATA'
 
                                 output_dict[str(sequence_no)] = {  
-                                    'SCTG description': material,
-                                    'scenario': scenario,
+                                    'Material': material,
+                                    'SCTG code': product.get_sctg_code(digits=2),
+                                    'Scenario scope': 'Global',
+                                    'scenario': 'US_Average' if scenario == 'Average' else scenario,
                                     'destination state':destination_state,
                                     'origin state': 'N/A',
                                     'FAF foreign zone': origin,
                                     'dms_orig_port': domestic_port,
-                                    'SCTG code': product.get_sctg_code(digits=2), 
                                     'foreign mode': foreign_travel_mode,
                                     'domestic mode': local_travel_mode,
                                     'domestic mode efficiency': local_travel_eff,
@@ -144,4 +161,4 @@ for sctg_code, material in Material_names.items():
         print(f"\n Backup written at {time.strftime('%H:%M:%S')}")
 
 
-DataExporter.dict_to_csv(output_dict, output_file)
+# DataExporter.dict_to_csv(output_dict, output_file)
