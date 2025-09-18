@@ -136,5 +136,3 @@ for sctg_code, material in Material_names.items():
 
     DataExporter.dict_to_csv(output_dict, output_file, append=True)
     print(f"\n Backup written at {time.strftime('%H:%M:%S')}")
-
-DataExporter.dict_to_csv(output_dict, output_file)
