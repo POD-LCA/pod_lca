@@ -6,5 +6,6 @@
     "floor_plan":[[0.0 , 0.0], [0.0, 80.0], [30.0, 80.0], [30.0, 0.0]],
     "floors_below_grade":1,
     "wwr":0.7,
-    "geometry_units":"m"
+    "geometry_units":"m",
+    "logistic_type":"local"
 }

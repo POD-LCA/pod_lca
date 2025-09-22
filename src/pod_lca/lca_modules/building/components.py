@@ -126,7 +126,7 @@ class BuildingComponent:
             Building to which the component belong.
         """
         return self.building
-
+    
     def get_materials(self):
         """ Get the materials constituiting the building component.
         
@@ -150,22 +150,13 @@ class BuildingComponent:
         """
         self.materials.append(material)
 
+        if material.get_parent() is None:
+            material.set_parent(self.get_building())
+        material.set_transportation()
+
         # TODO set A1-A3 impacts / material could be a Model object or a product
         # TODO: add a output product to material models
         return self
-
-    # ================================
-    # Transportation Methods
-    # ================================ 
-    def set_transportation_inward(self, material):
-
-        pass # TODO: pick ProjectLogisticManager Obj. and set transportation link to each of the material inputs
-             # and add them to the impacts directory of the components
-
-    def set_transportation_outward(self, waste):
-
-        pass # TODO: pick ProjectLogisticManager Obj. and set transportation link to each of the material inputs
-             # and add them to the impacts directory of the components    
 
     # ================================
     # EOL Methods

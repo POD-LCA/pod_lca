@@ -14,7 +14,7 @@ my_building = Building()
 
 my_building.set_material_database(file_path='data\impacts_podlca_building-materials-data.csv')
 my_building.set_eol_database(file_path='data/impacts_podlca_eol-impacts.csv')
-my_building.set_transportation_impact_database(file_path='data/transportation_podlca_emission.csv')
+my_building.set_transportation_mode_impact_database(file_path='data/transportation_podlca_emission.csv')
 
 my_building = my_building.set_template_model(name='template building', 
                                            type='Commercial', 
@@ -23,5 +23,5 @@ my_building = my_building.set_template_model(name='template building',
                                            file_path=template_model_path, 
                                            building_data=template_model_data)
 
-print(my_building.get_impacts(scope='product'))
-print(my_building.get_emissions(scope='end of life', lc_stage='C3'))
+print(my_building.get_impacts(scope='transportation'))
+print(my_building.get_emissions(scope='transportation'))

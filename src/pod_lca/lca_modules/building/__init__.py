@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 from .end_of_life_mixins import EndOfLifeMixins
 from .product_scope_mixins import ProductScopeMixins
-from .construction_mixins import ConstructionMixins
+from .transportation_mixins import TransportationMixins
 from .floor import Floor
 from .building_material import BuildingMaterial
 from .building_material import BuildingEnvelopeMaterial

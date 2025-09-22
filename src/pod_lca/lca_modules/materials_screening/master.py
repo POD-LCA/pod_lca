@@ -56,6 +56,7 @@ class Master:
 
     def __init__(self):
         self.id = None
+        self.parent = None
         self.model = None
         self.name = None
         self.life_cycle_stage = None
@@ -214,8 +215,6 @@ class Master:
         """
         self.impact_database_entry = database_item
 
-        database = self.get_impact_database()
-
         if database_item is None:
             self.inventories_declared_unit = self.get_unit()
             self.inventories_declared_qty = 1.0
@@ -231,6 +230,8 @@ class Master:
 
             log(f'Impacts not assigned for the item {self.get_name()}.', 'Warn')
         else:
+            database = self.get_impact_database()
+            
             unit_inventories = database.get_data_entry(self.get_impact_database_entry())
             self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
             self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
@@ -492,7 +493,17 @@ class Master:
         ~pod_lca.materials_screening.Project
             Corresponding project.
         """
-        return self.get_model().get_project() 
+        return self.get_model().get_project()
+    
+    def get_parent(self):
+        """ Get the parent of the object.
+        
+        Retruns
+        -------
+        ~pod_lce.materials_screening.Model
+            Parent of the object.
+        """
+        return self.model
     
     # ================================
     # Methods

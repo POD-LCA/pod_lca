@@ -59,7 +59,7 @@ class Product(Master):
                             'by_location': None, 
                             '_current': None, 
                             '_tag':None}
-        self.density = 1.0 # the weight of 1 unit of prodcut
+        self.density = None
         self.density_unit = None
         self.mineral_carbonation_potential = None
         self.is_material = True
@@ -180,7 +180,7 @@ class Product(Master):
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
-        if not self.get_unit().get_qty_measured() == 'mass':
+        if (not self.get_unit().get_qty_measured() == 'mass') and (self.get_density() is None):
             self.set_density()
 
         if travel_dist is None:
@@ -190,7 +190,7 @@ class Product(Master):
         
         dist_unit = KILOMETER if dist_unit is None else dist_unit
 
-        transportation_manager = self.get_model().get_transportation_manager()
+        transportation_manager = self.get_transportation_manager()
         if transportation_manager.get_impact_database() is not None:
             transportation_manager.add_good(self, 
                                             travel_dist=travel_dist,
@@ -422,6 +422,16 @@ class Product(Master):
             Unit of measurement of the denisty of product.
         """
         return self.density_unit
+    
+    def get_transportation_manager(self):
+        """ Get the transportation manager corresponding to the product.
+        
+        Returns
+        -------
+        ~pod_lca.transportation.TransportationManager
+            Transportation manager
+        """
+        return self.get_model().get_transportation_manager()
       
     def get_transportation(self):
         """ Retrieve transport processes the product is subject to, if any.
@@ -431,7 +441,7 @@ class Product(Master):
         list of ~pod_lca.transportation.TransportationLeg
             Transportation legs the product is subject to.
         """
-        transportation_manager = self.get_model().get_transportation_manager()
+        transportation_manager = self.get_transportation_manager()
 
         return transportation_manager.get_link(self)
 

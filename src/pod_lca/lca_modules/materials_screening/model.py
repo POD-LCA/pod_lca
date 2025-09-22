@@ -35,6 +35,8 @@ class Model:
         Project on which the calculator operates.
     name : str
         Name of the model.
+    location : ~pod_lca.location.Location
+        Location of the project.
     processes : list of ~pod_lca.materials_screening.Process
         Processes in the model.
     products : list of ~pod_lca.materials_screening.Product
@@ -52,6 +54,7 @@ class Model:
     def __init__(self):
         self.project = None
         self.name = None
+        self.location = None
         self.processes = []
         self.products = []
         self.transportation_manager = None
@@ -101,6 +104,7 @@ class Model:
         else:
             model.set_name(f"Model_{len(project.models)}")
 
+        model.set_location(project.get_location())
         model.set_transportation_manager(transport_scope)
         if project.get_transportation_mode_impact_database() is not None:
             model.get_transportation_manager().set_impact_database(project.get_transportation_mode_impact_database())
@@ -216,7 +220,19 @@ class Model:
         self.name = name
 
         return self
-    
+
+    def set_location(self, location):
+        """ Set the location of the model.
+        
+        Parameters
+        ----------
+        location : ~pod_lca.location.Location
+            Location of the model.
+        """
+        self.location = location
+
+        return self
+   
     def set_transportation_manager(self, logistic_type='local'):
         """ Set the logistics manager of the model.
         
@@ -264,6 +280,16 @@ class Model:
         """
         return self.name
 
+    def get_location(self):
+        """ Retrieve the location of the model.
+        
+        Returns
+        -------
+        ~pod_lca.location.Location
+            Location of the model.
+        """
+        return self.location
+    
     def get_processes(self):
         """ Retrieve all the processes in the model.
 

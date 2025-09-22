@@ -13,6 +13,7 @@ from pod_lca.dynamic_radiative_forcing import UniformEmissionProfile
 from pod_lca.dynamic_radiative_forcing import NormEmissionProfile
 from pod_lca.impacts import Emissions
 from pod_lca.utilities import DataImporter
+from pod_lca.utilities import DataExporter
 
 test_data = r'tests/drf_test_gwpbio-guest2012-100yr-test-values.csv' # select for 100 yr or 500 yr time horizon
 output_file = r'tests/drf_test_gwpbio-guest2012-100yr-report.csv'
@@ -90,4 +91,4 @@ for rotation_period in tqdm(rotation_dict):
 
 # print(agwp_ref_dict)
 
-DataImporter.dict_to_csv(output_dict, output_file)
+DataExporter.dict_to_csv(output_dict, output_file)

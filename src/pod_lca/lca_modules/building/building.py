@@ -5,10 +5,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from . import ConstructionMixins
 from . import EndOfLifeMixins
-from . import ProductScopeMixins
 from . import Floor
+from . import ProductScopeMixins
+from . import TransportationMixins
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ...units import METER
@@ -17,7 +17,7 @@ from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
+class Building (EndOfLifeMixins, TransportationMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
@@ -64,13 +64,13 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
         self.transport_impact_database = None
         self.eol_impact_database = None
         self.eol_transport_dataset = None
-        self.transportation_in = None
+        self.transportation_manager = None
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def from_parameters(cls, name, type, location, built_year, no_floors, f2f_height, floor_plan, floors_below_grade=None, geometry_units=METER):
+    def from_parameters(cls, name, type, location, built_year, no_floors, f2f_height, floor_plan, floors_below_grade=None, geometry_units=METER, logistic_type='local'):
         """ Build a building.
         
         Parameters
@@ -93,6 +93,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             Number of floors below grade.
         geometry_units : ~pod_lca.units.Unit
             Unit of measurement used in geometry definitions.
+        logistic_type : {'local', 'global'}
+            Transportation scope of the building material in construction.
         
         Returns
         -------
@@ -113,6 +115,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
                 floors_below_grade = 0
 
         building.add_floors(no_floors, f2f_height, floor_plan, floors_below_grade, geometry_units)
+
+        building.set_transportation_manager(logistic_type)
 
         building.make_structure('from geometry')
         building.make_envelope()
@@ -150,7 +154,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
         return building
 
     @classmethod
-    def from_geometry(cls, name, type, location, built_year, geometry):
+    def from_geometry(cls, name, type, location, built_year, geometry, logistic_type='local'):
         """ Build a building.
         
         Parameters
@@ -165,6 +169,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             Built year of the building.
         geometry : 
             Geometry details of the building
+        logistic_type : {'local', 'global'}
+            Transportation scope of the building material in construction.
 
         Returns
         -------
@@ -177,6 +183,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
         building.set_building_type(type)
         building.set_location(location)
         building.set_built_year(built_year)
+
+        building.set_transportation_manager(logistic_type)
 
         building.make_structure()
         building.make_envelope()
@@ -270,6 +278,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
                         building_data['floor_plan'], 
                         building_data['floors_below_grade'], 
                         UNITS_MAP[building_data['geometry_units']])
+        
+        self.set_transportation_manager(building_data['logistic_type'])
 
         self.make_structure('from template', template_bom=file_path)
         self.make_envelope()    
@@ -508,10 +518,11 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             Scope of impacts
             - 'all': from A-C
             - 'product': from A1-A3
-            - 'construction': from A4-A5
+            - 'transportation': A4
+            - 'construction': A5
             - 'use': from B1-B7
             - 'end of life': C1-C4
-        lc_stage: {'A4', 'A5', 'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
+        lc_stage: {'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
             Life cycle stage for which the impacts to be calculated. 
             If None, gives impacts for all the relevant life cycle stages. 
             Default is None.
@@ -525,6 +536,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             pass
         elif scope == 'product':
             return self.get_product_impacts()
+        elif scope == 'transportation':
+            return self.get_transportation_impacts()
         elif scope == 'construction':
             pass
         elif scope == 'use':
@@ -543,10 +556,11 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             Scope of impacts
             - 'all': from A-C
             - 'product': from A1-A3
-            - 'construction': from A4-A5
+            - 'transportation: A4
+            - 'construction': A5
             - 'use': from B1-B7
             - 'end of life': C1-C4
-        lc_stage: {'A4', 'A5', 'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
+        lc_stage: {'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
             Life cycle stage for which the impacts to be calculated. 
             If None, gives impacts for all the relevant life cycle stages. 
             Default is None.
@@ -560,6 +574,8 @@ class Building (EndOfLifeMixins, ConstructionMixins, ProductScopeMixins):
             pass
         elif scope == 'product':
             return self.get_product_emissions()
+        elif scope == 'transportation':
+            return self.get_transportation_emissions()
         elif scope == 'construction':
             pass
         elif scope == 'use':

@@ -31,7 +31,6 @@ class BuildingMaterial(Product):
         End-of-life product name corresponding to the material.
     density : float
         Density of the material.
-    
     """
     
     def __init__(self):
@@ -152,16 +151,16 @@ class BuildingMaterial(Product):
         """
         return self.parent  
 
-    def get_sctg_code(self):
-        """ Get the Standard Classification of Transported Goods (SCTG) code of the material.
-
+    def get_project(self):
+        """ Get the project (building) of the component.
+        
         Returns
         -------
-        str
-            Standard Classification of Transported Goods (SCTG) code.     
+        ~pod_lca.building.Building
+            Building project to which the component belong.
         """
-        return self.sctg_code
-
+        return self.get_parent().get_parent()
+    
     def get_eol_material(self):
         """ Get the end-of-life product corresponding to the material.
 
@@ -190,7 +189,6 @@ class BuildingMaterial(Product):
         ~pod_lca.building.Building
             Building to which this building material belong.       
         """
-
         return self.get_parent().get_parent()
     
     def get_impact_database(self):
@@ -203,6 +201,16 @@ class BuildingMaterial(Product):
         """
         return self.get_building().get_material_impact_database()
 
+    def get_transportation_manager(self):
+        """ Get the transportation manager corresponding to the product.
+        
+        Returns
+        -------
+        ~pod_lca.transportation.TransportationManager
+            Transportation manager
+        """
+        return self.get_building().get_transportation_manager()
+    
     # @classmethod
     # def new_enclosure_material(cls,
     #                            name,

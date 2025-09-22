@@ -12,12 +12,14 @@ from pod_lca.impacts import Impacts
 from pod_lca.location import Location
 from pod_lca.units import KILOGRAM
 
+# TODO: Change this to a template model
+
 # create building
 my_land_plot = Location.from_str("98126, Seattle")
 
 my_building = Building()
 my_building.set_eol_database('data/impacts_podlca_eol-impacts.csv')
-my_building.set_transportation_impact_database('data/transportation_podlca_emission.csv')
+my_building.set_transportation_mode_impact_database('data/transportation_podlca_emission.csv')
 
 # add a window to the building
 bamboo = BuildingMaterial()
