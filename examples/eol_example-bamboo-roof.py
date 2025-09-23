@@ -6,7 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.building import Building
-from pod_lca.building import BuildingComponent
+from pod_lca.building import Assembly
 from pod_lca.building import BuildingMaterial
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
@@ -27,9 +27,9 @@ bamboo.qty = 538
 bamboo.unit = KILOGRAM
 bamboo.eol_product = 'Bamboo'
 
-my_bamboo_roof = BuildingComponent.create(name='Bamboo Roof', 
+my_bamboo_roof = Assembly.create(name='Bamboo Roof', 
                                           building=my_building,
-                                          materials=[bamboo]) # Making a building component from materials not within the scope of EOL
+                                          materials=[bamboo]) # Making a building assembly from materials not within the scope of EOL
 
 # impacts by cycle stage
 impact_dict = {'C2':Impacts.from_parent(my_bamboo_roof),

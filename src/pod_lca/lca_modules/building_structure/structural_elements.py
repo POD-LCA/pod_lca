@@ -5,10 +5,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ..building import BuildingComponent
+from ..building import Assembly
 
 
-class StructuralElement(BuildingComponent):
+class StructuralElement(Assembly):
     """ Super class for all types of structural elements.
     
     Attributes
@@ -16,7 +16,7 @@ class StructuralElement(BuildingComponent):
     floor :
         Floor to which the element belong.
     material : list of ~pod_lca.building.BuildingMaterial
-        List of materials the building component made up of.
+        List of materials the building assembly made up of.
     geometry :
         Geometry of the structural element.
     supports :

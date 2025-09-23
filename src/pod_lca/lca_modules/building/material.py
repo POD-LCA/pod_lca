@@ -16,8 +16,8 @@ from ..operational import find_glazing_materials
 from ...units import UNITS_MAP
 
 
-class BuildingMaterial(Product):
-    """ Subordinate level of construction for building components.
+class Material(Product):
+    """ Material (contextual) that makes up assemblies in the building.
     
     Attributes
     ----------
@@ -52,8 +52,8 @@ class BuildingMaterial(Product):
         
         Parameters
         ----------
-        parent : ~pod_lca.building.BuildingComponent
-            Building component to whcih the material belong.
+        parent : ~pod_lca.building.Assembly
+            Assembly to whcih the material belong.
         name : str
             Name of the product.
         qty : float
@@ -86,11 +86,11 @@ class BuildingMaterial(Product):
     # Setters
     # ================================
     def set_parent(self, parent):
-        """ Set the parent building component of the material.
+        """ Set the parent building assembly of the material.
         
         Parameters
         ----------
-        parent : ~pod_lca.building.BuildingComponent
+        parent : ~pod_lca.building.Assembly
             Building componet to which the material belong.
         """
         self.parent = parent
@@ -142,22 +142,22 @@ class BuildingMaterial(Product):
     # Getters
     # ================================
     def get_parent(self):
-        """ Get the parent building component of the material.
+        """ Get the parent building assembly of the material.
         
         Returns
         -------
-        ~pod_lca.building.BuildingComponent
+        ~pod_lca.building.Assembly
             Building componet to which the material belong.
         """
         return self.parent  
 
     def get_project(self):
-        """ Get the project (building) of the component.
+        """ Get the project (building) of the assembly.
         
         Returns
         -------
         ~pod_lca.building.Building
-            Building project to which the component belong.
+            Building project to which the assembly belong.
         """
         return self.get_parent().get_parent()
     
@@ -256,7 +256,7 @@ class BuildingMaterial(Product):
     #     return material
 
 
-class BuildingEnvelopeMaterial(BuildingMaterial):
+class BuildingEnvelopeMaterial(Material):
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
@@ -284,7 +284,7 @@ class BuildingEnvelopeMaterial(BuildingMaterial):
         return material
 
 
-class BuildingEnvelopeMaterialNoMass(BuildingMaterial):
+class BuildingEnvelopeMaterialNoMass(Material):
     def __init__(self):
         super().__init__()  
         self.name                = None
@@ -306,7 +306,7 @@ class BuildingEnvelopeMaterialNoMass(BuildingMaterial):
         return material
     
 
-class WindowMaterialGlazing(BuildingMaterial):
+class WindowMaterialGlazing(Material):
 
     def __init__(self):
         super().__init__()  

@@ -13,19 +13,19 @@ from ...utilities import DataImporter
 from ...utilities import log
 
 
-class BuildingComponent:
-    """ Building object to keep track of the building materials flow (i.e., embodied energy component).
+class Assembly:
+    """ Assemblies which the building is made up of.
 
     Attributes
     ----------
     name : str
         Name of the building.
     building : Building Obj.
-        Building to which the component belong.
+        Building to which the assembly belong.
     materials : list of ~pod_lca.building.BuildingMaterial
-        Materials making up the component.
+        Materials making up the assembly.
     service_life : float
-        Service life of the component in years.
+        Service life of the assembly in years.
     """
 
     def __init__(self):
@@ -39,66 +39,66 @@ class BuildingComponent:
     # ================================        
     @classmethod
     def create(cls, name, building, materials=None):
-        """ Create a building component from its constituent materials.
+        """ Create a building assembly from its constituent materials.
         
         Parameters
         ----------
         name : str
-            Name of the component.
+            Name of the assembly.
         building : ~pod_lca.building.Building
-            Building to which the component belong
+            Building to which the assembly belong
         materials : list of material.Model  or Product Objs
-            Materials making up the component.
+            Materials making up the assembly.
 
         Returns
         -------
-        ~pod_lca.building.BuildingComponent
-            Building component created.
+        ~pod_lca.building.Assembly
+            Building assembly created.
         """
-        component = cls()
+        assembly = cls()
 
-        component.set_name(name)
+        assembly.set_name(name)
         if materials is not None:
-            component.set_materials(materials)
+            assembly.set_materials(materials)
 
-        building.add_component(component)
+        building.add_assembly(assembly)
 
-        return component
+        return assembly
 
     # ================================
     # Setters
     # ================================  
     def set_name(self, name):
-        """ Set the name of the building component.
+        """ Set the name of the building assembly.
 
         Parameters
         ----------
         name : str
-            Name of the building component.
+            Name of the building assembly.
         """
         self.name = name
 
         return self
     
     def set_building(self, building):
-        """ Set the building of the component.
+        """ Set the building of the assembly.
         
         Parameters
         ----------
         building : ~pod_lca.building.Building
-            Building to which the component belong.
+            Building to which the assembly belong.
         """
         self.building = building
 
         return self
     
     def set_materials(self, materials):
-        """ Set the materials constituiting the building component.
+        """ Set the materials constituiting the building assembly.
         
         Parameters
         ----------
         materials : list of ~pod_lca.building.BuildingMaterial
-            Materials making up the component.
+            Materials making up the assembly.
         """
         for material in materials:
             self.add_material(material)
@@ -108,32 +108,32 @@ class BuildingComponent:
     # Getters
     # ================================
     def get_name(self):
-        """ Get the name of the building component.
+        """ Get the name of the building assembly.
 
         Returns
         -------
         str
-            Name of the building component.
+            Name of the building assembly.
         """
         return self.name
 
     def get_building(self):
-        """ Get the building of the component.
+        """ Get the building of the assembly.
         
         Returns
         -------
         ~pod_lca.building.Building
-            Building to which the component belong.
+            Building to which the assembly belong.
         """
         return self.building
     
     def get_materials(self):
-        """ Get the materials constituiting the building component.
+        """ Get the materials constituiting the building assembly.
         
         Returns
         -------
         list of ~pod_lca.building.BuildingMaterial
-            Materials making up the component.
+            Materials making up the assembly.
         """
         return self.materials
     
@@ -141,12 +141,12 @@ class BuildingComponent:
     # Methods
     # ================================
     def add_material(self, material):
-        """ Add a material to the building component.
+        """ Add a material to the building assembly.
         
         Parameters
         ----------
         material : ~pod_lca.building.BuildingMaterial
-            Material from whcih the component is composed of.
+            Material from whcih the assembly is composed of.
         """
         self.materials.append(material)
 
@@ -167,7 +167,7 @@ class BuildingComponent:
         return self.get_building()
 
     def get_waste_products(self):
-        """ Deconstruct the building component to waste products as specified in the deconstruction map.
+        """ Deconstruct the building assembly to waste products as specified in the deconstruction map.
         """
         eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
         waste_products = []

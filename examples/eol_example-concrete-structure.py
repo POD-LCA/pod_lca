@@ -6,7 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.building import Building
-from pod_lca.building import BuildingComponent
+from pod_lca.building import Assembly
 from pod_lca.building import BuildingMaterial
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
@@ -25,7 +25,7 @@ concrete.qty = 4.100000
 concrete.unit = KILOGRAM
 concrete.eol_product = 'Concrete'
 
-my_concrete_structure = BuildingComponent.create(name='Structure', 
+my_concrete_structure = Assembly.create(name='Structure', 
                                                  building=my_building, 
                                                  materials=[concrete]) 
 

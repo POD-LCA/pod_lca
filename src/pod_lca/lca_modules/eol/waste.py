@@ -20,7 +20,7 @@ class Waste(Product):
     
     Attributes
     ----------
-    parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+    parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
         The thing being was converted to waste.
     waste_processes : list of ~pod_lca.eol.WasteProcess
         List of processes the waste will be subjected to. These processes are in parallel.
@@ -66,7 +66,7 @@ class Waste(Product):
         
         Parameters
         ----------
-        parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+        parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         database_item : str
             Material name corresponding to the database entry which gives the unit impact of the product.
@@ -107,7 +107,7 @@ class Waste(Product):
         
         Parameters
         ----------
-        parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+        parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         """
         self.parent = parent
@@ -284,7 +284,7 @@ class Waste(Product):
     
         Returns
         -------
-        ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+        ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         """
         return self.parent

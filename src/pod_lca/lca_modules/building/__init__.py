@@ -10,13 +10,13 @@ from .product_scope_mixins import ProductScopeMixins
 from .transportation_mixins import TransportationMixins
 from .construction_mixins import ConstructionMixins
 from .floor import Floor
-from .building_material import BuildingMaterial
-from .building_material import BuildingEnvelopeMaterial
-from .building_material import BuildingEnvelopeMaterialNoMass
-from .building_material import WindowMaterialGlazing
-from .building_material import WindowMaterialGas
-from .components import BuildingComponent
+from .material import Material
+from .material import BuildingEnvelopeMaterial
+from .material import BuildingEnvelopeMaterialNoMass
+from .material import WindowMaterialGlazing
+from .material import WindowMaterialGas
+from .assembly import Assembly
 from .building import Building
 
 
-__all__ = ["Building", "BuildingComponent"]
+__all__ = ["Building", "Assembly"]

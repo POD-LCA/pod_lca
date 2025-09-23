@@ -6,7 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.building import Building
-from pod_lca.building import BuildingComponent
+from pod_lca.building import Assembly
 from pod_lca.building import BuildingMaterial
 from pod_lca.impacts import Emissions
 from pod_lca.impacts import Impacts
@@ -32,7 +32,7 @@ glass.qty = 0.5
 glass.unit = KILOGRAM
 glass.eol_product = 'Glass'
 
-my_timber_window = BuildingComponent.create(name='Window',
+my_timber_window = Assembly.create(name='Window',
                                             building=my_building,
                                             materials=[wood, glass])
 

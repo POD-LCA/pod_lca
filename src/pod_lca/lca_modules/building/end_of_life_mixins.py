@@ -115,8 +115,8 @@ class EndOfLifeMixins:
             C2-C4 impacts of the building.
         """
         impacts = Impacts.from_parent(self)
-        for component in self.get_components():
-            for waste in component.get_waste_products():
+        for assembly in self.get_assemblies():
+            for waste in assembly.get_waste_products():
                 if lc_stage is None:
                     for impact_lst in waste.get_impacts().values():
                         for impact in impact_lst:
@@ -125,7 +125,7 @@ class EndOfLifeMixins:
                     for impact in waste.get_impacts()[lc_stage]:
                         impacts += impact
                             
-        # TODO: test with the envelope components
+        # TODO: test with the envelope assemblies
 
         return impacts
 
@@ -145,8 +145,8 @@ class EndOfLifeMixins:
             C2-C4 emissions of the building.
         """        
         emissions = Emissions.from_parent(self)
-        for component in self.get_components():
-            for waste in component.get_waste_products():
+        for assembly in self.get_assemblies():
+            for waste in assembly.get_waste_products():
                 if lc_stage is None:
                     for emissions_lst in waste.get_emissions().values():
                         for emission in emissions_lst:
@@ -155,7 +155,7 @@ class EndOfLifeMixins:
                     for emission in waste.get_emissions()[lc_stage]:
                         emissions += emission
                         
-        # TODO: test with the envelope components
+        # TODO: test with the envelope assemblies
 
         return emissions
 

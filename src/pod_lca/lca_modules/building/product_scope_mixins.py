@@ -59,10 +59,10 @@ class ProductScopeMixins:
             A1-A3 impacts of the building.
         """
         impacts = Impacts.from_parent(self)
-        for component in self.get_components():
-            for material in component.get_materials():
+        for assembly in self.get_assemblies():
+            for material in assembly.get_materials():
                 impacts += material.get_impacts()
-        # TODO: test with the envelope components
+        # TODO: test with the envelope assemblies
 
         return impacts
 
@@ -75,10 +75,10 @@ class ProductScopeMixins:
             A1-A3 emissions of the building.
         """        
         emissions = Emissions.from_parent(self)
-        for component in self.get_components():
-            for material in component.get_materials():
+        for assembly in self.get_assemblies():
+            for material in assembly.get_materials():
                 emissions += material.get_emissions()
-        # TODO: test with the envelope components
+        # TODO: test with the envelope assemblies
 
         return emissions
 

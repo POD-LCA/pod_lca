@@ -19,7 +19,7 @@ from ...utilities import geometric_key
 
 
 class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
-    """ Building object to keep track of the building materials flow (i.e., embodied energy component).
+    """ Building object to keep track of the building materials flow (i.e., embodied energy assembly).
 
     Attributes
     ----------
@@ -33,7 +33,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
         Location of the building site.
     built_year: int
         Built year of the building.
-    components : list of BuildingComponent Objs.
+    assemblys : list of Assembly Objs.
         Structural and Fascade elements that make up the building.
     impacts : dict
         Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
@@ -54,7 +54,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
         self.structure = None
         self.envelope = None
         self.operational_object = None
-        self.components = []
+        self.assemblies = []
         self.surface_cpt_dict = {}
         self.constructions = {}
 
@@ -353,16 +353,16 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
 
         return self.envelope
 
-    def get_components(self):
-        """ Get a list of building components.
+    def get_assemblies(self):
+        """ Get a list of building assemblies.
 
         Returns
         -------
-        list of BuildingComponent Objs.
+        list of ~pod_lca.building.Assembly
             Structural and Fascade elements that make up the building.
         """
-        return self.components
-        # return self.get_structure().get_components() # + self.get_envelope().get_components() # TODO add envelop components
+        return self.assemblies
+        # return self.get_structure().get_assemblies() # + self.get_envelope().get_assemblies() # TODO add envelop assemblies
 
     # ================================
     # Assembly Methods
@@ -462,27 +462,27 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
 
         pass
 
-    def add_component(self, component):
-        """ Add a component to the building.
+    def add_assembly(self, assembly):
+        """ Add a assembly to the building.
         
         Parameters
         ----------
-        component : BuildingComponent Objs.
+        assembly : ~pod_lca.building.Assembly
             Structural or envelope element to be added to the building.
         """
-        self.get_components().append(component)
-        component.set_building(self)
+        self.get_assemblies().append(assembly)
+        assembly.set_building(self)
 
         return self
     
-    def remove_component(self, component):
-        """ Remove component from a building.
+    def remove_assembly(self, assembly):
+        """ Remove assembly from a building.
 
         Parameters
         ----------
-        component : BuildingComponent Objs.
+        assembly : ~pod_lca.building.Assembly
             Structural or envelope element to be removed from the building."""
-        self.get_components().remove(component)
+        self.get_assemblies().remove(assembly)
 
     def update_envelope_surfaces(self):
         for fk in self.floors:

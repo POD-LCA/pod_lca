@@ -9,13 +9,13 @@ from . import Foundation
 from . import Beam
 from . import Column
 from . import Slab
-from ..building import BuildingMaterial
+from ..building import Material
 from ...utilities import DataImporter
 from ...units import UNITS_MAP
 
 
 class BuildingStructure:
-    """ The structural components of the building.
+    """ The structural assemblies of the building.
     
     Attributes
     ----------
@@ -77,8 +77,8 @@ class BuildingStructure:
         for key in bill_of_materials:
             item = bill_of_materials[key]
             if item['Building Component'] in ['Structure', 'Superstructure', 'Substructure']:
-                building_element = item['Building element']
-                building_material = BuildingMaterial.new_structural_material(
+                building_element = item['assembly']
+                building_material = Material.new_structural_material(
                     parent=structure,
                     name=item['material'] + '_in_' + building_element, 
                     qty=float(item['qty']),
@@ -87,27 +87,27 @@ class BuildingStructure:
                 )
                 
                 if building_element in ['Structural Foundations']:
-                    component_obj = foundation
+                    assembly_obj = foundation
                 elif building_element in ["Structural Framing"]:
-                    component_obj = beams
+                    assembly_obj = beams
                 elif building_element in ["Structural Columns"]:
-                    component_obj = columns
+                    assembly_obj = columns
                 elif building_element in ["Floors"]:
                     if item['Building Component'] in ["Superstructure"]:
-                        component_obj = superstructure_floors
+                        assembly_obj = superstructure_floors
                     elif item['Building Component'] in ["Substructure"]:
-                        component_obj = substructure_floors
+                        assembly_obj = substructure_floors
                     else:
                         raise NotImplementedError
                 else:
                     raise NotImplementedError
                     
-                component_obj.add_material(building_material)
+                assembly_obj.add_material(building_material)
 
-        # remove unused component
-        del_list = [comp for comp in building.get_components() if not comp.get_materials()]
-        for component in del_list:
-            building.remove_component(component)
+        # remove unused assembly
+        del_list = [comp for comp in building.get_assemblies() if not comp.get_materials()]
+        for assembly in del_list:
+            building.remove_assembly(assembly)
 
         return structure
 
@@ -143,8 +143,8 @@ class BuildingStructure:
         """
         return self.parent
     
-    def get_components(self):
-        """ Get a list of all structural elements (i.e., structural components) of the building.
+    def get_assemblies(self):
+        """ Get a list of all structural elements (i.e., structural assemblies) of the building.
         
         Returns
         -------

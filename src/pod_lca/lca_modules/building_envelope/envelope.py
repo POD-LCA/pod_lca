@@ -70,7 +70,7 @@ class Envelope:
             for sk in self.wall_surface_keys:
                 self.constructions[sk] = construction
 
-    def get_components(self):
+    def get_assemblies(self):
         # TODO implement method to return all envelop elements as a list
         return []
 

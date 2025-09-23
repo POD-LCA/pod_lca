@@ -1,7 +1,6 @@
 
 from pod_lca.building import Building
 from pod_lca.location import Location
-from pod_lca.impacts import ImpactsDatabase
 from pod_lca.units import METER
 from pod_lca.utilities import DataImporter
 
