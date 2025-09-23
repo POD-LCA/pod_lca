@@ -44,6 +44,8 @@ class Product(Master):
         The mass of product in weight units per unit of product's unit of measurement. Default is 1.0.
     sctg_code : str
         Standard Classification of Transported Goods (SCTG) code.
+    transport_legs : list of ~pod_lca.transportation.TransportLeg
+        Transportation leg corresponding to the product.
     mineral_carbonation_potential : bool
         Mineral carbonation potential of the product.
     is_material : bool
@@ -64,6 +66,7 @@ class Product(Master):
         self.mineral_carbonation_potential = None
         self.is_material = True
         self.sctg_code = None
+        self.transport_legs = None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -201,7 +204,8 @@ class Product(Master):
                                             return_trip_factor=None, 
                                             mode_name=mode_name,
                                             mode_efficiency=mode_efficiency)
-
+            self.transport_legs = transportation_manager.get_transportation_leg(self)
+            
         return self
        
     def set_electricity_source(self, source='from_database'):

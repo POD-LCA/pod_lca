@@ -22,5 +22,5 @@ my_building = my_building.set_template_model(name='template building',
                                            file_path=template_model_path, 
                                            building_data=template_model_data)
 
-print(my_building.get_impacts(scope='transportation'))
-print(my_building.get_emissions(scope='transportation'))
+print(my_building.get_impacts(scope='construction'))
+print(my_building.get_emissions(scope='construction'))

@@ -82,7 +82,7 @@ class TransportationMixins:
         Returns
         -------
         ~pod_lca.impacts.TranportationModeImpactsDatabase
-            Filepath to the csv file containing impact data.
+            Impact database of transportation modes.
         """
         return self.transport_impact_database
     
@@ -90,7 +90,7 @@ class TransportationMixins:
     # Inventory Records Methods
     # ================================ 
     def get_transportation_impacts(self):
-        """ Get A4-A5 impacts of the building.
+        """ Get A4 impacts of the building.
         
         Returns
         -------
@@ -105,7 +105,7 @@ class TransportationMixins:
         return impacts
 
     def get_transportation_emissions(self):
-        """ Get A4-A5 impacts of the building.
+        """ Get A4 impacts of the building.
         
         Returns
         -------

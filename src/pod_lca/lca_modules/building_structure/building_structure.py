@@ -83,7 +83,8 @@ class BuildingStructure:
                     name=item['material'] + '_in_' + building_element, 
                     qty=float(item['qty']),
                     unit=UNITS_MAP[item['unit']],
-                    material_database_entry=item['material']
+                    material_database_entry=item['material'],
+                    waste_rate=float(item['waste rate'])
                 )
                 
                 if building_element in ['Structural Foundations']:

@@ -7,12 +7,51 @@ __version__ = "0.1.0"
 
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..impacts import TranportationModeImpactsDatabase
+from ..materials_screening import Electricity
+from ...units import Unit
 
 
 class ConstructionMixins:
     """ Methods for calculation of A5 impacts
     """
+
+    def set_construction_energy_product(self, energy_use_qty, energy_use_unit):
+        """ Set energy product used in the construction of the building.
+        
+        Parameters
+        ----------
+        energy_use_qty : float or int
+            Total energy usage in construction.
+        energy_use_unit: ~pod_lca.units.Unit
+            Unit of measurement corresponding to construction energy use.
+        """
+        if not isinstance(energy_use_qty, (float, int)):
+            raise TypeError("Energy use quantity must be a number.")
+
+        if not isinstance(energy_use_unit, Unit):
+            raise TypeError("Energy use unit should be a pod_lca.units.Unit object.")
+        elif not (energy_use_unit.get_qty_measured() == 'energy'):
+            raise TypeError("Energy use unit should be a measure of energy.")
+
+        self.construction_energy_product = Electricity.new(id=0,
+                                                           name='construction electricity', 
+                                                           model=self, 
+                                                           stage='A5', 
+                                                           qty=energy_use_qty, 
+                                                           unit=energy_use_unit, 
+                                                           year=self.get_built_year())  
+
+        return self
+    
+    def get_construction_energy_product(self):
+        """ Get the construction energy product.
+        
+        Returns
+        -------
+        ~pod_lca.materials_screening.Electricity
+            Electricity product for construction energy usage
+        """
+        return self.construction_energy_product
 
     # ================================
     # Inventory Records Methods
@@ -27,8 +66,14 @@ class ConstructionMixins:
         """
         impacts = Impacts.from_parent(self)
 
-        for transportaion_leg in self.get_transportation_manager().get_transportation_legs():
-            impacts += transportaion_leg.get_impacts()
+        for assembly in self.get_assemblies():
+            for material in assembly.get_materials():
+                material_impact = (material.get_product_impacts() + material.get_transportation_impacts() + material.get_eol_impacts())
+                construction_waste_impact = material_impact * material.get_waste_rate()
+
+                impacts += construction_waste_impact
+
+        impacts += self.construction_energy_product.get_impacts()
 
         return impacts
 
@@ -42,8 +87,14 @@ class ConstructionMixins:
         """
         emissions = Emissions.from_parent(self)
 
-        for transportaion_leg in self.get_transportation_manager().get_transportation_legs():
-            emissions += transportaion_leg.get_emissions()
+        for assembly in self.get_assemblies():
+            for material in assembly.get_materials():
+                material_emissions = (material.get_product_emissions() + material.get_transportation_emissions() + material.get_eol_emissions())
+                construction_waste_emissions = material_emissions * material.get_waste_rate()
+
+                emissions += construction_waste_emissions
+
+        emissions += self.construction_energy_product.get_emissions()
 
         return emissions
 

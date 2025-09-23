@@ -5,15 +5,17 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import gc
+
+from ..eol.waste import Waste
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..materials_screening import Product
-from ..operational import find_materials
-from ..operational import find_no_mass_materials
-from ..operational import find_gas_materials
-from ..operational import find_glazing_materials
 from ...units import UNITS_MAP
+from ...utilities import config
+from ...utilities import DataImporter
+from ...utilities import log
 
 
 class Material(Product):
@@ -29,8 +31,8 @@ class Material(Product):
         SCTG code mapped to the material.
     eol_product : str
         End-of-life product name corresponding to the material.
-    density : float
-        Density of the material.
+    waste_rate : float
+        Waste rate of the material during construction of the assembly/building.
     """
     
     def __init__(self):
@@ -42,12 +44,16 @@ class Material(Product):
         self.sctg_code = None
         self.eol_product = None
         self.bio_based = None
+        self.waste_rate = None
+
+        # impact objects
+        self.waste_obj = None
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def new_structural_material(cls, parent, name, qty, unit, material_database_entry):
+    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, waste_rate=0.0):
         """ Create new structural material.
         
         Parameters
@@ -62,6 +68,8 @@ class Material(Product):
             Unit of measurement.            
         material_database_entry : str
             Name of the impact database entry from which to use impacts.
+        waste_rate : float
+            Waste rate of the material during construction of the assembly/building. Default is 0.          
         """
         material = cls()
         
@@ -69,6 +77,7 @@ class Material(Product):
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
+        material.set_waste_rate(waste_rate)
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
         material.carbon_storage = CarbonStorage.from_parent(material)
@@ -79,6 +88,8 @@ class Material(Product):
         material.set_sctg_code(material_database_entry)
         material.set_eol_material(material_database_entry)
         material.set_density(material_database_entry)
+
+        material.set_waste_product()
 
         return material
 
@@ -138,6 +149,53 @@ class Material(Product):
         if 'bio-based' in data_entry:
             self.bio_based = data_entry['bio-based']
 
+    def set_waste_rate(self, waste_rate):
+        """ Set the waste rate of the material.
+        
+        Parameters
+        ----------
+        waste_rate : float
+            Waste rate of the material during construction of the assembly/building.
+        """
+        self.waste_rate = waste_rate
+
+    def set_waste_product(self):
+        """ Set the end-of-life waste product of the material.
+        """
+        eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
+            
+        eol_material = self.get_eol_material()
+        waste_qty = self.get_weight()
+        waste_unit = self.get_weight_unit()
+        
+        if eol_mix_data['Material'].isin([eol_material]).any():
+            eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
+        elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
+            eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
+        else:
+            log("A mix doesnt exist", 0)
+
+        if self.get_bio_based() is not None:
+            waste_obj = Waste.new(self, 
+                                database_item=eol_material, 
+                                qty=waste_qty, 
+                                unit=waste_unit, 
+                                process_mix=eol_mix, 
+                                bio_based=self.get_bio_based())
+        else:
+            waste_obj = Waste.new(self, 
+                                    database_item=eol_material, 
+                                    qty=waste_qty, 
+                                    unit=waste_unit, 
+                                    process_mix=eol_mix)
+            
+        self.waste_obj = waste_obj
+
+        del eol_mix_data
+        gc.collect()
+
+        return self
+    
     # ================================
     # Getters
     # ================================
@@ -170,7 +228,27 @@ class Material(Product):
             End-of-life product name corresponding to the material.      
         """
         return self.eol_product  
+
+    def get_waste_rate(self):
+        """ Get the waste rate of the material.
+        
+        Returns
+        -------
+        float
+            Waste rate of the material during construction of the assembly/building.
+        """
+        return self.waste_rate
     
+    def get_waste_product(self):
+        """ Set the end-of-life waste product of the material.
+
+        Returns
+        -------
+        ~pod_lca.eol.Waste
+            End-of-life waste object corresponding to the material.
+        """
+        return self.waste_obj
+
     def get_bio_based(self):
         """ Get the bio-based nature of the material.
         
@@ -210,6 +288,111 @@ class Material(Product):
             Transportation manager
         """
         return self.get_building().get_transportation_manager()
+    
+    # ================================
+    # Inventory Records Methods
+    # ================================
+    def get_product_impacts(self):
+        """ Get A1-A3 impacts of the material.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            A1-A3 impacts of the material.
+        """
+        return self.get_impacts()
+
+    def get_product_emissions(self):
+        """ Get A1-A3 emissions of the material.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            A1-A3 emissions of the material.
+        """        
+        return self.get_emissions()
+
+    def get_transportation_impacts(self):
+        """ Get A4 impacts of the material.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            A4-A5 impacts of the material.
+        """
+        impacts = Impacts.from_parent(self)
+        for leg in self.transport_legs:
+            impacts += leg.get_impacts()
+
+        return impacts
+
+    def get_transportation_emissions(self):
+        """ Get A4-A5 impacts of the building.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            A4-A5 emissions of the building.
+        """
+        emissions = Emissions.from_parent(self)
+        for leg in self.transport_legs:
+            emissions += leg.get_emissions()    
+        
+        return emissions
+
+    def get_eol_impacts(self, lc_stage=None):
+        """ Get C2-C4 impacts of the material.
+
+        Parameters
+        ----------
+        lc_stage: {'C1', 'C2', 'C3', 'C4', None}
+            Life cycle stage for which the impacts to be calculated. 
+            If None, gives impacts for all the relevant life cycle stages. 
+            Default is None.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            C2-C4 impacts of the building.
+        """
+        impacts = Impacts.from_parent(self)
+
+        if lc_stage is None:
+            for impact_lst in self.get_waste_product().get_impacts().values():
+                for impact in impact_lst:
+                    impacts += impact
+        else:
+            for impact in self.get_waste_product().get_impacts()[lc_stage]:
+                impacts += impact      
+
+        return impacts
+
+    def get_eol_emissions(self, lc_stage=None):
+        """ Get C2-C4 emissions of the building.
+        
+        Parameters
+        ----------
+        lc_stage: {'C1', 'C2', 'C3', 'C4', None}
+            Life cycle stage for which the emissions to be calculated. 
+            If None, gives emissions for all the relevant life cycle stages. 
+            Default is None.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            C2-C4 emissions of the building.
+        """        
+        emissions = Emissions.from_parent(self)
+
+        if lc_stage is None:
+            for emission_lst in self.get_waste_product().get_emissions().values():
+                for emission in emission_lst:
+                    emissions += emission
+        else:
+            for emission in self.get_waste_product().get_emissions()[lc_stage]:
+                emissions += emission  
+
+        return emissions
     
     # @classmethod
     # def new_enclosure_material(cls,

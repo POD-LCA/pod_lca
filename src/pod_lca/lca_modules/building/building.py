@@ -29,18 +29,24 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
         Type of building.
     structure_type : {'Concrete', 'Steel', 'CLT'}
         Major vertical gravity system of the structure.
-    location : ~pod_lca.location.Location
-        Location of the building site.
     built_year: int
         Built year of the building.
-    assemblys : list of Assembly Objs.
+    location : ~pod_lca.location.Location
+        Location of the building site.
+    assemblies : list of ~pod_lca.building.Assembly 
         Structural and Fascade elements that make up the building.
-    impacts : dict
-        Impact objects categorized by life cycle stage {life cycle stage (str): list of Impacts Obj.}
+    material_impact_database: ~pod_lca.impacts.ImpactsDatabase
+        Buildin material impact database.
+    transport_impact_database : ~pod_lca.impacts.TranportationModeImpactsDatabase
+        Impact database of transportation modes.
     eol_impact_database : ImpactsDatabase Obj.
         Impacts related to end of life processes.
-    transportation_in: ProjectLogisticManager Obj.
-        Inward trransportation of material for the construction of the building.   
+    eol_transport_dataset: ~pod_lca.transportation.TransportDataset
+        End-of-life transportation dataset.
+    transportation_manager: ~pod_lca.transportation.TransportationManager
+        Manager of inward transportation of material for the construction of the building.
+    construction_energy_product : 
+
     """
 
     def __init__(self):
@@ -58,14 +64,12 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
         self.surface_cpt_dict = {}
         self.constructions = {}
 
-        self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
-        self.emissions = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
-
         self.material_impact_database = None
         self.transport_impact_database = None
         self.eol_impact_database = None
         self.eol_transport_dataset = None
         self.transportation_manager = None
+        self.construction_energy_product = None
 
     # ================================
     # Constructors
@@ -281,6 +285,10 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
                         UNITS_MAP[building_data['geometry_units']])
         
         self.set_transportation_manager(building_data['logistic_type'])
+
+        if "construction_energy_use" in building_data:
+            self.set_construction_energy_product(building_data["construction_energy_use"], 
+                                         UNITS_MAP[building_data["construction_energy_use_unit"]])
 
         self.make_structure('from template', template_bom=file_path)
         self.make_envelope()    
@@ -543,7 +551,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
             return self.get_construction_impacts()
         elif scope == 'use':
             pass
-        elif scope == 'end of life':
+        elif scope in ['end of life', 'end-of-life']:
             return self.get_eol_impacts(lc_stage)
         else:
             raise ValueError('LCA scope not recognized')

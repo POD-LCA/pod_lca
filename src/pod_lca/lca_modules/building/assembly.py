@@ -166,44 +166,6 @@ class Assembly:
         """
         return self.get_building()
 
-    def get_waste_products(self):
-        """ Deconstruct the building assembly to waste products as specified in the deconstruction map.
-        """
-        eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
-        waste_products = []
-        for material in self.get_materials():
-            eol_material = material.get_eol_material()
-            waste_qty = material.get_weight()
-            waste_unit = material.get_weight_unit()
-            
-            if eol_mix_data['Material'].isin([eol_material]).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
-            elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
-            else:
-                log("A mix doesnt exist", 0)
-
-            if material.get_bio_based() is not None:
-                waste_obj = Waste.new(self, 
-                                      database_item=eol_material, 
-                                      qty=waste_qty, 
-                                      unit=waste_unit, 
-                                      process_mix=eol_mix, 
-                                      bio_based=material.get_bio_based())
-            else:
-                waste_obj = Waste.new(self, 
-                                        database_item=eol_material, 
-                                        qty=waste_qty, 
-                                        unit=waste_unit, 
-                                        process_mix=eol_mix)
-            waste_products.append(waste_obj)
-
-        # delete data
-        del eol_mix_data
-        gc.collect()
-
-        return waste_products
-
 
 if __name__ == '__main__':
     pass

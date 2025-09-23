@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 from ..impacts import Emissions
 from ..impacts import EOLImpactsDatabase
 from ..impacts import Impacts
-from ..impacts import TranportationModeImpactsDatabase
 from ..transportation import EOLTransportDataset
 
 
@@ -116,15 +115,14 @@ class EndOfLifeMixins:
         """
         impacts = Impacts.from_parent(self)
         for assembly in self.get_assemblies():
-            for waste in assembly.get_waste_products():
+            for material in assembly.get_materials():
                 if lc_stage is None:
-                    for impact_lst in waste.get_impacts().values():
+                    for impact_lst in material.get_waste_product().get_impacts().values():
                         for impact in impact_lst:
                             impacts += impact
                 else:
-                    for impact in waste.get_impacts()[lc_stage]:
-                        impacts += impact
-                            
+                    for impact in material.get_waste_product().get_impacts()[lc_stage]:
+                        impacts += impact      
         # TODO: test with the envelope assemblies
 
         return impacts
@@ -146,14 +144,14 @@ class EndOfLifeMixins:
         """        
         emissions = Emissions.from_parent(self)
         for assembly in self.get_assemblies():
-            for waste in assembly.get_waste_products():
+            for material in assembly.get_materials():
                 if lc_stage is None:
-                    for emissions_lst in waste.get_emissions().values():
-                        for emission in emissions_lst:
+                    for emission_lst in material.get_waste_product().get_impacts().values():
+                        for emission in emission_lst:
                             emissions += emission
                 else:
-                    for emission in waste.get_emissions()[lc_stage]:
-                        emissions += emission
+                    for emission in material.get_waste_product().get_impacts()[lc_stage]:
+                        emissions += emission  
                         
         # TODO: test with the envelope assemblies
 

@@ -7,5 +7,7 @@
     "floors_below_grade":1,
     "wwr":0.7,
     "geometry_units":"m",
-    "logistic_type":"local"
+    "logistic_type":"local",
+    "construction_energy_use":80,
+    "construction_energy_use_unit":"MWh"
 }
