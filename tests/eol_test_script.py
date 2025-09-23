@@ -18,6 +18,7 @@ from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import config
 
+# FIXME: update script with template 
 impact_data_file_path = r'data/impacts_podlca_eol-impacts.csv'
 test_dict_file_path = r'tests/eol_test_test-cases.json'
 

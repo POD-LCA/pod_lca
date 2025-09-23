@@ -9,6 +9,7 @@ from . import EndOfLifeMixins
 from . import Floor
 from . import ProductScopeMixins
 from . import TransportationMixins
+from . import ConstructionMixins
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ...units import METER
@@ -17,7 +18,7 @@ from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (EndOfLifeMixins, TransportationMixins, ProductScopeMixins):
+class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
@@ -514,7 +515,7 @@ class Building (EndOfLifeMixins, TransportationMixins, ProductScopeMixins):
          
         Parameters
         ----------
-        scope : {'all', 'product', 'construction', 'use', 'end of life'}
+        scope : {'all', 'product', 'transportation', 'construction', 'use', 'end of life'}
             Scope of impacts
             - 'all': from A-C
             - 'product': from A1-A3
@@ -539,7 +540,7 @@ class Building (EndOfLifeMixins, TransportationMixins, ProductScopeMixins):
         elif scope == 'transportation':
             return self.get_transportation_impacts()
         elif scope == 'construction':
-            pass
+            return self.get_construction_impacts()
         elif scope == 'use':
             pass
         elif scope == 'end of life':
@@ -552,7 +553,7 @@ class Building (EndOfLifeMixins, TransportationMixins, ProductScopeMixins):
          
         Parameters
         ----------
-        scope : {'all', 'product', 'construction', 'use', 'end of life'}
+        scope : {'all', 'product', 'transportation', 'construction', 'use', 'end of life'}
             Scope of impacts
             - 'all': from A-C
             - 'product': from A1-A3
@@ -577,7 +578,7 @@ class Building (EndOfLifeMixins, TransportationMixins, ProductScopeMixins):
         elif scope == 'transportation':
             return self.get_transportation_emissions()
         elif scope == 'construction':
-            pass
+            return self.get_construction_emissions()
         elif scope == 'use':
             pass
         elif scope == 'end of life':
