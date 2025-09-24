@@ -68,11 +68,9 @@ class ConstructionMixins:
 
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                material_impact = (material.get_product_impacts() + material.get_transportation_impacts() + material.get_eol_impacts())
-                construction_waste_impact = material_impact * material.get_waste_rate()
+                impacts += material.get_construction_impacts()
 
-                impacts += construction_waste_impact
-
+        # building level impacts
         impacts += self.construction_energy_product.get_impacts()
 
         return impacts
@@ -89,11 +87,9 @@ class ConstructionMixins:
 
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                material_emissions = (material.get_product_emissions() + material.get_transportation_emissions() + material.get_eol_emissions())
-                construction_waste_emissions = material_emissions * material.get_waste_rate()
+                emissions += material.get_construction_emissions()
 
-                emissions += construction_waste_emissions
-
+        # building level emission
         emissions += self.construction_energy_product.get_emissions()
 
         return emissions

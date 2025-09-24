@@ -393,7 +393,27 @@ class Material(Product):
                 emissions += emission  
 
         return emissions
-    
+
+    def get_construction_impacts(self):
+        """ Get A5 impacts of the building.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            A5 impacts of the building.
+        """
+        return (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * self.get_waste_rate()
+
+    def get_construction_emissions(self):
+        """ Get A5 impacts of the building.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            A4-A5 emissions of the building.
+        """
+        return (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * self.get_waste_rate()
+        
     # @classmethod
     # def new_enclosure_material(cls,
     #                            name,

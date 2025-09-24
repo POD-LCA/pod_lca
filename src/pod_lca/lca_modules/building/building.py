@@ -5,11 +5,12 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from . import ConstructionMixins
 from . import EndOfLifeMixins
 from . import Floor
 from . import ProductScopeMixins
 from . import TransportationMixins
-from . import ConstructionMixins
+from . import UseMixins
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ...units import METER
@@ -18,7 +19,7 @@ from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
+class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy assembly).
 
     Attributes
@@ -523,7 +524,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
          
         Parameters
         ----------
-        scope : {'all', 'product', 'transportation', 'construction', 'use', 'end of life'}
+        scope : {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
             Scope of impacts
             - 'all': from A-C
             - 'product': from A1-A3
@@ -531,7 +532,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
             - 'construction': A5
             - 'use': from B1-B7
             - 'end of life': C1-C4
-        lc_stage: {'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
+        lc_stage: {'C1', 'C2', 'C3', 'C4', None}
             Life cycle stage for which the impacts to be calculated. 
             If None, gives impacts for all the relevant life cycle stages. 
             Default is None.
@@ -541,6 +542,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
         ~pod_lca.impacts.Impact
             LCA Impacts.
         """
+        # TODO: use cache with each part to avoid redoing calculations ---  same for emissions
         if scope == 'all':
             pass
         elif scope == 'product':
@@ -549,7 +551,9 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
             return self.get_transportation_impacts()
         elif scope == 'construction':
             return self.get_construction_impacts()
-        elif scope == 'use':
+        elif scope == 'replacement':
+            return self.get_replacement_impacts()
+        elif scope == 'operational energy':
             pass
         elif scope in ['end of life', 'end-of-life']:
             return self.get_eol_impacts(lc_stage)
@@ -561,7 +565,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
          
         Parameters
         ----------
-        scope : {'all', 'product', 'transportation', 'construction', 'use', 'end of life'}
+        scope : {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
             Scope of impacts
             - 'all': from A-C
             - 'product': from A1-A3
@@ -569,7 +573,7 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
             - 'construction': A5
             - 'use': from B1-B7
             - 'end of life': C1-C4
-        lc_stage: {'B1', 'B2', C1', 'C2', 'C3', 'C4', None}
+        lc_stage: {'C1', 'C2', 'C3', 'C4', None}
             Life cycle stage for which the impacts to be calculated. 
             If None, gives impacts for all the relevant life cycle stages. 
             Default is None.
@@ -587,7 +591,9 @@ class Building (EndOfLifeMixins, ConstructionMixins, TransportationMixins, Produ
             return self.get_transportation_emissions()
         elif scope == 'construction':
             return self.get_construction_emissions()
-        elif scope == 'use':
+        elif scope == 'replacement':
+            return self.get_replacement_emissions()
+        elif scope == 'operational energy':
             pass
         elif scope == 'end of life':
             return self.get_eol_emissions(lc_stage)
