@@ -99,8 +99,9 @@ class TransportationMixins:
         """
         impacts = Impacts.from_parent(self)
 
-        for transportaion_leg in self.get_transportation_manager().get_transportation_legs():
-            impacts += transportaion_leg.get_impacts()
+        for assembly in self.get_assemblies():
+            for material in assembly.get_materials():
+                impacts += material.get_transportation_impacts()
 
         return impacts
 
@@ -114,8 +115,9 @@ class TransportationMixins:
         """
         emissions = Emissions.from_parent(self)
 
-        for transportaion_leg in self.get_transportation_manager().get_transportation_legs():
-            emissions += transportaion_leg.get_emissions()
+        for assembly in self.get_assemblies():
+            for material in assembly.get_materials():
+                impacts += material.get_transportation_emissions()
 
         return emissions
 

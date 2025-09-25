@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 from math import isnan
 
 from . import WasteProcess
+from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..materials_screening import Product
 from ..transportation import WasteTransportLeg
 from ...utilities import ArrayMethods
@@ -32,7 +33,7 @@ class Waste(Product):
     emissions : dict
         Emission objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
     bio_based : bool
-        True if the material is bio-based.          
+        True if the material is bio-based.    
     """
 
     def __init__(self):
@@ -275,6 +276,23 @@ class Waste(Product):
         
         else:
             raise ValueError('Waste mix does not sum to 100%.') 
+        
+    def set_production_year(self, year):
+        """ Set the production year of the waste product.
+        
+        Parameters
+        ----------
+        year : int
+            Year in which the waste is generated.
+        """
+        self.production_year = year
+    
+        for emission_lst in self.get_emissions().values():
+            for emission in emission_lst:
+                pulse = UniformEmissionProfile.unit_pulse(at=year)
+                emission.set_temporal_emission_profile(pulse)
+
+        return self
 
     # ================================
     # Getters
@@ -352,7 +370,17 @@ class Waste(Product):
             True, if the material is bio-based.
         """
         return self.bio_based
-    
+
+    def get_production_year(self):
+        """ Get the production year of the waste product.
+        
+        Returns
+        -------
+        int
+            Year in which the waste is generated.
+        """
+        return self.production_year
+
     def get_eol_database(self):
         """ Get the end-of-life product database corresponding to the project.
         

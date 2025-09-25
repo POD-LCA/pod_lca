@@ -452,8 +452,7 @@ class Model:
         if not kwargs.get('ignore_transport', False):
             product.set_transportation()
 
-        pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
-        product.get_emissions().set_temporal_emission_profile(pulse)
+        product.set_production_year(self.get_project().get_year())
 
         self.products.append(product)
         

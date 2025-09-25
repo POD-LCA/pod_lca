@@ -9,6 +9,7 @@ from numpy import bool_ as np_bool
 
 from . import Master
 from . import Electricity
+from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
@@ -115,6 +116,9 @@ class Product(Master):
 
         if not self.electricity['by_location'] is None:
             self.electricity['by_location'].set_year(year)
+
+        pulse = UniformEmissionProfile.unit_pulse(at=year)
+        self.get_emissions().set_temporal_emission_profile(pulse)
 
         return self
     
@@ -328,7 +332,7 @@ class Product(Master):
         year : int
             Year of production.
         """
-        return self.production_yea
+        return self.production_year
 
     def get_electricity(self):
         """ Get the electricity product of the item.

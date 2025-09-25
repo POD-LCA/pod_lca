@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 import gc
 
+from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..eol.waste import Waste
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
@@ -33,6 +34,9 @@ class Material(Product):
         End-of-life product name corresponding to the material.
     waste_rate : float
         Waste rate of the material during construction of the assembly/building.
+    service_life : float
+        Service life of the material in years.
+    
     """
     
     def __init__(self):
@@ -45,15 +49,17 @@ class Material(Product):
         self.eol_product = None
         self.bio_based = None
         self.waste_rate = None
+        self.service_life = None
 
         # impact objects
         self.waste_obj = None
+        self.replacement_product = None
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, waste_rate=0.0):
+    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, product_year, service_life, waste_rate=0.0):
         """ Create new structural material.
         
         Parameters
@@ -68,28 +74,83 @@ class Material(Product):
             Unit of measurement.            
         material_database_entry : str
             Name of the impact database entry from which to use impacts.
+        service_life : float
+            Service life of the material in years.
         waste_rate : float
-            Waste rate of the material during construction of the assembly/building. Default is 0.          
+            Waste rate of the material during construction of the assembly/building. Default is 0.
+        product_year : int, optional
+            Year of the emissions from the material. If None, uses the year of the parent assembly. Default is None.     
         """
         material = cls()
-        
+
         material.set_parent(parent)
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
         material.set_waste_rate(waste_rate)
+        material.set_service_life(service_life) 
+
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
         material.carbon_storage = CarbonStorage.from_parent(material)
         material.unit_impacts = Impacts.from_parent(material)
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
+
         material.set_impact_database_entry(material_database_entry)
         material.set_sctg_code(material_database_entry)
         material.set_eol_material(material_database_entry)
         material.set_density(material_database_entry)
+        material.set_production_year(product_year)
 
+        material.set_transportation()
         material.set_waste_product()
+        material.set_replacement_material()
+
+        return material
+    
+    @classmethod
+    def copy(cls, other, production_year):
+        """ Create a copy of the material.
+        
+        Parameters
+        ----------
+        other : ~pod_lca.building.Material
+            Material to be copied.
+        production_year : int
+            Year of the emissions from the material.
+
+        Returns
+        -------
+        ~pod_lca.building.Material
+            Material copied.
+        """
+        material = cls()
+
+        material.set_parent(other.get_parent())
+        material.set_name(other.get_name())
+        material.set_qty(other.get_qty())
+        material.set_unit(other.get_unit())
+        material.set_waste_rate(other.get_waste_rate())
+        material.set_service_life(other.get_service_life()) 
+
+        material.impacts = Impacts.from_parent(material)
+        material.emissions = Emissions.from_parent(material)
+        material.carbon_storage = CarbonStorage.from_parent(material)
+        material.unit_impacts = Impacts.from_parent(material)
+        material.unit_emissions = Emissions.from_parent(material)
+        material.unit_carbon_storage = CarbonStorage.from_parent(material)
+
+        material_database_entry = other.get_impact_database_entry()
+        material.set_impact_database_entry(material_database_entry)
+        material.set_sctg_code(material_database_entry)
+        material.set_eol_material(material_database_entry)
+        material.set_density(material_database_entry)
+        material.set_production_year(production_year)
+
+        material.set_transportation()
+        material.set_waste_product()
+        material.set_replacement_material()
 
         return material
 
@@ -105,6 +166,8 @@ class Material(Product):
             Building componet to which the material belong.
         """
         self.parent = parent
+        # TODO: this is created for integration with tranportation/or electricity modules
+        # ideally, this should be linked to the assembly, not the building structure
 
         return self
     
@@ -159,6 +222,20 @@ class Material(Product):
         """
         self.waste_rate = waste_rate
 
+        return self
+
+    def set_service_life(self, service_life):
+        """ Set the service life of the material.
+        
+        Parameters
+        ----------
+        service_life : float
+            Service life of the material in years.
+        """
+        self.service_life = service_life
+
+        return self
+
     def set_waste_product(self):
         """ Set the end-of-life waste product of the material.
         """
@@ -191,11 +268,24 @@ class Material(Product):
             
         self.waste_obj = waste_obj
 
+        waste_produced_year = min(self.get_production_year() + self.get_service_life(), # end of material service life
+                            self.get_building().get_built_year() + self.get_building().get_life_span()) # end of building life span
+        self.waste_obj.set_production_year(waste_produced_year)
+
         del eol_mix_data
         gc.collect()
 
         return self
-    
+
+    def set_replacement_material(self):
+        """ Set replacement materials for the building based on the service life of its materials.
+        """
+        material_end_year = self.get_production_year() + self.get_service_life()
+        building_end_year = self.get_building().get_built_year() + self.get_building().get_life_span()
+
+        if material_end_year < building_end_year:
+            self.replacement_product = Material.copy(self, material_end_year)
+
     # ================================
     # Getters
     # ================================
@@ -205,7 +295,7 @@ class Material(Product):
         Returns
         -------
         ~pod_lca.building.Assembly
-            Building componet to which the material belong.
+            Building assembly to which the material belong.
         """
         return self.parent  
 
@@ -217,7 +307,7 @@ class Material(Product):
         ~pod_lca.building.Building
             Building project to which the assembly belong.
         """
-        return self.get_parent().get_parent()
+        return self.get_building()
     
     def get_eol_material(self):
         """ Get the end-of-life product corresponding to the material.
@@ -239,6 +329,16 @@ class Material(Product):
         """
         return self.waste_rate
     
+    def get_service_life(self):
+        """ Set the service life of the material.
+        
+        Returns
+        -------
+        float
+            Service life of the material in years.
+        """
+        return self.service_life
+        
     def get_waste_product(self):
         """ Set the end-of-life waste product of the material.
 
@@ -248,6 +348,25 @@ class Material(Product):
             End-of-life waste object corresponding to the material.
         """
         return self.waste_obj
+    
+    def get_replacement_materials(self):
+        """ Get replacement materials for the building based on the service life of its materials.
+
+        Returns
+        -------
+        list of ~pod_lca.building.Material
+            Replacement material object if the service life of the material is less than the building life span. 
+            None if no replacement is needed.
+        """
+        replacements = []
+        if self.replacement_product is None:
+             return None
+        else:
+            replacements.append(self.replacement_product)
+            if self.replacement_product.get_replacement_materials() is not None:
+                replacements.extend(self.replacement_product.get_replacement_materials())
+
+        return replacements
 
     def get_bio_based(self):
         """ Get the bio-based nature of the material.
@@ -267,7 +386,7 @@ class Material(Product):
         ~pod_lca.building.Building
             Building to which this building material belong.       
         """
-        return self.get_parent().get_parent()
+        return self.get_parent().get_building()
     
     def get_impact_database(self):
         """ Get the impact database giving the A1-A3 impacts of the building materials.
@@ -413,7 +532,37 @@ class Material(Product):
             A4-A5 emissions of the building.
         """
         return (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * self.get_waste_rate()
+    
+    def get_replacement_impacts(self):
+        """ Get B6 impacts of the building.
         
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            B6 impacts of the building.
+        """
+        if self.get_replacement_materials() is None:
+            return Impacts.from_parent(self)
+        else:
+            return self.get_replacement_materials().get_product_impacts()
+            + self.get_replacement_materials().get_transportation_impacts() 
+            + self.get_replacement_materials().get_eol_impacts()
+
+    def get_replacement_emissions(self):
+        """ Get B6 impacts of the building.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            B6 impacts of the building.
+        """
+        if self.get_replacement_materials() is None:
+            return Impacts.from_parent(self)
+        else:
+            return self.get_replacement_materials().get_product_emissions()
+            + self.get_replacement_materials().get_transportation_emissions() 
+            + self.get_replacement_materials().get_eol_emissions()
+                
     # @classmethod
     # def new_enclosure_material(cls,
     #                            name,

@@ -150,10 +150,6 @@ class Assembly:
         """
         self.materials.append(material)
 
-        if material.get_parent() is None:
-            material.set_parent(self.get_building())
-        material.set_transportation()
-
         # TODO set A1-A3 impacts / material could be a Model object or a product
         # TODO: add a output product to material models
         return self

@@ -19,8 +19,9 @@ my_building = my_building.set_template_model(name='template building',
                                            type='Commercial', 
                                            location=my_location, 
                                            built_year=2025,
+                                           life_span=60,
                                            file_path=template_model_path, 
                                            building_data=template_model_data)
 
-print(my_building.get_impacts(scope='construction'))
-print(my_building.get_emissions(scope='construction'))
+print(my_building.get_impacts(scope='replacement')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(my_building.get_emissions(scope='replacement'))

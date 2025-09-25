@@ -146,11 +146,11 @@ class EndOfLifeMixins:
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
                 if lc_stage is None:
-                    for emission_lst in material.get_waste_product().get_impacts().values():
+                    for emission_lst in material.get_waste_product().get_emissions().values():
                         for emission in emission_lst:
                             emissions += emission
                 else:
-                    for emission in material.get_waste_product().get_impacts()[lc_stage]:
+                    for emission in material.get_waste_product().get_emissions()[lc_stage]:
                         emissions += emission  
                         
         # TODO: test with the envelope assemblies

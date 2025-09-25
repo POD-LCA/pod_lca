@@ -55,6 +55,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         self.building_type = None
         self.structure_type = None
         self.built_year = None
+        self.life_span = None
         self.location = None
 
         self.floors = {}
@@ -130,7 +131,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         return building
 
     @classmethod
-    def from_template_model(cls, name, type, location, built_year, file_path, building_data):
+    def from_template_model(cls, name, type, location, built_year, life_span, file_path, building_data):
         """ Build a building from a template model data given in a CSV file.
         
         Parameters
@@ -143,6 +144,8 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
             Location of the building site.
         built_year: int
             Built year of the building.
+        life_span: int
+            Life span of the building in years.
         file_path : int
             File path to template model bill of material list.
         building_data : dict
@@ -155,12 +158,12 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         """
         building = cls()
 
-        building.set_template_model(name, type, location, built_year, file_path, building_data)
+        building.set_template_model(name, type, location, built_year, life_span, file_path, building_data)
 
         return building
 
     @classmethod
-    def from_geometry(cls, name, type, location, built_year, geometry, logistic_type='local'):
+    def from_geometry(cls, name, type, location, built_year, life_span, geometry, logistic_type='local'):
         """ Build a building.
         
         Parameters
@@ -173,6 +176,8 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
             Location of the building site.
         built_year: int
             Built year of the building.
+        life_span: int
+            Life span of the building in years.
         geometry : 
             Geometry details of the building
         logistic_type : {'local', 'global'}
@@ -189,6 +194,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         building.set_building_type(type)
         building.set_location(location)
         building.set_built_year(built_year)
+        building.set_life_span(life_span)
 
         building.set_transportation_manager(logistic_type)
 
@@ -247,6 +253,18 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         self.built_year = year
 
         return self
+    
+    def set_life_span(self, life_span):
+        """ Set life span of the building.
+        
+        Parameters
+        ----------
+        life_span: int
+            Life span of the building in years.
+        """
+        self.life_span = life_span
+
+        return self
 
     def set_location(self, location):
         """ Set location of the building site.
@@ -260,7 +278,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
 
         return self
     
-    def set_template_model(self, name, type, location, built_year, file_path, building_data):
+    def set_template_model(self, name, type, location, built_year, life_span, file_path, building_data):
         """ Set attributes to an existing building.
         
         Parameters
@@ -272,12 +290,15 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         location : ~pod_lca.location.Location
             Location of the building site.
         built_year: int
-            Built year of the building.  
+            Built year of the building. 
+        life_span: int
+            Life span of the building in years.
         """
         self.set_name(name)
         self.set_building_type(type)
         self.set_location(location)
         self.set_built_year(built_year)
+        self.set_life_span(life_span)
 
         self.add_floors(building_data['no_floors'], 
                         building_data['f2f_height'], 
@@ -349,7 +370,17 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
 
         """
         return self.built_year
-    
+
+    def get_life_span(self):
+        """ Get life span of the building.
+        
+        Returns
+        -------
+        int
+            Life span of the building in years.
+        """
+        return self.life_span
+        
     def get_floor(self, floor_no):
         """ Get the floor """
         pass
@@ -599,7 +630,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
             return self.get_eol_emissions(lc_stage)
         else:
             raise ValueError('LCA scope not recognized')
-
+        
 
 if __name__ == '__main__':
     pass

@@ -77,23 +77,15 @@ class BuildingStructure:
         for key in bill_of_materials:
             item = bill_of_materials[key]
             if item['Building Component'] in ['Structure', 'Superstructure', 'Substructure']:
-                building_element = item['assembly']
-                building_material = Material.new_structural_material(
-                    parent=structure,
-                    name=item['material'] + '_in_' + building_element, 
-                    qty=float(item['qty']),
-                    unit=UNITS_MAP[item['unit']],
-                    material_database_entry=item['material'],
-                    waste_rate=float(item['waste rate'])
-                )
                 
-                if building_element in ['Structural Foundations']:
+                building_assembly = item['assembly']
+                if building_assembly in ['Structural Foundations']:
                     assembly_obj = foundation
-                elif building_element in ["Structural Framing"]:
+                elif building_assembly in ["Structural Framing"]:
                     assembly_obj = beams
-                elif building_element in ["Structural Columns"]:
+                elif building_assembly in ["Structural Columns"]:
                     assembly_obj = columns
-                elif building_element in ["Floors"]:
+                elif building_assembly in ["Floors"]:
                     if item['Building Component'] in ["Superstructure"]:
                         assembly_obj = superstructure_floors
                     elif item['Building Component'] in ["Substructure"]:
@@ -102,7 +94,18 @@ class BuildingStructure:
                         raise NotImplementedError
                 else:
                     raise NotImplementedError
-                    
+                                    
+                building_material = Material.new_structural_material(
+                    parent=assembly_obj,
+                    name=item['material'] + '_in_' + building_assembly, 
+                    qty=float(item['qty']),
+                    unit=UNITS_MAP[item['unit']],
+                    material_database_entry=item['material'],
+                    product_year=building.get_built_year(),
+                    service_life=float(item['service life']),
+                    waste_rate=float(item['waste rate'])
+                )
+                
                 assembly_obj.add_material(building_material)
 
         # remove unused assembly
