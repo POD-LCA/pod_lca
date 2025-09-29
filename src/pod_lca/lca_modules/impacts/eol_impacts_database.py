@@ -150,6 +150,29 @@ class EOLImpactsDatabase(ImpactsDatabase):
                 raise ImportError(f"Data for {material_name} {process_name} process ({life_cycle_stage}) not in database.")
             else:
                 raise ImportError("Multiple matching entries exist...")
+            
+    # =================================
+    # Other methods
+    # =================================         
+    def check_database_entry(self, material):
+        """ Check if the database contains the given item.
+
+        Parameters
+        ----------
+        material : str
+            The name of the database item which gives the item impacts.
+
+        Returns
+        -------
+        bool
+            True, if the database contains the item.
+        """
+    
+        row_id = self.data.index[(self.data[self.get_primary_key()] == material)]
+        if len(row_id) == 0:
+            return False
+        else:
+            return True
 
 
 if __name__ == '__main__':

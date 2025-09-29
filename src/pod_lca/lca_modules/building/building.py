@@ -77,7 +77,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
     # Constructors
     # ================================
     @classmethod
-    def from_parameters(cls, name, type, location, built_year, no_floors, f2f_height, floor_plan, floors_below_grade=None, geometry_units=METER, logistic_type='local'):
+    def from_parameters(cls, name, type, location, built_year, life_span, no_floors, f2f_height, floor_plan, floors_below_grade=None, geometry_units=METER, logistic_type='local'):
         """ Build a building.
         
         Parameters
@@ -90,6 +90,8 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
             Location of the building site.
         built_year: int
             Built year of the building.
+        life_span: int
+            Life span of the building in years.
         no_floors : int
             Number of floors in the building.
         f2f_height : float
@@ -114,6 +116,13 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         building.set_building_type(type)
         building.set_location(location)
         building.set_built_year(built_year)
+        building.set_life_span(life_span)
+
+        building.set_material_database()
+        building.set_transportation_mode_impact_database()
+        building.set_eol_process_impact_database()
+        building.set_eol_demolition_impact_database()
+        building.set_eol_transport_dataset()
 
         if floors_below_grade is None:
             if no_floors > 2:
@@ -158,7 +167,19 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         """
         building = cls()
 
-        building.set_template_model(name, type, location, built_year, life_span, file_path, building_data)
+        building.set_name(name)
+        building.set_building_type(type)
+        building.set_location(location)
+        building.set_built_year(built_year)
+        building.set_life_span(life_span)
+
+        building.set_material_database()
+        building.set_transportation_mode_impact_database()
+        building.set_eol_process_impact_database()
+        building.set_eol_demolition_impact_database()
+        building.set_eol_transport_dataset()
+
+        building.set_template_model(file_path, building_data)
 
         return building
 
@@ -195,6 +216,12 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         building.set_location(location)
         building.set_built_year(built_year)
         building.set_life_span(life_span)
+
+        building.set_material_database()
+        building.set_transportation_mode_impact_database()
+        building.set_eol_process_impact_database()
+        building.set_eol_demolition_impact_database()
+        building.set_eol_transport_dataset()
 
         building.set_transportation_manager(logistic_type)
 
@@ -278,28 +305,16 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
 
         return self
     
-    def set_template_model(self, name, type, location, built_year, life_span, file_path, building_data):
+    def set_template_model(self, file_path, building_data):
         """ Set attributes to an existing building.
         
         Parameters
         ----------
-        name : str
-            Name of the building.
-        type : {'Commercial', 'Residential'}
-            Type of building.
-        location : ~pod_lca.location.Location
-            Location of the building site.
-        built_year: int
-            Built year of the building. 
-        life_span: int
-            Life span of the building in years.
+        file_path : int
+            File path to template model bill of material list.
+        building_data : dict
+            Dictionary provding building data
         """
-        self.set_name(name)
-        self.set_building_type(type)
-        self.set_location(location)
-        self.set_built_year(built_year)
-        self.set_life_span(life_span)
-
         self.add_floors(building_data['no_floors'], 
                         building_data['f2f_height'], 
                         building_data['floor_plan'], 

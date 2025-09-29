@@ -65,6 +65,7 @@ file_paths:
     FAF_MODE_CODE: data/transportation_faf_mode-codes.json
     ELECTRIC_VEHICLES: data/transportation_podlca_electric-vehicles.csv
     WASTE_TRANSPORT: data/transportation_podlca_waste-transport.csv
+    MODE_IMPACTS: data/transportation_podlca_emission.csv
   electricity:
     CAMBIUM_NATIONAL_DATA: data/electricity_cambium_consumption-national.csv
     CAMBIUM_REGIONAL_DATA: data/electricity_cambium_consumption-regional.csv
@@ -77,6 +78,8 @@ file_paths:
     ELECTRICITY_TECHNOLOGIES: data/electricity_netl_electricity-technologies.csv
   eol:
     EOL_DEFAULT_MIXES: data/eol_podlca_default-mixes.csv
+    EOL_DEMOLITION_IMPACTS: data/impacts_podlca_eol-demolition-impacts.csv
+    EOL_PROCESS_IMPACTS: data/impacts_podlca_eol-process-impacts.csv
   impacts:
     IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
     IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv
@@ -101,6 +104,8 @@ file_paths:
     MOLECULER_WEIGHT: data/drf_none_moleculer-weight.json
     CO2_IRF_PARAMETERS: data\\drf_ipcc_co2-irf-parameters.json
     INDIRECT_EFFECTS_FACTORS: data\\drf_ipcc_indirect-contributions.json
+  building:
+    DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 

@@ -398,6 +398,26 @@ class Material(Product):
         """
         return self.get_building().get_material_impact_database()
 
+    def get_eol_process_impact_database(self):
+        """ Get the end-of-life process impact database giving the C2-C4 impacts of the building materials.
+
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            End-of-life process impact database object.
+        """
+        return self.get_building().get_eol_process_impact_database()
+    
+    def get_eol_demolition_database(self):
+        """ Get the end-of-life demolition impact database giving the C1 impacts of the building materials.
+
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            End-of-life demolition impact database object.
+        """
+        return self.get_building().get_eol_demolition_database()
+
     def get_transportation_manager(self):
         """ Get the transportation manager corresponding to the product.
         
@@ -478,6 +498,9 @@ class Material(Product):
 
         if lc_stage is None:
             for impact_lst in self.get_waste_product().get_impacts().values():
+                if isinstance(impact_lst, Impacts):
+                    impacts += impact_lst
+                    continue
                 for impact in impact_lst:
                     impacts += impact
         else:
@@ -505,6 +528,9 @@ class Material(Product):
 
         if lc_stage is None:
             for emission_lst in self.get_waste_product().get_emissions().values():
+                if isinstance(emission_lst, Emissions):
+                    emissions += emission_lst
+                    continue
                 for emission in emission_lst:
                     emissions += emission
         else:

@@ -5,12 +5,15 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pathlib import Path
+
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import TranportationModeImpactsDatabase
 from ..transportation import TransportationManager
 from ..transportation import USDomesticTransportationManager
 from ..transportation import USGlobalTransportationManager
+from ...utilities import config
 
 class TransportationMixins:
     """ Methods for calculation of A4 impacts
@@ -59,15 +62,18 @@ class TransportationMixins:
     # ================================
     # Database Methods
     # ================================   
-    def set_transportation_mode_impact_database(self, file_path):
-        """ Set the impact database for end-of-life impacts.
+    def set_transportation_mode_impact_database(self, file_path=None):
+        """ Set the impact database for end-of-life impacts. If file path not given, the default database will be used.
         
         Parameters
         ----------
         file_path :str
             Filepath to the csv file containing impact data.
         """
-        if isinstance(file_path, str):
+        if file_path is None:
+            file_path = config['file_paths']['transportation']['MODE_IMPACTS']
+
+        if isinstance(file_path, (Path, str)):
             impact_database = TranportationModeImpactsDatabase.new("impact database")
             impact_database.set_data(file_path)
             self.transport_impact_database = impact_database

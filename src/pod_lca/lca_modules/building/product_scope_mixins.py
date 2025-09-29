@@ -5,9 +5,12 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pathlib import Path
+
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import ImpactsDatabase
+from ...utilities import config
 
 
 class ProductScopeMixins:
@@ -17,15 +20,17 @@ class ProductScopeMixins:
     # ================================
     # Database Methods
     # ================================
-    def set_material_database(self, file_path):
-        """ Set the impact database for materials (A1-A3).
+    def set_material_database(self, file_path=None):
+        """ Set the impact database for materials (A1-A3). If file path is not provided, the default database will be used.
         
         Parameters
         ----------
         file_path : str
             Filepath to the csv file containing impact data. The csv file must contain headers 'sctg code' and 'eol material' in addition to the 
         """
-        if isinstance(file_path, str):
+        if file_path is None:
+            file_path = config['file_paths']['building']['DEFAULT_IMPACT_DATABASE']
+        if isinstance(file_path, (str, Path)):
             impact_database = ImpactsDatabase.new("impact database")
             impact_database.set_data(file_path, additional_headers=['sctg code',
                                                                     'eol material', 

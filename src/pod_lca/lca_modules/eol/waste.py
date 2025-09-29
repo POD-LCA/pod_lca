@@ -9,9 +9,10 @@ from math import isnan
 
 from . import WasteProcess
 from ..dynamic_radiative_forcing import UniformEmissionProfile
+from ..impacts import Impacts
+from ..impacts import Emissions
 from ..materials_screening import Product
 from ..transportation import WasteTransportLeg
-from ...utilities import ArrayMethods
 from ...utilities import config
 from ...utilities import log
 
@@ -41,8 +42,8 @@ class Waste(Product):
         self.parent = None
         self.waste_processes = None
         self.process_mix = None
-        self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
-        self.emissions = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.impacts = {'C1':[], 'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.emissions = {'C1':[], 'C2':[], 'C3':[], 'C4':[], 'D':[]}
         self.bio_based = True
 
     def __str__(self):
@@ -124,9 +125,8 @@ class Waste(Product):
         database_item : str
             The name of the database item which gives the item impacts.
         """
-        database = self.get_eol_database()
-        row_id = database.data.index[(database.data[database.get_primary_key()] == database_item)]
-        if len(row_id) == 0:
+        database = self.get_eol_process_impact_database()
+        if not database.check_database_entry(database_item):
             if self.get_bio_based():
                 database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_BIOBASED'
             else:
@@ -288,6 +288,8 @@ class Waste(Product):
         self.production_year = year
     
         for emission_lst in self.get_emissions().values():
+            if isinstance(emission_lst, Emissions):
+                emission_lst = [emission_lst]
             for emission in emission_lst:
                 pulse = UniformEmissionProfile.unit_pulse(at=year)
                 emission.set_temporal_emission_profile(pulse)
@@ -381,7 +383,7 @@ class Waste(Product):
         """
         return self.production_year
 
-    def get_eol_database(self):
+    def get_eol_process_impact_database(self):
         """ Get the end-of-life product database corresponding to the project.
         
         Returns
@@ -389,7 +391,12 @@ class Waste(Product):
         ~pod_lca.impacts.EOLImpactsDatabase
             True, if the material is bio-based.        
         """
-        return self.get_parent().get_building().get_eol_database()
+        return self.get_parent().get_eol_process_impact_database()
+    
+    def get_demolition_impact_database(self):
+
+        return self.get_parent().get_eol_demolition_database()
+    
 
     # ================================
     # Methods
@@ -408,13 +415,33 @@ class Waste(Product):
             for key in emissions.keys():
                 emissions[key] = []
 
+            # C1 impacts
+            impacts['C1'] = Impacts.from_parent(self)
+            emissions['C1'] = Emissions.from_parent(self)
+
+            demolition_impact_database = self.get_demolition_impact_database()
+            database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
+            declared_unit = database_entry[demolition_impact_database.get_unit_key()]
+            declared_qty = database_entry[demolition_impact_database.get_qty_key()]
+            conversion_factor = declared_unit.convert_to(self.get_unit())
+
+            impacts_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
+                             for key in impacts['C1'].record_attr_dict}
+            emissions_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
+                               for key in emissions['C1'].record_attr_dict}
+
+            impacts['C1'].update_qty(impacts_data)
+            emissions['C1'].update_qty(emissions_data) 
+
             for process in self.get_waste_processes():
+                # C3-C4 impacts
                 process_impact = process.get_unit_impacts() * process.get_qty()
                 process_emission = process.get_unit_emissions() * process.get_qty()
                 impacts[process.get_life_cycle_stage()].append(process_impact)
                 emissions[process.get_life_cycle_stage()].append(process_emission)
 
                 if process.get_transportation_leg() is not None:
+                    # C2 impacts
                     impacts['C2'].append(process.get_transportation_leg().get_impacts())
                     emissions['C2'].append(process.get_transportation_leg().get_emissions())
 
@@ -436,7 +463,7 @@ class Waste(Product):
         for process in self.get_waste_processes():
             process_name = process.get_process_name()
             if (process_name in process_mix.keys()) and not (process_name == 'Landfill') and (process.get_linked_process(to=False) is None):
-                if process.transporation_leg.get_travel_dist() > process.transporation_leg.get_cutoff_distance():
+                if process.get_transportation_leg().get_travel_dist() > process.transporation_leg.get_cutoff_distance():
                     transfer_to_landfill_percentage += process_mix[process_name]
                     process_mix[process_name] = 0.0
                     log(f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")

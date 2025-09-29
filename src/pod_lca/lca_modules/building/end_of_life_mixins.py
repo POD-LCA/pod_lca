@@ -5,10 +5,14 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pathlib import Path
+
 from ..impacts import Emissions
 from ..impacts import EOLImpactsDatabase
 from ..impacts import Impacts
+from ..impacts import ImpactsDatabase
 from ..transportation import EOLTransportDataset
+from ...utilities import config
 
 
 class EndOfLifeMixins:
@@ -16,8 +20,8 @@ class EndOfLifeMixins:
     # ================================
     # Database Methods
     # ================================    
-    def set_eol_database(self, file_path, **kwargs):
-        """ Set the impact database for end-of-life impacts.
+    def set_eol_process_impact_database(self, file_path=None, **kwargs):
+        """ Set the impact database for end-of-life impacts. If file path not given, default database will be used.
         
         Parameters
         ----------
@@ -35,25 +39,59 @@ class EndOfLifeMixins:
         transport_dataset : ~pod_lca.transportation.TransportDataset
             Transportation dataset corresponding to the end-of-life impacts.
         """
-        primary_key = kwargs['primary_key'] if 'primary_key' in kwargs else 'Material'
-        process_key = kwargs['process_key'] if 'process_key' in kwargs else 'Process'
-        lc_stage_key = kwargs['lc_stage_key'] if 'lc_stage_key' in kwargs else 'LCA Stage'
-        transport_dataset = kwargs['transport_dataset'] if 'transport_dataset' in kwargs else EOLTransportDataset()
+        if file_path is None:
+            file_path = config['file_paths']['eol']['EOL_PROCESS_IMPACTS']
+        
+        if isinstance(file_path, (str, Path)):
+            primary_key = kwargs['primary_key'] if 'primary_key' in kwargs else 'Material'
+            process_key = kwargs['process_key'] if 'process_key' in kwargs else 'Process'
+            lc_stage_key = kwargs['lc_stage_key'] if 'lc_stage_key' in kwargs else 'LCA Stage'
 
-        eol_impact_database = EOLImpactsDatabase.new("EOL database")
+            eol_impact_database = EOLImpactsDatabase.new("EOL database")
 
-        eol_impact_database.set_primary_key(primary_key)
-        eol_impact_database.set_process_key(process_key)
-        eol_impact_database.set_life_cycle_stage_key(lc_stage_key)
-        eol_impact_database.set_data(file_path)
+            eol_impact_database.set_primary_key(primary_key)
+            eol_impact_database.set_process_key(process_key)
+            eol_impact_database.set_life_cycle_stage_key(lc_stage_key)
+            eol_impact_database.set_data(file_path)
 
-        self.eol_impact_database = eol_impact_database
+            self.eol_impact_database = eol_impact_database
 
-        self.set_eol_transport_dataset(transport_dataset)
-
+        else:
+            raise TypeError("Database input not recognized")
+        
         return self
     
-    def set_eol_transport_dataset(self, dataset):
+    def set_eol_demolition_impact_database(self, file_path=None, **kwargs):
+        """ Set the demolition impact database for end-of-life impacts. If file path not given, default database will be used.
+        
+        Parameters
+        ----------
+        file_path : str
+            Filepath of the csv file containing impact data.
+
+        Other Parameters
+        ----------------
+        primary_key : str
+            Header of the primary identifier column in the csv file. Default is 'Material'.
+        """
+        if file_path is None:
+            file_path = config['file_paths']['eol']['EOL_DEMOLITION_IMPACTS']
+
+        if isinstance(file_path, (str, Path)):
+            primary_key = kwargs['primary_key'] if 'primary_key' in kwargs else 'Material'
+
+            demolition_impact_database = ImpactsDatabase.new("demolition database")
+
+            demolition_impact_database.set_primary_key(primary_key)
+            demolition_impact_database.set_data(file_path)
+
+            self.eol_demolition_impact_database = demolition_impact_database
+        else:
+            raise TypeError("Database input not recognized")
+        
+        return self
+    
+    def set_eol_transport_dataset(self, dataset=None):
         """ Set transportation dataset for the end-of-life impacts.
 
         Parameters
@@ -61,6 +99,9 @@ class EndOfLifeMixins:
         dataset : ~pod_lca.transportation.TransportDataset
             End-of-life transportation dataset.
         """
+        if dataset is None:
+            dataset = EOLTransportDataset()
+
         self.eol_transport_dataset = dataset
 
         return self
@@ -75,7 +116,7 @@ class EndOfLifeMixins:
         """
         return self.transport_impact_database
     
-    def get_eol_database(self):
+    def get_eol_process_impact_database(self):
         """ Get the impact database for end-of-life impacts.
         
         Returns
@@ -84,6 +125,16 @@ class EndOfLifeMixins:
             End-of-Life impacts database.
         """
         return self.eol_impact_database
+    
+    def get_eol_demolition_database(self):
+        """ Get the demolition impact database for end-of-life impacts.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            End-of-Life demolition impacts database.
+        """
+        return self.eol_demolition_impact_database
 
     def get_eol_transport_dataset(self):
         """ Get transportation dataset for the end-of-life impacts.
@@ -118,10 +169,17 @@ class EndOfLifeMixins:
             for material in assembly.get_materials():
                 if lc_stage is None:
                     for impact_lst in material.get_waste_product().get_impacts().values():
+                        if isinstance(impact_lst, Impacts):
+                            impacts += impact_lst
+                            continue
                         for impact in impact_lst:
                             impacts += impact
                 else:
-                    for impact in material.get_waste_product().get_impacts()[lc_stage]:
+                    impact_lst = material.get_waste_product().get_impacts()[lc_stage]
+                    if isinstance(impact_lst, Impacts):
+                        impacts += impact_lst
+                        continue
+                    for impact in impact_lst:
                         impacts += impact      
         # TODO: test with the envelope assemblies
 
@@ -147,10 +205,17 @@ class EndOfLifeMixins:
             for material in assembly.get_materials():
                 if lc_stage is None:
                     for emission_lst in material.get_waste_product().get_emissions().values():
+                        if isinstance(emission_lst, Emissions):
+                            emissions += emission_lst
+                            continue
                         for emission in emission_lst:
                             emissions += emission
                 else:
-                    for emission in material.get_waste_product().get_emissions()[lc_stage]:
+                    emission_lst = material.get_waste_product().get_emissions()[lc_stage]
+                    if isinstance(emission_lst, Emissions):
+                        emissions += emission_lst
+                        continue
+                    for emission in emission_lst:
                         emissions += emission  
                         
         # TODO: test with the envelope assemblies
