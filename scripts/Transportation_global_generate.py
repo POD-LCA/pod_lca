@@ -53,6 +53,7 @@ travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USGlobalTransportationManager.new("Building A")
 project.get_dataset().force_location = False # Stops defaulting to closest state
+project.get_dataset().force_mode = False # Stops defaulting to default mode
 project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
