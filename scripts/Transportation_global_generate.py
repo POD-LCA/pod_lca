@@ -140,9 +140,9 @@ for sctg_code, material in Material_names.items():
                                     'return trip factor': RTT}
                                 
                                 for impact_cat in impact_categories:
-                                    output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + ')'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
+                                    output_dict[str(sequence_no)][impact_cat + ' (' + impact_categories[impact_cat]  + '/ tonne)'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
                                 for emission in emission_inventories:
-                                    output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + ')'] = 'NO DATA' if emissions is None else  emissions.get_record(emission)
+                                    output_dict[str(sequence_no)][emission + ' (' + emission_inventories[emission]  + '/ tonne)'] = 'NO DATA' if emissions is None else  emissions.get_record(emission)
 
                                 for impact_cat in impact_categories:
                                     output_dict[str(sequence_no)][impact_cat + '_foreign (' + impact_categories[impact_cat] + '/ km * tonne)'] = 'NO DATA' if impacts is None else foreign_transport_leg.get_mode().get_unit_impacts().get_record(impact_cat)

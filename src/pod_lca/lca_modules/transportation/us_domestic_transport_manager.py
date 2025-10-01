@@ -80,8 +80,8 @@ class USDomesticTransportationManager(TransportationManager):
     # Model Methods
     # ================================
     def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None, 
-                 transport_scenario=None, distance_unit= KILOMETER, return_trip_factor=None, 
-                 mode_name=None, mode_efficiency='Median'):
+                 transport_scenario='Average', distance_unit= KILOMETER, return_trip_factor=None, 
+                 mode_name='Truck', mode_efficiency='Median'):
         """ Add goods to the project. This method creates the appropriate transportation legs based on the data provided
 
         Parameters
@@ -94,7 +94,7 @@ class USDomesticTransportationManager(TransportationManager):
             Shipping destination.
         shipping_org : ~pod_lca.location.Location
             Shipping origin
-        transport_scenario : {'Local', 'Regional', 'Regional_c', 'National'}
+        transport_scenario : {'Local', 'Regional', 'Regional_c', 'National', 'Average'}
             Transportation scenario considered.
         distance_unit : ~pod_lca.units.Unit
             Unit of measurement of distances.

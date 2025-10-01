@@ -81,7 +81,7 @@ class USGlobalTransportationManager(TransportationManager):
     # ================================
     def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None,
                  transport_scenario=None, distance_unit= KILOMETER, return_trip_factor=None, 
-                 mode_name=None, mode_efficiency='Median'):
+                 mode_name='Ocean', mode_efficiency='Median'):
         """ Add good to the project. This method creates the appropriate tranportation leg based on the data provided
 
         Parameters

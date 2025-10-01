@@ -120,14 +120,14 @@ for sctg_code, material in Material_names.items():
                             f'electricity consumption ({electricity_report_unit.get_standard_notation()})': electricity_consumption}
                         
                         for impact_cat in impact_categories:
-                            output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + '/ tonne)'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
+                            output_dict[str(sequence_no)][impact_cat + ' (' + impact_categories[impact_cat] + '/ tonne)'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
                         for emission in emission_inventories:
-                            output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + '/ tonne)'] = 'NO DATA' if emissions is None else  emissions.get_record(emission)
+                            output_dict[str(sequence_no)][emission + ' (' + emission_inventories[emission] + '/ tonne)'] = 'NO DATA' if emissions is None else  emissions.get_record(emission)
 
                         for impact_cat in impact_categories:
-                            output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + '/ km * tonne)'] = 'NO DATA' if impacts is None else transport_leg.get_mode().get_unit_impacts().get_record(impact_cat)
+                            output_dict[str(sequence_no)][impact_cat + '_domestic (' + impact_categories[impact_cat] + '/ km * tonne)'] = 'NO DATA' if impacts is None else transport_leg.get_mode().get_unit_impacts().get_record(impact_cat)
                         for emission in emission_inventories:
-                            output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + '/ km *  tonne)'] = 'NO DATA' if emissions is None else  transport_leg.get_mode().get_unit_emissions().get_record(emission)
+                            output_dict[str(sequence_no)][emission + '_domestic (' + emission_inventories[emission] + '/ km *  tonne)'] = 'NO DATA' if emissions is None else  transport_leg.get_mode().get_unit_emissions().get_record(emission)
 
                         sequence_no += 1
 
