@@ -322,7 +322,6 @@ class Project:
         except Exception as e:
             log("An error occurred:" + e, "Error")
 
-
     # ================================
     # Calcualotror Methods
     # ================================

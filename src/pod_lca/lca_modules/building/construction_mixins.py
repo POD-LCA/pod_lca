@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..materials_screening import Electricity
 from ...units import Unit
 
@@ -39,7 +40,7 @@ class ConstructionMixins:
                                                            stage='A5', 
                                                            qty=energy_use_qty, 
                                                            unit=energy_use_unit, 
-                                                           year=self.get_built_year())  
+                                                           year=self.get_built_year())
 
         return self
     
@@ -58,11 +59,11 @@ class ConstructionMixins:
     # ================================ 
     def get_construction_impacts(self):
         """ Get A5 impacts of the building.
-        
+          
         Returns
         -------
         ~pod_lca.impacts.Impacts
-            A5 impacts of the building.
+            A5 impacts of the building. 
         """
         impacts = Impacts.from_parent(self)
 
@@ -71,13 +72,13 @@ class ConstructionMixins:
                 impacts += material.get_construction_impacts()
 
         # building level impacts
-        impacts += self.construction_energy_product.get_impacts()
+        impacts += self.construction_energy_product.get_impacts() 
 
         return impacts
 
     def get_construction_emissions(self):
         """ Get A5 impacts of the building.
-        
+                
         Returns
         -------
         ~pod_lca.impacts.Emissions
@@ -91,6 +92,9 @@ class ConstructionMixins:
 
         # building level emission
         emissions += self.construction_energy_product.get_emissions()
+
+        pulse = UniformEmissionProfile.unit_pulse(at=self.get_built_year())
+        emissions.set_temporal_emission_profile(pulse)
 
         return emissions
 

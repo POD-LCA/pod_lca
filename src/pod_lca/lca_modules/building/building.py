@@ -8,18 +8,20 @@ __version__ = "0.1.0"
 from . import ConstructionMixins
 from . import EndOfLifeMixins
 from . import Floor
+from . import OperationalMixins
 from . import ProductScopeMixins
 from . import TransportationMixins
 from . import UseMixins
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
+from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ...units import METER
 from ...units import UNITS_MAP
 from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
+class Building (EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy assembly).
 
     Attributes
@@ -590,7 +592,9 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         """
         # TODO: use cache with each part to avoid redoing calculations ---  same for emissions
         if scope == 'all':
-            pass
+            return (self.get_product_impacts() + self.get_transportation_impacts()
+                    + self.get_construction_impacts() + self.get_replacement_impacts()
+                    + self.get_operational_impacts() + self.get_eol_impacts(lc_stage))
         elif scope == 'product':
             return self.get_product_impacts()
         elif scope == 'transportation':
@@ -600,7 +604,7 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         elif scope == 'replacement':
             return self.get_replacement_impacts()
         elif scope == 'operational energy':
-            pass
+            return self.get_operational_impacts()
         elif scope in ['end of life', 'end-of-life']:
             return self.get_eol_impacts(lc_stage)
         else:
@@ -630,7 +634,9 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
             LCA emissions.
         """
         if scope == 'all':
-            pass
+            return (self.get_product_emissions() + self.get_transportation_emissions()
+                    + self.get_construction_emissions() + self.get_replacement_emissions()
+                    + self.get_operational_emissions() + self.get_eol_emissions(lc_stage))
         elif scope == 'product':
             return self.get_product_emissions()
         elif scope == 'transportation':
@@ -640,12 +646,39 @@ class Building (EndOfLifeMixins, UseMixins, ConstructionMixins, TransportationMi
         elif scope == 'replacement':
             return self.get_replacement_emissions()
         elif scope == 'operational energy':
-            pass
+            return self.get_operational_emissions()
         elif scope == 'end of life':
             return self.get_eol_emissions(lc_stage)
         else:
             raise ValueError('LCA scope not recognized')
+
+    def get_drf_record(self, time_horizon=100, time_step=1/12):
+        """ Get the dynamic radiative forcing record for all the products and procesess in the model.
         
+        Parameters
+        ----------
+        time_horizon : int
+            Time horizon in years.
+        time_step : int or float
+            Time step of the record. The same time step is used for both for integration and for reporting.
+
+        Returns
+        -------
+        ~pod_lca.drf.DynamicRadiativeForcingRecord
+            Dynamic Radiative Forcing Record
+        """
+        all_emissions = self.get_product_emissions(objs=True) + \
+                        self.get_transportation_emissions(objs=True) + \
+                        [self.get_construction_emissions()] + \
+                        self.get_eol_emissions(lc_stage=None, objs=True) + \
+                        self.get_replacement_emissions(objs=True) 
+                        # self.get_operational_emissions(objs=True) + \
+                        
+        return DynamicRadiativeForcingRecord.from_emissions(all_emissions, 
+                                                           self.get_built_year(), 
+                                                           time_horizon, 
+                                                           time_step)
+
 
 if __name__ == '__main__':
     pass

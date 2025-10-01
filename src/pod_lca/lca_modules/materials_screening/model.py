@@ -319,7 +319,7 @@ class Model:
             All products and processess in the model.
 
         """
-        return self.get_products() + self.get_processes()
+        return self.get_products() + self.get_processes() + self.get_transportation_manager().get_transportation_legs()
     
     def get_transportation_manager(self):
         """ Retrieve the logistics manager of the model.
@@ -708,7 +708,7 @@ class Model:
         ~pod_lca.drf.DynamicRadiativeForcingRecord
             Dynamic Radiative Forcing Record
         """
-        return DynamicRadiativeForcingRecord.from_products(self.get_all_items(), 
+        return DynamicRadiativeForcingRecord.from_products(self.get_all_items(),
                                                            self.get_project().get_year(), 
                                                            time_horizon, 
                                                            time_step)

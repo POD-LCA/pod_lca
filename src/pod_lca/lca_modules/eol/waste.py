@@ -42,9 +42,14 @@ class Waste(Product):
         self.parent = None
         self.waste_processes = None
         self.process_mix = None
-        self.impacts = {'C1':[], 'C2':[], 'C3':[], 'C4':[], 'D':[]}
-        self.emissions = {'C1':[], 'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.impacts = {'C1':Impacts.from_parent(self), 'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.emissions = {'C1':Emissions.from_parent(self), 'C2':[], 'C3':[], 'C4':[], 'D':[]}
         self.bio_based = True
+        
+        # cache
+        self._last_process_mix = None
+        self._last_database_entry = None
+
 
     def __str__(self):
         str = "="*50 + "\n" + f"Waste Product ({self.get_name()})\n" + "="*50 + "\n"
@@ -133,6 +138,7 @@ class Waste(Product):
                 database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_OTHER'
 
         self.impact_database_entry = database_item
+        self._last_database_entry = database_item # cache
 
         return self
         
@@ -271,6 +277,7 @@ class Waste(Product):
                 process_mix_cleaned[process_name] = mix_percent
             
             self.process_mix = process_mix_cleaned
+            self._last_process_mix = process_mix_cleaned # cache
 
             return self
         
@@ -358,6 +365,8 @@ class Waste(Product):
             for process in self.get_waste_processes():
                 if process.get_linked_process(to=False) is None:
                     process_mix[process.get_life_cycle_stage()] = process.get_qty() / self.get_qty()
+
+            self._last_process_mix = process_mix        
             
             return process_mix
         else:
@@ -400,50 +409,55 @@ class Waste(Product):
 
     # ================================
     # Methods
-    # ================================
+    # ================================       
     def update_inventory_records(self):
-        """ Update the transportation and processing impacts of the waste (C2-C4).
+        """ Update the demolition (C1), transportation (C2), and processing (C3-C4) impacts of waste. 
         """
         self.update_waste_process_mix()
         if self.get_waste_processes():
+            # update demolition impacts, if database entry changed
+            if self._last_database_entry != self.get_impact_database_entry():
+                # C1 impacts
+                demolition_impact_database = self.get_demolition_impact_database()
+                database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
+                declared_unit = database_entry[demolition_impact_database.get_unit_key()]
+                declared_qty = database_entry[demolition_impact_database.get_qty_key()]
+                conversion_factor = declared_unit.convert_to(self.get_unit())
 
-            impacts = self.impacts
-            for key in impacts.keys():
-                impacts[key] = []
+                impacts_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
+                                for key in impacts['C1'].record_attr_dict}
+                emissions_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
+                                for key in emissions['C1'].record_attr_dict}
 
-            emissions = self.emissions
-            for key in emissions.keys():
-                emissions[key] = []
+                impacts['C1'].update_qty(impacts_data)
+                emissions['C1'].update_qty(emissions_data)
 
-            # C1 impacts
-            impacts['C1'] = Impacts.from_parent(self)
-            emissions['C1'] = Emissions.from_parent(self)
+            # update process impacts, if mixes changed or database entry changed
+            if self._last_process_mix != self.get_process_mix(mode='actual') or self._last_database_entry != self.get_impact_database_entry():
 
-            demolition_impact_database = self.get_demolition_impact_database()
-            database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
-            declared_unit = database_entry[demolition_impact_database.get_unit_key()]
-            declared_qty = database_entry[demolition_impact_database.get_qty_key()]
-            conversion_factor = declared_unit.convert_to(self.get_unit())
+                impacts = self.impacts
+                for key in impacts.keys():
+                    if key != 'C1':
+                        impacts[key] = []
 
-            impacts_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
-                             for key in impacts['C1'].record_attr_dict}
-            emissions_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
-                               for key in emissions['C1'].record_attr_dict}
+                emissions = self.emissions
+                for key in emissions.keys():
+                    if key != 'C1':
+                        emissions[key] = []
 
-            impacts['C1'].update_qty(impacts_data)
-            emissions['C1'].update_qty(emissions_data) 
+                for process in self.get_waste_processes():
+                    # C3-C4 impacts
+                    process_impact = process.get_unit_impacts() * process.get_qty()
+                    process_emission = process.get_unit_emissions() * process.get_qty()
+                    impacts[process.get_life_cycle_stage()].append(process_impact)
+                    emissions[process.get_life_cycle_stage()].append(process_emission)
 
-            for process in self.get_waste_processes():
-                # C3-C4 impacts
-                process_impact = process.get_unit_impacts() * process.get_qty()
-                process_emission = process.get_unit_emissions() * process.get_qty()
-                impacts[process.get_life_cycle_stage()].append(process_impact)
-                emissions[process.get_life_cycle_stage()].append(process_emission)
+                    if process.get_transportation_leg() is not None:
+                        # C2 impacts
+                        impacts['C2'].append(process.get_transportation_leg().get_impacts())
+                        emissions['C2'].append(process.get_transportation_leg().get_emissions())
 
-                if process.get_transportation_leg() is not None:
-                    # C2 impacts
-                    impacts['C2'].append(process.get_transportation_leg().get_impacts())
-                    emissions['C2'].append(process.get_transportation_leg().get_emissions())
+                self.set_production_year(self.get_production_year())
 
         return self
 

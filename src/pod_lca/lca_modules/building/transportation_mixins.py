@@ -15,6 +15,7 @@ from ..transportation import USDomesticTransportationManager
 from ..transportation import USGlobalTransportationManager
 from ...utilities import config
 
+
 class TransportationMixins:
     """ Methods for calculation of A4 impacts
     """
@@ -95,35 +96,53 @@ class TransportationMixins:
     # ================================
     # Inventory Records Methods
     # ================================ 
-    def get_transportation_impacts(self):
+    def get_transportation_impacts(self, objs=False):
         """ Get A4 impacts of the building.
-        
+
+        Parameters
+        ----------
+        objs : bool, optional
+            If True, return a list of impacts objects for each material. 
+            If False, return a single impacts object for the entire building. Default is False.
+
         Returns
         -------
-        ~pod_lca.impacts.Impacts
-            A4-A5 impacts of the building.
+        ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
+            A4-A5 impacts of the building. List of impacts if objs is True.
         """
-        impacts = Impacts.from_parent(self)
+        impacts = [] if objs else Impacts.from_parent(self)
 
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                impacts += material.get_transportation_impacts()
+                if objs:
+                    impacts.extend(material.get_transportation_impacts(objs=True))
+                else:
+                    impacts += material.get_transportation_impacts()
 
         return impacts
 
-    def get_transportation_emissions(self):
+    def get_transportation_emissions(self, objs=False):
         """ Get A4 impacts of the building.
-        
+
+        Parameters
+        ----------
+        objs : bool, optional
+            If True, return a list of emissions objects for each material. 
+            If False, return a single emissions object for the entire building. Default is False.
+                
         Returns
         -------
-        ~pod_lca.impacts.Emissions
-            A4-A5 emissions of the building.
+        ~pod_lca.impacts.Emissions or list of ~pod_lca.impacts.Emissions
+            A4-A5 emissions of the building. List of emissions if objs is True.
         """
-        emissions = Emissions.from_parent(self)
+        emissions = [] if objs else Emissions.from_parent(self)
 
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                impacts += material.get_transportation_emissions()
+                if objs:
+                    emissions.extend(material.get_transportation_emissions(objs=True))
+                else:
+                    emissions += material.get_transportation_emissions()
 
         return emissions
 

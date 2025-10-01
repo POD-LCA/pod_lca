@@ -120,6 +120,10 @@ class Product(Master):
         pulse = UniformEmissionProfile.unit_pulse(at=year)
         self.get_emissions().set_temporal_emission_profile(pulse)
 
+        if self.get_transportation() is not None:
+            for leg in self.get_transportation():
+                leg.get_emissions().set_temporal_emission_profile(pulse)
+
         return self
     
     def set_density_unit(self, unit):
@@ -208,7 +212,11 @@ class Product(Master):
                                             return_trip_factor=None, 
                                             mode_name=mode_name,
                                             mode_efficiency=mode_efficiency)
-            self.transport_legs = transportation_manager.get_transportation_leg(self)
+
+        if self.get_production_year() is not None:
+            pulse = UniformEmissionProfile.unit_pulse(at=self.get_production_year())
+            for leg in self.get_transportation():
+                leg.get_emissions().set_temporal_emission_profile(pulse)
             
         return self
        
@@ -451,7 +459,7 @@ class Product(Master):
         """
         transportation_manager = self.get_transportation_manager()
 
-        return transportation_manager.get_link(self)
+        return transportation_manager.get_transportation_leg(self)
 
     def get_mineral_carbonation_potential(self):
         """ Set mineral carbonation potential of the product.

@@ -35,8 +35,7 @@ class Material(Product):
     waste_rate : float
         Waste rate of the material during construction of the assembly/building.
     service_life : float
-        Service life of the material in years.
-    
+        Service life of the material in years.  
     """
     
     def __init__(self):
@@ -451,35 +450,53 @@ class Material(Product):
         """        
         return self.get_emissions()
 
-    def get_transportation_impacts(self):
+    def get_transportation_impacts(self, objs=False):
         """ Get A4 impacts of the material.
+
+        Parameters
+        ----------
+        objs : bool
+            If True, returns a list of Impacts objects for each transport leg. 
+            If False, returns a single Impacts object summing all transport legs. Default is False.
         
         Returns
         -------
-        ~pod_lca.impacts.Impacts
-            A4-A5 impacts of the material.
+        ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
+            A4-A5 impacts of the material. List of impacts if objs is True.
         """
-        impacts = Impacts.from_parent(self)
-        for leg in self.transport_legs:
-            impacts += leg.get_impacts()
+        impacts = [] if objs else Impacts.from_parent(self)
+        for leg in self.get_transportation():
+            if objs:
+                impacts.append(leg.get_impacts())
+            else:
+                impacts += leg.get_impacts()
 
         return impacts
 
-    def get_transportation_emissions(self):
+    def get_transportation_emissions(self, objs=False):
         """ Get A4-A5 impacts of the building.
-        
+
+        Parameters
+        ----------
+        objs : bool
+            If True, returns a list of Emissions objects for each transport leg. 
+            If False, returns a single Emissions object summing all transport legs. Default is False.
+
         Returns
         -------
-        ~pod_lca.impacts.Emissions
-            A4-A5 emissions of the building.
+        ~pod_lca.impacts.Emissions or list of ~pod_lca.impacts.Emissions
+            A4-A5 emissions of the building. List of emissions if objs is True.
         """
-        emissions = Emissions.from_parent(self)
-        for leg in self.transport_legs:
-            emissions += leg.get_emissions()    
+        emissions = [] if objs else Emissions.from_parent(self)
+        for leg in self.get_transportation():
+            if objs:
+                emissions.append(leg.get_emissions())
+            else:
+                emissions += leg.get_emissions()    
         
         return emissions
 
-    def get_eol_impacts(self, lc_stage=None):
+    def get_eol_impacts(self, lc_stage=None, objs=False):
         """ Get C2-C4 impacts of the material.
 
         Parameters
@@ -488,28 +505,47 @@ class Material(Product):
             Life cycle stage for which the impacts to be calculated. 
             If None, gives impacts for all the relevant life cycle stages. 
             Default is None.
-        
+        objs : bool
+            If True, returns a list of Impacts objects for eol pathway, transportation, and demolition. 
+            If False, returns a single Impacts object summing all eol pathways, transportations, and demolition. Default is False.
+
         Returns
         -------
-        ~pod_lca.impacts.Impacts
-            C2-C4 impacts of the building.
+        ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
+            C2-C4 impacts of the building. List of impacts if objs is True.
         """
-        impacts = Impacts.from_parent(self)
+        impacts = [] if objs else Impacts.from_parent(self)
 
         if lc_stage is None:
             for impact_lst in self.get_waste_product().get_impacts().values():
                 if isinstance(impact_lst, Impacts):
-                    impacts += impact_lst
-                    continue
-                for impact in impact_lst:
-                    impacts += impact
+                    if objs:
+                        impacts.append(impact_lst)
+                    else:
+                        impacts += impact_lst
+                else:
+                    for impact in impact_lst:
+                        if objs:
+                            impacts.append(impact)
+                        else:
+                            impacts += impact
         else:
-            for impact in self.get_waste_product().get_impacts()[lc_stage]:
-                impacts += impact      
+            impact_lst = self.get_waste_product().get_impacts()[lc_stage]
+            if isinstance(impact_lst, Impacts):
+                if objs:
+                    impacts.append(impact_lst)
+                else:
+                    impacts += impact_lst
+            else:
+                for impact in impact_lst:
+                    if objs:
+                        impacts.append(impact)
+                    else:
+                        impacts += impact
 
         return impacts
 
-    def get_eol_emissions(self, lc_stage=None):
+    def get_eol_emissions(self, lc_stage=None, objs=False):
         """ Get C2-C4 emissions of the building.
         
         Parameters
@@ -518,30 +554,49 @@ class Material(Product):
             Life cycle stage for which the emissions to be calculated. 
             If None, gives emissions for all the relevant life cycle stages. 
             Default is None.
+        objs : bool
+            If True, returns a list of Emissions objects for eol pathway, transportation, and demolition. 
+            If False, returns a single Emissions object summing all eol pathways, transportations, and demolition. Default is False.
 
         Returns
         -------
-        ~pod_lca.impacts.Emissions
-            C2-C4 emissions of the building.
+        ~pod_lca.impacts.Emissions or list of ~pod_lca.impacts.Emissions
+            C2-C4 emissions of the building. List of emissions if objs is True.
         """        
-        emissions = Emissions.from_parent(self)
+        emissions = [] if objs else Emissions.from_parent(self)
 
         if lc_stage is None:
             for emission_lst in self.get_waste_product().get_emissions().values():
                 if isinstance(emission_lst, Emissions):
-                    emissions += emission_lst
-                    continue
-                for emission in emission_lst:
-                    emissions += emission
+                    if objs:
+                        emissions.append(emission_lst)
+                    else:
+                        emissions += emission_lst
+                else:
+                    for emission in emission_lst:
+                        if objs:
+                            emissions.append(emission)
+                        else:
+                            emissions += emission
         else:
-            for emission in self.get_waste_product().get_emissions()[lc_stage]:
-                emissions += emission  
+            emission_lst = self.get_waste_product().get_emissions()[lc_stage]
+            if isinstance(emission_lst, Emissions):
+                if objs:
+                    emissions.append(emission_lst)
+                else:
+                    emissions += emission_lst
+            else:
+                for emission in emission_lst:
+                    if objs:
+                        emissions.append(emission)
+                    else:
+                        emissions += emission  
 
         return emissions
 
     def get_construction_impacts(self):
         """ Get A5 impacts of the building.
-        
+
         Returns
         -------
         ~pod_lca.impacts.Impacts
@@ -551,43 +606,70 @@ class Material(Product):
 
     def get_construction_emissions(self):
         """ Get A5 impacts of the building.
-        
+
         Returns
         -------
         ~pod_lca.impacts.Emissions
             A4-A5 emissions of the building.
         """
-        return (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * self.get_waste_rate()
-    
-    def get_replacement_impacts(self):
-        """ Get B6 impacts of the building.
-        
-        Returns
-        -------
-        ~pod_lca.impacts.Impacts
-            B6 impacts of the building.
-        """
-        if self.get_replacement_materials() is None:
-            return Impacts.from_parent(self)
-        else:
-            return self.get_replacement_materials().get_product_impacts()
-            + self.get_replacement_materials().get_transportation_impacts() 
-            + self.get_replacement_materials().get_eol_impacts()
+        emission = (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * self.get_waste_rate()
 
-    def get_replacement_emissions(self):
+        pulse = UniformEmissionProfile.unit_pulse(at=self.get_building().get_built_year())
+        emission.set_temporal_emission_profile(pulse)
+
+        return emission
+    
+    def get_replacement_impacts(self, objs=False):
         """ Get B6 impacts of the building.
+
+        Parameters
+        ----------
+        objs : bool
+            If True, returns a list of Impacts objects for product, transportation, and eol. 
+            If False, returns a single Impacts object summing product, transportation, and eol. Default is False.
         
         Returns
         -------
-        ~pod_lca.impacts.Impacts
-            B6 impacts of the building.
+        ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
+            B6 impacts of the building. List of impacts if objs is True.
         """
         if self.get_replacement_materials() is None:
             return Impacts.from_parent(self)
         else:
-            return self.get_replacement_materials().get_product_emissions()
-            + self.get_replacement_materials().get_transportation_emissions() 
-            + self.get_replacement_materials().get_eol_emissions()
+            if objs:
+                return [self.get_replacement_materials().get_product_impacts(),
+                        self.get_replacement_materials().get_transportation_impacts(objs=True),
+                        self.get_replacement_materials().get_eol_impacts(objs=True)]
+            else:
+                return self.get_replacement_materials().get_product_impacts() + \
+                       self.get_replacement_materials().get_transportation_impacts() +\
+                       self.get_replacement_materials().get_eol_impacts()
+
+    def get_replacement_emissions(self, objs=False):
+        """ Get B6 impacts of the building.
+
+        Parameters
+        ----------
+        objs : bool
+            If True, returns a list of Emissions objects for product, transportation, and eol. 
+            If False, returns a single Emissions object summing product, transportation, and eol. Default is False.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions or list of ~pod_lca.impacts.Emissions
+            B6 impacts of the building. List of impacts if objs is True.
+        """
+        if self.get_replacement_materials() is None:
+            return Impacts.from_parent(self)
+        else:
+            if objs:
+                return [self.get_replacement_materials().get_product_emissions(),
+                        self.get_replacement_materials().get_transportation_emissions(objs=True),
+                        self.get_replacement_materials().get_eol_emissions(objs=True)]
+            else:
+                return self.get_replacement_materials().get_product_emissions() + \
+                       self.get_replacement_materials().get_transportation_emissions() + \
+                       self.get_replacement_materials().get_eol_emissions()
                 
     # @classmethod
     # def new_enclosure_material(cls,

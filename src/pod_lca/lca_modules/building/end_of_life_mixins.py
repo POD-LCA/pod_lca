@@ -149,7 +149,7 @@ class EndOfLifeMixins:
     # ================================
     # Inventory Records Methods
     # ================================ 
-    def get_eol_impacts(self, lc_stage=None):
+    def get_eol_impacts(self, lc_stage=None, objs=False):
         """ Get C2-C4 impacts of the building.
 
         Parameters
@@ -158,34 +158,35 @@ class EndOfLifeMixins:
             Life cycle stage for which the impacts to be calculated. 
             If None, gives impacts for all the relevant life cycle stages. 
             Default is None.
+        objs : bool, optional
+            If True, return a list of impacts objects for each material. 
+            If False, return a single impacts object for the entire building. Default is False.
         
         Returns
         -------
-        ~pod_lca.impacts.Impacts
-            C2-C4 impacts of the building.
+        ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
+            C2-C4 impacts of the building. List of impacts objects if objs is True.
         """
-        impacts = Impacts.from_parent(self)
+        impacts = [] if objs else Impacts.from_parent(self)
+
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                if lc_stage is None:
-                    for impact_lst in material.get_waste_product().get_impacts().values():
-                        if isinstance(impact_lst, Impacts):
-                            impacts += impact_lst
-                            continue
-                        for impact in impact_lst:
-                            impacts += impact
-                else:
-                    impact_lst = material.get_waste_product().get_impacts()[lc_stage]
-                    if isinstance(impact_lst, Impacts):
+                impact_lst = material.get_eol_impacts(lc_stage, objs)
+                if isinstance(impact_lst, Impacts):
+                    if objs:
+                        impacts.append(impact_lst)
+                    else:
                         impacts += impact_lst
-                        continue
+                else:
                     for impact in impact_lst:
-                        impacts += impact      
-        # TODO: test with the envelope assemblies
+                        if objs:
+                            impacts.append(impact)
+                        else:
+                            impacts += impact
 
         return impacts
 
-    def get_eol_emissions(self, lc_stage=None):
+    def get_eol_emissions(self, lc_stage=None, objs=False):
         """ Get C2-C4 emissions of the building.
         
         Parameters
@@ -194,31 +195,32 @@ class EndOfLifeMixins:
             Life cycle stage for which the emissions to be calculated. 
             If None, gives emissions for all the relevant life cycle stages. 
             Default is None.
-
+        objs : bool, optional
+            If True, return a list of emissions objects for each material. 
+            If False, return a single emissions object for the entire building. Default is False.
+            
         Returns
         -------
-        ~pod_lca.impacts.Emissions
-            C2-C4 emissions of the building.
+        ~pod_lca.impacts.Emissions or list of ~pod_lca.impacts.Emissions
+            C2-C4 emissions of the building. List of emissions objects if objs is True.
         """        
-        emissions = Emissions.from_parent(self)
+        emissions = [] if objs else Emissions.from_parent(self)
+
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                if lc_stage is None:
-                    for emission_lst in material.get_waste_product().get_emissions().values():
-                        if isinstance(emission_lst, Emissions):
-                            emissions += emission_lst
-                            continue
-                        for emission in emission_lst:
-                            emissions += emission
-                else:
-                    emission_lst = material.get_waste_product().get_emissions()[lc_stage]
-                    if isinstance(emission_lst, Emissions):
+                emission_lst = material.get_eol_emissions(lc_stage, objs)
+                if isinstance(emission_lst, Emissions):
+                    if objs:
+                        emissions.append(emission_lst)
+                    else:
                         emissions += emission_lst
-                        continue
+                else:
                     for emission in emission_lst:
-                        emissions += emission  
-                        
-        # TODO: test with the envelope assemblies
+                        if objs:
+                            emissions.extend(emission_lst)
+                            break
+                        else:
+                            emissions += emission
 
         return emissions
 

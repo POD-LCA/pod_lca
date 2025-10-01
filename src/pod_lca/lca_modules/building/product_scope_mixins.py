@@ -55,34 +55,52 @@ class ProductScopeMixins:
     # ================================
     # Inventory Records Methods
     # ================================        
-    def get_product_impacts(self):
+    def get_product_impacts(self, objs=False):
         """ Get A1-A3 impacts of the building.
-        
+
+        Parameters
+        ----------
+        objs : bool, optional
+            If True, return a list of impacts objects for each material. 
+            If False, return a single impacts object for the entire building. Default is False.
+
         Returns
         -------
-        ~pod_lca.impacts.Impacts
-            A1-A3 impacts of the building.
+        ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
+            A1-A3 impacts of the building. List of impacts if Objs is True.
         """
-        impacts = Impacts.from_parent(self)
+        impacts = [] if objs else Impacts.from_parent(self)
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                impacts += material.get_impacts()
+                if objs:
+                    impacts.append(material.get_impacts())
+                else:
+                    impacts += material.get_impacts()
         # TODO: test with the envelope assemblies
 
         return impacts
 
-    def get_product_emissions(self):
+    def get_product_emissions(self, objs=False):
         """ Get A1-A3 emissions of the building.
+
+        Parameters
+        ----------
+        objs : bool, optional
+            If True, return a list of emissions objects for each material. 
+            If False, return a single emissions object for the entire building. Default is False.
         
         Returns
         -------
-        ~pod_lca.impacts.Emissions
-            A1-A3 emissions of the building.
+        ~pod_lca.impacts.Emissions, list of ~pod_lca.impacts.Emissions
+            A1-A3 emissions of the building. List of emissions if Objs is True.
         """        
-        emissions = Emissions.from_parent(self)
+        emissions = [] if objs else Emissions.from_parent(self)
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                emissions += material.get_emissions()
+                if objs:
+                    emissions.append(material.get_emissions())
+                else:
+                    emissions += material.get_emissions()
         # TODO: test with the envelope assemblies
 
         return emissions

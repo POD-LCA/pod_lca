@@ -16,5 +16,8 @@ my_building = Building.from_template_model(name='template building',
                                            file_path=template_model_path, 
                                            building_data=template_model_data)
 
-print(my_building.get_impacts(scope='transportation', lc_stage='C1')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(my_building.get_emissions(scope='end of life', lc_stage='C1'))
+print(my_building.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(my_building.get_emissions(scope='product', lc_stage=None))
+
+drf_record = my_building.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('instantaneous radiative forcing')
