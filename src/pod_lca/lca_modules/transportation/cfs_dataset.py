@@ -21,6 +21,10 @@ class CFSDataset(TransportDataset):
     ----------
     force_location : bool
         If true, when location (origin/destination) not found in the dataset, use closest location.
+    force_mode : bool
+        If true, when mode not found in the dataset, use forced_mode
+    force_mode_value : str
+        The mode to use when the specified mode is not found in the dataset.
     cfs_dataset : ~pandas.DataFrame
         Pre-processed dataset from the Comodity Flow Survery (CFS).
     cfs_mode_mapping : dict
@@ -29,6 +33,9 @@ class CFSDataset(TransportDataset):
 
     def __init__(self):
         self.force_location = True
+        self.force_mode = True
+        self.force_mode_value = "Truck"
+        
         self.cfs_dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH']) 
         self.cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
 
@@ -66,14 +73,6 @@ class CFSDataset(TransportDataset):
                 raise ValueError("Material not found in the CFS dataset")
             cfs = cfs_filtered
 
-        # Mode
-        if isinstance(mode,  TransportMode):
-            cfs_modes_mapping = self.cfs_modes_mapping
-            cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
-            if cfs_filtered.empty:
-                raise ValueError("Transportation mode not in CFS dataset")
-            cfs = cfs_filtered  
-        
         # Destination
         if isinstance(destination, Location):
             cfs_filtered = cfs[cfs["DEST_STATE"] == destination.get_cfs_area()]
@@ -97,7 +96,19 @@ class CFSDataset(TransportDataset):
                 else:
                     raise ValueError("Origin not in CFS Dataset.")    
             cfs = cfs_filtered
-      
+
+        # Mode
+        if isinstance(mode,  TransportMode):
+            cfs_modes_mapping = self.cfs_modes_mapping
+            cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
+            if cfs_filtered.empty:
+                if self.force_mode:
+                    cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[self.force_mode_value])]
+                    log(f"Forced mode {self.force_mode_value} is used to estimate travel distance.", "Info")
+                else:
+                    raise ValueError("Transportation mode not in CFS dataset")
+            cfs = cfs_filtered  
+        
         return cfs
     
     @staticmethod
