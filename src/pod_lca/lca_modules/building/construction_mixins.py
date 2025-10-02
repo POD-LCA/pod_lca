@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..dynamic_radiative_forcing import UniformEmissionProfile
+from ..impacts import UniformEmissionProfile
 from ..materials_screening import Electricity
 from ...units import Unit
 

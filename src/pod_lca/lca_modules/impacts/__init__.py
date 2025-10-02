@@ -8,5 +8,9 @@ from .electricity_impacts_database import ElectricityImpactsDatabase
 from .eol_impacts_database import EOLImpactsDatabase
 from .transportation_impacts_database import TranportationModeImpactsDatabase
 from .olca_data import openLCA
+from .temporal_emission_profiles import UniformEmissionProfile
+from .temporal_emission_profiles import NormEmissionProfile
+from .temporal_emission_profiles import LogNormEmissionProfile
+from .temporal_emission_profiles import ExponentDecayEmissionProfile
 
 __all__ = ["CarbonStorage", "ElectricityImpactsDatabase", "Emissions", "Impacts", "ImpactsDatabase",  "EOLImpactsDatabase", "openLCA", "Records", "TranportationModeImpactsDatabase"]

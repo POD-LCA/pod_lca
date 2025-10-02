@@ -9,10 +9,10 @@ from numpy import bool_ as np_bool
 
 from . import Master
 from . import Electricity
-from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOMETER

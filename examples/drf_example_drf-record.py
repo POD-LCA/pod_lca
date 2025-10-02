@@ -1,10 +1,10 @@
 
 from pod_lca.impacts import Emissions
-from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
-from pod_lca.dynamic_radiative_forcing import ExponentDecayEmissionProfile
-from pod_lca.dynamic_radiative_forcing import UniformEmissionProfile
-from pod_lca.dynamic_radiative_forcing import NormEmissionProfile
-from pod_lca.dynamic_radiative_forcing import LogNormEmissionProfile
+from pod_lca.impacts import DynamicRadiativeForcingRecord
+from pod_lca.impacts import ExponentDecayEmissionProfile
+from pod_lca.impacts import UniformEmissionProfile
+from pod_lca.impacts import NormEmissionProfile
+from pod_lca.impacts import LogNormEmissionProfile
 
 emission_01 = Emissions.from_dict(record_dict={'CO2': 1})
 pulse = UniformEmissionProfile.unit_pulse(at=2035)

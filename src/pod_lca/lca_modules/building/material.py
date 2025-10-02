@@ -7,11 +7,11 @@ __version__ = "0.1.0"
 
 import gc
 
-from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..eol.waste import Waste
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..impacts import UniformEmissionProfile
 from ..materials_screening import Product
 from ...units import UNITS_MAP
 from ...utilities import config

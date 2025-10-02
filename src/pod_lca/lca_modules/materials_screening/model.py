@@ -14,7 +14,7 @@ from . import Fuel
 from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
-from ..dynamic_radiative_forcing import UniformEmissionProfile
+from ..impacts import UniformEmissionProfile
 from ..transportation import TransportationManager
 from ..transportation import USDomesticTransportationManager
 from ..transportation import USGlobalTransportationManager

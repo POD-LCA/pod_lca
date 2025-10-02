@@ -8,9 +8,9 @@ __version__ = "0.1.0"
 from math import isnan
 
 from . import WasteProcess
-from ..dynamic_radiative_forcing import UniformEmissionProfile
 from ..impacts import Impacts
 from ..impacts import Emissions
+from ..impacts import UniformEmissionProfile
 from ..materials_screening import Product
 from ..transportation import WasteTransportLeg
 from ...utilities import config
