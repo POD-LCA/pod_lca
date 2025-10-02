@@ -169,7 +169,19 @@ class Material(Product):
         # ideally, this should be linked to the assembly, not the building structure
 
         return self
-    
+
+    def set_name(self, name):
+        """ Set name of the product/process.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the product/process.
+        """
+        self.name = name + ' in ' + self.get_parent().get_name()
+
+        return self
+        
     def set_density(self, material_database_entry):
         """ Set the density of the material.
         
@@ -633,17 +645,26 @@ class Material(Product):
         ~pod_lca.impacts.Impacts or list of ~pod_lca.impacts.Impacts
             B6 impacts of the building. List of impacts if objs is True.
         """
-        if self.get_replacement_materials() is None:
+        replacement_materals = self.get_replacement_materials()
+        if replacement_materals is None:
             return Impacts.from_parent(self)
         else:
-            if objs:
-                return [self.get_replacement_materials().get_product_impacts(),
-                        self.get_replacement_materials().get_transportation_impacts(objs=True),
-                        self.get_replacement_materials().get_eol_impacts(objs=True)]
-            else:
-                return self.get_replacement_materials().get_product_impacts() + \
-                       self.get_replacement_materials().get_transportation_impacts() +\
-                       self.get_replacement_materials().get_eol_impacts()
+            impacts = [] if objs else Impacts.from_parent(self)
+            for replacement in replacement_materals:
+                if objs:
+                    replacement_impact = [replacement.get_product_impacts(),
+                                            *replacement.get_transportation_impacts(objs=True),
+                                            *replacement.get_eol_impacts(objs=True),
+                                            replacement.get_construction_impacts()]
+                    impacts.extend(replacement_impact)
+                else:
+                            replacement_impact = (replacement.get_product_impacts() + 
+                                                  replacement.get_transportation_impacts() + 
+                                                  replacement.get_eol_impacts() + 
+                                                  replacement.get_construction_impacts())
+                            impacts += replacement_impact
+
+            return impacts
 
     def get_replacement_emissions(self, objs=False):
         """ Get B6 impacts of the building.
@@ -659,18 +680,26 @@ class Material(Product):
         ~pod_lca.impacts.Emissions or list of ~pod_lca.impacts.Emissions
             B6 impacts of the building. List of impacts if objs is True.
         """
-        if self.get_replacement_materials() is None:
-            return Impacts.from_parent(self)
+        replacement_materals = self.get_replacement_materials()
+        if replacement_materals is None:
+            return Emissions.from_parent(self)
         else:
-            if objs:
-                return [self.get_replacement_materials().get_product_emissions(),
-                        self.get_replacement_materials().get_transportation_emissions(objs=True),
-                        self.get_replacement_materials().get_eol_emissions(objs=True)]
-            else:
-                return self.get_replacement_materials().get_product_emissions() + \
-                       self.get_replacement_materials().get_transportation_emissions() + \
-                       self.get_replacement_materials().get_eol_emissions()
-                
+            emissions = [] if objs else Emissions.from_parent(self)
+            for replacement in replacement_materals:
+                if objs:
+                    replacement_emission = [replacement.get_product_emissions(),
+                                            *replacement.get_transportation_emissions(objs=True),
+                                            *replacement.get_eol_emissions(objs=True),
+                                            replacement.get_construction_emissions()]
+                    emissions.extend(replacement_emission)
+                else:
+                            replacement_emission = (replacement.get_product_emissions() + 
+                                                    replacement.get_transportation_emissions() + 
+                                                    replacement.get_eol_emissions() + 
+                                                    replacement.get_construction_emissions())
+                            emissions += replacement_emission
+            return emissions
+
     # @classmethod
     # def new_enclosure_material(cls,
     #                            name,

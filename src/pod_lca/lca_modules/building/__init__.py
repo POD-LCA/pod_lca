@@ -12,6 +12,7 @@ from .transportation_mixins import TransportationMixins
 from .construction_mixins import ConstructionMixins
 from .use_mixins import UseMixins
 from .operational_energy_mixins import OperationalMixins
+from .data_mixins import DataMixins
 from .floor import Floor
 from .material import BuildingEnvelopeMaterial
 from .material import BuildingEnvelopeMaterialNoMass

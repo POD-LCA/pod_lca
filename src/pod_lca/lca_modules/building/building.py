@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from . import ConstructionMixins
+from . import DataMixins
 from . import EndOfLifeMixins
 from . import Floor
 from . import OperationalMixins
@@ -21,7 +22,7 @@ from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
+class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy assembly).
 
     Attributes
