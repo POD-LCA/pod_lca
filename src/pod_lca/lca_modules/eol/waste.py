@@ -47,8 +47,7 @@ class Waste(Product):
         self.bio_based = True
         
         # cache
-        self._last_process_mix = None
-        self._last_database_entry = None
+        self._inventory_records_uptodata = False
 
 
     def __str__(self):
@@ -138,7 +137,7 @@ class Waste(Product):
                 database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_OTHER'
 
         self.impact_database_entry = database_item
-        self._last_database_entry = database_item # cache
+        self._inventory_records_uptodata = False
 
         return self
         
@@ -277,7 +276,7 @@ class Waste(Product):
                 process_mix_cleaned[process_name] = mix_percent
             
             self.process_mix = process_mix_cleaned
-            self._last_process_mix = process_mix_cleaned # cache
+            self._inventory_records_uptodata = False
 
             return self
         
@@ -415,8 +414,9 @@ class Waste(Product):
         """
         self.update_waste_process_mix()
         if self.get_waste_processes():
-            # update demolition impacts, if database entry changed
-            if self._last_database_entry != self.get_impact_database_entry():
+            if not self._inventory_records_uptodata:
+                self._inventory_records_uptodata = True
+
                 # C1 impacts
                 demolition_impact_database = self.get_demolition_impact_database()
                 database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
@@ -425,15 +425,12 @@ class Waste(Product):
                 conversion_factor = declared_unit.convert_to(self.get_unit())
 
                 impacts_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
-                                for key in impacts['C1'].record_attr_dict}
+                                for key in self.impacts['C1'].record_attr_dict}
                 emissions_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
-                                for key in emissions['C1'].record_attr_dict}
+                                for key in self.emissions['C1'].record_attr_dict}
 
-                impacts['C1'].update_qty(impacts_data)
-                emissions['C1'].update_qty(emissions_data)
-
-            # update process impacts, if mixes changed or database entry changed
-            if self._last_process_mix != self.get_process_mix(mode='actual') or self._last_database_entry != self.get_impact_database_entry():
+                self.impacts['C1'].update_qty(impacts_data)
+                self.emissions['C1'].update_qty(emissions_data)
 
                 impacts = self.impacts
                 for key in impacts.keys():
@@ -532,8 +529,8 @@ class Waste(Product):
         if abs(sum - 1) < tol:
             return True
         else:
-            return False
-        
-        
+            return False     
+
+
 if __name__ == '__main__':
     pass
