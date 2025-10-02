@@ -10,7 +10,7 @@ from ..electricity import ElectricitySupply
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..uncertainty import DataDistribution
+from ..analysis import DataDistribution
 from ...utilities import config
 
 

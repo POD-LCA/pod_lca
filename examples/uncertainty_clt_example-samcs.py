@@ -17,8 +17,8 @@ import time
 from pod_lca.impacts import ImpactsDatabase
 from pod_lca.location import Location
 from pod_lca.materials_screening import Project
-from pod_lca.uncertainty import DataDistribution
-from pod_lca.uncertainty import MonteCarloSimulator
+from pod_lca.analysis import DataDistribution
+from pod_lca.analysis import MonteCarloSimulator
 from pod_lca.units import CUBIC_METER
 from pod_lca.units import KILO
 from pod_lca.units import KILOGRAM

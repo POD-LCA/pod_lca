@@ -6,7 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from . import Records
-from ..uncertainty import DataDistribution
+from ..analysis import DataDistribution
 from ...utilities import config
 
     

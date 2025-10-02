@@ -21,7 +21,7 @@ from . import units
 from . import visualizer
 from . import utilities
 from .lca_modules import location
-from .lca_modules import uncertainty
+from .lca_modules import analysis
 from .lca_modules import impacts
 from .lca_modules import electricity
 from .lca_modules import transportation
@@ -36,7 +36,7 @@ from .lca_modules import building_envelope
 import sys
 sys.modules['pod_lca.location'] = location
 sys.modules['pod_lca.impacts'] = impacts
-sys.modules['pod_lca.uncertainty'] = uncertainty
+sys.modules['pod_lca.analysis'] = analysis
 sys.modules['pod_lca.electricity'] = electricity
 sys.modules['pod_lca.materials_screening'] = materials_screening
 sys.modules['pod_lca.building'] = building
