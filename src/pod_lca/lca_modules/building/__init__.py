@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from .material import Material
+from .operational_electricity_product import OperationalElectricityProduct
 from .end_of_life_mixins import EndOfLifeMixins
 from .product_scope_mixins import ProductScopeMixins
 from .transportation_mixins import TransportationMixins
