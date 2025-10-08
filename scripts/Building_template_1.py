@@ -1,6 +1,5 @@
 
 from pathlib import Path
-
 from pod_lca.building import Building
 from pod_lca.building import Scenario
 from pod_lca.location import Location
@@ -12,8 +11,8 @@ from pod_lca.visualizer import MatplotlibPlotter
 current_folder = Path(__file__).resolve().parents[0]
 
 my_location = Location.from_str("98126, Seattle")
-template_model_path = 'scripts\Template_Model_BOM.csv'
-template_model_data = DataImporter.json_to_dict('scripts\Template_Model_data.json')
+template_model_path = current_folder / 'Template_Model_BOM.csv'
+template_model_data = DataImporter.json_to_dict(current_folder / 'Template_Model_data.json')
 
 my_building = Building.from_template_model(name='template building', 
                                            type='Commercial', 
