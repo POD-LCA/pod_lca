@@ -15,10 +15,10 @@ product.set_unit(M_TON)
 product.set_sctg_code('01')
 
 destination_state = Location.from_US_state('Utah')
-origin = Location.from_str('Canada')
+origin = Location.from_str('Rest of America')
 # origin = Location.from_faf_regions(faf_region='Africa')
 
-project.add_good(product, shipping_dest=destination_state, shipping_org=origin, mode_name="Truck", transport_scenario="Global")
+project.add_good(product, shipping_dest=None, shipping_org=None, mode_name=None, transport_scenario="Global")
 
 transportation_leg = project.get_transportation_leg(product)[0]
 distance = transportation_leg.get_travel_dist()

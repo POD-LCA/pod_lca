@@ -21,7 +21,7 @@ states_list = list(DataImporter.json_to_dict(config['file_paths']['transportatio
 
 origin_locations = ['Canada',
                     'Mexico',
-                    'Rest of Americas', 
+                    'Rest of America', 
                     'Europe', 
                     'Africa', 
                     'SW & Central Asia', 

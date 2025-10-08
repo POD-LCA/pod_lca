@@ -142,7 +142,7 @@ class ForeignLeg(TransportationLeg):
         
         else:
             mode_efficiency = 'Median' if efficiency is None else efficiency
-            foreign_mode_name = 'Truck' if mode is None else mode
+            foreign_mode_name = 'Ocean' if mode is None else mode
             
             foreign_mode_obj = TransportMode.new(foreign_mode_name, mode_efficiency)
             self.mode = foreign_mode_obj
