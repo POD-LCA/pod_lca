@@ -96,6 +96,18 @@ class OperationalElectricityProduct:
 
         return self
 
+    def set_supplier(self, supplier):
+        """ Set electricity supplier.
+        
+        Parameters
+        ----------
+        supplier : ~pod_lca.electricity.ElectricitySupply
+            Electricity supply
+        """
+        self.electricity_supplier = supplier
+
+        return self
+    
     def set_decarbonization_scenario(self, scenario):
         """ Set scenario name. This will be used with cambium data.
     

@@ -5,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from .scenario import Scenario
 from .material import Material
 from .operational_electricity_product import OperationalElectricityProduct
 from .end_of_life_mixins import EndOfLifeMixins

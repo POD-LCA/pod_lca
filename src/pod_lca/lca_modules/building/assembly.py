@@ -5,13 +5,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-import gc
-
-from ..eol.waste import Waste
-from ...utilities import config
-from ...utilities import DataImporter
-from ...utilities import log
-
 
 class Assembly:
     """ Assemblies which the building is made up of.

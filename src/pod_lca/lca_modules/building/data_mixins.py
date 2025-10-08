@@ -44,5 +44,10 @@ class DataMixins:
         return results
     
 
+    # TODO: plot option for comparing scenarios
+
+ 
+    
+
 if __name__ == '__main__':
     pass

@@ -11,6 +11,7 @@ from . import EndOfLifeMixins
 from . import Floor
 from . import OperationalMixins
 from . import ProductScopeMixins
+from . import Scenario
 from . import TransportationMixins
 from . import UseMixins
 from ..building_structure import BuildingStructure
@@ -77,6 +78,8 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
 
         self.construction_energy_product = None
         self.operational_energy_product = None
+
+        self.scenarios = {}
 
     # ================================
     # Constructors
@@ -340,6 +343,20 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
 
         return self
     
+    def set_scenario(self, name):
+        """ Create new scenario for the building.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the building scenario.
+        """
+        scenario = Scenario.new(self)
+
+        self.scenarios[name] = scenario
+
+        return scenario
+    
     # ================================
     # Getters
     # ================================
@@ -425,8 +442,17 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
             Structural and Fascade elements that make up the building.
         """
         return self.assemblies
-        # return self.get_structure().get_assemblies() # + self.get_envelope().get_assemblies() # TODO add envelop assemblies
 
+    def get_scenario(self, name):
+        """ Retrieve a building scenario.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the building scenario.
+        """
+        return self.scenarios[name]
+    
     # ================================
     # Assembly Methods
     # ================================ 
