@@ -14,7 +14,6 @@ from ...units import CUBIC_METER
 class Construction(Assembly):
     def __init__(self):
         super().__init__()
-        self.name = None
         self.layers = {}
 
     @classmethod
@@ -23,11 +22,10 @@ class Construction(Assembly):
         find_constructions(path, data)
         data = data['constructions'][name]
 
-        construction = cls()
-        construction.name = data['name']
+        construction = cls.create(data['name'], building)
+
         construction.layers = data['layers']
         construction.get_layers_from_idf(path)
-        construction.set_building(building)
         for lk in construction.layers:
             mat_name = construction.layers[lk].material_property.name
             mat_type = construction.layers[lk].material_property.__type__
@@ -41,7 +39,8 @@ class Construction(Assembly):
                                                             product_year=building.get_built_year(),
                                                             service_life=service_life,
                                                             waste_rate=0.0)
-                construction.materials.append(material)
+                construction.add_material(material)
+
         return construction
     
     def get_layers_from_idf(self, path):

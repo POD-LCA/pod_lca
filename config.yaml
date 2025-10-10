@@ -52,7 +52,6 @@ setup:
   utilities:
     LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
 
-
 file_paths:
   transportation:
     CFS_DATA_PATH: data/transportation_cfs_dataset.csv

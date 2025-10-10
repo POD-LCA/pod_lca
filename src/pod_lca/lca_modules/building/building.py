@@ -17,8 +17,10 @@ from . import UseMixins
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
+from ...units import MEGA
 from ...units import METER
 from ...units import UNITS_MAP
+from ...units import WATT_HOUR
 from ...utilities import centroid
 from ...utilities import geometric_key
 
@@ -85,6 +87,38 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
     # Constructors
     # ================================
     @classmethod
+    def new(cls, name, type, location, built_year, life_span):
+        """ Build a building.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the building.
+        type : {'Commercial', 'Residential'}
+            Type of building.
+        location : ~pod_lca.location.Location
+            Location of the building site.
+        built_year: int
+            Built year of the building.
+        life_span: int
+            Life span of the building in years.
+
+        Returns
+        -------
+        ~pod_lca.buildings.Building
+            Building built.
+        """    
+        building = cls()
+
+        building.set_name(name)
+        building.set_building_type(type)
+        building.set_location(location)
+        building.set_built_year(built_year)
+        building.set_life_span(life_span)
+
+        return building
+     
+    @classmethod
     def from_parameters(cls, name, type, location, built_year, life_span, no_floors, f2f_height, floor_plan, floors_below_grade=None, geometry_units=METER, logistic_type='local'):
         """ Build a building.
         
@@ -118,19 +152,9 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         ~pod_lca.buildings.Building
             Building built.
         """
-        building = cls()
-
-        building.set_name(name)
-        building.set_building_type(type)
-        building.set_location(location)
-        building.set_built_year(built_year)
-        building.set_life_span(life_span)
-
-        building.set_material_database()
-        building.set_transportation_mode_impact_database()
-        building.set_eol_process_impact_database()
-        building.set_eol_demolition_impact_database()
-        building.set_eol_transport_dataset()
+        building = cls.new(name, type, location, built_year, life_span)
+        building.set_databases()
+        building.set_building_level_products(logistic_type)
 
         if floors_below_grade is None:
             if no_floors > 2:
@@ -139,15 +163,6 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
                 floors_below_grade = 0
 
         building.add_floors(no_floors, f2f_height, floor_plan, floors_below_grade, geometry_units)
-
-        building.set_transportation_manager(logistic_type)
-        building.set_operational_electricity_product()
-
-        # FIXME: Fix this somehow...
-        # if "construction_energy_use" in building_data:
-        #     building.set_construction_energy_product(building_data["construction_energy_use"], 
-        #                                  UNITS_MAP[building_data["construction_energy_use_unit"]])
-
 
         building.make_structure('from geometry')
         building.make_envelope()
@@ -180,19 +195,8 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         ~pod_lca.buildings.Building
             Building built.
         """
-        building = cls()
-
-        building.set_name(name)
-        building.set_building_type(type)
-        building.set_location(location)
-        building.set_built_year(built_year)
-        building.set_life_span(life_span)
-
-        building.set_material_database()
-        building.set_transportation_mode_impact_database()
-        building.set_eol_process_impact_database()
-        building.set_eol_demolition_impact_database()
-        building.set_eol_transport_dataset()
+        building = cls.new(name, type, location, built_year, life_span)
+        building.set_databases()
 
         building.set_template_model(file_path, building_data)
 
@@ -224,22 +228,9 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         ~pod_lca.building.Building
             Building built.
         """
-        building = cls()
-
-        building.set_name(name)
-        building.set_building_type(type)
-        building.set_location(location)
-        building.set_built_year(built_year)
-        building.set_life_span(life_span)
-
-        building.set_material_database()
-        building.set_transportation_mode_impact_database()
-        building.set_eol_process_impact_database()
-        building.set_eol_demolition_impact_database()
-        building.set_eol_transport_dataset()
-
-        building.set_transportation_manager(logistic_type)
-        building.set_operational_electricity_product()
+        building = cls.new(name, type, location, built_year, life_span)
+        building.set_databases()
+        building.set_building_level_products(logistic_type)
 
         building.make_structure()
         building.make_envelope()
@@ -337,12 +328,11 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
                         building_data['floors_below_grade'], 
                         UNITS_MAP[building_data['geometry_units']])
         
-        self.set_transportation_manager(building_data['logistic_type'])
-        self.set_operational_electricity_product(unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
-
-        if "construction_energy_use" in building_data:
-            self.set_construction_energy_product(building_data["construction_energy_use"], 
-                                         UNITS_MAP[building_data["construction_energy_use_unit"]])
+        construction_energy_use = building_data["construction_energy_use"] if "construction_energy_use" in building_data else 0.0
+        energy_units = UNITS_MAP[building_data["construction_energy_use_unit"]] if "construction_energy_use" in building_data else MEGA * WATT_HOUR
+        self.set_building_level_products(logistic_type=building_data['logistic_type'], 
+                                         construction_electricity_consumption=construction_energy_use, 
+                                         electricity_unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
 
         self.make_structure('from template', template_bom=file_path)
         self.make_envelope()    
@@ -362,7 +352,35 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         self.scenarios[name] = scenario
 
         return scenario
+
+    def set_databases(self):
+        """ Set databases and datasets to be used in the LCA computations.
+        """
+        self.set_material_database()
+        self.set_transportation_mode_impact_database()
+        self.set_eol_process_impact_database()
+        self.set_eol_demolition_impact_database()
+        self.set_eol_transport_dataset()
+
+        return self
     
+    def set_building_level_products(self, logistic_type='domestic', construction_electricity_consumption=0.0, electricity_unit=MEGA * WATT_HOUR):
+        """ Set building level products used for LCA calculations.
+        
+        Parameters
+        ----------
+        logistic_type : {'domestic', 'global'}
+            Type of logistic management used for A4 transportation.
+        construction_electricity_consumption : float
+            Amount of electricity consumed in construction activities.
+        electricity_unit : ~pod_lca.units.Unit
+            Unit of measurement used for electricity consumption.
+        """
+        self.set_transportation_manager()
+        self.set_operational_electricity_product(electricity_unit)
+        self.set_construction_energy_product(construction_electricity_consumption, electricity_unit)
+
+        return self
     # ================================
     # Getters
     # ================================
