@@ -80,8 +80,8 @@ class USDomesticTransportationManager(TransportationManager):
     # Model Methods
     # ================================
     def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None, 
-                 transport_scenario='Average', distance_unit= KILOMETER, return_trip_factor=None, 
-                 mode_name='Truck', mode_efficiency='Median'):
+                 transport_scenario=None, distance_unit=KILOMETER, return_trip_factor=None, 
+                 mode_name=None, mode_efficiency=None):
         """ Add goods to the project. This method creates the appropriate transportation legs based on the data provided
 
         Parameters
@@ -111,6 +111,9 @@ class USDomesticTransportationManager(TransportationManager):
             Transport scenario not recognized.
         """
         self.transport_legs[good] = []
+
+        mode_efficiency = 'Median' if mode_efficiency is None else mode_efficiency
+        transport_scenario ='Average' if transport_scenario is None else transport_scenario
 
         # select type of transport leg
         if isinstance(travel_dist, (int, float)):
