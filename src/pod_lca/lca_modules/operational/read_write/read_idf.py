@@ -15,6 +15,7 @@ def get_idf_data(filepath):
     find_sufaces(filepath, data)
     find_windows(filepath, data)
     find_materials(filepath, data)
+    find_materials_air_gap(filepath, data)
     find_no_mass_materials(filepath, data)
     find_gas_materials(filepath, data)
     find_glazing_materials(filepath, data)
@@ -176,6 +177,26 @@ def find_materials(filepath, data):
                                    'visible_absorptance': vsba,
                                   }
     
+
+def find_materials_air_gap(filepath, data):
+    fh = open(filepath, 'r')
+    lines = fh.readlines()
+    fh.close()
+
+    i_lines = []
+    for i, line in enumerate(lines):
+        line = line.split(',')
+        if line[0].lower() == 'material:airgap':
+            i_lines.append(i)
+
+    for i in i_lines:
+        name = lines[i + 1].split(',')[0].strip()
+        resi = lines[i + 2].split(',')[0].strip()
+
+        data['materials'][name] = {'__type__': 'MaterialAirGap',
+                                'name': name,
+                                'resistance': resi,
+                                }
 
 def find_no_mass_materials(filepath, data):
     fh = open(filepath, 'r')

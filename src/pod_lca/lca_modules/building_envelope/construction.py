@@ -6,15 +6,19 @@ __version__ = "0.1.0"
 
 from ..building_envelope import Layer
 from ..operational import find_constructions
+from pod_lca.lca_modules.building.assembly import Assembly
+from pod_lca.lca_modules.building.material import Material
+from ...units import CUBIC_METER
 
 
-class Construction(object):
+class Construction(Assembly):
     def __init__(self):
+        super().__init__()
         self.name = None
         self.layers = {}
 
     @classmethod
-    def from_idf(cls, name, path):
+    def from_idf(cls, name, path, building, service_life):
         data = {}
         find_constructions(path, data)
         data = data['constructions'][name]
@@ -23,6 +27,21 @@ class Construction(object):
         construction.name = data['name']
         construction.layers = data['layers']
         construction.get_layers_from_idf(path)
+        construction.set_building(building)
+        for lk in construction.layers:
+            mat_name = construction.layers[lk].material_property.name
+            mat_type = construction.layers[lk].material_property.__type__
+            if mat_type != 'EnvelopeMaterialAirGap':
+                quantity = 1.
+                material = Material.new_structural_material(parent=construction,
+                                                            name=mat_name,
+                                                            qty=quantity,
+                                                            unit=CUBIC_METER,
+                                                            material_database_entry=mat_name,
+                                                            product_year=building.get_built_year(),
+                                                            service_life=service_life,
+                                                            waste_rate=0.0)
+                construction.materials.append(material)
         return construction
     
     def get_layers_from_idf(self, path):

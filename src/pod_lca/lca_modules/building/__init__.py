@@ -16,10 +16,6 @@ from .use_mixins import UseMixins
 from .operational_energy_mixins import OperationalMixins
 from .data_mixins import DataMixins
 from .floor import Floor
-from .material import BuildingEnvelopeMaterial
-from .material import BuildingEnvelopeMaterialNoMass
-from .material import WindowMaterialGlazing
-from .material import WindowMaterialGas
 from .assembly import Assembly
 from .building import Building
 

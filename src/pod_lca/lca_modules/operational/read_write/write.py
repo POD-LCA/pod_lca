@@ -34,7 +34,7 @@ def write_idf_from_building(building):
     write_layers(building)
     write_constructions(building)
     write_shadings(building)
-    write_spaces(building)
+    # write_spaces(building)
 #     write_space_lists(building)
 
 #     write_simulation_control(building)
@@ -396,7 +396,7 @@ def write_layers(building):
         l = layers[lk]
         lay_name = l.name
         # mat_name = l.material.name
-        mat = l.material
+        mat = l.material_property
         thick = l.thickness
         if mat.__type__ == 'Material':
             write_material(mat, thick, lay_name)
@@ -546,7 +546,7 @@ def write_constructions(building):
     for ck in constructions:
         name = constructions[ck].name
         layers = [constructions[ck].layers[lk] for lk in constructions[ck].layers]
-        types = [layer.material.__type__ for layer in layers]
+        types = [layer.material_property.__type__ for layer in layers]
         thicks = [layer.thickness for layer in layers] 
         lnames = [layer.name for layer in layers]
         fh.write('Construction,\n')

@@ -10,5 +10,6 @@ from .layer import Layer
 from .construction import Construction
 from .window import Window
 from .shading import Shading
+from .material_property import EnvelopeMaterialProperty
 
 __all__ = ["Envelope"]

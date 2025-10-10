@@ -4,11 +4,13 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from ..building import BuildingEnvelopeMaterial
-from ..building import BuildingEnvelopeMaterialNoMass
-from ..building import WindowMaterialGlazing
-from ..building import WindowMaterialGas
+from .material_property import EnvelopeMaterial
+from .material_property import EnvelopeMaterialAirGap
+from .material_property import EnvelopeMaterialNoMass
+from .material_property import WindowMaterialGlazing
+from .material_property import WindowMaterialGas
 from ..operational import find_materials
+from ..operational import find_materials_air_gap
 from ..operational import find_no_mass_materials
 from ..operational import find_gas_materials
 from ..operational import find_glazing_materials
@@ -17,7 +19,7 @@ from ..operational import find_glazing_materials
 class Layer(object):
     def __init__(self):
         self.name = None
-        self.material = None
+        self._material_property = None
         self.thickness = None
 
     @classmethod
@@ -25,36 +27,40 @@ class Layer(object):
         data = {}
         find_materials(path, data)
         if name not in data:
+            find_materials_air_gap(path, data)
+        if name not in data:
             find_no_mass_materials(path, data)
         if name not in data:
             find_gas_materials(path, data)
         if name not in data:
             find_glazing_materials(path, data)
 
-        data                = data['materials'][name]
+        data = data['materials'][name]
         name = data['name']
         thickness = data.get('thickness')
 
         layer = cls()
         layer.name = '{}_{}'.format(name, thickness)
         layer.thickness = thickness
-        layer.material = layer.add_building_envelope_material(data)
+        layer.material_property = layer.add_envelope_material_property(data)
         return layer
 
-    def add_building_envelope_material(self, data):
+    def add_envelope_material_property(self, data):
         mtype = data['__type__']
         if mtype == 'Material':
-            material = BuildingEnvelopeMaterial.from_idf_data(data)
+            material_prop = EnvelopeMaterial.from_idf_data(data)
+        elif mtype == 'MaterialAirGap':
+            material_prop = EnvelopeMaterialAirGap.from_idf_data(data)
         elif mtype == 'MaterialNoMass':
-            material = BuildingEnvelopeMaterialNoMass.from_idf_data(data)
+            material_prop = EnvelopeMaterialNoMass.from_idf_data(data)
         elif mtype == 'WindowMaterialGlazing':
-            material = WindowMaterialGlazing.from_idf_data(data)
+            material_prop = WindowMaterialGlazing.from_idf_data(data)
         elif mtype == 'WindowMaterialGas':
-            material = WindowMaterialGas.from_idf_data(data)
+            material_prop = WindowMaterialGas.from_idf_data(data)
         else:
-            raise ValueError('Material type {} has not been implemented yet'.format(mtype))
+            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 
-        return material
+        return material_prop
 
 if __name__ == '__main__':
     pass

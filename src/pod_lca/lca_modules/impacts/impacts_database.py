@@ -354,6 +354,7 @@ class ImpactsDatabase:
         ImportError
             Multiple matching entries.
         """
+        # print(flow_name)
         if self.data is not None:
             row_id = self.data.index[self.data[self.get_primary_key()] == flow_name]
             if len(row_id) == 1:
@@ -361,8 +362,10 @@ class ImpactsDatabase:
                     return self.data.iloc[row_id[0]]
                 else:
                     return self.data.iloc[row_id[0]][header]
-            else:
+            elif len(row_id) > 1:
                 raise ImportError("Multiple matching entries exist...")
+            elif len(row_id) == 0:
+                raise ImportError("No matching entries exist...")
 
     def get_primary_key(self):
         """ Get primary key of the database.

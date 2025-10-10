@@ -143,6 +143,12 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         building.set_transportation_manager(logistic_type)
         building.set_operational_electricity_product()
 
+        # FIXME: Fix this somehow...
+        # if "construction_energy_use" in building_data:
+        #     building.set_construction_energy_product(building_data["construction_energy_use"], 
+        #                                  UNITS_MAP[building_data["construction_energy_use_unit"]])
+
+
         building.make_structure('from geometry')
         building.make_envelope()
 
