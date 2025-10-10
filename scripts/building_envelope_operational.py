@@ -48,6 +48,7 @@ b = Building.from_parameters(name='test',
 
 wall_service_life = 30
 structure_service_life = 60
+window_service_life = 20
 
 for fk in b.floors:
     floor = b.floors[fk]
@@ -83,38 +84,38 @@ for fk in b.floors:
 b.update_envelope_surfaces()
 
 
-# # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# for fk in b.floors:
-#     if not b.floors[fk].is_below_grade:
-#         env = b.floors[fk].envelope
-#         wall_key = 'wall_1'
-#         wwr = .4
-#         construction = 'Generic Double Pane'
-#         construction = Construction.from_idf(construction, path)
-#         w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
-#         env.add_window(w)
+for fk in b.floors:
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wall_key = 'wall_1'
+        wwr = .4
+        construction = 'Generic Double Pane'
+        construction = Construction.from_idf(construction, path, b, window_service_life)
+        w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+        env.add_window(w)
 
-# for fk in b.floors:
-#     if not b.floors[fk].is_below_grade:
-#         env = b.floors[fk].envelope
-#         wall_key = 'wall_3'
-#         wwr = .9
-#         construction = 'Generic Double Pane'
-#         construction = Construction.from_idf(construction, path)
-#         w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
-#         env.add_window(w)
+for fk in b.floors:
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wall_key = 'wall_3'
+        wwr = .9
+        construction = 'Generic Double Pane'
+        construction = Construction.from_idf(construction, path, b, window_service_life)
+        w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+        env.add_window(w)
 
 
-# # add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-# for fk in b.floors:
-#     if not b.floors[fk].is_below_grade:
-#         env = b.floors[fk].envelope
-#         wks = env.windows
-#         for wk in wks:
-#             sh = Shading.from_window(env.windows[wk], 1.5, 1.5, 1.5)
-#             env.add_shading(sh)
+for fk in b.floors:
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wks = env.windows
+        for wk in wks:
+            sh = Shading.from_window(env.windows[wk], 1.5, 1.5, 1.5)
+            env.add_shading(sh)
 
 
 # ###############################################

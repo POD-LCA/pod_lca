@@ -18,6 +18,7 @@ class Construction(Assembly):
 
     @classmethod
     def from_idf(cls, name, path, building, service_life):
+        print(name)
         data = {}
         find_constructions(path, data)
         data = data['constructions'][name]
@@ -27,9 +28,10 @@ class Construction(Assembly):
         construction.layers = data['layers']
         construction.get_layers_from_idf(path)
         for lk in construction.layers:
-            mat_name = construction.layers[lk].material_property.name
             mat_type = construction.layers[lk].material_property.__type__
+            print(construction.layers[lk].material_property.name)
             if mat_type != 'EnvelopeMaterialAirGap':
+                mat_name = construction.layers[lk].material_property.name
                 quantity = 1.
                 material = Material.new_structural_material(parent=construction,
                                                             name=mat_name,
