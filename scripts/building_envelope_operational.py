@@ -113,8 +113,10 @@ for fk in b.floors:
     if not b.floors[fk].is_below_grade:
         env = b.floors[fk].envelope
         wks = env.windows
+        construction = 'Aluminum Shading'
+        construction = Construction.from_idf(construction, path, b, window_service_life)
         for wk in wks:
-            sh = Shading.from_window(env.windows[wk], 1.5, 1.5, 1.5)
+            sh = Shading.from_window(env.windows[wk], construction, 1.5, 1.5, 1.5)
             env.add_shading(sh)
 
 

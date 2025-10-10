@@ -123,7 +123,7 @@ class Shading(object):
         return zone
 
     @classmethod
-    def from_window(cls, window, top=None, left=None, right=None):
+    def from_window(cls, window, construction, top=None, left=None, right=None):
         """
         Create a new instance of the shading from a window object. The shading device will
         be made up of a top, left and right rectangular surfaces surrounding the given
@@ -178,6 +178,7 @@ class Shading(object):
         shading = cls()
         shading.name = f'sh_win{window.name}'
         shading.mesh = mesh
+        shading.construction = construction
         return shading
 
 

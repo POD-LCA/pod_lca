@@ -23,6 +23,11 @@ Construction,
   Generic LW Concrete;                    !- Layer 4
 
 Construction,
+  Aluminum Shading,                                                  !- Name
+  Aluminum extrusion mill-finished Kawneer - EPD;                    !- Layer 4
+
+
+Construction,
   Generic Exterior Door,                  !- Name
   Generic Painted Metal,                  !- Layer 1
   Generic 25mm Insulation,                !- Layer 2
@@ -317,6 +322,18 @@ Material,
   Generic Painted Metal,                  !- Name
   Smooth,                                 !- Roughness
   0.0015,                                 !- Thickness {m}
+  45,                                     !- Conductivity {W/m-K}
+  7690,                                   !- Density {kg/m3}
+  410,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+
+Material,
+  Aluminum extrusion mill-finished Kawneer - EPD,                  !- Name
+  Smooth,                                 !- Roughness
+  0.015,                                 !- Thickness {m}
   45,                                     !- Conductivity {W/m-K}
   7690,                                   !- Density {kg/m3}
   410,                                    !- Specific Heat {J/kg-K}
