@@ -30,7 +30,7 @@ class Construction(Assembly):
         for lk in construction.layers:
             mat_type = construction.layers[lk].material_property.__type__
             print(construction.layers[lk].material_property.name)
-            if mat_type != 'EnvelopeMaterialAirGap':
+            if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
                 mat_name = construction.layers[lk].material_property.name
                 quantity = 1.
                 material = Material.new_structural_material(parent=construction,
