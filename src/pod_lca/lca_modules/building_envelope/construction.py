@@ -14,36 +14,29 @@ from ...units import CUBIC_METER
 class Construction(Assembly):
     def __init__(self):
         super().__init__()
+        self.layer_order = {}
         self.layers = {}
         self.surfaces = []
 
     @classmethod
-    def from_idf(cls, name, path, building, envelope, surface_type, service_life):
+    def from_idf(cls, name, building, surfaces, service_life):
 
-    
-        data = {}
-        find_constructions(path, data)
-        data = data['constructions'][name]
-
+        data = building.idf_constructions_data['constructions'][name]
         construction = cls.create(data['name'], building)
-        construction.layers = data['layers']
-        construction.get_layers_from_idf(path)
-
-        if surface_type == 'wall' or surface_type == 'walls':
-            sks = envelope.wall_surface_keys
-        elif surface_type == 'window' or surface_type == 'windows':
-            sks = envelope.window_surface_keys
-        else:
-            sks = [surface_type]
-        for sk in sks:
-            construction.surfaces.append(envelope.surfaces[sk])
-        area = construction.area
-        for lk in construction.layers:
-            mat_type = construction.layers[lk].material_property.__type__
+        construction.layer_order = data['layers']
+        construction.get_layers(building)
+        construction.surfaces = surfaces
+        construction.add_materials(building, service_life)
+        return construction
+    
+    def add_materials(self, building, service_life):
+        area = self.area
+        for lk in self.layers:
+            mat_type = self.layers[lk].material_property.__type__
             if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
-                mat_name = construction.layers[lk].material_property.name
-                quantity = area * construction.layers[lk].thickness
-                material = Material.new_structural_material(parent=construction,
+                mat_name = self.layers[lk].material_property.name
+                quantity = area * self.layers[lk].thickness
+                material = Material.new_structural_material(parent=self,
                                                             name=mat_name,
                                                             qty=quantity,
                                                             unit=CUBIC_METER,
@@ -51,10 +44,8 @@ class Construction(Assembly):
                                                             product_year=building.get_built_year(),
                                                             service_life=service_life,
                                                             waste_rate=0.0)
-                construction.add_material(material)
+                self.add_material(material)
 
-        return construction
-    
 
     @property
     def area(self):
@@ -64,10 +55,10 @@ class Construction(Assembly):
         return area
 
 
-    def get_layers_from_idf(self, path):
-        for mk in self.layers:
-            name = self.layers[mk]
-            layer = Layer.from_idf(name, path)
+    def get_layers(self, building):
+        for mk in self.layer_order:
+            name = self.layer_order[mk]
+            layer = Layer.from_idf(name, building)
             self.layers[mk] = layer
 
 if __name__ == '__main__':

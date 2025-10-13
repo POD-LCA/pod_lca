@@ -10,7 +10,9 @@ from pod_lca.visualizer import MatplotlibPlotter
 
 from pod_lca.lca_modules.building import Building
 from pod_lca.lca_modules.building_envelope import Envelope
-from pod_lca.lca_modules.building_envelope import Construction
+from pod_lca.lca_modules.building_envelope import Wall
+from pod_lca.lca_modules.building_envelope import Slab
+from pod_lca.lca_modules.building_envelope import Cieling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
 from pod_lca.lca_modules.operational import write_idf_from_building
@@ -45,6 +47,9 @@ b = Building.from_parameters(name='test',
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
+path = config['file_paths']['operational']['CONSTRUCTIONS']
+b.read_constructions_data(path)
+b.read_material_properties_data(path)
 
 wall_service_life = 30
 structure_service_life = 60
@@ -55,58 +60,61 @@ for fk in b.floors:
     e = Envelope.from_floor(floor)
     floor.add_envelope(e)
 
-    # add constructions - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    path = config['file_paths']['operational']['CONSTRUCTIONS']
+    # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    walls = 'Generic Exterior Wall'
+    surfaces = [e.surfaces[sk] for sk in e.wall_surface_keys]
+    walls = Wall.from_idf(walls, b, surfaces, wall_service_life)
+
+    # add slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if floor.is_on_ground:
         gslab = 'Generic Ground Slab'
-        gslab = Construction.from_idf(gslab, path, b, e, 'floor', wall_service_life)
-        e.add_construction(gslab, 'floor')
+        gslab = Slab.from_idf(gslab, path, b, e, 'floor', wall_service_life)
+        e.add_construction(gslab)
     else:
         slab = 'Insulated 8in Slab Floor'
-        slab = Construction.from_idf(slab, path, b, e, 'floor', structure_service_life)
+        slab = Slab.from_idf(slab, path, b, e, 'floor', structure_service_life)
         e.add_construction(slab, 'floor')
 
-    walls = 'Generic Exterior Wall'
-    walls = Construction.from_idf(walls, path, b, e, 'wall', wall_service_life)
-    e.add_construction(walls, 'wall')
-
-    if floor.is_last:
-        roof = 'Generic Roof'
-        roof = Construction.from_idf(roof, path, b, e, 'cieling', structure_service_life)
-        e.add_construction(roof, 'cieling')
-    else:
-        ciel = 'Generic Interior Ceiling'
-        ciel = Construction.from_idf(ciel, path, b, e, 'cieling', structure_service_life)
-        e.add_construction(ciel, 'cieling')
-
-# TODO: Is this needed anymore?
-# b.update_envelope_surfaces()
 
 
-# # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # if floor.is_last:
+    #     roof = 'Generic Roof'
+    #     roof = Cieling.from_idf(roof, path, b, e, 'cieling', structure_service_life)
+    #     e.add_construction(roof, 'cieling')
+    # else:
+    #     ciel = 'Generic Interior Ceiling'
+    #     ciel = Cieling.from_idf(ciel, path, b, e, 'cieling', structure_service_life)
+    #     e.add_construction(ciel, 'cieling')
 
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wall_key = 'wall_1'
-        wwr = .4
-        construction = 'Generic Double Pane'
-        w = Window.from_wall_wwr_and_idf(b, env, path, wall_key, wwr, construction, window_service_life)
-        env.add_window(w)
-
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wall_key = 'wall_3'
-        wwr = .9
-        construction = 'Generic Double Pane'
-        w = Window.from_wall_wwr_and_idf(b, env, path, wall_key, wwr, construction, window_service_life)
-        env.add_window(w)
+# # TODO: Is this needed anymore?
+# # b.update_envelope_surfaces()
 
 
-# add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# # # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wall_key = 'wall_1'
+#         wwr = .4
+#         construction = 'Generic Double Pane'
+#         w = Window.from_wall_wwr_and_idf(b, env, path, wall_key, wwr, construction, window_service_life)
+#         env.add_window(w)
+
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wall_key = 'wall_3'
+#         wwr = .9
+#         construction = 'Generic Double Pane'
+#         w = Window.from_wall_wwr_and_idf(b, env, path, wall_key, wwr, construction, window_service_life)
+#         env.add_window(w)
+
+
+# # add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 # for fk in b.floors:
 #     if not b.floors[fk].is_below_grade:
@@ -119,22 +127,22 @@ for fk in b.floors:
 #             env.add_shading(sh)
 
 
-# # ###############################################
-# # # TODO: Make quantities actually work
-# # # TODO: Continue HERE, fix window plotter
-# # # TODO: Write spaces
+# # # ###############################################
+# # # # TODO: Make quantities actually work
+# # # # FIXME: Building plotter is broken
+# # # # TODO: Revisit IDF writing with new objects
 
 
-# plot_building(b)
-# # write_idf_from_building(b)
+# # plot_building(b)
+# # # write_idf_from_building(b)
 
 
-print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product', lc_stage=None))
+# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product', lc_stage=None))
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()

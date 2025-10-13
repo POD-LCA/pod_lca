@@ -23,19 +23,8 @@ class Layer(object):
         self.thickness = None
 
     @classmethod
-    def from_idf(cls, name, path):
-        data = {}
-        find_materials(path, data)
-        if name not in data:
-            find_materials_air_gap(path, data)
-        if name not in data:
-            find_no_mass_materials(path, data)
-        if name not in data:
-            find_gas_materials(path, data)
-        if name not in data:
-            find_glazing_materials(path, data)
-
-        data = data['materials'][name]
+    def from_idf(cls, name, building):
+        data = building.idf_material_properties['materials'][name]
         name = data['name']
         thickness = data.get('thickness')
 

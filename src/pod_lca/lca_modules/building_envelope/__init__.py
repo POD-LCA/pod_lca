@@ -9,6 +9,9 @@ from .envelope import Envelope
 from .layer import Layer
 from .construction import Construction
 from .window import Window
+from .wall import Wall
+from .slab import Slab
+from .cieling import Cieling
 from .shading import Shading
 from .material_property import EnvelopeMaterialProperty
 

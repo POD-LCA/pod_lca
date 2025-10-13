@@ -14,6 +14,7 @@ from . import ProductScopeMixins
 from . import Scenario
 from . import TransportationMixins
 from . import UseMixins
+from . import EnvelopeMixins
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
@@ -25,7 +26,7 @@ from ...utilities import centroid
 from ...utilities import geometric_key
 
 
-class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
+class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
     """ Building object to keep track of the building materials flow (i.e., embodied energy assembly).
 
     Attributes
@@ -80,6 +81,9 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
 
         self.construction_energy_product = None
         self.operational_energy_product = None
+
+        self.idf_constructions_data = {}
+        self.idf_material_properties = {}
 
         self.scenarios = {}
 

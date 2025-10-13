@@ -15,9 +15,13 @@ class Envelope:
         self.name = None
         self.floor = None
         self.surfaces = {}
-        self.constructions = {}
+
+        self.walls = {}
         self.windows = {}
         self.shadings = {}
+        self.floors = {}
+        self.cielings = {}
+        
         self.wall_surface_keys = []
         self.window_surface_keys = []
         self.origin = [0, 0, 0]
