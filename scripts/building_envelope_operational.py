@@ -61,81 +61,82 @@ for fk in b.floors:
 
     if floor.is_on_ground:
         gslab = 'Generic Ground Slab'
-        gslab = Construction.from_idf(gslab, path, b, wall_service_life)
-        e.add_construction(gslab, 'floor')
+        gslab = Construction.from_idf(gslab, path, b, e, 'floor', wall_service_life)
+        # e.add_construction(gslab, 'floor')
     else:
         slab = 'Insulated 8in Slab Floor'
-        slab = Construction.from_idf(slab, path, b, structure_service_life)
+        slab = Construction.from_idf(slab, path, b, e, 'floor', structure_service_life)
         e.add_construction(slab, 'floor')
 
     walls = 'Generic Exterior Wall'
-    walls = Construction.from_idf(walls, path, b, wall_service_life)
+    walls = Construction.from_idf(walls, path, b, e, 'wall', wall_service_life)
     e.add_construction(walls, 'wall')
 
     if floor.is_last:
         roof = 'Generic Roof'
-        roof = Construction.from_idf(roof, path, b, structure_service_life)
+        roof = Construction.from_idf(roof, path, b, e, 'cieling', structure_service_life)
         e.add_construction(roof, 'cieling')
     else:
         ciel = 'Generic Interior Ceiling'
-        ciel = Construction.from_idf(ciel, path, b, structure_service_life)
+        ciel = Construction.from_idf(ciel, path, b, e, 'cieling', structure_service_life)
         e.add_construction(ciel, 'cieling')
 
-b.update_envelope_surfaces()
+# TODO: Is this needed anymore?
+# b.update_envelope_surfaces()
 
 
-# add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wall_key = 'wall_1'
-        wwr = .4
-        construction = 'Generic Double Pane'
-        construction = Construction.from_idf(construction, path, b, window_service_life)
-        w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
-        env.add_window(w)
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wall_key = 'wall_1'
+#         wwr = .4
+#         construction = 'Generic Double Pane'
+#         construction = Construction.from_idf(construction, path, b, window_service_life)
+#         w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+#         env.add_window(w)
 
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wall_key = 'wall_3'
-        wwr = .9
-        construction = 'Generic Double Pane'
-        construction = Construction.from_idf(construction, path, b, window_service_life)
-        w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
-        env.add_window(w)
-
-
-# add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wks = env.windows
-        construction = 'Aluminum Shading'
-        construction = Construction.from_idf(construction, path, b, window_service_life)
-        for wk in wks:
-            sh = Shading.from_window(env.windows[wk], construction, 1.5, 1.5, 1.5)
-            env.add_shading(sh)
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wall_key = 'wall_3'
+#         wwr = .9
+#         construction = 'Generic Double Pane'
+#         construction = Construction.from_idf(construction, path, b, window_service_life)
+#         w = Window.from_wall_and_wwr(env, wall_key, wwr, construction)
+#         env.add_window(w)
 
 
-# ###############################################
-# # TODO: Continue HERE, fix window plotter
-# # TODO: Add construction to shading devices
-# # TODO: Write spaces
+# # add shading - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wks = env.windows
+#         construction = 'Aluminum Shading'
+#         construction = Construction.from_idf(construction, path, b, window_service_life)
+#         for wk in wks:
+#             sh = Shading.from_window(env.windows[wk], construction, 1.5, 1.5, 1.5)
+#             env.add_shading(sh)
 
 
-# plot_building(b)
-# write_idf_from_building(b)
+# # ###############################################
+# # # TODO: Make quantities actually work
+# # # TODO: Continue HERE, fix window plotter
+# # # TODO: Write spaces
 
 
-print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product', lc_stage=None))
+# # plot_building(b)
+# # write_idf_from_building(b)
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product', lc_stage=None))
+
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
+
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()

@@ -15,22 +15,32 @@ class Construction(Assembly):
     def __init__(self):
         super().__init__()
         self.layers = {}
+        self.surfaces = []
 
     @classmethod
-    def from_idf(cls, name, path, building, service_life):
+    def from_idf(cls, name, path, building, envelope, surface_type, service_life):
+
+    
         data = {}
         find_constructions(path, data)
         data = data['constructions'][name]
 
         construction = cls.create(data['name'], building)
-
         construction.layers = data['layers']
         construction.get_layers_from_idf(path)
+
+        if surface_type == 'wall' or surface_type == 'walls':
+            sks = envelope.wall_surface_keys
+        else:
+            sks = [surface_type]
+        for sk in sks:
+            construction.surfaces.append(envelope.surfaces[sk])
+        area = construction.area
         for lk in construction.layers:
             mat_type = construction.layers[lk].material_property.__type__
             if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
                 mat_name = construction.layers[lk].material_property.name
-                quantity = 1.
+                quantity = area * construction.layers[lk].thickness
                 material = Material.new_structural_material(parent=construction,
                                                             name=mat_name,
                                                             qty=quantity,
@@ -43,6 +53,15 @@ class Construction(Assembly):
 
         return construction
     
+
+    @property
+    def area(self):
+        area = 0
+        for s in self.surfaces:
+            area += s.area
+        return area
+
+
     def get_layers_from_idf(self, path):
         for mk in self.layers:
             name = self.layers[mk]
