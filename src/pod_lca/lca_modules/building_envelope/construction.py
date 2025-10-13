@@ -31,6 +31,8 @@ class Construction(Assembly):
 
         if surface_type == 'wall' or surface_type == 'walls':
             sks = envelope.wall_surface_keys
+        elif surface_type == 'window' or surface_type == 'windows':
+            sks = envelope.window_surface_keys
         else:
             sks = [surface_type]
         for sk in sks:

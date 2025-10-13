@@ -19,6 +19,7 @@ class Envelope:
         self.windows = {}
         self.shadings = {}
         self.wall_surface_keys = []
+        self.window_surface_keys = []
         self.origin = [0, 0, 0]
 
     @classmethod

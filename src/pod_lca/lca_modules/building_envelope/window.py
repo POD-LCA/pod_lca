@@ -6,6 +6,11 @@ __version__ = "0.1.0"
 
 import json
 
+from pod_lca.lca_modules.building.assembly import Assembly
+from ..building_envelope import Surface
+from pod_lca.lca_modules.building_envelope.construction import Construction
+from ..operational import find_constructions
+
 from pod_lca.utilities.geometry import centroid
 from pod_lca.utilities.geometry import subtract_vectors
 from pod_lca.utilities.geometry import scale_vector
@@ -15,7 +20,7 @@ from pod_lca.utilities.geometry import distance_point_point
 from pod_lca.utilities.geometry import is_point_on_plane
 from pod_lca.utilities.geometry import area_polygon
 
-class Window(object):
+class Window(Assembly):
     """
     Window datastructure for energy+ analysis. 
 
@@ -32,33 +37,13 @@ class Window(object):
     
     """
     def __init__(self):
-        self.name = None
-        self.nodes = None
+        super().__init__()
+        self.surfaces = []
         self.building_surface = None
         self.construction = None
     
     @classmethod
-    def from_wall_and_wwr(cls, envelope, wall_key, wwr, construction=None):
-        """
-        Creates a window instance from a wall and window-to-wall ratio.
-
-        Parameters
-        ----------
-        envelope: object
-            The envelope object the window is to be places
-        wall_key: int
-            The key of the wall the window is to be attached to
-        wwr: float
-            The window-to-wall ratio for the window
-        construction: str
-            The window construction name
-
-        Returns
-        -------
-        Window
-            The instance of the created window object
-        
-        """
+    def from_wall_wwr_and_idf(cls, building, envelope, path, wall_key, wwr, construction_name, window_service_life):
         if wwr > .95:
             wwr = .95
         pts = envelope.surfaces[wall_key].polygon
@@ -76,9 +61,15 @@ class Window(object):
         p2 = add_vectors(cpt, add_vectors(vx, vy))
         p3 = add_vectors(cpt, add_vectors(vx_, vy))
 
+        sk = 'window_{}'.format(wall_key)
+        surface = Surface.from_polygon(sk, [p0, p1, p2, p3])
+        envelope.surfaces[sk] = surface
+        envelope.window_surface_keys.append(sk)
+        construction = Construction.from_idf(construction_name, path, building, envelope, 'window', window_service_life)
+
+
         window = cls()
         window.name = f'win_{envelope.name}_{wall_key}'
-        window.nodes = [p0, p1, p2, p3]
         window.building_surface = f'{envelope.name}_wall_{wall_key}' 
         window.construction = construction
         return window
