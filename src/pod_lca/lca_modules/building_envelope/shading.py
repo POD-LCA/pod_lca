@@ -9,22 +9,13 @@ __version__ = "0.1.0"
 
 
 
-class Shading(object):
-    """
-    Shading device object.
+from pod_lca.lca_modules.building_envelope.construction import Construction
 
-    Parameters
-    ----------
-    name: str, optional
-        The name of the shading device
-    mesh: object
-        compas Mesh object representing the surfaces making up the shading device
 
-    """
+class Shading(Construction):
     def __init__(self):
-        self.name =  'Shading'
-        self.mesh = None
-        self.construction = None
+        super().__init__()
+        self.__type__ = 'Shading'
 
     # def to_json(self, filepath):
     #     """

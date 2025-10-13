@@ -25,7 +25,7 @@ class Envelope:
                                  'Cieling': self.cielings,
                                  'Wall': self.walls,
                                  'Window': self.windows,
-                                 'Shadings': self.shadings}
+                                 'Shading': self.shadings}
         
         self.wall_surface_keys = []
         self.window_surface_keys = []

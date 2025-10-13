@@ -4,13 +4,9 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-import json
 
-from ..building_envelope import Surface
 from pod_lca.lca_modules.building_envelope.construction import Construction
-from ..operational import find_constructions
 
-from pod_lca.utilities.geometry import area_polygon
 
 class Window(Construction):
     def __init__(self):

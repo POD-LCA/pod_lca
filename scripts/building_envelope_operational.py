@@ -18,6 +18,7 @@ from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
 
 from pod_lca.lca_modules.geometry.building_geometry import window_surfaces_from_wwr
+from pod_lca.lca_modules.geometry.building_geometry import shading_surfaces_from_window
 
 from pod_lca.lca_modules.operational import write_idf_from_building
 from pod_lca.lca_modules.location import Location
@@ -26,8 +27,6 @@ from pod_lca.utilities import config
 from pod_lca.visualizer.plotters.building_plotter import plot_building
 
 for i in range(50): print('')
-
-#TODO: How do we make it easier to many stacked floors?
 
 # Create Building - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -130,16 +129,16 @@ for fk in b.floors:
     if not b.floors[fk].is_below_grade:
         env = b.floors[fk].envelope
         wks = env.windows.keys()
-        construction = 'Aluminum Shading'
-        surfaces = 
-        # construction = Construction.from_idf(construction, path, b, window_service_life)
-        # for wk in wks:
-        #     sh = Shading.from_window(env.windows[wk], construction, 1.5, 1.5, 1.5)
-        #     env.add_shading(sh)
+        shading = 'Aluminum Shading'
+        for wk in wks:
+            window = env.windows[wk]
+            surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
+            sh = Shading.from_idf(shading, b, surfaces, window_service_life)
+            env.add_construction(sh)
 
 
 # # # ###############################################
-# # # # TODO: Make quantities actually work
+# # # # TODO: Wall quantities are still not substracting windows
 # # # # FIXME: Building plotter is broken
 # # # # TODO: Revisit IDF writing with new objects
 
@@ -148,12 +147,12 @@ for fk in b.floors:
 # # # write_idf_from_building(b)
 
 
-# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product', lc_stage=None))
+print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product', lc_stage=None))
 
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
+drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('cumulative radiative forcing')
 
-# graph = BarChart.from_plotter(MatplotlibPlotter)
-# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# graph.show()
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+graph.show()
