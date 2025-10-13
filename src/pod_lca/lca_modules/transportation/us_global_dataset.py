@@ -171,6 +171,7 @@ class USGlobalDataset(TransportDataset):
                 if self.force_mode:
                     faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[self.force_mode_domestic_value]]
                     log(f"Forced mode {self.force_mode_domestic_value} is used to estimate travel distance.", "Info")
+                    # FIXME throw error if empty
                 else:
                     raise ValueError("Transportation mode not in dataset")
             faf = faf_filtered
@@ -229,6 +230,7 @@ class USGlobalDataset(TransportDataset):
         
         # Destination
         if isinstance(destination, Location):
+            #FIXME see flow chart 
             marine = marine[marine["Coast"] == destination.get_us_coast()]
             if marine.empty:
                 raise ValueError("No data for the selected destination in marine dataset")

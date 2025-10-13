@@ -18,10 +18,10 @@ project.force_mode = False
 project.force_location = False
 
 project.add_good(product, 
-                 shipping_dest=Location.from_US_state('Arkansas'), 
+                 shipping_dest=Location.from_US_state('Alaska'), 
                  shipping_org=None, 
                  mode_name="Truck", 
-                 transport_scenario='Regional_c', 
+                 transport_scenario='Local', 
                  mode_efficiency=None)
 
 transport_leg = project.get_transportation_leg(product)[0]
