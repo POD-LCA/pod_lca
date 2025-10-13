@@ -23,6 +23,7 @@ from ...units import UNITS_MAP
 from ...units import WATT_HOUR
 from ...utilities import centroid
 from ...utilities import geometric_key
+from ...utilities import config
 
 
 class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins):
@@ -54,6 +55,9 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         Manager of inward transportation of material for the construction of the building.
     construction_energy_product : 
 
+    building_data_standard: {'RICS', 'ASHRAE'}
+        building strnadard used for 
+
     """
 
     def __init__(self):
@@ -77,6 +81,7 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         self.eol_impact_database = None
         self.eol_transport_dataset = None
         self.transportation_manager = None
+        self.building_data_standard = 'RICS'
 
         self.construction_energy_product = None
         self.operational_energy_product = None
@@ -170,23 +175,19 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         return building
 
     @classmethod
-    def from_template_model(cls, name, type, location, built_year, life_span, file_path, building_data):
+    def from_template_model(cls, name, location, built_year, life_span, building_data):
         """ Build a building from a template model data given in a CSV file.
         
         Parameters
         ----------
         name : str
             Name of the building.
-        type : {'Commercial', 'Residential'}
-            Type of building.
         location : ~pod_lca.location.Location
             Location of the building site.
         built_year: int
             Built year of the building.
         life_span: int
             Life span of the building in years.
-        file_path : int
-            File path to template model bill of material list.
         building_data : dict
             Dictionary provding building data
         
@@ -195,10 +196,10 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         ~pod_lca.buildings.Building
             Building built.
         """
-        building = cls.new(name, type, location, built_year, life_span)
+        building = cls.new(name, building_data['building_type'], location, built_year, life_span)
         building.set_databases()
 
-        building.set_template_model(file_path, building_data)
+        building.set_template_model(building_data)
 
         return building
 
@@ -312,13 +313,21 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
 
         return self
     
-    def set_template_model(self, file_path, building_data):
+    def set_building_data_standard(self, standard):
+        """ Set standard used for service lives and waste rates.
+        
+        Parameters
+        ----------
+        standard: {'RICS', 'ASHRAE'}
+            building strnadard used for 
+        """
+        self.building_data_standard = standard
+    
+    def set_template_model(self, building_data):
         """ Set attributes to an existing building.
         
         Parameters
         ----------
-        file_path : int
-            File path to template model bill of material list.
         building_data : dict
             Dictionary provding building data
         """
@@ -334,7 +343,10 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
                                          construction_electricity_consumption=construction_energy_use, 
                                          electricity_unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
 
-        self.make_structure('from template', template_bom=file_path)
+        template_model = building_data['building_type'] + '_' + building_data['structure_type']
+        template_bom_path = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (config['setup']['building']['TEMPLATE_BOM_PREFIX'] + template_model + '.csv')
+        
+        self.make_structure('from template', template_bom=template_bom_path)
         self.make_envelope()    
 
         return self
@@ -361,6 +373,7 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
         self.set_eol_process_impact_database()
         self.set_eol_demolition_impact_database()
         self.set_eol_transport_dataset()
+        self.set_building_data_standard('RICS')
 
         return self
     
@@ -444,7 +457,17 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
             Life span of the building in years.
         """
         return self.life_span
+
+    def get_building_data_standard(self):
+        """ Get standard used for service lives and waste rates.
         
+        Returns
+        -------
+        str
+            building strnadard used for 
+        """
+        return self.building_data_standard
+
     def get_floor(self, floor_no):
         """ Get the floor """
         pass

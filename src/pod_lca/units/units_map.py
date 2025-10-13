@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
 from ..units import DAY
+from ..units import FEET
 from ..units import HOUR
 from ..units import ITEM
 from ..units import JOULE
@@ -37,6 +38,7 @@ UNITS_MAP.update({
                     't': M_TON,
                     'km': KILOMETER,
                     'm': METER,
+                    'ft': FEET,
                     't': M_TON,
                     'tonne': M_TON,
                     'tkm': TON_KILOMETER,

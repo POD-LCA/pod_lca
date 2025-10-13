@@ -58,7 +58,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, product_year, service_life, waste_rate=0.0):
+    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, product_year):
         """ Create new structural material.
         
         Parameters
@@ -78,7 +78,7 @@ class Material(Product):
         waste_rate : float
             Waste rate of the material during construction of the assembly/building. Default is 0.
         product_year : int, optional
-            Year of the emissions from the material. If None, uses the year of the parent assembly. Default is None.     
+            Year of the emissions from the material. If None, uses the year of the parent assembly. Default is None. 
         """
         material = cls()
 
@@ -86,8 +86,8 @@ class Material(Product):
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
-        material.set_waste_rate(waste_rate)
-        material.set_service_life(service_life) 
+
+        material.set_service_life()
 
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
@@ -100,6 +100,7 @@ class Material(Product):
         material.set_sctg_code(material_database_entry)
         material.set_eol_material(material_database_entry)
         material.set_density(material_database_entry)
+        material.set_waste_rate(material_database_entry)
         material.set_production_year(product_year)
 
         material.set_transportation()
@@ -223,19 +224,22 @@ class Material(Product):
         if 'bio-based' in data_entry:
             self.bio_based = data_entry['bio-based']
 
-    def set_waste_rate(self, waste_rate):
+    def set_waste_rate(self, material_database_entry):
         """ Set the waste rate of the material.
         
         Parameters
         ----------
-        waste_rate : float
-            Waste rate of the material during construction of the assembly/building.
+        material_database_entry : str
+            Name of the impact database entry from which to use impacts.       
         """
-        self.waste_rate = waste_rate
+        pass # TODO: test and push
+        # database = self.get_impact_database()
+        # data_entry = database.get_data_entry(material_database_entry)
+        # self.eol_product = data_entry['eol material']
 
         return self
 
-    def set_service_life(self, service_life):
+    def set_service_life(self, service_life=None):
         """ Set the service life of the material.
         
         Parameters
@@ -243,7 +247,10 @@ class Material(Product):
         service_life : float
             Service life of the material in years.
         """
-        self.service_life = service_life
+        if service_life is None:
+            self.service_life = self.get_parent().get_service_life()
+        else:
+            self.service_life = service_life
 
         return self
 

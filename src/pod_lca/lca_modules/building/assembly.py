@@ -96,6 +96,16 @@ class Assembly:
         for material in materials:
             self.add_material(material)
         return self
+    
+    def set_service_life(self, service_life):
+        """ Set the service life of the material.
+        
+        Parameters
+        ----------
+        service_life : float
+            Service life of the material in years.
+        """
+        pass # TODO: check all the material service lifes... pick the lower of those and the set value
 
     # ================================
     # Getters
@@ -129,6 +139,16 @@ class Assembly:
             Materials making up the assembly.
         """
         return self.materials
+
+    def get_service_life(self):
+        """ Get the service life of the assembly.
+        
+        Returns
+        -------
+        float
+            Service life of the material in years.
+        """
+        return self.service_life
     
     # ================================
     # Methods

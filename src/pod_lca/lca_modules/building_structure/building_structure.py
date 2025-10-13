@@ -9,9 +9,11 @@ from . import Foundation
 from . import Beam
 from . import Column
 from . import Slab
+from . import Wall
 from ..building import Material
-from ...utilities import DataImporter
 from ...units import UNITS_MAP
+from ...utilities import DataImporter
+from ...utilities import config
 
 
 class BuildingStructure:
@@ -67,46 +69,51 @@ class BuildingStructure:
         structure.set_parent(building)
 
         bill_of_materials = DataImporter.csv_to_dict(bom_file_path)
+        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
 
-        superstructure_floors = Slab.create('superstructure floors', structure, None)
-        substructure_floors = Slab.create('substructure floors', structure, None)
-        columns = Column.create('columns', structure, None)
-        beams = Beam.create('structural framing', structure, None)
-        foundation = Foundation.create('structural foundation', structure, None)
+        column_foundation = Foundation.create('wall foundation', structure, None)
+        wall_foundation = Foundation.create('column foundation', structure, None)
+        slab_on_grade = Slab.create('slab on grade', structure, None)
+        elevated_slab = Slab.create('elevated slab', structure, None)
+        structural_beam = Beam.create('structural framing: beams', structure, None)
+        structural_girders = Beam.create('structural framing: girders', structure, None)
+        structural_columns = Column.create('structural walls', structure, None)
+        structural_walls = Wall.create('structural columns', structure, None)
 
         for key in bill_of_materials:
             item = bill_of_materials[key]
-            if item['Building Component'] in ['Structure', 'Superstructure', 'Substructure']:
                 
-                building_assembly = item['assembly']
-                if building_assembly in ['Structural Foundations']:
-                    assembly_obj = foundation
-                elif building_assembly in ["Structural Framing"]:
-                    assembly_obj = beams
-                elif building_assembly in ["Structural Columns"]:
-                    assembly_obj = columns
-                elif building_assembly in ["Floors"]:
-                    if item['Building Component'] in ["Superstructure"]:
-                        assembly_obj = superstructure_floors
-                    elif item['Building Component'] in ["Substructure"]:
-                        assembly_obj = substructure_floors
-                    else:
-                        raise NotImplementedError
-                else:
-                    raise NotImplementedError
-                                    
-                building_material = Material.new_structural_material(
-                    parent=assembly_obj,
-                    name=item['material'] + '_in_' + building_assembly, 
-                    qty=float(item['qty']),
-                    unit=UNITS_MAP[item['unit']],
-                    material_database_entry=item['material'],
-                    product_year=building.get_built_year(),
-                    service_life=float(item['service life']),
-                    waste_rate=float(item['waste rate'])
-                )
-                
-                assembly_obj.add_material(building_material)
+            building_assembly = item['assembly'].lower().replace(" ", "_")
+            match building_assembly:
+                case 'column_foundation':
+                    assembly_obj = column_foundation
+                case 'wall_foundation':
+                    assembly_obj = wall_foundation
+                case 'slab_on_grade':
+                    assembly_obj = slab_on_grade
+                case 'elevated_slabs':
+                    assembly_obj = elevated_slab
+                case 'structural_framing:_beams':
+                    assembly_obj = structural_beam
+                case 'structural_framing:_girders':
+                    assembly_obj = structural_girders
+                case 'structural_columns':
+                    assembly_obj = structural_columns
+                case 'structural_walls':
+                    assembly_obj = structural_walls
+                case _:
+                    ValueError("Building assmebly not recognized.")
+
+            building_material = Material.new_structural_material(
+                parent=assembly_obj,
+                name=item['material'] + '_in_' + building_assembly, 
+                qty=float(item['qty']),
+                unit=UNITS_MAP[item['unit']],
+                material_database_entry=default_database_entry_map[item['material']]['impact database entry'],
+                product_year=building.get_built_year()
+            )
+            
+            assembly_obj.add_material(building_material)
 
         # remove unused assembly
         del_list = [comp for comp in building.get_assemblies() if not comp.get_materials()]

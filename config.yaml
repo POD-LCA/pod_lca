@@ -45,6 +45,8 @@ setup:
     TERRAIN: 'city'
     NUM_TIMESTEPS: 1
     SOLAR_DISTRIBUTION: 'FullExteriorWithReflections'
+  building:
+    TEMPLATE_BOM_PREFIX: template-model_
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
@@ -105,6 +107,10 @@ file_paths:
     INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
   building:
     DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
+    TEMPLATE_BOM_FOLDER: data/
+    TEMPLATE_MATERIALS_DEFAULT_MAP: data/building_podlca_default-impact-database-entry-mapping.csv
+    RICS_SERVICE_LIFE: data/building_rics_service-life.csv
+    ASHRAE_SERVICE_LIE: data/building_ashrae_service-life.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 
