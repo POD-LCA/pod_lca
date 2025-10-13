@@ -20,7 +20,6 @@ class Construction(Assembly):
 
     @classmethod
     def from_idf(cls, name, building, surfaces, service_life):
-
         data = building.idf_constructions_data['constructions'][name]
         construction = cls.create(data['name'], building)
         construction.layer_order = data['layers']

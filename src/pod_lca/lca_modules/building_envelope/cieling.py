@@ -4,9 +4,10 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from ..operational import find_constructions
-from pod_lca.lca_modules.building.assembly import Assembly
+from pod_lca.lca_modules.building_envelope.construction import Construction
 
 
-class Cieling(Assembly):
-    pass
+class Cieling(Construction):
+    def __init__(self):
+        super().__init__()
+        self.__type__ = 'Cieling'

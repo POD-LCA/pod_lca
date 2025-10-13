@@ -21,6 +21,11 @@ class Envelope:
         self.shadings = {}
         self.floors = {}
         self.cielings = {}
+        self.construction_map = {'Floor': self.floors,
+                                 'Cieling': self.cielings,
+                                 'Wall': self.walls,
+                                 'Window': self.windows,
+                                 'Shadings': self.shadings}
         
         self.wall_surface_keys = []
         self.window_surface_keys = []
@@ -66,24 +71,20 @@ class Envelope:
             self.surfaces[wk] = Surface.from_polygon(wk, wp)
             self.wall_surface_keys.append(wk)
 
-    def add_construction(self, construction, surface_type):
-        if surface_type == 'floor':
-            self.constructions['floor'] = construction
-        elif surface_type == 'cieling':
-            self.constructions['cieling'] = construction
-        elif surface_type == 'wall' or surface_type == 'walls':
-            for sk in self.wall_surface_keys:
-                self.constructions[sk] = construction
-
     def get_assemblies(self):
         # TODO implement method to return all envelop elements as a list
         return []
 
-    def add_window(self, window):
-        self.windows[len(self.windows)] = window
+    def add_construction(self, construction):
+        con_dict = self.construction_map[construction.__type__]
+        key = '{}_{}'.format(construction.__type__, len(con_dict))
+        con_dict[key] = construction
 
-    def add_shading(self, shading):
-        self.shadings[len(self.shadings)] = shading
+    # def add_window(self, window):
+    #     self.windows[len(self.windows)] = window
+
+    # def add_shading(self, shading):
+    #     self.shadings[len(self.shadings)] = shading
 
 if __name__ == '__main__':
 
