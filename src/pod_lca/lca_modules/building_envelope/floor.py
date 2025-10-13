@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 from pod_lca.lca_modules.building_envelope.construction import Construction
 
 
-class Wall(Construction):
+class Floor(Construction):
     def __init__(self):
         super().__init__()
-        self.__type__ = 'Wall'
+        self.__type__ = 'Floor'

@@ -11,7 +11,7 @@ from pod_lca.visualizer import MatplotlibPlotter
 from pod_lca.lca_modules.building import Building
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Wall
-from pod_lca.lca_modules.building_envelope import Slab
+from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Cieling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
@@ -67,16 +67,16 @@ for fk in b.floors:
     surfaces = [e.surfaces[sk] for sk in e.wall_surface_keys]
     walls = Wall.from_idf(walls, b, surfaces, wall_service_life)
 
-    # add slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # add floor slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if floor.is_on_ground:
         gslab = 'Generic Ground Slab'
-        gslab = Slab.from_idf(gslab, path, b, e, 'floor', wall_service_life)
-        e.add_construction(gslab)
+        surfaces = [e.surfaces['floor']]
+        gslab = Floor.from_idf(gslab, b, surfaces, structure_service_life)
     else:
         slab = 'Insulated 8in Slab Floor'
-        slab = Slab.from_idf(slab, path, b, e, 'floor', structure_service_life)
-        e.add_construction(slab, 'floor')
+        surfaces = [e.surfaces['floor']]
+        gslab = Floor.from_idf(slab, b, surfaces, structure_service_life)
 
 
 
@@ -137,12 +137,12 @@ for fk in b.floors:
 # # # write_idf_from_building(b)
 
 
-# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product', lc_stage=None))
+print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product', lc_stage=None))
 
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
+drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('cumulative radiative forcing')
 
-# graph = BarChart.from_plotter(MatplotlibPlotter)
-# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# graph.show()
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+graph.show()
