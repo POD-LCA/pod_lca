@@ -1,0 +1,19 @@
+﻿POD|LCA Key,waste_rate
+p_standard,1
+p_custom,0
+d_truck,5
+d_sprayed,10
+d_soil,20
+d_pile_conc,5
+d_pile_steel,3
+d_pile_timber,20
+d_troweled,15
+d_liquid,10
+e_block,5
+e_tile,8
+e_sheet_metal,10
+e_sheet_other,15
+e_length,10
+e_rebar,3
+e_steel_conn,5
+DEFAULT,5

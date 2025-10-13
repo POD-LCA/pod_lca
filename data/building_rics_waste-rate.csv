@@ -1,0 +1,29 @@
+﻿POD|LCA Key,waste_rate,Material/product
+d_truck,5,Concrete in situ
+p_custom,1,"Concrete precast (floor, beams and frames)"
+d_sprayed,10,Concrete (sprayed)
+e_rebar,5,Steel reinforcement
+p_custom,1,"Steel frame (beams, columns, braces)"
+e_block,10,Concrete blocks (lightweight AAC)
+e_block,5,Concrete blocks (dense/medium density)
+e_block,6,Brickwork (clay)
+e_tile,5,Stone (cladding)
+e_tile,10,Stone (landscaping)
+d_troweled,4,Mortar and render (internal and external)
+d_troweled,8,Screed
+e_tile,6,Floor finish (tile)
+e_tile,6,Floor finish (carpet)
+e_length,2,"Timber frames (beams, columns, joists, braces)"
+e_sheet_other,10,Timber floors (boards)
+e_sheet_other,10,Timber formwork
+e_sheet_metal,1,Aluminium sheet
+e_length,1,Aluminium extruded profiles/frames
+e_sheet_other,4,Plasterboard
+e_sheet_other,7,Insulation
+d_soil,10,Aggregate
+,1,Glass
+d_liquid,6,"Coatings (paint, intumescent coatings)"
+d_sprayed,10,Sprayed cementitious fire protection to steel
+d_truck,6,Asphalt
+d_truck,6,Bitumen
+e_sheet_other,5,Roof cladding

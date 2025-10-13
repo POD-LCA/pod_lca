@@ -1,0 +1,32 @@
+﻿POD|LCA RSL Category,RICS Building Element,Reference Servivce Life
+substructure,Piling and foundations,60
+superstructure,"Structural elements, e.g. columns, walls, beams, upper floor and roof structure",60
+encl_curtainwall,"(Facade), Glazed cladded/curtain walling",35
+encl_brickconc_panels,"(Facade), Brick, stone, block and precast concrete panels",60
+encl_woodpanel,"(Facade), Rain screens, timber panels",30
+encl_rs_thinbrick,"(Facade), Rain screens, timber panels",30
+encl_rs_wood,"(Facade), Rain screens, timber panels",30
+encl_rs_gfrc,"(Facade), Rain screens, timber panels",30
+encl_rs_eifs,"(Facade), Rain screens, timber panels",30
+encl_rs_mvbrick,"(Facade), Rain screens, timber panels",30
+encl_rs_mvgranite,"(Facade), Rain screens, timber panels",30
+encl_rs_steelpanel,"(Facade), Rain screens, timber panels",30
+ecl_windows_openings,Hardwood/steel/aluminium windows,30
+encl_horiz_openings,Hardwood/steel/aluminium windows,30
+glazing,Hardwood/steel/aluminium windows,30
+roofing_asphaltshingle,Single-ply membrane,30
+roofing_singleply,Single-ply membrane,30
+roofing_EPDM,Single-ply membrane,30
+roofing_metal,Standing seam metal,30
+roofing_tiles,"Tiles, clay and concrete",60
+int_studs,(Superstructure) Internal partitioning and dry lining: Studwork,30
+int_blockwall,(Superstructure) Internal partitioning and dry lining: Blockwork,60
+fin_gwb,Finishes Wall Render,30
+fin_paint,Finishes Wall Paint,5
+fin_ceramictile,,
+fin_vinyltile,,
+fin_ff&e,FF&E Loose furniture and fittings,10
+fin_carpet_Vinyl,Finishes Floor Carpet/vinyl,7
+fin_stonetile,Finnishes Floor Stone Tiles,25
+fin_accessfloorsupport,Finnishes Raised access floor (RAF) pedestal,50
+fin_accessfloortile,Finnishes Raised access floor (RAF) tile,30
