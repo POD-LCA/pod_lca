@@ -114,6 +114,33 @@ class CFSDataset(TransportDataset):
         return cfs
     
     @staticmethod
+    def get_data_bins(dataset, target_bins=3):
+        """ Compute the qaurtile bins
+        
+        Parameters
+        ----------
+        dataset : pandas.DataFrame
+            The filtered CFS dataset.
+        target_bins : int
+            Target number of bins to split the data into.
+
+        Returns
+        -------
+        :class:`int`
+            Number of bins realised.
+        :class:`pandas.Series`
+            Dataseries tagged with bin number.
+        """
+        for bins in range(target_bins, 0, -1):
+            try:
+                groups = qcut(dataset['SHIPMT_DIST_ROUTED'], q=bins, labels=[f"Q{i+1}" for i in range(bins)], duplicates='drop')
+                unique_bins = groups.cat.categories.size
+                if unique_bins == bins:
+                    return bins, groups
+            except ValueError:
+                continue
+    
+    @staticmethod
     def get_distance_estimate(dataset, scenario):
         """ Get the average distance from the CFS dataset based on the scenario.
         
@@ -121,7 +148,7 @@ class CFSDataset(TransportDataset):
         ----------
         dataset : pandas.DataFrame
             The filtered CFS dataset.
-        scenario : {'Local', 'Regional'. 'Regional_c', 'National', 'Average'}
+        scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No scenario'}
             The scenario to filter the distances by.
         
         Returns
@@ -134,73 +161,30 @@ class CFSDataset(TransportDataset):
         ValueError
             If the scenario is not recognized.
         """
-        for bins in range(3, 0, -1):
-            try:
-                groups = qcut(dataset["SHIPMT_DIST_ROUTED"], q=bins, labels=[f"Q{i+1}" for i in range(bins)], duplicates='drop')
-                unique_bins = groups.cat.categories.size
-                if unique_bins == bins:
-                    break
-            except ValueError:
-                continue
+        if scenario in ['No scenario', 'N/A']:
+            return dataset['SHIPMT_DIST_ROUTED'].mean()
+
+        bins, groups = CFSDataset.get_data_bins(dataset, target_bins=3)
 
         if bins == 3:
-            if scenario == "Local":
+            if scenario == 'Local':
                 return dataset.loc[groups == 'Q1', 'SHIPMT_DIST_ROUTED'].mean()
-            elif scenario == "Achievable":
+            elif scenario == 'Achievable':
                 return dataset.loc[groups == 'Q2', 'SHIPMT_DIST_ROUTED'].mean()
-            elif scenario == "Conservative":
+            elif scenario == 'Conservative':
                 return dataset.loc[groups == 'Q3', 'SHIPMT_DIST_ROUTED'].mean()
         elif bins == 2:
-            if scenario == "Local":
+            if scenario == 'Local':
                 return dataset.loc[groups == 'Q1', 'SHIPMT_DIST_ROUTED'].mean()
-            elif scenario == "Conservative":
+            elif scenario == 'Conservative':
                 return dataset.loc[groups == 'Q2', 'SHIPMT_DIST_ROUTED'].mean()
             else:
                 raise ValueError('Scenario not achievable within data.')    
         elif bins == 1:
-            if scenario == "Achievable":
-                return dataset["SHIPMT_DIST_ROUTED"].mean()  
+            if scenario == 'Achievable':
+                return dataset['SHIPMT_DIST_ROUTED'].mean()  
             else:
                 raise ValueError('Scenario not achievable within data.')    
-            
-        # groups = []
-        # for x in dataset["SHIPMT_DIST_ROUTED"]:
-        #     if x <= quartiles[0]:
-        #         groups.append("Q1")
-        #     elif x <= quartiles[1]:
-        #         groups.append("Q2")
-        #     elif x <= quartiles[2]:
-        #         groups.append("Q3")
-        #     else:
-        #         groups.append("Q4")
-
-        # if len(dataset) < 4 or scenario == "Average":
-        #     return dataset["SHIPMT_DIST_ROUTED"].mean()
-        # else:
-        #     if scenario == "Local":
-        #         n = 1
-        #     elif scenario == "Regional":
-        #         n = 2
-        #     elif scenario == "Regional_c":
-        #         n = 3
-        #     elif scenario == "National":
-        #         n = 4
-        #     else:
-        #         raise ValueError(f"{scenario} scenario is not recognized")
-
-        #     sorted_data = dataset["SHIPMT_DIST_ROUTED"].sort_values(ignore_index=True)
-        #     length = len(sorted_data)
-        #     base_size = length // 4
-        #     extras = length % 4
-
-        #     group_sizes = [base_size + (1 if i < extras else 0) for i in range(4)]
-
-        #     start = sum(group_sizes[:n - 1])
-        #     end = start + group_sizes[n - 1]
-
-        #     group = sorted_data[start:end]
-
-        #     return group.mean()
 
 
 if __name__ == '__main__':

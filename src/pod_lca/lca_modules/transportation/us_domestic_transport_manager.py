@@ -113,7 +113,6 @@ class USDomesticTransportationManager(TransportationManager):
         self.transport_legs[good] = []
 
         mode_efficiency = 'Median' if mode_efficiency is None else mode_efficiency
-        transport_scenario ='Average' if transport_scenario is None else transport_scenario
 
         # select type of transport leg
         if isinstance(travel_dist, (int, float)):
@@ -126,7 +125,7 @@ class USDomesticTransportationManager(TransportationManager):
                 raise ValueError("This project is for US domestic logistics only")
 
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ["National", "Regional_c", "Regional", "Local", "Average"]:
+            if transport_scenario in ["Local", "Achievable", "Conservative"]:
                 LinkClass = DomesticLeg
             else:
                 raise ValueError("Transport scenario not recognized.")

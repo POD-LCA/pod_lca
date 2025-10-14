@@ -20,7 +20,7 @@ states_list = list(DataImporter.json_to_dict(config['file_paths']['transportatio
 origin_states = [None] + states_list
 destination_states = states_list
 
-tranpsort_scenarios = ["National", "Regional_c", "Regional", "Local", "Average"]
+tranpsort_scenarios = ["Local", "Achievable", "Conservative"]
 Material_names = {
     '10': {'SCTG code': '10', 'material': 'monumental or building stone'}, 
     '11': {'SCTG code': '11', 'material': 'natural sands'}, 
@@ -68,7 +68,7 @@ for sctg_code, material in Material_names.items():
         for destination_state in destination_states:
             origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
             destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
-            scenarios = tranpsort_scenarios if origin_state_obj is None else ["Average"]
+            scenarios = tranpsort_scenarios if origin_state is None else ['N/A']
             
             project.add_good(product, 
                             None,
@@ -106,7 +106,7 @@ for sctg_code, material in Material_names.items():
                             'Material': material,
                             'SCTG code': product.get_sctg_code(digits=2),
                             'Scenario scope': 'Domestic',
-                            'scenario': 'US_Average' if scenario == 'Average' else scenario,
+                            'scenario': transport_leg.get_transport_scenario(),
                             'destination state':destination_state, 
                             'origin state': origin_state,
                             'FAF foreign zone': 'N/A',

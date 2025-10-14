@@ -12,16 +12,15 @@ product = Product()
 product.set_name("Crushed stone")
 product.set_qty(1)
 product.set_unit(M_TON)
-product.set_sctg_code('12')
+product.set_sctg_code('11')
 
 project.force_mode = False
 project.force_location = False
 
 project.add_good(product, 
-                 shipping_dest=Location.from_US_state('Alaska'), 
+                 shipping_dest=Location.from_US_state('Nebraska'), 
                  shipping_org=None, 
                  mode_name="Truck", 
-                 transport_scenario='Local', 
                  mode_efficiency=None)
 
 transport_leg = project.get_transportation_leg(product)[0]

@@ -16,8 +16,9 @@ class DomesticLeg(TransportationLeg):
 
     Attributes
     ----------
-    transport_scenario : {'National', 'Regional', 'Regional_c', 'Local', 'Average'}
-        A discriptor of the tranportation scenario.
+    transport_scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No scenario'}
+        A discriptor of the tranportation scenario. N/A when scenario not applicable (i.e., origin and destination both known). 
+        'No scenario' when insufficient data points to get scenarios.
     """
 
     def __init__(self):
@@ -34,7 +35,7 @@ class DomesticLeg(TransportationLeg):
 
         Parameters
         ----------
-        transport_scenario : {'National', 'Regional', 'Regional_c', 'Local', 'Average'}
+        transport_scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No scenario'}
             Transport scenario of the transportation leg.
 
         Raises
@@ -45,9 +46,9 @@ class DomesticLeg(TransportationLeg):
             Transportation scenario is not None or a string.
         """
         if transport_scenario is None:
-            self.transport_scenario = None
+            self.transport_scenario = 'N/A'
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ["National", "Regional", "Regional_c", "Local", "Average"]:
+            if transport_scenario in ['Local', 'Achievable', 'Conservative', 'N/A', 'No scenario']:
                 self.transport_scenario = transport_scenario
             else:
                 raise ValueError("Transportation scenario not recognized")
@@ -166,11 +167,7 @@ class DomesticLeg(TransportationLeg):
             log("Returning cached result.", "Info")
             return self._cache_travel_dist
         else:
-            transport_scenario = self.get_transport_scenario()
-            if transport_scenario in ["Local", "Regional", "Regional_c", "National", "Average"]:
-                travel_dist = self.get_distance_from_datset(transport_scenario)
-            else:
-                raise ValueError("Transport scenario not recognized.")
+            travel_dist = self.get_distance_from_datset()
 
             self._cache_travel_dist = travel_dist
             self._last_params = current_params
@@ -198,7 +195,7 @@ class DomesticLeg(TransportationLeg):
     # ================================
     # CFS Methods
     # ================================
-    def get_distance_from_datset(self, transport_scenario):
+    def get_distance_from_datset(self):
         """ Get the average distance from the CFS dataset based on the scenario.
 
         Note
@@ -216,10 +213,18 @@ class DomesticLeg(TransportationLeg):
             The distance estimate for the specified scenario.
         """
         dataset = self.get_dataset()
-        transport_scenario = transport_scenario if (self.get_shipping_destination() is None or self.get_shipping_origin() is None) else "Average"
 
         conversion_factor = KILOMETER.convert_to(self.get_dist_unit())
         cfs_filtered = dataset.filter_datasets(self.get_material(), self.get_shipping_destination(), self.get_shipping_origin(), self.get_mode())
+        bins, _ = dataset.get_data_bins(cfs_filtered, target_bins=3)
+
+        # update scenario
+        transport_scenario = self.get_transport_scenario() if self.get_shipping_origin() is None else 'N/A'
+        if not self.get_transport_scenario() == 'N/A':
+            if bins == 1:
+                transport_scenario = 'No Scenario'
+        self.set_transport_scenario(transport_scenario)
+        
         travel_dist = dataset.get_distance_estimate(cfs_filtered, transport_scenario) * conversion_factor
 
         return travel_dist
