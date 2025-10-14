@@ -15,6 +15,7 @@ class Surface(object):
         self.surface_type                       = None
         self.outside_boundary_condition         = None
         self.outside_boundary_condition_object  = None
+        self.construction                       = None
 
     @property
     def area(self):
@@ -27,3 +28,6 @@ class Surface(object):
         srf.name = name
         srf.polygon = polygon
         return srf
+    
+    def add_construction(self, construction):
+        self.construction = construction

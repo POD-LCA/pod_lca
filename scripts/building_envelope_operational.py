@@ -143,7 +143,7 @@ for fk in b.floors:
 # # # # TODO: Revisit IDF writing with new objects
 
 
-# # plot_building(b)
+plot_building(b)
 # # # write_idf_from_building(b)
 
 

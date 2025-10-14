@@ -15,7 +15,7 @@ def plot_building(building):
 
     add_ground(building, data)
     add_windows(building, data)
-    add_shadings(building, data)
+    # add_shadings(building, data)
 
     layout = make_layout()
     fig = go.Figure(data=data, layout=layout)
@@ -32,7 +32,7 @@ def add_shadings(building, data):
         count1 = 0
         for sk in env.shadings:
             sh = env.shadings[sk]
-            mesh = sh.mesh
+            mesh = sh.surfaces
             vertices_, faces = mesh.to_vertices_and_faces()
             edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
             line_marker = dict(color='rgb(0,0,0)', width=1.5)
@@ -104,7 +104,7 @@ def add_windows(building, data):
     for fk in building.floors:
         env = building.floors[fk].envelope
         for wk in env.windows:
-            vertices.extend(env.windows[wk].nodes)
+            vertices.extend(env.windows[wk].surfaces[0].polygon)
             triangles.append([count, count+1, count+2])
             triangles.append([count+2, count+3, count])
             count += 4
@@ -265,11 +265,12 @@ def add_floor(building, data, floor):
     text = []
     intensity = []
     for sk in srfs:
-        con = env.constructions[sk]
+        con = srfs[sk].construction
         layers = con.layers
         layers = [con.layers[lk].name for lk in con.layers] 
         thick = [con.layers[lk].thickness for lk in con.layers]
-        layers = ['{} {}mm'.format(lay, round(thick[tk]*1000, 1)) for tk, lay in enumerate(layers)]
+        thick = [0 if i is None else i for i in thick]
+        layers = ['{} {}mm'.format(lay, round(thick[tk]*1000, 1)) for tk, lay in enumerate(layers) if thick]
         string = 'Zone: {}<br>'.format(zname)
         string += 'Name: {}<br>'.format(con.name)
         string += 'Surface Type: {}<br>'.format(srfs[sk].name)

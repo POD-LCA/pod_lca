@@ -26,6 +26,8 @@ class Construction(Assembly):
         construction.get_layers(building)
         construction.surfaces = surfaces
         construction.add_materials(building, service_life)
+        for surface in surfaces:
+            surface.add_construction(construction)
         return construction
     
     def add_materials(self, building, service_life):
@@ -45,14 +47,12 @@ class Construction(Assembly):
                                                             waste_rate=0.0)
                 self.add_material(material)
 
-
     @property
     def area(self):
         area = 0
         for s in self.surfaces:
             area += s.area
         return area
-
 
     def get_layers(self, building):
         for mk in self.layer_order:
