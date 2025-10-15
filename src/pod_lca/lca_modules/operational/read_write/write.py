@@ -35,24 +35,21 @@ def write_idf_from_building(building):
     write_constructions(building)
     write_shadings(building)
 
-
-
-
     # write_spaces(building)
-#     write_space_lists(building)
+    # write_space_lists(building)
 
-#     write_simulation_control(building)
-#     write_schedules(building)
-#     # write_schedule_type_limits(building)
-#     write_internal_gains(building)
-#     write_infiltration_rates(building)
-#     write_thermostats(building)
-#     write_hvac(building)
-#     write_node_lists(building)
-#     write_outdoor_airs(building)
-#     write_daylight(building)
+    write_simulation_control(building)
+    write_schedules(building)
+    # # write_schedule_type_limits(building)
+    # write_internal_gains(building)
+    # write_infiltration_rates(building)
+    # write_thermostats(building)
+    # write_hvac(building)
+    # write_node_lists(building)
+    # write_outdoor_airs(building)
+    # write_daylight(building)
 
-#     write_output_items(building)
+    # write_output_items(building)
 
 
 def write_pre():
@@ -646,6 +643,190 @@ def write_shading(shading):
     fh.write('\n')
     fh.close()
 
+
+def write_spaces(building):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    for fk in building.floors:
+        floor = building.floors[fk]
+        envelope = floor.envelope
+        fh.write('Space,\n')
+        fh.write('{},                               !- Name\n'.format(fk))
+        fh.write('{},                               !- Zone Name\n'.format(envelope.name))
+        fh.write('{},                               !- Ceiling Height [m]\n'.format(floor.height))
+        fh.write('{},                               !- Volume [m3]\n'.format(envelope.volume))
+        fh.write('{},                               !- Floor Area [m2]\n'.format(envelope.area))
+        fh.write('{};                               !- Space Type\n'.format(building.building_type))
+        fh.write('\n')
+    fh.write('\n')
+    fh.close()
+
+
+def write_simulation_control(building):
+
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    fh.write('SimulationControl,\n')
+    fh.write('  No,       !- Do Zone Sizing Calculation\n')
+    fh.write('  No,       !- Do System Sizing Calculation\n')
+    fh.write('  No,       !- Do Plant Sizing Calculation\n')
+    fh.write('  No,       !- Run Simulation for Sizing Periods\n')
+    fh.write('  Yes,      !- Run Simulation for Weather File Run Periods\n')
+    fh.write('  No,       !- Do HVAC Sizing Simulation for Sizing Periods\n')
+    fh.write('  1;        !- Maximum Number of HVAC Sizing Simulation Passes\n')
+    fh.write('  \n')
+    fh.write('  \n')
+    fh.close()
+
+
+def write_schedules(building):
+    # building.find_set_schedules()
+    # for sk in building.set_schedules:
+    for sk in building.schedules:
+        schedule = building.schedules[sk]
+        stype = schedule.type
+        if stype == 'compact':
+            write_schedule_compact(building, schedule)
+        elif stype == 'day_interval':
+            write_schedule_day_interval(building, schedule)
+        elif stype == 'week_daily':
+            write_schedule_week_daily(building, schedule)
+        elif stype == 'year':
+            write_schedule_year(building, schedule)
+        elif stype == 'schedule_type_limits':
+            write_schedule_type_limits(building, schedule)
+            
+
+def write_schedule_compact(building, schedule):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('Schedule:Compact,\n')
+    fh.write('  {},  !- Name\n'.format(schedule.name))
+    fh.write('  {}, !- Schedule Type Limits Name\n'.format(schedule.type_limits))
+    fh.write('  Through: {}, !- Field 1\n'.format(schedule.through))
+    fh.write('  For: {},     !- Field 2\n'.format(schedule.for_))
+    fh.write('  Until: {}:00,   !- Field 3\n'.format(schedule.until))
+    fh.write('  {};          !- Field 4\n'.format(schedule.value))
+    fh.write('\n')
+    fh.close()
+
+
+def write_schedule_day_interval(building, schedule):
+
+    time_values = schedule.time_values
+    sep = ','
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('Schedule:Day:Interval,\n')
+    fh.write('  {},   !- Name\n'.format(schedule.name))
+    fh.write('  {},   !- Schedule Type Limits Name\n'.format(schedule.type_limits))
+    fh.write('  {},   !- Interpolate to Timestep\n'.format(schedule.interpolate_timestep))
+    for i, tk in enumerate(time_values):
+        fh.write('  {},    !- Time {} [hh:mm]\n'.format(time_values[tk]['time'], i + 1))
+        if i == len(time_values) - 1:
+            sep = ';'
+        fh.write('  {}{}    !- Value Until Time {}\n'.format(time_values[tk]['value'], sep, i + 1))
+    fh.write('\n')
+    fh.close()
+
+
+def write_schedule_week_daily(building, schedule):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('Schedule:Week:Daily,\n')
+
+    fh.write('  {},         !- Name\n'.format(schedule.name))
+    fh.write('  {},         !- Sunday Schedule:Day Name\n'.format(schedule.sunday))
+    fh.write('  {},         !- Monday Schedule:Day Name\n'.format(schedule.monday))
+    fh.write('  {},         !- Tuesday Schedule:Day Name\n'.format(schedule.tuesday))
+    fh.write('  {},         !- Wednesday Schedule:Day Name\n'.format(schedule.wednesday))
+    fh.write('  {},         !- Thursday Schedule:Day Name\n'.format(schedule.thursday))
+    fh.write('  {},         !- Friday Schedule:Day Name\n'.format(schedule.friday))
+    fh.write('  {},         !- Saturday Schedule:Day Name\n'.format(schedule.saturday))
+    fh.write('  {},         !- Holiday Schedule:Day Name\n'.format(schedule.holiday))
+    fh.write('  {},         !- SummerDesignDay Schedule:Day Name\n'.format(schedule.summer_design_day))
+    fh.write('  {},         !- WinterDesignDay Schedule:Day Name\n'.format(schedule.winter_design_day))
+    fh.write('  {},         !- CustomDay1 Schedule:Day Name\n'.format(schedule.custom_day1))
+    fh.write('  {};         !- CustomDay2 Schedule:Day Name\n'.format(schedule.custom_day2))
+    fh.write('\n')
+    fh.close()
+
+
+def write_schedule_year(building, schedule):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+
+    fh.write('Schedule:Year,\n')
+    fh.write('  {},     !- Name\n'.format(schedule.name))
+    fh.write('  {},     !- Schedule Type Limits Name\n'.format(schedule.type_limits))
+    fh.write('  {},     !- Schedule:Week Name 1\n'.format(schedule.schedule_week_name1))
+    fh.write('  {},     !- Start Month 1\n'.format(schedule.start_month_1))
+    fh.write('  {},     !- Start Day 1\n'.format(schedule.start_day1))
+    fh.write('  {},     !- End Month 1\n'.format(schedule.end_month1))
+    fh.write('  {};     !- End Day 1\n'.format(schedule.end_day1))
+    fh.write('  \n')
+    fh.write('  \n')
+    fh.close()
+
+
+def write_schedule_type_limits(building, schedule):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('ScheduleTypeLimits,\n')
+    fh.write('  {},     !- Name\n'.format(schedule.name))
+    fh.write('  {},     !- Lower Limit Value\n'.format(schedule.lower_limit))
+    fh.write('  {},     !- Upper Limit Value\n'.format(schedule.upper_limit))
+    fh.write('  {},     !- Numeric Type\n'.format(schedule.numeric_type))
+    fh.write('  {};     !- Unit Type\n'.format(schedule.unit_type))
+    fh.write('  \n')
+
+    # fh.write('ScheduleTypeLimits,\n')
+    # fh.write('  Any Number;              !- Name\n')
+    # fh.write('  \n')
+
+    # fh.write('ScheduleTypeLimits,\n')
+    # fh.write('  Fraction,                !- Name\n')
+    # fh.write('  0.0,                     !- Lower Limit Value\n')
+    # fh.write('  1.0,                     !- Upper Limit Value\n')
+    # fh.write('  CONTINUOUS;              !- Numeric Type\n')
+    # fh.write('  \n')
+
+    # fh.write('ScheduleTypeLimits,\n')
+    # fh.write('  Temperature,             !- Name\n')
+    # fh.write('  -60,                     !- Lower Limit Value\n')
+    # fh.write('  200,                     !- Upper Limit Value\n')
+    # fh.write('  CONTINUOUS,              !- Numeric Type\n')
+    # fh.write('  Temperature;             !- Unit Type\n')
+    # fh.write('  \n')
+
+    # fh.write('ScheduleTypeLimits,\n')
+    # fh.write('  Control Type,            !- Name\n')
+    # fh.write('  0,                       !- Lower Limit Value\n')
+    # fh.write('  4,                       !- Upper Limit Value\n')
+    # fh.write('  DISCRETE;                !- Numeric Type\n')
+    # fh.write('  \n')
+
+    fh.write('  \n')
+    fh.write('  \n')
+    fh.close()
+
+
+
+# def write_space_lists(building):
+#     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+#     fh.write('\n')
+
+#     for slk in building.space_lists:
+#         sl = building.space_lists[slk]
+#         spaces = building.space_lists[slk].spaces
+#         fh.write('SpaceList,\n')
+#         fh.write('  {},     !- Name\n'.format(sl.name))
+#         for i, sk in enumerate(spaces):
+#             if i == len(spaces) - 1:
+#                 sep = ';'
+#             else:
+#                 sep = ','
+#             fh.write('  {}{}        !- Space Name {}\n'.format(spaces[sk], sep, i + 1))
+#         fh.write('\n')
+#         fh.close()
+
+
+
 # def write_zone_lists(building):
 #     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
 
@@ -711,197 +892,6 @@ def write_shading(shading):
 
 
 
-
-
-# def write_simulation_control(building):
-
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('SimulationControl,\n')
-#     fh.write('  No,       !- Do Zone Sizing Calculation\n')
-#     fh.write('  No,       !- Do System Sizing Calculation\n')
-#     fh.write('  No,       !- Do Plant Sizing Calculation\n')
-#     fh.write('  No,       !- Run Simulation for Sizing Periods\n')
-#     fh.write('  Yes,      !- Run Simulation for Weather File Run Periods\n')
-#     fh.write('  No,       !- Do HVAC Sizing Simulation for Sizing Periods\n')
-#     fh.write('  1;        !- Maximum Number of HVAC Sizing Simulation Passes\n')
-#     fh.write('  \n')
-#     fh.write('  \n')
-#     fh.close()
-
-
-# def write_schedule(building, schedule):
-#     if schedule.alldays:
-#         add = schedule.alldays
-#         addks = sorted(add.keys())
-
-#         fh = open(building.idf_filepath, 'a')
-#         fh.write('Schedule:Compact,\n')
-#         fh.write('  {},                !- Name\n'.format(schedule.name))
-#         fh.write('  {},                !- Schedule Type Limits Name\n'.format(schedule.type_limits))
-#         fh.write('  Through: 12/31,          !- Field 1\n')
-#         fh.write('  For: AllDays,            !- Field 2\n')
-#         for h in addks:
-#             fh.write('  Until: {}:00,{},         !- Field n \n'.format(h, add[h]))
-#         fh.write('  ;\n')
-#         fh.write('  \n')
-#         fh.write('  \n')
-#         fh.close()
-
-#     else:
-#         wd = schedule.weekdays
-#         wdks = sorted(wd.keys())
-
-#         wed = schedule.weekends
-#         wedks = sorted(wed.keys())
-
-#         if schedule.summer_design_day:
-#             sddd = schedule.summer_design_day
-#             sdddls = sorted(sddd.keys())
-
-
-#         fh = open(building.idf_filepath, 'a')
-#         fh.write('Schedule:Compact,\n')
-#         fh.write('  {},                !- Name\n'.format(schedule.name))
-#         fh.write('  {},                !- Schedule Type Limits Name\n'.format(schedule.type_limits))
-#         fh.write('  Through: 12/31,    !- Field 1\n')
-#         fh.write('  For: WeekDays SummerDesignDay CustomDay1 CustomDay2, !- Field 2\n')
-#         for h in wdks:
-#             fh.write('  Until: {}:00,{},         !- Field n \n'.format(h, wd[h]))
-
-#         fh.write('  For: Weekends WinterDesignDay Holiday, !- Field n \n')
-#         for h in wedks:
-#             fh.write('  Until: {}:00,{},         !- Field n \n'.format(h, wed[h]))
-#         fh.write('  ;\n')
-#         fh.write('  \n')
-#         fh.write('  \n')
-#         fh.close()
-
-
-# def write_schedules(building):
-#     # building.find_set_schedules()
-#     # for sk in building.set_schedules:
-#     for sk in building.schedules:
-#         schedule = building.schedules[sk]
-#         stype = schedule.type
-#         if stype == 'compact':
-#             write_schedule_compact(building, schedule)
-#         elif stype == 'day_interval':
-#             write_schedule_day_interval(building, schedule)
-#         elif stype == 'week_daily':
-#             write_schedule_week_daily(building, schedule)
-#         elif stype == 'year':
-#             write_schedule_year(building, schedule)
-#         elif stype == 'schedule_type_limits':
-#             write_schedule_type_limits(building, schedule)
-
-
-# def write_schedule_compact(building, schedule):
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('Schedule:Compact,\n')
-#     fh.write('  {},  !- Name\n'.format(schedule.name))
-#     fh.write('  {}, !- Schedule Type Limits Name\n'.format(schedule.type_limits))
-#     fh.write('  Through: {}, !- Field 1\n'.format(schedule.through))
-#     fh.write('  For: {},     !- Field 2\n'.format(schedule.for_))
-#     fh.write('  Until: {}:00,   !- Field 3\n'.format(schedule.until))
-#     fh.write('  {};          !- Field 4\n'.format(schedule.value))
-#     fh.write('\n')
-#     fh.close()
-
-
-# def write_schedule_day_interval(building, schedule):
-
-#     time_values = schedule.time_values
-#     sep = ','
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('Schedule:Day:Interval,\n')
-#     fh.write('  {},   !- Name\n'.format(schedule.name))
-#     fh.write('  {},   !- Schedule Type Limits Name\n'.format(schedule.type_limits))
-#     fh.write('  {},   !- Interpolate to Timestep\n'.format(schedule.interpolate_timestep))
-#     for i, tk in enumerate(time_values):
-#         fh.write('  {},    !- Time {} [hh:mm]\n'.format(time_values[tk]['time'], i + 1))
-#         if i == len(time_values) - 1:
-#             sep = ';'
-#         fh.write('  {}{}    !- Value Until Time {}\n'.format(time_values[tk]['value'], sep, i + 1))
-#     fh.write('\n')
-#     fh.close()
-
-
-# def write_schedule_week_daily(building, schedule):
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('Schedule:Week:Daily,\n')
-
-#     fh.write('  {},         !- Name\n'.format(schedule.name))
-#     fh.write('  {},         !- Sunday Schedule:Day Name\n'.format(schedule.sunday))
-#     fh.write('  {},         !- Monday Schedule:Day Name\n'.format(schedule.monday))
-#     fh.write('  {},         !- Tuesday Schedule:Day Name\n'.format(schedule.tuesday))
-#     fh.write('  {},         !- Wednesday Schedule:Day Name\n'.format(schedule.wednesday))
-#     fh.write('  {},         !- Thursday Schedule:Day Name\n'.format(schedule.thursday))
-#     fh.write('  {},         !- Friday Schedule:Day Name\n'.format(schedule.friday))
-#     fh.write('  {},         !- Saturday Schedule:Day Name\n'.format(schedule.saturday))
-#     fh.write('  {},         !- Holiday Schedule:Day Name\n'.format(schedule.holiday))
-#     fh.write('  {},         !- SummerDesignDay Schedule:Day Name\n'.format(schedule.summer_design_day))
-#     fh.write('  {},         !- WinterDesignDay Schedule:Day Name\n'.format(schedule.winter_design_day))
-#     fh.write('  {},         !- CustomDay1 Schedule:Day Name\n'.format(schedule.custom_day1))
-#     fh.write('  {};         !- CustomDay2 Schedule:Day Name\n'.format(schedule.custom_day2))
-#     fh.write('\n')
-#     fh.close()
-
-
-# def write_schedule_year(building, schedule):
-#     fh = open(building.idf_filepath, 'a')
-
-#     fh.write('Schedule:Year,\n')
-#     fh.write('  {},     !- Name\n'.format(schedule.name))
-#     fh.write('  {},     !- Schedule Type Limits Name\n'.format(schedule.type_limits))
-#     fh.write('  {},     !- Schedule:Week Name 1\n'.format(schedule.schedule_week_name1))
-#     fh.write('  {},     !- Start Month 1\n'.format(schedule.start_month_1))
-#     fh.write('  {},     !- Start Day 1\n'.format(schedule.start_day1))
-#     fh.write('  {},     !- End Month 1\n'.format(schedule.end_month1))
-#     fh.write('  {};     !- End Day 1\n'.format(schedule.end_day1))
-#     fh.write('  \n')
-#     fh.write('  \n')
-#     fh.close()
-
-
-# def write_schedule_type_limits(building, schedule):
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('ScheduleTypeLimits,\n')
-#     fh.write('  {},     !- Name\n'.format(schedule.name))
-#     fh.write('  {},     !- Lower Limit Value\n'.format(schedule.lower_limit))
-#     fh.write('  {},     !- Upper Limit Value\n'.format(schedule.upper_limit))
-#     fh.write('  {},     !- Numeric Type\n'.format(schedule.numeric_type))
-#     fh.write('  {};     !- Unit Type\n'.format(schedule.unit_type))
-#     fh.write('  \n')
-
-#     # fh.write('ScheduleTypeLimits,\n')
-#     # fh.write('  Any Number;              !- Name\n')
-#     # fh.write('  \n')
-
-#     # fh.write('ScheduleTypeLimits,\n')
-#     # fh.write('  Fraction,                !- Name\n')
-#     # fh.write('  0.0,                     !- Lower Limit Value\n')
-#     # fh.write('  1.0,                     !- Upper Limit Value\n')
-#     # fh.write('  CONTINUOUS;              !- Numeric Type\n')
-#     # fh.write('  \n')
-
-#     # fh.write('ScheduleTypeLimits,\n')
-#     # fh.write('  Temperature,             !- Name\n')
-#     # fh.write('  -60,                     !- Lower Limit Value\n')
-#     # fh.write('  200,                     !- Upper Limit Value\n')
-#     # fh.write('  CONTINUOUS,              !- Numeric Type\n')
-#     # fh.write('  Temperature;             !- Unit Type\n')
-#     # fh.write('  \n')
-
-#     # fh.write('ScheduleTypeLimits,\n')
-#     # fh.write('  Control Type,            !- Name\n')
-#     # fh.write('  0,                       !- Lower Limit Value\n')
-#     # fh.write('  4,                       !- Upper Limit Value\n')
-#     # fh.write('  DISCRETE;                !- Numeric Type\n')
-#     # fh.write('  \n')
-
-#     fh.write('  \n')
-#     fh.write('  \n')
-#     fh.close()
 
 
 # def write_internal_gains(building):
@@ -1186,38 +1176,7 @@ def write_shading(shading):
 #     fh.close()
 
 
-# def write_spaces(building):
-#     fh = open(building.idf_filepath, 'a')
-#     for spk in building.spaces:
-#         sp = building.spaces[spk]
-#         fh.write('Space,\n')
-#         fh.write('{},                               !- Name\n'.format(sp.name))
-#         fh.write('{},                               !- Zone Name\n'.format(sp.zone_name))
-#         fh.write('{},                               !- Ceiling Height [m]\n'.format(sp.height))
-#         fh.write('{},                               !- Volume [m3]\n'.format(sp.volume))
-#         fh.write('{},                               !- Floor Area [m2]\n'.format(sp.floor_area))
-#         fh.write('{};                               !- Space Type\n'.format(sp.space_type))
-#         fh.write('\n')
-#     fh.write('\n')
-#     fh.close()
 
-
-# def write_space_lists(building):
-#     fh = open(building.idf_filepath, 'a')
-
-#     for slk in building.space_lists:
-#         sl = building.space_lists[slk]
-#         spaces = building.space_lists[slk].spaces
-#         fh.write('SpaceList,\n')
-#         fh.write('  {},     !- Name\n'.format(sl.name))
-#         for i, sk in enumerate(spaces):
-#             if i == len(spaces) - 1:
-#                 sep = ';'
-#             else:
-#                 sep = ','
-#             fh.write('  {}{}        !- Space Name {}\n'.format(spaces[sk], sep, i + 1))
-#         fh.write('\n')
-#         fh.close()
 
 
 # def write_output_items(building):

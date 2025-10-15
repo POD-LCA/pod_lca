@@ -17,6 +17,8 @@ from pod_lca.lca_modules.building_envelope import Cieling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
 
+from pod_lca.lca_modules.operational.operational_object import OperationalObject
+
 from pod_lca.lca_modules.geometry.building_geometry import window_surfaces_from_wwr
 from pod_lca.lca_modules.geometry.building_geometry import shading_surfaces_from_window
 
@@ -48,112 +50,120 @@ b = Building.from_parameters(name='test',
                              floors_below_grade=num_below_grade, 
                              geometry_units=METER)
 
-# Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-path = config['file_paths']['operational']['CONSTRUCTIONS']
-b.read_constructions_data(path)
-b.read_material_properties_data(path)
-
-wall_service_life = 30
-structure_service_life = 60
-window_service_life = 20
-
-for fk in b.floors:
-    floor = b.floors[fk]
-    e = Envelope.from_floor(floor)
-    floor.add_envelope(e)
+path = config['file_paths']['operational']['SYSTEMS']
+b.operational_object = OperationalObject.from_idf(path)
 
 
-    # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    walls = 'Generic Exterior Wall'
-    surfaces = [e.surfaces[sk] for sk in e.wall_surface_keys]
-    walls = Wall.from_idf(walls, b, surfaces, wall_service_life)
-    e.add_construction(walls)
-
-    # add floor slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-    if floor.is_on_ground:
-        gslab = 'Generic Ground Slab'
-        surfaces = [e.surfaces['floor']]
-        gslab = Floor.from_idf(gslab, b, surfaces, structure_service_life)
-        e.add_construction(gslab)
-    else:
-        slab = 'Insulated 8in Slab Floor'
-        surfaces = [e.surfaces['floor']]
-        slab = Floor.from_idf(slab, b, surfaces, structure_service_life)
-        e.add_construction(slab)
+print(b.operational_object.equipment_connection)
 
 
-    # add cieling slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-    if floor.is_last:
-        roof = 'Generic Roof'
-        surfaces = [e.surfaces['cieling']]
-        roof = Cieling.from_idf(roof, b, surfaces, structure_service_life)
-        e.add_construction(roof)
-    else:
-        ciel = 'Generic Interior Ceiling'
-        surfaces = [e.surfaces['cieling']]
-        ciel = Cieling.from_idf(ciel, b, surfaces, structure_service_life)
-        e.add_construction(ciel)
+# path = config['file_paths']['operational']['CONSTRUCTIONS']
+# b.read_constructions_data(path)
+# b.read_material_properties_data(path)
 
+# wall_service_life = 30
+# structure_service_life = 60
+# window_service_life = 20
 
-
-# # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wall_key = 'wall_1'
-        wwr = .4
-        window = 'Generic Double Pane'
-        surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
-        window = Window.from_idf(window, b, surfaces, window_service_life)
-        env.add_window(window, wall_key)
-
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wall_key = 'wall_3'
-        wwr = .9
-        window = 'Generic Double Pane'
-        surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
-        window = Window.from_idf(window, b, surfaces, window_service_life)
-        env.add_window(window, wall_key)
+# for fk in b.floors:
+#     floor = b.floors[fk]
+#     e = Envelope.from_floor(floor)
+#     floor.add_envelope(e)
 
 
-# add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#     # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wks = env.windows.keys()
-        shading = 'Aluminum Shading'
-        for wk in wks:
-            window = env.windows[wk]
-            surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
-            sh = Shading.from_idf(shading, b, surfaces, window_service_life)
-            env.add_construction(sh)
+#     walls = 'Generic Exterior Wall'
+#     surfaces = [e.surfaces[sk] for sk in e.wall_surface_keys]
+#     walls = Wall.from_idf(walls, b, surfaces, wall_service_life)
+#     e.add_construction(walls)
 
-# TODO: Window names must NOT be their construction name, must be unique
-# TODO: wall keys must be unique. must include floor / envelope name
+#     # add floor slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# # # ###############################################
-# # # # TODO: Wall quantities are still not substracting windows
-# # # # FIXME: Building plotter is broken
-
-
-# plot_building(b)
-write_idf_from_building(b)
+#     if floor.is_on_ground:
+#         gslab = 'Generic Ground Slab'
+#         surfaces = [e.surfaces['floor']]
+#         gslab = Floor.from_idf(gslab, b, surfaces, structure_service_life)
+#         e.add_construction(gslab)
+#     else:
+#         slab = 'Insulated 8in Slab Floor'
+#         surfaces = [e.surfaces['floor']]
+#         slab = Floor.from_idf(slab, b, surfaces, structure_service_life)
+#         e.add_construction(slab)
 
 
-# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product', lc_stage=None))
+#     # add cieling slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
+#     if floor.is_last:
+#         roof = 'Generic Roof'
+#         surfaces = [e.surfaces['cieling']]
+#         roof = Cieling.from_idf(roof, b, surfaces, structure_service_life)
+#         e.add_construction(roof)
+#     else:
+#         ciel = 'Generic Interior Ceiling'
+#         surfaces = [e.surfaces['cieling']]
+#         ciel = Cieling.from_idf(ciel, b, surfaces, structure_service_life)
+#         e.add_construction(ciel)
 
-# graph = BarChart.from_plotter(MatplotlibPlotter)
-# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# graph.show()
+
+
+# # # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wall_key = 'wall_1'
+#         wwr = .4
+#         window = 'Generic Double Pane'
+#         surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
+#         window = Window.from_idf(window, b, surfaces, window_service_life)
+#         env.add_window(window, wall_key)
+
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wall_key = 'wall_3'
+#         wwr = .9
+#         window = 'Generic Double Pane'
+#         surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
+#         window = Window.from_idf(window, b, surfaces, window_service_life)
+#         env.add_window(window, wall_key)
+
+
+# # add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wks = env.windows.keys()
+#         shading = 'Aluminum Shading'
+#         for wk in wks:
+#             window = env.windows[wk]
+#             surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
+#             sh = Shading.from_idf(shading, b, surfaces, window_service_life)
+#             env.add_construction(sh)
+
+# # TODO: Window names must NOT be their construction name, must be unique
+# # TODO: wall keys must be unique. must include floor / envelope name
+
+# # # # ###############################################
+# # # # # TODO: Wall quantities are still not substracting windows
+# # # # # FIXME: Building plotter is broken
+
+
+# # plot_building(b)
+# write_idf_from_building(b)
+
+
+# # print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# # print(b.get_emissions(scope='product', lc_stage=None))
+
+# # drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# # drf_record.plot('cumulative radiative forcing')
+
+# # graph = BarChart.from_plotter(MatplotlibPlotter)
+# # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# # graph.show()
