@@ -16,9 +16,9 @@ class DomesticLeg(TransportationLeg):
 
     Attributes
     ----------
-    transport_scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No scenario'}
+    transport_scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No Scenario'}
         A discriptor of the tranportation scenario. N/A when scenario not applicable (i.e., origin and destination both known). 
-        'No scenario' when insufficient data points to get scenarios.
+        'No Scenario' when insufficient data points to get scenarios.
     """
 
     def __init__(self):
@@ -35,7 +35,7 @@ class DomesticLeg(TransportationLeg):
 
         Parameters
         ----------
-        transport_scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No scenario'}
+        transport_scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No Scenario'}
             Transport scenario of the transportation leg.
 
         Raises
@@ -48,7 +48,7 @@ class DomesticLeg(TransportationLeg):
         if transport_scenario is None:
             self.transport_scenario = 'N/A'
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ['Local', 'Achievable', 'Conservative', 'N/A', 'No scenario']:
+            if transport_scenario in ['Local', 'Achievable', 'Conservative', 'N/A', 'No Scenario']:
                 self.transport_scenario = transport_scenario
             else:
                 raise ValueError("Transportation scenario not recognized")

@@ -148,7 +148,7 @@ class CFSDataset(TransportDataset):
         ----------
         dataset : pandas.DataFrame
             The filtered CFS dataset.
-        scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No scenario'}
+        scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No Scenario'}
             The scenario to filter the distances by.
         
         Returns
@@ -161,7 +161,7 @@ class CFSDataset(TransportDataset):
         ValueError
             If the scenario is not recognized.
         """
-        if scenario in ['No scenario', 'N/A']:
+        if scenario in ['No Scenario', 'N/A']:
             return dataset['SHIPMT_DIST_ROUTED'].mean()
 
         bins, groups = CFSDataset.get_data_bins(dataset, target_bins=3)
