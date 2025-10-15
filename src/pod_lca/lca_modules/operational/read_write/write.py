@@ -31,9 +31,9 @@ def write_idf_from_building(building):
     write_run_period()
     write_zones(building)
     write_windows(building)
-    # write_layers(building)
-    # write_constructions(building)
-    # write_shadings(building)
+    write_layers(building)
+    write_constructions(building)
+    write_shadings(building)
 
 
 
@@ -330,7 +330,6 @@ def write_windows(building):
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
 
-    windows = []
     for fk in building.floors:
         envelope = building.floors[fk].envelope
         if envelope.windows:
@@ -340,10 +339,11 @@ def write_windows(building):
                 con = window.name
                 bsn = '{}_{}'.format(envelope.name, window.wall_key)
                 polygon = window.surfaces[0].polygon
+                wname = '{}_{}'.format(envelope.name, wk)
 
                 fh.write('\n')
                 fh.write('FenestrationSurface:Detailed,\n')
-                fh.write('  {},                       !- Name\n'.format(window.name))
+                fh.write('  {},                       !- Name\n'.format(wname))
                 fh.write('  Window,                   !- Surface Type\n')
                 fh.write('  {},                       !- Construction Name\n'.format(con))
                 fh.write('  {},                       !- Building Surface Name\n'.format(bsn))
@@ -380,16 +380,18 @@ def write_layers(building):
     constructions = {}
     for fk in building.floors:
         env = building.floors[fk].envelope
-        for ck in env.constructions:
-            con = env.constructions[ck]
+        for ck in env.walls:
+            con = env.walls[ck]
             constructions[con.name] = con
-
-    for fk in building.floors:
-        if building.floors[fk].envelope.windows:
-            for wk in building.floors[fk].envelope.windows:
-                win = building.floors[fk].envelope.windows[wk]
-                con = win.construction
-                constructions[con.name] = con
+        for ck in env.floors:
+            con = env.floors[ck]
+            constructions[con.name] = con
+        for ck in env.cielings:
+            con = env.cielings[ck]
+            constructions[con.name] = con
+        for ck in env.windows:
+            con = env.windows[ck]
+            constructions[con.name] = con
 
     for ck in constructions:
         l = constructions[ck].layers
@@ -407,6 +409,8 @@ def write_layers(building):
             write_material(mat, thick, lay_name)
         # elif mat.__type__ == 'MaterialNoMass':
         #     write_materials_nomass(building, mat)
+        elif mat.__type__ == 'EnvelopeMaterialAirGap':
+            write_material_air_gap(mat, lay_name)
         elif mat.__type__ == 'WindowMaterialGlazing':
             write_material_glazing(mat, thick, lay_name)
         elif mat.__type__ == 'WindowMaterialGas':
@@ -449,6 +453,17 @@ def write_material(mat, thickness, layer_name):
         fh.write('\n')
         fh.write('\n')
         fh.close()
+
+
+def write_material_air_gap(mat, layer_name):
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    fh.write('Material:AirGap,\n')
+    fh.write('  {},     !- Name\n'.format(layer_name))
+    fh.write('  {};     !- Resistance (M**2K/W)\n'.format(mat.resistance))
+    fh.write('\n')
+    fh.write('\n')
+    fh.close()
 
 
 def write_material_glazing(mat, thickness, layer_name):
@@ -534,16 +549,18 @@ def write_constructions(building):
     constructions = {}
     for fk in building.floors:
         env = building.floors[fk].envelope
-        for ck in env.constructions:
-            con = env.constructions[ck]
+        for ck in env.walls:
+            con = env.walls[ck]
             constructions[con.name] = con
-
-    for fk in building.floors:
-        if building.floors[fk].envelope.windows:
-            for wk in building.floors[fk].envelope.windows:
-                win = building.floors[fk].envelope.windows[wk]
-                con = win.construction
-                constructions[con.name] = con
+        for ck in env.floors:
+            con = env.floors[ck]
+            constructions[con.name] = con
+        for ck in env.cielings:
+            con = env.cielings[ck]
+            constructions[con.name] = con
+        for ck in env.windows:
+            con = env.windows[ck]
+            constructions[con.name] = con
 
 
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
@@ -561,7 +578,9 @@ def write_constructions(building):
                 sep = ';'
             else:
                 sep = ','
-            if thicks[i] > 0:
+            if thicks[i] == None:
+                lname = layer
+            elif thicks[i] > 0:
                 lname = '{} {}mm'.format(layer, round(thicks[i]*1000, 1))
             elif thicks[i] <= 0 and types[i] == 'Material':
                     continue
@@ -609,20 +628,20 @@ def write_shading(shading):
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('\n')
     sname = shading.name
-    mesh = shading.mesh
-    for fk in mesh.faces:
+    surfaces = shading.surfaces
+    for i, srf in enumerate(surfaces):
         fh.write('Shading:Building:Detailed,\n')
-        fh.write('  Shading {}-{}, !- Detached Shading\n'.format(sname, fk))
+        fh.write('  Shading {}-{}, !- Detached Shading\n'.format(sname, i))
         fh.write('  , !- Shadowing Transmittance & Schedule\n')
-        vertices = mesh.face_vertices(fk)
+        vertices = srf.polygon
         fh.write('  {}, !-Number of verrices\n'.format(len(vertices)))
-        for i, vk in enumerate(vertices):
-            if i == len(vertices) - 1:
+        for j, xyz in enumerate(vertices):
+            if j == len(vertices) - 1:
                 sep = ';'
             else:
                 sep = ','
-            x, y, z = mesh.vertex_xyz(vk)
-            fh.write('  {}, {}, {}{} ! Vertex {}\n'.format(x, y, z, sep, i))
+            x, y, z = xyz
+            fh.write('  {}, {}, {}{} ! Vertex {}\n'.format(x, y, z, sep, j))
         fh.write('\n')
     fh.write('\n')
     fh.close()

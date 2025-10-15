@@ -142,7 +142,6 @@ for fk in b.floors:
 # # # ###############################################
 # # # # TODO: Wall quantities are still not substracting windows
 # # # # FIXME: Building plotter is broken
-# # # # TODO: Revisit IDF writing with new objects
 
 
 # plot_building(b)
