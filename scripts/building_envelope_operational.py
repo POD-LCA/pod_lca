@@ -110,7 +110,7 @@ for fk in b.floors:
         window = 'Generic Double Pane'
         surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
         window = Window.from_idf(window, b, surfaces, window_service_life)
-        env.add_construction(window)
+        env.add_window(window, wall_key)
 
 for fk in b.floors:
     if not b.floors[fk].is_below_grade:
@@ -120,7 +120,7 @@ for fk in b.floors:
         window = 'Generic Double Pane'
         surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
         window = Window.from_idf(window, b, surfaces, window_service_life)
-        env.add_construction(window)
+        env.add_window(window, wall_key)
 
 
 # add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -136,6 +136,8 @@ for fk in b.floors:
             sh = Shading.from_idf(shading, b, surfaces, window_service_life)
             env.add_construction(sh)
 
+# TODO: Window names must NOT be their construction name, must be unique
+# TODO: wall keys must be unique. must include floor / envelope name
 
 # # # ###############################################
 # # # # TODO: Wall quantities are still not substracting windows
@@ -143,16 +145,16 @@ for fk in b.floors:
 # # # # TODO: Revisit IDF writing with new objects
 
 
-plot_building(b)
-# # # write_idf_from_building(b)
+# plot_building(b)
+write_idf_from_building(b)
 
 
-print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product', lc_stage=None))
+# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product', lc_stage=None))
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()

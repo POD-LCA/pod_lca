@@ -36,6 +36,7 @@ class Envelope:
         envelope = cls()
         envelope.floor = floor
         envelope.update_envelope_surfaces()
+        envelope.name = 'Envelope_floor_{}'.format(floor.floor_no)
         return envelope
     
     @property
@@ -80,8 +81,10 @@ class Envelope:
         key = '{}_{}'.format(construction.__type__, len(con_dict))
         con_dict[key] = construction
 
-    # def add_window(self, window):
-    #     self.windows[len(self.windows)] = window
+    def add_window(self, window, wall_key):
+        window.wall_key = wall_key
+        key = 'Window_{}'.format(len(self.windows))
+        self.windows[key] = window
 
     # def add_shading(self, shading):
     #     self.shadings[len(self.shadings)] = shading

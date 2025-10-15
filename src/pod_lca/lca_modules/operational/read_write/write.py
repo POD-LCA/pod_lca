@@ -31,9 +31,13 @@ def write_idf_from_building(building):
     write_run_period()
     write_zones(building)
     write_windows(building)
-    write_layers(building)
-    write_constructions(building)
-    write_shadings(building)
+    # write_layers(building)
+    # write_constructions(building)
+    # write_shadings(building)
+
+
+
+
     # write_spaces(building)
 #     write_space_lists(building)
 
@@ -251,7 +255,7 @@ def write_building_surface(envelope, sk):
     """
     
     st  = sk.capitalize()
-    ct  = envelope.constructions[sk].name
+    ct  = envelope.surfaces[sk].construction.name
     ob  = envelope.surfaces[sk].outside_boundary_condition
     obo = envelope.surfaces[sk].outside_boundary_condition_object
 
@@ -328,34 +332,35 @@ def write_windows(building):
 
     windows = []
     for fk in building.floors:
-        if building.floors[fk].envelope.windows:
+        envelope = building.floors[fk].envelope
+        if envelope.windows:
             for wk in building.floors[fk].envelope.windows:
-                windows.append(building.floors[fk].envelope.windows[wk])
+                window = building.floors[fk].envelope.windows[wk]
 
-    for win in windows:
-        con = win.construction.name
-        bsn = win.building_surface
+                con = window.name
+                bsn = '{}_{}'.format(envelope.name, window.wall_key)
+                polygon = window.surfaces[0].polygon
 
-        fh.write('\n')
-        fh.write('FenestrationSurface:Detailed,\n')
-        fh.write('  {},                       !- Name\n'.format(win.name))
-        fh.write('  Window,                   !- Surface Type\n')
-        fh.write('  {},                       !- Construction Name\n'.format(con))
-        fh.write('  {},                       !- Building Surface Name\n'.format(bsn))
-        fh.write('  ,                         !- Outside Boundary Condition Object\n')
-        fh.write('  ,                         !- View Factor to Ground\n')
-        fh.write('  ,                         !- Frame and Divider Name\n')
-        fh.write('  ,                         !- Multiplier\n')
-        fh.write('  {},                         !- Number of Vertices\n'.format(len(win.nodes)))
-        for i, nodes in enumerate(win.nodes):
-            x, y, z = nodes
-            if i == len(win.nodes) - 1:
-                sep = ';'
-            else:
-                sep = ','
-            fh.write('  {:.3f}, {:.3f}, {:.3f}{}            !- X,Y,Z Vertex {} (m)\n'.format(x, y, z, sep, i))
-        fh.write('\n')
-    fh.write('\n')
+                fh.write('\n')
+                fh.write('FenestrationSurface:Detailed,\n')
+                fh.write('  {},                       !- Name\n'.format(window.name))
+                fh.write('  Window,                   !- Surface Type\n')
+                fh.write('  {},                       !- Construction Name\n'.format(con))
+                fh.write('  {},                       !- Building Surface Name\n'.format(bsn))
+                fh.write('  ,                         !- Outside Boundary Condition Object\n')
+                fh.write('  ,                         !- View Factor to Ground\n')
+                fh.write('  ,                         !- Frame and Divider Name\n')
+                fh.write('  ,                         !- Multiplier\n')
+                fh.write('  {},                         !- Number of Vertices\n'.format(len(polygon)))
+                for i, nodes in enumerate(polygon):
+                    x, y, z = nodes
+                    if i == len(polygon) - 1:
+                        sep = ';'
+                    else:
+                        sep = ','
+                    fh.write('  {:.3f}, {:.3f}, {:.3f}{}            !- X,Y,Z Vertex {} (m)\n'.format(x, y, z, sep, i))
+                fh.write('\n')
+            fh.write('\n')
     fh.close()
 
 

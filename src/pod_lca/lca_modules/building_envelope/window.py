@@ -12,7 +12,12 @@ class Window(Construction):
     def __init__(self):
         super().__init__()
         self.__type__ = 'Window'
-    
+        self.wall_key = None # the wall this window is related to
+
+    def update_wall(self, envelope):
+        # TODO: Create a function that updates the wall area / quantities the window is attached to. 
+        pass
+
     # @classmethod
     # def from_wall_wwr_and_idf(cls):
     #     pass
