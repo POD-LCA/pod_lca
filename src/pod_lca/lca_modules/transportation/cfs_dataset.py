@@ -134,7 +134,7 @@ class CFSDataset(TransportDataset):
         for bins in range(target_bins, 0, -1):
             try:
                 groups = qcut(dataset['SHIPMT_DIST_ROUTED'], q=bins, labels=[f"Q{i+1}" for i in range(bins)], duplicates='drop')
-                unique_bins = groups.cat.categories.size
+                unique_bins = groups.unique().size
                 if unique_bins == bins:
                     return bins, groups
             except ValueError:
