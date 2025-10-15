@@ -110,7 +110,7 @@ class ForeignLeg(TransportationLeg):
             most_common_state = self.get_dataset().find_most_common_US_destination(self.get_material())
             self.shipping_destination = Location.from_US_state(most_common_state)
         else:
-            self.shipping_destination = super().set_shipping_destination(shipping_dest)
+            super().set_shipping_destination(shipping_dest)
 
         self._invalidate_cache()
         return self
@@ -124,10 +124,10 @@ class ForeignLeg(TransportationLeg):
             Name of the shipping origin location.
         """
         if shipping_org is None:
-            most_common_faf_region = self.get_dataset().find_most_common_FAF_origin(self.get_material())
+            most_common_faf_region = self.get_dataset().find_most_common_FAF_origin(self.get_material(), self.get_shipping_destination())
             self.shipping_origin = Location.from_faf_regions(most_common_faf_region)
         else:
-            self.shipping_origin = super().set_shipping_origin(shipping_org)
+            super().set_shipping_origin(shipping_org)
 
         self._invalidate_cache()
         return self
@@ -301,17 +301,11 @@ class ForeignLeg(TransportationLeg):
         """ Check if the mode and origin combinations are realistic.
         """
         if self.get_mode().get_name() == 'Truck':
-            if self.get_shipping_origin() is None:
-                if not self.get_transport_scenario() == 'North America':
-                    return False
-            elif not self.get_shipping_origin().get_country_code() in ['CA', 'MX']:
+            if not self.get_shipping_origin().get_country_code() in ['CA', 'MX']:
                 return False
-        
+
         if self.get_mode().get_name() == 'Rail':
-            if self.get_shipping_origin() is None:
-                if not self.get_transport_scenario() == 'North America':
-                    return False
-            elif not self.get_shipping_origin().get_country_code() == 'CA':
+            if not self.get_shipping_origin().get_country_code() == 'CA':
                 return False
 
         return True

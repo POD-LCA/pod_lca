@@ -66,7 +66,7 @@ class USGlobalDataset(TransportDataset):
 
         return max(counts, key=counts.get)
 
-    def find_most_common_FAF_origin(self, material=None):
+    def find_most_common_FAF_origin(self, material=None, destination=None):
         """ Find the most common US destination state in the FAF dataset.
         
         Parameters
@@ -80,7 +80,14 @@ class USGlobalDataset(TransportDataset):
         if material is not None:
             sctg_code = material.get_sctg_code(digits=2)
             faf = faf[faf["sctg2"] == sctg_code]
-
+            if faf.empty:
+                raise ValueError("Material not in CFS Dataset.")
+            
+        if isinstance(destination, Location):
+            faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
+            if faf.empty:
+                raise ValueError("Destination not in CFS Dataset.")
+       
         faf_foreign_origin = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
         counts = {}
         for letter, value in faf_foreign_origin.items():
@@ -188,14 +195,14 @@ class USGlobalDataset(TransportDataset):
                     raise ValueError("Destination not in CFS Dataset.")
             faf = faf_filtered
 
-        # Origin
+        # Origin (FAF zone)
         if isinstance(origin, Location):
             faf_filtered = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
             if faf_filtered.empty:
                 raise ValueError("Origin not in FAF dataset.")
             faf = faf_filtered
             
-        # Mode
+        # Foreign Mode
         if isinstance(mode_foreign, TransportMode):
             faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
             faf_filtered = faf[faf["fr_inmode"] == faf_modes_mapping[mode_foreign.get_name()]]
@@ -215,7 +222,8 @@ class USGlobalDataset(TransportDataset):
                 if self.force_mode:
                     faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[self.force_mode_domestic_value]]
                     log(f"Forced mode {self.force_mode_domestic_value} is used to estimate travel distance.", "Info")
-                    # FIXME throw error if empty
+                    if faf_filtered.empty:
+                        raise ValueError("Forced transportation mode not in dataset")
                 else:
                     raise ValueError("Transportation mode not in dataset")
             faf = faf_filtered
