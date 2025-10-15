@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from . import TransportationLeg
 from . import TransportMode
+from ..location import Location
 from ...units import KILOMETER
 from ...utilities import log
 
@@ -97,7 +98,7 @@ class ForeignLeg(TransportationLeg):
         self._invalidate_cache()
         return self
     
-    def set_shipping_destination(self, shipping_dest):
+    def set_shipping_destination(self, shipping_dest=None):
         """ Set the shipping destination of the project.
 
         Parameters
@@ -105,11 +106,16 @@ class ForeignLeg(TransportationLeg):
         shipping_dest : ~pod_lca.location.Location
             Name of the shipping destination location.
         """
-        self = super().set_shipping_destination(shipping_dest)
+        if shipping_dest is None:
+            most_common_state = self.get_dataset().find_most_common_US_destination(self.get_material())
+            self.shipping_destination = Location.from_US_state(most_common_state)
+        else:
+            self.shipping_destination = super().set_shipping_destination(shipping_dest)
+
         self._invalidate_cache()
         return self
         
-    def set_shipping_origin(self, shipping_org):
+    def set_shipping_origin(self, shipping_org=None):
         """ Set the shipping origin of the project.
 
         Parameters
@@ -117,7 +123,12 @@ class ForeignLeg(TransportationLeg):
         shipping_org : ~pod_lca.location.Location
             Name of the shipping origin location.
         """
-        self = super().set_shipping_origin(shipping_org)
+        if shipping_org is None:
+            most_common_faf_region = self.get_dataset().find_most_common_FAF_origin(self.get_material())
+            self.shipping_origin = Location.from_faf_regions(most_common_faf_region)
+        else:
+            self.shipping_origin = super().set_shipping_origin(shipping_org)
+
         self._invalidate_cache()
         return self
 

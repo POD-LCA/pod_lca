@@ -674,7 +674,6 @@ class Location:
         list of int
             Codes of the Freight Analysis Framework (FAF) region (domestic).
         """
-
         return self.faf_domestic_codes
 
     def get_us_coast(self):

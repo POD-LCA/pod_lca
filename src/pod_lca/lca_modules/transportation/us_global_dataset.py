@@ -44,13 +44,57 @@ class USGlobalDataset(TransportDataset):
         self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH']) 
         self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_DATA_PATH'])
     
+    def find_most_common_US_destination(self, material=None):
+        """ Find the most common US destination state in the FAF dataset.
+        
+        Parameters
+        ----------
+        material : ~pod_lca.materials_screening.Master
+            The material transported.
+        """
+        faf = self.faf
+        
+        # filter dataset
+        if material is not None:
+            sctg_code = material.get_sctg_code(digits=2)
+            faf = faf[faf["sctg2"] == sctg_code]
+
+        faf_states_city = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
+        counts = {}
+        for letter, values in faf_states_city.items():
+            counts[letter] = faf['dms_dest'].isin(values).sum()
+
+        return max(counts, key=counts.get)
+
+    def find_most_common_FAF_origin(self, material=None):
+        """ Find the most common US destination state in the FAF dataset.
+        
+        Parameters
+        ----------
+        material : ~pod_lca.materials_screening.Master
+            The material transported.
+        """
+        faf = self.faf
+        
+        # filter dataset
+        if material is not None:
+            sctg_code = material.get_sctg_code(digits=2)
+            faf = faf[faf["sctg2"] == sctg_code]
+
+        faf_foreign_origin = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
+        counts = {}
+        for letter, value in faf_foreign_origin.items():
+            counts[letter] = (faf['fr_orig'] == int(value)).sum()
+
+        return max(counts, key=counts.get)
+
     def filter_datasets(self, material=None, destination=None, origin=None, mode_domestic=None, mode_foreign=None):
         """ Filter all datasets corresponding to foreign travel.
 
         Parameters
         ----------
         material : ~pod_lca.materials_screening.Master
-            The Standard Classification of Transported Goods (SCTG) code to filter by.
+            The material transported.
         destination : ~pod_lca.location.Location
             The destination location to filter by.
         origin : ~pod_lca.location.Location
