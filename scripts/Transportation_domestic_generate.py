@@ -18,7 +18,7 @@ output_file = "save_files\\transportation_dataset_domestic.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 origin_states = [None] + states_list
-destination_states = states_list
+destination_states = [None] + states_list
 
 tranpsort_scenarios = ["Local", "Achievable", "Conservative"]
 Material_names = {
@@ -66,6 +66,8 @@ for sctg_code, material in Material_names.items():
     output_dict = {}
     for origin_state in tqdm(origin_states):
         for destination_state in destination_states:
+            if destination_state is None and origin_state is not None:
+                continue
             origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
             destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
             scenarios = tranpsort_scenarios if origin_state is None else ['N/A']
@@ -76,10 +78,10 @@ for sctg_code, material in Material_names.items():
                             origin_state_obj,
                             None,
                             KILOMETER)  
-            transport_leg = project.get_transportation_leg(product)[0]              
-            for scenario in scenarios:
-                transport_leg.set_transport_scenario(scenario)
-                for travel_mode in travel_modes:
+            transport_leg = project.get_transportation_leg(product)[0] 
+            for travel_mode in travel_modes:             
+                for scenario in scenarios:
+                    transport_leg.set_transport_scenario(scenario)
                     for eff in travel_mode_efficiency:
                         transport_leg.set_mode(travel_mode, efficiency=eff)
                         try:
@@ -96,11 +98,6 @@ for sctg_code, material in Material_names.items():
                                 electricity_consumption = 0.0
                         except:
                             continue
-                            # distance = 'NO DATA'
-                            # RTT = 'NO DATA'
-                            # impacts = None
-                            # emissions = None
-                            # electricity_consumption = 'NO DATA'
 
                         output_dict[str(sequence_no)] = {  
                             'Material': material,
@@ -132,5 +129,8 @@ for sctg_code, material in Material_names.items():
 
                         sequence_no += 1
 
+                    if transport_leg.get_transport_scenario() == 'No Scenario':
+                        break
+                
     DataExporter.dict_to_csv(output_dict, output_file, append=True)
     print(f"\n Backup written at {time.strftime('%H:%M:%S')}")
