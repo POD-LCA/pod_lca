@@ -33,7 +33,7 @@ class Schedule(object):
         self.winter_design_day      = {}
 
     @classmethod
-    def from_idf_data(cls, data):
+    def from_data(cls, data):
         name = data['name']
         schedule = cls(name)
         schedule.type = data['__type__']

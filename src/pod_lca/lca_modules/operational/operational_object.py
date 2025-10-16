@@ -16,6 +16,10 @@ from pod_lca.lca_modules.operational.ideal_air_load import IdealAirLoad
 from pod_lca.lca_modules.operational.infiltration import Infiltration
 from pod_lca.lca_modules.operational.equipment import EquipmentList
 from pod_lca.lca_modules.operational.equipment import EquipmentConnection
+from pod_lca.lca_modules.operational.zone_list import ZoneList
+from pod_lca.lca_modules.operational.node_list import NodeList
+from pod_lca.lca_modules.operational.outdoor_air import OutdoorAir
+from pod_lca.lca_modules.operational.schedule import Schedule
 
 from pod_lca.lca_modules.operational.read_write.read_idf import find_schedule_compact
 from pod_lca.lca_modules.operational.read_write.read_idf import find_daylight_controls
@@ -55,6 +59,10 @@ class OperationalObject(object):
         self.infiltration = None
         self.equipment_list = None
         self.equipment_connection = None
+        self.zone_lists = None
+        self.node_lists = None
+        self.outdoor_air = None
+        self.schedules = None
         
     @classmethod
     def from_idf(cls, path):
@@ -80,8 +88,8 @@ class OperationalObject(object):
         find_schedule_week_daily(path, data)
         find_schedule_year(path, data)
 
-        find_spaces(path, data)
-        find_space_lists(path, data)
+        # find_spaces(path, data)
+        # find_space_lists(path, data)
 
         operational_object = cls.from_data(data)
         return operational_object
@@ -101,4 +109,8 @@ class OperationalObject(object):
         oo.infiltration = {ik: Infiltration.from_data(data['infiltration'][ik]) for ik in data['infiltration']}
         oo.equipment_list = {ek: EquipmentList.from_data(data['equipment_list'][ek]) for ek in data['equipment_list']}
         oo.equipment_connection = {ek: EquipmentConnection.from_data(data['equipment_connection'][ek]) for ek in data['equipment_connection']}
+        oo.zone_lists = {zk: ZoneList.from_data(data['zone_lists'][zk]) for zk in data['zone_lists']}
+        oo.node_lists = {nk: NodeList.from_data(data['node_lists'][nk]) for nk in data['node_lists']}
+        oo.outdoor_air = {ok: OutdoorAir.from_data(data['outdoor_air'][ok]) for ok in data['outdoor_air']}
+        oo.schedules = {sk: Schedule.from_data(data['schedules'][sk]) for sk in data['schedules']}
         return oo
