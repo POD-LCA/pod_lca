@@ -18,9 +18,10 @@ project.force_mode = False
 project.force_location = False
 
 project.add_good(product, 
-                 shipping_dest=Location.from_US_state('Nebraska'), 
+                 shipping_dest=Location.from_US_state('Maryland'), 
                  shipping_org=None, 
-                 mode_name="Truck", 
+                 mode_name=None,
+                 transport_scenario=None,
                  mode_efficiency=None)
 
 transport_leg = project.get_transportation_leg(product)[0]
@@ -30,5 +31,6 @@ impacts = project.get_impacts(product)
 emissions = project.get_emissions(product)
 
 print(distance)
+print(transport_leg.get_transport_scenario())
 print (impacts)
 print (emissions)

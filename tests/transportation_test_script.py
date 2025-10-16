@@ -1,158 +1,134 @@
 
+# This script compares the transportation impact values from the manual method (given in as a CSV file) with the values calculated using the Python Framework.
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-import os
-import csv
+from tqdm import tqdm
 import time
 
 import pandas as pd
 
-from pod_lca.transportation import USDomesticLogisticProject
-from pod_lca.material_screening import Product
+from pod_lca.units import KILO
+from pod_lca.units import KILOMETER
+from pod_lca.units import WATT_HOUR
+from pod_lca.transportation import USDomesticTransportationManager
+from pod_lca.materials_screening import Product
 from pod_lca.units import UNITS_MAP
-from pod_lca.transportation import DomesticLink, ForeignLink
 from pod_lca.location import Location
+from pod_lca.utilities import DataExporter
+from pod_lca.utilities import DataImporter
+from pod_lca.utilities import config
 
-def clean(value):
-    return None if pd.isna(value) else value
+test_data = "tests\\transportation-domestic_test_test-values.csv"
+output_file = "tests\\transportation-domestic_test_report.csv"
+test_dict = DataImporter.csv_to_dict(test_data, 'test name')
 
-def string(value):
-    return "None" if pd.isna(value) else value
+project = USDomesticTransportationManager.new("Building A")
+project.get_dataset().force_location = True
+project.get_dataset().force_mode = True
+project.set_impact_database(r'data/transportation_podlca_emission.csv')
+electricity_report_unit = KILO * WATT_HOUR
 
-def run_test_files(test_file_path, output_csv_path):
-    test_inputs = pd.read_csv(test_file_path)
-    all_results = []
-    rows_count = len(test_inputs)
+output_dict = {}
+impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
+emission_inventories = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
+inventories = impact_categories | emission_inventories
+for test in tqdm(test_dict):
+    product = Product()
+    product.set_name(test_dict[test]['product'])
+    product.set_qty(float(test_dict[test]['qty']))
+    product.set_unit(UNITS_MAP[test_dict[test]['unit']])
+    product.set_sctg_code(test_dict[test]['sctg_code'])
 
-    start_time = time.time()
-    last_save_time = start_time
+    origin_state_obj = None if test_dict[test]['origin'] == '' else Location.from_US_state(test_dict[test]['origin'])
+    destination_state_obj = None if test_dict[test]['destination'] == '' else Location.from_US_state(test_dict[test]['destination']) 
+    scenario = None if test_dict[test]['transport_scenario'] == '' else test_dict[test]['transport_scenario']
+    mode = None if test_dict[test]['mode'] == '' else test_dict[test]['mode']
+    efficiency = None if test_dict[test]['efficiency'] == '' else test_dict[test]['efficiency']
 
-    for _, row in test_inputs.iterrows():
+    project.add_good(good=product, 
+                     shipping_dest=destination_state_obj, 
+                     shipping_org=origin_state_obj,
+                     transport_scenario=scenario,
+                     distance_unit=KILOMETER,
+                     mode_name=mode,
+                     mode_efficiency=efficiency) 
+    
+    output_dict[test] = {
+        'test name': test,
+        'product': test_dict[test]['product'],
+        'sctg_code': test_dict[test]['sctg_code'],
+        'qty': test_dict[test]['qty'],
+        'unit': test_dict[test]['unit'],
+        'destination': test_dict[test]['destination'],
+        'origin': test_dict[test]['origin'],
+        'mode': test_dict[test]['mode'],
+        'efficiency': test_dict[test]['efficiency'],
+        'transport_scenario': test_dict[test]['transport_scenario']
+    }
 
-        # Print progress
-        progress = (_ + 1) / rows_count * 100
-        print(f"Processing row {_ + 1}/{rows_count} - Progress: {progress:.2f}%")
-        # Clean all required inputs
-        shipping_dest = clean(row["destination"])
-        shipping_org = clean(row["origin"])
-        material = clean(row["material"])
-        qty = clean(row["qty"])
-        qty_unit = clean(row["qty_unit"])
-        travel_dist = string(row["travel_dist"])
-        travel_dist_unit = clean(row["travel_dist_unit"])
-        return_trip_factor = clean(row["return_trip_factor"])
-        mode_domestic = clean(row["mode_domestic"])
-        mode_domestic_fuel_type = clean(row["mode_domestic_fuel_type"])
-        mode_domestic_efficiency = clean(row["mode_domestic_efficiency"])
-        mode_foreign = clean(row["mode_foreign"])
-        mode_foreign_fuel_type = clean(row["mode_foreign_fuel_type"])
-        mode_foreign_efficiency = clean(row["mode_foreign_efficiency"])
+    test_status = True
+    transport_leg = project.get_transportation_leg(product)[0]
+    conversion_factor = KILOMETER.convert_to(UNITS_MAP[test_dict[test]['distance_unit']])
+    try:
+        distance = transport_leg.get_travel_dist() * conversion_factor
+    except Exception as e:
+        # set results to N/A
+        output_dict[test]['distance (Python tool)'] = 'N/A'
+        output_dict[test]['distance (Manual calc)'] = test_dict[test]['distance']
+        output_dict[test]['distance_unit'] = test_dict[test]['distance_unit']
+        output_dict[test]['distance_difference (%)'] = 'N/A'
+        for inventory in inventories:
+            if inventory in test_dict[test]:
+                output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = 'N/A'
+                output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Manual calc'] = test_dict[test][inventory]
+                output_dict[test][inventory + '_difference (%)'] = 'N/A'
+        output_dict[test]['test status'] = 'N/A'
+        # Note error
+        output_dict[test]['Notes'] = e
+        continue
 
-        project = USDomesticLogisticProject.new("Building A")
-        project.set_impact_database(r'data/transportation_podlca_emission.csv')
+    # check distance
+    dif = abs(distance - float(test_dict[test]['distance'])) / ((distance + float(test_dict[test]['distance'])) / 2 )  # symmetric difference
+    
+    output_dict[test]['distance (Python tool)'] = distance
+    output_dict[test]['distance (Manual calc)'] = test_dict[test]['distance']
+    output_dict[test]['distance_unit'] = test_dict[test]['distance_unit']
+    output_dict[test]['distance_difference (%)'] = dif * 100   
+    if dif * 100 > 0.5:
+        test_status = False
+        print(f"{test} failed on distance with a difference of {dif * 100:.2f}%")
+        print(f"computed distance value: {distance}")
+        print(f"expected distance value: {test_dict[test]['distance']}")      
 
-        # FIXME: ELectric truck as a mode and generate the electric data
-
-        product = Product()
-        product.set_name(material)
-        product.set_qty(qty)
-        product.set_unit(UNITS_MAP[qty_unit])
-        product.set_sctg_code()
-
-        # TODO: refine with what inputs are provided here
-        mode = {'domestic': mode_domestic,
-                'foreign': mode_foreign} if mode_foreign_efficiency is not None else mode_domestic
-        mode_efficiency = {'domestic': mode_domestic_efficiency,
-                            'foreign': mode_foreign_efficiency} if mode_foreign_efficiency is not None else mode_domestic_efficiency
-        if isinstance(travel_dist, str):
-            if travel_dist == "None":
-                transport_scenario = "Average"
-            else:
-                transport_scenario = travel_dist
-            travel_dist = None
+    impacts = project.get_impacts(product)
+    emissions = project.get_emissions(product)
+    # check inventories
+    for inventory in inventories:
+        if inventory in impact_categories:
+            records = impacts
+        elif inventory in emission_inventories:
+            records = emissions
         else:
-            travel_dist = travel_dist
-            transport_scenario = "Average"
+            raise KeyError(f"Inventory '{inventory}' not found in IMPACT_CATEGORIES or EMISSION_INVENTORIES.")
+        if inventory in test_dict[test]:
+            dif = abs(records.get_record(inventory) - float(test_dict[test][inventory])) / ((records.get_record(inventory) + float(test_dict[test][inventory])) / 2 )  # symmetric difference
+            
+            output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = records.get_record(inventory)
+            output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Manual calc'] = test_dict[test][inventory]
+            output_dict[test][inventory + '_difference (%)'] = dif * 100
 
-        shipping_dest = None if shipping_dest is None else Location.from_str(shipping_dest)
-        shipping_org = None if shipping_org is None else Location.from_str(shipping_org) 
+            if dif * 100 > 0.5:
+                test_status = False
+                print(f"{test} failed on {inventory} with a difference of {dif * 100:.2f}%")
+                print(f"computed impact value: {records.get_record(inventory)} {inventories[inventory]}")
+                print(f"expected impact value: {test_dict[test][inventory]} {inventories[inventory]}")
 
-        project.add_good(product, 
-                          travel_dist,
-                          shipping_dest, 
-                          shipping_org,
-                          transport_scenario,
-                          UNITS_MAP[travel_dist_unit], 
-                          return_trip_factor, 
-                          mode, 
-                          mode_efficiency)
+    output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
+    output_dict[test]['Notes'] = ''
 
-        result_row = row.to_dict()
-        passed = True
-        try:
-            print(project.get_impacts(product))
-        except Exception as e:
-            passed = False
-            note = {"Notes": e}
-            result_row.update(note)
-
-        if passed:
-        # if isinstance(, Domestic)
-            distances = {}
-            domestic_impact = None
-            foreign_impact = None
-            for link in project.get_link(product):
-                if isinstance(link, DomesticLink):
-                    domestic_impact = link.get_impacts()
-                    domestic_mode_impact = link.get_mode().get_unit_impacts()
-                    distances['domestic'] = link.get_travel_dist()
-                elif isinstance(link, ForeignLink):
-                    foreign_impact = link.get_impacts()
-                    foreign_mode_impact = link.get_mode().get_unit_impacts()
-                    distances['foreign'] = link.get_travel_dist()
-
-            if domestic_impact is not None:
-                domestic_impact_prefixed = {f"Domestic_{k}": v for k, v in domestic_impact.get_record_dict().items()}
-                domestic_mode_impact_prefixed = {f"Domestic_mode_{k}": v for k, v in domestic_mode_impact.get_record_dict().items()} if domestic_mode_impact else {f"Domestic_mode_{k}": None for k, v in foreign_mode_impact.get_record_dict().items()}
-                result_row.update(domestic_impact_prefixed)
-                result_row.update(domestic_mode_impact_prefixed)
-            if foreign_impact is not None:
-                foreign_impact_prefixed = {f"Foreign_{k}": v for k, v in foreign_impact.get_record_dict().items()}
-                foreign_mode_prefixed = {f"Foreign_mode_{k}": v for k, v in foreign_mode_impact.get_record_dict().items()} if foreign_mode_impact else {f"Foreign_mode_{k}": None for k, v in domestic_mode_impact.get_record_dict().items()}
-                result_row.update(foreign_impact_prefixed)
-                result_row.update(foreign_mode_prefixed)
-
-            result_row.update({
-                "Domestic_distance_km": distances.get("Domestic", None),
-                "Foreign_distance_km": distances.get("Foreign", None)
-            })
-             
-        all_results.append(result_row)
-        
-        # Periodically save to file every 10 minutes
-        current_time = time.time()
-        if current_time - last_save_time >= 600:  # 600 seconds = 10 minutes
-            df_partial = pd.DataFrame(all_results)
-            df_partial.to_csv(output_csv_path, index=False)
-            print(f"Backup written at {time.strftime('%H:%M:%S')}")
-            last_save_time = current_time
-
-    # Final save
-    df_results = pd.DataFrame(all_results)
-    df_results.to_csv(output_csv_path, index=False)
-    print(f"Results saved to: {output_csv_path}")
-
-
-if __name__ == "__main__":
-    """
-    This script is designed to run a series of tests.
-    the input files should be in the form of a CSV file.
-    """
-
-    test_file_path = r"tests\transportation_QC_5nd_TEMP.csv"
-    output_csv_path = r"tests\transportation_test_report_TEMP.csv"
-    run_test_files(test_file_path, output_csv_path)
+DataExporter.dict_to_csv(output_dict, output_file)
