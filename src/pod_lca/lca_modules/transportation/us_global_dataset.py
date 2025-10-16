@@ -58,6 +58,8 @@ class USGlobalDataset(TransportDataset):
         if material is not None:
             sctg_code = material.get_sctg_code(digits=2)
             faf = faf[faf["sctg2"] == sctg_code]
+            if faf.empty:
+                raise ValueError("Material not in FAF Dataset.")
 
         faf_states_city = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
         counts = {}
@@ -81,12 +83,12 @@ class USGlobalDataset(TransportDataset):
             sctg_code = material.get_sctg_code(digits=2)
             faf = faf[faf["sctg2"] == sctg_code]
             if faf.empty:
-                raise ValueError("Material not in CFS Dataset.")
+                raise ValueError("Material not in FAF Dataset.")
             
         if isinstance(destination, Location):
             faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
             if faf.empty:
-                raise ValueError("Destination not in CFS Dataset.")
+                raise ValueError("Destination not in FAF Dataset.")
        
         faf_foreign_origin = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
         counts = {}

@@ -19,7 +19,7 @@ output_file = "save_files\\transportation_dataset_global.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 
-origin_locations = [ None,
+origin_locations = [
                     'Canada',
                     'Mexico',
                     'Rest of Americas', 
@@ -28,22 +28,22 @@ origin_locations = [ None,
                     'SW & Central Asia', 
                     'Eastern Asia', 
                     'SE Asia & Oceania']
-destination_states = [None] + states_list[0:3]
+destination_states = states_list
 
 Material_names = {
     '10': {'SCTG code': '10', 'material': 'monumental or building stone'}, 
     '11': {'SCTG code': '11', 'material': 'natural sands'}, 
-    # '12': {'SCTG code': '12', 'material': 'gravel and crushed stone (excludes dolomite and slate)'}, 
-    # '13': {'SCTG code': '13', 'material': 'other non-metallic minerals not elsewhere classified'}, 
-    # '19': {'SCTG code': '19', 'material': 'other coal and petroleum products, not elsewhere classified'}, 
-    # '23': {'SCTG code': '23', 'material': 'other chemical products and preparations'}, 
-    # '24': {'SCTG code': '24', 'material': 'plastics and rubber'}, 
-    # '25': {'SCTG code': '25', 'material': 'logs and other wood in the rough'}, 
-    # '26': {'SCTG code': '26', 'material': 'wood products'}, 
-    # '31': {'SCTG code': '31', 'material': 'non-metallic mineral products'}, 
-    # '32': {'SCTG code': '32', 'material': 'base metal in primary or semi-finished forms and in finished basic shapes'}, 
-    # '33': {'SCTG code': '33', 'material': 'articles of base metal'}, 
-    # '34': {'SCTG code': '34', 'material': 'machinery'}
+    '12': {'SCTG code': '12', 'material': 'gravel and crushed stone (excludes dolomite and slate)'}, 
+    '13': {'SCTG code': '13', 'material': 'other non-metallic minerals not elsewhere classified'}, 
+    '19': {'SCTG code': '19', 'material': 'other coal and petroleum products, not elsewhere classified'}, 
+    '23': {'SCTG code': '23', 'material': 'other chemical products and preparations'}, 
+    '24': {'SCTG code': '24', 'material': 'plastics and rubber'}, 
+    '25': {'SCTG code': '25', 'material': 'logs and other wood in the rough'}, 
+    '26': {'SCTG code': '26', 'material': 'wood products'}, 
+    '31': {'SCTG code': '31', 'material': 'non-metallic mineral products'}, 
+    '32': {'SCTG code': '32', 'material': 'base metal in primary or semi-finished forms and in finished basic shapes'}, 
+    '33': {'SCTG code': '33', 'material': 'articles of base metal'}, 
+    '34': {'SCTG code': '34', 'material': 'machinery'}
 }
 qty = 1
 unit = M_TON
@@ -92,8 +92,10 @@ for sctg_code, material in Material_names.items():
             # TODO: Wait for valid mode-origin combinations
             if origin not in ['Canada', 'Mexico']:
                 travel_modes = ["Ocean", "Air"]
-            else:
+            elif origin in ['Canada']:
                 travel_modes = ["Truck", "Rail", "Ocean", "Air"]
+            elif origin in ['Mexico']:
+                travel_modes = ["Truck", "Ocean", "Air"]
 
             for foreign_travel_mode in travel_modes:
                 for foreign_travel_eff in travel_mode_efficiency:
