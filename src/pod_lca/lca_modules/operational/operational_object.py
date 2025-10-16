@@ -49,19 +49,19 @@ class OperationalObject(object):
     def __init__(self):
         self.name = None
         self.daylighting_controls = None
-        self.daylighting_referencepoint = None
+        self.daylighting_referencepoints = None
         self.lights = None
-        self.people = None
+        self.peoples = None
         self.electric_equipment = None
-        self.zone_control_thermostat = None
-        self.setpoint = None
-        self.ideal_air_load = None
-        self.infiltration = None
-        self.equipment_list = None
-        self.equipment_connection = None
+        self.zone_control_thermostats = None
+        self.setpoints = None
+        self.ideal_air_loads = None
+        self.infiltrations = None
+        self.equipment_lists = None
+        self.equipment_connections = None
         self.zone_lists = None
         self.node_lists = None
-        self.outdoor_air = None
+        self.outdoor_airs = None
         self.schedules = None
         
     @classmethod
@@ -98,19 +98,19 @@ class OperationalObject(object):
     def from_data(cls, data):
         oo = cls()
     
-        oo.daylight_controls = {lk: DaylightingControls.from_data(data['daylighting_controls'][lk]) for lk in data['daylighting_controls']}
-        oo.daylighting_referencepoint = {lk: DaylightingReferencePoint.from_data(data['daylighting:referencepoint'][lk]) for lk in data['daylighting:referencepoint']}
+        oo.daylighting_controls = {lk: DaylightingControls.from_data(data['daylighting_controls'][lk]) for lk in data['daylighting_controls']}
+        oo.daylighting_referencepoints = {lk: DaylightingReferencePoint.from_data(data['daylighting:referencepoint'][lk]) for lk in data['daylighting:referencepoint']}
         oo.lights = {lk: Light.from_data(data['lights'][lk]) for lk in data['lights']}
-        oo.people = {pk: People.from_data(data['people'][pk]) for pk in data['people']}
+        oo.peoples = {pk: People.from_data(data['people'][pk]) for pk in data['people']}
         oo.electric_equipment = {ek: ElectricEquipment.from_data(data['electric_equipment'][ek]) for ek in data['electric_equipment']}
-        oo.zone_control_thermostat = {zk: ZoneControlThermostat.from_data(data['zone_control_thermostat'][zk]) for zk in data['zone_control_thermostat']}
-        oo.setpoint = {sk: DualSetpoint.from_data(data['setpoint'][sk]) for sk in data['setpoint']}
-        oo.ideal_air_load = {ik: IdealAirLoad.from_data(data['ideal_air_load'][ik]) for ik in data['ideal_air_load']}
-        oo.infiltration = {ik: Infiltration.from_data(data['infiltration'][ik]) for ik in data['infiltration']}
-        oo.equipment_list = {ek: EquipmentList.from_data(data['equipment_list'][ek]) for ek in data['equipment_list']}
-        oo.equipment_connection = {ek: EquipmentConnection.from_data(data['equipment_connection'][ek]) for ek in data['equipment_connection']}
+        oo.zone_control_thermostats = {zk: ZoneControlThermostat.from_data(data['zone_control_thermostat'][zk]) for zk in data['zone_control_thermostat']}
+        oo.setpoints = {sk: DualSetpoint.from_data(data['setpoint'][sk]) for sk in data['setpoint']}
+        oo.ideal_air_loads = {ik: IdealAirLoad.from_data(data['ideal_air_load'][ik]) for ik in data['ideal_air_load']}
+        oo.infiltrations = {ik: Infiltration.from_data(data['infiltration'][ik]) for ik in data['infiltration']}
+        oo.equipment_lists = {ek: EquipmentList.from_data(data['equipment_list'][ek]) for ek in data['equipment_list']}
+        oo.equipment_connections = {ek: EquipmentConnection.from_data(data['equipment_connection'][ek]) for ek in data['equipment_connection']}
         oo.zone_lists = {zk: ZoneList.from_data(data['zone_lists'][zk]) for zk in data['zone_lists']}
         oo.node_lists = {nk: NodeList.from_data(data['node_lists'][nk]) for nk in data['node_lists']}
-        oo.outdoor_air = {ok: OutdoorAir.from_data(data['outdoor_air'][ok]) for ok in data['outdoor_air']}
+        oo.outdoor_airs = {ok: OutdoorAir.from_data(data['outdoor_air'][ok]) for ok in data['outdoor_air']}
         oo.schedules = {sk: Schedule.from_data(data['schedules'][sk]) for sk in data['schedules']}
         return oo
