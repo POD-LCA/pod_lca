@@ -13,6 +13,14 @@ from . import OperationalElectricityProduct
 from ..impacts import Emissions
 from ..impacts import Impacts
 from pod_lca.lca_modules.operational.read_write import write_idf_from_building
+from pod_lca.lca_modules.operational.read_write import read_results_file
+
+from pod_lca.lca_modules.operational.node_list import  NodeList
+from pod_lca.lca_modules.operational.ideal_air_load import  IdealAirLoad
+from pod_lca.lca_modules.operational.equipment import  EquipmentList
+from pod_lca.lca_modules.operational.equipment import  EquipmentConnection
+from pod_lca.lca_modules.operational.light import  DaylightingControls
+from pod_lca.lca_modules.operational.light import  DaylightingReferencePoint
 
     
 class OperationalMixins:
@@ -100,8 +108,8 @@ class OperationalMixins:
         print(exe, '-w', weather,'--output-directory', out, idf)
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
 
-
-
+        results = read_results_file(self, os.path.join(out, 'eplusout.eso'))
+        print(results)
         self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
@@ -129,6 +137,87 @@ class OperationalMixins:
                 self.layers[lname] = {'layer_name': lname,
                                                  'material_name': name,
                                                  'thickness': thick}
+
+    def set_zone_systems(self):
+
+        from copy import deepcopy
+
+        eqc_key = list(self.operational_object.equipment_connections.keys())[0]
+        eql_key = list(self.operational_object.equipment_lists.keys())[0]
+        inl_key = list(self.operational_object.node_lists.keys())[0]
+        enl_key = list(self.operational_object.node_lists.keys())[1]
+        ial_key = list(self.operational_object.ideal_air_loads.keys())[0]
+        dlc_key = list(self.operational_object.daylighting_controls.keys())[0]
+        dlr_key = list(self.operational_object.daylighting_reference_points.keys())[0]
+
+        eqc = self.operational_object.equipment_connections[eqc_key]
+        eql = self.operational_object.equipment_lists[eql_key]
+        inl = self.operational_object.node_lists[inl_key]
+        enl = self.operational_object.node_lists[enl_key]
+        ial = self.operational_object.ideal_air_loads[ial_key]
+        dlc = self.operational_object.daylighting_controls[dlc_key]
+        # dlr = self.daylighting_reference_points[dlr_key]
+
+        for zk in self.floors:
+            envelope = self.floors[zk].envelope
+            zname = envelope.name
+
+            self.operational_object.node_lists[zk] = NodeList.from_data(deepcopy(inl.data))
+            inlname = '{}_{}'.format(self.operational_object.node_lists[zk].name, zname)
+            self.operational_object.node_lists[zk].name = inlname
+            self.operational_object.node_lists[zk].nodes['0'] = 'inlet_node_{}'.format(zname)
+
+            self.operational_object.node_lists[zname] = NodeList.from_data(deepcopy(enl.data))
+            enlname = '{}_{}'.format(self.operational_object.node_lists[zname].name, zname)
+            self.operational_object.node_lists[zname].name = enlname
+            self.operational_object.node_lists[zname].nodes['0'] = 'exhaust_node_{}'.format(zname)
+
+            self.operational_object.ideal_air_loads[zk] = IdealAirLoad.from_data(deepcopy(ial.data))
+            ialname = '{} {}'.format(zname, self.operational_object.ideal_air_loads[zk].name)
+            self.operational_object.ideal_air_loads[zk].name = ialname
+            self.operational_object.ideal_air_loads[zk].zone_supply_air_node_name = inlname
+            self.operational_object.ideal_air_loads[zk].zone_exhaust_air_node_name = enlname
+
+            self.operational_object.equipment_lists[zk] = EquipmentList.from_data(eql.data)
+            elname =  '{}_{}'.format(self.operational_object.equipment_lists[zk].name, zname)
+            self.operational_object.equipment_lists[zk].name = elname
+            self.operational_object.equipment_lists[zk].zone_equipment_name1 = ialname
+
+            self.operational_object.equipment_connections[zk] = EquipmentConnection.from_data(eqc.data)
+            self.operational_object.equipment_connections[zk].name = zname
+            self.operational_object.equipment_connections[zk].zone_conditioning_equipment_list = elname
+            self.operational_object.equipment_connections[zk].zone_air_inlet_node = inlname
+            self.operational_object.equipment_connections[zk].zone_air_exhaust_node = enlname
+            self.operational_object.equipment_connections[zk].zone_air_node += '_{}'.format(zname)
+
+            self.operational_object.daylighting_controls[zk] = DaylightingControls.from_data(deepcopy(dlc.data))
+            dc_name = 'daylighting_controls_{}'.format(zname)
+            dc_ref_pt_name = 'daylighting_ref_pt_{}'.format(zname)
+            x, y, z = envelope.centroid
+            self.operational_object.daylighting_controls[zk].name = dc_name
+            self.operational_object.daylighting_controls[zk].zone_name = zname
+            self.operational_object.daylighting_controls[zk].glare_reference_point = dc_ref_pt_name
+            rp_key = list(self.operational_object.daylighting_controls[zk].reference_points.keys())[0]
+            self.operational_object.daylighting_controls[zk].reference_points = {0: self.operational_object.daylighting_controls[zk].reference_points[rp_key]}
+            self.operational_object.daylighting_controls[zk].reference_points[0]['ref_pt_name'] = dc_ref_pt_name
+            dl_rpt = DaylightingReferencePoint.from_data({'name': dc_ref_pt_name,
+                                                                 'zone_name': zname,
+                                                                 'x': x,
+                                                                 'y': y,
+                                                                 'z': z + self.operational_object.daylighting_controls_height,
+                                                                 })
+            self.operational_object.daylighting_reference_points[dc_ref_pt_name] = dl_rpt
+
+
+        del self.operational_object.equipment_connections[eqc_key]
+        del self.operational_object.equipment_lists[eql_key]
+        del self.operational_object.node_lists[inl_key]
+        del self.operational_object.node_lists[enl_key]
+        del self.operational_object.ideal_air_loads[ial_key]
+        del self.operational_object.daylighting_controls[dlc_key]
+        del self.operational_object.daylighting_reference_points[dlr_key]
+
+
     # ================================
     # Inventory Records Methods
     # ================================ 

@@ -16,15 +16,14 @@ __all__ = ['read_mean_zone_temperatures',
 
 def read_results_file(building, filepath):
     pre_dict = read_eso_preamble(building, filepath)
-    building.results = read_eso(building, filepath, pre_dict)
+    return read_eso(building, filepath, pre_dict)
 
 
 def read_eso(building, filepath, pre_dict):
     fh = open(filepath, 'r')
     lines = fh.readlines()
     fh.close()
-
-    zones = [building.zones[zk].name for zk in building.zones] 
+    zones = [building.floors[zk].envelope.name.lower() for zk in building.floors] 
     
     del lines[:9 + pre_dict['len_preamble']]
     del lines[-2:]
@@ -59,7 +58,8 @@ def read_eso_preamble(building, filepath):
     del lines[:7]
     del lines[-2:]
 
-    zones = [building.zones[zk].name.lower() for zk in building.zones]
+    zones = [building.floors[zk].envelope.name.lower() for zk in building.floors] 
+    print(zones)
 
     data = {}
     len_preamble = 0
@@ -74,6 +74,7 @@ def read_eso_preamble(building, filepath):
         key = stuff[0]
         zone = stuff[2].split(' ')[0]
         item = stuff[3]
+        print(zone)
         if zone in zones:
             if 'cooling' in item:
                 item = 'cooling'

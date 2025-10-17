@@ -52,16 +52,14 @@ b = Building.from_parameters(name='test',
                              geometry_units=METER)
 
 
-path = config['file_paths']['operational']['SYSTEMS']
-b.operational_object = OperationalObject.from_idf(path)
-
-
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 path = config['file_paths']['operational']['CONSTRUCTIONS']
 b.read_constructions_data(path)
 b.read_material_properties_data(path)
+
+
 
 wall_service_life = 30
 structure_service_life = 60
@@ -151,7 +149,14 @@ for fk in b.floors:
 # FIXME: Building plotter is missing shading devices
 # TODO: Fix envelope idf errors (See eplus error file)
 # TODO: Implement outdoor boundary condition generator
-# TODO: Ceiling, not cieling
+# TODO: FIx thermostat and zone list, internal gains...
+
+
+path = config['file_paths']['operational']['SYSTEMS']
+b.operational_object = OperationalObject.from_idf(path)
+b.set_zone_systems()
+
+
 
 # # plot_building(b)
 b.write_idf()

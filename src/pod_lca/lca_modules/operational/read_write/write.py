@@ -35,13 +35,13 @@ def write_idf_from_building(building):
     write_constructions(building)
     write_shadings(building)
 
-    # write_spaces(building)
-    # write_space_lists(building)
+    # # write_spaces(building)
+    # # write_space_lists(building)
 
     write_simulation_control(building)
     write_schedules(building)
     write_infiltration_rates(building)
-    write_thermostats(building)
+    # write_thermostats(building) # THIS IS THE ONE CAUSING PROBLEMS< NEEDS A ZONE LIST
     write_hvac(building)
     write_node_lists(building)
     write_outdoor_airs(building)
@@ -998,11 +998,10 @@ def write_daylight(building):
         fh.write('  {},     !- Maximum Allowable Discomfort Glare Index\n'.format(dc.max_allowable_discomfort_glare_index))
         fh.write('  {},     !- DElight Gridding Resolution [m2]\n'.format(dc.delight_gridding_resolution))
 
-        for i, rpk in enumerate(building.operational_object.daylighting_controls[dck].reference_points):
-            rpt = building.operational_object.daylighting_reference_points[rpk]
-            rpt_name = rpt.name #
-            rpt_frac = rpt.fraction
-            rpt_illm = rpt.illuminance_set_point
+        for i, rpk in enumerate(dc.reference_points):
+            rpt_name = dc.reference_points[rpk]['ref_pt_name']
+            rpt_frac = dc.reference_points[rpk]['ref_pt_fraction']
+            rpt_illm = dc.reference_points[rpk]['illuminance_setpt']
             sep = ';'
             # print(rpt_name)
             fh.write('  {}, !- Daylighting Reference Point Name {}\n'.format(rpt_name, i + 1))

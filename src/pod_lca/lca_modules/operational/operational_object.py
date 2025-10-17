@@ -63,6 +63,7 @@ class OperationalObject(object):
         self.node_lists = None
         self.outdoor_airs = None
         self.schedules = None
+        self.daylighting_controls_height = .8
         
     @classmethod
     def from_idf(cls, path):

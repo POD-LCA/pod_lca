@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from ..building_envelope import Surface
 from pod_lca.utilities import area_polygon
+from pod_lca.utilities import centroid
 
 
 class Envelope:
@@ -55,6 +56,11 @@ class Envelope:
     def volume(self):
         return self.height * self.area
     
+    @property
+    def centroid(self):
+        return centroid(self.floor_plan)
+
+
     def update_envelope_surfaces(self):
         fp = self.floor_plan
         h = self.height
