@@ -19,8 +19,7 @@ output_file = "save_files\\transportation_dataset_global.csv"
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 
-origin_locations = [
-                    'Canada',
+origin_locations = ['Canada',
                     'Mexico',
                     'Rest of Americas', 
                     'Europe', 
@@ -74,12 +73,7 @@ for sctg_code, material in Material_names.items():
     for origin in tqdm(origin_locations):
         output_dict = {} # data dict
         for destination_state in destination_states:
-            if origin is None:
-                origin_obj = None
-            elif origin in ['Canada', 'Mexico']:
-                origin_obj = Location.from_str(origin)
-            else:
-                origin_obj = Location.from_faf_regions(origin)
+            origin_obj = Location.from_faf_regions(origin) if not origin is None else None
             destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
 
             project.add_good(good=product, 
