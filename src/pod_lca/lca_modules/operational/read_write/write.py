@@ -35,13 +35,10 @@ def write_idf_from_building(building):
     write_constructions(building)
     write_shadings(building)
 
-    # # write_spaces(building)
-    # # write_space_lists(building)
-
     write_simulation_control(building)
     write_schedules(building)
     write_infiltration_rates(building)
-    # write_thermostats(building) # THIS IS THE ONE CAUSING PROBLEMS< NEEDS A ZONE LIST
+    write_thermostats(building)
     write_hvac(building)
     write_node_lists(building)
     write_outdoor_airs(building)
@@ -839,7 +836,7 @@ def write_thermostats(building):
         fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
         fh.write('ZoneControl:Thermostat,\n')
         fh.write('  {},    !- Name\n'.format(t.name))
-        fh.write('  {},    !- Zone or ZoneList Name\n'.format(t.zone_name))
+        fh.write('  {},    !- Zone or ZoneList Name\n'.format('all_zones_list'))
         fh.write('  {},    !- Control Type Schedule Name\n'.format(t.schedule_name))
         fh.write('  {},    !- Control 1 Object Type\n'.format(t.control1_object_type))
         fh.write('  {},    !- Control 1 Name\n'.format(t.control1_object_name))
@@ -851,6 +848,17 @@ def write_thermostats(building):
         fh.write('  {},    !- Control 4 Name\n'.format(t.control4_object_name))
         fh.write('  {};    !- Temperature Difference Between Cutout And Setpoint [deltaC]\n'.format(t.temperature_difference))
         fh.write('  \n')
+
+    for sk in building.operational_object.setpoints:
+        s = building.operational_object.setpoints[sk]
+        fh.write('ThermostatSetpoint:DualSetpoint,\n')
+        fh.write('  {},     !- Name\n'.format(s.name))
+        fh.write('  {},     !- Heating Setpoint Temperature Schedule Name\n'.format(s.heating_setpoint))
+        fh.write('  {};     !- Cooling Setpoint Temperature Schedule Name\n'.format(s.cooling_setpoint))
+        fh.write('  \n')
+
+    fh.write('  \n')
+    fh.close()
 
 
 def write_hvac(building):
@@ -1078,10 +1086,6 @@ def write_internal_gains(building):
     fh.close()
 
 
-
-
-
-
 def write_output_items(building):
     """
     Writes the output items to the .idf file from the building data.
@@ -1214,38 +1218,5 @@ def write_output_items(building):
 #     fh.close()
 
 
-
-
-
-
-
-
-
-    
-#     for sk in building.setpoints:
-#         s = building.setpoints[sk]
-#         fh.write('ThermostatSetpoint:DualSetpoint,\n')
-#         fh.write('  {},     !- Name\n'.format(s.name))
-#         fh.write('  {},     !- Heating Setpoint Temperature Schedule Name\n'.format(s.heating_setpoint))
-#         fh.write('  {};     !- Cooling Setpoint Temperature Schedule Name\n'.format(s.cooling_setpoint))
-#         fh.write('  \n')
-
-#     fh.write('  \n')
-#     fh.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# if __name__ == '__main__':
-#     pass
+if __name__ == '__main__':
+    pass

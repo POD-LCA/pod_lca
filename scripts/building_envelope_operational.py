@@ -149,7 +149,6 @@ for fk in b.floors:
 # FIXME: Building plotter is missing shading devices
 # TODO: Fix envelope idf errors (See eplus error file)
 # TODO: Implement outdoor boundary condition generator
-# TODO: FIx thermostat and zone list, internal gains...
 
 
 path = config['file_paths']['operational']['SYSTEMS']
