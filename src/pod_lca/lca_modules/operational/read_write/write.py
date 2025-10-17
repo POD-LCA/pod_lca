@@ -46,6 +46,7 @@ def write_idf_from_building(building):
     write_node_lists(building)
     write_outdoor_airs(building)
     write_daylight(building)
+    write_internal_gains(building)
 
     write_output_items(building)
 
@@ -1021,6 +1022,66 @@ def write_daylight(building):
     fh.close()
 
 
+
+def write_internal_gains(building):
+
+    for pk in building.operational_object.peoples:
+        p = building.operational_object.peoples[pk]
+        fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+        fh.write('People,\n')
+        fh.write('  {},     !- Name\n'.format(p.name))
+        fh.write('  {},     !- Zone or ZoneList Name\n'.format(p.zone_name))
+        fh.write('  {},     !- Number of People Schedule Name\n'.format(p.schedule_name))
+        fh.write('  {},     !- Number of People Calculation Method\n'.format(p.calculation_method))
+        fh.write('  {},     !- Number of People\n'.format(p.number_of_people))
+        fh.write('  {},     !- People per Zone Floor Area [person/m2]\n'.format(p.people_per_floor_area))
+        fh.write('  {},     !- Zone Floor Area per Person [m2/person]\n'.format(p.floor_area_per_person))
+        fh.write('  {},     !- Fraction Radiant\n'.format(p.fraction_radiant))
+        fh.write('  {},     !- Sensible Heat Fraction\n'.format(p.sensible_heat_fraction))
+        fh.write('  {};     !- Activity Level Schedule Name\n'.format(p.activity_level_schedule_name))
+        fh.write('  \n')
+
+
+    for lk in building.operational_object.lights:
+        l = building.operational_object.lights[lk]
+        fh.write('Lights,\n')
+        fh.write('  {},     !- Name\n'.format(l.name))
+        fh.write('  {},     !- Zone or ZoneList Name\n'.format(l.zone_name))
+        fh.write('  {},     !- Schedule Name\n'.format(l.schedule_name))
+        fh.write('  {},     !- Design Level Calculation Method\n'.format(l.design_level_calculation_method))
+        fh.write('  {},     !- Lighting Level [W]\n'.format(l.lighting_level))
+        fh.write('  {},     !- Watts per Zone Floor Area [W/m2]\n'.format(l.watts_per_zone_floor_area))
+        fh.write('  {},     !- Watts per Person [W/person]\n'.format(l.watts_per_person))
+        fh.write('  {},     !- Return Air Fraction\n'.format(l.return_air_fraction))
+        fh.write('  {},     !- Fraction Radiant\n'.format(l.fraction_radiant))
+        fh.write('  {},     !- Fraction Visible\n'.format(l.fraction_visible))
+        fh.write('  {},     !- Fraction Replaceable\n'.format(l.fraction_replaceable))
+        fh.write('  {};     !- End-Use Subcategory\n'.format(l.end_use_subcategory))
+        fh.write('  \n')
+
+    for ek in building.operational_object.electric_equipment:
+        e = building.operational_object.electric_equipment[ek]
+        fh.write('ElectricEquipment,\n')
+        fh.write('  {},     !- Name\n'.format(e.name))                              
+        fh.write('  {},     !- Zone or ZoneList Name\n'.format(e.zone_name))             
+        fh.write('  {},     !- Schedule Name\n'.format(e.schedule_name))                     
+        fh.write('  {},     !- Design Level Calculation Method\n'.format(e.calculation_method))       
+        fh.write('  {},     !- Design Level [W]\n'.format(e.design_level))                  
+        fh.write('  {},     !- Watts per Zone Floor Area [W/m2]\n'.format(e.watts_per_zone_floor_area))  
+        fh.write('  {},     !- Watts per Person [W/person]\n'.format(e.watts_per_person))           
+        fh.write('  {},     !- Fraction Latent\n'.format(e.fraction_latent))                   
+        fh.write('  {},     !- Fraction Radiant\n'.format(e.fraction_radiant))                  
+        fh.write('  {},     !- Fraction Lost\n'.format(e.fraction_lost))   
+        fh.write('  {};     !- End-Use Subcategory\n'.format(e.end_use_subcategory))
+        fh.write('  \n')
+    fh.write('  \n')
+    fh.close()
+
+
+
+
+
+
 def write_output_items(building):
     """
     Writes the output items to the .idf file from the building data.
@@ -1153,63 +1214,6 @@ def write_output_items(building):
 #     fh.close()
 
 
-
-
-
-
-# def write_internal_gains(building):
-
-#     for pk in building.peoples:
-#         p = building.peoples[pk]
-#         fh = open(building.idf_filepath, 'a')
-#         fh.write('People,\n')
-#         fh.write('  {},     !- Name\n'.format(p.name))
-#         fh.write('  {},     !- Zone or ZoneList Name\n'.format(p.zone_name))
-#         fh.write('  {},     !- Number of People Schedule Name\n'.format(p.schedule_name))
-#         fh.write('  {},     !- Number of People Calculation Method\n'.format(p.calculation_method))
-#         fh.write('  {},     !- Number of People\n'.format(p.number_of_people))
-#         fh.write('  {},     !- People per Zone Floor Area [person/m2]\n'.format(p.people_per_floor_area))
-#         fh.write('  {},     !- Zone Floor Area per Person [m2/person]\n'.format(p.floor_area_per_person))
-#         fh.write('  {},     !- Fraction Radiant\n'.format(p.fraction_radiant))
-#         fh.write('  {},     !- Sensible Heat Fraction\n'.format(p.sensible_heat_fraction))
-#         fh.write('  {};     !- Activity Level Schedule Name\n'.format(p.activity_level_schedule_name))
-#         fh.write('  \n')
-
-
-#     for lk in building.lights:
-#         l = building.lights[lk]
-#         fh.write('Lights,\n')
-#         fh.write('  {},     !- Name\n'.format(l.name))
-#         fh.write('  {},     !- Zone or ZoneList Name\n'.format(l.zone_name))
-#         fh.write('  {},     !- Schedule Name\n'.format(l.schedule_name))
-#         fh.write('  {},     !- Design Level Calculation Method\n'.format(l.design_level_calculation_method))
-#         fh.write('  {},     !- Lighting Level [W]\n'.format(l.lighting_level))
-#         fh.write('  {},     !- Watts per Zone Floor Area [W/m2]\n'.format(l.watts_per_zone_floor_area))
-#         fh.write('  {},     !- Watts per Person [W/person]\n'.format(l.watts_per_person))
-#         fh.write('  {},     !- Return Air Fraction\n'.format(l.return_air_fraction))
-#         fh.write('  {},     !- Fraction Radiant\n'.format(l.fraction_radiant))
-#         fh.write('  {},     !- Fraction Visible\n'.format(l.fraction_visible))
-#         fh.write('  {},     !- Fraction Replaceable\n'.format(l.fraction_replaceable))
-#         fh.write('  {};     !- End-Use Subcategory\n'.format(l.end_use_subcategory))
-#         fh.write('  \n')
-
-#     for ek in building.electric_equipments:
-#         e = building.electric_equipments[ek]
-#         fh.write('ElectricEquipment,\n')
-#         fh.write('  {},     !- Name\n'.format(e.name))                              
-#         fh.write('  {},     !- Zone or ZoneList Name\n'.format(e.zone_name))             
-#         fh.write('  {},     !- Schedule Name\n'.format(e.schedule_name))                     
-#         fh.write('  {},     !- Design Level Calculation Method\n'.format(e.calculation_method))       
-#         fh.write('  {},     !- Design Level [W]\n'.format(e.design_level))                  
-#         fh.write('  {},     !- Watts per Zone Floor Area [W/m2]\n'.format(e.watts_per_zone_floor_area))  
-#         fh.write('  {},     !- Watts per Person [W/person]\n'.format(e.watts_per_person))           
-#         fh.write('  {},     !- Fraction Latent\n'.format(e.fraction_latent))                   
-#         fh.write('  {},     !- Fraction Radiant\n'.format(e.fraction_radiant))                  
-#         fh.write('  {},     !- Fraction Lost\n'.format(e.fraction_lost))   
-#         fh.write('  {};     !- End-Use Subcategory\n'.format(e.end_use_subcategory))
-#         fh.write('  \n')
-#     fh.write('  \n')
-#     fh.close()
 
 
 
