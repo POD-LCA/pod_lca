@@ -49,7 +49,7 @@ class OperationalObject(object):
     def __init__(self):
         self.name = None
         self.daylighting_controls = None
-        self.daylighting_referencepoints = None
+        self.daylighting_reference_points = None
         self.lights = None
         self.peoples = None
         self.electric_equipment = None
@@ -99,7 +99,7 @@ class OperationalObject(object):
         oo = cls()
     
         oo.daylighting_controls = {lk: DaylightingControls.from_data(data['daylighting_controls'][lk]) for lk in data['daylighting_controls']}
-        oo.daylighting_referencepoints = {lk: DaylightingReferencePoint.from_data(data['daylighting:referencepoint'][lk]) for lk in data['daylighting:referencepoint']}
+        oo.daylighting_reference_points = {lk: DaylightingReferencePoint.from_data(data['daylighting:referencepoint'][lk]) for lk in data['daylighting:referencepoint']}
         oo.lights = {lk: Light.from_data(data['lights'][lk]) for lk in data['lights']}
         oo.peoples = {pk: People.from_data(data['people'][pk]) for pk in data['people']}
         oo.electric_equipment = {ek: ElectricEquipment.from_data(data['electric_equipment'][ek]) for ek in data['electric_equipment']}
