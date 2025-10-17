@@ -94,7 +94,7 @@ class DaylightingControls(object):
     @classmethod
     def from_data(cls, data):
         dc = cls()
-        dc.__type__        = 'Light'
+        dc.__type__                             = 'Light'
         dc.name                                 = data['name']
         dc.zone_name                            = data['zone_name']
         dc.daylighting_method                   = data['daylighting_method']
@@ -159,8 +159,8 @@ class DaylightingReferencePoint(object):
         drp.__type__                    = 'Light'
         drp.name                        = data['name']
         drp.zone_name                   = data['zone_name']
-        drp.fraction                    = data['fraction']
-        drp.illuminance_set_point       = data['illuminance_set_point']
+        # drp.fraction                    = data['fraction']
+        # drp.illuminance_set_point       = data['illuminance_set_point']
         drp.x                           = data['x']
         drp.y                           = data['y']
         drp.z                           = data['z']

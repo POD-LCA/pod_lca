@@ -998,8 +998,8 @@ def write_daylight(building):
         fh.write('  {},     !- Maximum Allowable Discomfort Glare Index\n'.format(dc.max_allowable_discomfort_glare_index))
         fh.write('  {},     !- DElight Gridding Resolution [m2]\n'.format(dc.delight_gridding_resolution))
 
-        for i, rpk in enumerate(building.daylighting_controls[dck].reference_points):
-            rpt = building.daylighting_reference_points[rpk]
+        for i, rpk in enumerate(building.operational_object.daylighting_controls[dck].reference_points):
+            rpt = building.operational_object.daylighting_reference_points[rpk]
             rpt_name = rpt.name #
             rpt_frac = rpt.fraction
             rpt_illm = rpt.illuminance_set_point
