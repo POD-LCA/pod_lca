@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 import os
 import subprocess
+import shutil
 from collections import defaultdict
 
 from . import OperationalElectricityProduct
@@ -100,10 +101,8 @@ class OperationalMixins:
         out = os.path.join(idf_path, '{}_eplus_out'.format(self.name))
 
         if delete:
-            try:
-                self.delete_result_files(out)
-            except:
-                pass
+            self.delete_result_files(out)
+
 
         print(exe, '-w', weather,'--output-directory', out, idf)
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
@@ -217,6 +216,16 @@ class OperationalMixins:
         del self.operational_object.daylighting_controls[dlc_key]
         del self.operational_object.daylighting_reference_points[dlr_key]
 
+    def delete_result_files(self, out_path):
+        """ Deletes energy+ result files.
+
+        Parameters:
+            out_path (str): Path to the energy+ output folder.
+
+        Returns:
+            None
+        """
+        shutil.rmtree(out_path)
 
     # ================================
     # Inventory Records Methods

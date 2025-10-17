@@ -600,14 +600,19 @@ def write_shadings(building):
     -------
     None
     """
-
+    shadings = []
     for fk in building.floors:
         env = building.floors[fk].envelope
         for sk in env.shadings:
-            write_shading(env, env.shadings[sk])
+            shadings.append([env, env.shadings[sk]])
+
+    for i in range(len(shadings)):
+        env = shadings[i][0]
+        shading = shadings[i][1]
+        write_shading(env, shading, i)
 
 
-def write_shading(envelope, shading):
+def write_shading(envelope, shading, key):
     """
     Writes a single shading device to the .idf file from the building data.
     Parameters
@@ -627,7 +632,7 @@ def write_shading(envelope, shading):
     surfaces = shading.surfaces
     for i, srf in enumerate(surfaces):
         fh.write('Shading:Building:Detailed,\n')
-        fh.write('  Shading {}-{}, !- Detached Shading\n'.format(sname, i))
+        fh.write('  Shading {}-{}-{}, !- Detached Shading\n'.format(sname, key, i))
         fh.write('  , !- Shadowing Transmittance & Schedule\n')
         vertices = srf.polygon
         fh.write('  {}, !-Number of verrices\n'.format(len(vertices)))

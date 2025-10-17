@@ -130,24 +130,23 @@ for fk in b.floors:
         env.add_window(window, wall_key)
 
 
-# # add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-# for fk in b.floors:
-#     if not b.floors[fk].is_below_grade:
-#         env = b.floors[fk].envelope
-#         wks = env.windows.keys()
-#         shading = 'Aluminum Shading'
-#         for wk in wks:
-#             window = env.windows[wk]
-#             surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
-#             sh = Shading.from_idf(shading, b, surfaces, window_service_life)
-#             env.add_construction(sh)
+for fk in b.floors:
+    if not b.floors[fk].is_below_grade:
+        env = b.floors[fk].envelope
+        wks = env.windows.keys()
+        shading = 'Aluminum Shading'
+        for wk in wks:
+            window = env.windows[wk]
+            surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
+            sh = Shading.from_idf(shading, b, surfaces, window_service_life)
+            env.add_construction(sh)
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # TODO: Wall quantities are still not substracting windows
 # FIXME: Building plotter is missing shading devices
-# TODO: Fix envelope idf errors (See eplus error file)
 # TODO: Implement outdoor boundary condition generator
 
 
