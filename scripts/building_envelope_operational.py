@@ -1,3 +1,5 @@
+import os
+import pod_lca
 # from pathlib import Path
 # from pod_lca.building import Building
 # from pod_lca.building import Scenario
@@ -22,7 +24,6 @@ from pod_lca.lca_modules.operational.operational_object import OperationalObject
 from pod_lca.lca_modules.geometry.building_geometry import window_surfaces_from_wwr
 from pod_lca.lca_modules.geometry.building_geometry import shading_surfaces_from_window
 
-from pod_lca.lca_modules.operational import write_idf_from_building
 from pod_lca.lca_modules.location import Location
 from pod_lca.units import METER
 from pod_lca.utilities import config
@@ -151,7 +152,10 @@ for fk in b.floors:
 
 
 # # plot_building(b)
-write_idf_from_building(b)
+b.write_idf()
+eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+wea = config['file_paths']['operational']['SEATTLE']
+b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
 
 # print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}

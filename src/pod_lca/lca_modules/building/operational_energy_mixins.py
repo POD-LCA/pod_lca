@@ -5,11 +5,14 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import os
+import subprocess
 from collections import defaultdict
 
 from . import OperationalElectricityProduct
 from ..impacts import Emissions
 from ..impacts import Impacts
+from pod_lca.lca_modules.operational.read_write import write_idf_from_building
 
     
 class OperationalMixins:
@@ -72,15 +75,32 @@ class OperationalMixins:
 
             return electricity_usage
 
-    def run_operational_energy_model(self):
+
+    def write_idf(self):
+        write_idf_from_building(self)
+
+    def run_operational_energy_model(self, eplus_path, idf_path, weather, delete=True):
         """ Run operational energy model to get operational energy use and emissions.
         
         Returns
         -------
         None
         """
-        # TODO: run e+ model
-        # set_usage in the OperationalElectricityProduct
+        idf = os.path.join(idf_path, 'pod_lca_operational.idf')
+        exe = os.path.join(eplus_path, 'energyplus')
+        out = os.path.join(idf_path, '{}_eplus_out'.format(self.name))
+
+        if delete:
+            try:
+                self.delete_result_files(out)
+            except:
+                pass
+
+        print(exe, '-w', weather,'--output-directory', out, idf)
+        subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
+
+
+
         self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
