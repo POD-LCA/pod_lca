@@ -249,7 +249,7 @@ def write_building_surface(envelope, sk):
     None
     """
     
-    st  = sk.capitalize()
+    st  = envelope.surfaces[sk].construction.__type__
     ct  = envelope.surfaces[sk].construction.name
     ob  = envelope.surfaces[sk].outside_boundary_condition
     obo = envelope.surfaces[sk].outside_boundary_condition_object
@@ -381,8 +381,8 @@ def write_layers(building):
         for ck in env.floors:
             con = env.floors[ck]
             constructions[con.name] = con
-        for ck in env.cielings:
-            con = env.cielings[ck]
+        for ck in env.ceiling:
+            con = env.ceiling[ck]
             constructions[con.name] = con
         for ck in env.windows:
             con = env.windows[ck]
@@ -396,10 +396,13 @@ def write_layers(building):
 
     for lk in layers:
         l = layers[lk]
-        lay_name = l.name
         # mat_name = l.material.name
         mat = l.material_property
         thick = l.thickness
+        if thick: 
+            lay_name = '{} {}mm'.format(l.name, round(thick*1000, 1))
+        else:
+            lay_name = l.name
         if mat.__type__ == 'Material':
             write_material(mat, thick, lay_name)
         # elif mat.__type__ == 'MaterialNoMass':
@@ -550,8 +553,8 @@ def write_constructions(building):
         for ck in env.floors:
             con = env.floors[ck]
             constructions[con.name] = con
-        for ck in env.cielings:
-            con = env.cielings[ck]
+        for ck in env.ceiling:
+            con = env.ceiling[ck]
             constructions[con.name] = con
         for ck in env.windows:
             con = env.windows[ck]
@@ -603,10 +606,10 @@ def write_shadings(building):
     for fk in building.floors:
         env = building.floors[fk].envelope
         for sk in env.shadings:
-            write_shading(env.shadings[sk])
+            write_shading(env, env.shadings[sk])
 
 
-def write_shading(shading):
+def write_shading(envelope, shading):
     """
     Writes a single shading device to the .idf file from the building data.
     Parameters
@@ -622,7 +625,7 @@ def write_shading(shading):
     """
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('\n')
-    sname = shading.name
+    sname = '{}_{}'.format(envelope.name, shading.name) 
     surfaces = shading.surfaces
     for i, srf in enumerate(surfaces):
         fh.write('Shading:Building:Detailed,\n')

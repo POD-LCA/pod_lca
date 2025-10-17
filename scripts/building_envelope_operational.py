@@ -15,7 +15,7 @@ from pod_lca.lca_modules.building import Building
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Wall
 from pod_lca.lca_modules.building_envelope import Floor
-from pod_lca.lca_modules.building_envelope import Cieling
+from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
 
@@ -94,17 +94,17 @@ for fk in b.floors:
         e.add_construction(slab)
 
 
-    # add cieling slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # add ceiling slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if floor.is_last:
         roof = 'Generic Roof'
-        surfaces = [e.surfaces['cieling']]
-        roof = Cieling.from_idf(roof, b, surfaces, structure_service_life)
+        surfaces = [e.surfaces['ceiling']]
+        roof = Ceiling.from_idf(roof, b, surfaces, structure_service_life)
         e.add_construction(roof)
     else:
         ciel = 'Generic Interior Ceiling'
-        surfaces = [e.surfaces['cieling']]
-        ciel = Cieling.from_idf(ciel, b, surfaces, structure_service_life)
+        surfaces = [e.surfaces['ceiling']]
+        ciel = Ceiling.from_idf(ciel, b, surfaces, structure_service_life)
         e.add_construction(ciel)
 
 
@@ -132,24 +132,26 @@ for fk in b.floors:
         env.add_window(window, wall_key)
 
 
-# add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# # add shading devices - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-for fk in b.floors:
-    if not b.floors[fk].is_below_grade:
-        env = b.floors[fk].envelope
-        wks = env.windows.keys()
-        shading = 'Aluminum Shading'
-        for wk in wks:
-            window = env.windows[wk]
-            surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
-            sh = Shading.from_idf(shading, b, surfaces, window_service_life)
-            env.add_construction(sh)
+# for fk in b.floors:
+#     if not b.floors[fk].is_below_grade:
+#         env = b.floors[fk].envelope
+#         wks = env.windows.keys()
+#         shading = 'Aluminum Shading'
+#         for wk in wks:
+#             window = env.windows[wk]
+#             surfaces = shading_surfaces_from_window(window, top=1.5, left=1.5, right=1.5)
+#             sh = Shading.from_idf(shading, b, surfaces, window_service_life)
+#             env.add_construction(sh)
 
 
-# # # # ###############################################
-# # # # # TODO: Wall quantities are still not substracting windows
-# # # # # FIXME: Building plotter is missing shading devices
-
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# TODO: Wall quantities are still not substracting windows
+# FIXME: Building plotter is missing shading devices
+# TODO: Fix envelope idf errors (See eplus error file)
+# TODO: Implement outdoor boundary condition generator
+# TODO: Ceiling, not cieling
 
 # # plot_building(b)
 b.write_idf()

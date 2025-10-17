@@ -11,7 +11,7 @@ from .construction import Construction
 from .window import Window
 from .wall import Wall
 from .floor import Floor
-from .cieling import Cieling
+from .ceiling import Ceiling
 from .shading import Shading
 from .material_property import EnvelopeMaterialProperty
 

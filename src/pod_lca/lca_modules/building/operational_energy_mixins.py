@@ -77,6 +77,7 @@ class OperationalMixins:
 
 
     def write_idf(self):
+        self.make_layers_dict()
         write_idf_from_building(self)
 
     def run_operational_energy_model(self, eplus_path, idf_path, weather, delete=True):
@@ -105,6 +106,29 @@ class OperationalMixins:
 
         return self
        
+    def make_layers_dict(self):
+        """
+        Makes a dictionary containing all unique layers, with names, materials and
+        thicknesses.
+        
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        
+        """
+        for ck in self.constructions:
+            lkeys = self.constructions[ck].layers.keys()
+            for lk in lkeys:
+                name = self.constructions[ck].layers[lk]['name']
+                thick = self.constructions[ck].layers[lk]['thickness']
+                lname = '{} {}mm'.format(name, round(thick*1000, 1))
+                self.layers[lname] = {'layer_name': lname,
+                                                 'material_name': name,
+                                                 'thickness': thick}
     # ================================
     # Inventory Records Methods
     # ================================ 

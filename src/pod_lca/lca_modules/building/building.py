@@ -616,7 +616,7 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
                         srf.outside_boundary_condition = 'Ground'
                     else:
                         srf.outside_boundary_condition = 'Zone'
-                elif sk == 'cieling':
+                elif sk == 'ceiling':
                     if floor.is_last:
                         srf.outside_boundary_condition = 'Outdoors'
                     else:

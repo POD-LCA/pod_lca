@@ -53,7 +53,7 @@ class Zone(object):
 
         h = floor.height
         zone.height = h
-        zone.surfaces['cieling'].polygon = [[p[0], p[1], p[2]+h] for p in fp]
+        zone.surfaces['ceiling'].polygon = [[p[0], p[1], p[2]+h] for p in fp]
         for i in range(len(fp)):
             a = fp[i]
             if i == len(fp)-1:

@@ -20,9 +20,9 @@ class Envelope:
         self.windows = {}
         self.shadings = {}
         self.floors = {}
-        self.cielings = {}
+        self.ceiling = {}
         self.construction_map = {'Floor': self.floors,
-                                 'Cieling': self.cielings,
+                                 'Ceiling': self.ceiling,
                                  'Wall': self.walls,
                                  'Window': self.windows,
                                  'Shading': self.shadings}
@@ -60,7 +60,7 @@ class Envelope:
         h = self.height
         cp = [[p[0], p[1], p[2]+h] for p in fp]
         self.surfaces['floor'] = Surface.from_polygon('floor', fp)
-        self.surfaces['cieling'] = Surface.from_polygon('cieling', cp)
+        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp)
         for i in range(len(fp)):
             a = fp[i]
             if i == len(fp)-1:
