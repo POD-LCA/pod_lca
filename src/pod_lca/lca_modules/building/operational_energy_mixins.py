@@ -108,7 +108,7 @@ class OperationalMixins:
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
 
         results = read_results_file(self, os.path.join(out, 'eplusout.eso'))
-        print(results)
+        self.energy_plus_results = results
         self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self

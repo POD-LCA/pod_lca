@@ -59,7 +59,6 @@ def read_eso_preamble(building, filepath):
     del lines[-2:]
 
     zones = [building.floors[zk].envelope.name.lower() for zk in building.floors] 
-    print(zones)
 
     data = {}
     len_preamble = 0
@@ -74,7 +73,6 @@ def read_eso_preamble(building, filepath):
         key = stuff[0]
         zone = stuff[2].split(' ')[0]
         item = stuff[3]
-        print(zone)
         if zone in zones:
             if 'cooling' in item:
                 item = 'cooling'
