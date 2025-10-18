@@ -28,8 +28,7 @@ output_file = "tests\\transportation-domestic_test_report.csv"
 test_dict = DataImporter.csv_to_dict(test_data, 'test name')
 
 project = USDomesticTransportationManager.new("Building A")
-project.get_dataset().force_location = True
-project.get_dataset().force_mode = True
+project.set_data_generator_mode()
 project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 

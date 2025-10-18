@@ -112,8 +112,6 @@ class USDomesticTransportationManager(TransportationManager):
         """
         self.transport_legs[good] = []
 
-        mode_efficiency = 'Median' if mode_efficiency is None else mode_efficiency
-
         # select type of transport leg
         if isinstance(travel_dist, (int, float)):
             LinkClass = TransportationLeg
@@ -145,7 +143,14 @@ class USDomesticTransportationManager(TransportationManager):
             leg.set_transport_scenario(transport_scenario)
 
         return self
+    
+    def set_data_generator_mode(self):
+        """ Set variables used for data generator.
+        """
+        self.get_dataset().force_closest_location = False
+        self.get_dataset().force_default_mode = False
 
+        return self
 
 if __name__ == '__main__':
     pass

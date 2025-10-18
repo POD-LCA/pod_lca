@@ -21,11 +21,11 @@ class CFSDataset(TransportDataset):
 
     Attributes
     ----------
-    force_location : bool
+    force_closest_location : bool
         If true, when location (origin/destination) not found in the dataset, use closest location.
-    force_mode : bool
+    force_default_mode : bool
         If true, when mode not found in the dataset, use forced_mode
-    force_mode_value : str
+    force_default_mode_value : str
         The mode to use when the specified mode is not found in the dataset.
     cfs_dataset : ~pandas.DataFrame
         Pre-processed dataset from the Comodity Flow Survery (CFS).
@@ -34,9 +34,9 @@ class CFSDataset(TransportDataset):
     """
 
     def __init__(self):
-        self.force_location = True
-        self.force_mode = True
-        self.force_mode_value = "Truck"
+        self.force_closest_location = True
+        self.force_default_mode = True
+        self.force_default_mode_value = "Truck"
         
         self.cfs_dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH']) 
         self.cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
@@ -79,7 +79,7 @@ class CFSDataset(TransportDataset):
         if isinstance(destination, Location):
             cfs_filtered = cfs[cfs["DEST_STATE"] == destination.get_cfs_area()]
             if cfs_filtered.empty:
-                if self.force_location:
+                if self.force_closest_location:
                     closest_state_name, closest_state_code = Location.get_closest_state_CFS(destination, cfs["DEST_STATE"].tolist())
                     cfs_filtered = cfs[cfs["DEST_STATE"] == closest_state_code]
                     log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
@@ -91,7 +91,7 @@ class CFSDataset(TransportDataset):
             if isinstance(origin, Location):
                 cfs_filtered = cfs[cfs["ORIG_STATE"] == origin.get_cfs_area()]
                 if cfs_filtered.empty:
-                    if self.force_location:
+                    if self.force_closest_location:
                         closest_state_name, closest_state_code = Location.get_closest_state_CFS(origin, cfs["ORIG_STATE"].tolist())
                         cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state_code]
                         log(f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
@@ -104,9 +104,9 @@ class CFSDataset(TransportDataset):
             cfs_modes_mapping = self.cfs_modes_mapping
             cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
             if cfs_filtered.empty:
-                if self.force_mode:
-                    cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[self.force_mode_value])]
-                    log(f"Forced mode {self.force_mode_value} is used to estimate travel distance.", "Info")
+                if self.force_default_mode:
+                    cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[self.force_default_mode_value])]
+                    log(f"Forced mode {self.force_default_mode_value} is used to estimate travel distance.", "Info")
                 else:
                     raise ValueError("Transportation mode not in CFS dataset")
             cfs = cfs_filtered  
