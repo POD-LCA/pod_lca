@@ -94,7 +94,7 @@ for sctg_code, material in Material_names.items():
             for foreign_travel_mode in travel_modes:
                 for foreign_travel_eff in travel_mode_efficiency:
                     foreign_transport_leg.set_mode(foreign_travel_mode, efficiency=foreign_travel_eff)
-                    local_travel_modes = ['Truck', 'E_Truck', 'Rail', 'Air'] if foreign_travel_mode == 'Ocean' else [foreign_travel_mode]
+                    local_travel_modes = ['Truck', 'E_Truck', 'Rail', 'Air', 'Barge'] if foreign_travel_mode == 'Ocean' else [foreign_travel_mode]
                     for local_travel_mode in local_travel_modes:
                         local_travel_mode_efficiencies = [foreign_travel_eff] if local_travel_mode == foreign_travel_mode else travel_mode_efficiency
                         for local_travel_eff in local_travel_mode_efficiencies:

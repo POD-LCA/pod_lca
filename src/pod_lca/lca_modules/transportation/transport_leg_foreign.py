@@ -301,11 +301,11 @@ class ForeignLeg(TransportationLeg):
         """ Check if the mode and origin combinations are realistic.
         """
         if self.get_mode().get_name() == 'Truck':
-            if not self.get_shipping_origin().get_country_code() in ['CA', 'MX']:
+            if not self.get_shipping_origin().get_faf_foreign_region('name') in ['Canada', 'Mexico']:
                 return False
 
         if self.get_mode().get_name() == 'Rail':
-            if not self.get_shipping_origin().get_country_code() == 'CA':
+            if not self.get_shipping_origin().get_faf_foreign_region('name') == 'Canada':
                 return False
 
         return True
