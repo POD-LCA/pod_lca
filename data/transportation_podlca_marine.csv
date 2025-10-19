@@ -1,12 +1,12 @@
 ﻿Region,Coast,USA Port,Foreign Port,Distance_km,Distance (nautical miles)
 Canada,West Coast,New York,Montreal,2808,1516
 Canada,East Coast,Los Angeles,Vancouver,2152,1162
-Mexico,East Coast,New York,Veracruz,3676,1985
+Mexico,East Coast,New York,Veracruz,3626,1958
 Mexico,Gulf Coast,Houston,Veracruz,1232,665
 Mexico,West Coast,Los Angeles,Manzanillo,2234,1206
-Rest of America,East Coast,New York,Santos,9130,4930
-Rest of America,East Coast,Houston,Santos,10205,5510
-Rest of America,West Coast,Los Angeles,Santos,13675,7384
+Rest of America,East Coast,New York,Santos,9130.36,4930
+Rest of America,East Coast,Houston,Santos,10204.52,5510
+Rest of America,West Coast,Los Angeles,Santos,13675.17,7384
 Europe,East Coast,New York,Hamburg,6704,3620
 Europe,Gulf Coast,Houston,Hamburg,9745,5262
 Europe,West Coast,Los Angeles,Hamburg,14825,8005
