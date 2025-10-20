@@ -13,15 +13,14 @@ from collections import defaultdict
 from . import OperationalElectricityProduct
 from ..impacts import Emissions
 from ..impacts import Impacts
-from pod_lca.lca_modules.operational.read_write import write_idf_from_building
-from pod_lca.lca_modules.operational.read_write import read_results_file
-
-from pod_lca.lca_modules.operational.node_list import  NodeList
-from pod_lca.lca_modules.operational.ideal_air_load import  IdealAirLoad
-from pod_lca.lca_modules.operational.equipment import  EquipmentList
-from pod_lca.lca_modules.operational.equipment import  EquipmentConnection
-from pod_lca.lca_modules.operational.light import  DaylightingControls
-from pod_lca.lca_modules.operational.light import  DaylightingReferencePoint
+from ..operational.equipment import  EquipmentConnection
+from ..operational.equipment import  EquipmentList
+from ..operational.ideal_air_load import  IdealAirLoad
+from ..operational.light import  DaylightingControls
+from ..operational.light import  DaylightingReferencePoint
+from ..operational.node_list import  NodeList
+from ..operational.read_write import read_results_file
+from ..operational.read_write import write_idf_from_building
 
     
 class OperationalMixins:
@@ -78,23 +77,21 @@ class OperationalMixins:
                         name = None
 
                     if name is None:
-                        electricity_usage[time] += values[category]
+                        electricity_usage[time]['total'] += values[category]
                     else:
                         electricity_usage[time][name] += values[category]
 
-            return electricity_usage
+        return electricity_usage
 
 
     def write_idf(self):
+        """ Write idf file.
+        """
         self.make_layers_dict()
         write_idf_from_building(self)
 
     def run_operational_energy_model(self, eplus_path, idf_path, weather, delete=True):
         """ Run operational energy model to get operational energy use and emissions.
-        
-        Returns
-        -------
-        None
         """
         idf = os.path.join(idf_path, 'pod_lca_operational.idf')
         exe = os.path.join(eplus_path, 'energyplus')
@@ -103,24 +100,19 @@ class OperationalMixins:
         if delete:
             self.delete_result_files(out)
 
-
         print(exe, '-w', weather,'--output-directory', out, idf)
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
 
-        results = read_results_file(self, os.path.join(out, 'eplusout.eso'))
-        self.energy_plus_results = results
+        self.energy_plus_results = read_results_file(self, os.path.join(out, 'eplusout.eso'))
+
         self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
        
     def make_layers_dict(self):
-        """
-        Makes a dictionary containing all unique layers, with names, materials and
+        """ Makes a dictionary containing all unique layers, with names, materials and
         thicknesses.
         
-        Parameters
-        ----------
-        None
 
         Returns
         -------
@@ -230,12 +222,12 @@ class OperationalMixins:
     # ================================
     # Inventory Records Methods
     # ================================ 
-    def get_operational_impacts(self, category=None, objs=False):
+    def get_operational_impacts(self, category='total', objs=False):
         """ Get B6 impacts of the building.
 
         Parameters
         ----------
-        category : {'heating', 'lighting', 'cooling', None}
+        category : {'heating', 'lighting', 'cooling', 'total'}
             Category of operational energy.
         objs : bool, optional
             If True, return a list of emissions objects for each material. 
@@ -258,12 +250,12 @@ class OperationalMixins:
 
             return impacts
 
-    def get_operational_emissions(self, category=None, objs=False):
+    def get_operational_emissions(self, category='total', objs=False):
         """ Get B6 emissions of the building.
 
         Parameters
         ----------
-        category : {'heating', 'lighting', 'cooling', None}
+        category : {'heating', 'lighting', 'cooling', 'total'}
             Category of operational energy.
         objs : bool, optional
             If True, return a list of emissions objects for each material. 

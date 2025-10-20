@@ -731,8 +731,8 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
                         self.get_transportation_emissions(objs=True) + \
                         [self.get_construction_emissions()] + \
                         self.get_eol_emissions(lc_stage=None, objs=True) + \
-                        self.get_replacement_emissions(objs=True) 
-                        # self.get_operational_emissions(objs=True) + \
+                        self.get_replacement_emissions(objs=True) + \
+                        self.get_operational_emissions(objs=True) 
                         
         return DynamicRadiativeForcingRecord.from_emissions(all_emissions, 
                                                            self.get_built_year(), 
