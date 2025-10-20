@@ -34,7 +34,8 @@ Material:NoMass,
   3.17,                                        !- Thermal Resistance {m2-K/W}               
   0.9000000,                                   !- Thermal Absorptance              NO VALUE FROM TERESA   
   0.7500000,                                   !- Solar Absorptance                NO VALUE FROM TERESA     
-  0.7500000;                                   !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.127;                                        ! Thickness (m)
 
 Material:NoMass,
   Expanded polystyrene (EPS) Type I - 1.5in,     !- Name                              
@@ -42,7 +43,8 @@ Material:NoMass,
   0.95,                                          !- Thermal Resistance {m2-K/W}               
   0.9000000,                                     !- Thermal Absorptance              NO VALUE FROM TERESA   
   0.7500000,                                     !- Solar Absorptance                NO VALUE FROM TERESA     
-  0.7500000;                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.0381;                                        ! Thickness (m)
 
 Material:NoMass,
   Mineral wool blanket baseline,                 !- Name                              
@@ -50,7 +52,8 @@ Material:NoMass,
   3.91,                                          !- Thermal Resistance {m2-K/W}               
   0.9000000,                                     !- Thermal Absorptance              NO VALUE FROM TERESA   
   0.7500000,                                     !- Solar Absorptance                NO VALUE FROM TERESA     
-  0.7500000;                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.1524;                                        ! Thickness (m)
 
 Material,
   Clay brick,                             !- Name
@@ -62,9 +65,6 @@ Material,
   0.9,                                    !- Thermal Absorptance           NO VALUE FROM TERESA
   0.7,                                    !- Solar Absorptance             NO VALUE FROM TERESA
   0.7;                                    !- Visible Absorptance           NO VALUE FROM TERESA
-
-
-
 
 
 

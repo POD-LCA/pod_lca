@@ -216,7 +216,12 @@ def find_no_mass_materials(filepath, data):
         thres  = float(lines[i + 3].split(',')[0])
         thabs = float(lines[i + 4].split(',')[0])
         slra = float(lines[i + 5].split(',')[0])
-        visa = float(lines[i + 6].split(';')[0])
+        if ';' not in lines[i + 6]:
+            visa = float(lines[i + 6].split(',')[0])
+            thic = float(lines[i + 7].split(';')[0])
+        else:
+            visa = float(lines[i + 6].split(';')[0])
+            thic = None
 
         data['materials'][name] = {'__type__': 'MaterialNoMass',
                                    'name': name,
@@ -225,6 +230,7 @@ def find_no_mass_materials(filepath, data):
                                    'thermal_absorptance': thabs,
                                    'solar_absorptance': slra,
                                    'visible_absorptance': visa,
+                                   'thickness':thic,
                                           }
 
 

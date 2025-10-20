@@ -65,6 +65,7 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
         self.thermal_absorptance = None
         self.solar_absorptance   = None
         self.visible_absorptance = None
+        self.thickness           = None
 
     @classmethod
     def from_idf_data(cls, data):
@@ -76,6 +77,7 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
         material.thermal_absorptance = data['thermal_absorptance'] 
         material.solar_absorptance   = data['solar_absorptance']
         material.visible_absorptance = data['visible_absorptance']
+        material.thickness           = data['thickness']
         return material
     
 

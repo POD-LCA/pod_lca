@@ -397,14 +397,19 @@ def write_layers(building):
         # mat_name = l.material.name
         mat = l.material_property
         thick = l.thickness
+        print(lk)
+        print(l.thickness)
+        print(mat.__type__)
         if thick: 
             lay_name = '{} {}mm'.format(l.name, round(thick*1000, 1))
         else:
             lay_name = l.name
+        print(lay_name)
+        print('')
         if mat.__type__ == 'Material':
             write_material(mat, thick, lay_name)
         elif mat.__type__ == 'MaterialNoMass':
-            write_materials_nomass(mat)
+            write_materials_nomass(mat, lay_name)
         elif mat.__type__ == 'EnvelopeMaterialAirGap':
             write_material_air_gap(mat, lay_name)
         elif mat.__type__ == 'WindowMaterialGlazing':
@@ -451,7 +456,7 @@ def write_material(mat, thickness, layer_name):
         fh.close()
 
 
-def write_materials_nomass(mat):
+def write_materials_nomass(mat, layer_name):
     """
     Writes a no mass material to the .idf file from the building data.
     Parameters
@@ -468,7 +473,7 @@ def write_materials_nomass(mat):
     fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
     fh.write('\n')
     fh.write('Material:NoMass,\n')
-    fh.write('  {},     !- Name\n'.format(mat.name))
+    fh.write('  {},     !- Name\n'.format(layer_name))
     fh.write('  {},     !- Roughness\n'.format(mat.roughness))
     fh.write('  {},     !- Thermal Resistance (m2-K/W)\n'.format(mat.thermal_resistance))
     fh.write('  {},     !- Thermal Absorptance\n'.format(mat.thermal_absorptance))
