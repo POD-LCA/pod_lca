@@ -36,7 +36,10 @@ class Construction(Assembly):
             mat_type = self.layers[lk].material_property.__type__
             if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
                 mat_name = self.layers[lk].material_property.name
-                quantity = area * self.layers[lk].thickness
+                if mat_type == 'MaterialNoMass':
+                    quantity = area * .1
+                else: 
+                    quantity = area * self.layers[lk].thickness
                 material = Material.new_structural_material(parent=self,
                                                             name=mat_name,
                                                             qty=quantity,

@@ -62,6 +62,7 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
         self.__type__            = 'MaterialNoMass'
         self.roughness           = None
         self.thermal_resistance  = None
+        self.thermal_absorptance = None
         self.solar_absorptance   = None
         self.visible_absorptance = None
 
@@ -72,6 +73,7 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
         material.name                = data['name']
         material.roughness           = data['roughness']
         material.thermal_resistance  = data['thermal_resistance'] 
+        material.thermal_absorptance = data['thermal_absorptance'] 
         material.solar_absorptance   = data['solar_absorptance']
         material.visible_absorptance = data['visible_absorptance']
         return material

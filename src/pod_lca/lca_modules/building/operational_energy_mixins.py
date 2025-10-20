@@ -84,7 +84,6 @@ class OperationalMixins:
 
             return electricity_usage
 
-
     def write_idf(self):
         self.make_layers_dict()
         write_idf_from_building(self)

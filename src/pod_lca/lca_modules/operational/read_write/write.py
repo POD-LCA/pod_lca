@@ -403,8 +403,8 @@ def write_layers(building):
             lay_name = l.name
         if mat.__type__ == 'Material':
             write_material(mat, thick, lay_name)
-        # elif mat.__type__ == 'MaterialNoMass':
-        #     write_materials_nomass(building, mat)
+        elif mat.__type__ == 'MaterialNoMass':
+            write_materials_nomass(mat)
         elif mat.__type__ == 'EnvelopeMaterialAirGap':
             write_material_air_gap(mat, lay_name)
         elif mat.__type__ == 'WindowMaterialGlazing':
@@ -449,6 +449,34 @@ def write_material(mat, thickness, layer_name):
         fh.write('\n')
         fh.write('\n')
         fh.close()
+
+
+def write_materials_nomass(mat):
+    """
+    Writes a no mass material to the .idf file from the building data.
+    Parameters
+    ----------
+    building: object
+        The building datastructure containing the data to be used
+    mat: object
+        The material object to be written
+    
+    Returns
+    -------
+    None
+    """
+    fh = open(os.path.join(pod_lca.TEMP, 'pod_lca_operational.idf'), 'a')
+    fh.write('\n')
+    fh.write('Material:NoMass,\n')
+    fh.write('  {},     !- Name\n'.format(mat.name))
+    fh.write('  {},     !- Roughness\n'.format(mat.roughness))
+    fh.write('  {},     !- Thermal Resistance (m2-K/W)\n'.format(mat.thermal_resistance))
+    fh.write('  {},     !- Thermal Absorptance\n'.format(mat.thermal_absorptance))
+    fh.write('  {},     !- Solar Absorptance\n'.format(mat.solar_absorptance))
+    fh.write('  {};     !- Visible Absorptance\n'.format(mat.visible_absorptance))
+    fh.write('\n')
+    fh.write('\n')
+    fh.close()
 
 
 def write_material_air_gap(mat, layer_name):
@@ -1035,7 +1063,6 @@ def write_daylight(building):
     fh.close()
 
 
-
 def write_internal_gains(building):
 
     for pk in building.operational_object.peoples:
@@ -1188,39 +1215,6 @@ def write_output_items(building):
 #     fh.write('\n')
 #     fh.close()
 
-
-
-
-
-
-
-
-# def write_materials_nomass(building, mat):
-#     """
-#     Writes a no mass material to the .idf file from the building data.
-#     Parameters
-#     ----------
-#     building: object
-#         The building datastructure containing the data to be used
-#     mat: object
-#         The material object to be written
-    
-#     Returns
-#     -------
-#     None
-#     """
-#     fh = open(building.idf_filepath, 'a')
-#     fh.write('\n')
-#     fh.write('Material:NoMass,\n')
-#     fh.write('  {},     !- Name\n'.format(mat.name))
-#     fh.write('  {},     !- Roughness\n'.format(mat.roughness))
-#     fh.write('  {},     !- Thermal Resistance (m2-K/W)\n'.format(mat.thermal_resistance))
-#     fh.write('  {},     !- Thermal Absorptance\n'.format(mat.thermal_absorptance))
-#     fh.write('  {},     !- Solar Absorptance\n'.format(mat.solar_absorptance))
-#     fh.write('  {};     !- Visible Absorptance\n'.format(mat.visible_absorptance))
-#     fh.write('\n')
-#     fh.write('\n')
-#     fh.close()
 
 
 if __name__ == '__main__':
