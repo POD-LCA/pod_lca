@@ -165,7 +165,7 @@ b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
 # print(b.get_operational_impacts('heating'))
 # print(b.get_operational_impacts('lighting'))
-print(# b.get_operational_impacts()) # default is 'total'
+print(b.get_operational_impacts()) # default is 'total'
 
 # print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 # print(b.get_emissions(scope='product', lc_stage=None))

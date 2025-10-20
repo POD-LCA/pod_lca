@@ -1,4 +1,74 @@
 Construction,
+  Curtain Wall-aluminium spandrel,          ! Name # Teresa's construction for com template
+  Expanded polystyrene (EPS) Type I - 5in,  !- Layer 1    DONE!!!!
+  Mineral wool blanket baseline,            !- Layer 2    DONE!!!!
+  Gypsum board, 1/2 in;                     !- Layer 3    DONE!!!!
+
+Construction,
+  Rainscreen-Thinbrick,                             ! Name # Teresa's construction for res template
+  Clay brick,                                       !- Layer 1            DONE!!!!
+  Galvanized Steel Support System (air gap),        !- Layer 2      
+  Expanded polystyrene (EPS) Type I - 1.5in,        !- Layer 3            DONE!!!!
+  Gypsum board 1/2 in,                              !- Layer 4            DONE!!!!
+  Mineral wool blanket baseline,                    !- Layer 5            DONE!!!!
+  Gypsum board 1/2 in;                              !- Layer 6            DONE!!!!
+
+Material,
+  Gypsum board 1/2 in,                    !- Name
+  MediumRough,                            !- Roughness                     NO VALUE FROM TERESA
+  0.0127,                                 !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance           NO VALUE FROM TERESA
+  0.7,                                    !- Solar Absorptance             NO VALUE FROM TERESA
+  0.7;                                    !- Visible Absorptance           NO VALUE FROM TERESA
+
+Material:AirGap,
+  Galvanized Steel Support System (air gap),      ! Material Name
+  0.1603675;                                      ! Resistance {M**2K/W}      # number to be updated for units
+
+Material:NoMass,
+  Expanded polystyrene (EPS) Type I - 5in,     !- Name                              
+  Rough,                                       !- Roughness                        NO VALUE FROM TERESA     
+  3.17,                                        !- Thermal Resistance {m2-K/W}               
+  0.9000000,                                   !- Thermal Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                   !- Solar Absorptance                NO VALUE FROM TERESA     
+  0.7500000;                                   !- Visible Absorptance              NO VALUE FROM TERESA   
+
+Material:NoMass,
+  Expanded polystyrene (EPS) Type I - 1.5in,     !- Name                              
+  Rough,                                         !- Roughness                        NO VALUE FROM TERESA     
+  0.95,                                          !- Thermal Resistance {m2-K/W}               
+  0.9000000,                                     !- Thermal Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Solar Absorptance                NO VALUE FROM TERESA     
+  0.7500000;                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+
+Material:NoMass,
+  Mineral wool blanket baseline,                 !- Name                              
+  Rough,                                         !- Roughness                        NO VALUE FROM TERESA     
+  3.91,                                          !- Thermal Resistance {m2-K/W}               
+  0.9000000,                                     !- Thermal Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Solar Absorptance                NO VALUE FROM TERESA     
+  0.7500000;                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+
+Material,
+  Clay brick,                             !- Name
+  MediumRough,                            !- Roughness                     NO VALUE FROM TERESA
+  0.01905,                                !- Thickness {m}
+  0.78,                                   !- Conductivity {W/m-K}
+  1920,                                   !- Density {kg/m3}
+  720,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance           NO VALUE FROM TERESA
+  0.7,                                    !- Solar Absorptance             NO VALUE FROM TERESA
+  0.7;                                    !- Visible Absorptance           NO VALUE FROM TERESA
+
+
+
+
+
+
+Construction,
   Generic Context,                        !- Name
   Material 2;                             !- Layer 1
 
