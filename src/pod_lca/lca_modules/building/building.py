@@ -615,12 +615,12 @@ class Building (DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, Const
                     if floor.is_on_ground:
                         srf.outside_boundary_condition = 'Ground'
                     else:
-                        srf.outside_boundary_condition = 'Zone'
+                        srf.outside_boundary_condition = 'Adiabatic'
                 elif sk == 'ceiling':
                     if floor.is_last:
                         srf.outside_boundary_condition = 'Outdoors'
                     else:
-                        srf.outside_boundary_condition = 'Zone'
+                        srf.outside_boundary_condition = 'Adiabatic'
                 cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
                 self.surface_cpt_dict[geometric_key(cpt)] = {}
 

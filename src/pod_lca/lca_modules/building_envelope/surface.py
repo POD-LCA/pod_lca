@@ -13,7 +13,7 @@ class Surface(object):
         self.polygon                            = None
         self.name                               = None
         self.surface_type                       = None
-        self.outside_boundary_condition         = 'Outdoors'
+        self.outside_boundary_condition         = None
         self.outside_boundary_condition_object  = None
         self.construction                       = None
 

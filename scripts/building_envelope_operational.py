@@ -60,7 +60,6 @@ b.read_constructions_data(path)
 b.read_material_properties_data(path)
 
 
-
 wall_service_life = 30
 structure_service_life = 60
 window_service_life = 20
@@ -144,11 +143,13 @@ for fk in b.floors:
             env.add_construction(sh)
 
 
+b.update_envelope_surfaces()
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # TODO: Wall quantities are still not substracting windows
 # FIXME: Building plotter is missing shading devices
 # TODO: Implement outdoor boundary condition generator
-
+# TODO: No Mass materials need to get their thickness from somewhere else, not the IDF...
 
 path = config['file_paths']['operational']['SYSTEMS']
 b.operational_object = OperationalObject.from_idf(path)
@@ -164,14 +165,14 @@ b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
 # print(b.get_operational_impacts('heating'))
 # print(b.get_operational_impacts('lighting'))
-print(b.get_operational_impacts()) # default is 'total'
+print(# b.get_operational_impacts()) # default is 'total'
 
-print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product', lc_stage=None))
+# print(b.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product', lc_stage=None))
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()

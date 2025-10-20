@@ -83,7 +83,6 @@ class OperationalMixins:
 
         return electricity_usage
 
-
     def write_idf(self):
         """ Write idf file.
         """
