@@ -12,19 +12,28 @@ product = Product()
 product.set_name("Coal")
 product.set_qty(1)
 product.set_unit(M_TON)
-product.set_sctg_code('01')
+product.set_sctg_code('10')
 
-destination_state = Location.from_US_state('Wyoming')
 # origin = Location.from_faf_regions('Mexico') # 'Canada', 'Mexico', 'Rest of Americas', 'Europe', 'Africa', 'SW & Central Asia', 'Eastern Asia', 'SE Asia & Oceania
 
-project.add_good(product, shipping_dest=destination_state, shipping_org=None, mode_name=None, transport_scenario="Global")
+project.add_good(product, 
+                 shipping_dest=Location.from_US_state('Georgia'), 
+                 shipping_org=None, 
+                 mode_name='Ocean', 
+                 transport_scenario="Global")
 
 transportation_leg = project.get_transportation_leg(product)[0]
+
+# domestic_transport_leg = transportation_leg.get_domestic_leg()
+# domestic_transport_leg.set_mode('Air', efficiency=None)
+
 distance = transportation_leg.get_travel_dist()
 RTT =  project.transport_legs[product][0].get_return_trip_factor()
 impacts = project.get_impacts(product)
 emissions = project.get_emissions(product)
 
+
 print(distance)
-print (impacts)
-print (emissions)
+print (RTT)
+print(transportation_leg.get_domestic_leg().get_travel_dist())
+# print (emissions)
