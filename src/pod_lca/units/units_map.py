@@ -47,6 +47,7 @@ UNITS_MAP.update({
                     'm3': CUBIC_METER,
                     'ft3': CUBIC_FEET,
                     'gal': US_GALLON,
+                    'J': JOULE,
                     'MJ': MEGA * JOULE, 
                     'kWh': KILO * WATT_HOUR,
                     'MWh': MEGA * WATT_HOUR,

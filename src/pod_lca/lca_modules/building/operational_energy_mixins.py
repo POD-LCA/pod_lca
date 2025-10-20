@@ -21,6 +21,9 @@ from ..operational.light import  DaylightingReferencePoint
 from ..operational.node_list import  NodeList
 from ..operational.read_write import read_results_file
 from ..operational.read_write import write_idf_from_building
+from ...units import KILO
+from ...units import UNITS_MAP
+from ...units import WATT_HOUR
 
     
 class OperationalMixins:
@@ -37,7 +40,7 @@ class OperationalMixins:
         """
         return self.operational_energy_product
 
-    def get_operational_electricity_usasge(self, summed_at='year', group_by_category=True, group_by_zone=False, unit=None):
+    def get_operational_electricity_usasge(self, summed_at='year', group_by_category=True, group_by_zone=False, unit=WATT_HOUR):
         """ Get the operational electricity demands of the building.
 
         Parameters
@@ -48,13 +51,14 @@ class OperationalMixins:
             If true, grouped by category, 'heating', 'lighting', and 'cooling'.
         group_by_zone : bool
             If true, grouped by zone.
+        unit : ~pod_lca.units.Unit
+            Unit of measurement of the electricity usage.
 
         Returns
         -------
         ~pod_lca.impacts.Impacts
             B6 impacts of the building.
         """
-        # TODO: unit conversion
         electricity_usage = defaultdict(lambda: defaultdict(float))
         for tk, item in self.energy_plus_results.items():
             
@@ -67,6 +71,8 @@ class OperationalMixins:
             
             for zone, values in item.items():
                 for category in ['heating', 'lighting', 'cooling']:
+                    conversion_factor = UNITS_MAP[self.energy_plus_units[zone][category]].convert_to(unit)
+
                     if group_by_category and group_by_zone:
                         name = zone + '-' + category
                     elif group_by_category:
@@ -76,10 +82,10 @@ class OperationalMixins:
                     else:
                         name = None
 
-                    if name is None:
-                        electricity_usage[time]['total'] += values[category]
+                    if name is None:  
+                        electricity_usage[time]['total'] += values[category] * conversion_factor
                     else:
-                        electricity_usage[time][name] += values[category]
+                        electricity_usage[time][name] += values[category] * conversion_factor
 
         return electricity_usage
 
@@ -102,7 +108,7 @@ class OperationalMixins:
         print(exe, '-w', weather,'--output-directory', out, idf)
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
 
-        self.energy_plus_results = read_results_file(self, os.path.join(out, 'eplusout.eso'))
+        self.energy_plus_results, self.energy_plus_units = read_results_file(self, os.path.join(out, 'eplusout.eso'))
 
         self.get_operational_electricity_product()._inventories_uptodate = False
 
