@@ -40,6 +40,7 @@ UNITS_MAP.update({
                     'm': METER,
                     'ft': FEET,
                     't': M_TON,
+                    'metric ton': M_TON,
                     'tonne': M_TON,
                     'tkm': TON_KILOMETER,
                     't*km': TON_KILOMETER,

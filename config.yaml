@@ -110,7 +110,9 @@ file_paths:
     TEMPLATE_BOM_FOLDER: data/
     TEMPLATE_MATERIALS_DEFAULT_MAP: data/building_podlca_default-impact-database-entry-mapping.csv
     RICS_SERVICE_LIFE: data/building_rics_service-life.csv
-    ASHRAE_SERVICE_LIE: data/building_ashrae_service-life.csv
+    ASHRAE_SERVICE_LIFE: data/building_ashrae_service-life.csv
+    RICS_WASTE_RATE: data/building_rics_waste-rate.csv
+    ASHRAE_WASTE_RATE: data/building_ashrae_waste-rate.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 

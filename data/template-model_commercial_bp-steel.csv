@@ -1,15 +1,15 @@
 ﻿assembly,material,qty,unit
-Column foundation,"Normalweight concrete, 4000 psi",668697,kg
+Column foundation,"Normalweight concrete, 4000 psi",278.6,m3
 Column foundation,"Steel, reinforcing rod",74893,kg
-Wall foundation,"Normalweight concrete, 4000 psi",1905120,kg
+Wall foundation,"Normalweight concrete, 4000 psi",293.8,m3
 Wall foundation,"Steel, reinforcing rod",213370,kg
-Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+Slab on grade,"Normalweight concrete, 4000 psi",223.2,m3
 Slab on grade,"Steel, welded wire mesh",3601,kg
-Elevated slabs,"Lightweight concrete, 5000 psi",2551980,kg
+Elevated slabs,"Lightweight concrete, 5000 psi",1063.3,m3
 Elevated slabs,"Steel decking, galvanized",132267,kg
 Elevated slabs,"Steel, welded wire mesh",17149,kg
 Structural framing: beams,"Steel, hot rolled structural steel",145303,kg
 Structural framing: girders,"Steel, hot rolled structural steel",65264,kg
 Structural columns,"Steel, hot rolled structural steel",116629,kg
-Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+Structural walls,"Normalweight concrete, 6000 psi",455.3,kg
 Structural walls,"Steel, reinforcing rod",142771,kg
