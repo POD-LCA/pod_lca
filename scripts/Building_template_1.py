@@ -19,8 +19,12 @@ my_building = Building.from_template_model(name='template building',
                                            life_span=60,
                                            building_data=template_model_data)
 
-print(my_building.get_impacts(scope='end of life', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(my_building.get_emissions(scope='product', lc_stage=None))
+print(my_building.get_impacts(scope='product',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(my_building.get_impacts(scope='construction'))
+print(my_building.get_impacts(scope='end of life', lc_stage='C1'))
+print(my_building.get_impacts(scope='end of life', lc_stage='C2'))
+print(my_building.get_impacts(scope='end of life', lc_stage='C3'))
+print(my_building.get_impacts(scope='end of life', lc_stage='C4'))
 
 drf_record = my_building.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('cumulative radiative forcing')

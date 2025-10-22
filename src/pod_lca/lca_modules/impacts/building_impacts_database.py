@@ -133,10 +133,17 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         ImportError
             Data not in database or multiple matching entries.
         """
-        # TODO: add geographical representation
         if self.data is not None:
-            row_id = self.data.index[(self.data[self.get_primary_key()] == material_name) & 
-                                     (self.data[self.get_variability_key()] == variability_level)]
+            row_id = self.data.index[(self.data[self.get_primary_key()] == material_name)]
+            
+            if len(row_id) > 1:
+                row_id = self.data.index[(self.data[self.get_primary_key()] == material_name) &
+                                         (self.data[self.get_variability_key()] == variability_level)]
+
+            if len(row_id) > 1:
+                pass 
+                # TODO: add geographical representation
+
             if len(row_id) == 1:
                 return self.data.iloc[row_id[0]]
             elif len(row_id) == 0:

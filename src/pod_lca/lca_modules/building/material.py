@@ -103,7 +103,8 @@ class Material(Product):
         data_entry = database.get_data_entry(material_database_entry)
 
         material.set_sctg_code(data_entry['sctg code'])
-        material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
+        if not unit.get_qty_measured() == 'mass':
+            material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])  
         material.set_eol_material(data_entry['eol material'], 
                                   data_entry['bio-based'] if 'bio-based' in data_entry else None)
         material.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
@@ -626,7 +627,7 @@ class Material(Product):
         ~pod_lca.impacts.Impacts
             A5 impacts of the building.
         """
-        return (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * self.get_waste_rate()
+        return (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * (self.get_waste_rate()/100)
 
     def get_construction_emissions(self):
         """ Get A5 impacts of the building.
