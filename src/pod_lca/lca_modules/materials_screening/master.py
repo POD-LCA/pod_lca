@@ -245,6 +245,8 @@ class Master:
             carbon_storage = {key: unit_inventories[key] for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)
 
+            del unit_inventories
+            
         return self
         
     def set_qty(self, qty):

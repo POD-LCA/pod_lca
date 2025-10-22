@@ -1,0 +1,6 @@
+DRF_Category,Value,CO2,CH4,N2O
+1,median,89.50,9.80,0.70
+2,median,93.08,5.98,0.94
+3,median,92.79,6.71,0.50
+4,median,95.01,4.51,0.48
+CF,GWP,1,28,265

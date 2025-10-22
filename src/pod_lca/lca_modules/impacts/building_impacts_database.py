@@ -5,18 +5,22 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import isnan
+
 from . import ImpactsDatabase
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class BuildingMaterialImpactsDatabase(ImpactsDatabase):
-    """ Database manager to handle End-of-Life impacts.
+    """ Database manager to handle building material impacts.
 
     Attributes
     ----------
-    process_key : str
-        Data header corresponding to the end-of-life pathway corresponding to the database entry.
-    life_cycle_stage_key : str
-        Data header corresponding to the life cycle stage corresponding to the database entry.
+    variablility_key : str
+        Data header identifying the level of variability to the database entry.
+    geography_key : str
+        Data header geographical representation of the database entry.
     """
 
     def __init__(self):
@@ -87,7 +91,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         Returns
         -------
         str
-            Data header corresponding to the end-of-life process corresponding to the database entry.
+            Data header identifying the level of variability to the database entry.
         """
         return self.variablility_key
     
@@ -97,7 +101,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         Returns
         -------
         str
-            Data header corresponding to the life cycle stage corresponding to the database entry.
+            Data header geographical representation of the database entry.
         """
         return self.geography_key
     
@@ -120,7 +124,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
             Name of the material
         variability_level : {'Baseline', 'High-80th%', 'Low-20th%'}
             The percintile of the value used.
-        geography_representation : {'C3', 'C4', 'D'}
+        geography_representation : str
             geography representation of the place.
         
         Returns
@@ -145,7 +149,10 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
                 # TODO: add geographical representation
 
             if len(row_id) == 1:
-                return self.data.iloc[row_id[0]]
+                data = self.data.iloc[row_id[0]].copy(deep=False)
+                if 'DRF Category' in data and not isnan(data["DRF Category"]):
+                    data = BuildingMaterialImpactsDatabase.emissions_from_drf_category(data)
+                return data
             elif len(row_id) == 0:
                 raise ImportError(f"Data for {material_name} {variability_level} representing ({geography_representation}) not in database.")
             else:
@@ -173,6 +180,22 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
             return False
         else:
             return True
+        
+    @staticmethod
+    def emissions_from_drf_category(data):
+        """ Missing emission data replaced with emissions computed based in DRF categories.
+        """
+        drf_categories = DataImporter.csv_to_dict(config['file_paths']['building']['DRF_CATEGORIES'], "DRF_Category")
+        drf_category = data["DRF Category"]
+
+        impacts_cat = drf_categories['CF']['Value']
+        impact_val = data[impacts_cat]
+        for emission in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']:
+            if emission in drf_categories['CF'] and isnan(data[emission]):
+                data.loc[emission] = impact_val * (float(drf_categories[str(drf_category)][emission]) / 100) / float(drf_categories['CF'][emission])
+
+        # TODO: incorporate 'Value' variable
+        return data  
 
 
 if __name__ == '__main__':

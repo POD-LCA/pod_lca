@@ -113,6 +113,7 @@ file_paths:
     ASHRAE_SERVICE_LIFE: data/building_ashrae_service-life.csv
     RICS_WASTE_RATE: data/building_rics_waste-rate.csv
     ASHRAE_WASTE_RATE: data/building_ashrae_waste-rate.csv
+    DRF_CATEGORIES: data/buildings_podlca_drf-categoris.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 
