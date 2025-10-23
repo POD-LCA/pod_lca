@@ -1,0 +1,22 @@
+test name,product,sctg_code,qty,unit,destination,faf_zone,fr_mode,dms_mode,efficiency,fr_distance (Python tool),fr_distance (Manual calc),fr_distance_difference (%),dms_distance (Python tool),dms_distance (Manual calc),dms_distance_difference (%),distance_unit,Notes
+test_01,monumental or building stone,10,1,tonne,,,,,,18014.404,9745.224,59.57702315,645.1759358,554,15.20643186,km,
+test_02,monumental or building stone,10,1,tonne,,Europe,,,Low,9745,9745.224,0.002298588,601.0153382,554,8.141075989,km,
+test_03,Crushed stone,12,1,tonne,Arkansas,,,,,9745,9745.224,0.002298588,1407.36783,874.5,46.70453065,km,
+test_04,Crushed stone,12,1,tonne,Arkansas,Canada,Rail,,Median,1860.536651,1807.5,2.891827735,0,0,0,km,
+test_05,Crushed stone,12,1,tonne,,,,,,1232,9745.224,155.1070471,461.961047,685.95,39.02548958,km,
+test_06,Other chemical products and preparations,23,1,tonne,California,,Ocean,,,10571,13315.88,22.98232335,2182.815604,1356.34,46.7046774,km,
+test_07,Other chemical products and preparations,23,1,tonne,Pennsylvania,,Truck,,,N/A,200,N/A,N/A,1413.59.72,N/A,km,The transportation origin and transportation mode are inconsistant.
+test_08,Other chemical products and preparations,23,1,tonne,Maine,Rest of Americas,Truck,,,N/A,0,N/A,N/A,0,N/A,km,The transportation origin and transportation mode are inconsistant.
+test_09,machinery,34,1,tonne,New Mexico,,,,,14825,14825.26,0.001753779,2655.089132,1649.8,46.70453065,km,
+test_10,wood products,26,1,tonne,Alaska,,Air,,High,4936.693405,6920.35,33.45954851,0,0,0,km,
+test_11,natural sands,11,1,tonne,Alaska,Canada,Truck,,High,200,200,0,1971.173277,1224.8333,46.70453322,km,
+test_12,Crushed stone,12,1,tonne,Texas,,Truck,,Median,200,200,0,1090.852635,1982,58.0013083,km,
+test_13,monumental or building stone,10,1,tonne,Georgia,,Ocean,,High,6050,14825.26,84.07330016,301.0806917,312.05,3.578130563,km,
+test_14,monumental or building stone,10,1,tonne,Maryland,,Ocean,Barge,Low,6704,0,200,205.6937688,0,0,km,
+test_15,articles of base metal,33,25,kg,Nebraska,Canada,Ocean,,,N/A,0,N/A,N/A,0,N/A,km,Forced transportation mode not in dataset
+test_16,articles of base metal,33,0.25,tonne,Nebraska,Canada,Ocean,Rail,,2808,2152.024,26.45051717,2816.345,1750,46.70453065,km,
+test_17,wood products,26,7.98,tonne,New Mexico,,Rail,,,1818.219314,1911.7,5.012477655,0,0,0,km,
+test_18,wood products,26,3,tonne,Rhode Island,,Rail,,,N/A,1911.7,N/A,N/A,0,N/A,km,The transportation origin and transportation mode are inconsistant.
+test_19,furniture,39,2,tonne,Illinois,Europe,Air,,,7100.136037,6870,3.294685699,0,0,0,km,
+test_20,base metal,33,5,tonne,Hawaii,,Air,,Low,7857.855564,11630,38.71277088,0,0,0,km,
+test_21,logs and other wood in the rough,25,8.5,tonne,Oregon,Canada,Ocean,,Median,2808,2152.024,26.45051717,441.76383,274.5,46.70453065,km,
