@@ -9,6 +9,8 @@ from ..operational import find_constructions
 from pod_lca.lca_modules.building.assembly import Assembly
 from pod_lca.lca_modules.building.material import Material
 from ...units import CUBIC_METER
+from ...utilities import DataImporter
+from ...utilities import config
 
 
 class Construction(Assembly):
@@ -25,26 +27,29 @@ class Construction(Assembly):
         construction.layer_order = data['layers']
         construction.get_layers(building)
         construction.surfaces = surfaces
+        construction.set_service_life(35) # TODO: implement reading POD|LCA RSL Category from constructions
         construction.add_materials(building, service_life)
         for surface in surfaces:
             surface.add_construction(construction)
         return construction
     
     def add_materials(self, building, service_life):
+        
+        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
+
         area = self.area
         for lk in self.layers:
             mat_type = self.layers[lk].material_property.__type__
             if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
                 mat_name = self.layers[lk].material_property.name
-                quantity = area * self.layers[lk].thickness
+                quantity = area * self.layers[lk].thickness #FIXME: not all impacts are declared per volume... 
                 material = Material.new_structural_material(parent=self,
                                                             name=mat_name,
                                                             qty=quantity,
                                                             unit=CUBIC_METER,
-                                                            material_database_entry=mat_name,
-                                                            product_year=building.get_built_year(),
-                                                            service_life=service_life,
-                                                            waste_rate=0.0)
+                                                            material_database_entry=default_database_entry_map[mat_name]['impact database entry'],
+                                                            product_year=building.get_built_year())
+                                                            
                 self.add_material(material)
 
     @property

@@ -9,7 +9,7 @@ from pathlib import Path
 
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..impacts import ImpactsDatabase
+from ..impacts import BuildingMaterialImpactsDatabase
 from ...utilities import config
 
 
@@ -31,11 +31,17 @@ class ProductScopeMixins:
         if file_path is None:
             file_path = config['file_paths']['building']['DEFAULT_IMPACT_DATABASE']
         if isinstance(file_path, (str, Path)):
-            impact_database = ImpactsDatabase.new("impact database")
+            impact_database = BuildingMaterialImpactsDatabase.new("impact database")
+            impact_database.set_primary_key('product')
+            impact_database.set_qty_key('Declared qty')
+            impact_database.set_unit_key('Declared unit')
+            impact_database.set_variability_key('Value')
+            impact_database.set_geography_key('Geography')
             impact_database.set_data(file_path, additional_headers=['sctg code',
-                                                                    'eol material', 
+                                                                    'eol material',
+                                                                    'waste_rate_category',
                                                                     'bio-based',
-                                                                    'random test',
+                                                                    'DRF Category',
                                                                     'Density', 
                                                                     'Density unit'])
             self.material_impact_database = impact_database

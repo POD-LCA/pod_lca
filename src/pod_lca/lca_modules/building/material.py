@@ -58,7 +58,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, product_year, service_life, waste_rate=0.0):
+    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, product_year):
         """ Create new structural material.
         
         Parameters
@@ -78,7 +78,7 @@ class Material(Product):
         waste_rate : float
             Waste rate of the material during construction of the assembly/building. Default is 0.
         product_year : int, optional
-            Year of the emissions from the material. If None, uses the year of the parent assembly. Default is None.     
+            Year of the emissions from the material. If None, uses the year of the parent assembly. Default is None. 
         """
         material = cls()
 
@@ -86,8 +86,8 @@ class Material(Product):
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
-        material.set_waste_rate(waste_rate)
-        material.set_service_life(service_life) 
+
+        material.set_service_life()
 
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
@@ -96,12 +96,22 @@ class Material(Product):
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
 
+        # set properties from database
         material.set_impact_database_entry(material_database_entry)
-        material.set_sctg_code(material_database_entry)
-        material.set_eol_material(material_database_entry)
-        material.set_density(material_database_entry)
+
+        database = material.get_impact_database()
+        data_entry = database.get_data_entry(material_database_entry)
+
+        material.set_sctg_code(data_entry['sctg code'])
+        if not unit.get_qty_measured() == 'mass':
+            material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])  
+        material.set_eol_material(data_entry['eol material'], 
+                                  data_entry['bio-based'] if 'bio-based' in data_entry else None)
+        material.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+
         material.set_production_year(product_year)
 
+        # set allied processes
         material.set_transportation()
         material.set_waste_product()
         material.set_replacement_material()
@@ -142,9 +152,10 @@ class Material(Product):
 
         material_database_entry = other.get_impact_database_entry()
         material.set_impact_database_entry(material_database_entry)
-        material.set_sctg_code(material_database_entry)
-        material.set_eol_material(material_database_entry)
-        material.set_density(material_database_entry)
+        material.set_sctg_code(other.get_sctg_code())
+        material.set_eol_material(other.get_eol_material())
+        material.set_density(other.get_density())
+        material.set_waste_rate(other.get_waste_rate())
         material.set_production_year(production_year)
 
         material.set_transportation()
@@ -181,61 +192,60 @@ class Material(Product):
         self.name = name + ' in ' + self.get_parent().get_name()
 
         return self
-        
-    def set_density(self, material_database_entry):
-        """ Set the density of the material.
-        
-        Parameters
-        ----------
-        material_database_entry : str
-            Name of the impact database entry from which to use impacts.        
-        """
-        database = self.get_impact_database()
-        data_entry = database.get_data_entry(material_database_entry)
-
-        super().set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
-
-        return self
     
-    def set_sctg_code(self, material_database_entry):
-        """ Set the Standard Classification of Transported Goods (SCTG) code of the material.
-
-        Parameters
-        ----------
-        material_database_entry : str
-            Name of the impact database entry from which to use impacts.        
-        """
-        database = self.get_impact_database()
-        data_entry = database.get_data_entry(material_database_entry)
-        self.sctg_code = data_entry['sctg code']
-
-    def set_eol_material(self, material_database_entry):
+    def set_eol_material(self, eol_material, is_bio_based=None, is_composite=None):
         """ Set the end-of-life product corresponding to the material.
 
         Parameters
         ----------
-        material_database_entry : str
-            Name of the impact database entry from which to use impacts.        
+        eol_material : str
+            EOL product name.
+        is_bio_based : bool
+            Flag to identify if the material is bio-based.
+        is_composite : bool
+            Flag to identify if the material is a composite.    
         """
-        database = self.get_impact_database()
-        data_entry = database.get_data_entry(material_database_entry)
-        self.eol_product = data_entry['eol material']
-        if 'bio-based' in data_entry:
-            self.bio_based = data_entry['bio-based']
+        self.eol_product = eol_material
+        self.bio_based = is_bio_based if is_bio_based is not None else True
+        self.composite = is_composite if is_composite is not None else True
 
-    def set_waste_rate(self, waste_rate):
+        return self
+
+    def set_waste_rate(self, waste_rate=None, waste_rate_category=None):
         """ Set the waste rate of the material.
         
         Parameters
         ----------
-        waste_rate : float
-            Waste rate of the material during construction of the assembly/building.
+        waste_rate : float 
+            Waste rate of material during construction. Value between 0 and 100.
+        waste_rate_category : str
+            Category from which to extract waste rate.   
         """
-        self.waste_rate = waste_rate
+        if waste_rate is not None:
+            self.waste_rate = waste_rate
+        elif waste_rate_category is not None:
+            building = self.get_building()
+            building_standard = building.get_building_data_standard()
+
+            match building_standard:
+                case 'RICS':
+                    data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_WASTE_RATE'], 'POD|LCA Key')
+                case 'ASHRAE':
+                    data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_WASTE_RATE'], 'POD|LCA Key')
+
+            if waste_rate_category in data:
+                self.waste_rate = float(data[waste_rate_category]['waste_rate'])
+            else:
+                self.waste_rate = float(data['DEFAULT']['waste_rate'])
+        else:
+            raise ValueError('Waste rate input not recognized.')
+
+        if self.waste_rate > 100 or self.waste_rate < 0:
+            raise ValueError('Waste rate to be given as a value between 0 and 100.')
 
         return self
 
-    def set_service_life(self, service_life):
+    def set_service_life(self, service_life=None):
         """ Set the service life of the material.
         
         Parameters
@@ -243,7 +253,10 @@ class Material(Product):
         service_life : float
             Service life of the material in years.
         """
-        self.service_life = service_life
+        if service_life is None:
+            self.service_life = self.get_parent().get_service_life()
+        else:
+            self.service_life = service_life
 
         return self
 
@@ -337,6 +350,7 @@ class Material(Product):
         -------
         float
             Waste rate of the material during construction of the assembly/building.
+            Value between 0 and 100.
         """
         return self.waste_rate
     
@@ -614,7 +628,7 @@ class Material(Product):
         ~pod_lca.impacts.Impacts
             A5 impacts of the building.
         """
-        return (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * self.get_waste_rate()
+        return (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * (self.get_waste_rate()/100)
 
     def get_construction_emissions(self):
         """ Get A5 impacts of the building.
@@ -624,7 +638,7 @@ class Material(Product):
         ~pod_lca.impacts.Emissions
             A4-A5 emissions of the building.
         """
-        emission = (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * self.get_waste_rate()
+        emission = (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * (self.get_waste_rate() / 100)
 
         pulse = UniformEmissionProfile.unit_pulse(at=self.get_building().get_built_year())
         emission.set_temporal_emission_profile(pulse)

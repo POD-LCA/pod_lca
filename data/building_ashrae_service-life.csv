@@ -1,4 +1,4 @@
-﻿POD|LCA RSL Category,ASHRAE 240p Element Category,Reference Servivce Life 
+﻿POD|LCA RSL Category,ASHRAE 240p Element Category,service_life
 substructure,Foundations,Life of Building
 superstructure,Superstructure,Life of Building
 encl_curtainwall,Exterior Walls,35

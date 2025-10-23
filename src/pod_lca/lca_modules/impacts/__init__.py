@@ -7,6 +7,7 @@ from .impacts_database import ImpactsDatabase
 from .electricity_impacts_database import ElectricityImpactsDatabase
 from .eol_impacts_database import EOLImpactsDatabase
 from .transportation_impacts_database import TranportationModeImpactsDatabase
+from .building_impacts_database import BuildingMaterialImpactsDatabase
 from .olca_data import openLCA
 from .temporal_emission_profiles import UniformEmissionProfile
 from .temporal_emission_profiles import NormEmissionProfile

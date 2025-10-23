@@ -24,6 +24,7 @@ from ...units import METER
 from ...units import WATT_HOUR
 from ...utilities import centroid
 from ...utilities import geometric_key
+from ...utilities import config
 
 
 class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
@@ -55,6 +56,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         Manager of inward transportation of material for the construction of the building.
     construction_energy_product : 
 
+    building_data_standard: {'RICS', 'ASHRAE'}
+        building strnadard used for 
+
     """
 
     def __init__(self):
@@ -78,6 +82,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.eol_impact_database = None
         self.eol_transport_dataset = None
         self.transportation_manager = None
+        self.building_data_standard = 'RICS'
 
         self.construction_energy_product = None
         self.operational_energy_product = None
@@ -286,6 +291,16 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return self
     
+    def set_building_data_standard(self, standard):
+        """ Set standard used for service lives and waste rates.
+        
+        Parameters
+        ----------
+        standard: {'RICS', 'ASHRAE'}
+            building strnadard used for 
+        """
+        self.building_data_standard = standard
+    
     def set_scenario(self, name):
         """ Create new scenario for the building.
         
@@ -308,6 +323,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.set_eol_process_impact_database()
         self.set_eol_demolition_impact_database()
         self.set_eol_transport_dataset()
+        self.set_building_data_standard('RICS')
 
         return self
     
@@ -391,7 +407,17 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Life span of the building in years.
         """
         return self.life_span
+
+    def get_building_data_standard(self):
+        """ Get standard used for service lives and waste rates.
         
+        Returns
+        -------
+        str
+            building strnadard used for 
+        """
+        return self.building_data_standard
+
     def get_floor(self, floor_no):
         """ Get the floor specified.
 

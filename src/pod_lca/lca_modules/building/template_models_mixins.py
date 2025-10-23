@@ -6,12 +6,13 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ...units import UNITS_MAP
+from ...utilities import config
 
 
 class TemplateModels:
 
     @classmethod
-    def from_template_model(cls, name, type, location, built_year, life_span, file_path, building_data):
+    def from_template_model(cls, name, location, built_year, life_span, building_data):
         """ Build a building from a template model data given in a CSV file.
         
         Parameters
@@ -36,23 +37,25 @@ class TemplateModels:
         ~pod_lca.buildings.Building
             Building built.
         """
-        building = cls.new(name, type, location, built_year, life_span)
+        building = cls.new(name,
+                           type=building_data['building_type'],
+                           location=location, 
+                           built_year=built_year, 
+                           life_span=life_span)
         building.set_databases()
 
-        building.set_template_model(file_path, building_data)
+        building.set_template_model(building_data)
 
         return building
     
     # ================================
     # Setters
-    # ================================   
-    def set_template_model(self, file_path, building_data):
+    # ================================
+    def set_template_model(self, building_data):
         """ Set attributes to an existing building.
         
         Parameters
         ----------
-        file_path : int
-            File path to template model bill of material list.
         building_data : dict
             Dictionary provding building data
         """
@@ -68,7 +71,10 @@ class TemplateModels:
                                          construction_electricity_consumption=construction_energy_use, 
                                          electricity_unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
 
-        self.make_structure('from template', template_bom=file_path)
+        template_model = building_data['building_type'] + '_' + building_data['structure_type']
+        template_bom_path = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (config['setup']['building']['TEMPLATE_BOM_PREFIX'] + template_model + '.csv')
+        
+        self.make_structure('from template', template_bom=template_bom_path)
         self.make_envelope()    
 
         return self

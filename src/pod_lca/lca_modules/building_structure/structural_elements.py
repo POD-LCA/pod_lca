@@ -6,6 +6,8 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..building import Assembly
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class StructuralElement(Assembly):
@@ -44,6 +46,27 @@ class StructuralElement(Assembly):
     def set_floor(self):
         pass
 
+    def set_service_life(self, part):
+        """ Set the service life of the assembly.
+
+        Parameters
+        ----------
+        part : {'superstructure', 'substructure'}
+            Part of the structure the assembly belongs to
+        """
+        building = self.get_building()
+        building_standard = building.get_building_data_standard()
+
+        match building_standard:
+            case 'RICS':
+                data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_SERVICE_LIFE'], 'POD|LCA RSL Category')
+            case 'ASHRAE':
+                data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_SERVICE_LIFE'], 'POD|LCA RSL Category')
+
+        service_life = data[part]['service_life']
+        
+        return super().set_service_life(service_life)
+
     def get_capacity(self):
         pass
 
@@ -53,6 +76,7 @@ class StructuralElement(Assembly):
 
 class Foundation(StructuralElement):
 
+
     def __init__(self):
         super().__init__()
 
@@ -60,6 +84,7 @@ class Foundation(StructuralElement):
     def create(cls, name, structure, materials):
 
         foundation_element = super().create(name, structure.get_parent(), materials)
+        foundation_element.set_service_life('substructure')
         structure.foundations.append(foundation_element)
 
         return foundation_element
@@ -78,6 +103,7 @@ class Beam(StructuralElement):
     def create(cls, name, structure, materials):
 
         beam = super().create(name, structure.get_parent(), materials)
+        beam.set_service_life('superstructure')
         structure.beams.append(beam)
 
         return beam
@@ -91,6 +117,7 @@ class Column(StructuralElement):
     def create(cls, name, structure, materials):
 
         column = super().create(name, structure.get_parent(), materials)
+        column.set_service_life('superstructure')
         structure.columns.append(column)
 
         return column
@@ -104,9 +131,24 @@ class Slab(StructuralElement):
     def create(cls, name, structure, materials):
 
         slab = super().create(name, structure.get_parent(), materials)
+        slab.set_service_life('superstructure')
         structure.slabs.append(slab)
 
         return slab
 
+class Wall(StructuralElement):
+
+    def __init__(self):
+        super().__init__()
+
+    @classmethod
+    def create(cls, name, structure, materials):
+
+        wall = super().create(name, structure.get_parent(), materials)
+        wall.set_service_life('superstructure')
+        structure.columns.append(wall)
+
+        return wall
+    
 if __name__ == '__main__':
     pass

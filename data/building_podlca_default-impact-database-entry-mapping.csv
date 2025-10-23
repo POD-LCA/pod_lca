@@ -1,0 +1,73 @@
+template model material,impact database entry,Geographic Represntativeness,Technological Representativeness,Product Representativeness,Temporal Represntativeness,Data Granularity,Verifiability
+"2.5"" XPS insulation","Extruded polystyrene (XPS) board, ≤25 psi",7,6,4,4,3,5
+"3.5"" Mineral Wool insulation",Mineral wool blanket,7,6,4,4,3,5
+"3/4"" Brick",Clay brick,7,6,4,4,3,5
+"3/8"" Synthetic Stucco",Expanded polystyrene (EPS) Type I,7,6,4,4,3,5
+"4.5"" Mineral Wool insulation",Mineral wool blanket,7,6,4,4,3,5
+"4"" granite veneer",Clay brick,7,1,2,4,3,5
+"4"" mineral wool insulation",Mineral wool blanket,7,6,4,4,3,5
+"5"" mineral wool insulation",Mineral wool blanket,7,6,4,4,3,5
+"6"" Galvanized Steel Stud Framing",Cold-formed steel framing,7,6,4,4,3,5
+"6"" galvanized steel stud framing",Cold-formed steel framing,7,6,4,4,3,5
+"6"" Galvanized steel stud framing",Cold-formed steel framing,7,6,4,4,3,5
+"6"" x 1' Tulipwood/Poplar Lumber",Softwood Lumber,7,1,2,4,3,5
+Acrylic latex paint,,null,null,null,null,null,null
+Aluminum Curtain Wall System,"Aluminum extrusions, mill finish",7,1,2,4,3,5
+Aluminum extrusion,"Aluminum extrusions, mill finish",7,6,4,4,3,5
+AVB,Fiberglass board,7,1,2,4,3,5
+AVB membrane,"SBS-modified bitumen roofing membrane, installation: self adhered",7,1,2,4,3,5
+AVB Membrane,"SBS-modified bitumen roofing membrane, installation: self adhered",7,1,2,4,3,5
+Brick,Clay brick,7,6,4,4,3,5
+Casement Window (glass + frame),Insulated glazing unit (IGU),7,1,2,4,3,5
+CLT (Cross laminated timber),"Cross laminated timber (CLT), North America",7,6,4,4,3,5
+Coarse aggregate,,null,null,null,null,null,null
+Composite wood I-joist,"Wood I-joist, 300mm (≅11-7/8"")",7,6,4,4,3,5
+Double glazing,Insulated glazing unit (IGU),7,6,4,4,3,5
+Double pane IGU,Insulated glazing unit (IGU),7,6,4,4,3,5
+Enamel Paint,,null,null,null,null,null,null
+EPDM membrane,"EPDM membrane roofing, non-reinforced, 45 mil",7,6,4,4,3,5
+"Expanded polystyrene (EPS), board",Expanded polystyrene (EPS) Type I,7,6,4,4,3,5
+"Fiberglass blanket insulation, paper faced","Fiberglass board",7,6,4,4,3,5
+Fluoropolymer coating,,null,null,null,null,null,null
+"Fluoropolymer coating, metal stock",,null,null,null,null,null,null
+Formed Steel Sheet,"Steel plate, fabricated",7,6,4,4,3,5
+Galvanized Steel Backer Tray,"Steel plate, fabricated",7,1,2,4,3,5
+Galvanized steel shelf angle with knife plate,"Hot-rolled sections, fabricated",7,1,2,4,3,5
+Galvanized Steel Support,Cold-formed steel framing,7,1,2,4,3,5
+Galvanized steel support system,Cold-formed steel framing,7,1,2,4,3,5
+Galvanized Steel Support System,Cold-formed steel framing,7,1,2,4,3,5
+Glass fiber mesh,Fiberglass blanket,7,1,2,4,3,5
+Glass Fiber Reinforced Concrete (GFRC) Panel,"Ready-mixed concrete, USA, National, 2500 psi",7,1,2,4,3,5
+"Glazing, double pane IGU",Insulated glazing unit (IGU),7,6,4,4,3,5
+Glue laminated timber (Glulam),Glue laminated timber (GLT),7,6,4,4,3,5
+Gypsum Wall Board,"Gypsum board, 1/2 in",7,6,4,4,3,5
+Gypsum wall board,"Gypsum board, 1/2 in",7,6,4,4,3,5
+Gypsum wall Board,"Gypsum board, 1/2 in",7,6,4,4,3,5
+IGU spacer,Insulated glazing unit (IGU),7,1,2,4,3,5
+Insulated 24 ga. steel sandwich panel with polyurethane foam,"Insulated metal panel (IMP), 2"" thick",7,6,4,4,3,5
+Light wood framing,Softwood Lumber,7,1,2,4,3,5
+"Lightweight concrete, 5000 psi","Ready-mixed concrete, USA, National, LW 5000 psi",7,6,4,4,3,5
+Low-e coating,,null,null,null,null,null,null
+"Normalweight Concrete, 3000 psi","Ready-mixed concrete, USA, National, 3000 psi",7,6,4,4,3,5
+"Normalweight concrete, 4000 psi","Ready-mixed concrete, USA, National, 4000 psi",7,6,4,4,3,5
+"Normalweight concrete, 5000 psi","Ready-mixed concrete, USA, National, 5000 psi",7,6,4,4,3,5
+"Normalweight concrete, 6000 psi","Ready-mixed concrete, USA, National, 6000 psi",7,6,4,4,3,5
+Oriented strandboard (OSB),Oriented strandboard (OSB),7,6,4,4,3,5
+Polyisocyanurate board,"Polyiso, aluminum foil facer",7,6,4,4,3,5
+SBS modified asphalt shingles,SBS-modified bitumen roofing membrane,7,6,4,4,3,5
+"Self-adhering, polymer-modified asphalt sheet underlayment","SBS/APP-modified bitumen roofing membrane, hybrid self-adhered SBS base sheet and torch-applied APP",7,1,2,4,3,5
+Sheathing,Wood sheathing (includes plywood and OSB),7,6,4,4,3,5
+Stainless steel fastener,"Hot-rolled sections, fabricated",7,1,2,4,3,5
+Stainless Steel Fasteners,"Hot-rolled sections, fabricated",7,1,2,4,3,5
+Steel Curtain Wall System,Curtain wall ,7,1,2,4,3,5
+"Steel decking, galvanized",Steel deck,7,6,4,4,3,5
+"Steel, hot rolled structural steel","Hot-rolled sections, unfabricated",7,6,4,4,3,5
+"Steel, reinforcing rod","Rebar, fabricated",7,6,4,4,3,5
+"Steel, welded wire mesh","Steel plate, fabricated",7,6,4,4,3,5
+Thermal Break,,null,null,null,null,null,null
+Triple pane IGU,Insulated glazing unit (IGU),7,6,4,4,3,5
+Type N Mortar,Masonry cement,7,6,4,4,3,5
+Type S mortar,Masonry cement,7,6,4,4,3,5
+Type S Mortar,Masonry cement,7,6,4,4,3,5
+Water based stain,,null,null,null,null,null,null
+"Window frame, vinyl, fixed",Curtain wall ,7,6,4,4,3,5

@@ -9,6 +9,7 @@ from .structural_elements import Foundation
 from .structural_elements import Beam
 from .structural_elements import Column
 from .structural_elements import Slab
+from .structural_elements import Wall
 from .building_structure import BuildingStructure
 from .concrete_building_structure import ConcreteStructure
 from .clt_building_structure import CLTStructure
