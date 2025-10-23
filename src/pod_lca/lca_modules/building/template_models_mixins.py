@@ -11,7 +11,7 @@ from ...units import UNITS_MAP
 class TemplateModels:
 
     @classmethod
-    def from_template_model(cls, name, type, location, built_year, life_span, file_path, building_data):
+    def from_template_model(cls, name, type, location, built_year, life_span, file_path, building_data, env_constructions_path, operational_sys_path):
         """ Build a building from a template model data given in a CSV file.
         
         Parameters
@@ -30,6 +30,10 @@ class TemplateModels:
             File path to template model bill of material list.
         building_data : dict
             Dictionary provding building data
+        env_constructions_path: str
+            File path to envelope constructions IDF file
+        operational_sys_path: str
+            File path to operational systems IDF file
         
         Returns
         -------
@@ -38,15 +42,17 @@ class TemplateModels:
         """
         building = cls.new(name, type, location, built_year, life_span)
         building.set_databases()
+        
+        building.read_constructions_data(env_constructions_path)
+        building.read_material_properties_data(env_constructions_path)
 
-        building.set_template_model(file_path, building_data)
-
+        building.set_template_model(file_path, building_data, operational_sys_path)
         return building
     
     # ================================
     # Setters
     # ================================   
-    def set_template_model(self, file_path, building_data):
+    def set_template_model(self, file_path, building_data, operational_sys_path):
         """ Set attributes to an existing building.
         
         Parameters
@@ -55,6 +61,8 @@ class TemplateModels:
             File path to template model bill of material list.
         building_data : dict
             Dictionary provding building data
+        operational_sys_path: str
+            File path to operational systems IDF file
         """
         self.add_floors(building_data['no_floors'], 
                         building_data['f2f_height'], 
@@ -69,7 +77,7 @@ class TemplateModels:
                                          electricity_unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
 
         self.make_structure('from template', template_bom=file_path)
-        self.make_envelope()    
+        self.make_envelope('from template', operational_sys_path=operational_sys_path)    
 
         return self
 
