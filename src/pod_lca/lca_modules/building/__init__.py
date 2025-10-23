@@ -16,6 +16,7 @@ from .use_mixins import UseMixins
 from .operational_energy_mixins import OperationalMixins
 from .envelope_mixins import EnvelopeMixins
 from .data_mixins import DataMixins
+from .template_models_mixins import TemplateModels
 from .floor import Floor
 from .assembly import Assembly
 from .building import Building

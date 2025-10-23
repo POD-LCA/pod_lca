@@ -352,8 +352,9 @@ class Unit:
                 for component_in, component_out in zip(components_in, components_out): # it is assumed components of in and out are in same order
                     conversion_factor *= component_in.convert_to(component_out)
                 return conversion_factor
-            
+    
         else:
+            # TODO: implement simplify method. e.g., unit with mass per meter-feet to be simplified to mass with a conversion factor corresponding to the feet/meter canceling 
             raise TypeError(f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible.")
         
     @staticmethod

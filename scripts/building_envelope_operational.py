@@ -50,7 +50,7 @@ b = Building.from_parameters(name='test',
                              floor_plan=[[0,0], [x/2, -y/4], [x,0], [x,y], [x/2, y+(y/4)], [0,y]], 
                              floors_below_grade=num_below_grade, 
                              geometry_units=METER)
-
+b.run_eplus = True
 
 
 # Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

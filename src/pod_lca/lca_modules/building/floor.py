@@ -7,8 +7,12 @@ __version__ = "0.1.0"
 
 from shapely.affinity import scale
 from shapely.geometry import box
+from shapely import Polygon
 
+from ...units import FEET
 from ...units import METER
+from ...units import CUBIC_FEET
+from ...units import CUBIC_METER
 
 
 class Floor:
@@ -211,16 +215,37 @@ class Floor:
             Unit of measurement           
         """ 
         return self.geometry_unit
+    
+    def get_area(self):
+        """ Get the floor area.
+        
+        Returns
+        -------
+        float
+            Area of the floor.           
+        """ 
+        return Polygon(self.get_floor_plan()).area
 
     def get_volume(self):
         """ Get the volume of the floor.
         
         Returns
         -------
-        float
-            Volume of the floor.            
+        :class:`float`
+            Volume of the floor.
+        :class:`~pod_lca.units.Unit`
+            Unit of measurement of volume.       
         """
-        return self.get_height() * self.get_floor_plan().area()
+        volume = self.get_height() * self.get_area()
+
+        if self.get_geometry_unit() is METER:
+            vol_unit = CUBIC_METER
+        elif self.get_geometry_unit() is FEET:
+            vol_unit = CUBIC_FEET
+        else:
+            raise TypeError("Building Geometry to be in meters or feet.")
+        
+        return volume, vol_unit
     
     # ================================
     # Add

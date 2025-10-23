@@ -21,9 +21,14 @@ from ..operational.light import  DaylightingReferencePoint
 from ..operational.node_list import  NodeList
 from ..operational.read_write import read_results_file
 from ..operational.read_write import write_idf_from_building
-from ...units import KILO
+from ...units import FEET
+from ...units import METER
+from ...units import SQUARE_FEET
+from ...units import SQUARE_METER
 from ...units import UNITS_MAP
 from ...units import WATT_HOUR
+from ...utilities import config
+from ...utilities import DataImporter
 
     
 class OperationalMixins:
@@ -40,11 +45,13 @@ class OperationalMixins:
         """
         return self.operational_energy_product
 
-    def get_operational_electricity_usasge(self, summed_at='year', group_by_category=True, group_by_zone=False, unit=WATT_HOUR):
+    def get_operational_electricity_usasge(self, method='EUI', summed_at='year', group_by_category=True, group_by_zone=False, unit=WATT_HOUR):
         """ Get the operational electricity demands of the building.
 
         Parameters
         ----------
+        method : {'eplus', 'EUIs'} 
+            How operation electricity to be computed.
         summed_at : {'year', 'month'}
             Freequency at whcih the energy plus results are summed.
         group_by_category : bool
@@ -60,32 +67,64 @@ class OperationalMixins:
             B6 impacts of the building.
         """
         electricity_usage = defaultdict(lambda: defaultdict(float))
-        for tk, item in self.energy_plus_results.items():
+
+        if method == 'EUIs': 
+            eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[self.get_building_type()]
+            eui = float(eui_data['eui'])
             
+            total_area = 0.0
+            for floor_no in range(1, self.get_no_floors() + 1):
+                total_area += self.get_floor(floor_no).get_area()
+
+                if floor_no == self.get_no_floors():
+                    floor_geom_unit = self.get_floor(floor_no).get_geometry_unit()
+                    if  floor_geom_unit is METER:
+                        area_unit = SQUARE_METER
+                    elif floor_geom_unit is FEET:
+                        area_unit = SQUARE_FEET
+                    else:
+                        raise TypeError("Building Geometry to be in meters or feet.")
+                
+            eui_unit = UNITS_MAP[eui_data['unit']]
+            energy_unit = eui_unit * area_unit
+            conversion_factor = energy_unit.convert_to(unit)
+
             if summed_at == 'year':
-                time = 'year' 
+                electricity_usage['year']['total'] = eui * total_area * conversion_factor
             elif summed_at == 'month':
-                time = tk[-2:]
+                for month in range(12):  
+                    electricity_usage[str(month + 1).zfill(2)]['total'] = eui * total_area * conversion_factor / 12
             else:
                 raise ValueError('Summed at time not recognized.')
-            
-            for zone, values in item.items():
-                for category in ['heating', 'lighting', 'cooling']:
-                    conversion_factor = UNITS_MAP[self.energy_plus_units[zone][category]].convert_to(unit)
 
-                    if group_by_category and group_by_zone:
-                        name = zone + '-' + category
-                    elif group_by_category:
-                        name = category
-                    elif group_by_zone:
-                        name = zone
-                    else:
-                        name = None
+        elif method == 'eplus':
 
-                    if name is None:  
-                        electricity_usage[time]['total'] += values[category] * conversion_factor
-                    else:
-                        electricity_usage[time][name] += values[category] * conversion_factor
+            for tk, item in self.energy_plus_results.items():
+                
+                if summed_at == 'year':
+                    time = 'year' 
+                elif summed_at == 'month':
+                    time = tk[-2:]
+                else:
+                    raise ValueError('Summed at time not recognized.')
+                
+                for zone, values in item.items():
+                    for category in ['heating', 'lighting', 'cooling']:
+                        conversion_factor = UNITS_MAP[self.energy_plus_units[zone][category]].convert_to(unit)
+
+                        if group_by_category and group_by_zone:
+                            name = zone + '-' + category
+                        elif group_by_category:
+                            name = category
+                        elif group_by_zone:
+                            name = zone
+                        else:
+                            name = None
+
+                        if name is None:  
+                            electricity_usage[time]['total'] += values[category] * conversion_factor
+                        else:
+                            electricity_usage[time][name] += values[category] * conversion_factor
 
         return electricity_usage
 
@@ -112,7 +151,7 @@ class OperationalMixins:
 
         self.get_operational_electricity_product()._inventories_uptodate = False
 
-        return self
+        return self   
        
     def make_layers_dict(self):
         """ Makes a dictionary containing all unique layers, with names, materials and

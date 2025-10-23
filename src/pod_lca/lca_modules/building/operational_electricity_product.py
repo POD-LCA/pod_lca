@@ -218,10 +218,15 @@ class OperationalElectricityProduct:
         """ Set the impacts and emissions of the operational energy consmuption.
         """
         building = self.get_building()
-        if building.energy_plus_results == None:
-            building.run_operational_energy_model()
 
-        annual_electricity_usage = building.get_operational_electricity_usasge(summed_at='year', 
+        method = 'EUIs'
+        if building.run_eplus:
+            if building.energy_plus_results == None:
+                building.run_operational_energy_model()
+            method = 'eplus'
+
+        annual_electricity_usage = building.get_operational_electricity_usasge(method,
+                                                                               summed_at='year', 
                                                                                group_by_category=True,
                                                                                group_by_zone=False,
                                                                                unit=self.get_unit())

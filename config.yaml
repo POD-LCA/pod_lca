@@ -107,6 +107,7 @@ file_paths:
     INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
   building:
     DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
+    EUI: data/building_podlca_eui.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 
