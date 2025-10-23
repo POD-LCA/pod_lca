@@ -5,6 +5,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ...units import MEGA
+from ...units import WATT_HOUR
 from ...units import UNITS_MAP
 from ...utilities import config
 
@@ -12,7 +14,7 @@ from ...utilities import config
 class TemplateModels:
 
     @classmethod
-    def from_template_model(cls, name, type, location, built_year, life_span, file_path, building_data, env_constructions_path, operational_sys_path):
+    def from_template_model(cls, name, location, built_year, life_span, building_data):
         """ Build a building from a template model data given in a CSV file.
         
         Parameters
@@ -47,19 +49,15 @@ class TemplateModels:
                            built_year=built_year, 
                            life_span=life_span)
         building.set_databases()
-        
-        building.read_constructions_data(env_constructions_path)
-        building.read_material_properties_data(env_constructions_path)
 
         building.set_template_model(building_data)
 
-        building.set_template_model(file_path, building_data, operational_sys_path)
         return building
     
     # ================================
     # Setters
     # ================================   
-    def set_template_model(self, file_path, building_data, operational_sys_path):
+    def set_template_model(self, building_data):
         """ Set attributes to an existing building.
         
         Parameters
@@ -85,6 +83,11 @@ class TemplateModels:
         template_bom_path = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (config['setup']['building']['TEMPLATE_BOM_PREFIX'] + template_model + '.csv')
         
         self.make_structure('from template', template_bom=template_bom_path)
+        
+        # TODO: chose method based on templates or 'in built'
+        self.read_constructions_data()
+        self.read_material_properties_data()
+        operational_sys_path = config['file_paths']['operational']['SYSTEMS']
         self.make_envelope('from template', operational_sys_path=operational_sys_path)    
 
         return self

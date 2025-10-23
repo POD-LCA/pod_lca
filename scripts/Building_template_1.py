@@ -20,16 +20,11 @@ current_folder = Path(__file__).resolve().parents[0]
 my_location = Location.from_str("98126, Seattle")
 template_model_data = DataImporter.json_to_dict(current_folder / 'Template_Model_data.json')
 
-env_constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
-operational_sys_path = config['file_paths']['operational']['SYSTEMS']
-
 my_building = Building.from_template_model(name='template building',
                                            location=my_location, 
                                            built_year=2025,
                                            life_span=60,
-                                           building_data=template_model_data,
-                                           env_constructions_path=env_constructions_path,
-                                           operational_sys_path=operational_sys_path)
+                                           building_data=template_model_data)
 
 
 # plot_building(my_building)

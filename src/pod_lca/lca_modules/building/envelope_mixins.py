@@ -4,6 +4,12 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from ..building_envelope import Envelope
+from ..building_envelope import Wall
+from ..building_envelope import Floor
+from ..building_envelope import Ceiling
+from ..building_envelope import Window
+from ..geometry import window_surfaces_from_wwr
 from ..operational import find_constructions
 from ..operational import find_materials
 from ..operational import find_materials_air_gap
@@ -11,25 +17,19 @@ from ..operational import find_no_mass_materials
 from ..operational import find_gas_materials
 from ..operational import find_glazing_materials
 from ..operational import OperationalObject
-
-from ..geometry import window_surfaces_from_wwr
-
-from ..building_envelope import Envelope
-from ..building_envelope import Wall
-from ..building_envelope import Floor
-from ..building_envelope import Ceiling
-from ..building_envelope import Window
-
-
-
-
+from ...utilities import config
 
 
 class EnvelopeMixins():
-    def read_constructions_data(self, path):
+    def read_constructions_data(self, path=None):
+        if path is None:
+            path = config['file_paths']['operational']['CONSTRUCTIONS']
+        
         find_constructions(path, self.idf_constructions_data)
 
-    def read_material_properties_data(self, path):
+    def read_material_properties_data(self, path=None):
+        if path is None:
+            path = config['file_paths']['operational']['SYSTEMS']
         find_materials(path, self.idf_material_properties)
         find_materials_air_gap(path, self.idf_material_properties)
         find_no_mass_materials(path, self.idf_material_properties)
