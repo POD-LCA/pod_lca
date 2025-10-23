@@ -555,9 +555,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return self
 
-    def make_envelope(self):
-
-        pass
+    def make_envelope(self, method, operational_sys_path):
+        if method == 'from template':
+            self.create_envelopes_from_template(operational_sys_path)
+        else:
+            raise ValueError('Method of creating structure is not recognized.')
 
     def add_assembly(self, assembly):
         """ Add a assembly to the building.

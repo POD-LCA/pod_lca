@@ -84,7 +84,7 @@ class Envelope:
 
     def add_construction(self, construction):
         con_dict = self.construction_map[construction.__type__]
-        key = '{}_{}'.format(construction.__type__, len(con_dict))
+        key = '{}_{}'.format(construction.__type__.lower(), len(con_dict))
         con_dict[key] = construction
 
     def add_window(self, window, wall_key):
