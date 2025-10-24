@@ -25,20 +25,20 @@ class DataMixins:
             "A1-A3": {},
             "A4": {},
             "A5": {},
-            "B6": {},
+            "B4": {},
             "C1-C4": {}
         }
         for assembly in self.get_assemblies():
             results["A1-A3"][assembly.get_name()] = 0.0
             results["A4"][assembly.get_name()] = 0.0
             results["A5"][assembly.get_name()] = 0.0
-            results["B6"][assembly.get_name()] = 0.0
+            results["B4"][assembly.get_name()] = 0.0
             results["C1-C4"][assembly.get_name()] = 0.0
             for material in assembly.get_materials():
                 results["A1-A3"][assembly.get_name()] += material.get_product_impacts().get_record(impact_cat)
                 results["A4"][assembly.get_name()] += material.get_transportation_impacts().get_record(impact_cat)
                 results["A5"][assembly.get_name()] += material.get_construction_impacts().get_record(impact_cat)
-                results["B6"][assembly.get_name()] += material.get_replacement_impacts().get_record(impact_cat)
+                results["B4"][assembly.get_name()] += material.get_replacement_impacts().get_record(impact_cat)
                 results["C1-C4"][assembly.get_name()] += material.get_eol_impacts().get_record(impact_cat)
     
         return results
