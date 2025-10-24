@@ -69,15 +69,14 @@ class Envelope:
 
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
         bill_of_materials_walls = DataImporter.csv_to_dict(bom_file_path_walls)
+        bill_of_materials_windows = DataImporter.csv_to_dict(bom_file_path_windows)
         
         # FIXME: if the wwr to be calculated from these
         enclosure_walls = Construction.create('walls', building, None)
         enclosure_windows = Construction.create('windows', building, None)
 
-        for assembly in [enclosure_walls, enclosure_windows]:
-            for key in bill_of_materials_walls:
-                
-                item = bill_of_materials_walls[key]
+        for assembly, bom in zip([enclosure_walls, enclosure_windows], [bill_of_materials_walls, bill_of_materials_windows] ):
+            for item in bom.values():
                     
                 building_assembly = item['assembly'].lower().replace(" ", "_").replace(",", "")
                 if not item['qty'] == '': # TODO: better check for qty
