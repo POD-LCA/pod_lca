@@ -82,7 +82,6 @@ class ProductScopeMixins:
                     impacts.append(material.get_impacts())
                 else:
                     impacts += material.get_impacts()
-        # TODO: test with the envelope assemblies
 
         return impacts
 
@@ -107,7 +106,6 @@ class ProductScopeMixins:
                     emissions.append(material.get_emissions())
                 else:
                     emissions += material.get_emissions()
-        # TODO: test with the envelope assemblies
 
         return emissions
 
