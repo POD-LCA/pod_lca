@@ -10,7 +10,7 @@ from . import Beam
 from . import Column
 from . import Slab
 from . import Wall
-from ..building import Material
+from . import StructuralMaterial
 from ...units import UNITS_MAP
 from ...utilities import DataImporter
 from ...utilities import config
@@ -104,7 +104,7 @@ class BuildingStructure:
                 case _:
                     ValueError("Building assmebly not recognized.")
 
-            building_material = Material.new_structural_material(
+            building_material = StructuralMaterial.new(
                 parent=assembly_obj,
                 name=item['material'] + '_in_' + building_assembly, 
                 qty=float(item['qty']),

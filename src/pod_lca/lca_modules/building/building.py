@@ -16,6 +16,7 @@ from . import Scenario
 from . import TemplateModels
 from . import TransportationMixins
 from . import UseMixins
+from ..building_envelope import Envelope
 from ..building_structure import BuildingStructure
 from ..building_structure import ConcreteStructure
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
@@ -82,7 +83,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.eol_impact_database = None
         self.eol_transport_dataset = None
         self.transportation_manager = None
-        self.building_data_standard = 'RICS'
+        self.building_data_standard = None
 
         self.construction_energy_product = None
         self.operational_energy_product = None
@@ -158,6 +159,8 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Unit of measurement used in geometry definitions.
         logistic_type : {'local', 'global'}
             Transportation scope of the building material in construction.
+        # TODO: move above to kwargs
+        # TODO: add building data standard to kwargs
         
         Returns
         -------
@@ -323,7 +326,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.set_eol_process_impact_database()
         self.set_eol_demolition_impact_database()
         self.set_eol_transport_dataset()
-        self.set_building_data_standard('RICS')
+        self.set_building_data_standard(config['setup']['building']['DEFAULT_DATA_STANDARD'])
 
         return self
     
@@ -555,11 +558,38 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return self
 
-    def make_envelope(self, method, operational_sys_path):
-        if method == 'from template':
-            self.create_envelopes_from_template(operational_sys_path)
+    def make_envelope(self,  method, **kwargs):
+        """ Create the envelope of the building.
+        
+        Parameters
+        ----------
+        method : {'from geometry', 'from template'}
+            Method of structure generation.
+
+        Other Parameters
+        ----------------
+        template_bom_walls : str
+            File path to the bill-of-materials of the template model for opaque enclosure.
+        template_bom_windows : str
+            File path to the bill-of-materials of the template model for transparent enclosure.
+        operational_sys_path: str
+            File path to operational systems IDF file.         
+        """
+        if method == 'from geometry':
+            self.read_constructions_data()
+            self.read_material_properties_data()
+            # FIXME: consolidate the different thinkings in envelope by geometry and from template
+            envelope = self.create_envelopes_from_template(kwargs['operational_sys_path'])
+        elif method == 'from template':
+            envelope = Envelope.from_template(self, kwargs['template_bom_walls'], kwargs['template_bom_windows'])
         else:
-            raise ValueError('Method of creating structure is not recognized.')
+            raise ValueError('Method of creating envelope is not recognized.')
+        
+        
+        
+        self.envelope = envelope
+
+        return self
 
     def add_assembly(self, assembly):
         """ Add a assembly to the building.

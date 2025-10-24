@@ -64,8 +64,7 @@ class TemplateModels:
         ----------
         building_data : dict
             Dictionary provding building data
-        operational_sys_path: str
-            File path to operational systems IDF file
+
         """
         self.add_floors(building_data['no_floors'], 
                         building_data['f2f_height'], 
@@ -79,16 +78,21 @@ class TemplateModels:
                                          construction_electricity_consumption=construction_energy_use, 
                                          electricity_unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
 
-        template_model = building_data['building_type'] + '_' + building_data['structure_type']
-        template_bom_path = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (config['setup']['building']['TEMPLATE_BOM_PREFIX'] + template_model + '.csv')
+        template_bom_file_name_prefix = config['setup']['building']['TEMPLATE_BOM_PREFIX'] + building_data['building_type'] + '_'
+
+        template_bom_path_structure = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + building_data['structure_type'] + '.csv')
+        self.make_structure('from template', template_bom=template_bom_path_structure)
         
-        self.make_structure('from template', template_bom=template_bom_path)
-        
-        # TODO: chose method based on templates or 'in built'
-        self.read_constructions_data()
-        self.read_material_properties_data()
-        operational_sys_path = config['file_paths']['operational']['SYSTEMS']
-        self.make_envelope('from template', operational_sys_path=operational_sys_path)    
+        # FIXME: decide on check... optional parameter in method.. or drop this altogether
+        if self.run_eplus:
+            operational_sys_path = config['file_paths']['operational']['SYSTEMS']
+            self.make_envelope('from geometry', operational_sys_path=operational_sys_path)  
+        else:
+            template_bom_path_walls = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + building_data['enclosure-opaque'] + '.csv')   
+            template_bom_path_windows = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + building_data['enclosure-translucent'] + '.csv')       
+            self.make_envelope('from template', 
+                               template_bom_walls=template_bom_path_walls,
+                               template_bom_windows=template_bom_path_windows)
 
         return self
 

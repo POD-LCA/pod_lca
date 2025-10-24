@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from .scenario import Scenario
 from .material import Material
+from .assembly import Assembly
 from .operational_electricity_product import OperationalElectricityProduct
 from .end_of_life_mixins import EndOfLifeMixins
 from .product_scope_mixins import ProductScopeMixins
@@ -18,7 +19,7 @@ from .envelope_mixins import EnvelopeMixins
 from .data_mixins import DataMixins
 from .template_models_mixins import TemplateModels
 from .floor import Floor
-from .assembly import Assembly
+
 from .building import Building
 
 

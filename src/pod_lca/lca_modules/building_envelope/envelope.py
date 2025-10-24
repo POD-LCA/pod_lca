@@ -5,9 +5,15 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from ..building_envelope import Surface
+from . import Construction
+from . import Surface
+from . import EnvelopeMaterial
 from pod_lca.utilities import area_polygon
 from pod_lca.utilities import centroid
+from pod_lca.utilities import config
+from pod_lca.utilities import DataImporter
+from ...units import UNITS_MAP
+from ...utilities import log
 
 
 class Envelope:
@@ -40,6 +46,87 @@ class Envelope:
         envelope.name = 'Envelope_floor_{}'.format(floor.floor_no)
         return envelope
     
+    @classmethod
+    def from_template(cls, building, bom_file_path_walls, bom_file_path_windows):
+        """ Create a structure from a template model.
+        
+        Parameters
+        ----------
+        building : ~pod_lca.building.Building
+            Building for which the structure belong.
+        bom_file_path_walls : str
+            File path to bill of materials for opaque enclosure.
+        bom_file_path_windows : str
+            File path to bill of materials for transparent enclosure.
+
+        Returns
+        -------
+        ~pod_lca.building_structure.BuildingStructure
+            Structure created.
+        """
+        envelope = cls()
+        envelope.set_parent(building)
+
+        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
+        bill_of_materials_walls = DataImporter.csv_to_dict(bom_file_path_walls)
+        
+        # FIXME: if the wwr to be calculated from these
+        enclosure_walls = Construction.create('walls', building, None)
+        enclosure_windows = Construction.create('windows', building, None)
+
+        for assembly in [enclosure_walls, enclosure_windows]:
+            for key in bill_of_materials_walls:
+                
+                item = bill_of_materials_walls[key]
+                    
+                building_assembly = item['assembly'].lower().replace(" ", "_").replace(",", "")
+                if not item['qty'] == '': # TODO: better check for qty
+                    building_material = EnvelopeMaterial.new(
+                        parent=assembly,
+                        name=item['material'] + '_in_' + building_assembly,
+                        qty=float(item['qty']),
+                        unit=UNITS_MAP[item['unit']],
+                        material_database_entry=default_database_entry_map[item['material']]['impact database entry'],
+                        product_year=building.get_built_year(),
+                        service_life=item['POD|LCA RSL Category']
+                    )
+                    assembly.add_material(building_material)
+                else:
+                    log("Quantity not specified for {} in {}. Skipping.".format(item['material'], building_assembly), level='Warn')
+                
+                
+            # TODO:update component servie life based on materials
+        
+        return envelope
+
+    # ================================
+    # Setters
+    # ================================
+    def set_parent(self, parent):
+        """ Set the parent building of the envelope.
+        
+        Parameters
+        ----------
+        parent : ~pod_lca.building.Building
+            The building to which the envelope belong.
+        """
+        self.parent = parent
+
+        return self
+
+    # ================================
+    # Getters
+    # ================================
+    def get_parent(self):
+        """ Get the parent building of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.building.Building
+            The building to which the envelope belong.
+        """
+        return self.parent
+        
     @property
     def height(self):
         return self.floor.height
