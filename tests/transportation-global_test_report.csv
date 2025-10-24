@@ -1,22 +1,22 @@
-test name,product,sctg_code,qty,unit,destination,faf_zone,fr_mode,dms_mode,efficiency,fr_distance (Python tool),fr_distance (Manual calc),fr_distance_difference (%),dms_distance (Python tool),dms_distance (Manual calc),dms_distance_difference (%),distance_unit,Notes
-test_01,monumental or building stone,10,1,tonne,,,,,,18014.404,9745.224,59.57702315,645.1759358,554,15.20643186,km,
-test_02,monumental or building stone,10,1,tonne,,Europe,,,Low,9745,9745.224,0.002298588,601.0153382,554,8.141075989,km,
-test_03,Crushed stone,12,1,tonne,Arkansas,,,,,9745,9745.224,0.002298588,1407.36783,874.5,46.70453065,km,
-test_04,Crushed stone,12,1,tonne,Arkansas,Canada,Rail,,Median,1860.536651,1807.5,2.891827735,0,0,0,km,
-test_05,Crushed stone,12,1,tonne,,,,,,1232,9745.224,155.1070471,461.961047,685.95,39.02548958,km,
-test_06,Other chemical products and preparations,23,1,tonne,California,,Ocean,,,10571,13315.88,22.98232335,2182.815604,1356.34,46.7046774,km,
-test_07,Other chemical products and preparations,23,1,tonne,Pennsylvania,,Truck,,,N/A,200,N/A,N/A,1413.59.72,N/A,km,The transportation origin and transportation mode are inconsistant.
-test_08,Other chemical products and preparations,23,1,tonne,Maine,Rest of Americas,Truck,,,N/A,0,N/A,N/A,0,N/A,km,The transportation origin and transportation mode are inconsistant.
-test_09,machinery,34,1,tonne,New Mexico,,,,,14825,14825.26,0.001753779,2655.089132,1649.8,46.70453065,km,
-test_10,wood products,26,1,tonne,Alaska,,Air,,High,4936.693405,6920.35,33.45954851,0,0,0,km,
-test_11,natural sands,11,1,tonne,Alaska,Canada,Truck,,High,200,200,0,1971.173277,1224.8333,46.70453322,km,
-test_12,Crushed stone,12,1,tonne,Texas,,Truck,,Median,200,200,0,1090.852635,1982,58.0013083,km,
-test_13,monumental or building stone,10,1,tonne,Georgia,,Ocean,,High,6050,14825.26,84.07330016,301.0806917,312.05,3.578130563,km,
-test_14,monumental or building stone,10,1,tonne,Maryland,,Ocean,Barge,Low,6704,0,200,205.6937688,0,0,km,
-test_15,articles of base metal,33,25,kg,Nebraska,Canada,Ocean,,,N/A,0,N/A,N/A,0,N/A,km,Forced transportation mode not in dataset
-test_16,articles of base metal,33,0.25,tonne,Nebraska,Canada,Ocean,Rail,,2808,2152.024,26.45051717,2816.345,1750,46.70453065,km,
-test_17,wood products,26,7.98,tonne,New Mexico,,Rail,,,1818.219314,1911.7,5.012477655,0,0,0,km,
-test_18,wood products,26,3,tonne,Rhode Island,,Rail,,,N/A,1911.7,N/A,N/A,0,N/A,km,The transportation origin and transportation mode are inconsistant.
-test_19,furniture,39,2,tonne,Illinois,Europe,Air,,,7100.136037,6870,3.294685699,0,0,0,km,
-test_20,base metal,33,5,tonne,Hawaii,,Air,,Low,7857.855564,11630,38.71277088,0,0,0,km,
-test_21,logs and other wood in the rough,25,8.5,tonne,Oregon,Canada,Ocean,,Median,2808,2152.024,26.45051717,441.76383,274.5,46.70453065,km,
+test name,product,sctg_code,qty,unit,destination,faf_zone,fr_mode,dms_mode,efficiency,fr_distance (Python tool),fr_distance (Manual calc),fr_distance_difference (%),dms_distance (Python tool),dms_distance (Manual calc),dms_distance_difference (%),distance_unit,GWP(kg CO2 eq) Python tool,GWP(kg CO2 eq) Manual calc,GWP_difference (%),AP(kg SO2 eq) Python tool,AP(kg SO2 eq) Manual calc,AP_difference (%),EP(kg N eq) Python tool,EP(kg N eq) Manual calc,EP_difference (%),ODP(kg CFC-11 eq) Python tool,ODP(kg CFC-11 eq) Manual calc,ODP_difference (%),CO2(kg) Python tool,CO2(kg) Manual calc,CO2_difference (%),CH4(kg) Python tool,CH4(kg) Manual calc,CH4_difference (%),N2O(kg) Python tool,N2O(kg) Manual calc,N2O_difference (%),test status,Notes
+test_01,monumental or building stone,10,1,tonne,,,,,,18014.404,9745.224,59.57702315,645.1759358,554,15.20643186,km,195.0392949,0,200,2.63940849,0,200,0.257961727,0,200,7.48E-07,0,200,191.7142717,0,200,0.040226021,0,200,0.008279611,0,200,FAIL,
+test_02,monumental or building stone,10,1,tonne,,Europe,,,Low,9745,9745.224,0.002298588,601.0153382,554,8.141075989,km,132.0309826,0,200,1.650850047,0,200,0.155066025,0,200,4.56E-07,0,200,129.4979818,0,200,0.024466663,0,200,0.006962766,0,200,FAIL,
+test_03,Crushed stone,12,1,tonne,Arkansas,,,,,9745,9745.224,0.002298588,1407.36783,874.5,46.70453065,km,198.6640712,0,200,1.568657047,0,200,0.187724653,0,200,5.86E-07,0,200,194.0157852,0,200,0.031275576,0,200,0.014222507,0,200,FAIL,
+test_04,Crushed stone,12,1,tonne,Arkansas,Canada,Rail,,Median,1807.45908,1807.5,0.002263953,0,0,0,km,33.99876496,0,200,0.110302723,0,200,0.024011004,0,200,7.86E-08,0,200,33.62270588,0,200,0.006027637,0,200,0.000780386,0,200,FAIL,
+test_05,Crushed stone,12,1,tonne,,,,,,1232,9745.224,155.1070471,461.961047,685.95,39.02548958,km,50.11671072,0,200,0.236117061,0,200,0.036662824,0,200,1.23E-07,0,200,48.76429686,0,200,0.006507584,0,200,0.004413002,0,200,FAIL,
+test_06,Other chemical products and preparations,23,1,tonne,California,,Ocean,,,10571,13315.88,22.98232335,2182.815604,1356.34,46.7046774,km,273.2580185,0,200,1.788944489,0,200,0.233506192,0,200,7.48E-07,0,200,266.4490516,0,200,0.03982567,0,200,0.021468843,0,200,FAIL,
+test_07,Other chemical products and preparations,23,1,tonne,Pennsylvania,,Truck,,,N/A,200,N/A,N/A,1413.59.72,N/A,km,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,The transportation origin and transportation mode are inconsistant.
+test_08,Other chemical products and preparations,23,1,tonne,Maine,Rest of Americas,Truck,,,N/A,0,N/A,N/A,0,N/A,km,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,The transportation origin and transportation mode are inconsistant.
+test_09,machinery,34,1,tonne,New Mexico,,,,,14825,14825.26,0.001753779,2655.089132,1649.8,46.70453065,km,347.4746761,0,200,2.454802897,0,200,0.308985815,0,200,9.80E-07,0,200,339.0191509,0,200,0.052201024,0,200,0.026369314,0,200,FAIL,
+test_10,wood products,26,1,tonne,Alaska,,Air,,High,4936.693405,6920.35,33.45954851,0,0,0,km,3277.440745,0,200,7.924528389,0,200,2.68832305,0,200,1.04E-05,0,200,3260.958872,0,200,0.492594981,0,200,0.009907252,0,200,FAIL,
+test_11,natural sands,11,1,tonne,Alaska,Canada,Truck,,High,200,200,0,1971.173277,1224.8333,46.70453322,km,188.4733176,0,200,0.283252445,0,200,0.097364291,0,200,3.67E-07,0,200,182.7045075,0,200,0.019330662,0,200,0.019718071,0,200,FAIL,
+test_12,Crushed stone,12,1,tonne,Texas,,Truck,,Median,200,200,0,1090.852635,1982,58.0013083,km,113.6207215,0,200,0.171795398,0,200,0.058762468,0,200,2.21E-07,0,200,110.145136,0,200,0.011605312,0,200,0.011884048,0,200,FAIL,
+test_13,monumental or building stone,10,1,tonne,Georgia,,Ocean,,High,6050,14825.26,84.07330016,301.0806917,312.05,3.578130563,km,64.42564233,0,200,0.427914732,0,200,0.081439716,0,200,2.51E-07,0,200,63.15478053,0,200,0.013290168,0,200,0.003385641,0,200,FAIL,
+test_14,monumental or building stone,10,1,tonne,Maryland,,Ocean,Barge,Low,6704,0,200,205.6937688,0,0,km,57.72792875,0,200,1.106301474,0,200,0.091486851,0,200,2.54E-07,0,200,57.08143806,0,200,0.013726637,0,200,0.000983329,0,200,FAIL,
+test_15,articles of base metal,33,25,kg,Nebraska,Canada,Ocean,,,N/A,0,N/A,N/A,0,N/A,km,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,Forced transportation mode not in dataset
+test_16,articles of base metal,33,0.25,tonne,Nebraska,Canada,Ocean,Rail,,2152,2152.024,0.001115235,2816.345,1750,46.70453065,km,17.37290538,0,200,0.11922942,0,200,0.016180256,0,200,4.97E-08,0,200,17.17899077,0,200,0.003376155,0,200,0.000373876,0,200,FAIL,
+test_17,wood products,26,7.98,tonne,New Mexico,,Rail,,,1911.695317,1911.7,0.000244984,0,0,0,km,286.9566112,0,200,0.930977803,0,200,0.202657843,0,200,6.64E-07,0,200,283.7825947,0,200,0.050874506,0,200,0.006586621,0,200,FAIL,
+test_18,wood products,26,3,tonne,Rhode Island,,Rail,,,N/A,1911.7,N/A,N/A,0,N/A,km,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,0,N/A,N/A,The transportation origin and transportation mode are inconsistant.
+test_19,furniture,39,2,tonne,Illinois,Europe,Air,,,7100.136037,6870,3.294685699,0,0,0,km,11784.3429,0,200,28.49337855,0,200,9.666115456,0,200,3.73E-05,0,200,11725.08079,0,200,1.771171051,0,200,0.035622445,0,200,FAIL,
+test_20,base metal,33,5,tonne,Hawaii,,Air,,Low,7857.855564,11630,38.71277088,0,0,0,km,39125.8691,0,200,94.60249156,0,200,32.09302134,0,200,0.000123976,0,200,38929.1096,0,200,5.880566044,0,200,0.118272111,0,200,FAIL,
+test_21,logs and other wood in the rough,25,8.5,tonne,Oregon,Canada,Ocean,,Median,2152,2152.024,0.001115235,441.76383,274.5,46.70453065,km,470.8954484,0,200,3.092633185,0,200,0.403049985,0,200,1.29E-06,0,200,459.1728598,0,200,0.068715076,0,200,0.036945744,0,200,FAIL,
