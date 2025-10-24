@@ -58,6 +58,7 @@ UNITS_MAP.update({
                     'kWh': KILO * WATT_HOUR,
                     'MWh': MEGA * WATT_HOUR,
                     'kBtu/ft2': KILO * BTU / SQUARE_FEET,
+                    'kWh/ft2': KILO * WATT_HOUR / SQUARE_FEET,
                     'Item(s)': ITEM,
                     'kg C': KG_CARBON,
                     'kg CO2': KG_CARBON_DIOXIDE,
