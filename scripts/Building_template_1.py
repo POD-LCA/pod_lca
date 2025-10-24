@@ -29,10 +29,10 @@ my_building = Building.from_template_model(name='template building',
 
 # plot_building(my_building)
 
-my_building.write_idf()
-eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-wea = config['file_paths']['operational']['SEATTLE']
-my_building.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
+# my_building.write_idf()
+# eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+# wea = config['file_paths']['operational']['SEATTLE']
+# my_building.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
 
 print(my_building.get_impacts(scope='product',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}

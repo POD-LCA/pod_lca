@@ -18,6 +18,7 @@ AVB,Fiberglass board,7,1,2,4,3,5
 AVB membrane,"SBS-modified bitumen roofing membrane, installation: self adhered",7,1,2,4,3,5
 AVB Membrane,"SBS-modified bitumen roofing membrane, installation: self adhered",7,1,2,4,3,5
 Brick,Clay brick,7,6,4,4,3,5
+Generic Brick,Clay brick,7,6,4,4,3,5
 Casement Window (glass + frame),Insulated glazing unit (IGU),7,1,2,4,3,5
 CLT (Cross laminated timber),"Cross laminated timber (CLT), North America",7,6,4,4,3,5
 Coarse aggregate,,null,null,null,null,null,null
@@ -27,7 +28,8 @@ Double pane IGU,Insulated glazing unit (IGU),7,6,4,4,3,5
 Enamel Paint,,null,null,null,null,null,null
 EPDM membrane,"EPDM membrane roofing, non-reinforced, 45 mil",7,6,4,4,3,5
 "Expanded polystyrene (EPS), board",Expanded polystyrene (EPS) Type I,7,6,4,4,3,5
-"Fiberglass blanket insulation, paper faced","Fiberglass board",7,6,4,4,3,5
+"Fiberglass blanket insulation, paper faced","Fiberglass board
+",7,6,4,4,3,5
 Fluoropolymer coating,,null,null,null,null,null,null
 "Fluoropolymer coating, metal stock",,null,null,null,null,null,null
 Formed Steel Sheet,"Steel plate, fabricated",7,6,4,4,3,5
@@ -37,7 +39,8 @@ Galvanized Steel Support,Cold-formed steel framing,7,1,2,4,3,5
 Galvanized steel support system,Cold-formed steel framing,7,1,2,4,3,5
 Galvanized Steel Support System,Cold-formed steel framing,7,1,2,4,3,5
 Glass fiber mesh,Fiberglass blanket,7,1,2,4,3,5
-Glass Fiber Reinforced Concrete (GFRC) Panel,"Ready-mixed concrete, USA, National, 2500 psi",7,1,2,4,3,5
+Glass Fiber Reinforced Concrete (GFRC) Panel,"Ready-mixed concrete, USA, National, 2500 psi
+",7,1,2,4,3,5
 "Glazing, double pane IGU",Insulated glazing unit (IGU),7,6,4,4,3,5
 Glue laminated timber (Glulam),Glue laminated timber (GLT),7,6,4,4,3,5
 Gypsum Wall Board,"Gypsum board, 1/2 in",7,6,4,4,3,5
@@ -52,6 +55,7 @@ Low-e coating,,null,null,null,null,null,null
 "Normalweight concrete, 4000 psi","Ready-mixed concrete, USA, National, 4000 psi",7,6,4,4,3,5
 "Normalweight concrete, 5000 psi","Ready-mixed concrete, USA, National, 5000 psi",7,6,4,4,3,5
 "Normalweight concrete, 6000 psi","Ready-mixed concrete, USA, National, 6000 psi",7,6,4,4,3,5
+Normalweight concrete 6000 psi,"Ready-mixed concrete, USA, National, 6000 psi",7,6,4,4,3,5
 Oriented strandboard (OSB),Oriented strandboard (OSB),7,6,4,4,3,5
 Polyisocyanurate board,"Polyiso, aluminum foil facer",7,6,4,4,3,5
 SBS modified asphalt shingles,SBS-modified bitumen roofing membrane,7,6,4,4,3,5
@@ -71,3 +75,4 @@ Type S mortar,Masonry cement,7,6,4,4,3,5
 Type S Mortar,Masonry cement,7,6,4,4,3,5
 Water based stain,,null,null,null,null,null,null
 "Window frame, vinyl, fixed",Curtain wall ,7,6,4,4,3,5
+Generic 25mm Insulation,Expanded polystyrene (EPS) Type I,7,6,4,4,3,5

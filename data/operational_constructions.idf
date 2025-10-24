@@ -6,6 +6,7 @@ Construction,
 
 Construction,
   Rainscreen-Thinbrick,                             ! Name # Teresa's construction for res template
+  encl_rs_thinbrick,                                !- POD|LCA RSL Category
   Clay brick,                                       !- Layer 1            DONE!!!!
   Galvanized Steel Support System (air gap),        !- Layer 2      
   Expanded polystyrene (EPS) Type I - 1.5in,        !- Layer 3            DONE!!!!
@@ -106,7 +107,7 @@ Construction,
 Construction,
   Generic Exterior Wall,                                             !- Name
   Generic Brick,                                                     !- Layer 1
-  Structural concrete 6000 psi Pacific Southwest regional average,   !- Layer 2
+  Normalweight concrete 6000 psi,                                 !- Layer 2
   Generic 25mm Insulation,                                           !- Layer 3
   Generic Wall Air Gap,                                              !- Layer 4
   Generic Gypsum Board;                                              !- Layer 5
@@ -114,11 +115,11 @@ Construction,
 Construction,
   Generic Ground Slab,                    !- Name
   Generic 25mm Insulation,                !- Layer 1  R13LAYER,                               ! Tomas added layer
-  Structural concrete 6000 psi Pacific Southwest regional average;                    !- Layer 2
+  Normalweight concrete 6000 psi;                    !- Layer 2
 
 Construction,
   Generic Interior Ceiling,               !- Name
-  Structural concrete 6000 psi Pacific Southwest regional average,                    !- Layer 1
+  Normalweight concrete 6000 psi,                    !- Layer 1
   Generic Ceiling Air Gap,                !- Layer 2
   Generic Acoustic Tile;                  !- Layer 3
 
@@ -142,7 +143,7 @@ Construction,
   Generic Roof,                           !- Name
   Generic Roof Membrane,                  !- Layer 1
   Generic 25mm Insulation,                !- Layer 2
-  Structural concrete 6000 psi Pacific Southwest regional average,                    !- Layer 3
+  Normalweight concrete 6000 psi,                    !- Layer 3
   Generic Ceiling Air Gap,                !- Layer 4
   Generic Acoustic Tile;                  !- Layer 5
 
@@ -188,7 +189,7 @@ Construction,
 Construction,
   Insulated 8in Slab Floor,        !- Name
   Generic 25mm Insulation,                  !- Layer 1
-  Structural concrete 6000 psi Pacific Southwest regional average;      !- Layer 2
+  Normalweight concrete 6000 psi;      !- Layer 2
 
 Construction,
   Typical Insulated Metal Door-R3,        !- Name
@@ -268,7 +269,7 @@ Material,
   0.7;                                    !- Visible Absorptance
 
 Material,
-  Structural concrete 6000 psi Pacific Southwest regional average,      !- Name
+  Normalweight concrete 6000 psi,      !- Name
   MediumRough,                            !- Roughness
   0.2032,                                 !- Thickness {m}
   2.30845517442043,                       !- Conductivity {W/m-K}

@@ -47,12 +47,13 @@ setup:
     SOLAR_DISTRIBUTION: 'FullExteriorWithReflections'
   building:
     TEMPLATE_BOM_PREFIX: template-model_
+    DEFAULT_DATA_STANDARD: ASHRAE # Options: RICS, ASHRAE
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
     MIN_DQS: 1
   utilities:
-    LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
+    LOG_LEVEL: Warn # Options: Fatal, Error, Warn, Info, Debug, Trace
 
 file_paths:
   transportation:
