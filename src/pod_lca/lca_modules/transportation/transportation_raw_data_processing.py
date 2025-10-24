@@ -1,5 +1,7 @@
 import pandas as pd
 
+from pod_lca.utilities import config
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -20,7 +22,7 @@ def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.g
     input_file : str
         The path to the original FAF dataset CSV file. If None, downloads the dataset from the web.
     """
-    faf_dist_band = pd.read_csv(r"data\transportation_podlca_faf-dist-band.csv")
+    faf_dist_band = pd.read_csv(config['file_paths']['transportation']['FAF_DISTANCE_BANDS'])
 
     faf = pd.read_csv(input_file)
 
@@ -45,7 +47,6 @@ def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.g
     faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * 1.60934
     faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * 1.60934
 
-    # FIXME : get the mid of distnace band first...
     faf_merged['avr_dom_dist_km'] = (faf_merged['min_dom_dist_km'] + faf_merged['max_dom_dist_km']) / 2
     faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km','max_dom_dist_km','trade_type','dist_band' ], inplace=True)
 
@@ -60,7 +61,7 @@ def cfaf_preprocessing (input_path_cfaf , output_path_cfaf):
     """
     cfaf = pd.read_csv(input_path_cfaf)
 
-    cfaf_filtered = cfaf[(cfaf['Mode'] == 'RL') & 
+    cfaf_filtered = cfaf[(cfaf['Mode'] == 'RL') & # CFAF data only used for transportation by rail.
                          (cfaf['Year'] == 2017) & 
                          (cfaf['DestCtry'].isin(['UM'])) & 
                          (cfaf['OrigCtry'] == 'CA')]
@@ -150,22 +151,22 @@ if __name__ == "__main__":
     CFaf (Canadian Freight Analysis Framework) dataset: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
     CFS (Commodity Flow Survey) dataset: https://www.census.gov/programs-surveys/cfs.html
     """
-    # # Preprocessing Freight Analysis Framework (FAF) dataset
-    # # original data from: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
-    # input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
-    # output_path_faf = r"data\transportation_faf_dataset.csv"
-    # faf_preprocessing(input_path_faf, output_path_faf)
+    # Preprocessing Freight Analysis Framework (FAF) dataset
+    # original data from: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
+    input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
+    output_path_faf = r"data\transportation_faf_dataset.csv"
+    faf_preprocessing(input_path_faf, output_path_faf)
 
     # Preprocessing Canadian Freight Analysis Framework (CFaf) dataset
     # original data from: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
-    input_path_cfaf = r"C:\Users\kiun\OneDrive - UW\Documents\6_POD_LCA_Transportation\50-503-x_2017-csv-eng\CFAF_C2011-2017_Code_E.csv"
+    input_path_cfaf = r"C:\Users\mhtaba\Downloads\CFAF_C2011-2017_Code_E.csv"
     output_path_cfaf = r"data\transportation_cfaf_dataset.csv"
     cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
 
     # # Preprocessing Commodity Flow Survey (CFS) dataset
     # # original data from: https://www.census.gov/programs-surveys/cfs.html
-    # input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
-    # output_path_cfs = r"data\transportation_cfs_dataset.csv"
-    # cfs_preprocessing (input_path_cfs, output_path_cfs)
+    input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
+    output_path_cfs = r"data\transportation_cfs_dataset.csv"
+    cfs_preprocessing (input_path_cfs, output_path_cfs)
 
     # TODO: create option to download the datasets from the web if input_path is None

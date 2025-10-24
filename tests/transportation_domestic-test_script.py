@@ -77,7 +77,7 @@ for test in tqdm(test_dict):
         distance = transport_leg.get_travel_dist() * conversion_factor
     except Exception as e:
         # set results to N/A
-        output_dict[test]['distance (Python tool)'] = 'error'
+        output_dict[test]['distance (Python tool)'] = 'Error'
         output_dict[test]['distance (Manual calc)'] = test_dict[test]['distance']
         output_dict[test]['distance_unit'] = test_dict[test]['distance_unit']
         output_dict[test]['distance_difference (%)'] = 'N/A'
@@ -86,7 +86,7 @@ for test in tqdm(test_dict):
                 output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = 'N/A'
                 output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Manual calc'] = test_dict[test][inventory]
                 output_dict[test][inventory + '_difference (%)'] = 'N/A'
-        output_dict[test]['test status'] = 'PASS' if test_dict[test]['distance'] == 'error' else 'FAIL'
+        output_dict[test]['test status'] = 'PASS' if test_dict[test]['distance'] == 'Error' else 'FAIL'
         # Note error
         output_dict[test]['Notes'] = e
         continue
