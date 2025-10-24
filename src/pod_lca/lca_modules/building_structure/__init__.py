@@ -4,6 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from .structural_material import StructuralMaterial
 from .structural_elements import StructuralElement
 from .structural_elements import Foundation
 from .structural_elements import Beam

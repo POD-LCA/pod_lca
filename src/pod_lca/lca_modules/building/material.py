@@ -58,7 +58,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new_structural_material(cls, parent, name, qty, unit, material_database_entry, product_year):
+    def new(cls, parent, name, qty, unit, material_database_entry, product_year, service_life=None):
         """ Create new structural material.
         
         Parameters
@@ -87,7 +87,7 @@ class Material(Product):
         material.set_qty(qty)
         material.set_unit(unit)
 
-        material.set_service_life()
+        material.set_service_life(service_life)
 
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
@@ -101,18 +101,23 @@ class Material(Product):
 
         database = material.get_impact_database()
         data_entry = database.get_data_entry(material_database_entry)
-
+        
         material.set_sctg_code(data_entry['sctg code'])
         if not unit.get_qty_measured() == 'mass':
-            material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])  
+            material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
         material.set_eol_material(data_entry['eol material'], 
                                   data_entry['bio-based'] if 'bio-based' in data_entry else None)
         material.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
 
         material.set_production_year(product_year)
 
-        # set allied processes
-        material.set_transportation()
+        # set transportation process
+        if data_entry['sctg code'] in [999, '999', '', 'N/A', None]:
+            log(f"Material {name} has SCTG code unasigned, transportation not set.", level='Warn')
+        else:    
+            material.set_transportation()
+
+        # set allied processes    
         material.set_waste_product()
         material.set_replacement_material()
 
@@ -154,16 +159,19 @@ class Material(Product):
         material.set_impact_database_entry(material_database_entry)
         material.set_sctg_code(other.get_sctg_code())
         material.set_eol_material(other.get_eol_material())
-        material.set_density(other.get_density())
+        material.set_density(other.get_density(), other.get_density_unit())
         material.set_waste_rate(other.get_waste_rate())
         material.set_production_year(production_year)
 
-        material.set_transportation()
+        if other.get_sctg_code(digits=2) in [99, '99', '', 'N/A', None]:
+            log(f"Material {other.get_name()} has SCTG code unasigned, transportation not set.", level='Warn')
+        else:    
+            material.set_transportation()
+
         material.set_waste_product()
         material.set_replacement_material()
 
         return material
-
     # ================================
     # Setters
     # ================================
@@ -227,11 +235,7 @@ class Material(Product):
             building = self.get_building()
             building_standard = building.get_building_data_standard()
 
-            match building_standard:
-                case 'RICS':
-                    data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_WASTE_RATE'], 'POD|LCA Key')
-                case 'ASHRAE':
-                    data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_WASTE_RATE'], 'POD|LCA Key')
+            data = DataImporter.csv_to_dict(config['file_paths']['building'][building_standard + '_WASTE_RATE'], 'POD|LCA Key')
 
             if waste_rate_category in data:
                 self.waste_rate = float(data[waste_rate_category]['waste_rate'])
@@ -255,8 +259,23 @@ class Material(Product):
         """
         if service_life is None:
             self.service_life = self.get_parent().get_service_life()
-        else:
+        elif isinstance(service_life, str):
+            building_standard = self.get_building().get_building_data_standard()
+            service_life_mapping = DataImporter.csv_to_dict(config['file_paths']['building'][building_standard.upper() + '_SERVICE_LIFE'], 'POD|LCA RSL Category')
+            if service_life in service_life_mapping:
+                self.service_life = float(service_life_mapping[service_life]['service_life'])
+            else: 
+                if self.get_parent().get_service_life() is None:
+                    self.service_life = self.get_building().get_life_span()
+                    log(f"Service life category '{service_life}' not found in '{building_standard}' service life database. Using building life span as default.", level='Warn')
+                else:
+                    self.service_life = self.get_parent().get_service_life()
+                    log(f"Service life category '{service_life}' not found in '{building_standard}' service life database. Using parent assembly service life as default.", level='Warn')
+            # TODO: verify default service life setting
+        elif isinstance(service_life, (int, float)):
             self.service_life = service_life
+        else:
+            raise ValueError("Service life input is not recognized.")
 
         return self
 
@@ -491,11 +510,12 @@ class Material(Product):
             A4-A5 impacts of the material. List of impacts if objs is True.
         """
         impacts = [] if objs else Impacts.from_parent(self)
-        for leg in self.get_transportation():
-            if objs:
-                impacts.append(leg.get_impacts())
-            else:
-                impacts += leg.get_impacts()
+        if not self.get_transportation() is None:
+            for leg in self.get_transportation():
+                if objs:
+                    impacts.append(leg.get_impacts())
+                else:
+                    impacts += leg.get_impacts()
 
         return impacts
 
@@ -514,11 +534,12 @@ class Material(Product):
             A4-A5 emissions of the building. List of emissions if objs is True.
         """
         emissions = [] if objs else Emissions.from_parent(self)
-        for leg in self.get_transportation():
-            if objs:
-                emissions.append(leg.get_emissions())
-            else:
-                emissions += leg.get_emissions()    
+        if not self.get_transportation() is None:
+            for leg in self.get_transportation():
+                if objs:
+                    emissions.append(leg.get_emissions())
+                else:
+                    emissions += leg.get_emissions()    
         
         return emissions
 
