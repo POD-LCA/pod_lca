@@ -1,12 +1,14 @@
-import pandas as pd
-
-from pod_lca.utilities import config
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
+import pandas as pd
+
+from ...units import KILOMETER
+from ...units import MILE
+from ...utilities import config
 
 
 def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.gov/freight/freight_analysis/faf/'):
@@ -44,8 +46,8 @@ def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.g
     faf_merged = faf_cleaned.merge(faf_dist_band, on='dist_band', how='left')
 
     # Convert 'min_dms_dist' and 'max_dms_dist' from miles to kilometers
-    faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * 1.60934
-    faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * 1.60934
+    faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * MILE.convert_to(KILOMETER)
+    faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * MILE.convert_to(KILOMETER)
 
     faf_merged['avr_dom_dist_km'] = (faf_merged['min_dom_dist_km'] + faf_merged['max_dom_dist_km']) / 2
     faf_merged.drop(columns=['min_dom_dist', 'max_dom_dist', 'min_dom_dist_km','max_dom_dist_km','trade_type','dist_band' ], inplace=True)
@@ -136,7 +138,7 @@ def cfs_preprocessing (input_path, output_path):
     
     cfs = cfs[cfs["EXPORT_YN"] == "N"]
     cfs = cfs[cfs["MODE"].isin([3, 4, 5, 6, 7, 8, 9, 10, 101, 11])]
-    cfs ["SHIPMT_DIST_ROUTED"] = cfs ["SHIPMT_DIST_ROUTED"] * 1.60934
+    cfs ["SHIPMT_DIST_ROUTED"] = cfs ["SHIPMT_DIST_ROUTED"] * MILE.convert_to(KILOMETER)
 
     cfs.to_csv(output_path, index=False)
     return cfs
