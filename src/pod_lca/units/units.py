@@ -375,8 +375,12 @@ class Unit:
                 return conversion_factor
     
         else:
-            # TODO: implement simplify method. e.g., unit with mass per meter-feet to be simplified to mass with a conversion factor corresponding to the feet/meter canceling 
-            raise TypeError(f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible.")
+            simplification_factor, self = self.simplify()
+            if self.get_qty_measured() == to_unit.get_qty_measured(): # TODO: test this branch... potential issues with quantity measured after simplification
+                conversion_factor = self.convert_to(to_unit)
+                return simplification_factor * conversion_factor
+            else:
+                raise TypeError(f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible.")
         
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out, qty_measured):
