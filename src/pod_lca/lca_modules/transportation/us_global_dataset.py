@@ -42,7 +42,7 @@ class USGlobalDataset(TransportDataset):
 
         self.faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
         self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH']) 
-        self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_DATA_PATH'])
+        self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_RAIL_DATA_PATH'])
     
     def find_most_common_US_destination(self, material=None):
         """ Find the most common US destination state in the FAF dataset.

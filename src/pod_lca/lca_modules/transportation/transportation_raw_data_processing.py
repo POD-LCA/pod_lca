@@ -6,9 +6,9 @@ __version__ = "0.1.0"
 
 import pandas as pd
 
-from ...units import KILOMETER
-from ...units import MILE
-from ...utilities import config
+from pod_lca.units import KILOMETER
+from pod_lca.units import MILE
+from pod_lca.utilities import config
 
 
 def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.gov/freight/freight_analysis/faf/'):
@@ -56,14 +56,14 @@ def faf_preprocessing(output_file, input_file, input_url='https://ops.fhwa.dot.g
 
     return faf
 
-def cfaf_preprocessing (input_path_cfaf , output_path_cfaf):
+def cfaf_preprocessing (input_path_cfaf , output_path_cfaf, mode='RL'):
     """
     This function cleans the CFaf dataset by filtering the data for specific conditions, dropping unrelated columns,
     and creating a mapping for SCTG groups to their corresponding numbers. It also calculates the average distance per shipment.
     """
     cfaf = pd.read_csv(input_path_cfaf)
 
-    cfaf_filtered = cfaf[(cfaf['Mode'] == 'RL') & # CFAF data only used for transportation by rail.
+    cfaf_filtered = cfaf[(cfaf['Mode'] == mode) & # CFAF data only used for transportation by rail.
                          (cfaf['Year'] == 2017) & 
                          (cfaf['DestCtry'].isin(['UM'])) & 
                          (cfaf['OrigCtry'] == 'CA')]
@@ -155,20 +155,20 @@ if __name__ == "__main__":
     """
     # Preprocessing Freight Analysis Framework (FAF) dataset
     # original data from: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
-    input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
-    output_path_faf = r"data\transportation_faf_dataset.csv"
-    faf_preprocessing(input_path_faf, output_path_faf)
+    # input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
+    # output_path_faf = r"data\transportation_faf_dataset.csv"
+    # faf_preprocessing(input_path_faf, output_path_faf)
 
     # Preprocessing Canadian Freight Analysis Framework (CFaf) dataset
     # original data from: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
-    input_path_cfaf = r"C:\Users\mhtaba\Downloads\CFAF_C2011-2017_Code_E.csv"
-    output_path_cfaf = r"data\transportation_cfaf_dataset.csv"
-    cfaf_preprocessing (input_path_cfaf, output_path_cfaf)
+    input_path_cfaf = r"C:\Users\kiun\Downloads\CFAF_C2011-2017_Code_E.csv"
+    output_path_cfaf = r"data\transportation_cfaf_rail_dataset.csv"
+    cfaf_preprocessing (input_path_cfaf, output_path_cfaf, 'RL')
 
     # # Preprocessing Commodity Flow Survey (CFS) dataset
     # # original data from: https://www.census.gov/programs-surveys/cfs.html
-    input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
-    output_path_cfs = r"data\transportation_cfs_dataset.csv"
-    cfs_preprocessing (input_path_cfs, output_path_cfs)
+    # input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
+    # output_path_cfs = r"data\transportation_cfs_dataset.csv"
+    # cfs_preprocessing (input_path_cfs, output_path_cfs)
 
     # TODO: create option to download the datasets from the web if input_path is None
