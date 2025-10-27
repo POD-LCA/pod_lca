@@ -1,0 +1,11 @@
+﻿assembly,material,qty,unit
+Concrete Footing,"Normalweight Concrete, 3000 psi",9,m3
+Slab on grade,"Normalweight Concrete, 3000 psi",110.4,m2
+Slab on grade,"Steel, reinforcing rod",84.7,m
+Slab on grade,"Steel, welded wire mesh",110.4,m2
+Slab on grade,"Expanded polystyrene (EPS), board",110.4,m2
+Slab on grade,AVB,110.4,m2
+Slab on grade,Coarse aggregate,110.4,m2
+Floor framing,Composite wood I-joist,104.4,m2
+Roof framing,Composite wood I-joist,116.3,m2
+Roof decking,Oriented strandboard (OSB),116.3,m2

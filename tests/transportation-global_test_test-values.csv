@@ -1,22 +1,22 @@
 ﻿test name,product,sctg_code,qty,unit,destination,faf_zone,fr_mode,dms_mode,efficiency,fr_distance,dms_distance,distance_unit,Backhaul factor,EP,AP,SFP,GWP,ODP,CO2,N2O,CH4,Date added,Added by,Notes
-test_01,monumental or building stone,10,1,tonne,,,,,,9745.224,554,km,1,0,0,0,0,0,0,0,0,,,
-test_02,monumental or building stone,10,1,tonne,,Europe,,,Low,9745.224,554,km,1,0,0,0,0,0,0,0,0,,,
-test_03,Crushed stone,12,1,tonne,Arkansas,,,,,9745.224,874.5,km,1.5,0,0,0,0,0,0,0,0,,,
+test_01,monumental or building stone,10,1,tonne,,,,,,9745.224,891.57436,km,1,0,0,0,0,0,0,0,0,,,
+test_02,monumental or building stone,10,1,tonne,,Europe,,,Low,9745.224,891.57436,km,1,0,0,0,0,0,0,0,0,,,
+test_03,Crushed stone,12,1,tonne,Arkansas,,,,,9745.224,1407.36783,km,1.5,0,0,0,0,0,0,0,0,,,
 test_04,Crushed stone,12,1,tonne,Arkansas,Canada,Rail,,Median,1807.5,0,km,1.5,0,0,0,0,0,0,0,0,,,
-test_05,Crushed stone,12,1,tonne,,,,,,9745.224,685.95,km,1,0,0,0,0,0,0,0,0,,,
-test_06,Other chemical products and preparations,23,1,tonne,California,,Ocean,,,13315.88,1356.34,km,1,0,0,0,0,0,0,0,0,,,
-test_07,Other chemical products and preparations,23,1,tonne,Pennsylvania,,Truck,,,200,1413.59.72,km,1,0,0,0,0,0,0,0,0,,,
-test_08,Other chemical products and preparations,23,1,tonne,Maine,Rest of Americas,Truck,,,0,0,km,0,0,0,0,0,0,0,0,0,,,Error
-test_09,machinery,34,1,tonne,New Mexico,,,,,14825.26,1649.8,km,1,0,0,0,0,0,0,0,0,,,
+test_05,Crushed stone,12,1,tonne,,,,,,9745.224,1103.926773,km,1,0,0,0,0,0,0,0,0,,,
+test_06,Other chemical products and preparations,23,1,tonne,California,,Ocean,,,13315.88,2182.812216,km,1,0,0,0,0,0,0,0,0,,,
+test_07,Other chemical products and preparations,23,1,tonne,Pennsylvania,,Truck,,,200,2274.958518,km,1,0,0,0,0,0,0,0,0,,,
+test_08,Other chemical products and preparations,23,1,tonne,Maine,Rest of Americas,Truck,,,Error,Error,km,0,0,0,0,0,0,0,0,0,,,Error
+test_09,machinery,34,1,tonne,New Mexico,,,,,14825.26,2655.089132,km,1,0,0,0,0,0,0,0,0,,,
 test_10,wood products,26,1,tonne,Alaska,,Air,,High,6920.35,0,km,0,0,0,0,0,0,0,0,0,,,
-test_11,natural sands,11,1,tonne,Alaska,Canada,Truck,,High,200,1224.8333,km,1,0,0,0,0,0,0,0,0,,,
-test_12,Crushed stone,12,1,tonne,Texas,,Truck,,Median,200,1982,km,1,0,0,0,0,0,0,0,0,,,
-test_13,monumental or building stone,10,1,tonne,Georgia,,Ocean,,High,14825.26,312.05,km,1.5,0,0,0,0,0,0,0,0,,,
-test_14,monumental or building stone,10,1,tonne,Maryland,,Ocean,Barge,Low,0,0,km,0,0,0,0,0,0,0,0,0,,,Error-not exist
-test_15,articles of base metal,33,25,kg,Nebraska,Canada,Ocean,,,0,0,km,0,0,0,0,0,0,0,0,0,,,Error-not exist
-test_16,articles of base metal,33,0.25,tonne,Nebraska,Canada,Ocean,Rail,,2152.024,1750,km,1,0,0,0,0,0,0,0,0,,,
+test_11,natural sands,11,1,tonne,Alaska,Canada,Truck,,High,200,1971.173223,km,1,0,0,0,0,0,0,0,0,,,
+test_12,Crushed stone,12,1,tonne,Texas,,Truck,,Median,200,3189.71188,km,1,0,0,0,0,0,0,0,0,,,
+test_13,monumental or building stone,10,1,tonne,Georgia,,Ocean,,High,14825.26,502.194547,km,1.5,0,0,0,0,0,0,0,0,,,
+test_14,monumental or building stone,10,1,tonne,Maryland,,Ocean,Barge,Low,Error,Error,km,0,0,0,0,0,0,0,0,0,,,Error-not exist
+test_15,articles of base metal,33,25,kg,Nebraska,Canada,Ocean,,,Error,Error,km,0,0,0,0,0,0,0,0,0,,,Error-not exist
+test_16,articles of base metal,33,0.25,tonne,Nebraska,Canada,Ocean,Rail,,2152.024,2816.345,km,1,0,0,0,0,0,0,0,0,,,
 test_17,wood products,26,7.98,tonne,New Mexico,,Rail,,,1911.7,0,km,1,0,0,0,0,0,0,0,0,,,
 test_18,wood products,26,3,tonne,Rhode Island,,Rail,,,1911.7,0,km,1,0,0,0,0,0,0,0,0,,,
 test_19,furniture,39,2,tonne,Illinois,Europe,Air,,,6870,0,km,1,0,0,0,0,0,0,0,0,,,
 test_20,base metal,33,5,tonne,Hawaii,,Air,,Low,11630,0,km,1,0,0,0,0,0,0,0,0,,,
-test_21,logs and other wood in the rough,25,8.5,tonne,Oregon,Canada,Ocean,,Median,2152.024,274.5,km,1.5,0,0,0,0,0,0,0,0,,,
+test_21,logs and other wood in the rough,25,8.5,tonne,Oregon,Canada,Ocean,,Median,2152.024,441.76383,km,1.5,0,0,0,0,0,0,0,0,,,

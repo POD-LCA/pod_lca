@@ -94,15 +94,18 @@ for test in tqdm(test_dict):
                 output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = 'N/A'
                 output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Manual calc'] = test_dict[test][inventory]
                 output_dict[test][inventory + '_difference (%)'] = 'N/A'
-        output_dict[test]['test status'] = 'N/A'
+        output_dict[test]['test status'] = 'PASS' if test_dict[test]['fr_distance'] == 'Error' else 'FAIL'
         # Note error
         output_dict[test]['Notes'] = e
         continue
 
     # check distance
-    fr_dif = abs(fr_distance - float(test_dict[test]['fr_distance'])) / ((fr_distance + float(test_dict[test]['fr_distance'])) / 2 )  # symmetric difference
-    if float(test_dict[test]['dms_distance']) > 0.0:
-        dms_dif = abs(dms_distance - float(test_dict[test]['dms_distance'])) / ((dms_distance + float(test_dict[test]['dms_distance'])) / 2 )  # symmetric difference
+    test_dist_foreign = 0.0 if test_dict[test]['fr_distance'] == "Error" else float(test_dict[test]['fr_distance'])
+    fr_dif = abs(fr_distance - test_dist_foreign) / ((fr_distance + test_dist_foreign) / 2 )  # symmetric difference
+
+    test_dist_domestic = 0.0 if test_dict[test]['dms_distance'] == "Error" else float(test_dict[test]['dms_distance'])
+    if test_dist_domestic> 0.0:
+        dms_dif = abs(dms_distance - test_dist_domestic) / ((dms_distance + test_dist_domestic) / 2 )  # symmetric difference
     else:
         dms_dif = 0.0
 
