@@ -520,18 +520,26 @@ class Master:
         ImportError
             Incompatible units of Master object and database entry.
         """
-        conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit)
-
-        if conversion_factor is None:
-            raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
+        if self.get_unit().get_qty_measured() == self.inventories_declared_unit.get_qty_measured():
+            conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit)
+            qty = self.qty * conversion_factor
+        else:
+            if self.inventories_declared_unit.get_qty_measured() == 'mass':
+                conversion_factor = self.get_weight_unit().convert_to(self.inventories_declared_unit)
+                qty = self.get_weight_qty() * conversion_factor
+            elif (self.get_unit()/self.get_density_unit()).get_qty_measured() == self.inventories_declared_unit.get_qty_measured():
+                conversion_factor = (self.get_unit()/self.get_density_unit()).convert_to(self.inventories_declared_unit)
+                qty = (self.qty / self.get_density_qty()) * conversion_factor
+            else:    
+                raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
         
-        impacts = {key: self.unit_impacts.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.impacts.record_attr_dict}
+        impacts = {key: self.unit_impacts.get_record(key) * qty / self.inventories_declared_qty for key in self.impacts.record_attr_dict}
         self.impacts.update_qty(impacts)
 
-        emissions = {key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.emissions.record_attr_dict}
+        emissions = {key: self.unit_emissions.get_record(key) * qty / self.inventories_declared_qty for key in self.emissions.record_attr_dict}
         self.emissions.update_qty(emissions)
 
-        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty for key in self.carbon_storage.record_attr_dict}
+        carbon_storage = {key: self.unit_carbon_storage.get_record(key) * qty / self.inventories_declared_qty for key in self.carbon_storage.record_attr_dict}
         self.carbon_storage.update_qty(carbon_storage)
 
         return self
