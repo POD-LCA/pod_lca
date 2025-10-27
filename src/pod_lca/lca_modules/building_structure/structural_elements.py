@@ -149,6 +149,20 @@ class Wall(StructuralElement):
         structure.columns.append(wall)
 
         return wall
-    
+
+class RoofStructure(StructuralElement):
+
+    def __init__(self):
+        super().__init__()
+
+    @classmethod
+    def create(cls, name, structure, materials):
+
+        roof = super().create(name, structure.get_parent(), materials)
+        roof.set_service_life('superstructure')
+        structure.roof_structure.append(roof)
+
+        return roof
+
 if __name__ == '__main__':
     pass

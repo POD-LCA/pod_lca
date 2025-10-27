@@ -5,6 +5,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from math import sqrt
+
 from ...units import MEGA
 from ...units import WATT_HOUR
 from ...units import UNITS_MAP
@@ -59,24 +61,41 @@ class TemplateModels:
     # ================================   
     def set_template_model(self, building_data):
         """ Set attributes to an existing building.
-        
+
+        Notes
+        -----
+        - If floor_plan is not provided, a square floor plan will be created based on the provided floor_area.
+
         Parameters
         ----------
         building_data : dict
             Dictionary provding building data
-
         """
-        self.add_floors(building_data['no_floors'], 
-                        building_data['f2f_height'], 
-                        building_data['floor_plan'], 
-                        building_data['floors_below_grade'], 
-                        UNITS_MAP[building_data['geometry_units']])
+        no_floors = building_data['no_floors'] if 'no_floors' in building_data else 1
+        floors_below_grade = building_data['floors_below_grade'] if 'floors_below_grade' in building_data else 0
+        geometry_units = building_data['geometry_units'] if 'geometry_units' in building_data else 'm'
+        f2f_height = building_data['f2f_height'] if 'f2f_height' in building_data else 3.0 if geometry_units == 'm' else 10.0
+
+        if 'floor_plan' in building_data:
+            floor_plan = building_data['floor_plan']
+        else:
+            if 'floor_area' in building_data:
+                side_length = sqrt(building_data['floor_area'])
+                floor_plan = [(0.0 , 0.0), (0.0, side_length), (side_length, side_length), (side_length, 0.0)]
+            else:
+                raise ValueError('Either floor plan or floor area must be provided to define the floor geometry.')
+            
+        self.add_floors(no_floors=no_floors, 
+                        floors_below_grade=floors_below_grade,
+                        f2f_height=f2f_height, 
+                        floor_plan=floor_plan,
+                        geometry_units=UNITS_MAP[geometry_units])
         
         construction_energy_use = building_data["construction_energy_use"] if "construction_energy_use" in building_data else 0.0
         energy_units = UNITS_MAP[building_data["construction_energy_use_unit"]] if "construction_energy_use" in building_data else MEGA * WATT_HOUR
         self.set_building_level_products(logistic_type=building_data['logistic_type'], 
                                          construction_electricity_consumption=construction_energy_use, 
-                                         electricity_unit=UNITS_MAP[building_data["construction_energy_use_unit"]])
+                                         electricity_unit=energy_units)
 
         template_bom_file_name_prefix = config['setup']['building']['TEMPLATE_BOM_PREFIX'] + building_data['building_type'] + '_'
 

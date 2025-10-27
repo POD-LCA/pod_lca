@@ -467,22 +467,22 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
     # ================================
     # Assembly Methods
     # ================================ 
-    def add_floors(self, no_floors, f2f_height, floor_plan, floors_below_grade, geometry_units):
+    def add_floors(self, no_floors, floors_below_grade, f2f_height, floor_plan, geometry_units):
         """ Add floors to the building.
         
         Parameters
         ----------
         no_floors : int
             Number of floors in the building.
+        floors_below_grade : int
+            Number of floors below grade.
         f2f_height : float
             Floor to floor height.
         floor_plan : list of tuples of float
             A polygon defining the floor plan geometry [(x1, y1), (x2, y2), ... , (xn, yn)].
-        floors_below_grade : int
-            Number of floors below grade.
         geometry_units : ~pod_lca.units.Unit
             Unit of measurement used in geometry definitions.        
-        """
+        """ 
         for num in range(no_floors):
             z = (f2f_height * num) - (floors_below_grade * f2f_height)
             floor_plan_poly = [(coords[0], coords[1], z) for coords in floor_plan]

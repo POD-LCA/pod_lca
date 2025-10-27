@@ -10,6 +10,7 @@ from . import Beam
 from . import Column
 from . import Slab
 from . import Wall
+from . import RoofStructure
 from . import StructuralMaterial
 from ...units import UNITS_MAP
 from ...utilities import DataImporter
@@ -45,6 +46,7 @@ class BuildingStructure:
         self.beams = []
         self.columns = []
         self.slabs = []
+        self.roof_structure = []
 
     # ================================
     # Constructors
@@ -79,19 +81,20 @@ class BuildingStructure:
         structural_girders = Beam.create('structural framing: girders', structure, None)
         structural_columns = Column.create('structural walls', structure, None)
         structural_walls = Wall.create('structural columns', structure, None)
+        roof_structure = RoofStructure.create('roof structure', structure, None)
 
         for key in bill_of_materials:
             item = bill_of_materials[key]
                 
             building_assembly = item['assembly'].lower().replace(" ", "_")
             match building_assembly:
-                case 'column_foundation':
+                case 'column_foundation' | 'concrete_footing':
                     assembly_obj = column_foundation
                 case 'wall_foundation':
                     assembly_obj = wall_foundation
                 case 'slab_on_grade':
                     assembly_obj = slab_on_grade
-                case 'elevated_slabs':
+                case 'elevated_slabs' | 'floor_framing':
                     assembly_obj = elevated_slab
                 case 'structural_framing:_beams':
                     assembly_obj = structural_beam
@@ -101,6 +104,8 @@ class BuildingStructure:
                     assembly_obj = structural_columns
                 case 'structural_walls':
                     assembly_obj = structural_walls
+                case 'roof_framing' | 'roof_decking':
+                    assembly_obj = roof_structure
                 case _:
                     ValueError("Building assmebly not recognized.")
 
