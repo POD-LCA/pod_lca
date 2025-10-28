@@ -28,6 +28,7 @@ output_file = "tests\\transportation-global_test_report.csv"
 test_dict = DataImporter.csv_to_dict(test_data, 'test name')
 
 project = USGlobalTransportationManager.new("Building A")
+project.set_data_generator_mode()
 project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
