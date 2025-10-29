@@ -534,7 +534,7 @@ class MetricPrefix:
         float
             Conversion factor to be applied on the value.
         """
-        return 10**(to_prefix.get_power() - self.get_power())
+        return 10**(self.get_power() - to_prefix.get_power())
 
 
 if __name__ == '__main__':
