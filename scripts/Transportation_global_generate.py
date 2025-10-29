@@ -50,8 +50,7 @@ unit = M_TON
 travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USGlobalTransportationManager.new("Building A")
-project.get_dataset().force_location = False # Stops defaulting to closest state
-project.get_dataset().force_mode = False # Stops defaulting to default mode
+project.set_data_generator_mode()
 project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
@@ -83,7 +82,6 @@ for sctg_code, material in Material_names.items():
             foreign_transport_leg = project.get_transportation_leg(product)[0]
             domestic_transport_leg = foreign_transport_leg.get_domestic_leg()  
 
-            # TODO: Wait for valid mode-origin combinations
             if origin not in ['Canada', 'Mexico']:
                 travel_modes = ["Ocean", "Air"]
             elif origin in ['Canada']:
@@ -104,7 +102,8 @@ for sctg_code, material in Material_names.items():
                             try:
                                 foreign_distance = foreign_transport_leg.get_travel_dist()
                                 domestic_distance = domestic_transport_leg.get_travel_dist()
-                                RTT =  project.transport_legs[product][0].get_return_trip_factor()
+                                RTT_fr =  project.transport_legs[product][0].get_return_trip_factor()
+                                RTT_dms =  project.transport_legs[product][1].get_return_trip_factor()
                                 impacts = project.get_impacts(product)
                                 emissions = project.get_emissions(product)
 
@@ -132,7 +131,8 @@ for sctg_code, material in Material_names.items():
                                 'foreign mode efficiency': foreign_travel_eff,
                                 'foreign distance (km)': foreign_distance,
                                 'domestic distance (km)': domestic_distance,
-                                'return trip factor': RTT}
+                                'return trip factor_fr': RTT_fr,
+                                'return trip factor_dms': RTT_dms}
                             
                             for impact_cat in impact_categories:
                                 output_dict[str(sequence_no)][impact_cat + ' (' + impact_categories[impact_cat]  + '/ tonne)'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
@@ -151,9 +151,5 @@ for sctg_code, material in Material_names.items():
 
                             sequence_no += 1
 
-
         DataExporter.dict_to_csv(output_dict, output_file, append=True)
         print(f"\n Backup written at {time.strftime('%H:%M:%S')}")
-
-
-# DataExporter.dict_to_csv(output_dict, output_file)
