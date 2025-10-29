@@ -47,7 +47,7 @@ class Envelope:
         return envelope
     
     @classmethod
-    def from_template(cls, building, bom_file_path_walls, bom_file_path_windows):
+    def from_template(cls, building, bom_file_path_walls, bom_file_path_windows, bom_file_path_roof=None):
         """ Create a structure from a template model.
         
         Parameters
@@ -58,6 +58,8 @@ class Envelope:
             File path to bill of materials for opaque enclosure.
         bom_file_path_windows : str
             File path to bill of materials for transparent enclosure.
+        bom_file_path_roof : str
+            File path to bill of materials for roof enclosure.
 
         Returns
         -------
@@ -70,12 +72,19 @@ class Envelope:
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
         bill_of_materials_walls = DataImporter.csv_to_dict(bom_file_path_walls)
         bill_of_materials_windows = DataImporter.csv_to_dict(bom_file_path_windows)
+        if bom_file_path_roof is not None:
+            bill_of_materials_roof = DataImporter.csv_to_dict(bom_file_path_roof)
         
         # FIXME: if the wwr to be calculated from these
         enclosure_walls = Construction.create('walls', building, None)
         enclosure_windows = Construction.create('windows', building, None)
+        if bom_file_path_roof is not None:
+            enclosure_roof = Construction.create('roof', building, None)
 
-        for assembly, bom in zip([enclosure_walls, enclosure_windows], [bill_of_materials_walls, bill_of_materials_windows] ):
+        enclosures = [enclosure_walls, enclosure_windows] if bom_file_path_roof is None else [enclosure_walls, enclosure_windows, enclosure_roof]
+        boms = [bill_of_materials_walls, bill_of_materials_windows] if bom_file_path_roof is None else [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
+
+        for assembly, bom in zip(enclosures, boms):
             for item in bom.values():
                     
                 building_assembly = item['assembly'].lower().replace(" ", "_").replace(",", "")

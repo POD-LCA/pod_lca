@@ -1,10 +1,10 @@
 ﻿assembly,POD|LCA RSL Category,material,qty,unit
-"Brick, wood framing",encl_rs_thinbrick,Brick,187.8,m2
-"Brick, wood framing",encl_rs_thinbrick,Type N Mortar,187.8,m2
+"Brick, wood framing",encl_rs_thinbrick,Brick,3115930,kg
+"Brick, wood framing",encl_rs_thinbrick,Type N Mortar,54987,kg
 "Brick, wood framing",encl_rs_thinbrick,AVB membrane,187.8,m2
-"Brick, wood framing",superstructure,Oriented strandboard (OSB),187.8,m2
-"Brick, wood framing",superstructure,Light wood framing,187.8,m2
-"Brick, wood framing",encl_rs_thinbrick,"Expanded polystyrene (EPS), board",187.8,m2
-"Brick, wood framing",encl_rs_thinbrick,"Fiberglass blanket insulation, paper faced",187.8,m2
+"Brick, wood framing",superstructure,Oriented strandboard (OSB),1849,kg
+"Brick, wood framing",superstructure,Light wood framing,3017,kg
+"Brick, wood framing",encl_rs_thinbrick,"Expanded polystyrene (EPS), board",129,kg
+"Brick, wood framing",encl_rs_thinbrick,"Fiberglass blanket insulation, paper faced",236,kg
 "Brick, wood framing",encl_rs_thinbrick,AVB membrane,187.8,m2
 "Brick, wood framing",fin_gwb,Gypsum wall board,187.8,m2

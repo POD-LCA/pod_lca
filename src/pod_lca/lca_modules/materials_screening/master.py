@@ -232,7 +232,7 @@ class Master:
         else:
             database = self.get_impact_database()
             
-            unit_inventories = database.get_data_entry(self.get_impact_database_entry())
+            unit_inventories = database.get_data_entry(self.get_impact_database_entry()).fillna(0.0)
             self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
             self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
 
@@ -527,9 +527,12 @@ class Master:
             if self.inventories_declared_unit.get_qty_measured() == 'mass':
                 conversion_factor = self.get_weight_unit().convert_to(self.inventories_declared_unit)
                 qty = self.get_weight_qty() * conversion_factor
-            elif (self.get_unit()/self.get_density_unit()).get_qty_measured() == self.inventories_declared_unit.get_qty_measured():
-                conversion_factor = (self.get_unit()/self.get_density_unit()).convert_to(self.inventories_declared_unit)
-                qty = (self.qty / self.get_density_qty()) * conversion_factor
+            elif self.get_density_unit() is not None:
+                if self.get_unit().get_qty_measured() == (self.inventories_declared_unit * self.get_density_unit()).get_qty_measured():
+                    conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit * self.get_density_unit())
+                    qty = (self.qty / self.get_density()) * conversion_factor
+                else:
+                    raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
             else:    
                 raise ImportError(f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units.")
         

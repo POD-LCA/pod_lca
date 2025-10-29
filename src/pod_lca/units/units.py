@@ -462,7 +462,11 @@ class Unit:
 
                     self.components.remove(numerator)
                     self.components.remove(denominator)
+                    self.denominator.remove(denominator)
+
                     self.convert_compound = False if len(self.components) < 2 else True
+                    if len(self.components) == 1:
+                        self = self.components[0]
                 
                     if self.convert_compound:
                         factor, self = self.simplify()

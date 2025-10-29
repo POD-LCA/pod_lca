@@ -16,7 +16,7 @@ from ...utilities import config
 class TemplateModels:
 
     @classmethod
-    def from_template_model(cls, name, location, built_year, life_span, building_data):
+    def from_template_model(cls, name, location, built_year, life_span, **kwargs):
         """ Build a building from a template model data given in a CSV file.
         
         Parameters
@@ -33,12 +33,43 @@ class TemplateModels:
             Life span of the building in years.
         file_path : int
             File path to template model bill of material list.
-        building_data : dict
-            Dictionary provding building data
-        env_constructions_path: str
-            File path to envelope constructions IDF file
-        operational_sys_path: str
-            File path to operational systems IDF file
+
+        Other Parameters
+        ----------------
+        building_type: {'residential', 'commercial'}
+            Type of building.
+        structure_type: str
+            Template used for building structure. 
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{structure-type}.csv', will be used.
+        enclosure-opaque: str
+            Template used for building opaque enclosure.
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{enclosure-opaque}.csv', will be used.                                                                                                         
+        enclosure-translucent: str
+            Template used for building translucent enclosure.
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{enclosure-translucent}.csv', will be used.
+        roof: str
+            Template used for building roof enclosure.
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{roof}.csv', will be used.
+        no_floors: int
+            Number of floors in the building.
+        floors_below_grade: int
+            Number of floors below grade in the building.
+        floor_plan: list of tuple of float
+            List of (x, y) coordinates defining the floor plan of the building
+        floor_area: float
+            Total floor area of the building. If floor_plan is not provided, a square floor plan will be created based on the provided floor_area.
+        f2f_height: float
+            Floor to floor height of each story in the building.
+        geometry_units: {'m', 'ft'}
+            Units used for building geometry.
+        wwr: float
+            Window to wall ratio for the building façades.
+        construction_energy_use: float
+            Construction energy use for the building.
+        construction_energy_use_unit: str
+            Unit for construction energy use. E.g., 'MWh', 'kWh', etc
+        logistic_type: {'Local', 'Global'}
+            Logistic type for building material transportation. 
         
         Returns
         -------
@@ -46,41 +77,69 @@ class TemplateModels:
             Building built.
         """
         building = cls.new(name,
-                           type=building_data['building_type'],
+                           type=kwargs['building_type'],
                            location=location, 
                            built_year=built_year, 
                            life_span=life_span)
         building.set_databases()
 
-        building.set_template_model(building_data)
+        building.set_template_model(**kwargs)
 
         return building
     
     # ================================
     # Setters
     # ================================   
-    def set_template_model(self, building_data):
+    def set_template_model(self, **kwargs):
         """ Set attributes to an existing building.
 
-        Notes
-        -----
-        - If floor_plan is not provided, a square floor plan will be created based on the provided floor_area.
-
-        Parameters
-        ----------
-        building_data : dict
-            Dictionary provding building data
+        Other Parameters
+        ----------------
+        building_type: {'residential', 'commercial'}
+            Type of building.
+        structure_type: str
+            Template used for building structure. 
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{structure-type}.csv', will be used.
+        enclosure-opaque: str
+            Template used for building opaque enclosure.
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{enclosure-opaque}.csv', will be used.                                                                                                         
+        enclosure-translucent: str
+            Template used for building translucent enclosure.
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{enclosure-translucent}.csv', will be used.
+        roof: str
+            Template used for building roof enclosure.
+            The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{roof}.csv', will be used.
+        no_floors: int
+            Number of floors in the building.
+        floors_below_grade: int
+            Number of floors below grade in the building.
+        floor_plan: list of tuple of float
+            List of (x, y) coordinates defining the floor plan of the building
+        floor_area: float
+            Total floor area of the building. If floor_plan is not provided, a square floor plan will be created based on the provided floor_area.
+        f2f_height: float
+            Floor to floor height of each story in the building.
+        geometry_units: {'m', 'ft'}
+            Units used for building geometry.
+        wwr: float
+            Window to wall ratio for the building façades.
+        construction_energy_use: float
+            Construction energy use for the building.
+        construction_energy_use_unit: str
+            Unit for construction energy use. E.g., 'MWh', 'kWh', etc
+        logistic_type: {'Local', 'Global'}
+            Logistic type for building material transportation. 
         """
-        no_floors = building_data['no_floors'] if 'no_floors' in building_data else 1
-        floors_below_grade = building_data['floors_below_grade'] if 'floors_below_grade' in building_data else 0
-        geometry_units = building_data['geometry_units'] if 'geometry_units' in building_data else 'm'
-        f2f_height = building_data['f2f_height'] if 'f2f_height' in building_data else 3.0 if geometry_units == 'm' else 10.0
+        no_floors = kwargs['no_floors'] if 'no_floors' in kwargs else 1
+        floors_below_grade = kwargs['floors_below_grade'] if 'floors_below_grade' in kwargs else 0
+        geometry_units = kwargs['geometry_units'] if 'geometry_units' in kwargs else 'm'
+        f2f_height = kwargs['f2f_height'] if 'f2f_height' in kwargs else 3.0 if geometry_units == 'm' else 10.0
 
-        if 'floor_plan' in building_data:
-            floor_plan = building_data['floor_plan']
+        if 'floor_plan' in kwargs:
+            floor_plan = kwargs['floor_plan']
         else:
-            if 'floor_area' in building_data:
-                side_length = sqrt(building_data['floor_area'])
+            if 'floor_area' in kwargs:
+                side_length = sqrt(kwargs['floor_area'] / no_floors)
                 floor_plan = [(0.0 , 0.0), (0.0, side_length), (side_length, side_length), (side_length, 0.0)]
             else:
                 raise ValueError('Either floor plan or floor area must be provided to define the floor geometry.')
@@ -91,15 +150,15 @@ class TemplateModels:
                         floor_plan=floor_plan,
                         geometry_units=UNITS_MAP[geometry_units])
         
-        construction_energy_use = building_data["construction_energy_use"] if "construction_energy_use" in building_data else 0.0
-        energy_units = UNITS_MAP[building_data["construction_energy_use_unit"]] if "construction_energy_use" in building_data else MEGA * WATT_HOUR
-        self.set_building_level_products(logistic_type=building_data['logistic_type'], 
+        construction_energy_use = kwargs["construction_energy_use"] if "construction_energy_use" in kwargs else 0.0
+        energy_units = UNITS_MAP[kwargs["construction_energy_use_unit"]] if "construction_energy_use" in kwargs else MEGA * WATT_HOUR
+        self.set_building_level_products(logistic_type=kwargs['logistic_type'], 
                                          construction_electricity_consumption=construction_energy_use, 
                                          electricity_unit=energy_units)
 
-        template_bom_file_name_prefix = config['setup']['building']['TEMPLATE_BOM_PREFIX'] + building_data['building_type'] + '_'
+        template_bom_file_name_prefix = config['setup']['building']['TEMPLATE_BOM_PREFIX'] + kwargs['building_type'] + '_'
 
-        template_bom_path_structure = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + building_data['structure_type'] + '.csv')
+        template_bom_path_structure = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['structure_type'] + '.csv')
         self.make_structure('from template', template_bom=template_bom_path_structure)
         
         # FIXME: decide on check... optional parameter in method.. or drop this altogether
@@ -107,11 +166,13 @@ class TemplateModels:
             operational_sys_path = config['file_paths']['operational']['SYSTEMS']
             self.make_envelope('from geometry', operational_sys_path=operational_sys_path)  
         else:
-            template_bom_path_walls = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + building_data['enclosure-opaque'] + '.csv')   
-            template_bom_path_windows = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + building_data['enclosure-translucent'] + '.csv')       
+            template_bom_path_walls = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['enclosure-opaque'] + '.csv') if 'enclosure-opaque' in kwargs else None 
+            template_bom_path_windows = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['enclosure-translucent'] + '.csv') if 'enclosure-translucent' in kwargs else None
+            template_bom_path_roof = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['roof'] + '.csv') if 'roof' in kwargs else None   
             self.make_envelope('from template', 
                                template_bom_walls=template_bom_path_walls,
-                               template_bom_windows=template_bom_path_windows)
+                               template_bom_windows=template_bom_path_windows,
+                               template_bom_roof=template_bom_path_roof)
 
         return self
 

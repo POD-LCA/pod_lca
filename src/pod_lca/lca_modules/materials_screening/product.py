@@ -98,10 +98,6 @@ class Product(Master):
         """
         super().set_unit(unit)
 
-        if unit.get_qty_measured() == 'mass':
-            self.set_density_unit(unit/unit)
-            self.density = 1.0
-
         return self
 
     def set_production_year(self, year):
@@ -117,8 +113,9 @@ class Product(Master):
         if not self.electricity['by_location'] is None:
             self.electricity['by_location'].set_year(year)
 
-        pulse = UniformEmissionProfile.unit_pulse(at=year)
-        self.get_emissions().set_temporal_emission_profile(pulse)
+        if self.emissions is not None:
+            pulse = UniformEmissionProfile.unit_pulse(at=year)
+            self.get_emissions().set_temporal_emission_profile(pulse)
 
         if self.get_transportation() is not None:
             for leg in self.get_transportation():
@@ -402,7 +399,10 @@ class Product(Master):
         if self.get_unit().get_qty_measured() == 'mass':
             return self.get_qty()
         else:
-            return self.get_qty() * self.get_density()
+            if self.get_density() is None:
+                return None
+            else:
+                return self.get_qty() * self.get_density()
 
     def get_weight_unit(self):
         """ Retrieve the unit of measurement of mass of the product.

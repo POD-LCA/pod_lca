@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import gc
+from math import isnan
 
 from ..eol.waste import Waste
 from ..impacts import CarbonStorage
@@ -13,6 +14,7 @@ from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
 from ..materials_screening import Product
+from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
@@ -86,9 +88,10 @@ class Material(Product):
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
-
+        material.set_production_year(product_year)
         material.set_service_life(service_life)
 
+        # set inventory objects
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
         material.carbon_storage = CarbonStorage.from_parent(material)
@@ -96,30 +99,58 @@ class Material(Product):
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
 
+        pulse = UniformEmissionProfile.unit_pulse(at=product_year)
+        material.emissions.set_temporal_emission_profile(pulse)
+
         # set properties from database
-        material.set_impact_database_entry(material_database_entry)
+        if material_database_entry in [None, '', 'N/A']:
+            material.set_impact_database_entry(None)
+            material.set_waste_rate(waste_rate_category='DEFAULT')
+        else:
+            material.set_impact_database_entry(material_database_entry)
 
-        database = material.get_impact_database()
-        data_entry = database.get_data_entry(material_database_entry)
-        
-        material.set_sctg_code(data_entry['sctg code'])
-        if not unit.get_qty_measured() == 'mass':
-            material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
-        material.set_eol_material(data_entry['eol material'], 
-                                  data_entry['bio-based'] if 'bio-based' in data_entry else None)
-        material.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+            database = material.get_impact_database()
+            data_entry = database.get_data_entry(material_database_entry)
 
-        material.set_production_year(product_year)
+            # set density
+            if data_entry['Density unit'] in [None, '', 'N/A', 'Null']:
+                log(f"Density unit not specified for {name}. Skipping density setting.", level='Warn')
+            else:
+                if isinstance(data_entry['Density'], (int, float, str)) and isinstance(data_entry['Density'], str):
+                    material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
+                else:
+                    ValueError(f"Density value/unit not recognized for {name}.")
 
-        # set transportation process
-        if data_entry['sctg code'] in [999, '999', '', 'N/A', None]:
-            log(f"Material {name} has SCTG code unasigned, transportation not set.", level='Warn')
-        else:    
-            material.set_transportation()
+            # set transportation process
+            if isnan(data_entry['sctg code']) or data_entry['sctg code'] in [999, '999', None, '', 'N/A', 'Null']:
+                log(f"SCTG code not specified for {name}. Skipping SCTG setting.", level='Warn')
+            else:
+                material.set_sctg_code(data_entry['sctg code'])
+                material.set_transportation()
 
-        # set allied processes    
-        material.set_waste_product()
-        material.set_replacement_material()
+            # set eol material
+            if data_entry['eol material'] in [None, '', 'N/A', 'Null']:
+                log(f"EOL material not specified for {name}. Skipping EOL material setting.", level='Warn')
+            else:
+                if isinstance(data_entry['eol material'], str):
+                    material.set_eol_material(data_entry['eol material'], 
+                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
+                    material.set_waste_product()
+                else:
+                    ValueError(f"EOL material value not recognized for {name}.")
+
+            # set waste rate
+            if data_entry['waste_rate_category'] in [None, '', 'N/A', 'Null'] :
+                material.set_waste_rate(waste_rate_category='DEFAULT')
+                log(f"Waste rate category not specified for {name}. 'DEFAULT' category set.", level='Warn')
+            else:
+                if isinstance(data_entry['waste_rate_category'], str):
+                    material.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+                else:
+                    ValueError(f"Waste rate value not recognized for {name}.")
+
+            # set replacement materials
+            material.set_replacement_material()
 
         return material
     
@@ -147,6 +178,7 @@ class Material(Product):
         material.set_unit(other.get_unit())
         material.set_waste_rate(other.get_waste_rate())
         material.set_service_life(other.get_service_life()) 
+        material.set_production_year(production_year)
 
         material.impacts = Impacts.from_parent(material)
         material.emissions = Emissions.from_parent(material)
@@ -155,20 +187,25 @@ class Material(Product):
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
 
+        pulse = UniformEmissionProfile.unit_pulse(at=production_year)
+        material.emissions.set_temporal_emission_profile(pulse)
+
         material_database_entry = other.get_impact_database_entry()
         material.set_impact_database_entry(material_database_entry)
-        material.set_sctg_code(other.get_sctg_code())
-        material.set_eol_material(other.get_eol_material())
-        material.set_density(other.get_density(), other.get_density_unit())
-        material.set_waste_rate(other.get_waste_rate())
-        material.set_production_year(production_year)
-
+        # set density
+        if other.get_density() is not None:
+            material.set_density(other.get_density(), other.get_density_unit())
+        # set transportation process
         if other.get_sctg_code(digits=2) in [99, '99', '', 'N/A', None]:
             log(f"Material {other.get_name()} has SCTG code unasigned, transportation not set.", level='Warn')
         else:    
+            material.set_sctg_code(other.get_sctg_code())
             material.set_transportation()
-
-        material.set_waste_product()
+        # set waste rate
+        if other.get_eol_material() is not None:
+            material.set_eol_material(other.get_eol_material())
+            material.set_waste_product()
+        # set replacement materials
         material.set_replacement_material()
 
         return material
@@ -263,7 +300,18 @@ class Material(Product):
             building_standard = self.get_building().get_building_data_standard()
             service_life_mapping = DataImporter.csv_to_dict(config['file_paths']['building'][building_standard.upper() + '_SERVICE_LIFE'], 'POD|LCA RSL Category')
             if service_life in service_life_mapping:
-                self.service_life = float(service_life_mapping[service_life]['service_life'])
+                if isinstance(service_life_mapping[service_life]['service_life'], (int, float)):
+                    self.service_life = float(service_life_mapping[service_life]['service_life'])
+                elif isinstance(service_life_mapping[service_life]['service_life'], str):
+                    if service_life_mapping[service_life]['service_life'].lower() in ['life of building', 'building life span', 'building lifespan']:
+                        self.service_life = self.get_building().get_life_span()
+                    else:
+                        try:
+                            self.service_life = float(service_life_mapping[service_life]['service_life'])
+                        except ValueError:
+                            raise ValueError(f"Service life value '{service_life_mapping[service_life]['service_life']}' not recognized for category '{service_life}' in '{building_standard}' service life database.")
+                else:
+                    raise ValueError(f"Service life value type not recognized for category '{service_life}' in '{building_standard}' service life database.")
             else: 
                 if self.get_parent().get_service_life() is None:
                     self.service_life = self.get_building().get_life_span()
@@ -287,7 +335,12 @@ class Material(Product):
         eol_material = self.get_eol_material()
         waste_qty = self.get_weight()
         waste_unit = self.get_weight_unit()
-        
+
+        if waste_qty is None:
+            waste_qty = 0.0
+            waste_unit = KILOGRAM
+            log(" Cannot determine waste quantity in mass.", level='Warn')
+
         if eol_mix_data['Material'].isin([eol_material]).any():
             eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
         elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
@@ -564,7 +617,22 @@ class Material(Product):
         impacts = [] if objs else Impacts.from_parent(self)
 
         if lc_stage is None:
-            for impact_lst in self.get_waste_product().get_impacts().values():
+            if self.get_waste_product() is not None:
+                for impact_lst in self.get_waste_product().get_impacts().values():
+                    if isinstance(impact_lst, Impacts):
+                        if objs:
+                            impacts.append(impact_lst)
+                        else:
+                            impacts += impact_lst
+                    else:
+                        for impact in impact_lst:
+                            if objs:
+                                impacts.append(impact)
+                            else:
+                                impacts += impact
+        else:
+            if self.get_waste_product() is not None:
+                impact_lst = self.get_waste_product().get_impacts()[lc_stage]
                 if isinstance(impact_lst, Impacts):
                     if objs:
                         impacts.append(impact_lst)
@@ -576,19 +644,6 @@ class Material(Product):
                             impacts.append(impact)
                         else:
                             impacts += impact
-        else:
-            impact_lst = self.get_waste_product().get_impacts()[lc_stage]
-            if isinstance(impact_lst, Impacts):
-                if objs:
-                    impacts.append(impact_lst)
-                else:
-                    impacts += impact_lst
-            else:
-                for impact in impact_lst:
-                    if objs:
-                        impacts.append(impact)
-                    else:
-                        impacts += impact
 
         return impacts
 
@@ -613,7 +668,22 @@ class Material(Product):
         emissions = [] if objs else Emissions.from_parent(self)
 
         if lc_stage is None:
-            for emission_lst in self.get_waste_product().get_emissions().values():
+            if self.get_waste_product() is not None:
+                for emission_lst in self.get_waste_product().get_emissions().values():
+                    if isinstance(emission_lst, Emissions):
+                        if objs:
+                            emissions.append(emission_lst)
+                        else:
+                            emissions += emission_lst
+                    else:
+                        for emission in emission_lst:
+                            if objs:
+                                emissions.append(emission)
+                            else:
+                                emissions += emission
+        else:
+            if self.get_waste_product() is not None:
+                emission_lst = self.get_waste_product().get_emissions()[lc_stage]
                 if isinstance(emission_lst, Emissions):
                     if objs:
                         emissions.append(emission_lst)
@@ -624,20 +694,7 @@ class Material(Product):
                         if objs:
                             emissions.append(emission)
                         else:
-                            emissions += emission
-        else:
-            emission_lst = self.get_waste_product().get_emissions()[lc_stage]
-            if isinstance(emission_lst, Emissions):
-                if objs:
-                    emissions.append(emission_lst)
-                else:
-                    emissions += emission_lst
-            else:
-                for emission in emission_lst:
-                    if objs:
-                        emissions.append(emission)
-                    else:
-                        emissions += emission  
+                            emissions += emission  
 
         return emissions
 

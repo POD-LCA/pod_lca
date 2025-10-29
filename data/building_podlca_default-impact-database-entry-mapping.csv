@@ -28,8 +28,7 @@ Double pane IGU,Insulated glazing unit (IGU),7,6,4,4,3,5
 Enamel Paint,,null,null,null,null,null,null
 EPDM membrane,"EPDM membrane roofing, non-reinforced, 45 mil",7,6,4,4,3,5
 "Expanded polystyrene (EPS), board",Expanded polystyrene (EPS) Type I,7,6,4,4,3,5
-"Fiberglass blanket insulation, paper faced","Fiberglass board
-",7,6,4,4,3,5
+"Fiberglass blanket insulation, paper faced","Fiberglass board",7,6,4,4,3,5
 Fluoropolymer coating,,null,null,null,null,null,null
 "Fluoropolymer coating, metal stock",,null,null,null,null,null,null
 Formed Steel Sheet,"Steel plate, fabricated",7,6,4,4,3,5
@@ -74,5 +73,5 @@ Type N Mortar,Masonry cement,7,6,4,4,3,5
 Type S mortar,Masonry cement,7,6,4,4,3,5
 Type S Mortar,Masonry cement,7,6,4,4,3,5
 Water based stain,,null,null,null,null,null,null
-"Window frame, vinyl, fixed",Curtain wall ,7,6,4,4,3,5
+"Window frame, vinyl, fixed",Curtain wall,7,6,4,4,3,5
 Generic 25mm Insulation,Expanded polystyrene (EPS) Type I,7,6,4,4,3,5

@@ -581,7 +581,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             # FIXME: consolidate the different thinkings in envelope by geometry and from template
             envelope = self.create_envelopes_from_template(kwargs['operational_sys_path'])
         elif method == 'from template':
-            envelope = Envelope.from_template(self, kwargs['template_bom_walls'], kwargs['template_bom_windows'])
+            envelope = Envelope.from_template(self, kwargs['template_bom_walls'], kwargs['template_bom_windows'], kwargs['template_bom_roof'])
         else:
             raise ValueError('Method of creating envelope is not recognized.')
         
