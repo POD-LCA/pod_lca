@@ -132,7 +132,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         return building
      
     @classmethod
-    def from_parameters(cls, name, type, location, built_year, life_span, no_floors, f2f_height, floor_plan, floors_below_grade=None, geometry_units=METER, logistic_type='local'):
+    def from_parameters(cls, name, type, location, built_year, life_span, no_floors, f2f_height, floor_plan, geometry_units=METER, **kwargs):
         """ Build a building.
         
         Parameters
@@ -157,10 +157,19 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Number of floors below grade.
         geometry_units : ~pod_lca.units.Unit
             Unit of measurement used in geometry definitions.
+
+        Other Parameters
+        ----------------
+        floors_below_grade : int, optional
+            Number of floors below grade. If not provided, it will be set to 1 if no_floors > 2, else 0.
         logistic_type : {'local', 'global'}
             Transportation scope of the building material in construction.
-        # TODO: move above to kwargs
-        # TODO: add building data standard to kwargs
+        construction_energy_use: float
+            Construction energy use for the building.
+        construction_energy_use_unit: str
+            Unit for construction energy use. E.g., 'MWh', 'kWh', etc
+        building_standard : {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates.
         
         Returns
         -------
@@ -168,14 +177,13 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Building built.
         """
         building = cls.new(name, type, location, built_year, life_span)
-        building.set_databases()
-        building.set_building_level_products(logistic_type)
+        building.set_databases(kwargs.get('building_standard', 'ASHRAE'))
+        building.set_building_level_products(logistic_type=kwargs.get('logistic_type', 'local'),
+                                             construction_electricity_consumption=kwargs.get('construction_energy_use', 0.0),
+                                             electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
 
         if floors_below_grade is None:
-            if no_floors > 2:
-                floors_below_grade = 1
-            else:
-                floors_below_grade = 0
+            floors_below_grade = 1 if no_floors > 2 else 0
 
         building.add_floors(no_floors, f2f_height, floor_plan, floors_below_grade, geometry_units)
 
@@ -185,7 +193,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         return building
 
     @classmethod
-    def from_geometry(cls, name, type, location, built_year, life_span, geometry, logistic_type='local'):
+    def from_geometry(cls, name, type, location, built_year, life_span, geometry, **kwargs):
         """ Build a building.
         
         Parameters
@@ -202,8 +210,17 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Life span of the building in years.
         geometry : 
             Geometry details of the building
+
+        Other Parameters
+        ----------------
         logistic_type : {'local', 'global'}
-            Transportation scope of the building material in construction.
+            Transportation scope of the building material in construction. Default is 'local'.
+        construction_energy_use: float
+            Construction energy use for the building.
+        construction_energy_use_unit: str
+            Unit for construction energy use. E.g., 'MWh', 'kWh', etc
+        building_standard : {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates. Default is 'ASHRAE'.
 
         Returns
         -------
@@ -211,8 +228,10 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Building built.
         """
         building = cls.new(name, type, location, built_year, life_span)
-        building.set_databases()
-        building.set_building_level_products(logistic_type)
+        building.set_databases(kwargs.get('building_standard', 'ASHRAE'))
+        building.set_building_level_products(logistic_type=kwargs.get('logistic_type', 'local'),
+                                             construction_electricity_consumption=kwargs.get('construction_energy_use', 0.0),
+                                             electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
 
         building.make_structure()
         building.make_envelope()
@@ -318,19 +337,24 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return scenario
 
-    def set_databases(self):
+    def set_databases(self, building_standard):
         """ Set databases and datasets to be used in the LCA computations.
+
+        Parameters
+        ----------
+        building_standard: {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates.
         """
         self.set_material_database()
         self.set_transportation_mode_impact_database()
         self.set_eol_process_impact_database()
         self.set_eol_demolition_impact_database()
         self.set_eol_transport_dataset()
-        self.set_building_data_standard(config['setup']['building']['DEFAULT_DATA_STANDARD'])
+        self.set_building_data_standard(building_standard)
 
         return self
     
-    def set_building_level_products(self, logistic_type='domestic', construction_electricity_consumption=0.0, electricity_unit=MEGA * WATT_HOUR):
+    def set_building_level_products(self, logistic_type, construction_electricity_consumption, electricity_unit):
         """ Set building level products used for LCA calculations.
         
         Parameters
@@ -342,7 +366,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         electricity_unit : ~pod_lca.units.Unit
             Unit of measurement used for electricity consumption.
         """
-        self.set_transportation_manager()
+        self.set_transportation_manager(logistic_type)
         self.set_operational_electricity_product(electricity_unit)
         self.set_construction_energy_product(construction_electricity_consumption, electricity_unit)
 

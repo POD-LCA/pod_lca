@@ -68,6 +68,8 @@ class TemplateModels:
             Construction energy use for the building.
         construction_energy_use_unit: str
             Unit for construction energy use. E.g., 'MWh', 'kWh', etc
+        building_standard : {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates. Default is 'ASHRAE'.
         logistic_type: {'Local', 'Global'}
             Logistic type for building material transportation. 
         
@@ -81,7 +83,7 @@ class TemplateModels:
                            location=location, 
                            built_year=built_year, 
                            life_span=life_span)
-        building.set_databases()
+        building.set_databases(kwargs.get('building_standard', 'ASHRAE'))
 
         building.set_template_model(**kwargs)
 
@@ -130,11 +132,8 @@ class TemplateModels:
         logistic_type: {'Local', 'Global'}
             Logistic type for building material transportation. 
         """
-        no_floors = kwargs['no_floors'] if 'no_floors' in kwargs else 1
-        floors_below_grade = kwargs['floors_below_grade'] if 'floors_below_grade' in kwargs else 0
-        geometry_units = kwargs['geometry_units'] if 'geometry_units' in kwargs else 'm'
-        f2f_height = kwargs['f2f_height'] if 'f2f_height' in kwargs else 3.0 if geometry_units == 'm' else 10.0
-
+        # set default geometry
+        no_floors = kwargs.get('no_floors', 1)
         if 'floor_plan' in kwargs:
             floor_plan = kwargs['floor_plan']
         else:
@@ -143,19 +142,23 @@ class TemplateModels:
                 floor_plan = [(0.0 , 0.0), (0.0, side_length), (side_length, side_length), (side_length, 0.0)]
             else:
                 raise ValueError('Either floor plan or floor area must be provided to define the floor geometry.')
-            
+        geometry_units = kwargs.get('geometry_units', 'm')
+
+        # set floors
         self.add_floors(no_floors=no_floors, 
-                        floors_below_grade=floors_below_grade,
-                        f2f_height=f2f_height, 
+                        floors_below_grade=kwargs.get('floors_below_grade', 0),
+                        f2f_height=kwargs.get('f2f_height', 3.0 if geometry_units == 'm' else 10.0), 
                         floor_plan=floor_plan,
                         geometry_units=UNITS_MAP[geometry_units])
         
+        # set building level products
         construction_energy_use = kwargs["construction_energy_use"] if "construction_energy_use" in kwargs else 0.0
         energy_units = UNITS_MAP[kwargs["construction_energy_use_unit"]] if "construction_energy_use" in kwargs else MEGA * WATT_HOUR
-        self.set_building_level_products(logistic_type=kwargs['logistic_type'], 
+        self.set_building_level_products(logistic_type=kwargs.get('logistic_type', 'local'), 
                                          construction_electricity_consumption=construction_energy_use, 
                                          electricity_unit=energy_units)
 
+        # building structure and envelope
         template_bom_file_name_prefix = config['setup']['building']['TEMPLATE_BOM_PREFIX'] + kwargs['building_type'] + '_'
 
         template_bom_path_structure = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['structure_type'] + '.csv')
