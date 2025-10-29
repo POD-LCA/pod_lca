@@ -9,6 +9,7 @@ from . import TransportationLeg
 from . import TransportMode
 from ..location import Location
 from ...units import KILOMETER
+from ...units import MILE
 from ...utilities import log
 
 
@@ -50,7 +51,7 @@ class ForeignLeg(TransportationLeg):
         """
         leg = super().in_project(good, project, name)
 
-        domestic_leg = TransportationLeg.in_project(good, project, name + '_domestic')
+        domestic_leg = LinkedDomesticLeg.in_project(good, project, name + '_domestic')
         leg.set_next(domestic_leg)
 
         return leg
@@ -316,6 +317,28 @@ class ForeignLeg(TransportationLeg):
     def _invalidate_cache(self):
         self._cache_travel_dist = None
         self._last_params = None
+
+
+class LinkedDomesticLeg(TransportationLeg):
+    """ A leg of Domestic transportation linked to a Foreign transportation leg.
+    """
+
+    def __init__(self):
+        super().__init__()
+
+
+    def get_return_trip_factor(self):
+        """ Retrieve the return trip factor of the transportation leg.
+
+        Returns
+        -------
+        float
+            The return trip factor of the transportation leg.
+        """
+        dist = self.get_travel_dist()
+        convertion_factor = self.get_dist_unit().convert_to(MILE)
+
+        return 1.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 1.0
 
 
 if __name__ == '__main__':

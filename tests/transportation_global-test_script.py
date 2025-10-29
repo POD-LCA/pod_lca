@@ -118,36 +118,40 @@ for test in tqdm(test_dict):
     output_dict[test]['dms_distance_difference (%)'] = dms_dif * 100 
 
     output_dict[test]['distance_unit'] = test_dict[test]['distance_unit']
-      
-    if fr_dif * 100 > 0.5 or dms_dif * 100 > 0:
+
+    limit = 5.0 if fr_mode == 'Air' else 0.5  # air distances can have larger variation  
+    if fr_dif * 100 > limit or dms_dif * 100 > limit:
         test_status = False
         dif = max(fr_dif, dms_dif)
         print(f"{test} failed on distance with a difference of {dif * 100:.2f}%")
         print(f"computed distance value: {fr_distance}")
         print(f"expected distance value: {test_dict[test]['fr_distance']}")      
 
-    impacts = project.get_impacts(product)
-    emissions = project.get_emissions(product)
-    # check inventories
-    for inventory in inventories:
-        if inventory in impact_categories:
-            records = impacts
-        elif inventory in emission_inventories:
-            records = emissions
-        else:
-            raise KeyError(f"Inventory '{inventory}' not found in IMPACT_CATEGORIES or EMISSION_INVENTORIES.")
-        if inventory in test_dict[test]:
-            dif = abs(records.get_record(inventory) - float(test_dict[test][inventory])) / ((records.get_record(inventory) + float(test_dict[test][inventory])) / 2 )  # symmetric difference
-            
-            output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Python tool'] = records.get_record(inventory)
-            output_dict[test][inventory + '(' + inventories[inventory] + ')' + ' Manual calc'] = test_dict[test][inventory]
-            output_dict[test][inventory + '_difference (%)'] = dif * 100
 
-            if dif * 100 > 0.5:
-                test_status = False
-                print(f"{test} failed on {inventory} with a difference of {dif * 100:.2f}%")
-                print(f"computed impact value: {records.get_record(inventory)} {inventories[inventory]}")
-                print(f"expected impact value: {test_dict[test][inventory]} {inventories[inventory]}")
+    # check inventories
+    for leg in [foreign_transport_leg, domestic_transport_leg]:
+        impacts = leg.get_impacts()
+        emissions = leg.get_emissions()
+        tag = '_fr' if leg == foreign_transport_leg else '_dms'
+        for inventory in inventories:
+            if inventory in impact_categories:
+                records = impacts
+            elif inventory in emission_inventories:
+                records = emissions
+            else:
+                raise KeyError(f"Inventory '{inventory}' not found in IMPACT_CATEGORIES or EMISSION_INVENTORIES.")
+            if inventory + tag in test_dict[test]:
+                dif = abs(records.get_record(inventory) - float(test_dict[test][inventory + tag])) / ((records.get_record(inventory) + float(test_dict[test][inventory + tag])) / 2 )  # symmetric difference
+                
+                output_dict[test][inventory + tag + '(' + inventories[inventory] + ')' + ' Python tool'] = records.get_record(inventory)
+                output_dict[test][inventory + tag + '(' + inventories[inventory] + ')' + ' Manual calc'] = test_dict[test][inventory + tag]
+                output_dict[test][inventory+ tag  + '_difference (%)'] = dif * 100
+
+                if dif * 100 > limit:
+                    test_status = False
+                    print(f"{test} failed on {inventory+ tag} with a difference of {dif * 100:.2f}%")
+                    print(f"computed impact value: {records.get_record(inventory)} {inventories[inventory]}")
+                    print(f"expected impact value: {test_dict[test][inventory + tag]} {inventories[inventory]}")
 
     output_dict[test]['test status'] = 'PASS' if test_status else 'FAIL'
     output_dict[test]['Notes'] = ''

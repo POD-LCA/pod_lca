@@ -13,20 +13,20 @@ product = Product()
 product.set_name("Coal")
 product.set_qty(1)
 product.set_unit(M_TON)
-product.set_sctg_code('33')
+product.set_sctg_code('10')
 
 # origin = Location.from_faf_regions('Mexico') # 'Canada', 'Mexico', 'Rest of Americas', 'Europe', 'Africa', 'SW & Central Asia', 'Eastern Asia', 'SE Asia & Oceania
 
 project.add_good(product, 
-                 shipping_dest=Location.from_US_state('Hawaii'), 
+                 shipping_dest=Location.from_US_state('Georgia'), 
                  shipping_org=None, 
-                 mode_name='Air', 
+                 mode_name='Ocean', 
                  transport_scenario="Global")
 
 transportation_leg = project.get_transportation_leg(product)[0]
 
 domestic_transport_leg = transportation_leg.get_domestic_leg()
-domestic_transport_leg.set_mode('Barge', efficiency=None)
+# domestic_transport_leg.set_mode('Barge', efficiency=None)
 # TODO force mode off
 
 distance = transportation_leg.get_travel_dist()
