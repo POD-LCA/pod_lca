@@ -46,7 +46,6 @@ setup:
     NUM_TIMESTEPS: 1
     SOLAR_DISTRIBUTION: 'FullExteriorWithReflections'
   building:
-    TEMPLATE_BOM_PREFIX: template-model_
     DEFAULT_DATA_STANDARD: ASHRAE # Options: RICS, ASHRAE
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
@@ -110,7 +109,10 @@ file_paths:
     INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
   building:
     DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
-    TEMPLATE_BOM_FOLDER: data/
+    TEMPLATE_BOM_STRUCTURE: data/buildings_podlca_template-models-structure.csv
+    TEMPLATE_BOM_ENCLOSURE_OPAQUE: data/buildings_podlca_template-models-enclosure-opaque.csv
+    TEMPLATE_BOM_ENCLOSURE_TRANSLUCENT: data/buildings_podlca_template-models-enclosure-translucent.csv
+    TEMPLATE_BOM_ROOFING: data/buildings_podlca_template-models-roofing.csv
     TEMPLATE_MATERIALS_DEFAULT_MAP: data/building_podlca_default-impact-database-entry-mapping.csv
     RICS_SERVICE_LIFE: data/building_rics_service-life.csv
     ASHRAE_SERVICE_LIFE: data/building_ashrae_service-life.csv

@@ -7,10 +7,10 @@ from pod_lca.visualizer import MatplotlibPlotter
 my_location = Location.from_str("98126, Seattle")
 template_model_data ={
     "building_type":"residential",
-    "structure_type":"doe-prototype",
-    "enclosure-opaque":"opaque-enclosure-doe-prototype",
-    "enclosure-translucent":"translucent-enclosure-doe-prototype",
-    "roof":"roofing-enclosure-doe-prototype",
+    "structure_type":"doe_prototype",
+    "enclosure-opaque":"Brick, wood framing",
+    "enclosure-translucent":"Glazing, operable window",
+    "roof":"Asphalt shingle roofing",
     "no_floors":2,
     "floor_area":221,
     "floors_below_grade":0,

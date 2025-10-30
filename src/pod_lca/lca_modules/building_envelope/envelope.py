@@ -5,6 +5,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from math import isnan
+
 from . import Construction
 from . import Surface
 from . import EnvelopeMaterial
@@ -47,19 +49,23 @@ class Envelope:
         return envelope
     
     @classmethod
-    def from_template(cls, building, bom_file_path_walls, bom_file_path_windows, bom_file_path_roof=None):
+    def from_template(cls, building, building_type, envelope_opaque, envelope_translucent, roofing):
         """ Create a structure from a template model.
         
         Parameters
         ----------
         building : ~pod_lca.building.Building
             Building for which the structure belong.
-        bom_file_path_walls : str
-            File path to bill of materials for opaque enclosure.
-        bom_file_path_windows : str
-            File path to bill of materials for transparent enclosure.
-        bom_file_path_roof : str
-            File path to bill of materials for roof enclosure.
+        building_type : {'Commercial', 'Residential'}
+            Type of building.
+        envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
+                            'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 
+                            'Rainscreen, Formed Steel Panel', 'Brick, wood framing'}
+            Template used for building opaque enclosure.
+        envelope_translucent : {'Glazing, double pane IGU', 'Glazing, triple pane IGU', 'Operable window', 'Glazing, operable window'}
+            Template used for building translucent enclosure.
+        roofing : {'EPDM roofing', 'Asphalt shingle roofing'}
+            Template used for building roofing.
 
         Returns
         -------
@@ -70,25 +76,38 @@ class Envelope:
         envelope.set_parent(building)
 
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
-        bill_of_materials_walls = DataImporter.csv_to_dict(bom_file_path_walls)
-        bill_of_materials_windows = DataImporter.csv_to_dict(bom_file_path_windows)
-        if bom_file_path_roof is not None:
-            bill_of_materials_roof = DataImporter.csv_to_dict(bom_file_path_roof)
         
+        bill_of_materials_walls_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_ENCLOSURE_OPAQUE'])
+        bill_of_materials_walls = bill_of_materials_walls_all[(bill_of_materials_walls_all['building_type'].str.lower() == building_type.lower()) & 
+                                                              (bill_of_materials_walls_all['assembly'].str.lower() == envelope_opaque.lower())].drop(['building_type'], axis=1).to_dict('index')
+        if not bill_of_materials_walls:
+            log("The opaque enclosure is empty.", 'warn')
+
+        bill_of_materials_windows_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_ENCLOSURE_TRANSLUCENT'])
+        bill_of_materials_windows = bill_of_materials_windows_all[(bill_of_materials_windows_all['building_type'].str.lower() == building_type.lower()) & 
+                                                                  (bill_of_materials_windows_all['assembly'].str.lower() == envelope_translucent.lower())].drop(['building_type'], axis=1).to_dict('index')
+        if not bill_of_materials_windows:
+            log("The translucent enclosure is empty.", 'warn')
+
+        bill_of_materials_roof_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_ROOFING'])
+        bill_of_materials_roof = bill_of_materials_roof_all[(bill_of_materials_roof_all['building_type'].str.lower() == building_type.lower()) & 
+                                                            (bill_of_materials_roof_all['assembly'].str.lower() == roofing.lower())].drop(['building_type'], axis=1).to_dict('index')
+        if not bill_of_materials_roof:
+            log("The roof is empty.", 'warn')
+
+        boms = [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
+
         # FIXME: if the wwr to be calculated from these
         enclosure_walls = Construction.create('walls', building, None)
         enclosure_windows = Construction.create('windows', building, None)
-        if bom_file_path_roof is not None:
-            enclosure_roof = Construction.create('roof', building, None)
-
-        enclosures = [enclosure_walls, enclosure_windows] if bom_file_path_roof is None else [enclosure_walls, enclosure_windows, enclosure_roof]
-        boms = [bill_of_materials_walls, bill_of_materials_windows] if bom_file_path_roof is None else [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
-
+        enclosure_roof = Construction.create('roof', building, None)
+        enclosures =  [enclosure_walls, enclosure_windows, enclosure_roof]
+        
         for assembly, bom in zip(enclosures, boms):
             for item in bom.values():
                     
                 building_assembly = item['assembly'].lower().replace(" ", "_").replace(",", "")
-                if not item['qty'] == '': # TODO: better check for qty
+                if not (isnan(item['qty']) or (item['qty'] == '') or (isinstance(item['material'], (float, int)) and isnan(item['material'])) or (item['material'] == '')): # TODO: better check for qty
                     building_material = EnvelopeMaterial.new(
                         parent=assembly,
                         name=item['material'] + '_in_' + building_assembly,
@@ -100,7 +119,7 @@ class Envelope:
                     )
                     assembly.add_material(building_material)
                 else:
-                    log("Quantity not specified for {} in {}. Skipping.".format(item['material'], building_assembly), level='Warn')
+                    log("Quantity or material not specified for {} in {}. Skipping.".format(item['material'], building_assembly), level='Warn')
                 
                 
             # TODO:update component servie life based on materials

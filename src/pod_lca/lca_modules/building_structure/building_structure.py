@@ -15,6 +15,7 @@ from . import StructuralMaterial
 from ...units import UNITS_MAP
 from ...utilities import DataImporter
 from ...utilities import config
+from ...utilities import log
 
 
 class BuildingStructure:
@@ -52,15 +53,17 @@ class BuildingStructure:
     # Constructors
     # ================================
     @classmethod
-    def from_template(cls, building, bom_file_path):
+    def from_template(cls, building, building_type, structure_type):
         """ Create a structure from a template model.
         
         Parameters
         ----------
         building : ~pod_lca.building.Building
             Building for which the structure belong.
-        bom_file_path : str
-            File path to bill of materials
+        building_type : {'Commercial', 'Residential'}
+            Type of building.
+        structure_type : {'BP_Steel'. 'LS_steel', 'SS_Steel', "BP_Concrete', 'LS_Concrete', 'SS_Concrete', 'BP_Wood', 'LS_Wood', 'SS_Wood'}
+            Template used for building structure.  
 
         Returns
         -------
@@ -70,7 +73,13 @@ class BuildingStructure:
         structure = cls()
         structure.set_parent(building)
 
-        bill_of_materials = DataImporter.csv_to_dict(bom_file_path)
+        bill_of_materials_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_STRUCTURE'])
+        bill_of_materials = bill_of_materials_all[(bill_of_materials_all['building_type'].str.lower() == building_type.lower()) & 
+                                                  (bill_of_materials_all['structure_type'].str.lower() == structure_type.lower())].drop(['building_type', 'structure_type'], axis=1).to_dict('index')
+        if not bill_of_materials:
+            log("The structure is empty.", 'warn')
+
+
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
 
         column_foundation = Foundation.create('wall foundation', structure, None)
@@ -83,8 +92,7 @@ class BuildingStructure:
         structural_walls = Wall.create('structural columns', structure, None)
         roof_structure = RoofStructure.create('roof structure', structure, None)
 
-        for key in bill_of_materials:
-            item = bill_of_materials[key]
+        for item in bill_of_materials.values():
                 
             building_assembly = item['assembly'].lower().replace(" ", "_")
             match building_assembly:

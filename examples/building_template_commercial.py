@@ -6,10 +6,11 @@ from pod_lca.visualizer import MatplotlibPlotter
 
 my_location = Location.from_str("98126, Seattle")
 template_model_data = {
-    "building_type":"commercial",
-    "structure_type":"bp-steel",
-    "enclosure-opaque":"rain-screen-thin-brick",
-    "enclosure-translucent":"glazing-double-pane",
+    "building_type":"commercial", 
+    "structure_type":"BP_Wood", # 'BP_Steel'. 'LS_steel', 'SS_Steel', "BP_Concrete', 'LS_Concrete', 'SS_Concrete', 'BP_Wood', 'LS_Wood', 'SS_Wood'
+    "enclosure-opaque":"Curtain wall: aluminum spandrel", # 'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 'Rainscreen, Formed Steel Panel', 'Brick, wood framing'
+    "enclosure-translucent":"Glazing, double pane IGU", # 'Glazing, double pane IGU', 'Glazing, triple pane IGU', 'Operable window'
+    "roof": "EPDM roofing", # 'EPDM roofing'
     "no_floors":6,
     "f2f_height":3.0,
     "floor_plan":[[0.0 , 0.0], [0.0, 180.0], [120.0, 180.0], [120.0, 0.0]],

@@ -1,0 +1,6 @@
+﻿building_type,assembly,material,qty,unit,POD|LCA RSL Category
+commercial,EPDM roofing,EPDM membrane,10829,kg,roofing_EPDM
+commercial,EPDM roofing,Polyisocyanurate board,9755,kg,roofing_EPDM
+residential,Asphalt shingle roofing,SBS modified asphalt shingles,116,m2,roofing_asphaltshingle
+residential,Asphalt shingle roofing,"Self-adhering, polymer-modified asphalt sheet underlayment",110.4,m2,roofing_asphaltshingle
+residential,Asphalt shingle roofing,"Fiberglass blanket insulation, paper faced",750,kg,roofing_asphaltshingle

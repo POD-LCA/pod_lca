@@ -50,6 +50,8 @@ class TemplateModels:
         roof: str
             Template used for building roof enclosure.
             The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{roof}.csv', will be used.
+        run_eplus: bool
+            Whether to run EnergyPlus simulation for operational energy modeling. Default is False.
         no_floors: int
             Number of floors in the building.
         floors_below_grade: int
@@ -111,6 +113,8 @@ class TemplateModels:
         roof: str
             Template used for building roof enclosure.
             The corresonding CSV file in data folder, named as 'TEMPLATE_BOM_PREFIX_{building-type}_{roof}.csv', will be used.
+        run_eplus: bool
+            Whether to run EnergyPlus simulation for operational energy modeling. Default is False.
         no_floors: int
             Number of floors in the building.
         floors_below_grade: int
@@ -130,7 +134,7 @@ class TemplateModels:
         construction_energy_use_unit: str
             Unit for construction energy use. E.g., 'MWh', 'kWh', etc
         logistic_type: {'Local', 'Global'}
-            Logistic type for building material transportation. 
+            Logistic type for building material transportation.
         """
         # set default geometry
         no_floors = kwargs.get('no_floors', 1)
@@ -158,24 +162,11 @@ class TemplateModels:
                                          construction_electricity_consumption=construction_energy_use, 
                                          electricity_unit=energy_units)
 
-        # building structure and envelope
-        template_bom_file_name_prefix = config['setup']['building']['TEMPLATE_BOM_PREFIX'] + kwargs['building_type'] + '_'
-
-        template_bom_path_structure = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['structure_type'] + '.csv')
-        self.make_structure('from template', template_bom=template_bom_path_structure)
+        # make structure and envelope
+        self.make_structure('from template', kwargs['building_type'], kwargs['structure_type'])
         
-        # FIXME: decide on check... optional parameter in method.. or drop this altogether
-        if self.run_eplus:
-            operational_sys_path = config['file_paths']['operational']['SYSTEMS']
-            self.make_envelope('from geometry', operational_sys_path=operational_sys_path)  
-        else:
-            template_bom_path_walls = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['enclosure-opaque'] + '.csv') if 'enclosure-opaque' in kwargs else None 
-            template_bom_path_windows = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['enclosure-translucent'] + '.csv') if 'enclosure-translucent' in kwargs else None
-            template_bom_path_roof = config['file_paths']['building']['TEMPLATE_BOM_FOLDER'] / (template_bom_file_name_prefix + kwargs['roof'] + '.csv') if 'roof' in kwargs else None   
-            self.make_envelope('from template', 
-                               template_bom_walls=template_bom_path_walls,
-                               template_bom_windows=template_bom_path_windows,
-                               template_bom_roof=template_bom_path_roof)
+        envelope_method = 'from geometry' if kwargs.get('run_eplus', False) else 'from template'
+        self.make_envelope(envelope_method, kwargs['building_type'],kwargs['enclosure-opaque'], kwargs['enclosure-translucent'], kwargs['roof']) 
 
         return self
 

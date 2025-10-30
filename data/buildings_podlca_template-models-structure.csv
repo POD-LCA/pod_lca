@@ -1,0 +1,131 @@
+﻿building_type,structure_type,assembly,material,qty,unit
+commercial,BP_Steel,Column foundation,"Normalweight concrete, 4000 psi",668697,kg
+commercial,BP_Steel,Column foundation,"Steel, reinforcing rod",74893,kg
+commercial,BP_Steel,Wall foundation,"Normalweight concrete, 4000 psi",1905120,kg
+commercial,BP_Steel,Wall foundation,"Steel, reinforcing rod",213370,kg
+commercial,BP_Steel,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,BP_Steel,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,BP_Steel,Elevated slabs,"Lightweight concrete, 5000 psi",2551980,kg
+commercial,BP_Steel,Elevated slabs,"Steel decking, galvanized",132267,kg
+commercial,BP_Steel,Elevated slabs,"Steel, welded wire mesh",17149,kg
+commercial,BP_Steel,Structural framing: beams,"Steel, hot rolled structural steel",145303,kg
+commercial,BP_Steel,Structural framing: girders,"Steel, hot rolled structural steel",65264,kg
+commercial,BP_Steel,Structural columns,"Steel, hot rolled structural steel",116629,kg
+commercial,BP_Steel,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,BP_Steel,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,LS_Steel,Column foundation,"Normalweight concrete, 4000 psi",1219277,kg
+commercial,LS_Steel,Column foundation,"Steel, reinforcing rod",136557,kg
+commercial,LS_Steel,Wall foundation,"Normalweight concrete, 4000 psi",1905120,kg
+commercial,LS_Steel,Wall foundation,"Steel, reinforcing rod",213370,kg
+commercial,LS_Steel,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,LS_Steel,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,LS_Steel,Elevated slabs,"Lightweight concrete, 5000 psi",2551980,kg
+commercial,LS_Steel,Elevated slabs,"Steel decking, galvanized",132267,kg
+commercial,LS_Steel,Elevated slabs,"Steel, welded wire mesh",17149,kg
+commercial,LS_Steel,Structural framing: beams,"Steel, hot rolled structural steel",208771,kg
+commercial,LS_Steel,Structural framing: girders,"Steel, hot rolled structural steel",152764,kg
+commercial,LS_Steel,Structural columns,"Steel, hot rolled structural steel",97990,kg
+commercial,LS_Steel,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,LS_Steel,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,SS_Steel,Column foundation,"Normalweight concrete, 4000 psi",342922,kg
+commercial,SS_Steel,Column foundation,"Steel, reinforcing rod",38407,kg
+commercial,SS_Steel,Wall foundation,"Normalweight concrete, 4000 psi",2357586,kg
+commercial,SS_Steel,Wall foundation,"Steel, reinforcing rod",264045,kg
+commercial,SS_Steel,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,SS_Steel,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,SS_Steel,Elevated slabs,"Lightweight concrete, 5000 psi",2551980,kg
+commercial,SS_Steel,Elevated slabs,"Steel decking, galvanized",132267,kg
+commercial,SS_Steel,Elevated slabs,"Steel, welded wire mesh",17149,kg
+commercial,SS_Steel,Structural framing: beams,"Steel, hot rolled structural steel",44512,kg
+commercial,SS_Steel,Structural framing: girders,"Steel, hot rolled structural steel",41074,kg
+commercial,SS_Steel,Structural columns,"Steel, hot rolled structural steel",121621,kg
+commercial,SS_Steel,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,SS_Steel,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,BP_Concrete,Column foundation,"Normalweight concrete, 4000 psi",1044839,kg
+commercial,BP_Concrete,Column foundation,"Steel, reinforcing rod",117020,kg
+commercial,BP_Concrete,Wall foundation,"Normalweight concrete, 4000 psi",1905120,kg
+commercial,BP_Concrete,Wall foundation,"Steel, reinforcing rod",213370,kg
+commercial,BP_Concrete,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,BP_Concrete,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,BP_Concrete,Elevated slabs,"Normalweight concrete, 5000 psi",6429780,kg
+commercial,BP_Concrete,Elevated slabs,"Steel, reinforcing rod",43207,kg
+commercial,BP_Concrete,Structural columns,"Normalweight concrete, 5000 psi",534398,kg
+commercial,BP_Concrete,Structural columns,"Steel, reinforcing rod",39901,kg
+commercial,BP_Concrete,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,BP_Concrete,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,LS_Concrete,Column foundation,"Normalweight concrete, 4000 psi",2334010,kg
+commercial,LS_Concrete,Column foundation,"Steel, reinforcing rod",261405,kg
+commercial,LS_Concrete,Wall foundation,"Normalweight concrete, 4000 psi",1905120,kg
+commercial,LS_Concrete,Wall foundation,"Steel, reinforcing rod",213370,kg
+commercial,LS_Concrete,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,LS_Concrete,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,LS_Concrete,Elevated slabs,"Normalweight concrete, 5000 psi",8573040,kg
+commercial,LS_Concrete,Elevated slabs,"Steel, reinforcing rod",57610,kg
+commercial,LS_Concrete,Structural columns,"Normalweight concrete, 5000 psi",710954,kg
+commercial,LS_Concrete,Structural columns,"Steel, reinforcing rod",53084,kg
+commercial,LS_Concrete,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,LS_Concrete,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,SS_Concrete,Column foundation,"Normalweight concrete, 4000 psi",547722,kg
+commercial,SS_Concrete,Column foundation,"Steel, reinforcing rod",61344,kg
+commercial,SS_Concrete,Wall foundation,"Normalweight concrete, 4000 psi",2357586,kg
+commercial,SS_Concrete,Wall foundation,"Steel, reinforcing rod",264045,kg
+commercial,SS_Concrete,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,SS_Concrete,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,SS_Concrete,Elevated slabs,"Normalweight concrete, 5000 psi",4822335,kg
+commercial,SS_Concrete,Elevated slabs,"Steel, reinforcing rod",32406,kg
+commercial,SS_Concrete,Structural columns,"Normalweight concrete, 5000 psi",507759,kg
+commercial,SS_Concrete,Structural columns,"Steel, reinforcing rod",37912,kg
+commercial,SS_Concrete,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,SS_Concrete,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,BP_Wood,Column foundation,"Normalweight concrete, 4000 psi",342922,kg
+commercial,BP_Wood,Column foundation,"Steel, reinforcing rod",38407,kg
+commercial,BP_Wood,Wall foundation,"Normalweight concrete, 4000 psi",2357586,kg
+commercial,BP_Wood,Wall foundation,"Steel, reinforcing rod",264045,kg
+commercial,BP_Wood,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,BP_Wood,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,BP_Wood,Elevated slabs,"Lightweight concrete, 5000 psi",1285956,kg
+commercial,BP_Wood,Elevated slabs,CLT (Cross laminated timber),620244,kg
+commercial,BP_Wood,Elevated slabs,"Steel, welded wire mesh",8641,kg
+commercial,BP_Wood,Structural framing: beams,Glue laminated timber (Glulam),66358,kg
+commercial,BP_Wood,Structural framing: girders,Glue laminated timber (Glulam),57373,kg
+commercial,BP_Wood,Structural columns,Glue laminated timber (Glulam),94307,kg
+commercial,BP_Wood,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,BP_Wood,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,LS_Wood,Column foundation,"Normalweight concrete, 4000 psi",535815,kg
+commercial,LS_Wood,Column foundation,"Steel, reinforcing rod",60010,kg
+commercial,LS_Wood,Wall foundation,"Normalweight concrete, 4000 psi",2357586,kg
+commercial,LS_Wood,Wall foundation,"Steel, reinforcing rod",264045,kg
+commercial,LS_Wood,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,LS_Wood,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,LS_Wood,Elevated slabs,"Lightweight concrete, 5000 psi",1607445,kg
+commercial,LS_Wood,Elevated slabs,CLT (Cross laminated timber),775305,kg
+commercial,LS_Wood,Elevated slabs,"Steel, welded wire mesh",10802,kg
+commercial,LS_Wood,Structural framing: beams,Glue laminated timber (Glulam),109396,kg
+commercial,LS_Wood,Structural framing: girders,Glue laminated timber (Glulam),76129,kg
+commercial,LS_Wood,Structural columns,Glue laminated timber (Glulam),107537,kg
+commercial,LS_Wood,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,LS_Wood,Structural walls,"Steel, reinforcing rod",142771,kg
+commercial,SS_Wood,Column foundation,"Normalweight concrete, 4000 psi",141455,kg
+commercial,SS_Wood,Column foundation,"Steel, reinforcing rod",15843,kg
+commercial,SS_Wood,Wall foundation,"Normalweight concrete, 4000 psi",2357586,kg
+commercial,SS_Wood,Wall foundation,"Steel, reinforcing rod",264045,kg
+commercial,SS_Wood,Slab on grade,"Normalweight concrete, 4000 psi",535815,kg
+commercial,SS_Wood,Slab on grade,"Steel, welded wire mesh",3601,kg
+commercial,SS_Wood,Elevated slabs,"Lightweight concrete, 5000 psi",1607445,kg
+commercial,SS_Wood,Elevated slabs,CLT (Cross laminated timber),775305,kg
+commercial,SS_Wood,Elevated slabs,"Steel, welded wire mesh",10802,kg
+commercial,SS_Wood,Structural framing: beams,Glue laminated timber (Glulam),37922,kg
+commercial,SS_Wood,Structural framing: girders,Glue laminated timber (Glulam),31185,kg
+commercial,SS_Wood,Structural columns,Glue laminated timber (Glulam),71691,kg
+commercial,SS_Wood,Structural walls,"Normalweight concrete, 6000 psi",1092652,kg
+commercial,SS_Wood,Structural walls,"Steel, reinforcing rod",142771,kg
+residential,doe_prototype,Concrete Footing,"Normalweight Concrete, 3000 psi",20745,kg
+residential,doe_prototype,Slab on grade,"Normalweight Concrete, 3000 psi",38782,kg
+residential,doe_prototype,Slab on grade,"Steel, reinforcing rod",132,kg
+residential,doe_prototype,Slab on grade,"Steel, welded wire mesh",226,kg
+residential,doe_prototype,Slab on grade,"Expanded polystyrene (EPS), board",11.77,m3
+residential,doe_prototype,Slab on grade,AVB,1.104,m3
+residential,doe_prototype,Slab on grade,Coarse aggregate,110.4,m2
+residential,doe_prototype,Floor framing,Composite wood I-joist,1223,kg
+residential,doe_prototype,Roof framing,Composite wood I-joist,1128,kg
+residential,doe_prototype,Roof decking,Oriented strandboard (OSB),1145,kg

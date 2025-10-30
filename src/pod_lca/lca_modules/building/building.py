@@ -551,21 +551,18 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         
         return self
 
-    def make_structure(self, method, **kwargs):
+    def make_structure(self, method, building_type, structure_type):
         """ Create the structure of the building.
         
         Parameters
         ----------
         method : {'from geometry', 'from template'}
             Method of structure generation.
-
-        Other Parameters
-        ----------------
-        template_bom : str
-            File path to the bill-of-materials of the template model.            
+        building_type : {'Commercial', 'Residential'}
+            Type of building.
+        structure_type : {'BP_Steel'. 'LS_steel', 'SS_Steel', "BP_Concrete', 'LS_Concrete', 'SS_Concrete', 'BP_Wood', 'LS_Wood', 'SS_Wood'}
+            Template used for building structure.     
         """
-        structure_type = self.get_structure_type()
-
         if structure_type == 'Concrete':
             structure_obj = ConcreteStructure
         else:
@@ -574,7 +571,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         if method == 'from geometry':
             structure = structure_obj.from_geometry(self)
         elif method == 'from template':
-            structure = structure_obj.from_template(self, kwargs['template_bom'])
+            structure = structure_obj.from_template(self, building_type, structure_type)
         else:
             raise ValueError('Method of creating structure is not recognized.')
         
@@ -582,30 +579,36 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return self
 
-    def make_envelope(self,  method, **kwargs):
+    def make_envelope(self,  method, building_type, envelope_opaque, envelope_translucent, roofing, **kwargs):
         """ Create the envelope of the building.
         
         Parameters
         ----------
         method : {'from geometry', 'from template'}
             Method of structure generation.
+        building_type : {'Commercial', 'Residential'}
+            Type of building.
+        envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
+                            'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 'Rainscreen, Formed Steel Panel', 'Brick, wood framing'}
+            Template used for building opaque enclosure.
+        envelope_translucent : {'Glazing, double pane IGU', 'Glazing, triple pane IGU', 'Operable window', 'Glazing, operable window'}
+            Template used for building translucent enclosure.
+        roofing : {'EPDM roofing', 'Asphalt shingle roofing'}
+            Template used for building roofing.
 
         Other Parameters
         ----------------
-        template_bom_walls : str
-            File path to the bill-of-materials of the template model for opaque enclosure.
-        template_bom_windows : str
-            File path to the bill-of-materials of the template model for transparent enclosure.
         operational_sys_path: str
             File path to operational systems IDF file.         
         """
+        # FIXME: consolidate the different thinkings in envelope by geometry and from template
         if method == 'from geometry':
             self.read_constructions_data()
             self.read_material_properties_data()
-            # FIXME: consolidate the different thinkings in envelope by geometry and from template
+            operational_sys_path = config['file_paths']['operational']['SYSTEMS']
             envelope = self.create_envelopes_from_template(kwargs['operational_sys_path'])
         elif method == 'from template':
-            envelope = Envelope.from_template(self, kwargs['template_bom_walls'], kwargs['template_bom_windows'], kwargs['template_bom_roof'])
+            envelope = Envelope.from_template(self, building_type, envelope_opaque, envelope_translucent, roofing)
         else:
             raise ValueError('Method of creating envelope is not recognized.')
         
