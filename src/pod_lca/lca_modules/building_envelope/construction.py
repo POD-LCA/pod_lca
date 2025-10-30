@@ -4,6 +4,7 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from . import EnvelopeMaterial
 from ..building_envelope import Layer
 from ..operational import find_constructions
 from pod_lca.lca_modules.building.assembly import Assembly
@@ -43,12 +44,12 @@ class Construction(Assembly):
             if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
                 mat_name = self.layers[lk].material_property.name
                 quantity = area * self.layers[lk].thickness #FIXME: not all impacts are declared per volume... 
-                material = Material.new_structural_material(parent=self,
-                                                            name=mat_name,
-                                                            qty=quantity,
-                                                            unit=CUBIC_METER,
-                                                            material_database_entry=default_database_entry_map[mat_name]['impact database entry'],
-                                                            product_year=building.get_built_year())
+                material = EnvelopeMaterial.new(parent=self,
+                                                name=mat_name,
+                                                qty=quantity,
+                                                unit=CUBIC_METER,
+                                                material_database_entry=default_database_entry_map[mat_name]['impact database entry'],
+                                                product_year=building.get_built_year())
                                                             
                 self.add_material(material)
 

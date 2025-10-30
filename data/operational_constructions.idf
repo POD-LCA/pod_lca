@@ -6,7 +6,6 @@ Construction,
 
 Construction,
   Rainscreen-Thinbrick,                             ! Name # Teresa's construction for res template
-  encl_rs_thinbrick,                                !- POD|LCA RSL Category
   Clay brick,                                       !- Layer 1            DONE!!!!
   Galvanized Steel Support System (air gap),        !- Layer 2      
   Expanded polystyrene (EPS) Type I - 1.5in,        !- Layer 3            DONE!!!!
@@ -107,10 +106,10 @@ Construction,
 Construction,
   Generic Exterior Wall,                                             !- Name
   Generic Brick,                                                     !- Layer 1
-  Normalweight concrete 6000 psi,                                 !- Layer 2
+  Normalweight concrete 6000 psi,                                    !- Layer 2
   Generic 25mm Insulation,                                           !- Layer 3
   Generic Wall Air Gap,                                              !- Layer 4
-  Generic Gypsum Board;                                              !- Layer 5
+  Gypsum Wall Board;                                                 !- Layer 5
 
 Construction,
   Generic Ground Slab,                    !- Name
@@ -135,9 +134,9 @@ Construction,
 
 Construction,
   Generic Interior Wall,                  !- Name
-  Generic Gypsum Board,                   !- Layer 1
+  Gypsum Wall Board,                      !- Layer 1
   Generic Wall Air Gap,                   !- Layer 2
-  Generic Gypsum Board;                   !- Layer 3
+  Gypsum Wall Board;                      !- Layer 3
 
 Construction,
   Generic Roof,                           !- Name
@@ -167,7 +166,7 @@ Construction,
   Generic 50mm Insulation,                !- Layer 1
   Generic HW Concrete,                    !- Layer 2
   Generic Wall Air Gap,                   !- Layer 3
-  Generic Gypsum Board;                   !- Layer 4
+  Gypsum Wall Board;                      !- Layer 4
 
 Construction,
   Typical IEAD Roof-R32,                  !- Name
@@ -373,7 +372,7 @@ Material,
   0.65;                                   !- Visible Absorptance
 
 Material,
-  Generic Gypsum Board,                   !- Name
+  Gypsum Wall Board,                      !- Name
   MediumSmooth,                           !- Roughness
   0.0127,                                 !- Thickness {m}
   0.16,                                   !- Conductivity {W/m-K}

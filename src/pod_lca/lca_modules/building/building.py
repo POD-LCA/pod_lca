@@ -182,13 +182,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
                                              construction_electricity_consumption=kwargs.get('construction_energy_use', 0.0),
                                              electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
 
-        if floors_below_grade is None:
-            floors_below_grade = 1 if no_floors > 2 else 0
+        floors_below_grade = kwargs.get('floors_below_grade', 1 if no_floors > 2 else 0)
+        building.add_floors(no_floors, floors_below_grade, f2f_height, floor_plan,  geometry_units)
 
-        building.add_floors(no_floors, f2f_height, floor_plan, floors_below_grade, geometry_units)
-
-        building.make_structure('from geometry')
-        building.make_envelope()
+        building.make_structure('from geometry', building_type='commercial', structure_type='concrete')
+        building.make_envelope('from geometry', 'commercial', None, None, None) # TODO: Does the type of enclosure: opaque, enclosure:transparent, roofing get selected here... for the eplus model
 
         return building
 
@@ -606,7 +604,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             self.read_constructions_data()
             self.read_material_properties_data()
             operational_sys_path = config['file_paths']['operational']['SYSTEMS']
-            envelope = self.create_envelopes_from_template(kwargs['operational_sys_path'])
+            envelope = self.create_envelopes_from_template(operational_sys_path)
         elif method == 'from template':
             envelope = Envelope.from_template(self, building_type, envelope_opaque, envelope_translucent, roofing)
         else:
