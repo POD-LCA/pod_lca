@@ -14,7 +14,6 @@ from pandas import DataFrame
 try:
     from sklearn.cluster import KMeans
     from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics import pairwise_distances_argmin_min
     from sklearn.metrics.pairwise import cosine_similarity
 
     SKLEARN_IMPORTED = True
@@ -38,12 +37,29 @@ except ImportError:
     NLTK_IMPORTED = False
 
 
+def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False):
+    """ Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
 
-def expand_search_terms(search_term, vocabulary=None, max_edit_distance=3):
-    """Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
+    Parameters
+    ----------
+    search_term : str
+        String looked-up.
+    data_set : set
+        The dataset on which the search is done.
+    max_edit_distance : int
+        Edit distance considered in correcting spelling mistakes.
+    max_senses : int
+        How many Wordnet senses (i.e., levels of depth) to consider when looking for synonyms.
+    limit_to_noun : bool
+        If true, limit the search terms to nouns only.
+
+    Returns
+    -------
+    list of str
+        Expanded list of search terms.
     """
     if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
-        raise ImportError("Please install the 'nltk'  and 'sklearn' packages to use the search methods.")
+        raise ImportError("Please install the 'nltk' and 'sklearn' packages to use the search methods.")
     
     lemmatizer = WordNetLemmatizer()
     stemmer = PorterStemmer()
@@ -52,134 +68,147 @@ def expand_search_terms(search_term, vocabulary=None, max_edit_distance=3):
     expanded = set(tokens)
 
     # Correct spelling
-    if vocabulary:
-        for word in tokens:
-            closest = min(vocabulary, key=lambda w: edit_distance(word, w))
-            if edit_distance(word, closest) <= max_edit_distance:
-                expanded.add(closest)
+    for word in tokens:
+        closest = min(data_set, key=lambda w: edit_distance(word, w))
+        if edit_distance(word, closest) <= max_edit_distance:
+            expanded.add(closest)
 
     # Check synonyms
     for word in tokens:
-        for syn in wordnet.synsets(word):
+        synsets = wordnet.synsets(word, pos='n') if limit_to_noun else wordnet.synsets(word)
+        for syn in synsets[:max_senses]:
             for lemma in syn.lemmas():
                 expanded.add(lemma.name().replace('_', ' '))
 
-    # Stemming and Lemmatization
+    # Stemming and lemmatization
     stems = {stemmer.stem(w) for w in expanded}
     lemmas = {lemmatizer.lemmatize(w) for w in expanded}
     expanded |= stems | lemmas
 
     return list(expanded)
 
-def rank_documents(series, search_terms, top_n=25):
-    """Rank documents in a pandas Series based on TF-IDF similarity to search terms.
+def rank_entries(products, search_terms, support_data_set=None, support_data_weight=0.25, max_returns=25):
+    """ Rank products based on TF-IDF similarity to search terms.
+
+    Parameters
+    ----------
+    products : ~pandas.Series
+        Products being ranked.
+    search_terms : list of str
+        List of search terms being matched.
+    support_data_set : ~pandas.Series
+        Additional set of product information. This should be in the same order as products.
+    support_data_weight : float
+        The weightage given to the similarity of support data to search terms.
+    max_returns : int
+        Number of top ranked products returned.
+
+    Returns
+    -------
+    ~pandas.DataFrame
+        Ranked list of products with similarity values.
     """
     if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
         raise ImportError("Please install the 'nltk'  and 'sklearn' packages to use the search methods.")
-    
-    docs = series.astype(str).tolist()
+
+    docs = products.astype(str).tolist()
     vectorizer = TfidfVectorizer(stop_words='english')
     tfidf_matrix = vectorizer.fit_transform(docs + [' '.join(search_terms)])
 
-    # Last vector = search term vector
     search_vec = tfidf_matrix[-1]
     doc_vecs = tfidf_matrix[:-1]
-
     scores = cosine_similarity(search_vec, doc_vecs)[0]
+
+    if support_data_set is not None:
+        support_docs = support_data_set.astype(str).tolist()
+        vectorizer = TfidfVectorizer(stop_words='english')
+        tfidf_matrix = vectorizer.fit_transform(support_docs + [' '.join(search_terms)])
+
+        search_vec = tfidf_matrix[-1]
+        doc_vecs = tfidf_matrix[:-1]
+        support_scores = cosine_similarity(search_vec, doc_vecs)[0]
+
     ranked =  (
         DataFrame({
             'product': docs,
-            'similarity': scores
+            'similarity': scores if support_data_set is None else (scores * (1 - support_data_weight)) 
+                                                                   + (support_scores * support_data_weight)
         })
-        .loc[lambda df: df['similarity'] > 0]  # remove zero similarity items
+        .loc[lambda df: df['similarity'] > 0]
         .sort_values(by='similarity', ascending=False)
-        .head(top_n)
+        .head(max_returns)
         .reset_index(drop=True)
     )
 
     return ranked
 
-def adaptive_kmeans_cutoff(products, scores, start_i=5, k_init=2, max_k=3, move_thresh=0.05, impact_weight=0.5):
-    """
-    Dynamically find cutoff in ranked scores using adaptive k-means clustering.
+def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_max=3, move_thresh=0.1):
+    """ Dynamically find cutoff in ranked scores using adaptive k-means clustering.
     
     Parameters
     ----------
-    scores : list or np.array
-        Sorted descending cosine similarity or relevance scores.
-    start_i : int
-        Number of top scores to start clustering with.
-    k_init : int
+    products: ~pandas.DataFrame
+        Ranked list of products with similarity values.
+    impact_scores : ~numpy.ndarray
+        Impact scores sorted in the descending similarity scores.
+    n_initial : int
+        Number of top products to start clustering with.
+    k_initial : int
         Initial number of clusters.
-    max_k : int
-        Maximum allowed clusters.
+    k_max : int
+        Maximum number of clusters.
     move_thresh : float
         Threshold for mean shift before stopping.
         
     Returns
     -------
-    dict with:
-        cutoff_index : int
-        clusters : np.ndarray
-        means : np.ndarray
+    ~pandas.DataFrame
+            Ranked list of products with impact and similarity values.
     """
-    scores = array(scores).reshape(-1, 1)
+    impact_scores = array(impact_scores).reshape(-1, 1)
     prev_means = None
-    k = k_init
+    k = k_initial
 
-    for i in range(start_i, len(scores) + 1):
-        subset = scores[:i]
+    # cluster by impact
+    for i in range(n_initial, len(impact_scores) + 1):
+        subset = impact_scores[:i]
         kmeans = KMeans(n_clusters=k, n_init='auto', random_state=0).fit(subset)
         means = sort(kmeans.cluster_centers_.flatten())
 
         if prev_means is not None:
-            move = mean(abs(means - prev_means[:len(means)]))
-            if move > move_thresh:
-                if k < max_k:
-                    k += 1  # add a bin and re-evaluate
+            move_max = max(abs(means - prev_means) / prev_means)
+            if move_max > move_thresh:
+                if k < k_max:
+                    k += 1
                     means = None
-                else:
-                    # Stop — clusters have stabilized or diverged
+                else: # clusters have stabilized or diverged
                     cutoff_index = i - 1
-                    subset_scores = scores[:cutoff_index]
+                    subset_scores = impact_scores[:cutoff_index]
                     items = products[:cutoff_index]
                     kmeans = KMeans(n_clusters=k, n_init='auto', random_state=0).fit(subset_scores)
-                    cluster_centers = kmeans.cluster_centers_
                     cluster_labels = kmeans.labels_
                     break
         prev_means = means
-    else:
-        # only single bin possible
-        cutoff_index = len(scores)
-        subset_scores = scores[:cutoff_index]
+    else: # only single bin possible
+        cutoff_index = len(impact_scores)
+        subset_scores = impact_scores[:cutoff_index]
         items = products[:cutoff_index]
-        cluster_labels = array([0] * len(scores))
-        cluster_centers = array([[subset_scores.mean()]])
+        cluster_labels = array([0] * len(impact_scores))
 
-    # Compute distances to cluster centers
-    _, distances = pairwise_distances_argmin_min(subset_scores, cluster_centers)
-    
     df = DataFrame({
         'item': items['product'].tolist(),
         'impact': subset_scores.flatten(),
         'similarity': items['similarity'].tolist(),
         'cluster': cluster_labels,
-        'distance_to_center': distances
     })
     
-    # Order by cluster then distance to center
-    cluster_stats = (
-        df.groupby('cluster')[['impact', 'similarity']]
-        .max()
-        .reset_index()
-    )
-    cluster_stats['cluster_rank_value'] = (
-        impact_weight * cluster_stats['impact'] + (1 - impact_weight) * cluster_stats['similarity'] # FIXME: This weighting scheme does not give a balanced view... try something else "Order by similarity cluster by GWP"
-    )
-    cluster_rank_map = cluster_stats.set_index('cluster')['cluster_rank_value'].to_dict()
-
-    df['cluster_rank'] = df['cluster'].map(cluster_rank_map)
-    df_sorted = df.sort_values(['cluster_rank', 'distance_to_center'], ascending=[False, True]).reset_index(drop=True)
-    df_sorted = df_sorted.drop(columns=['cluster', 'distance_to_center', 'cluster_rank'])
+    # order by similarity
+    cluster_mean_score = df.groupby('cluster')['similarity'].max().to_dict()
+    df['cluster_mean'] = df['cluster'].map(cluster_mean_score)
+    df_sorted = df.sort_values(['cluster_mean', 'similarity'], ascending=[False, False]).reset_index(drop=True)
+    df_sorted = df_sorted.drop(columns=['cluster',  'cluster_mean'])
     
     return df_sorted
+
+if __name__ == '__main__':
+    pass

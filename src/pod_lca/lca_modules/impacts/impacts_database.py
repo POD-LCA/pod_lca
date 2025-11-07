@@ -8,7 +8,7 @@ __version__ = "0.1.0"
 from pandas import concat
 
 from . import expand_search_terms
-from . import rank_documents
+from . import rank_entries
 from . import adaptive_kmeans_cutoff
 from ...units import UNITS_MAP
 from ...utilities import config
@@ -430,36 +430,59 @@ class ImpactsDatabase:
     # =================================
     # Search Methods
     # =================================  
-    def find(self, product, printout=True):
-        """ Search for a product in the database.
+    def find(self, product, additional_headers=None, shortlist=True, printout=True):
+        """ Search for a product in the database. Search is done on the primary data column of the database.
 
         Parameters
         ----------
         product : str
             The product searched for---i.e., search term.
-        n_matches: int
-            Target number of matches to be returned.
-        print : bool
+        additional_headers : list of str
+            Additional headers in the database to be considered for the search.
+        shortlist : bool
+            If true, shortlist the matching product list based on impacts.
+        printout : bool
             Print the results if true.
+
+        Returns
+        -------
+        ~pandas.DataFrame
+            Matching products with the similarity scores, and impact values when shortlisted.
         """
         # TODO: run profiler to see bottlenecks
+        # TODO: use cache
         products_all = self.data[self.get_primary_key()]
 
+        product_support_data = None
+        if additional_headers is not None:
+            valid_headers = [header for header in additional_headers if header in self.data.columns]
+            if valid_headers:
+                product_support_data = self.data[valid_headers].astype(str).agg(' '.join, axis=1)
+
         vocab = set(' '.join(products_all).lower().split())
-        expanded = expand_search_terms(product, vocabulary=vocab)
+        expanded = expand_search_terms(product, data_set=vocab)
 
-        ranked = rank_documents(products_all, expanded)
+        ranked = rank_entries(products_all, expanded, product_support_data)
+        if ranked.empty:
+            log("No data found", 'Info')
+            return []
 
-        impact_map = self.data.set_index(self.get_primary_key())[config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']].to_dict() 
-        scores = ranked['product'].map(impact_map)
+        if shortlist:
+            impact_map = self.data.set_index(self.get_primary_key())[config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']].to_dict() 
+            scores = ranked['product'].map(impact_map)
 
-        search_result = adaptive_kmeans_cutoff(ranked, scores)
+            search_result = adaptive_kmeans_cutoff(ranked, scores)
 
-        if printout:
-            print(search_result.to_string(index=False))
+            if printout:
+                print(search_result.to_string(index=False))
 
-        return search_result
+            return search_result
+        
+        else:
+            if printout:
+                print(ranked.to_string(index=False))
 
+            return ranked            
 
 
 if __name__ == '__main__':
