@@ -4,6 +4,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os
+import re
 import sys
 sys.path.insert(0, os.path.abspath('../../src'))
 
@@ -40,3 +41,50 @@ language = 'Python'
 
 html_theme =  'piccolo_theme'  # https://piccolo-theme.readthedocs.io/en/latest/index.html
 html_static_path = ['../_static']
+
+# -- For gitbook markdown- ---------------------------------------------------
+def add_gitbook_prefix(app, exception):
+    if exception:
+        return
+    
+    if app.builder.name != "markdown":
+        return 
+    
+    group_prefix = "api-documentation/"  # your GitBook group name
+    build_dir = app.outdir
+
+    for root, _, files in os.walk(build_dir):
+        for f in files:
+            if f.endswith(".md"):
+                path = os.path.join(root, f)
+                with open(path, encoding="utf-8") as fh:
+                    text = fh.read()
+
+                text = re.sub(r"\((?!https?:)([^)]+)\.md\)", rf"({group_prefix}\1)", text)
+
+                # # 1. Add .md to any local links missing it (e.g. (api-documentation/electricity-generation))
+                # text = re.sub(
+                #     r"\((?!https?:)(?!/)([^)]+?)(?<!\.md)(?<!/)\)",
+                #     r"(\1.md)",
+                #     text
+                # )
+
+                # # 2️. Add prefix to .md links (but skip anchors)
+                # text = re.sub(
+                #     r"\((?!https?:)([^)#]+)\.md\)",
+                #     rf"({group_prefix}\1)",
+                #     text
+                # )
+
+                # # 3️. Leave anchor links (page.md#anchor) untouched
+                # text = re.sub(
+                #     r"\((?!https?:)([^)#]+)\.md(#.*?)\)",
+                #     r"(\1\2)",
+                #     text
+                # )
+
+                with open(path, "w", encoding="utf-8") as fh:
+                    fh.write(text)
+
+def setup(app):
+    app.connect("build-finished", add_gitbook_prefix)
