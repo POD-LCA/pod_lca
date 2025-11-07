@@ -7,6 +7,9 @@ __version__ = "0.1.0"
 
 from pandas import concat
 
+from . import expand_search_terms
+from . import rank_documents
+from . import adaptive_kmeans_cutoff
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
@@ -423,6 +426,41 @@ class ImpactsDatabase:
             Headers of the columns to be imported, other than name, unit, and impact categories.
         """
         return [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()]
+
+    # =================================
+    # Search Methods
+    # =================================  
+    def find(self, product, printout=True):
+        """ Search for a product in the database.
+
+        Parameters
+        ----------
+        product : str
+            The product searched for---i.e., search term.
+        n_matches: int
+            Target number of matches to be returned.
+        print : bool
+            Print the results if true.
+        """
+        # TODO: run profiler to see bottlenecks
+        products_all = self.data[self.get_primary_key()]
+
+        vocab = set(' '.join(products_all).lower().split())
+        expanded = expand_search_terms(product, vocabulary=vocab)
+
+        ranked = rank_documents(products_all, expanded)
+
+        impact_map = self.data.set_index(self.get_primary_key())[config['setup']['impacts']['PRIMARY_IMPACT_CATEGORY']].to_dict() 
+        scores = ranked['product'].map(impact_map)
+
+        search_result = adaptive_kmeans_cutoff(ranked, scores)
+
+        if printout:
+            print(search_result.to_string(index=False))
+
+        return search_result
+
+
 
 if __name__ == '__main__':
     pass
