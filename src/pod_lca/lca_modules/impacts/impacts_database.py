@@ -430,7 +430,7 @@ class ImpactsDatabase:
     # =================================
     # Search Methods
     # =================================  
-    def find(self, product, additional_headers=None, shortlist=True, printout=True):
+    def find(self, product, additional_headers=None, shortlist=False, printout=True):
         """ Search for a product in the database. Search is done on the primary data column of the database.
 
         Parameters
@@ -459,7 +459,8 @@ class ImpactsDatabase:
             if valid_headers:
                 product_support_data = self.data[valid_headers].astype(str).agg(' '.join, axis=1)
 
-        vocab = set(' '.join(products_all).lower().split())
+        documents = products_all if product_support_data is None else concat([products_all, product_support_data])
+        vocab = set(' '.join(documents).lower().split())
         expanded = expand_search_terms(product, data_set=vocab)
 
         ranked = rank_entries(products_all, expanded, product_support_data)
