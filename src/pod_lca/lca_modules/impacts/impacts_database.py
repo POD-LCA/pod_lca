@@ -449,8 +449,6 @@ class ImpactsDatabase:
         ~pandas.DataFrame
             Matching products with the similarity scores, and impact values when shortlisted.
         """
-        # TODO: run profiler to see bottlenecks
-        # TODO: use cache
         products_all = self.data[self.get_primary_key()]
 
         product_support_data = None

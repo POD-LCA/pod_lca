@@ -5,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from functools import lru_cache
 from numpy import abs
 from numpy import array
 from numpy import mean
@@ -37,6 +38,11 @@ except ImportError:
     NLTK_IMPORTED = False
 
 
+
+@lru_cache(maxsize=50000)
+def _cached_synsets(word, pos=None):
+    return wordnet.synsets(word, pos=pos)
+
 def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False):
     """ Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
 
@@ -66,19 +72,22 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
     
     tokens = nltk.word_tokenize(search_term.lower())
     expanded = set(tokens)
+    add = expanded.add
 
     # Correct spelling
     for word in tokens:
         closest = min(data_set, key=lambda w: edit_distance(word, w))
         if edit_distance(word, closest) <= max_edit_distance:
-            expanded.add(closest)
+            add(closest)
 
     # Check synonyms
     for word in tokens:
-        synsets = wordnet.synsets(word, pos='n') if limit_to_noun else wordnet.synsets(word)
-        for syn in synsets[:max_senses]:
-            for lemma in syn.lemmas():
-                expanded.add(lemma.name().replace('_', ' '))
+        synsets = _cached_synsets(word, 'n')[:max_senses] if limit_to_noun else _cached_synsets(word)[:max_senses]
+        for syn in synsets:
+            lemmas = syn.lemmas()
+            for lemma in lemmas:
+                name = lemma._name
+                add(name.replace('_', ' '))
 
     # Stemming and lemmatization
     stems = {stemmer.stem(w) for w in expanded}

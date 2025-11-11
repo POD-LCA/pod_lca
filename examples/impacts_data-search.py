@@ -1,5 +1,4 @@
 
-import time
 from pod_lca.impacts import ImpactsDatabase
 
 databse_path = 'data/impacts_podlca_data.csv'
@@ -8,7 +7,12 @@ impact_database = ImpactsDatabase.new("impact database")
 impact_database.set_data(databse_path,
                          additional_headers=['Taxanomy', 'Category', 'Sub-category', 'Description'])
 
-impact_database.find('chemical', 
+# impact_database.find('cement')
+
+# impact_database.find('cement',
+#                      shortlist=True)
+
+impact_database.find('cement', 
                      additional_headers=['Taxanomy', 'Category', 'Sub-category', 'Description'], 
                      shortlist=True)
 
