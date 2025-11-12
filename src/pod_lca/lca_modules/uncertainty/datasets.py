@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from collections import Counter
+
 import numpy as np
 import scipy.stats as stats
 

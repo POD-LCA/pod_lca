@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 import csv
 import json
+
 from pandas import read_csv
 
 

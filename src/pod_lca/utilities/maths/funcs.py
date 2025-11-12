@@ -6,6 +6,7 @@ __email__ = "; mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 from math import exp
+
 from numpy import atleast_1d
 from numpy import exp as np_exp
 from numpy import floor

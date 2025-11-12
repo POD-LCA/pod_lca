@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pathlib import Path
+
 import yaml
 
 def load_config():
