@@ -14,7 +14,7 @@ def _get_carbon_data(data, species=None, region=None, material_form=None):
     
     Parameters
     ----------
-    data : {'carbon percentage', }
+    data : {'carbon percentage', 'moisture content', 'dry density', 'dry density unit'}
         Type of data to be retrieved.
     species : str
         Species identifier. Search is case insensitive.
@@ -42,6 +42,8 @@ def _get_carbon_data(data, species=None, region=None, material_form=None):
             header = "Moisture % (Green)"
         case "dry density":
             header = "Dry Density (0% moisture)"
+        case "dry density unit":
+            header = 'Dry density unit'
 
     if species is None:
         species = 'Unspecified'
@@ -139,8 +141,7 @@ def get_dry_density(species, region, material_form):
     material_form : str
         Final form of the product.
     """
-    return _get_carbon_data('dry density', species, region, material_form)
-    # TODO check dry density units
+    return _get_carbon_data('dry density', species, region, material_form), _get_carbon_data('dry density unit', species, region, material_form)
 
 
 if __name__ == '__main__':

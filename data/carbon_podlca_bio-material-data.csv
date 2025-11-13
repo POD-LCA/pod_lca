@@ -1,136 +1,136 @@
-Species,Region,Material Form,%C (dry basis),Dry Density (0% moisture),Moisture % (Green),Rotation Period [years],Growth Model
-Unspecified,Unspecified,Unspecified,47.88,,100,100,Normal
-Woody plants,,,48.16,,100,60,Normal
-Bamboo,GLO, Stem,49.2,,100,6,Normal
-Shrub Willow,GLO,All,50.31,,100,4,Normal
-Wood,,,49.37,,100,60,Normal
-Wood (EN16449),,,50,,100,60,Normal
-Wood Species,,,50.72,,100,60,Normal
-Hybrid Poplar,,,49.09,,100,60,Normal
-Juniper,,,52.58,,100,60,Normal
-Pinyon Juniper,,,51,,100,60,Normal
-Loblolly Pine,,,52.33,,100,60,Normal
-Lodge Pole Pine,,,50.44,,100,60,Normal
-Maple,,,50.01,,100,60,Normal
-Oak,,,50.21,,100,60,Normal
-Pine,,,51.07,,100,60,Normal
-Pinyon Pine,,,52.6,,100,60,Normal
-Poplar,,,49.83,,100,60,Normal
-Tulip Poplar,,,49.24,,100,60,Normal
-Willow,,,50.23,,100,60,Normal
-Wood Intermediates and Co-Products,,,50,,100,60,Normal
-Miscellaneous Softwood,SE,Roundwood,50,380,100,60,Normal
-Miscellaneous Softwood,SE,Sawlog,50,470,100,60,Normal
-Miscellaneous Softwood,INW,Roundwood,50,451,100,60,Normal
-Miscellaneous Softwood,INW,Wood Chips,50,451,100,60,Normal
-Miscellaneous Wood,PNW,Roundwood,50,425,100,60,Normal
-Miscellaneous Softwood,PNW,Roundwood,50,380,100,60,Normal
-Miscellaneous Hardwood,PNW,Roundwood,50,470,100,60,Normal
-Miscellaneous Softwood,PNW,Sawlog,50,464.28,100,60,Normal
-Miscellaneous Softwood,NE-NC,Roundwood,50,380,100,60,Normal
-Miscellaneous Hardwood,SE,Roundwood,50,532.35,100,60,Normal
-Miscellaneous Hardwood,E,Roundwood,50,510.2702703,85,60,Normal
-Miscellaneous Hardwood,INW,Roundwood,50,470,100,60,Normal
-Miscellaneous Hardwood,NE-NC,Roundwood,50,456.684492,87,60,Normal
-Miscellaneous Hardwood,E,Sawlog,50,510.162597,100,60,Normal
-Miscellaneous Hardwood,NE-NC,Bark,50,,100,60,Normal
-Miscellaneous Softwood,PNW,Bark,50,,100,60,Normal
-Miscellaneous Softwood,INW,Bark,50,,100,60,Normal
-Miscellaneous Softwood,NE-NC,Bark,50,,100,60,Normal
-Miscellaneous Wood,US,Residue,50,,100,60,Normal
-Miscellaneous Hardwood,NE-NC,Pulpwood,50,580.6,100,60,Normal
-Miscellaneous Softwood,US,Pulpwood,50,380,100,60,Normal
-Miscellaneous Wood,US,Wood Products,47.76,526.1905889,100,,
-Miscellaneous Wood,US,Medium Density Fiberboard,46.94,741,100,60,Normal
-Miscellaneous Wood,US,Fiberboard,46.94,,100,60,Normal
-Miscellaneous Wood,US,Micro Lams (LVL),48.16,,100,60,Normal
-Miscellaneous Wood,US,Particleboard,47.06,746,100,60,Normal
-Miscellaneous Wood,US,Plywood,48.16,,100,60,Normal
-Miscellaneous Wood,PNW,Plywood,48.16,485,100,60,Normal
-Miscellaneous Wood,SE,Plywood,48.16,548.419,100,60,Normal
-Miscellaneous Wood,US,Pressure Treated Lumber,47.81,,100,60,Normal
-Miscellaneous Wood,US,TJI Joists,48.5,,100,60,Normal
-Miscellaneous Wood,US,Wafer Board,47.71,,100,60,Normal
-Miscellaneous Wood,US,Lumber,47.81,484.50075,100,60,Normal
-Miscellaneous Wood,SE,Lumber,47.81,528.9425,100,60,Normal
-Miscellaneous Wood,PNW,Lumber,47.81,440.059,100,60,Normal
-Miscellaneous Wood,SE,Glue Laminated Timber,47.76,590,100,60,Normal
-Miscellaneous Wood,PNW,Glue Laminated Timber,47.76,511,100,60,Normal
-Miscellaneous Hardwood,US-E,Engineered Flooring,47.76,578.3018868,100,60,Normal
-Miscellaneous Wood,US,Oriented Strand Board,47.76,632.27,100,60,Normal
-Miscellaneous Softwood,US,Poles,47.76,491.4,100,60,Normal
-Miscellaneous Softwood,SE,Post,48.5,519,100,60,Normal
-Miscellaneous Hardwood,SE,Railroad Tie,50,563.6364,100,60,Normal
-Miscellaneous Hardwood,SE,"Sawn Lumber, planed",50,510,100,60,Normal
-Miscellaneous Hardwood,SE,"Sawn Lumber, rough",50,555.5555556,100,60,Normal
-Miscellaneous Hardwood,NE-NC,Sawn Lumber,50,572,100,60,Normal
-Miscellaneous Hardwood,US-Southeast expanded,Sawn Lumber,50,576,70,60,Normal
-Miscellaneous Softwood,NE-NC,"Sawn Lumber, planed",50,362.0689655,100,60,Normal
-Miscellaneous Softwood,NE-NC,Sawn Lumber,50,434,100,60,Normal
-Miscellaneous Softwood,INW,Sawn Lumber,50,451,100,60,Normal
-Miscellaneous Softwood,US-INW,Sawn Lumber,50,471,50,60,Normal
-Miscellaneous Softwood,US-Pacific coast,Sawn Lumber,50,495,64,60,Normal
-Miscellaneous Softwood,US-South,Sawn Lumber,50,564.97,100,60,Normal
-Miscellaneous Softwood,PNW,Sawn Lumber,50,439.6,100,60,Normal
-Miscellaneous Softwood,PNW,"Sawn Lumber, planed, packaged",50,465,100,60,Normal
-Miscellaneous Softwood,SE,Sawn Lumber,50,448.52,100,60,Normal
-Miscellaneous Softwood,SE,"Sawn Lumber, planed, packaged",50,510,100,60,Normal
-Miscellaneous Hardwood,US-E,Veneer,50,545.2830189,12,60,Normal
-Miscellaneous Softwood,PNW,Veneer,50,,12,60,Normal
-Miscellaneous Softwood,SE,Veneer,50,,12,60,Normal
-Miscellaneous Wood,US,Marine Piling,47.76,519,100,60,Normal
-Unspecified,Unspecified,Crops,46.15,,100,1,Normal
-Crops,,,43.26,,100,1,Normal
-Food Crops,,,50.55,,100,1,Normal
-Oil Palm,Unspecified, Palm Oil Shells,55.7,,100,1,Normal
-Palm oil fibers,,,49.6,,100,1,Normal
-Coffee shells,,,50.3,,100,1,Normal
-Sugarcane Bagasse (INL),,,44.05,,100,1,Normal
-Sugarcane Bagasse,,,53.1,,100,1,Normal
-Grain and Cereal Crops,,,44.29,,100,1,Normal
-Corn,US,Grain,43,,100,1,Normal
-Corn,US,Stover (Wozniak),43.52,,100,1,Normal
-Corn,US,Stover,47.54,,100,1,Normal
-Corn,US,Whole Plant,47.54,,100,1,Normal
-Soy,US,Grain,43,,100,1,Normal
-Sorghum,US,Whole Plant,43.3,,100,1,Normal
-Sweet Sorghum,US,Whole Plant,42.8,,100,1,Normal
-Unspecified,Unspecified,Whole Plant,44.33,,100,1,Normal
-Wheat,US,Straw,43.59,,100,1,Normal
-Wheat,US,Grain,43,,100,1,Normal
-Fiber Crops,,,46.61,,0,1,Normal
-Cotton,US,Whole Plant,45,,100,1,Normal
-Grasses,,,46.52,,0,1,Normal
-Switchgrass,US,Whole Plant,47.8,,100,1,Normal
-"Switchgrass (Holou et al., 2017)",,,44,,100,1,Normal
-Miscanthus,,,48.96,,100,1,Normal
-Mixed Grass,,,47.66,,100,1,Normal
-Prairie Cord Grass,,,46.21,,100,1,Normal
-Grass Clippings,,,44.46,,100,1,Normal
-Paper Products,,,41.24,,0,,Normal
-Unspecified,US,Cardboard,31.5,500,100,100,Normal
-Unspecified,US,Corrugated Cardboard,48.28,,100,60,Normal
-Unspecified,US,Glossy Cardboard,43.46,,100,60,Normal
-Unspecified,US,Paper,41.71,,100,60,Normal
-Unspecified,US,Glossy Paper,36.81,,100,60,Normal
-Unspecified,US,Kraft Paper,45,,100,60,Normal
-Miscellaneous Softwood,US,Kraft Pulp,45,,100,60,Normal
-Unspecified,US,Chemical Products,49.55,,0,,Normal
-Unspecified,US,Ethanol,52.14,,0,60,Normal
-Corn,US,Ethanol,52.14,,0,1,Normal
-Miscellaneous Wood,US,Ethanol,52.14,,0,1,Normal
-Switchgrass,US,Ethanol,52.14,,0,1,Normal
-Wheat,US,Ethanol,52.14,,0,1,Normal
-Unspecified,US,Glycerine,39.12,,0,1,Normal
-Unspecified,US,"Pyrolysis Product - Liquid, Oil Phase",39.11,,0,60,Normal
-Soy,US,Biodiesel,39.11,,0,1,Normal
-Soy,US,Polyol,49.55,,0,1,Normal
-Soy,US,Resin,49.55,,0,1,Normal
-Unspecified,US,Pyrolysis Product - Bio Solid,72.3,,0,60,Normal
-Miscellaneous Wood,US,Pyrolysis Product - Bio Solid,72.3,,0,60,Normal
-Unspecified,US,Pyrolysis Product - Bio Gas,34.75,,0,60,Normal
-Miscellaneous Wood,US,Pyrolysis Product - Bio Gas,34.75,1.082,0,60,Normal
-Unspecified,US,Loose Fill Packaging,50,52.9,100,100,Normal
-Unspecified,Unspecified,Oils and Extractives,50,,0,,Normal
-Oil Palm,Unspecified,Palm Kernel Oil,50,,0,,Normal
-Soy,US,Oil,50,,0,1,Normal
+Species,Region,Material Form,%C (dry basis),Dry Density (0% moisture),Dry density unit,Moisture % (Green),Rotation Period [years],Growth Model
+Unspecified,Unspecified,Unspecified,47.88,,,100,100,Normal
+Woody plants,,,48.16,,,100,60,Normal
+Bamboo,GLO, Stem,49.2,,,100,6,Normal
+Shrub Willow,GLO,All,50.31,,,100,4,Normal
+Wood,,,49.37,,,100,60,Normal
+Wood (EN16449),,,50,,,100,60,Normal
+Wood Species,,,50.72,,,100,60,Normal
+Hybrid Poplar,,,49.09,,,100,60,Normal
+Juniper,,,52.58,,,100,60,Normal
+Pinyon Juniper,,,51,,,100,60,Normal
+Loblolly Pine,,,52.33,,,100,60,Normal
+Lodge Pole Pine,,,50.44,,,100,60,Normal
+Maple,,,50.01,,,100,60,Normal
+Oak,,,50.21,,,100,60,Normal
+Pine,,,51.07,,,100,60,Normal
+Pinyon Pine,,,52.6,,,100,60,Normal
+Poplar,,,49.83,,,100,60,Normal
+Tulip Poplar,,,49.24,,,100,60,Normal
+Willow,,,50.23,,,100,60,Normal
+Wood Intermediates and Co-Products,,,50,,,100,60,Normal
+Miscellaneous Softwood,SE,Roundwood,50,380,,100,60,Normal
+Miscellaneous Softwood,SE,Sawlog,50,470,,100,60,Normal
+Miscellaneous Softwood,INW,Roundwood,50,451,,100,60,Normal
+Miscellaneous Softwood,INW,Wood Chips,50,451,,100,60,Normal
+Miscellaneous Wood,PNW,Roundwood,50,425,,100,60,Normal
+Miscellaneous Softwood,PNW,Roundwood,50,380,,100,60,Normal
+Miscellaneous Hardwood,PNW,Roundwood,50,470,,100,60,Normal
+Miscellaneous Softwood,PNW,Sawlog,50,464.28,,100,60,Normal
+Miscellaneous Softwood,NE-NC,Roundwood,50,380,,100,60,Normal
+Miscellaneous Hardwood,SE,Roundwood,50,532.35,,100,60,Normal
+Miscellaneous Hardwood,E,Roundwood,50,510.2702703,,85,60,Normal
+Miscellaneous Hardwood,INW,Roundwood,50,470,,100,60,Normal
+Miscellaneous Hardwood,NE-NC,Roundwood,50,456.684492,,87,60,Normal
+Miscellaneous Hardwood,E,Sawlog,50,510.162597,,100,60,Normal
+Miscellaneous Hardwood,NE-NC,Bark,50,,,100,60,Normal
+Miscellaneous Softwood,PNW,Bark,50,,,100,60,Normal
+Miscellaneous Softwood,INW,Bark,50,,,100,60,Normal
+Miscellaneous Softwood,NE-NC,Bark,50,,,100,60,Normal
+Miscellaneous Wood,US,Residue,50,,,100,60,Normal
+Miscellaneous Hardwood,NE-NC,Pulpwood,50,580.6,,100,60,Normal
+Miscellaneous Softwood,US,Pulpwood,50,380,,100,60,Normal
+Miscellaneous Wood,US,Wood Products,47.76,526.1905889,,100,,
+Miscellaneous Wood,US,Medium Density Fiberboard,46.94,741,,100,60,Normal
+Miscellaneous Wood,US,Fiberboard,46.94,,,100,60,Normal
+Miscellaneous Wood,US,Micro Lams (LVL),48.16,,,100,60,Normal
+Miscellaneous Wood,US,Particleboard,47.06,746,,100,60,Normal
+Miscellaneous Wood,US,Plywood,48.16,,,100,60,Normal
+Miscellaneous Wood,PNW,Plywood,48.16,485,,100,60,Normal
+Miscellaneous Wood,SE,Plywood,48.16,548.419,,100,60,Normal
+Miscellaneous Wood,US,Pressure Treated Lumber,47.81,,,100,60,Normal
+Miscellaneous Wood,US,TJI Joists,48.5,,,100,60,Normal
+Miscellaneous Wood,US,Wafer Board,47.71,,,100,60,Normal
+Miscellaneous Wood,US,Lumber,47.81,484.50075,,100,60,Normal
+Miscellaneous Wood,SE,Lumber,47.81,528.9425,,100,60,Normal
+Miscellaneous Wood,PNW,Lumber,47.81,440.059,,100,60,Normal
+Miscellaneous Wood,SE,Glue Laminated Timber,47.76,590,,100,60,Normal
+Miscellaneous Wood,PNW,Glue Laminated Timber,47.76,511,,100,60,Normal
+Miscellaneous Hardwood,US-E,Engineered Flooring,47.76,578.3018868,,100,60,Normal
+Miscellaneous Wood,US,Oriented Strand Board,47.76,632.27,,100,60,Normal
+Miscellaneous Softwood,US,Poles,47.76,491.4,,100,60,Normal
+Miscellaneous Softwood,SE,Post,48.5,519,,100,60,Normal
+Miscellaneous Hardwood,SE,Railroad Tie,50,563.6364,,100,60,Normal
+Miscellaneous Hardwood,SE,"Sawn Lumber, planed",50,510,,100,60,Normal
+Miscellaneous Hardwood,SE,"Sawn Lumber, rough",50,555.5555556,,100,60,Normal
+Miscellaneous Hardwood,NE-NC,Sawn Lumber,50,572,,100,60,Normal
+Miscellaneous Hardwood,US-Southeast expanded,Sawn Lumber,50,576,,70,60,Normal
+Miscellaneous Softwood,NE-NC,"Sawn Lumber, planed",50,362.0689655,,100,60,Normal
+Miscellaneous Softwood,NE-NC,Sawn Lumber,50,434,,100,60,Normal
+Miscellaneous Softwood,INW,Sawn Lumber,50,451,,100,60,Normal
+Miscellaneous Softwood,US-INW,Sawn Lumber,50,471,,50,60,Normal
+Miscellaneous Softwood,US-Pacific coast,Sawn Lumber,50,495,,64,60,Normal
+Miscellaneous Softwood,US-South,Sawn Lumber,50,564.97,,100,60,Normal
+Miscellaneous Softwood,PNW,Sawn Lumber,50,439.6,,100,60,Normal
+Miscellaneous Softwood,PNW,"Sawn Lumber, planed, packaged",50,465,,100,60,Normal
+Miscellaneous Softwood,SE,Sawn Lumber,50,448.52,,100,60,Normal
+Miscellaneous Softwood,SE,"Sawn Lumber, planed, packaged",50,510,,100,60,Normal
+Miscellaneous Hardwood,US-E,Veneer,50,545.2830189,,12,60,Normal
+Miscellaneous Softwood,PNW,Veneer,50,,,12,60,Normal
+Miscellaneous Softwood,SE,Veneer,50,,,12,60,Normal
+Miscellaneous Wood,US,Marine Piling,47.76,519,,100,60,Normal
+Unspecified,Unspecified,Crops,46.15,,,100,1,Normal
+Crops,,,43.26,,,100,1,Normal
+Food Crops,,,50.55,,,100,1,Normal
+Oil Palm,Unspecified, Palm Oil Shells,55.7,,,100,1,Normal
+Palm oil fibers,,,49.6,,,100,1,Normal
+Coffee shells,,,50.3,,,100,1,Normal
+Sugarcane Bagasse (INL),,,44.05,,,100,1,Normal
+Sugarcane Bagasse,,,53.1,,,100,1,Normal
+Grain and Cereal Crops,,,44.29,,,100,1,Normal
+Corn,US,Grain,43,,,100,1,Normal
+Corn,US,Stover (Wozniak),43.52,,,100,1,Normal
+Corn,US,Stover,47.54,,,100,1,Normal
+Corn,US,Whole Plant,47.54,,,100,1,Normal
+Soy,US,Grain,43,,,100,1,Normal
+Sorghum,US,Whole Plant,43.3,,,100,1,Normal
+Sweet Sorghum,US,Whole Plant,42.8,,,100,1,Normal
+Unspecified,Unspecified,Whole Plant,44.33,,,100,1,Normal
+Wheat,US,Straw,43.59,,,100,1,Normal
+Wheat,US,Grain,43,,,100,1,Normal
+Fiber Crops,,,46.61,,,0,1,Normal
+Cotton,US,Whole Plant,45,,,100,1,Normal
+Grasses,,,46.52,,,0,1,Normal
+Switchgrass,US,Whole Plant,47.8,,,100,1,Normal
+"Switchgrass (Holou et al., 2017)",,,44,,,100,1,Normal
+Miscanthus,,,48.96,,,100,1,Normal
+Mixed Grass,,,47.66,,,100,1,Normal
+Prairie Cord Grass,,,46.21,,,100,1,Normal
+Grass Clippings,,,44.46,,,100,1,Normal
+Paper Products,,,41.24,,,0,,Normal
+Unspecified,US,Cardboard,31.5,500,,100,100,Normal
+Unspecified,US,Corrugated Cardboard,48.28,,,100,60,Normal
+Unspecified,US,Glossy Cardboard,43.46,,,100,60,Normal
+Unspecified,US,Paper,41.71,,,100,60,Normal
+Unspecified,US,Glossy Paper,36.81,,,100,60,Normal
+Unspecified,US,Kraft Paper,45,,,100,60,Normal
+Miscellaneous Softwood,US,Kraft Pulp,45,,,100,60,Normal
+Unspecified,US,Chemical Products,49.55,,,0,,Normal
+Unspecified,US,Ethanol,52.14,,,0,60,Normal
+Corn,US,Ethanol,52.14,,,0,1,Normal
+Miscellaneous Wood,US,Ethanol,52.14,,,0,1,Normal
+Switchgrass,US,Ethanol,52.14,,,0,1,Normal
+Wheat,US,Ethanol,52.14,,,0,1,Normal
+Unspecified,US,Glycerine,39.12,,,0,1,Normal
+Unspecified,US,"Pyrolysis Product - Liquid, Oil Phase",39.11,,,0,60,Normal
+Soy,US,Biodiesel,39.11,,,0,1,Normal
+Soy,US,Polyol,49.55,,,0,1,Normal
+Soy,US,Resin,49.55,,,0,1,Normal
+Unspecified,US,Pyrolysis Product - Bio Solid,72.3,,,0,60,Normal
+Miscellaneous Wood,US,Pyrolysis Product - Bio Solid,72.3,,,0,60,Normal
+Unspecified,US,Pyrolysis Product - Bio Gas,34.75,,,0,60,Normal
+Miscellaneous Wood,US,Pyrolysis Product - Bio Gas,34.75,1.082,,0,60,Normal
+Unspecified,US,Loose Fill Packaging,50,52.9,,100,100,Normal
+Unspecified,Unspecified,Oils and Extractives,50,,,0,,Normal
+Oil Palm,Unspecified,Palm Kernel Oil,50,,,0,,Normal
+Soy,US,Oil,50,,,0,1,Normal
