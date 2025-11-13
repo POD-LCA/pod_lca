@@ -93,6 +93,8 @@ file_paths:
     MOLECULER_WEIGHT: data\\drf_none_moleculer-weight.json
     CO2_IRF_PARAMETERS: data\\drf_ipcc_co2-irf-parameters.json
     INDIRECT_EFFECTS_FACTORS: data\\drf_ipcc_indirect-contributions.json
+  carbon:
+    BIO_MATERIAL_DATA: data\\carbon_podlca_bio-material-data.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 
