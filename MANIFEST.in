@@ -14,9 +14,12 @@ include requirements.txt
 include config.yaml
 
 exclude requirements-dev.txt
-exclude pytest.ini .bumpversion.cfg .editorconfig
+exclude pytest.ini 
+exclude .bumpversion.cfg 
+exclude .editorconfig
 exclude tasks.py
 exclude CONTRIBUTING.md
 exclude conftest.py
 
-global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store
+global-exclude *.py[cod]
+global-exclude __pycache__/*
