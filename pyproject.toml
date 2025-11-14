@@ -1,3 +1,11 @@
+[project]
+name = "pod_lca"
+version = "0.1.0"
+description = "POD|LCA Python Package for LCA Screening of materials and building."
+readme = "README.md"
+authors = [{ name = "POD|LCA Tools Team" }]
+requires-python = ">=3.9"
+
 [tool.setuptools]
 include-package-data = true
 
