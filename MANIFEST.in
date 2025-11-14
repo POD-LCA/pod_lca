@@ -11,7 +11,7 @@ include README.md
 include AUTHORS.md
 include CHANGELOG.md
 include requirements.txt
-include config
+include config.yaml
 
 exclude requirements-dev.txt
 exclude pytest.ini .bumpversion.cfg .editorconfig
