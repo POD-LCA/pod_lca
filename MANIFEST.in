@@ -1,7 +1,6 @@
 graft src
 
 prune .github
-prune data
 prune docs
 prune scripts
 prune tests
@@ -12,6 +11,7 @@ include README.md
 include AUTHORS.md
 include CHANGELOG.md
 include requirements.txt
+include config
 
 exclude requirements-dev.txt
 exclude pytest.ini .bumpversion.cfg .editorconfig
