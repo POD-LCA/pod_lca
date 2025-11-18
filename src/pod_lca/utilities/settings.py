@@ -5,28 +5,27 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from pathlib import Path
+from importlib import resources
 
 import yaml
 
 def load_config():
     """  Load the configuration file.
     """
-    path = Path(__file__).resolve().parents[3] / 'config.yaml'
-    with open(path, "r") as f:
+    with resources.open_text("pod_lca", "config.yaml") as f:
         config = yaml.safe_load(f)
     
-    update_filepaths(config, parent_level=3)
+    update_filepaths(config)
 
     return config
 
-def update_filepaths(config, parent_level=1):
+def update_filepaths(config):
     """ Update file paths to absolute file path.
     """
-    current_file = Path(__file__).resolve()
-    project_root = current_file.parents[parent_level]
     for group, paths_dict in config['file_paths'].items():
-        for key, path in paths_dict.items():
-            paths_dict[key] = project_root / path
+        for key, relative_path in paths_dict.items():
+            package_root = resources.files("pod_lca")
+            file_path = package_root.joinpath(relative_path)
+            paths_dict[key] = file_path
 
 config = load_config()

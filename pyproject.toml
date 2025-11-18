@@ -1,27 +1,56 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pod_lca"
+version = "0.1.0"
+description = "pod_lca is a python library to carry out life cycle assessment of novel building materials and buildings."
+requires-python = ">= 3.9"
+dependencies = [
+    "matplotlib >= 3.9",
+    "numpy >= 1.26",
+    "pandas >= 2.2",
+    "PyYAML >= 6.0",
+    "scipy >= 1.14",
+    "geopy >= 2.4"
+]
+authors = [
+    {name = "Tomás Méndez Echenagucia", email = "tmendeze@uw.edu"},
+    {name = "Kavinda Isuru Nanayakkara", email = "kiun@uw.edu"},
+    {name = "Mohammad Tabatabaei Manesh", email = "mhtaba@uw.edu"},
+    {name = "Ethan Ellingboe", email = "etel5501@uw.edu"}
+]
+maintainers = [
+    {name = "Tomás Méndez Echenagucia", email = "tmendeze@uw.edu"}
+]
+license-files = ["LICENSE", "AUTHORS.md"]
+
+[project.optional-dependencies]
+olca = [
+    "olca-ipc",
+    "olca_schema"
+]
+search = [
+    "scikit-learn >= 1.7",
+    "nltk > 3.9"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["legacy*", "ui*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+pod_lca = ["config.yaml"]
+"pod_lca.data" = ["*.json", "*.csv", "*.idf"]
+
 [tool.black]
 line-length = 120
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-testpaths = ["tests", "src/pod_lca"]
-python_files = [
-    "test_*.py",
-    "tests.py"
-]
-addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short"
-doctest_optionflags= "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE ALLOW_BYTES NUMBER"
-filterwarnings = "ignore::DeprecationWarning"
-
-[tool.isort]
-line_length = 120
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-force_single_line = true
-ensure_newline_before_comments = true
-known_first_party = "pod_lca"
-default_section = "THIRDPARTY"
-forced_separate = "test_pod_lca"
-skip = ["__init__.py"]
-
+[tool.pydocstyle]
+convention = "numpy"
+add-ignore = ["D419", "D107", "D203"]
