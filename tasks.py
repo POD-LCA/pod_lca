@@ -1,13 +1,12 @@
-
 import os
 import pathlib
 import shutil
 from invoke import task
 
+
 @task
 def clean(c):
-    """ Clean all generated artifacts.
-    """
+    """Clean all generated artifacts."""
     dirs_to_remove = ["build", "dist", ".pytest_cache", "docs/_build"]
 
     for d in dirs_to_remove:
@@ -25,9 +24,10 @@ def clean(c):
 
     print("Clean complete.")
 
+
 @task
 def check(c):
-    """ Run various code and documentation style checks.
+    """Run various code and documentation style checks.
 
     This includes:
     - Black (formatting check)
@@ -35,12 +35,7 @@ def check(c):
     - MyPy (static type checking)
     - Docstring / documentation linting (optional)
     """
-    commands = [
-        "black --check .",
-        "ruff check .",
-        "mypy src",
-        "pydocstyle src --convention=numpy"
-    ]
+    commands = ["black .", "ruff check .", "mypy src", "pydocstyle src --convention=numpy"]
 
     for cmd in commands:
         print(f"Running: {cmd}")
@@ -48,13 +43,15 @@ def check(c):
 
     print("All checks passed (or reported).")
 
+
 @task
-def docs(c, out='md'):
+def docs(c, out="md"):
     """Build Sphinx HTML docs"""
-    if out=='html':
+    if out == "html":
         c.run("sphinx-build -b html docs/source docs/_build/html")
-    elif out=='md':
+    elif out == "md":
         c.run("sphinx-build -b markdown docs/source docs/_build/md")
+
 
 @task
 def tests(c):
@@ -69,6 +66,7 @@ def tests(c):
     for script in scripts:
         print(f"Running {script}...")
         c.run(f"python {script}")
+
 
 @task(pre=[clean])
 @task

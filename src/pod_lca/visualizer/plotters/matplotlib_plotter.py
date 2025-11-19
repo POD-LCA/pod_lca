@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -13,7 +12,7 @@ from ...utilities import config
 
 
 class MatplotlibPlotter(AbstractPlotter):
-    """ A plotter implemented from Matplotlib package.
+    """A plotter implemented from Matplotlib package.
 
     Attributes
     ----------
@@ -25,7 +24,7 @@ class MatplotlibPlotter(AbstractPlotter):
 
     def __init__(self):
         super().__init__()
-        self.fig = None 
+        self.fig = None
         self.ax = None
 
     # ================================
@@ -33,44 +32,42 @@ class MatplotlibPlotter(AbstractPlotter):
     # ================================
     @classmethod
     def create_plot(cls, polar=False):
-        """ Creates a new matplotlib plot.
-        
+        """Creates a new matplotlib plot.
+
         Parameters
         ----------
         Polar : bool
             If true, create a plot with polar axis.
         """
-        plt.close('all')
+        plt.close("all")
 
         plot = cls()
         if polar:
-            plot.fig, plot.ax = plt.subplots(layout='constrained', subplot_kw={'projection': 'polar'})
+            plot.fig, plot.ax = plt.subplots(layout="constrained", subplot_kw={"projection": "polar"})
         else:
-            plot.fig, plot.ax = plt.subplots(layout='constrained')
-        
+            plot.fig, plot.ax = plt.subplots(layout="constrained")
+
         return plot
 
     # ================================
     # Plot actions
-    # ================================      
+    # ================================
     def clear_plot(self):
-        """ Clear the plot
-        """
+        """Clear the plot"""
         self.ax.clear()
 
         return self
 
     def show(self):
-        """Display the plot.
-        """
+        """Display the plot."""
         plt.show()
 
     # ================================
     # Draw methods
-    # ================================ 
-    def draw_bar(self, pos, height, width, bottom=0., color='blue', label=None, label_pos='center'):
-        """ draw a bar in a bar chart.
-        
+    # ================================
+    def draw_bar(self, pos, height, width, bottom=0.0, color="blue", label=None, label_pos="center"):
+        """draw a bar in a bar chart.
+
         Parameters
         ----------
         pos : float
@@ -90,10 +87,10 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.bar_label(rect, label_type=label_pos)
 
         return self
-    
+
     def draw_radar(self, angles, values, label, color, alpha=0.5):
-        """ Draw radar lines in a polar plot.
-        
+        """Draw radar lines in a polar plot.
+
         Parameters
         ----------
         angles : list
@@ -112,8 +109,8 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.fill(angles, values, color=color, alpha=alpha)
 
     def draw_histogram(self, data, no_bins, label, color, alpha, unitize):
-        """ Draw a histogram.
-        
+        """Draw a histogram.
+
         Parameters
         ----------
         data : list
@@ -128,14 +125,14 @@ class MatplotlibPlotter(AbstractPlotter):
             Transparency of the radar (value between 0 and 1).
         unitize : bool
             If true, the area under of the histogram is set to 1.
-        """        
+        """
         self.ax.hist(data, bins=no_bins, density=unitize, alpha=alpha, label=label, color=color)
 
         return self
-    
+
     def draw_line(self, x_data, y_data, label, color=None):
-        """ Draw a line plot through (x, y) data pairs.
-        
+        """Draw a line plot through (x, y) data pairs.
+
         Parameters
         ----------
         x_data : list
@@ -148,15 +145,15 @@ class MatplotlibPlotter(AbstractPlotter):
             Color of the radar plot as a named or hex string.
         """
         if color is None:
-            COLOUR_BASE = config['Preferences']['COLOUR_BASE']
-            COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
-            COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
+            COLOUR_BASE = config["Preferences"]["COLOUR_BASE"]
+            COLOUR_PALETTES = config["Preferences"]["COLOUR_PALETTES"]
+            COLOUR_ORDER_LIST = config["Preferences"]["COLOUR_ORDER_LIST"]
             color = COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE]
 
         self.ax.plot(x_data, y_data, color=color, linewidth=2, label=label)
 
     def draw_stackplot(self, x_data, y_data, labels, colors=None):
-        """ Draw a stackplot.
+        """Draw a stackplot.
 
         Parameters
         ----------
@@ -172,8 +169,8 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.stackplot(x_data, *y_data, labels=labels, colors=colors)
 
     def draw_boxplot(self, data):
-        """ Draw a boxplot.
-    
+        """Draw a boxplot.
+
         Parameters
         ----------
         data : list
@@ -186,10 +183,10 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.boxplot(data, patch_artist=True)
 
         return self
-    
+
     def draw_violinplot(self, data):
-        """ Draw a violinplot.
-        
+        """Draw a violinplot.
+
         Parameters
         ----------
         data : list
@@ -207,8 +204,8 @@ class MatplotlibPlotter(AbstractPlotter):
     # Set plot components
     # ================================
     def set_title(self, title):
-        """ Set title of the plot.
-        
+        """Set title of the plot.
+
         Parameters
         ----------
         title : str
@@ -218,9 +215,9 @@ class MatplotlibPlotter(AbstractPlotter):
 
         return self
 
-    def set_labels(self, x_label='', y_label=''):
+    def set_labels(self, x_label="", y_label=""):
         """Set plot title and axis labels.
-        
+
         Parameters
         ----------
         x_label : str
@@ -235,7 +232,7 @@ class MatplotlibPlotter(AbstractPlotter):
 
     def set_legend(self, colors=None, labels=None, title=None):
         """Set the legend of the plot. If colors and labels are given, override with patches.
-        
+
         Parameters
         ----------
         colors : list
@@ -261,7 +258,7 @@ class MatplotlibPlotter(AbstractPlotter):
 
     def set_xticks(self, ticks, labels=None):
         """Set and label ticks along the x-axis of the plot.
-        
+
         Parameters
         ----------
         ticks : 1D array-like
@@ -277,7 +274,7 @@ class MatplotlibPlotter(AbstractPlotter):
 
     def set_xlim(self, min, max):
         """Set limits of the x-axis of the plot.
-        
+
         Parameters
         ----------
         min : float
@@ -288,10 +285,10 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.set_xlim([min, max])
 
         return self
-    
+
     def set_ylim(self, min, max):
         """Set limits of the y-axis of the plot.
-        
+
         Parameters
         ----------
         min : float
@@ -302,15 +299,13 @@ class MatplotlibPlotter(AbstractPlotter):
         self.ax.set_ylim([min, max])
 
         return self
-    
+
     def set_grid(self):
-        """Set grid lines of the plot.
-        """
+        """Set grid lines of the plot."""
         self.ax.grid(True)
 
         return self
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
-       

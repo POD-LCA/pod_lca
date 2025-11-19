@@ -1,4 +1,3 @@
-
 from .datasets import DataDistribution
 from .prebuilt_distributions import ExponentDecay
 from .prebuilt_distributions import LogNorm
@@ -12,4 +11,12 @@ from .monte_carlo_simulation import MonteCarloSimulator
 from .monte_carlo_simulation import MonteCarloResults
 from .sensitivity_analysis import SensitivityAnalysis
 
-__all__ = ["DataDistribution", "DataQualityAnalysis", "HotSpotAnalysis", "MonteCarloResults", "MonteCarloSimulator", "PedigreeScore", "SensitivityAnalysis"]
+__all__ = [
+    "DataDistribution",
+    "DataQualityAnalysis",
+    "HotSpotAnalysis",
+    "MonteCarloResults",
+    "MonteCarloSimulator",
+    "PedigreeScore",
+    "SensitivityAnalysis",
+]

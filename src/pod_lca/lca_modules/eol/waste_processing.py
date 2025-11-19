@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -10,7 +9,7 @@ from ..impacts import Emissions
 
 
 class WasteProcess:
-    """ Waste process a waste object is subjected to.
+    """Waste process a waste object is subjected to.
 
     Attributes
     ----------
@@ -23,7 +22,7 @@ class WasteProcess:
             - `'Recycle'`: transporting waste to a recycler.
             - `'Compost'`: transporting to a composting facility.
             - `'Incinerate'`: transporting to an incinerator.
-            Default to 'Incinerate'. 
+            Default to 'Incinerate'.
     qty : float
         Quantity of the parent object subjected to this process.
     unit : ~pod_lca.units.Unit
@@ -65,8 +64,8 @@ class WasteProcess:
     # ================================
     @classmethod
     def new(cls, parent, process_name, qty, unit, life_cycle_stage, linked_process=None):
-        """ Create new waste process.
-        
+        """Create new waste process.
+
         Parameters
         ----------
         parent : ~pod_lca.eol.Waste
@@ -78,14 +77,14 @@ class WasteProcess:
                 - `'Recycle'`: transporting waste to a recycler.
                 - `'Compost'`: transporting to a composting facility.
                 - `'Incinerate'`: transporting to an incinerator.
-                Default to 'Incinerate'. 
+                Default to 'Incinerate'.
         qty : float
             Quantity of the parent object subjected to this process.
         unit : ~pod_lca.units.Unit
             Unit of measurement.
         life_cycle_stage : {'C3', 'C4', 'D'}
             Life cycle stage of this process.
-        linked_process : {None, 'C4', 'D'}  
+        linked_process : {None, 'C4', 'D'}
             Linked waste process.
 
         Returns
@@ -105,12 +104,8 @@ class WasteProcess:
 
         if linked_process is not None:
             for process in linked_process:
-                linked_waste_process = WasteProcess.new(parent, 
-                                                    process_name, 
-                                                    qty, 
-                                                    unit, 
-                                                    process)
-                
+                linked_waste_process = WasteProcess.new(parent, process_name, qty, unit, process)
+
                 waste_process.set_linked_process(linked_waste_process)
                 parent.waste_processes.append(linked_waste_process)
 
@@ -118,10 +113,10 @@ class WasteProcess:
 
     # ================================
     # Setters
-    # ================================    
+    # ================================
     def set_parent(self, parent):
-        """ Set parent Waste object of the Waste Processing.
-        
+        """Set parent Waste object of the Waste Processing.
+
         Parameters
         ----------
         parent : ~pod_lca.eol.Waste
@@ -130,9 +125,9 @@ class WasteProcess:
         self.parent = parent
 
         return self
-    
+
     def set_process_name(self, name):
-        """ Set the process name.
+        """Set the process name.
 
         Parameters
         ----------
@@ -147,10 +142,10 @@ class WasteProcess:
         self.process_name = name
 
         return self
-            
+
     def set_qty(self, qty):
-        """ Set quantity of the parent subjected to this waste process.
-        
+        """Set quantity of the parent subjected to this waste process.
+
         Parameters
         ----------
         qty : float
@@ -164,12 +159,12 @@ class WasteProcess:
             else:
                 self.get_linked_process().set_unit(self.get_unit())
                 self.get_linked_process().set_qty(qty)
-        
+
         return self
 
     def set_unit(self, unit):
-        """ Set unit of measurement for the waste amount processed.
-        
+        """Set unit of measurement for the waste amount processed.
+
         Parameters
         ----------
         unit : ~pod_lca.units.Unit
@@ -197,7 +192,7 @@ class WasteProcess:
         return self
 
     def set_life_cycle_stage(self, life_cycle_stage):
-        """ Set life cycle stage of the product/process.
+        """Set life cycle stage of the product/process.
 
         Parameters
         ----------
@@ -209,7 +204,7 @@ class WasteProcess:
         else:
             previous_stage = self.get_life_cycle_stage()
             self.life_cycle_stage = life_cycle_stage
-            
+
             impact_obj = self.get_impacts()
             parent_impacts_list = self.get_parent().get_impacts()[previous_stage]
             for impact in parent_impacts_list:
@@ -222,8 +217,7 @@ class WasteProcess:
         return self
 
     def set_unit_inventories(self):
-        """ Set unit impacts of the waste process.
-        """
+        """Set unit impacts of the waste process."""
         material = self.get_parent().get_impact_database_entry()
         process = self.get_process_name()
         life_cycle_stage = self.get_life_cycle_stage()
@@ -235,16 +229,16 @@ class WasteProcess:
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.get_conversion_factor(unit)
 
-        impacts = {key: database_entry[key]*conversion_factor for key in self.get_unit_impacts().get_categories()}
-        emissions = {key: database_entry[key]*conversion_factor for key in self.get_unit_emissions().get_categories()}
-        
+        impacts = {key: database_entry[key] * conversion_factor for key in self.get_unit_impacts().get_categories()}
+        emissions = {key: database_entry[key] * conversion_factor for key in self.get_unit_emissions().get_categories()}
+
         self.get_unit_impacts().update_qty(impacts)
         self.get_unit_emissions().update_qty(emissions)
 
         return self
 
     def set_location(self, location):
-        """ Set location of the waste process facility.
+        """Set location of the waste process facility.
 
         Parameters
         ----------
@@ -253,11 +247,11 @@ class WasteProcess:
         """
         self.location = location
         self.get_transportation_leg().set_shipping_destination(location)
-        
+
         return self
 
     def set_linked_process(self, process):
-        """ Set a linked process to the current process.
+        """Set a linked process to the current process.
 
         Parameters
         ----------
@@ -273,8 +267,8 @@ class WasteProcess:
     # Getters
     # ================================
     def get_parent(self):
-        """ Get parent Waste object of the Waste Processing.
-        
+        """Get parent Waste object of the Waste Processing.
+
         Returns
         -------
         ~pod_lca.eol.Waste
@@ -283,47 +277,47 @@ class WasteProcess:
         return self.parent
 
     def get_process_name(self):
-        """ Get the process name.
+        """Get the process name.
 
         Returns
         -------
         str
             Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'
-        """       
+        """
         return self.process_name
-    
+
     def get_name(self):
-        """ Get name of the process identifying the parent and process.
-        
+        """Get name of the process identifying the parent and process.
+
         Returns
         -------
         str
             Name identifyer.
         """
-        return self.get_parent().get_parent().get_name() + '_' + self.get_process_name()
-        
+        return self.get_parent().get_parent().get_name() + "_" + self.get_process_name()
+
     def get_qty(self):
-        """ Get quantity of the parent subjected to this waste process.
-        
+        """Get quantity of the parent subjected to this waste process.
+
         Returns
         -------
         float
             Quantity of the parent object subjected to this process.
         """
         return self.qty
-    
+
     def get_unit(self):
-        """ Get unit of measurement for the waste amount processed.
-        
+        """Get unit of measurement for the waste amount processed.
+
         Returns
         -------
         ~pod_lca.units.Unit
             Unit of measurement.
-        """        
+        """
         return self.unit
-    
+
     def get_life_cycle_stage(self):
-        """ Retrieve the life cycle stage corresponding to the waste process.
+        """Retrieve the life cycle stage corresponding to the waste process.
 
         Returns
         -------
@@ -333,7 +327,7 @@ class WasteProcess:
         return self.life_cycle_stage
 
     def get_unit_impacts(self):
-        """ Get unit impacts of the waste process.
+        """Get unit impacts of the waste process.
 
         Returns
         -------
@@ -342,9 +336,9 @@ class WasteProcess:
         """
         self.update_unit_inventories()
         return self.unit_impacts
-    
+
     def get_unit_emissions(self):
-        """ Get unit emissions of the waste process.
+        """Get unit emissions of the waste process.
 
         Returns
         -------
@@ -355,7 +349,7 @@ class WasteProcess:
         return self.unit_emissions
 
     def get_linked_process(self, to=True):
-        """ Get the linked process to the current process.
+        """Get the linked process to the current process.
 
         Parameters
         ----------
@@ -371,23 +365,22 @@ class WasteProcess:
             return self.linked_to
         else:
             return self.linked_from
-        
+
     def get_transportation_leg(self):
-        """ Get the transportation leg corresponding to the end-of-life pathway.
-        
+        """Get the transportation leg corresponding to the end-of-life pathway.
+
         Returns
         -------
         ~pod_lca.transportation.TransportationLeg
             Secondary process following the current process.
         """
         return self.transporation_leg
-        
+
     # ================================
     # Methods
-    # ================================    
+    # ================================
     def update_unit_inventories(self):
-        """ Set unit impacts of the waste process.
-        """
+        """Set unit impacts of the waste process."""
         material = self.get_parent().get_impact_database_entry()
         process = self.get_process_name()
         life_cycle_stage = self.get_life_cycle_stage()
@@ -399,12 +392,12 @@ class WasteProcess:
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.convert_to(unit)
 
-        impacts = {key: database_entry[key]*conversion_factor for key in self.unit_impacts.record_attr_dict}
-        emissions = {key: database_entry[key]*conversion_factor for key in self.unit_emissions.record_attr_dict}
-        
+        impacts = {key: database_entry[key] * conversion_factor for key in self.unit_impacts.record_attr_dict}
+        emissions = {key: database_entry[key] * conversion_factor for key in self.unit_emissions.record_attr_dict}
+
         self.unit_impacts.update_qty(impacts)
-        self.unit_emissions.update_qty(emissions)  
+        self.unit_emissions.update_qty(emissions)
 
 
-if __name__ == '__main__':
-    pass    
+if __name__ == "__main__":
+    pass

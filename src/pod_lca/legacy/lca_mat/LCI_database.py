@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
@@ -9,8 +8,9 @@ __version__ = "0.1.0"
 # LCI DATABASE CLASS
 # =================================
 
-class LCIDatabase():
-    
+
+class LCIDatabase:
+
     def __init__(self):
 
         self.name = None
@@ -18,9 +18,7 @@ class LCIDatabase():
         self.impacts = {}
 
     def get_unit_processess(self):
-        """  Returns a list of corresponding UnitProcess Objects.
-        
-        """
+        """Returns a list of corresponding UnitProcess Objects."""
         pass
 
     def load_impacts(self):
@@ -34,11 +32,13 @@ class LCIDatabase():
         else:
             return self.load_impacts()
 
+
 # =================================
 # UNIT PROCESS CLASS
 # =================================
 
-class UnitProcess():
+
+class UnitProcess:
 
     def __init__(self, name):
         self.unit_process_id = None
@@ -68,11 +68,11 @@ class UnitProcess():
     def get_exchanges(self):
 
         return self.exchanges
-    
+
     def get_location(self):
 
         return self.location
-    
+
     def set_exchange(self, name, exchange):
 
         if not (exchange in self.get_exchanges.keys()):
@@ -80,11 +80,13 @@ class UnitProcess():
         else:
             raise NotImplementedError
 
+
 # =================================
 # EXCHANGE CLASS
 # =================================
 
-class Exchange():
+
+class Exchange:
 
     def __init__(self):
         self.name = None
@@ -100,18 +102,20 @@ class Exchange():
     def get_qty(self):
 
         return self.qty
-    
+
     def get_flow_id(self):
 
         return self.flow_id
 
     # TODO: create getters and setters
 
+
 # =================================
 # IMPACT CLASS
 # =================================
 
-class Impact():
+
+class Impact:
 
     def __init__(self, name, id):
         self.id = id
@@ -123,15 +127,15 @@ class Impact():
     def get_flows(self):
 
         return self.flow_impacts
-    
+
     def get_name(self):
 
         return self.name
-    
+
     def get_unit(self):
 
         return self.unit
-    
+
     def get_qty(self):
 
         return self.qty
@@ -139,6 +143,3 @@ class Impact():
     def add_qty(self, qty):
 
         self.qty += qty
-
-    
-        

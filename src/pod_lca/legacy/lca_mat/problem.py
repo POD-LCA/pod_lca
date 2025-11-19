@@ -19,6 +19,7 @@ __version__ = "0.1.0"
 # PROBLEM CLASS
 # =================================
 
+
 class Problem(object):
 
     def __init__(self):
@@ -34,43 +35,43 @@ class Problem(object):
     # =================================
 
     def set_database(self, database):
-        """ Sets database for the problem.
-        
+        """Sets database for the problem.
+
         Inputs:
         ------
             database    : LCIDatabase obj.
-        
+
         """
         self.database = database
         database.load_impacts()
 
     def set_process_matrix(self, process_matrix):
-        """ Sets process matrix for the problem.
-        
+        """Sets process matrix for the problem.
+
         Inputs:
         ------
             process_matrix    : dict.
-        
+
         """
         self.process_matrix = process_matrix
 
     def set_product_process_matrix(self, product_process_matrix):
-        """ Sets selection matrix for the problem.
-        
+        """Sets selection matrix for the problem.
+
         Inputs:
         ------
             selection_matrix    : array.
-        
+
         """
         self.product_process_matrix = product_process_matrix
 
     def set_process_exchange_matrix(self, proces_exchange_matrix):
-        """ Sets selection matrix for the problem.
-        
+        """Sets selection matrix for the problem.
+
         Inputs:
         ------
             selection_matrix    : array.
-        
+
         """
         self.process_exchange_matrix = proces_exchange_matrix
 
@@ -82,28 +83,25 @@ class Problem(object):
             self.demand[row] = val
 
     def get_database(self):
-        """ Gets database for the problem.
-        """
+        """Gets database for the problem."""
         return self.database
-    
+
     def get_process_matrix(self):
-        """ Gets process matrix for the problem.
-        """
+        """Gets process matrix for the problem."""
         return self.process_matrix
 
     def get_product_process_matrix(self):
-        """ Gets selection matrix for the problem.
-        """
+        """Gets selection matrix for the problem."""
         return self.product_process_matrix
-    
+
     def get_process_exchange_matrix(self):
 
         return self.process_exchange_matrix
-    
+
     def get_demand(self):
 
         return self.demand
-    
+
     def get_impacts(self):
 
         return self.get_database().get_impacts()
@@ -113,9 +111,9 @@ class Problem(object):
     # =================================
 
     def print_process(self, col_no=None, process_id=None):
-        
+
         if col_no:
-            process_id = self.get_process_matrix().cols[col_no]        
+            process_id = self.get_process_matrix().cols[col_no]
 
         if process_id:
             print(self.get_database().get_unit_processess()[process_id])
@@ -125,12 +123,11 @@ class Problem(object):
         inventory_item = self.get_process_matrix().get_basis().get_inventory_dict()[row]
         print(inventory_item)
 
-
     def print_unit_processes(self, n=50):
 
         terminal_size = shutil.get_terminal_size()
-        lines_per_page = terminal_size.lines - 2 
-        os.system('cls' if os.name == 'nt' else 'clear')
+        lines_per_page = terminal_size.lines - 2
+        os.system("cls" if os.name == "nt" else "clear")
 
         P = self.get_process_matrix()
 
@@ -140,11 +137,11 @@ class Problem(object):
             print("col. no | process ID | process name")
             ctr = 0
             for id in ids.keys():
-                print(str(ids[id]) + " | " +  id + " | " +  unitProcesss[id].get_name()[:n] + "...")
+                print(str(ids[id]) + " | " + id + " | " + unitProcesss[id].get_name()[:n] + "...")
 
                 if ctr > lines_per_page:
                     input("\nPress Enter to continue...")
-                    os.system('cls' if os.name == 'nt' else 'clear')
+                    os.system("cls" if os.name == "nt" else "clear")
                     print("col. no | process ID | process name")
                     ctr = 0
                 else:
@@ -155,8 +152,8 @@ class Problem(object):
     def print_inventory(self, n=100, print_nnz=False, tol=0.01):
 
         terminal_size = shutil.get_terminal_size()
-        lines_per_page = terminal_size.lines - 2 
-        os.system('cls' if os.name == 'nt' else 'clear')
+        lines_per_page = terminal_size.lines - 2
+        os.system("cls" if os.name == "nt" else "clear")
 
         P = self.get_process_matrix()
         if P is not None:
@@ -167,17 +164,23 @@ class Problem(object):
                 print("row. no | exchange name | location | unit process id")
             ctr = 0
             for id in inventory.keys():
-                prt_str = str(inventory[id].get_row_num()) + " | " +  inventory[id].get_name()[:n]
+                prt_str = str(inventory[id].get_row_num()) + " | " + inventory[id].get_name()[:n]
                 if len(inventory[id].get_name()) > n:
                     prt_str += "..."
-                prt_str += (" | " + inventory[id].get_location()) if inventory[id].get_location() is not None else " | --- "
-                prt_str += (" | " + inventory[id].get_unit_process_id()) if inventory[id].get_unit_process_id() is not None else " | --- "
-                
+                prt_str += (
+                    (" | " + inventory[id].get_location()) if inventory[id].get_location() is not None else " | --- "
+                )
+                prt_str += (
+                    (" | " + inventory[id].get_unit_process_id())
+                    if inventory[id].get_unit_process_id() is not None
+                    else " | --- "
+                )
+
                 if print_nnz:
                     qty = inventory[id].get_qty()
                     unit = inventory[id].get_unit()
                     if abs(qty) > tol:
-                        prt_str += (" | " + "{:.2f}".format(qty) + " " + unit)
+                        prt_str += " | " + "{:.2f}".format(qty) + " " + unit
                         print(prt_str)
                         ctr += 1
                 else:
@@ -186,14 +189,13 @@ class Problem(object):
 
                 if ctr > lines_per_page:
                     input("\nPress Enter to continue...")
-                    os.system('cls' if os.name == 'nt' else 'clear')
+                    os.system("cls" if os.name == "nt" else "clear")
                     print("row. no | exchange name | location | unit process id")
                     ctr = 0
-                    
+
         else:
             print("Create process matrix to load unit processess.")
 
-        
     def print_impacts(self):
 
         impacts = self.get_impacts()
@@ -202,35 +204,36 @@ class Problem(object):
             print("impact name | qty ")
             for impact in impacts:
                 prt_str = impacts[impact].get_name()
-                prt_str += (" | " + "{:.2f}".format(impacts[impact].get_qty()))
-                prt_str += (" " + impacts[impact].get_unit())
+                prt_str += " | " + "{:.2f}".format(impacts[impact].get_qty())
+                prt_str += " " + impacts[impact].get_unit()
                 print(prt_str)
         else:
             print("Load database to print impacts.")
-
 
     # =================================
     # User Methods
     # =================================
 
     def create_process_matrix(self, process_id=None):
-        """ Creates the full process matrix.
-        
+        """Creates the full process matrix.
+
         Inputs:
         ------
-        
-        
+
+
         Returns:
         -------
-        
+
         """
-        
+
         P = ProcessessMatrix()
         inventory_vector = P.get_basis()
         database = self.get_database()
         unit_processes = database.get_unit_processess(process_id)
         for unit_process in unit_processes.keys():
-            inventory_ids, exchange_qtys = inventory_vector.add_inventory_items(unit_processes[unit_process].get_exchanges())
+            inventory_ids, exchange_qtys = inventory_vector.add_inventory_items(
+                unit_processes[unit_process].get_exchanges()
+            )
             P.add_process(unit_processes[unit_process].get_process_id(), inventory_ids, exchange_qtys)
 
         self.set_process_matrix(P)
@@ -243,17 +246,17 @@ class Problem(object):
         self.demand = zeros(rows)
 
     def solve(self):
-        """ Solves the LCI problem.
-        
+        """Solves the LCI problem.
+
         Inputs:
         ------
-        
-        
+
+
         Returns:
         -------
-        
+
         """
-        
+
         _, cols, product_rows = self._partition_process_matrix()
 
         P = LinearAlgebra.mat_data_to_np_mat(self.get_process_matrix().get_mat_data())
@@ -266,7 +269,7 @@ class Problem(object):
         else:
             print("Product matrix is not square. Pseudo-inverse is considered.")
             pass
-        
+
         # mask = ones(P.shape[0], dtype=bool)
         # mask[product_rows] = False
         # B = P[mask, :][:, cols]
@@ -285,13 +288,12 @@ class Problem(object):
 
         # TODO: Update process qtys
 
-    
     # =================================
     # Private Methods
     # =================================
 
     def _generate_product_process_matrix(self):
-        
+
         rows = self.get_process_matrix().get_no_rows()
         cols = self.get_process_matrix().get_no_cols()
 
@@ -302,7 +304,6 @@ class Problem(object):
         row_indices = []
         col_indices = []
 
-
         for item in inventory_dict.keys():
             if inventory_dict[item].unit_process_id is not None:
                 process_id = inventory_dict[item].unit_process_id
@@ -311,7 +312,7 @@ class Problem(object):
 
                 row_indices.append(row)
                 col_indices.append(col)
-                data.append(True) 
+                data.append(True)
             # else:
             #     if not inventory_dict[item].is_elementary_flow:
             #         raise NotImplementedError
@@ -320,9 +321,8 @@ class Problem(object):
 
         self.set_product_process_matrix(product_process_matrix)
 
-
     def _generate_process_exchange_matrix(self):
-        
+
         rows = self.get_process_matrix().get_no_rows()
         cols = self.get_process_matrix().get_no_cols()
 
@@ -336,13 +336,13 @@ class Problem(object):
             for row in process_mat_data[col].keys():
                 row_indices.append(row)
                 col_indices.append(col)
-                data.append(True) 
-                
+                data.append(True)
+
         process_exchange_matrix = csr_matrix((data, (row_indices, col_indices)), shape=(rows, cols))
 
         self.set_process_exchange_matrix(process_exchange_matrix)
 
-    def _partition_process_matrix(self, tol = 0.001):
+    def _partition_process_matrix(self, tol=0.001):
 
         PP = self.get_product_process_matrix()
         PE = self.get_process_exchange_matrix()
@@ -358,8 +358,8 @@ class Problem(object):
         no_rows, no_cols = len(rows), len(cols)
         update = True
         while update:
-            
-            cols.extend(PP[rows,:].nonzero()[1].tolist())
+
+            cols.extend(PP[rows, :].nonzero()[1].tolist())
             rows.extend(PE[:, cols].nonzero()[0].tolist())
 
             cols = list(set(cols))
@@ -370,10 +370,10 @@ class Problem(object):
             else:
                 no_rows, no_cols = len(rows), len(cols)
 
-        product_rows = PP[:,cols].nonzero()[0].tolist()
+        product_rows = PP[:, cols].nonzero()[0].tolist()
 
         return list(set(rows)), list(set(cols)), product_rows
-    
+
     def _set_impacts(self):
 
         inventory = self.get_process_matrix().get_basis()
@@ -396,7 +396,7 @@ class Problem(object):
                         impacts[impact].add_qty(unit_impact * qty)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from lca_mat import HOME
     from lca_mat.ecoinvent_database import EcoinventDatabase
@@ -405,11 +405,10 @@ if __name__ == '__main__':
 
     test_problem = Problem()
 
-    process_database_path = HOME + '\Archive\ecoinvent_391_en15804gd_upr_n2_20230629'
-    impact_database_path = HOME + '\Archive\ecoinvent_3_9_1_LCIA_Methods_openLCA_2_(1)'
+    process_database_path = HOME + "\Archive\ecoinvent_391_en15804gd_upr_n2_20230629"
+    impact_database_path = HOME + "\Archive\ecoinvent_3_9_1_LCIA_Methods_openLCA_2_(1)"
 
-    database = EcoinventDatabase(process_file_path=process_database_path,
-                                 impact_file_path=impact_database_path)
+    database = EcoinventDatabase(process_file_path=process_database_path, impact_file_path=impact_database_path)
 
     test_problem.set_database(database)
     test_problem.create_process_matrix()

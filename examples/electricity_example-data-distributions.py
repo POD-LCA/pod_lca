@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -7,7 +6,7 @@ __version__ = "0.1.0"
 
 from numpy import percentile, linspace
 
-from pod_lca.materials_screening import Project 
+from pod_lca.materials_screening import Project
 from pod_lca.location import Location
 from pod_lca.units import KILO
 from pod_lca.units import WATT_HOUR
@@ -21,8 +20,8 @@ my_manufacturing_project = Project()
 
 # =================================
 # Set project location
-# ================================= 
-my_factory_location = Location.from_str("USA") # 'National' location
+# =================================
+my_factory_location = Location.from_str("USA")  # 'National' location
 # my_factory_location = Location.from_str("oklahoma") # 'Regional' location
 # my_factory_location = Location.from_str("98102, USA") # 'Local' location
 
@@ -42,10 +41,10 @@ electricity_supplier = electricity.get_supplier()
 impact_distribution = electricity_supplier.get_impact_distribution()
 
 # distribution of impacts of the electricity product
-distribution_list = electricity.get_data_distribution('impacts')
+distribution_list = electricity.get_data_distribution("impacts")
 
-impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
-plot_type = 'boxplot' # 'boxplot' or 'violinplot'
+impact_categories = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]
+plot_type = "boxplot"  # 'boxplot' or 'violinplot'
 for distribution in distribution_list:
     # Parametric Statistics
     # This is preferred when the nature of the data is known (e.g., we know the electricity consumption varies normally).
@@ -57,7 +56,14 @@ for distribution in distribution_list:
     # print(f"Q3: {distribution.percentile(.75)}")
     # print(f"Q4: {distribution.percentile(1.00)}")
     graph = Histogram.from_plotter(MatplotlibPlotter)
-    graph.draw(distribution.get_data(), no_bins=5, title=distribution.get_name(), x_label=impact_categories[distribution.get_name()], y_label='probability density', unitize=True)
+    graph.draw(
+        distribution.get_data(),
+        no_bins=5,
+        title=distribution.get_name(),
+        x_label=impact_categories[distribution.get_name()],
+        y_label="probability density",
+        unitize=True,
+    )
 
     # x = linspace(distribution.percentile(0), distribution.percentile(.95), 100)
     # p = distribution.get_distribution().pdf(x)
@@ -72,13 +78,23 @@ for distribution in distribution_list:
     print(percentile(distribution.get_data(), 75))
     print(percentile(distribution.get_data(), 100))
 
-    if plot_type == 'boxplot':
+    if plot_type == "boxplot":
         graph = BoxPlot.from_plotter(MatplotlibPlotter)
-        graph.draw(distribution.get_data(), title=distribution.get_name(), x_label='', y_label=impact_categories[distribution.get_name()])
+        graph.draw(
+            distribution.get_data(),
+            title=distribution.get_name(),
+            x_label="",
+            y_label=impact_categories[distribution.get_name()],
+        )
         graph.show()
-    elif plot_type == 'violinplot':
+    elif plot_type == "violinplot":
         graph = ViolinPlot.from_plotter(MatplotlibPlotter)
-        graph.draw(distribution.get_data(), title=distribution.get_name(), x_label='', y_label=impact_categories[distribution.get_name()])
+        graph.draw(
+            distribution.get_data(),
+            title=distribution.get_name(),
+            x_label="",
+            y_label=impact_categories[distribution.get_name()],
+        )
         graph.show()
     else:
         raise ValueError("Invalid plot type. Choose 'boxplot' or 'violinplot'.")

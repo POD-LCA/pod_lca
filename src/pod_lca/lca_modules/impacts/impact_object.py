@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -15,7 +14,7 @@ from ...utilities import DataImporter
 
 
 class Impacts(Records):
-    """ Impacts object keep record of the impacts created by a product or a process.
+    """Impacts object keep record of the impacts created by a product or a process.
 
     Attributes
     ----------
@@ -25,8 +24,9 @@ class Impacts(Records):
         Impact categories are dynamically set based on the class variable 'record_attr_dict'.
         This is set to the IMPACT_CATEGORIES in the config file.
     """
+
     record_type = "Impacts"
-    record_attr_dict = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
+    record_attr_dict = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]
 
     def __init__(self):
         super().__init__()
@@ -34,13 +34,13 @@ class Impacts(Records):
     # ========================
     # Impact Methods
     # ========================
-    def get_weighted_impact(self, method='TRACI_EPA'):
-        """ Get a normalized and weighted value for impacts.
-            
+    def get_weighted_impact(self, method="TRACI_EPA"):
+        """Get a normalized and weighted value for impacts.
+
         Note
-        ----    
+        ----
         Reference: The Carbon Leadership Forum. (2018) Life Cycle ASssesment of Buildings: A Practice Guide. DOI: http://hdl.handle.net/1773/41885
-        
+
         Parameters
         ----------
         method : {'TRACI_EPA', 'TRACI_NIST'}
@@ -48,7 +48,7 @@ class Impacts(Records):
             - 'TRACI_EPA': From Ref [1].
             - 'TRACI_NIST': From Ref [1].
             Default is 'TRACI_EPA'.
-            
+
         Returns
         -------
         float
@@ -59,21 +59,21 @@ class Impacts(Records):
         KeyError
             Weighing method not recognied.
         """
-        if method == 'TRACI_EPA':
+        if method == "TRACI_EPA":
             weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])
-        elif method == 'TRACI_NIST':
+        elif method == "TRACI_NIST":
             weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_NIST"])
         else:
             raise KeyError("Weighing method not recognized")
-        
+
         normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTORS"])
-        
+
         for impact_cat in self.record_attr_dict:
             if impact_cat not in weights:
                 raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
             if impact_cat not in normalisation_factors:
                 raise KeyError(f"Impact category '{impact_cat}' not found in normalization factors.")
-                        
+
         weighted_impact = 0.0
         for impact_cat in self.record_attr_dict:
             impact = getattr(self, impact_cat, None)
@@ -83,11 +83,11 @@ class Impacts(Records):
                 weighted_impact += (impact / norm_factor) * weight
             else:
                 return None
-        
+
         return weighted_impact
-    
+
     def get_adjusted_GWP(self):
-        """ Get GWP values adjusted for biogenic and accelerated carbonation effects.
+        """Get GWP values adjusted for biogenic and accelerated carbonation effects.
 
         Returns
         -------
@@ -97,13 +97,16 @@ class Impacts(Records):
         Raises
         ------
         KeyError
-            Impact category not recognied.        
+            Impact category not recognied.
         """
-        key = config['setup']['impacts']['CARBONATION_EFFECTS_IMPACT_CATEGORY']
+        key = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
 
         # check key
         if key in self.get_categories():
-            if not UNITS_MAP[self.get_categories(units=True)[1][key]].get_qty_measured() == KG_CARBON_DIOXIDE.get_qty_measured():
+            if (
+                not UNITS_MAP[self.get_categories(units=True)[1][key]].get_qty_measured()
+                == KG_CARBON_DIOXIDE.get_qty_measured()
+            ):
                 raise KeyError(f"Impact category {key} incompatible to account for carbonation effects.")
         else:
             raise KeyError(f"{key} not in impact categories of config.")
@@ -121,10 +124,10 @@ class Impacts(Records):
 
                     if isinstance(qty, (float, int)):
                         if not isnan(qty):
-                            gwp_qty  = gwp_qty - (qty * conversion_factor)
+                            gwp_qty = gwp_qty - (qty * conversion_factor)
 
             return gwp_qty
 
-        
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pass

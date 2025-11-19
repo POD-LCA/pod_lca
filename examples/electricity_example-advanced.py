@@ -1,11 +1,10 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from pod_lca.materials_screening import Project 
+from pod_lca.materials_screening import Project
 from pod_lca.location import Location
 from pod_lca.units import MEGA
 from pod_lca.units import WATT_HOUR
@@ -14,7 +13,7 @@ my_manufacturing_project = Project()
 
 # =================================
 # Set project location
-# ================================= 
+# =================================
 # Spatial resolution ('National', 'Regional', 'Local') will be automatically detected as the location is set
 # If no location is set, the spatial resolution will be set to 'National' (and 'USA') by default.
 # my_factory_location = Location.from_US_zip("98105")
@@ -67,7 +66,7 @@ print(electricity.get_impacts())
 # =================================
 # changing the electricity supplier spatial resolution would only change the unit impacts
 # and not the electricity product impacts
-electricity_supplier.set_geographical_scope('Regional')
+electricity_supplier.set_geographical_scope("Regional")
 
 unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
@@ -76,7 +75,7 @@ print(impacts)
 
 # to change the electricity product impacts, we need to set the spatial resolution on the electricity product
 # this will automatically update the supplier year as well
-electricity.set_geographical_scope('Regional')
+electricity.set_geographical_scope("Regional")
 
 unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
@@ -88,7 +87,7 @@ print(impacts)
 # =================================
 # changing the electricity supplier scenario would only change the unit impacts
 # and not the electricity product impacts
-electricity_supplier.set_scenario('Decarb95by2050')
+electricity_supplier.set_scenario("Decarb95by2050")
 
 unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()
@@ -97,7 +96,7 @@ print(impacts)
 
 # to change the electricity product impacts, we need to set the scenario on the electricity product
 # this will automatically update the supplier year as well
-electricity.set_scenario('Decarb95by2050')
+electricity.set_scenario("Decarb95by2050")
 
 unit_impacts = electricity_supplier.get_unit_impacts()
 impacts = electricity.get_impacts()

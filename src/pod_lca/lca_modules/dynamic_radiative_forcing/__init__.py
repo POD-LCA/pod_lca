@@ -1,4 +1,3 @@
-
 from .temporal_emission_profiles import UniformEmissionProfile
 from .temporal_emission_profiles import NormEmissionProfile
 from .temporal_emission_profiles import LogNormEmissionProfile

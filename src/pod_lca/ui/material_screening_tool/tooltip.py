@@ -1,10 +1,10 @@
-
 import tkinter as tk
 
 
 # =================================
 # Tooltip
 # =================================
+
 
 class Tooltip:
 
@@ -14,11 +14,11 @@ class Tooltip:
         self.tooltip = None
         self.widget.bind("<Enter>", self.show_tooltip)
         self.widget.bind("<Leave>", self.hide_tooltip)
-    
+
     def show_tooltip(self, event):
         if self.tooltip:
             self.hide_tooltip(None)
-        
+
         item = self.widget.find_closest(event.x, event.y)[0]
         bbox = self.widget.bbox(item)
         if bbox:
@@ -32,9 +32,8 @@ class Tooltip:
             self.tooltip.wm_geometry(f"+{x}+{y}")
             label = tk.Label(self.tooltip, text=self.text, background="lightyellow", borderwidth=1, relief="solid")
             label.pack()
-    
+
     def hide_tooltip(self, event):
         if self.tooltip:
             self.tooltip.destroy()
             self.tooltip = None
-            

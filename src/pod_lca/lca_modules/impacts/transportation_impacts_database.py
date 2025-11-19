@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -9,7 +8,7 @@ from . import ImpactsDatabase
 
 
 class TranportationModeImpactsDatabase(ImpactsDatabase):
-    """ Database manager to handle End-of-Life impacts.
+    """Database manager to handle End-of-Life impacts.
 
     Attributes
     ----------
@@ -28,13 +27,13 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
     # =================================
     @classmethod
     def new(cls, name):
-        """ Create a new database.
-        
+        """Create a new database.
+
         Parameters
         ----------
         name : str
             Name of the database.
-        
+
         Returns
         -------
         ~pod_lca.impacts.ImpactsDatabase
@@ -42,18 +41,18 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
         """
         new_db = cls()
         new_db.set_name(name)
-        new_db.set_primary_key('mode_name')
-        new_db.set_unit_key('Unit') 
-        new_db.set_qty_key('Qty')
-        new_db.set_mode_efficiency_key('eff')
+        new_db.set_primary_key("mode_name")
+        new_db.set_unit_key("Unit")
+        new_db.set_qty_key("Qty")
+        new_db.set_mode_efficiency_key("eff")
 
         return new_db
-    
+
     # =================================
     # Setters
-    # =================================  
+    # =================================
     def set_mode_efficiency_key(self, key):
-        """ Set the mode efficiency key of the database.
+        """Set the mode efficiency key of the database.
 
         Parameters
         ----------
@@ -68,7 +67,7 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
     # Getters
     # =================================
     def get_mode_efficiency_key(self):
-        """ Get the mode efficiency key of the database.
+        """Get the mode efficiency key of the database.
 
         Returns
         -------
@@ -76,25 +75,25 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
             Data header corresponding to the mode efficiency corresponding to the database entry.
         """
         return self.mode_efficiency_key
-    
+
     def get_required_headers(self):
-        """ Get the required headers of the database.
+        """Get the required headers of the database.
 
         Returns
         -------
         list of str
             Database headers.
         """
-        return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_mode_efficiency_key()] 
-    
+        return [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_mode_efficiency_key()]
+
     def get_data_entry(self, mode):
-        """ Retrieve impacts for given flow.
-        
+        """Retrieve impacts for given flow.
+
         Parameters
         ----------
         mode : ~pod_lca.transportation.TransportMode
             Transport mode with its name, fuel type, and efficiency.
-        
+
         Returns
         -------
         pandas.Series
@@ -104,7 +103,10 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
         mode_efficiency = mode.get_efficiency()
 
         if self.data is not None:
-            row_id = self.data.index[(self.data[self.get_primary_key()] == mode_name) & (self.data[self.get_mode_efficiency_key()] == mode_efficiency)]
+            row_id = self.data.index[
+                (self.data[self.get_primary_key()] == mode_name)
+                & (self.data[self.get_mode_efficiency_key()] == mode_efficiency)
+            ]
             if len(row_id) == 1:
                 return self.data.iloc[row_id[0]]
             elif len(row_id) == 0:
@@ -113,5 +115,5 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
                 raise ImportError("Multiple matching entries exist...")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

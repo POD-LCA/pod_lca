@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -10,7 +9,7 @@ from ..impacts import TranportationModeImpactsDatabase
 
 
 class Building:
-    """ Building object to keep track of the building materials flow (i.e., embodied energy component).
+    """Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
     ----------
@@ -29,10 +28,10 @@ class Building:
     eol_impact_database : ImpactsDatabase Obj.
         Impacts related to end of life processes.
     transportation_in: ProjectLogisticManager Obj.
-        Inward trransportation of material for the construction of the building.   
+        Inward trransportation of material for the construction of the building.
     """
 
-    def __init__(self): # NOTE: Currently only includes EOL
+    def __init__(self):  # NOTE: Currently only includes EOL
         self.name = None
         self.building_type = None
         self.location = None
@@ -42,8 +41,8 @@ class Building:
         self.envelope = None
         self.operational_object = None
         self.components = []
-        self.impacts = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
-        self.emissions = {'A5':[], 'B1':[], 'B2':[], 'B3':[], 'B4':[], 'B5':[], 'C1':[]}
+        self.impacts = {"A5": [], "B1": [], "B2": [], "B3": [], "B4": [], "B5": [], "C1": []}
+        self.emissions = {"A5": [], "B1": [], "B2": [], "B3": [], "B4": [], "B5": [], "C1": []}
         self.transport_impact_database = None
         self.eol_impact_database = None
         self.eol_transport_dataset = None
@@ -54,8 +53,8 @@ class Building:
     # ================================
     @classmethod
     def build(cls, name, type, location, built_year, geometry):
-        """ Build a building.
-        
+        """Build a building.
+
         Parameters
         ----------
         name : str
@@ -66,7 +65,7 @@ class Building:
             Location of the building site.
         built_year: int
             Built year of the building.
-        geometry : 
+        geometry :
             Geometry details of the building
 
         Returns
@@ -89,22 +88,22 @@ class Building:
 
     # ================================
     # Setters
-    # ================================     
+    # ================================
     def set_name(self, name):
-        """ Set name of the building.
-        
+        """Set name of the building.
+
         Parameters
         ----------
         name : str
             Name of the building.
         """
-        self.name =  name
+        self.name = name
 
         return self
-    
+
     def set_type(self, type):
-        """ Set building type.
-        
+        """Set building type.
+
         Parameters
         ----------
         type : str
@@ -113,10 +112,10 @@ class Building:
         self.building_type = type
 
         return self
-    
+
     def set_location(self, location):
-        """ Set location of the building site.
-        
+        """Set location of the building site.
+
         Parameters
         ----------
         location : Location Obj.
@@ -125,10 +124,10 @@ class Building:
         self.location = location
 
         return self
-    
+
     def set_built_year(self, year):
-        """ Set built year of the building.
-        
+        """Set built year of the building.
+
         Parameters
         ----------
         year: int
@@ -139,8 +138,8 @@ class Building:
         return self
 
     def set_transportation_impact_database(self, database):
-        """ Set the impact database for end-of-life impacts.
-        
+        """Set the impact database for end-of-life impacts.
+
         Parameters
         ----------
         database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
@@ -156,10 +155,10 @@ class Building:
             raise TypeError("Database input not recognized")
 
         return self
-      
+
     def set_eol_database(self, database):
-        """ Set the impact database for end-of-life impacts.
-        
+        """Set the impact database for end-of-life impacts.
+
         Parameters
         ----------
         database : ~pod_lca.impacts.EOLImpactsDatabase or str
@@ -173,9 +172,9 @@ class Building:
             self.set_eol_database(impact_database)
         else:
             raise TypeError("Database input not recognized")
-    
+
     def set_eol_transport_dataset(self, dataset):
-        """ Set transportation dataset for the end-of-life impacts.
+        """Set transportation dataset for the end-of-life impacts.
 
         Parameters
         ----------
@@ -185,13 +184,13 @@ class Building:
         self.eol_transport_dataset = dataset
 
         return self
-    
+
     # ================================
     # Getters
     # ================================
     def get_name(self):
-        """ Get name of the building.
-        
+        """Get name of the building.
+
         Returns
         -------
         str
@@ -200,8 +199,8 @@ class Building:
         return self.name
 
     def get_type(self):
-        """ Get building type.
-        
+        """Get building type.
+
         Returns
         -------
         str
@@ -211,18 +210,18 @@ class Building:
         self.building_type = type
 
     def get_location(self):
-        """ Get location of the building site.
-        
+        """Get location of the building site.
+
         Returns
         -------
         Location Obj.
             Location of the building site.
         """
         return self.location
-    
+
     def get_built_year(self):
-        """ Get built year of the building.
-        
+        """Get built year of the building.
+
         Returns
         -------
         int
@@ -230,9 +229,9 @@ class Building:
 
         """
         return self.built_year
-    
+
     def get_components(self):
-        """ Get a list of building components.
+        """Get a list of building components.
 
         Returns
         -------
@@ -242,18 +241,18 @@ class Building:
         return self.components
 
     def get_transportation_impact_database(self):
-        """ Set the impact database for end-of-life impacts.
-        
+        """Set the impact database for end-of-life impacts.
+
         Returns
         -------
         ~pod_lca.impacts.ImpactsDatabase
             End-of-Life impacts database.
         """
         return self.transport_impact_database
-    
+
     def get_eol_database(self):
-        """ Get the impact database for end-of-life impacts.
-        
+        """Get the impact database for end-of-life impacts.
+
         Returns
         -------
         ~pod_lca.impacts.ImpactsDatabase
@@ -262,7 +261,7 @@ class Building:
         return self.eol_impact_database
 
     def get_eol_transport_dataset(self):
-        """ Get transportation dataset for the end-of-life impacts.
+        """Get transportation dataset for the end-of-life impacts.
 
         Returns
         -------
@@ -270,12 +269,13 @@ class Building:
             End-of-life transportation dataset.
         """
         return self.eol_transport_dataset
+
     # ================================
     # Assembly Methods
-    # ================================ 
+    # ================================
     def add_component(self, component):
-        """ Add a component to the building.
-        
+        """Add a component to the building.
+
         Returns
         -------
         component : BuildingComponent Objs.
@@ -291,15 +291,15 @@ class Building:
 
     # ================================
     # EOL Methods
-    # ================================ 
+    # ================================
     def deconstruct(self):
 
-        pass # TODO: write method to deconstruct the building and add C1 impacts
+        pass  # TODO: write method to deconstruct the building and add C1 impacts
 
     def demolish(self):
 
-        pass # TODO: write method to demolish the building and add C1 impacts
+        pass  # TODO: write method to demolish the building and add C1 impacts
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

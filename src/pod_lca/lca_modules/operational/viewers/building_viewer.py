@@ -15,7 +15,7 @@ from pod_lca.utilities.geometry import Mesh
 
 class BuildingViewer(object):
     """
-    Viewer object for Building objects. Can show zone geometries, windows, 
+    Viewer object for Building objects. Can show zone geometries, windows,
     shading devicesconstruction layers.
 
     Parameters
@@ -28,6 +28,7 @@ class BuildingViewer(object):
         PLotly layout data
 
     """
+
     def __init__(self, building):
         self.building = building
         self.data = []
@@ -45,30 +46,35 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         name = self.building.name
-        title = '{0}'.format(name)
-        layout = go.Layout(title=title,
-                          scene=dict(aspectmode='data',
-                                    xaxis=dict(
-                                               gridcolor='rgb(255, 255, 255)',
-                                               zerolinecolor='rgb(255, 255, 255)',
-                                               showbackground=True,
-                                               backgroundcolor='rgb(230, 230,230)'),
-                                    yaxis=dict(
-                                               gridcolor='rgb(255, 255, 255)',
-                                               zerolinecolor='rgb(255, 255, 255)',
-                                               showbackground=True,
-                                               backgroundcolor='rgb(230, 230,230)'),
-                                    zaxis=dict(
-                                               gridcolor='rgb(255, 255, 255)',
-                                               zerolinecolor='rgb(255, 255, 255)',
-                                               showbackground=True,
-                                               backgroundcolor='rgb(230, 230,230)')
-                                    ),
-                          showlegend=True,
-                            )
+        title = "{0}".format(name)
+        layout = go.Layout(
+            title=title,
+            scene=dict(
+                aspectmode="data",
+                xaxis=dict(
+                    gridcolor="rgb(255, 255, 255)",
+                    zerolinecolor="rgb(255, 255, 255)",
+                    showbackground=True,
+                    backgroundcolor="rgb(230, 230,230)",
+                ),
+                yaxis=dict(
+                    gridcolor="rgb(255, 255, 255)",
+                    zerolinecolor="rgb(255, 255, 255)",
+                    showbackground=True,
+                    backgroundcolor="rgb(230, 230,230)",
+                ),
+                zaxis=dict(
+                    gridcolor="rgb(255, 255, 255)",
+                    zerolinecolor="rgb(255, 255, 255)",
+                    showbackground=True,
+                    backgroundcolor="rgb(230, 230,230)",
+                ),
+            ),
+            showlegend=True,
+        )
         self.layout = layout
 
     def show(self):
@@ -82,7 +88,7 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         self.make_layout()
         self.add_zones()
@@ -104,10 +110,10 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         for zk in self.building.zones:
-                self.add_zone_mesh(zk)
+            self.add_zone_mesh(zk)
 
     def add_windows(self):
         """
@@ -120,7 +126,7 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         for wk in self.building.windows:
             self.add_window_mesh(wk)
@@ -136,7 +142,7 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         for sk in self.building.shadings:
             self.add_shading_mesh(sk)
@@ -153,34 +159,37 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         mesh = self.building.shadings[key].mesh
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
-        line_marker = dict(color='rgb(0,0,0)', width=1.5)
+        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u, v in mesh.edges()]
+        line_marker = dict(color="rgb(0,0,0)", width=1.5)
         lines = []
-        x, y, z = [], [],  []
+        x, y, z = [], [], []
         for u, v in edges:
             x.extend([u[0], v[0], [None]])
             y.extend([u[1], v[1], [None]])
             z.extend([u[2], v[2], [None]])
 
         sname = self.building.shadings[key].name
-        lines = [go.Scatter3d(name=f'{sname}',
-                              x=x,
-                              y=y,
-                              z=z,
-                              mode='lines',
-                              line=line_marker,
-                              legendgroup=f'{sname}',
-                              )]
+        lines = [
+            go.Scatter3d(
+                name=f"{sname}",
+                x=x,
+                y=y,
+                z=z,
+                mode="lines",
+                line=line_marker,
+                legendgroup=f"{sname}",
+            )
+        ]
         triangles = []
         for face in faces:
             triangles.append(face[:3])
             if len(face) == 4:
                 triangles.append([face[2], face[3], face[0]])
-        
+
         i = [v[0] for v in triangles]
         j = [v[1] for v in triangles]
         k = [v[2] for v in triangles]
@@ -192,27 +201,29 @@ class BuildingViewer(object):
         text = []
         intensity = []
 
-        faces = [go.Mesh3d(name='Zone',
-                           x=x,
-                           y=y,
-                           z=z,
-                           i=i,
-                           j=j,
-                           k=k,
-                           color= 'rgb(255,255,255)',
-                           opacity=.8,
-                        #    colorbar_title='is_rad',
-                        #    colorbar_thickness=10,
-                        #    text=text,
-                        #    hoverinfo='text',
-                           legendgroup=f'{sname}',
-                           lighting={'ambient':1.},
-                        #    intensitymode='cell',
-                        #    intensity=intensity,
-                        #    showscale=False,
-                        #    colorscale='gnbu',
-
-                )]
+        faces = [
+            go.Mesh3d(
+                name="Zone",
+                x=x,
+                y=y,
+                z=z,
+                i=i,
+                j=j,
+                k=k,
+                color="rgb(255,255,255)",
+                opacity=0.8,
+                #    colorbar_title='is_rad',
+                #    colorbar_thickness=10,
+                #    text=text,
+                #    hoverinfo='text',
+                legendgroup=f"{sname}",
+                lighting={"ambient": 1.0},
+                #    intensitymode='cell',
+                #    intensity=intensity,
+                #    showscale=False,
+                #    colorscale='gnbu',
+            )
+        ]
         self.data.extend(lines)
         self.data.extend(faces)
 
@@ -228,36 +239,39 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         vertices = self.building.windows[key].nodes
         faces = [[0, 1, 2, 3]]
         mesh = Mesh.from_vertices_and_faces(vertices, faces)
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
-        line_marker = dict(color='rgb(0,0,0)', width=1.5)
+        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u, v in mesh.edges()]
+        line_marker = dict(color="rgb(0,0,0)", width=1.5)
         lines = []
-        x, y, z = [], [],  []
+        x, y, z = [], [], []
         for u, v in edges:
             x.extend([u[0], v[0], [None]])
             y.extend([u[1], v[1], [None]])
             z.extend([u[2], v[2], [None]])
 
         wname = self.building.windows[key].name
-        lines = [go.Scatter3d(name=f'{wname}',
-                              x=x,
-                              y=y,
-                              z=z,
-                              mode='lines',
-                              line=line_marker,
-                              legendgroup=f'{wname}',
-                              )]
+        lines = [
+            go.Scatter3d(
+                name=f"{wname}",
+                x=x,
+                y=y,
+                z=z,
+                mode="lines",
+                line=line_marker,
+                legendgroup=f"{wname}",
+            )
+        ]
         triangles = []
         for face in faces:
             triangles.append(face[:3])
             if len(face) == 4:
                 triangles.append([face[2], face[3], face[0]])
-        
+
         i = [v[0] for v in triangles]
         j = [v[1] for v in triangles]
         k = [v[2] for v in triangles]
@@ -266,51 +280,50 @@ class BuildingViewer(object):
         y = [v[1] for v in vertices]
         z = [v[2] for v in vertices]
 
-
         text = []
         intensity = []
         for fk in mesh.faces:
             ck = self.building.windows[key].construction
             if ck in self.building.construction_key_dict:
                 con = self.building.constructions[self.building.construction_key_dict[ck]]
-                layers = [con.layers[lk]['name'] for lk in con.layers] 
+                layers = [con.layers[lk]["name"] for lk in con.layers]
                 # thick = con.layers[lk]['thickness']
                 # layers = ['{} {}mm'.format(lay, round(thick*1000, 1)) for lay in layers]
             else:
                 layers = []
 
-            string = 'name: {}<br>'.format(wname)
-            string += 'construction: {}<br>'.format(ck)
+            string = "name: {}<br>".format(wname)
+            string += "construction: {}<br>".format(ck)
             for lk, layer in enumerate(layers):
-                string += 'layer {}: {}<br>'.format(lk, layer)
+                string += "layer {}: {}<br>".format(lk, layer)
             text.append(string)
             intensity.append(float(key))
             if len(mesh.face_vertices(fk)) == 4:
                 intensity.append(float(key))
                 text.append(string)
 
-
-
-        faces = [go.Mesh3d(name='Zone',
-                           x=x,
-                           y=y,
-                           z=z,
-                           i=i,
-                           j=j,
-                           k=k,
-                           opacity=.8,
-                           colorbar_title='is_rad',
-                           colorbar_thickness=10,
-                           text=text,
-                           hoverinfo='text',
-                           legendgroup=f'{wname}',
-                           lighting={'ambient':1.},
-                           intensitymode='cell',
-                           intensity=intensity,
-                           showscale=False,
-                           colorscale='gnbu',
-
-                )]
+        faces = [
+            go.Mesh3d(
+                name="Zone",
+                x=x,
+                y=y,
+                z=z,
+                i=i,
+                j=j,
+                k=k,
+                opacity=0.8,
+                colorbar_title="is_rad",
+                colorbar_thickness=10,
+                text=text,
+                hoverinfo="text",
+                legendgroup=f"{wname}",
+                lighting={"ambient": 1.0},
+                intensitymode="cell",
+                intensity=intensity,
+                showscale=False,
+                colorscale="gnbu",
+            )
+        ]
         self.data.extend(lines)
         self.data.extend(faces)
 
@@ -326,34 +339,37 @@ class BuildingViewer(object):
         Returns
         -------
         None
-        
+
         """
         mesh = self.building.zones[key].surfaces
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u,v in mesh.edges()]
-        line_marker = dict(color='rgb(0,0,0)', width=1.5)
+        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u, v in mesh.edges()]
+        line_marker = dict(color="rgb(0,0,0)", width=1.5)
         lines = []
-        x, y, z = [], [],  []
+        x, y, z = [], [], []
         for u, v in edges:
             x.extend([u[0], v[0], [None]])
             y.extend([u[1], v[1], [None]])
             z.extend([u[2], v[2], [None]])
 
         zname = self.building.zones[key].name
-        lines = [go.Scatter3d(name=f'{zname}',
-                              x=x,
-                              y=y,
-                              z=z,
-                              mode='lines',
-                              line=line_marker,
-                              legendgroup=f'{zname}',
-                              )]
+        lines = [
+            go.Scatter3d(
+                name=f"{zname}",
+                x=x,
+                y=y,
+                z=z,
+                mode="lines",
+                line=line_marker,
+                legendgroup=f"{zname}",
+            )
+        ]
         triangles = []
         for face in faces:
             triangles.append(face[:3])
             if len(face) == 4:
                 triangles.append([face[2], face[3], face[0]])
-        
+
         i = [v[0] for v in triangles]
         j = [v[1] for v in triangles]
         k = [v[2] for v in triangles]
@@ -365,50 +381,52 @@ class BuildingViewer(object):
         # colorscales = ['sunset', 'viridis', 'amp']
 
         colorscales = dir(plotly.colors.sequential)[::2]
-        attrs = ['name', 'surface_type', 'outside_boundary_condition', 'construction']
+        attrs = ["name", "surface_type", "outside_boundary_condition", "construction"]
         text = []
         intensity = []
         for fk in mesh.faces:
             faceatts = mesh.face_attributes[fk]
-            ck = mesh.get_face_attribute(fk, 'construction')
+            ck = mesh.get_face_attribute(fk, "construction")
             if ck:
                 con = self.building.constructions[self.building.construction_key_dict[ck]]
-                layers = [con.layers[lk]['name'] for lk in con.layers] 
-                thick = [con.layers[lk]['thickness'] for lk in con.layers]
-                layers = ['{} {}mm'.format(lay, round(thick[tk]*1000, 1)) for tk, lay in enumerate(layers)]
+                layers = [con.layers[lk]["name"] for lk in con.layers]
+                thick = [con.layers[lk]["thickness"] for lk in con.layers]
+                layers = ["{} {}mm".format(lay, round(thick[tk] * 1000, 1)) for tk, lay in enumerate(layers)]
             else:
                 layers = []
-            string = 'zone: {}<br>'.format(zname)
+            string = "zone: {}<br>".format(zname)
             for att in attrs:
-                string += '{}: {}<br>'.format(att, faceatts[att])
+                string += "{}: {}<br>".format(att, faceatts[att])
             for lk, layer in enumerate(layers):
-                string += 'layer {}: {}<br>'.format(lk, layer)
+                string += "layer {}: {}<br>".format(lk, layer)
             text.append(string)
             intensity.append(float(key))
             if len(mesh.face_vertices(fk)) == 4:
                 intensity.append(float(key))
                 text.append(string)
 
-
-        faces = [go.Mesh3d(name='Zone',
-                           x=x,
-                           y=y,
-                           z=z,
-                           i=i,
-                           j=j,
-                           k=k,
-                           opacity=.8,
-                           colorbar_title='is_rad',
-                           colorbar_thickness=10,
-                           text = text,
-                           hoverinfo='text',
-                           legendgroup=f'{zname}',
-                           lighting={'ambient':1.0},
-                           intensitymode='cell',
-                           intensity=intensity,
-                           showscale=False,
-                           colorscale=colorscales[int(key)],
-                )]
+        faces = [
+            go.Mesh3d(
+                name="Zone",
+                x=x,
+                y=y,
+                z=z,
+                i=i,
+                j=j,
+                k=k,
+                opacity=0.8,
+                colorbar_title="is_rad",
+                colorbar_thickness=10,
+                text=text,
+                hoverinfo="text",
+                legendgroup=f"{zname}",
+                lighting={"ambient": 1.0},
+                intensitymode="cell",
+                intensity=intensity,
+                showscale=False,
+                colorscale=colorscales[int(key)],
+            )
+        ]
         self.data.extend(lines)
         self.data.extend(faces)
 
@@ -425,33 +443,34 @@ class BuildingViewer(object):
             y.extend(y_)
             z.extend(z_)
 
-        return [min(x) - 2, min(y) - 2 , min(z)]
+        return [min(x) - 2, min(y) - 2, min(z)]
 
     def add_north(self):
 
         x, y, z = self.find_npt()
 
-
-        north = go.Scatter3d(x=[x, x-.5, x+.5, x],
-                             y=[y+3, y+.5, y+.5, y+3],
-                             z=[z, z, z, z], 
-                             mode='lines+text',
-                             text=['North', '', '', '', ''],
-                             name='North',
-                             marker={'color':'red'},
-                             )
+        north = go.Scatter3d(
+            x=[x, x - 0.5, x + 0.5, x],
+            y=[y + 3, y + 0.5, y + 0.5, y + 3],
+            z=[z, z, z, z],
+            mode="lines+text",
+            text=["North", "", "", "", ""],
+            name="North",
+            marker={"color": "red"},
+        )
         self.data.extend([north])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import os
     import compas_eplus
     from compas_eplus.building import Building
 
-    for i in range(50): print('')
+    for i in range(50):
+        print("")
 
-    file = 'teresa_example.idf'
-    filepath = os.path.join(compas_eplus.DATA, 'idf_examples', file)
+    file = "teresa_example.idf"
+    filepath = os.path.join(compas_eplus.DATA, "idf_examples", file)
     path = compas_eplus.TEMP
     wea = compas_eplus.SEATTLE
     b = Building.from_idf(filepath, path, wea)

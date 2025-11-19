@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -10,18 +9,17 @@ from ...visualizer import AbstractPlot
 
 
 class LinePlot(AbstractPlot):
-    """Line chart with multiple lines.
-    """
+    """Line chart with multiple lines."""
 
     def __init__(self):
         super().__init__()
 
     # ================================
     # Methods
-    # ================================ 
+    # ================================
     def draw(self, data, title, x_label, y_label, colors=None):
-        """ Draw the line plot.
-        
+        """Draw the line plot.
+
         Parameters
         ----------
         data : dict or list
@@ -42,24 +40,23 @@ class LinePlot(AbstractPlot):
 
         if isinstance(data, dict):
             if colors is None:
-                colors = config['Preferences']['COLOUR_ORDER_LIST']
+                colors = config["Preferences"]["COLOUR_ORDER_LIST"]
             counter = 0
             for label, xy_data in data.items():
                 x_data, y_data = zip(*xy_data)
-                colors = config['Preferences']['COLOUR_ORDER_LIST']
+                colors = config["Preferences"]["COLOUR_ORDER_LIST"]
                 self.get_plot().draw_line(x_data, y_data, label, colors[counter])
                 counter += 1
         elif isinstance(data, list):
             if colors is None:
-                colors = config['Preferences']['COLOUR_ORDER_LIST'][0]
+                colors = config["Preferences"]["COLOUR_ORDER_LIST"][0]
             self.get_plot().draw_line(data[0], data[1], None, colors)
-                
+
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
         self.get_plot().set_legend()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
-       

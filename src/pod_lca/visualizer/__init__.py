@@ -1,4 +1,3 @@
-
 from .plotters.abstract_plotter import AbstractPlotter
 from .plotters.matplotlib_plotter import MatplotlibPlotter
 from .plots.abstract_plot import AbstractPlot

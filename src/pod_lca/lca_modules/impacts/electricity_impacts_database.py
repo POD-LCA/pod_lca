@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -9,7 +8,7 @@ from . import ImpactsDatabase
 
 
 class ElectricityImpactsDatabase(ImpactsDatabase):
-    """ Database manager to handle electricity impacts.
+    """Database manager to handle electricity impacts.
 
     Attributes
     ----------
@@ -29,8 +28,8 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
     # =================================
     @classmethod
     def new(cls, name, geographical_scope=None):
-        """ Create a new database.
-        
+        """Create a new database.
+
         Parameters
         ----------
         name : str
@@ -39,7 +38,7 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
             Location of the impact categories json file.
         geographical_scope : {'National', 'Regional', 'Local'}
             Geographical scope of the database.
-        
+
         Returns
         -------
         ~pod_lca.impacts.ElectricityImpactsDatabase
@@ -52,26 +51,28 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         """
         new_db = cls()
         new_db.set_name(name)
-        new_db.set_unit_key('Unit') 
-        new_db.set_qty_key('Qty')
+        new_db.set_unit_key("Unit")
+        new_db.set_qty_key("Qty")
 
-        if geographical_scope == 'National':
-            new_db.set_region_key('Country code')
-        elif geographical_scope == 'Regional' or geographical_scope == 'Local':
-            new_db.set_region_key('Region')
+        if geographical_scope == "National":
+            new_db.set_region_key("Country code")
+        elif geographical_scope == "Regional" or geographical_scope == "Local":
+            new_db.set_region_key("Region")
         else:
-            raise ValueError(f"Geographical scope {geographical_scope} not recognized. Recognized spatial resolutions are: 'National' and 'Regional'.")
+            raise ValueError(
+                f"Geographical scope {geographical_scope} not recognized. Recognized spatial resolutions are: 'National' and 'Regional'."
+            )
 
-        new_db.set_technology_key('Technology Type')
+        new_db.set_technology_key("Technology Type")
 
         return new_db
-    
+
     # =================================
     # Setters
     # =================================
     def set_region_key(self, key):
-        """ Set region key of the database.
-        
+        """Set region key of the database.
+
         Parameters
         ----------
         key : str
@@ -80,10 +81,10 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         self.region_key = key
 
         return self
-    
+
     def set_technology_key(self, key):
-        """ Set technology key of the database.
-        
+        """Set technology key of the database.
+
         Parameters
         ----------
         key : str
@@ -95,20 +96,20 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
 
     # =================================
     # Getters
-    # =================================    
+    # =================================
     def get_region_key(self):
-        """ Get region key of the database.
-        
+        """Get region key of the database.
+
         Returns
         -------
         str
             Data header corresponding to the end-of-life process corresponding to the database entry.
         """
         return self.region_key
-    
+
     def get_technology_key(self):
-        """ Get technology key of the database.
-        
+        """Get technology key of the database.
+
         Returns
         -------
         str
@@ -117,25 +118,25 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         return self.technology_key
 
     def get_required_headers(self):
-        """ Get the required headers of the database.
+        """Get the required headers of the database.
 
         Returns
         -------
         list of str
             Headers of the database.
         """
-        return  [self.get_qty_key(), self.get_unit_key(), self.get_region_key(), self.get_technology_key()]
+        return [self.get_qty_key(), self.get_unit_key(), self.get_region_key(), self.get_technology_key()]
 
     def get_data_entry(self, region, technology):
-        """ Retrieve impacts for given flow.
-        
+        """Retrieve impacts for given flow.
+
         Parameters
         ----------
         region : str
             Electricity generation region, as appropriate to the regionality used.
         technology: str
             Electricity generation technology.
-        
+
         Returns
         -------
         pandas.Series
@@ -143,12 +144,19 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         """
         if self.data is not None:
             if region in self.data[self.get_region_key()].values:
-                impact_data_tmp = self.data[self.data[self.get_region_key()] == region].drop([self.get_region_key()], axis='columns')
-                impact_data_dict = impact_data_tmp[impact_data_tmp[self.get_technology_key()] == technology].drop([self.get_technology_key()], axis='columns').squeeze().to_dict()
+                impact_data_tmp = self.data[self.data[self.get_region_key()] == region].drop(
+                    [self.get_region_key()], axis="columns"
+                )
+                impact_data_dict = (
+                    impact_data_tmp[impact_data_tmp[self.get_technology_key()] == technology]
+                    .drop([self.get_technology_key()], axis="columns")
+                    .squeeze()
+                    .to_dict()
+                )
                 return impact_data_dict
             else:
-                raise KeyError(f"{region} not in the database.")  
-         
-            
-if __name__ == '__main__':
+                raise KeyError(f"{region} not in the database.")
+
+
+if __name__ == "__main__":
     pass

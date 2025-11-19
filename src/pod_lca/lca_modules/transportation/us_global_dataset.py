@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -16,8 +15,8 @@ from ...utilities import log
 
 
 class USGlobalDataset(TransportDataset):
-    """ A class to handle transportation of goods to US from global origins.
-    
+    """A class to handle transportation of goods to US from global origins.
+
     Attributes
     ----------
     force_location : bool
@@ -40,12 +39,12 @@ class USGlobalDataset(TransportDataset):
         self.force_mode_foreign_value = "Ocean"
         self.force_mode_domestic_value = "Truck"
 
-        self.faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
-        self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH']) 
-        self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_DATA_PATH'])
-    
+        self.faf = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["FAF_DATA_PATH"])
+        self.marine = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["MARINE_DATA_PATH"])
+        self.cfaf = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["CFAF_DATA_PATH"])
+
     def filter_datasets(self, material=None, destination=None, origin=None, mode_domestic=None, mode_foreign=None):
-        """ Filter all datasets corresponding to foreign travel.
+        """Filter all datasets corresponding to foreign travel.
 
         Parameters
         ----------
@@ -67,7 +66,7 @@ class USGlobalDataset(TransportDataset):
         :class:`pandas.DataFrame`
             The filtered marine dataset.
         :class:`pandas.DataFrame`
-            The filtered cfaf dataset.     
+            The filtered cfaf dataset.
         """
         sctg_code = material.get_sctg_code(digits=2)
 
@@ -90,16 +89,18 @@ class USGlobalDataset(TransportDataset):
                 marine = None
                 cfaf = None
             else:
-                raise ValueError(f"Invalid mode of transportation: {mode_name}. Must be one of 'Truck', 'Rail', 'Ocean', or 'Air'.")
-        else:       
+                raise ValueError(
+                    f"Invalid mode of transportation: {mode_name}. Must be one of 'Truck', 'Rail', 'Ocean', or 'Air'."
+                )
+        else:
             faf = self.filter_faf(sctg_code, destination, origin, mode_foreign, mode_domestic)
             marine = self.filter_marine(destination, origin)
             cfaf = self.filter_cfaf(sctg_code)
 
         return faf, marine, cfaf
-    
+
     def filter_faf(self, sctg=None, destination=None, origin=None, mode_foreign=None, mode_domestic=None):
-        """ Filter FAF data.
+        """Filter FAF data.
 
         Parameters
         ----------
@@ -122,10 +123,10 @@ class USGlobalDataset(TransportDataset):
         Raises
         ------
         ValueError
-            If no data is found for the provided SCTG code, destination, or mode.         
+            If no data is found for the provided SCTG code, destination, or mode.
         """
         faf = self.faf
-                
+
         # SCTG
         if sctg is not None:
             faf = faf[faf["sctg2"] == sctg]
@@ -137,9 +138,14 @@ class USGlobalDataset(TransportDataset):
             faf_filtered = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
             if faf_filtered.empty:
                 if self.force_location:
-                    closest_state_name, closest_faf_region_codes = Location.get_closest_regions_FAF(origin, faf["dms_dest"].tolist())
+                    closest_state_name, closest_faf_region_codes = Location.get_closest_regions_FAF(
+                        origin, faf["dms_dest"].tolist()
+                    )
                     faf_filtered = faf[faf["dms_dest"].isin(closest_faf_region_codes)]
-                    log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+                    log(
+                        f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.",
+                        "Info",
+                    )
                 else:
                     raise ValueError("Destination not in CFS Dataset.")
             faf = faf_filtered
@@ -150,10 +156,10 @@ class USGlobalDataset(TransportDataset):
             if faf_filtered.empty:
                 raise ValueError("Origin not in FAF dataset.")
             faf = faf_filtered
-            
+
         # Mode
         if isinstance(mode_foreign, TransportMode):
-            faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
+            faf_modes_mapping = DataImporter.json_to_dict(config["file_paths"]["transportation"]["FAF_MODE_CODE"])
             faf_filtered = faf[faf["fr_inmode"] == faf_modes_mapping[mode_foreign.get_name()]]
             if faf_filtered.empty:
                 if self.force_mode:
@@ -162,10 +168,10 @@ class USGlobalDataset(TransportDataset):
                 else:
                     raise ValueError("Transportation mode not in FAF dataset.")
             faf = faf_filtered
-        
+
         # Domestic Mode
         if mode_domestic is not None:
-            faf_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['FAF_MODE_CODE'])
+            faf_modes_mapping = DataImporter.json_to_dict(config["file_paths"]["transportation"]["FAF_MODE_CODE"])
             faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[mode_domestic.get_name()]]
             if faf_filtered.empty:
                 if self.force_mode:
@@ -178,8 +184,8 @@ class USGlobalDataset(TransportDataset):
         return faf
 
     def filter_cfaf(self, sctg):
-        """ Filter Canadian Freight Analysis Framework (CFAF) dataset by material SCTG code.
-        
+        """Filter Canadian Freight Analysis Framework (CFAF) dataset by material SCTG code.
+
         Parameters
         ----------
         sctg : int
@@ -204,8 +210,8 @@ class USGlobalDataset(TransportDataset):
         return cfaf
 
     def filter_marine(self, destination=None, origin=None):
-        """ Filter marine data.
-        
+        """Filter marine data.
+
         Parameters
         ----------
         destination : ~pod_lca.location.Location
@@ -226,7 +232,7 @@ class USGlobalDataset(TransportDataset):
             No data for the selected origin in marine dataset
         """
         marine = self.marine
-        
+
         # Destination
         if isinstance(destination, Location):
             marine = marine[marine["Coast"] == destination.get_us_coast()]
@@ -235,18 +241,18 @@ class USGlobalDataset(TransportDataset):
         else:
             pass
 
-        # Origin 
+        # Origin
         if isinstance(origin, Location):
-            marine = marine[marine["Region"] == origin.get_faf_foreign_region(type='name')]
+            marine = marine[marine["Region"] == origin.get_faf_foreign_region(type="name")]
             if marine.empty:
                 raise ValueError("No data for the selected origin in marine dataset")
-        
+
         return marine
-    
+
     @staticmethod
     def get_distance_estimate(fltered_datasets, destination, origin, mode_name):
-        """ Get the average travel distance based on shipping destination, origin, and mode of transportation.
-        
+        """Get the average travel distance based on shipping destination, origin, and mode of transportation.
+
         Parameters
         ----------
         filtered_datasets : tuple
@@ -292,10 +298,12 @@ class USGlobalDataset(TransportDataset):
             domestic_dis = 0.0
             foreign_dis = geodesic(dms_coordinates, fr_coordinates).km
         else:
-            raise ValueError(f"Invalid mode of transportation: {mode_name}. Must be one of 'Truck', 'Rail', 'Ocean', or 'Air'.")
+            raise ValueError(
+                f"Invalid mode of transportation: {mode_name}. Must be one of 'Truck', 'Rail', 'Ocean', or 'Air'."
+            )
 
         return domestic_dis, foreign_dis
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

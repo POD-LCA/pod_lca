@@ -66,8 +66,7 @@ from pod_lca.utilities.geometry import make_box_from_quad
 from pod_lca.utilities.geometry import Mesh
 
 
-#TODO: update to/from JSON eventually, or give a OBJ pickle option
-
+# TODO: update to/from JSON eventually, or give a OBJ pickle option
 
 
 class OperationalBuilding(object):
@@ -111,50 +110,51 @@ class OperationalBuilding(object):
     material_key_dict: dict
         Dictionary mapping material names to material keys
     """
-    def __init__(self, path, weather, name='Building', program='residential'):
-        
+
+    def __init__(self, path, weather, name="Building", program="residential"):
+
         self.name = name
         self.path = path
-        self.idf_filepath = os.path.join(path, '{}.idf'.format(self.name))
+        self.idf_filepath = os.path.join(path, "{}.idf".format(self.name))
         self.weather = weather
         self.program = program
 
-        self.ep_version = '25.1.0'
+        self.ep_version = "25.1.0"
         self.num_timesteps = 1
-        self.terrain = 'City'
-        self.solar_distribution = 'FullExteriorWithReflections'
+        self.terrain = "City"
+        self.solar_distribution = "FullExteriorWithReflections"
 
-        self.daylighting_controls_height = .8
+        self.daylighting_controls_height = 0.8
 
-        self.zones                        = {}
-        self.windows                      = {}
-        self.materials                    = {}
-        self.constructions                = {}
-        self.shadings                     = {}
-        self.layers                       = {}
-        self.schedules                    = {}
-        self.lights                       = {}
+        self.zones = {}
+        self.windows = {}
+        self.materials = {}
+        self.constructions = {}
+        self.shadings = {}
+        self.layers = {}
+        self.schedules = {}
+        self.lights = {}
         self.daylighting_reference_points = {}
-        self.daylighting_controls         = {}
-        self.peoples                      = {}
-        self.electric_equipments          = {}
-        self.zone_control_thermostats     = {}
-        self.setpoints                    = {}
-        self.ideal_air_loads              = {}
-        self.infiltrations                = {}
-        self.equipment_lists              = {}
-        self.equipment_connections        = {}
-        self.zone_lists                   = {}
-        self.node_lists                   = {}
-        self.outdoor_airs                 = {}
-        self.set_schedules                = set()
-        self.construction_key_dict        = {}
-        self.srf_cpt_dict                 = {}
-        self.material_key_dict            = {}
-        self.results                      = {}
-        self.spaces                       = {}
-        self.space_lists                  = {}
-        self.totals                       = {}
+        self.daylighting_controls = {}
+        self.peoples = {}
+        self.electric_equipments = {}
+        self.zone_control_thermostats = {}
+        self.setpoints = {}
+        self.ideal_air_loads = {}
+        self.infiltrations = {}
+        self.equipment_lists = {}
+        self.equipment_connections = {}
+        self.zone_lists = {}
+        self.node_lists = {}
+        self.outdoor_airs = {}
+        self.set_schedules = set()
+        self.construction_key_dict = {}
+        self.srf_cpt_dict = {}
+        self.material_key_dict = {}
+        self.results = {}
+        self.spaces = {}
+        self.space_lists = {}
+        self.totals = {}
 
     @property
     def area(self):
@@ -193,47 +193,47 @@ class OperationalBuilding(object):
                 for rk in self.results[timek][zk]:
                     results[timek][zk][rk] = self.results[timek][zk][rk]
 
-
-        data = {'idf_filepath' : self.idf_filepath,
-                'path'         : self.path,
-                'weather': self.weather,
-                'name' : self.name,
-                'ep_version' : self.ep_version,
-                'num_timesteps' : self.num_timesteps,
-                'terrain' : self.terrain,
-                'solar_distribution' : self.solar_distribution,
-                'zones' : zones,
-                'windows' : windows,
-                'materials' : materials,
-                'constructions' : constructions,
-                'shadings': shadings,
-                'layers': self.layers,
-                'construction_key_dict': self.construction_key_dict, 
-                'results' : results,
-                'material_key_dict': self.material_key_dict,
-                }
+        data = {
+            "idf_filepath": self.idf_filepath,
+            "path": self.path,
+            "weather": self.weather,
+            "name": self.name,
+            "ep_version": self.ep_version,
+            "num_timesteps": self.num_timesteps,
+            "terrain": self.terrain,
+            "solar_distribution": self.solar_distribution,
+            "zones": zones,
+            "windows": windows,
+            "materials": materials,
+            "constructions": constructions,
+            "shadings": shadings,
+            "layers": self.layers,
+            "construction_key_dict": self.construction_key_dict,
+            "results": results,
+            "material_key_dict": self.material_key_dict,
+        }
         return data
-    
+
     @data.setter
     def data(self, data):
-        self.filepath              = data.get('filepath') or {}
-        self.path                  = data.get('path') or {}
-        self.weather               = data.get('weather') or {}
-        self.name                  = data.get('name') or {}
-        self.ep_version            = data.get('ep_version') or {}
-        self.num_timesteps         = data.get('num_timesteps') or {}
-        self.terrain               = data.get('terrain') or {}
-        self.solar_distribution    = data.get('solar_distribution') or {}
-        zones                      = data.get('zones') or {}
-        windows                    = data.get('windows') or {}
-        materials                  = data.get('materials') or {}
-        constructions              = data.get('constructions') or {}
-        shadings                   = data.get('shadings') or {}
-        results                    = data.get('results') or {}
-        self.layers                = data.get('layers') or {}
-        self.construction_key_dict = data.get('construction_key_dict') or {}
-        self.mean_air_temperatures = data.get('mean_air_temperatures') or {}
-        self.material_key_dict     = data.get('material_key_dict') or {}
+        self.filepath = data.get("filepath") or {}
+        self.path = data.get("path") or {}
+        self.weather = data.get("weather") or {}
+        self.name = data.get("name") or {}
+        self.ep_version = data.get("ep_version") or {}
+        self.num_timesteps = data.get("num_timesteps") or {}
+        self.terrain = data.get("terrain") or {}
+        self.solar_distribution = data.get("solar_distribution") or {}
+        zones = data.get("zones") or {}
+        windows = data.get("windows") or {}
+        materials = data.get("materials") or {}
+        constructions = data.get("constructions") or {}
+        shadings = data.get("shadings") or {}
+        results = data.get("results") or {}
+        self.layers = data.get("layers") or {}
+        self.construction_key_dict = data.get("construction_key_dict") or {}
+        self.mean_air_temperatures = data.get("mean_air_temperatures") or {}
+        self.material_key_dict = data.get("material_key_dict") or {}
 
         for zk in zones:
             self.zones[zk] = Zone.from_data(zones[zk])
@@ -241,15 +241,16 @@ class OperationalBuilding(object):
         for wk in windows:
             self.windows[wk] = Window.from_data(windows[wk])
 
-        mat_dict = {'Material': Material,
-                    'MaterialNoMass': MaterialNoMass,
-                    'WindowMaterialGlazing': WindowMaterialGlazing,
-                    'WindowMaterialGlazingSimple': WindowMaterialGlazingSimple,
-                    'WindowMaterialGas': WindowMaterialGas, 
-                    }
+        mat_dict = {
+            "Material": Material,
+            "MaterialNoMass": MaterialNoMass,
+            "WindowMaterialGlazing": WindowMaterialGlazing,
+            "WindowMaterialGlazingSimple": WindowMaterialGlazingSimple,
+            "WindowMaterialGas": WindowMaterialGas,
+        }
 
         for mk in materials:
-            mat = mat_dict[materials[mk]['__type__']]
+            mat = mat_dict[materials[mk]["__type__"]]
             self.materials[literal_eval(mk)] = mat.from_data(materials[mk])
 
         for ck in constructions:
@@ -275,19 +276,19 @@ class OperationalBuilding(object):
         ----------
         filepath: str
             Path to the JSON file
-        
+
         Returns
         -------
             Building
                 The instance of the building datastructure
-        
+
         """
 
-        with open(filepath, 'r') as fp:
+        with open(filepath, "r") as fp:
             data = json.load(fp)
 
-        path = data['path']
-        weather = data['weather']
+        path = data["path"]
+        weather = data["weather"]
 
         building = cls(path, weather)
         building.data = data
@@ -296,7 +297,7 @@ class OperationalBuilding(object):
     @classmethod
     def from_quad_5zone(cls, path, wea, quad, zone_depth, height):
         b = cls(path, wea)
-        
+
         if type(zone_depth) == list:
             zd = zone_depth
         else:
@@ -310,8 +311,8 @@ class OperationalBuilding(object):
                 k = i + 1
             v1 = normalize_vector(subtract_vectors(quad[k], quad[i]))
             v2 = normalize_vector(subtract_vectors(quad[i - 1], quad[i]))
-            v1_ = scale_vector(cross_vectors(v1, [0,0,-1]), zd[i])
-            v2_ = scale_vector(cross_vectors(v2, [0,0,1]), zd[i-1])
+            v1_ = scale_vector(cross_vectors(v1, [0, 0, -1]), zd[i])
+            v2_ = scale_vector(cross_vectors(v2, [0, 0, 1]), zd[i - 1])
             l1 = [add_vectors(quad[i], v1_), add_vectors(quad[k], v1_)]
             l2 = [add_vectors(quad[i], v2_), add_vectors(quad[i - 1], v2_)]
 
@@ -325,11 +326,11 @@ class OperationalBuilding(object):
                 k = i + 1
             pts = [quad[i], quad[k], quad_[k], quad_[i]]
             mesh = make_box_from_quad(pts, height)
-            z = Zone.from_mesh(mesh, 'zone_{}'.format(i))
+            z = Zone.from_mesh(mesh, "zone_{}".format(i))
             b.add_zone(z)
 
         mesh = make_box_from_quad(quad_, height)
-        z = Zone.from_mesh(mesh, 'zone_4')
+        z = Zone.from_mesh(mesh, "zone_4")
         b.add_zone(z)
         return b
 
@@ -345,7 +346,7 @@ class OperationalBuilding(object):
 
         for i, quad in enumerate(quads):
             mesh = make_box_from_quad(quad, height)
-            z = Zone.from_mesh(mesh, 'zone_{}'.format(i))
+            z = Zone.from_mesh(mesh, "zone_{}".format(i))
             building.add_zone(z)
         return building
 
@@ -353,7 +354,7 @@ class OperationalBuilding(object):
     def from_quad_1zone(cls, path, wea, quad, height):
         building = cls(path, wea)
         mesh = make_box_from_quad(quad, height)
-        z = Zone.from_mesh(mesh, 'zone_0')
+        z = Zone.from_mesh(mesh, "zone_0")
         building.add_zone(z)
         return building
 
@@ -366,8 +367,7 @@ class OperationalBuilding(object):
 
     @staticmethod
     def from_obj(filename, output=True):
-
-        """ Imports a Building object from an .obj file through Pickle.
+        """Imports a Building object from an .obj file through Pickle.
 
         Parameters
         ----------
@@ -383,17 +383,16 @@ class OperationalBuilding(object):
 
         """
 
-        with open(filename, 'rb') as f:
+        with open(filename, "rb") as f:
             building = pickle.load(f)
 
         if output:
-            print('***** Building loaded from: {0} *****'.format(filename))
+            print("***** Building loaded from: {0} *****".format(filename))
 
         return building
 
     def to_obj(self, output=True, path=None, name=None):
-
-        """ Exports the Building object to an .obj file through Pickle.
+        """Exports the Building object to an .obj file through Pickle.
 
         Parameters
         ----------
@@ -409,161 +408,159 @@ class OperationalBuilding(object):
             path = self.path
         if not name:
             name = self.name
-        filename = os.path.join(path, name + '.obj')
+        filename = os.path.join(path, name + ".obj")
 
-        with open(filename, 'wb') as f:
+        with open(filename, "wb") as f:
             pickle.dump(self, f, protocol=2)
 
         if output:
-            print('***** Building saved to: {0} *****\n'.format(filename))
+            print("***** Building saved to: {0} *****\n".format(filename))
 
     def add_data_from_idf(self, data):
-        zones = data['zones']
+        zones = data["zones"]
         for zone in zones:
-            zname = zones[zone]['name']
-            surfaces = zones[zone]['surfaces']
+            zname = zones[zone]["name"]
+            surfaces = zones[zone]["surfaces"]
             vertices = []
             for srf in surfaces:
-                srf = zones[zone]['surfaces'][srf]
-                face_v = srf['surface_points']
+                srf = zones[zone]["surfaces"][srf]
+                face_v = srf["surface_points"]
                 vertices.extend(face_v)
-            faces = [[0, 1, 2, 3],
-                     [4, 5, 6, 7],
-                     [8, 9, 10, 11],
-                     [12, 13, 14, 15],
-                     [16, 17, 18, 19],
-                     [20, 21, 22, 23]
-                     ]
+            faces = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15], [16, 17, 18, 19], [20, 21, 22, 23]]
             mesh = Mesh.from_vertices_and_faces(vertices, faces)
             z = Zone.from_mesh(mesh, zname)
-            z.height = zones[zone]['height']
-            z.volume = zones[zone]['volume']
-            z.origin = zones[zone]['origin']
+            z.height = zones[zone]["height"]
+            z.volume = zones[zone]["volume"]
+            z.origin = zones[zone]["origin"]
 
             for i, srf in enumerate(surfaces):
-                srf = zones[zone]['surfaces'][srf]
+                srf = zones[zone]["surfaces"][srf]
                 # print(srf['name'])
-                z.surfaces.set_face_attribute(i, 'name', srf['name'])
-                z.surfaces.set_face_attribute(i, 'construction', srf['construction'])
-                z.surfaces.set_face_attribute(i, 'surface_type', srf['surface_type'])
-                z.surfaces.set_face_attribute(i, 'outside_boundary_condition', srf['outside_condition'])
+                z.surfaces.set_face_attribute(i, "name", srf["name"])
+                z.surfaces.set_face_attribute(i, "construction", srf["construction"])
+                z.surfaces.set_face_attribute(i, "surface_type", srf["surface_type"])
+                z.surfaces.set_face_attribute(i, "outside_boundary_condition", srf["outside_condition"])
                 # print(srf['outside_condition'])
             self.add_zone(z)
-        
-        windows = data['windows']
+
+        windows = data["windows"]
         for win in windows:
             w = Window()
-            w.name = windows[win]['name']
-            w.nodes = windows[win]['nodes']
-            w.building_surface = windows[win]['building_surface']
-            w.construction =  windows[win]['construction']
+            w.name = windows[win]["name"]
+            w.nodes = windows[win]["nodes"]
+            w.building_surface = windows[win]["building_surface"]
+            w.construction = windows[win]["construction"]
             self.add_window(w)
 
-        materials = data['materials']
+        materials = data["materials"]
         self.add_materials_from_json_dict(None, materials)
 
-        cons = data['constructions']
+        cons = data["constructions"]
         for con in cons:
-            name = data['constructions'][con]['name']
-            layers = data['constructions'][con]['layers']
+            name = data["constructions"][con]["name"]
+            layers = data["constructions"][con]["layers"]
             layers_ = {}
             for lk in layers:
                 lname = layers[lk]
-                mname = materials[lname]['name']
-                if 'thickness' in materials[lname]:
-                    thick = materials[lname]['thickness']
+                mname = materials[lname]["name"]
+                if "thickness" in materials[lname]:
+                    thick = materials[lname]["thickness"]
                 else:
                     thick = 0
-                layers_[lk] = {'name': mname, 'thickness': thick}
-            con_ = {'name': name, 'layers': layers_}
+                layers_[lk] = {"name": mname, "thickness": thick}
+            con_ = {"name": name, "layers": layers_}
             c = Construction.from_data(con_)
             self.add_construction(c)
         self.make_layers_dict()
 
-        schedules = data['schedules']
+        schedules = data["schedules"]
         for sk in schedules:
             s = Schedule.from_idf_data(schedules[sk])
             self.add_schedule(s, sk)
-        
-        lights = data['lights']
+
+        lights = data["lights"]
         for lk in lights:
             l = Light.from_data(lights[lk])
             self.add_light(l, lk)
 
-        peoples = data['people']
+        peoples = data["people"]
         for pk in peoples:
             p = People.from_data(peoples[pk])
             self.add_people(p, pk)
 
-        eeq = data['electric_equipment']
+        eeq = data["electric_equipment"]
         for ek in eeq:
             e = ElectricEquipment.from_data(eeq[ek])
             self.add_electric_equipment(e, ek)
 
-        zct = data['zone_control_thermostat']
+        zct = data["zone_control_thermostat"]
         for zk in zct:
             z = ZoneControlThermostat.from_data(zct[zk])
             self.add_zone_control_thermostat(z, zk)
 
-        spt = data['setpoint']
+        spt = data["setpoint"]
         for sk in spt:
             s = DualSetpoint.from_data(spt[sk])
             self.add_setpoint(s, sk)
 
-        ial = data['ideal_air_load']
+        ial = data["ideal_air_load"]
         for ik in ial:
             i = IdealAirLoad.from_data(ial[ik])
             self.add_ideal_air_load(i, ik)
 
-        infiltration = data['infiltration']
+        infiltration = data["infiltration"]
         for ik in infiltration:
             i = Infiltration.from_data(infiltration[ik])
             self.add_infiltration(i, ik)
 
-        el = data['equipment_list']
+        el = data["equipment_list"]
         for ek in el:
             e = EquipmentList.from_data(el[ek])
             self.add_equipment_list(e, ek)
 
-        ec = data['equipment_connection']
+        ec = data["equipment_connection"]
         for ek in ec:
             e = EquipmentConnection.from_data(ec[ek])
             self.add_equipment_connection(e, ek)
 
-        zl = data['zone_lists']
+        zl = data["zone_lists"]
         for zlk in zl:
             zl_ = ZoneList.from_data(zl[zlk])
             self.add_zone_list(zl_, zlk)
 
-        nl = data['node_lists']
+        nl = data["node_lists"]
         for nlk in nl:
             nl_ = NodeList.from_data(nl[nlk])
             self.add_node_list(nl_, nlk)
 
-        oa = data['outdoor_air']
+        oa = data["outdoor_air"]
         for oak in oa:
             oa_ = OutdoorAir.from_data(oa[oak])
             self.add_outdoor_air(oa_, oak)
 
-        dc = data['daylighting_controls']
+        dc = data["daylighting_controls"]
         for dck in dc:
             d = DaylightingControls.from_data(dc[dck])
             self.add_daylighting_controls(d, dck)
 
-        dp = data['daylighting:referencepoint']
+        dp = data["daylighting:referencepoint"]
         for ptk in dp:
-            ptname = dp[ptk]['name']
-            dp[ptk]['fraction'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['ref_pt_fraction']
-            dp[ptk]['illuminance_set_point'] = dc['{}_daylight_controls'.format(dp[ptk]['zone_name'])]['reference_points'][ptname]['illuminance_setpt']
+            ptname = dp[ptk]["name"]
+            dp[ptk]["fraction"] = dc["{}_daylight_controls".format(dp[ptk]["zone_name"])]["reference_points"][ptname][
+                "ref_pt_fraction"
+            ]
+            dp[ptk]["illuminance_set_point"] = dc["{}_daylight_controls".format(dp[ptk]["zone_name"])][
+                "reference_points"
+            ][ptname]["illuminance_setpt"]
             pt = DaylightingReferencePoint.from_data(dp[ptk])
             self.add_daylighting_reference_point(pt, ptk)
 
-        sp = data['spaces']
+        sp = data["spaces"]
         for spk in sp:
             s = Space.from_data(sp[spk])
             self.add_space(s, spk)
 
-        sl = data['space_lists']
+        sl = data["space_lists"]
         for slk in sl:
             sl_ = SpaceList.from_data(sl[slk])
             self.add_space_list(sl_, slk)
@@ -576,13 +573,13 @@ class OperationalBuilding(object):
         ----------
         filepath: str
             Path for the JSON file to be created
-        
+
         Returns
         -------
         None
 
         """
-        with open(filepath, 'w+') as fp:
+        with open(filepath, "w+") as fp:
             json.dump(self.data, fp)
 
     def write_idf(self):
@@ -597,7 +594,7 @@ class OperationalBuilding(object):
         Returns
         -------
         None
-        
+
         """
 
         self.make_layers_dict()
@@ -606,18 +603,18 @@ class OperationalBuilding(object):
         write_idf_from_building(self)
 
     def get_schedules(self):
-        if self.program == 'office':
-            self.schedules['occupancy'] = OfficeOccupancySchedule('{}_occupancy'.format(self.name))
-            self.schedules['lights'] = OfficeLightsSchedule('{}_lights'.format(self.name))
-            self.schedules['equipment'] = OfficeEquipmentSchedule('{}_equipment'.format(self.name))
-            self.schedules['activity'] = OfficeActivitySchedule('{}_activity'.format(self.name))
-            self.schedules['control_type'] = OfficeControlTypeSchedule('{}_control_type'.format(self.name))
-            self.schedules['heating'] = OfficeHeatingSchedule('{}_heating'.format(self.name))
-            self.schedules['heating'] = OfficeCoolingSchedule('{}_heating'.format(self.name))
+        if self.program == "office":
+            self.schedules["occupancy"] = OfficeOccupancySchedule("{}_occupancy".format(self.name))
+            self.schedules["lights"] = OfficeLightsSchedule("{}_lights".format(self.name))
+            self.schedules["equipment"] = OfficeEquipmentSchedule("{}_equipment".format(self.name))
+            self.schedules["activity"] = OfficeActivitySchedule("{}_activity".format(self.name))
+            self.schedules["control_type"] = OfficeControlTypeSchedule("{}_control_type".format(self.name))
+            self.schedules["heating"] = OfficeHeatingSchedule("{}_heating".format(self.name))
+            self.schedules["heating"] = OfficeCoolingSchedule("{}_heating".format(self.name))
         else:
-            raise('This Building program is not yet implemented')
+            raise ("This Building program is not yet implemented")
 
-    def add_zone(self, zone, floor_cond='Ground', roof_cond='Outdoors', wall_cond='Outdoors'):
+    def add_zone(self, zone, floor_cond="Ground", roof_cond="Outdoors", wall_cond="Outdoors"):
         """
         Adds a zone object to the building datastructure.
 
@@ -625,40 +622,40 @@ class OperationalBuilding(object):
         ----------
         zone: object
             The zone object to be added
-        
+
         Returns
         -------
         None
-        
-        """
-        out_dict = {'Wall': wall_cond, 'Roof': roof_cond, 'Floor': floor_cond}
 
-        zk =  len(self.zones)
+        """
+        out_dict = {"Wall": wall_cond, "Roof": roof_cond, "Floor": floor_cond}
+
+        zk = len(self.zones)
         self.zones[zk] = zone
         mesh = self.zones[zk].surfaces
         for fk in mesh.faces:
-            cpt =mesh.face_centroid(fk)
+            cpt = mesh.face_centroid(fk)
             gk = geometric_key(cpt)
-            out_cond = mesh.get_face_attribute(fk, 'outside_boundary_condition')
-            srft = mesh.get_face_attribute(fk, 'surface_type')
-            fn = mesh.get_face_attribute(fk, 'name')
-            
-            if out_cond == None or out_cond == 'Surface':
-                out_cond = 'Surface'
-                if gk in self.srf_cpt_dict:
-                    
-                    zk_ = self.srf_cpt_dict[gk]['zone']
-                    fk_ = self.srf_cpt_dict[gk]['surface']
-                    fn_ = self.zones[zk_].surfaces.get_face_attribute(fk_, 'name')
-                    mesh.set_face_attribute(fk, 'outside_boundary_condition', out_cond)
-                    self.zones[zk_].surfaces.set_face_attribute(fk_,'outside_boundary_condition', out_cond)  
+            out_cond = mesh.get_face_attribute(fk, "outside_boundary_condition")
+            srft = mesh.get_face_attribute(fk, "surface_type")
+            fn = mesh.get_face_attribute(fk, "name")
 
-                    mesh.set_face_attribute(fk, 'outside_boundary_condition_object', fn_)
-                    self.zones[zk_].surfaces.set_face_attribute(fk_,'outside_boundary_condition_object', fn)
+            if out_cond == None or out_cond == "Surface":
+                out_cond = "Surface"
+                if gk in self.srf_cpt_dict:
+
+                    zk_ = self.srf_cpt_dict[gk]["zone"]
+                    fk_ = self.srf_cpt_dict[gk]["surface"]
+                    fn_ = self.zones[zk_].surfaces.get_face_attribute(fk_, "name")
+                    mesh.set_face_attribute(fk, "outside_boundary_condition", out_cond)
+                    self.zones[zk_].surfaces.set_face_attribute(fk_, "outside_boundary_condition", out_cond)
+
+                    mesh.set_face_attribute(fk, "outside_boundary_condition_object", fn_)
+                    self.zones[zk_].surfaces.set_face_attribute(fk_, "outside_boundary_condition_object", fn)
                 else:
-                    mesh.set_face_attribute(fk, 'outside_boundary_condition', out_dict[srft])
-                    self.srf_cpt_dict[gk] = {'zone': zk, 'surface': fk}
-    
+                    mesh.set_face_attribute(fk, "outside_boundary_condition", out_dict[srft])
+                    self.srf_cpt_dict[gk] = {"zone": zk, "surface": fk}
+
     def add_window(self, window):
         """
         Adds a windows object to the building datastructure.
@@ -667,14 +664,14 @@ class OperationalBuilding(object):
         ----------
         window: object
             The window object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         wk = len(self.windows)
-        window.name = '{}_{}'.format(window.name, wk)
+        window.name = "{}_{}".format(window.name, wk)
         self.windows[wk] = window
 
     def add_material(self, material):
@@ -685,11 +682,11 @@ class OperationalBuilding(object):
         ----------
         material: object
             The material object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         mk = len(self.materials)
         self.materials[mk] = material
@@ -703,25 +700,26 @@ class OperationalBuilding(object):
         ----------
         filepath: string
             Path to the json file  containing data for all materials to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         if filepath:
-            with open(filepath, 'r') as fp:
+            with open(filepath, "r") as fp:
                 lib = json.load(fp)
 
-        mat_dict = {'Material': Material,
-                    'MaterialNoMass': MaterialNoMass,
-                    'WindowMaterialGlazing': WindowMaterialGlazing,
-                    'WindowMaterialGlazingSimple': WindowMaterialGlazingSimple, 
-                    'WindowMaterialGas': WindowMaterialGas, 
-                    }
+        mat_dict = {
+            "Material": Material,
+            "MaterialNoMass": MaterialNoMass,
+            "WindowMaterialGlazing": WindowMaterialGlazing,
+            "WindowMaterialGlazingSimple": WindowMaterialGlazingSimple,
+            "WindowMaterialGas": WindowMaterialGas,
+        }
 
         for mk in lib:
-            t = lib[mk]['__type__']
+            t = lib[mk]["__type__"]
             mat = mat_dict[t].from_data(lib[mk])
             self.add_material(mat)
 
@@ -733,11 +731,11 @@ class OperationalBuilding(object):
         ----------
         lib: dict
             Dictionary containing data for all constructions to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         for ck in lib:
             con = Construction.from_data(lib[ck])
@@ -751,11 +749,11 @@ class OperationalBuilding(object):
         ----------
         construction: object
             The construction object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
 
         # layers = {}
@@ -778,11 +776,11 @@ class OperationalBuilding(object):
         ----------
         schedule: object
             The schedule object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.schedules[sk] = schedule
 
@@ -794,11 +792,11 @@ class OperationalBuilding(object):
         ----------
         drpt: object
             The daylight reference point object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
 
         self.daylighting_reference_points[ptk] = drpt
@@ -811,11 +809,11 @@ class OperationalBuilding(object):
         ----------
         drpt: object
             The daylight controls point object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.daylighting_controls[dck] = dc
 
@@ -827,11 +825,11 @@ class OperationalBuilding(object):
         ----------
         light: object
             The light object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.lights[lk] = light
 
@@ -843,11 +841,11 @@ class OperationalBuilding(object):
         ----------
         space: object
             The space object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.spaces[sk] = space
 
@@ -859,11 +857,11 @@ class OperationalBuilding(object):
         ----------
         space_list: object
             The space list object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.space_lists[slk] = space_list
 
@@ -875,11 +873,11 @@ class OperationalBuilding(object):
         ----------
         people: object
             The people object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.peoples[pk] = people
 
@@ -891,11 +889,11 @@ class OperationalBuilding(object):
         ----------
         electric_equipment: object
             The electric_equipment object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.electric_equipments[ek] = eeq
 
@@ -907,11 +905,11 @@ class OperationalBuilding(object):
         ----------
         zone_control_thermostat: object
             The zone_control_thermostat object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.zone_control_thermostats[zk] = zct
 
@@ -923,11 +921,11 @@ class OperationalBuilding(object):
         ----------
         setpoints: object
             The setpoint object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.setpoints[sk] = spt
 
@@ -939,11 +937,11 @@ class OperationalBuilding(object):
         ----------
         ideal_air_load: object
             The ideal_air_load object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.ideal_air_loads[ik] = ideal_air_load
 
@@ -955,11 +953,11 @@ class OperationalBuilding(object):
         ----------
         infiltration: object
             The infiltration object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.infiltrations[ik] = infiltration
 
@@ -971,11 +969,11 @@ class OperationalBuilding(object):
         ----------
         infiltration: object
             The equipment_list object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.equipment_lists[ek] = equipment_list
 
@@ -987,11 +985,11 @@ class OperationalBuilding(object):
         ----------
         equipment_connection: object
             The equipment_connection object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.equipment_connections[ek] = equipment_connection
 
@@ -1003,11 +1001,11 @@ class OperationalBuilding(object):
         ----------
         zone_list: object
             The zone_list object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.zone_lists[zlk] = zone_list
 
@@ -1019,11 +1017,11 @@ class OperationalBuilding(object):
         ----------
         zone_list: object
             The node_list object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.node_lists[nlk] = node_list
 
@@ -1035,11 +1033,11 @@ class OperationalBuilding(object):
         ----------
         zone_list: object
             The outdoor_air object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.outdoor_airs[nlk] = outdoor_air
 
@@ -1051,11 +1049,11 @@ class OperationalBuilding(object):
         ----------
         shading: object
             The shading object to be added
-        
+
         Returns
         -------
         None
-        
+
         """
         self.shadings[len(self.shadings)] = shading
 
@@ -1067,21 +1065,17 @@ class OperationalBuilding(object):
         ----------
         exe: str, optional
             The path to the Energy+ executable
-        
+
         Returns
         -------
         None
-        
+
         """
-
-
-
-
 
         idf = self.idf_filepath
         if not exe:
-            exe = 'energyplus'
-        out = os.path.join(self.path, '{}_eplus_out'.format(self.name))
+            exe = "energyplus"
+        out = os.path.join(self.path, "{}_eplus_out".format(self.name))
 
         if delete:
             try:
@@ -1089,14 +1083,14 @@ class OperationalBuilding(object):
             except:
                 pass
 
-        print(exe, '-w', self.weather,'--output-directory', out, idf)
-        subprocess.call([exe, '-w', self.weather,'--output-directory', out, idf])
+        print(exe, "-w", self.weather, "--output-directory", out, idf)
+        subprocess.call([exe, "-w", self.weather, "--output-directory", out, idf])
 
     def load_results(self, print_error=True):
         """
         Loads Energy+ results from result text files
 
-        
+
         Parameters
         ----------
         None
@@ -1104,53 +1098,50 @@ class OperationalBuilding(object):
         Returns
         -------
         None
-        
+
         """
-        filepath = os.path.join(self.path, '{}_eplus_out'.format(self.name), 'eplusout.eso')
-        error_filepath = os.path.join(self.path, '{}_eplus_out'.format(self.name), 'eplusout.err')
+        filepath = os.path.join(self.path, "{}_eplus_out".format(self.name), "eplusout.eso")
+        error_filepath = os.path.join(self.path, "{}_eplus_out".format(self.name), "eplusout.err")
         read_error_file(error_filepath, print_error=print_error)
-        for i in range(5): print('')
+        for i in range(5):
+            print("")
         read_results_file(self, filepath)
         zones = [self.zones[zk].name for zk in self.zones]
-        totals = {'heating': 0, 'cooling':0, 'lighting': 0}
+        totals = {"heating": 0, "cooling": 0, "lighting": 0}
         for zone in zones:
-            heat = [self.results[tk][zone]['heating'] for tk in self.results]
+            heat = [self.results[tk][zone]["heating"] for tk in self.results]
             heat = sum(heat)
-            totals['heating'] += heat
+            totals["heating"] += heat
 
-            cool = [self.results[tk][zone]['cooling'] for tk in self.results]
+            cool = [self.results[tk][zone]["cooling"] for tk in self.results]
             cool = sum(cool)
-            totals['cooling'] += cool
+            totals["cooling"] += cool
 
-            light = [self.results[tk][zone]['lighting'] for tk in self.results]
+            light = [self.results[tk][zone]["lighting"] for tk in self.results]
             light = sum(light)
-            totals['lighting'] += light
-            
-            self.totals[zone] = {'heating': heat,
-                                 'cooling': cool,
-                                 'lighting': light
-                                }
-        totals['total'] = totals['heating'] + totals['cooling'] + totals['lighting']
-        self.totals['totals'] = totals
+            totals["lighting"] += light
+
+            self.totals[zone] = {"heating": heat, "cooling": cool, "lighting": light}
+        totals["total"] = totals["heating"] + totals["cooling"] + totals["lighting"]
+        self.totals["totals"] = totals
 
     def assign_constructions_from_rules(self, rules):
-        """
-        """
+        """ """
         for zk in self.zones:
             mesh = self.zones[zk].surfaces
             sks = mesh.face_keys()
             for sk in sks:
-                name = mesh.get_face_attribute(sk, 'surface_type')
-                mesh.set_face_attribute(sk, 'construction', rules[name])
+                name = mesh.get_face_attribute(sk, "surface_type")
+                mesh.set_face_attribute(sk, "construction", rules[name])
 
         for wk in self.windows:
-            self.windows[wk].construction = rules['Window']
-        
+            self.windows[wk].construction = rules["Window"]
+
     def make_layers_dict(self):
         """
         Makes a dictionary containing all unique layers, with names, materials and
         thicknesses.
-        
+
         Parameters
         ----------
         None
@@ -1158,20 +1149,18 @@ class OperationalBuilding(object):
         Returns
         -------
         None
-        
+
         """
         for ck in self.constructions:
             lkeys = self.constructions[ck].layers.keys()
             for lk in lkeys:
-                name = self.constructions[ck].layers[lk]['name']
-                thick = self.constructions[ck].layers[lk]['thickness']
-                lname = '{} {}mm'.format(name, round(thick*1000, 1))
-                self.layers[lname] = {'layer_name': lname,
-                                                 'material_name': name,
-                                                 'thickness': thick}
+                name = self.constructions[ck].layers[lk]["name"]
+                thick = self.constructions[ck].layers[lk]["thickness"]
+                lname = "{} {}mm".format(name, round(thick * 1000, 1))
+                self.layers[lname] = {"layer_name": lname, "material_name": name, "thickness": thick}
 
     def delete_result_files(self, out_path):
-        """ Deletes energy+ result files.
+        """Deletes energy+ result files.
 
         Parameters:
             out_path (str): Path to the energy+ output folder.
@@ -1183,24 +1172,25 @@ class OperationalBuilding(object):
 
     def find_set_schedules(self):
 
-        sdict = {'occupancy': self.peoples,
-                 'lights': self.lights,
-                 'equipment': self.electric_equipments,
-                 'activity': self.peoples,
-                 'control': self.zone_control_thermostats,
-                 'heating': self.setpoints,
-                 'cooling': self.setpoints,
-                 'any_number': self.infiltrations,
-                }
+        sdict = {
+            "occupancy": self.peoples,
+            "lights": self.lights,
+            "equipment": self.electric_equipments,
+            "activity": self.peoples,
+            "control": self.zone_control_thermostats,
+            "heating": self.setpoints,
+            "cooling": self.setpoints,
+            "any_number": self.infiltrations,
+        }
 
         for k in sdict:
             o = sdict[k]
             oks = o.keys()
-            if k == 'heating':
+            if k == "heating":
                 skeys = [o[ok].heating_setpoint for ok in oks]
-            elif k == 'cooling':
+            elif k == "cooling":
                 skeys = [o[ok].cooling_setpoint for ok in oks]
-            elif k == 'activity':
+            elif k == "activity":
                 skeys = [o[ok].schedule_name for ok in oks]
                 skeys_ = [o[ok].activity_level_schedule_name for ok in oks]
                 skeys.extend(skeys_)
@@ -1208,28 +1198,27 @@ class OperationalBuilding(object):
                 skeys = [o[ok].schedule_name for ok in oks]
             self.set_schedules.update(skeys)
 
-        year_schs =  set()
+        year_schs = set()
         for sk in self.set_schedules:
             schedule = self.schedules[sk]
             stype = schedule.type
-            if stype == 'year':
+            if stype == "year":
                 year_schs.add(schedule.schedule_week_name1)
-            
 
         self.set_schedules.update(year_schs)
         for sk in year_schs:
             wks = []
             wks.append(self.schedules[sk].sunday)
-            wks.append(self.schedules[sk].monday)           
-            wks.append(self.schedules[sk].tuesday)        
-            wks.append(self.schedules[sk].wednesday)        
-            wks.append(self.schedules[sk].thursday)         
-            wks.append(self.schedules[sk].friday)           
-            wks.append(self.schedules[sk].saturday)         
-            wks.append(self.schedules[sk].holiday)          
+            wks.append(self.schedules[sk].monday)
+            wks.append(self.schedules[sk].tuesday)
+            wks.append(self.schedules[sk].wednesday)
+            wks.append(self.schedules[sk].thursday)
+            wks.append(self.schedules[sk].friday)
+            wks.append(self.schedules[sk].saturday)
+            wks.append(self.schedules[sk].holiday)
             wks.append(self.schedules[sk].summer_design_day)
             wks.append(self.schedules[sk].winter_design_day)
-            wks.append(self.schedules[sk].custom_day1)      
+            wks.append(self.schedules[sk].custom_day1)
             wks.append(self.schedules[sk].custom_day2)
             self.set_schedules.update(wks)
 
@@ -1237,7 +1226,7 @@ class OperationalBuilding(object):
         for sk in self.schedules:
             schedule = self.schedules[sk]
             stype = schedule.type
-            if stype == 'schedule_type_limits':
+            if stype == "schedule_type_limits":
                 tls.append(sk)
         self.set_schedules.update(tls)
 
@@ -1265,23 +1254,23 @@ class OperationalBuilding(object):
             zname = self.zones[zk].name
 
             self.node_lists[zk] = NodeList.from_data(deepcopy(inl.data))
-            inlname = '{}_{}'.format(self.node_lists[zk].name, zname)
+            inlname = "{}_{}".format(self.node_lists[zk].name, zname)
             self.node_lists[zk].name = inlname
-            self.node_lists[zk].nodes['0'] = 'inlet_node_{}'.format(zname)
+            self.node_lists[zk].nodes["0"] = "inlet_node_{}".format(zname)
 
             self.node_lists[zname] = NodeList.from_data(deepcopy(enl.data))
-            enlname = '{}_{}'.format(self.node_lists[zname].name, zname)
+            enlname = "{}_{}".format(self.node_lists[zname].name, zname)
             self.node_lists[zname].name = enlname
-            self.node_lists[zname].nodes['0'] = 'exhaust_node_{}'.format(zname)
+            self.node_lists[zname].nodes["0"] = "exhaust_node_{}".format(zname)
 
             self.ideal_air_loads[zk] = IdealAirLoad.from_data(deepcopy(ial.data))
-            ialname = '{} {}'.format(zname, self.ideal_air_loads[zk].name)
+            ialname = "{} {}".format(zname, self.ideal_air_loads[zk].name)
             self.ideal_air_loads[zk].name = ialname
             self.ideal_air_loads[zk].zone_supply_air_node_name = inlname
             self.ideal_air_loads[zk].zone_exhaust_air_node_name = enlname
 
             self.equipment_lists[zk] = EquipmentList.from_data(eql.data)
-            elname =  '{}_{}'.format(self.equipment_lists[zk].name, zname)
+            elname = "{}_{}".format(self.equipment_lists[zk].name, zname)
             self.equipment_lists[zk].name = elname
             self.equipment_lists[zk].zone_equipment_name1 = ialname
 
@@ -1290,29 +1279,33 @@ class OperationalBuilding(object):
             self.equipment_connections[zk].zone_conditioning_equipment_list = elname
             self.equipment_connections[zk].zone_air_inlet_node = inlname
             self.equipment_connections[zk].zone_air_exhaust_node = enlname
-            self.equipment_connections[zk].zone_air_node += '_{}'.format(zname)
+            self.equipment_connections[zk].zone_air_node += "_{}".format(zname)
 
             self.daylighting_controls[zk] = DaylightingControls.from_data(deepcopy(dlc.data))
-            dc_name = 'daylighting_controls_{}'.format(zname)
-            dc_ref_pt_name = 'daylighting_ref_pt_{}'.format(zname)
+            dc_name = "daylighting_controls_{}".format(zname)
+            dc_ref_pt_name = "daylighting_ref_pt_{}".format(zname)
             x, y, _ = self.zones[zk].centroid_xy
             self.daylighting_controls[zk].name = dc_name
             self.daylighting_controls[zk].zone_name = zname
             self.daylighting_controls[zk].glare_reference_point = dc_ref_pt_name
             ref_pt_key = list(self.daylighting_controls[zk].reference_points.keys())[0]
-            self.daylighting_controls[zk].reference_points = {dc_ref_pt_name: self.daylighting_controls[zk].reference_points[ref_pt_key]}
-            self.daylighting_controls[zk].reference_points[dc_ref_pt_name]['ref_pt_name'] = dc_ref_pt_name
+            self.daylighting_controls[zk].reference_points = {
+                dc_ref_pt_name: self.daylighting_controls[zk].reference_points[ref_pt_key]
+            }
+            self.daylighting_controls[zk].reference_points[dc_ref_pt_name]["ref_pt_name"] = dc_ref_pt_name
 
-            dl_rpt = DaylightingReferencePoint.from_data({'name': dc_ref_pt_name,
-                                                          'zone_name': zname,
-                                                          'x': x,
-                                                          'y': y,
-                                                          'z': self.daylighting_controls_height,
-                                                          'fraction': dlr.fraction,
-                                                          'illuminance_set_point': dlr.illuminance_set_point,
-                                                          })
+            dl_rpt = DaylightingReferencePoint.from_data(
+                {
+                    "name": dc_ref_pt_name,
+                    "zone_name": zname,
+                    "x": x,
+                    "y": y,
+                    "z": self.daylighting_controls_height,
+                    "fraction": dlr.fraction,
+                    "illuminance_set_point": dlr.illuminance_set_point,
+                }
+            )
             self.daylighting_reference_points[dc_ref_pt_name] = dl_rpt
-
 
         del self.equipment_connections[eqc_key]
         del self.equipment_lists[eql_key]
@@ -1323,6 +1316,7 @@ class OperationalBuilding(object):
         del self.daylighting_reference_points[dlr_key]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-    for i in range(50): print('')
+    for i in range(50):
+        print("")

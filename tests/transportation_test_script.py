@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -17,11 +16,14 @@ from pod_lca.units import UNITS_MAP
 from pod_lca.transportation import DomesticLink, ForeignLink
 from pod_lca.location import Location
 
+
 def clean(value):
     return None if pd.isna(value) else value
 
+
 def string(value):
     return "None" if pd.isna(value) else value
+
 
 def run_test_files(test_file_path, output_csv_path):
     test_inputs = pd.read_csv(test_file_path)
@@ -53,7 +55,7 @@ def run_test_files(test_file_path, output_csv_path):
         mode_foreign_efficiency = clean(row["mode_foreign_efficiency"])
 
         project = USDomesticLogisticProject.new("Building A")
-        project.set_impact_database(r'data/transportation_podlca_emission.csv')
+        project.set_impact_database(r"data/transportation_podlca_emission.csv")
 
         # FIXME: ELectric truck as a mode and generate the electric data
 
@@ -64,10 +66,16 @@ def run_test_files(test_file_path, output_csv_path):
         product.set_sctg_code()
 
         # TODO: refine with what inputs are provided here
-        mode = {'domestic': mode_domestic,
-                'foreign': mode_foreign} if mode_foreign_efficiency is not None else mode_domestic
-        mode_efficiency = {'domestic': mode_domestic_efficiency,
-                            'foreign': mode_foreign_efficiency} if mode_foreign_efficiency is not None else mode_domestic_efficiency
+        mode = (
+            {"domestic": mode_domestic, "foreign": mode_foreign}
+            if mode_foreign_efficiency is not None
+            else mode_domestic
+        )
+        mode_efficiency = (
+            {"domestic": mode_domestic_efficiency, "foreign": mode_foreign_efficiency}
+            if mode_foreign_efficiency is not None
+            else mode_domestic_efficiency
+        )
         if isinstance(travel_dist, str):
             if travel_dist == "None":
                 transport_scenario = "Average"
@@ -79,17 +87,19 @@ def run_test_files(test_file_path, output_csv_path):
             transport_scenario = "Average"
 
         shipping_dest = None if shipping_dest is None else Location.from_str(shipping_dest)
-        shipping_org = None if shipping_org is None else Location.from_str(shipping_org) 
+        shipping_org = None if shipping_org is None else Location.from_str(shipping_org)
 
-        project.add_good(product, 
-                          travel_dist,
-                          shipping_dest, 
-                          shipping_org,
-                          transport_scenario,
-                          UNITS_MAP[travel_dist_unit], 
-                          return_trip_factor, 
-                          mode, 
-                          mode_efficiency)
+        project.add_good(
+            product,
+            travel_dist,
+            shipping_dest,
+            shipping_org,
+            transport_scenario,
+            UNITS_MAP[travel_dist_unit],
+            return_trip_factor,
+            mode,
+            mode_efficiency,
+        )
 
         result_row = row.to_dict()
         passed = True
@@ -101,7 +111,7 @@ def run_test_files(test_file_path, output_csv_path):
             result_row.update(note)
 
         if passed:
-        # if isinstance(, Domestic)
+            # if isinstance(, Domestic)
             distances = {}
             domestic_impact = None
             foreign_impact = None
@@ -109,30 +119,40 @@ def run_test_files(test_file_path, output_csv_path):
                 if isinstance(link, DomesticLink):
                     domestic_impact = link.get_impacts()
                     domestic_mode_impact = link.get_mode().get_unit_impacts()
-                    distances['domestic'] = link.get_travel_dist()
+                    distances["domestic"] = link.get_travel_dist()
                 elif isinstance(link, ForeignLink):
                     foreign_impact = link.get_impacts()
                     foreign_mode_impact = link.get_mode().get_unit_impacts()
-                    distances['foreign'] = link.get_travel_dist()
+                    distances["foreign"] = link.get_travel_dist()
 
             if domestic_impact is not None:
                 domestic_impact_prefixed = {f"Domestic_{k}": v for k, v in domestic_impact.get_record_dict().items()}
-                domestic_mode_impact_prefixed = {f"Domestic_mode_{k}": v for k, v in domestic_mode_impact.get_record_dict().items()} if domestic_mode_impact else {f"Domestic_mode_{k}": None for k, v in foreign_mode_impact.get_record_dict().items()}
+                domestic_mode_impact_prefixed = (
+                    {f"Domestic_mode_{k}": v for k, v in domestic_mode_impact.get_record_dict().items()}
+                    if domestic_mode_impact
+                    else {f"Domestic_mode_{k}": None for k, v in foreign_mode_impact.get_record_dict().items()}
+                )
                 result_row.update(domestic_impact_prefixed)
                 result_row.update(domestic_mode_impact_prefixed)
             if foreign_impact is not None:
                 foreign_impact_prefixed = {f"Foreign_{k}": v for k, v in foreign_impact.get_record_dict().items()}
-                foreign_mode_prefixed = {f"Foreign_mode_{k}": v for k, v in foreign_mode_impact.get_record_dict().items()} if foreign_mode_impact else {f"Foreign_mode_{k}": None for k, v in domestic_mode_impact.get_record_dict().items()}
+                foreign_mode_prefixed = (
+                    {f"Foreign_mode_{k}": v for k, v in foreign_mode_impact.get_record_dict().items()}
+                    if foreign_mode_impact
+                    else {f"Foreign_mode_{k}": None for k, v in domestic_mode_impact.get_record_dict().items()}
+                )
                 result_row.update(foreign_impact_prefixed)
                 result_row.update(foreign_mode_prefixed)
 
-            result_row.update({
-                "Domestic_distance_km": distances.get("Domestic", None),
-                "Foreign_distance_km": distances.get("Foreign", None)
-            })
-             
+            result_row.update(
+                {
+                    "Domestic_distance_km": distances.get("Domestic", None),
+                    "Foreign_distance_km": distances.get("Foreign", None),
+                }
+            )
+
         all_results.append(result_row)
-        
+
         # Periodically save to file every 10 minutes
         current_time = time.time()
         if current_time - last_save_time >= 600:  # 600 seconds = 10 minutes

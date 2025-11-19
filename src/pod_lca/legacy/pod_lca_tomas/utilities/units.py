@@ -11,4 +11,4 @@ __version__ = "0.1.0"
 
 
 def lbs_to_kgs(lbs):
-    return lbs * .45359237
+    return lbs * 0.45359237

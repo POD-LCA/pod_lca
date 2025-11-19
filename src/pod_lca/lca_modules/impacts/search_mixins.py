@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -28,23 +27,23 @@ try:
     from nltk.stem import PorterStemmer
     from nltk.stem import WordNetLemmatizer
 
-    nltk.download('wordnet', quiet=True)
-    nltk.download('omw-1.4', quiet=True)
-    nltk.download('punkt', quiet=True)
-    nltk.download('punkt_tab', quiet=True)
+    nltk.download("wordnet", quiet=True)
+    nltk.download("omw-1.4", quiet=True)
+    nltk.download("punkt", quiet=True)
+    nltk.download("punkt_tab", quiet=True)
 
     NLTK_IMPORTED = True
 except ImportError:
     NLTK_IMPORTED = False
 
 
-
 @lru_cache(maxsize=50000)
 def _cached_synsets(word, pos=None):
     return wordnet.synsets(word, pos=pos)
 
+
 def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False):
-    """ Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
+    """Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
 
     Parameters
     ----------
@@ -66,10 +65,10 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
     """
     if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
         raise ImportError("Please install the 'nltk' and 'sklearn' packages to use the search methods.")
-    
+
     lemmatizer = WordNetLemmatizer()
     stemmer = PorterStemmer()
-    
+
     tokens = nltk.word_tokenize(search_term.lower())
     expanded = set(tokens)
     add = expanded.add
@@ -82,12 +81,12 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
 
     # Check synonyms
     for word in tokens:
-        synsets = _cached_synsets(word, 'n')[:max_senses] if limit_to_noun else _cached_synsets(word)[:max_senses]
+        synsets = _cached_synsets(word, "n")[:max_senses] if limit_to_noun else _cached_synsets(word)[:max_senses]
         for syn in synsets:
             lemmas = syn.lemmas()
             for lemma in lemmas:
                 name = lemma._name
-                add(name.replace('_', ' '))
+                add(name.replace("_", " "))
 
     # Stemming and lemmatization
     stems = {stemmer.stem(w) for w in expanded}
@@ -96,8 +95,9 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
 
     return list(expanded)
 
+
 def rank_entries(products, search_terms, support_data_set=None, support_data_weight=0.25, max_returns=25):
-    """ Rank products based on TF-IDF similarity to search terms.
+    """Rank products based on TF-IDF similarity to search terms.
 
     Parameters
     ----------
@@ -121,8 +121,8 @@ def rank_entries(products, search_terms, support_data_set=None, support_data_wei
         raise ImportError("Please install the 'nltk'  and 'sklearn' packages to use the search methods.")
 
     docs = products.astype(str).tolist()
-    vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(docs + [' '.join(search_terms)])
+    vectorizer = TfidfVectorizer(stop_words="english")
+    tfidf_matrix = vectorizer.fit_transform(docs + [" ".join(search_terms)])
 
     search_vec = tfidf_matrix[-1]
     doc_vecs = tfidf_matrix[:-1]
@@ -130,30 +130,36 @@ def rank_entries(products, search_terms, support_data_set=None, support_data_wei
 
     if support_data_set is not None:
         support_docs = support_data_set.astype(str).tolist()
-        vectorizer = TfidfVectorizer(stop_words='english')
-        tfidf_matrix = vectorizer.fit_transform(support_docs + [' '.join(search_terms)])
+        vectorizer = TfidfVectorizer(stop_words="english")
+        tfidf_matrix = vectorizer.fit_transform(support_docs + [" ".join(search_terms)])
 
         search_vec = tfidf_matrix[-1]
         doc_vecs = tfidf_matrix[:-1]
         support_scores = cosine_similarity(search_vec, doc_vecs)[0]
 
-    ranked =  (
-        DataFrame({
-            'product': docs,
-            'similarity': scores if support_data_set is None else (scores * (1 - support_data_weight)) 
-                                                                   + (support_scores * support_data_weight)
-        })
-        .loc[lambda df: df['similarity'] > 0]
-        .sort_values(by='similarity', ascending=False)
+    ranked = (
+        DataFrame(
+            {
+                "product": docs,
+                "similarity": (
+                    scores
+                    if support_data_set is None
+                    else (scores * (1 - support_data_weight)) + (support_scores * support_data_weight)
+                ),
+            }
+        )
+        .loc[lambda df: df["similarity"] > 0]
+        .sort_values(by="similarity", ascending=False)
         .head(max_returns)
         .reset_index(drop=True)
     )
 
     return ranked
 
+
 def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_max=3, move_thresh=0.1):
-    """ Dynamically find cutoff in ranked scores using adaptive k-means clustering.
-    
+    """Dynamically find cutoff in ranked scores using adaptive k-means clustering.
+
     Parameters
     ----------
     products: ~pandas.DataFrame
@@ -168,7 +174,7 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
         Maximum number of clusters.
     move_thresh : float
         Threshold for mean shift before stopping.
-        
+
     Returns
     -------
     ~pandas.DataFrame
@@ -181,7 +187,7 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     # cluster by impact
     for i in range(n_initial, len(impact_scores) + 1):
         subset = impact_scores[:i]
-        kmeans = KMeans(n_clusters=k, n_init='auto', random_state=0).fit(subset)
+        kmeans = KMeans(n_clusters=k, n_init="auto", random_state=0).fit(subset)
         means = sort(kmeans.cluster_centers_.flatten())
 
         if prev_means is not None:
@@ -190,34 +196,37 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
                 if k < k_max:
                     k += 1
                     means = None
-                else: # clusters have stabilized or diverged
+                else:  # clusters have stabilized or diverged
                     cutoff_index = i - 1
                     subset_scores = impact_scores[:cutoff_index]
                     items = products[:cutoff_index]
-                    kmeans = KMeans(n_clusters=k, n_init='auto', random_state=0).fit(subset_scores)
+                    kmeans = KMeans(n_clusters=k, n_init="auto", random_state=0).fit(subset_scores)
                     cluster_labels = kmeans.labels_
                     break
         prev_means = means
-    else: # only single bin possible
+    else:  # only single bin possible
         cutoff_index = len(impact_scores)
         subset_scores = impact_scores[:cutoff_index]
         items = products[:cutoff_index]
         cluster_labels = array([0] * len(impact_scores))
 
-    df = DataFrame({
-        'item': items['product'].tolist(),
-        'impact': subset_scores.flatten(),
-        'similarity': items['similarity'].tolist(),
-        'cluster': cluster_labels,
-    })
-    
+    df = DataFrame(
+        {
+            "item": items["product"].tolist(),
+            "impact": subset_scores.flatten(),
+            "similarity": items["similarity"].tolist(),
+            "cluster": cluster_labels,
+        }
+    )
+
     # order by similarity
-    cluster_mean_score = df.groupby('cluster')['similarity'].max().to_dict()
-    df['cluster_mean'] = df['cluster'].map(cluster_mean_score)
-    df_sorted = df.sort_values(['cluster_mean', 'similarity'], ascending=[False, False]).reset_index(drop=True)
-    df_sorted = df_sorted.drop(columns=['cluster',  'cluster_mean'])
-    
+    cluster_mean_score = df.groupby("cluster")["similarity"].max().to_dict()
+    df["cluster_mean"] = df["cluster"].map(cluster_mean_score)
+    df_sorted = df.sort_values(["cluster_mean", "similarity"], ascending=[False, False]).reset_index(drop=True)
+    df_sorted = df_sorted.drop(columns=["cluster", "cluster_mean"])
+
     return df_sorted
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pass

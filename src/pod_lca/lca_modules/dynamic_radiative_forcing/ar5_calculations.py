@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -9,10 +8,10 @@ from . import ARXCalculation
 
 
 class AR5Calculations(ARXCalculation):
-    """ Computation methods related to dynamic radiative forcing methods, following IPCC AR5.
-    """
-    _ipcc_annual_report = 'AR5'
+    """Computation methods related to dynamic radiative forcing methods, following IPCC AR5."""
+
+    _ipcc_annual_report = "AR5"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

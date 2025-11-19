@@ -1,5 +1,3 @@
-
-
 # Master object operations
 # change name
 # add impact
@@ -20,18 +18,16 @@ import unittest
 class TestBuilder(unittest.TestCase):
 
     def test_01_create_project(self):
-        """ Test createing a project.
-        """
-        print('testing createing a project')
+        """Test createing a project."""
+        print("testing createing a project")
 
         project = Project()
 
         self.assertIsInstance(project, Project, " ")
 
     def test_02_create_new_model(self):
-        """ Test createing a new model in the project.
-        """
-        print('testing createing a new model in the project')
+        """Test createing a new model in the project."""
+        print("testing createing a new model in the project")
 
         project = Project()
         new_model = project.add_model("Model_1")
@@ -40,13 +36,12 @@ class TestBuilder(unittest.TestCase):
 
         self.assertIsInstance(new_model, Model, " ")
         self.assertEqual(no_models, 1)
-        
-    def test_03_save_load_project(self):
-        """ Test save/load project.
-        """
-        print('testing save/load project')
 
-        file_path = r'save_files/test.pkl'
+    def test_03_save_load_project(self):
+        """Test save/load project."""
+        print("testing save/load project")
+
+        file_path = r"save_files/test.pkl"
         project = Project()
 
         project.save(file_path)
@@ -56,30 +51,28 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(load_project, Project, " ")
 
     def test_04_import_database(self):
-        """ Test importing data to database.
-        """
-        print('testing importing data to database.')
-        
-        database_path = r'data/impact_data_smoothie.csv'
+        """Test importing data to database."""
+        print("testing importing data to database.")
+
+        database_path = r"data/impact_data_smoothie.csv"
 
         project = Project()
 
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
         custom_impact_database.set_data(database_path)
         project.set_database(custom_impact_database)
 
         self.assertIsInstance(project.get_impact_database().get_data_all(), DataFrame, " ")
 
     def test_05_importing_from_database(self):
-        """ Test importing data from database.
-        """
-        print('testing importing data from database.')
+        """Test importing data from database."""
+        print("testing importing data from database.")
 
-        database_path = r'data/impact_data_smoothie.csv'
+        database_path = r"data/impact_data_smoothie.csv"
 
         project = Project.new()
 
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
         custom_impact_database.set_data(database_path)
         project.set_database(custom_impact_database)
 
@@ -88,16 +81,18 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(sand_impacts, Series, " ")
 
     def test_06_create_custom_impact(self):
-        """ Test creating a custom impact.
-        """
-        print('testing creating a custom impact.')
+        """Test creating a custom impact."""
+        print("testing creating a custom impact.")
 
         project = Project()
 
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
-        custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
-                                            {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
+        custom_impact_database.set_data_entry(
+            "Electricity_New",
+            KILO * WATT_HOUR,
+            {"GWP": 0.503, "AP": 0.0036, "EP": 5.83e-05, "ODP": 7.6e-11, "SFP": 3.37e-2},
+        )
 
         project.set_database(custom_impact_database)
 
@@ -106,17 +101,19 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(Electricity_New_impacts, Series, " ")
 
     def test_07_create_product(self):
-        """ Test creating a Product.
-        """
-        print('testing creating a product.')
+        """Test creating a Product."""
+        print("testing creating a product.")
 
-        file_path = r'save_files/test.pkl'
+        file_path = r"save_files/test.pkl"
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
-        custom_impact_database.set_data_entry("Electricity_New", KILO * WATT_HOUR, 
-                                            {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
+        custom_impact_database.set_data_entry(
+            "Electricity_New",
+            KILO * WATT_HOUR,
+            {"GWP": 0.503, "AP": 0.0036, "EP": 5.83e-05, "ODP": 7.6e-11, "SFP": 3.37e-2},
+        )
 
         project.set_database(custom_impact_database)
 
@@ -131,16 +128,15 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(sprinkles, Product, " ")
 
     def test_08_create_process(self):
-        """ Test creating a Product.
-        """
-        print('testing creating a process.')
+        """Test creating a Product."""
+        print("testing creating a process.")
 
-        file_path = r'save_files/test.pkl'
+        file_path = r"save_files/test.pkl"
 
         project = Project()
 
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
         project.set_database(custom_impact_database)
 
         # product_1 = project.current_model.create_product("Product of mixing", "A3")
@@ -153,26 +149,28 @@ class TestBuilder(unittest.TestCase):
 
         # self.assertIsInstance(product_1, Process, " ")
 
-
     def test_09_create_transport_process(self):
-        """ Test creating a Transport Process.
-        """
-        print('testing creating a transportation process.')
+        """Test creating a Transport Process."""
+        print("testing creating a transportation process.")
 
-        file_path = r'save_files/test.pkl'
+        file_path = r"save_files/test.pkl"
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
         project.set_database(custom_impact_database)
 
         model_0 = project.add_model("Model_0")
 
         sprinkles = model_0.add_product(name="Sprinkles", stage="A1", qty=2.0, unit=KILOGRAM, impacts_from="Sprinkles")
 
-        sprinkles_by_truck = model_0.add_transportation_process(name="Sprinkle Transportation", stage="A2",
-                                                                transported_distance=30.0, unit=KILOMETER,
-                                                                impacts_from="Transportation by truck")
+        sprinkles_by_truck = model_0.add_transportation_process(
+            name="Sprinkle Transportation",
+            stage="A2",
+            transported_distance=30.0,
+            unit=KILOMETER,
+            impacts_from="Transportation by truck",
+        )
         sprinkles_by_truck.set_transported_product(sprinkles)
 
         project.save(file_path)
@@ -182,15 +180,14 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(sprinkles_by_truck, transportationProcess, " ")
 
     def test_10_create_emission(self):
-        """ Test creating a Emission.
-        """
-        print('testing creating an emission.')
+        """Test creating a Emission."""
+        print("testing creating an emission.")
 
-        file_path = r'save_files/test.pkl'
+        file_path = r"save_files/test.pkl"
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
         project.set_database(custom_impact_database)
 
         model_0 = project.add_model("Model_0")
@@ -204,24 +201,31 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(CO2, Emission, " ")
 
     def test_11_create_fuel(self):
-        """ Test creating a Fuel.
-        """
-        print('testing creating a fuel.')
+        """Test creating a Fuel."""
+        print("testing creating a fuel.")
 
-        file_path = r'save_files/test.pkl'
+        file_path = r"save_files/test.pkl"
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
         project.set_database(custom_impact_database)
 
-        project.get_impact_database().set_data_entry("Electricity_New", KILO * WATT_HOUR, 
-                                                {"GWP":0.503, "AP":0.0036, "EP":5.83e-05, "ODP":7.6e-11, "SFP":3.37e-2})
+        project.get_impact_database().set_data_entry(
+            "Electricity_New",
+            KILO * WATT_HOUR,
+            {"GWP": 0.503, "AP": 0.0036, "EP": 5.83e-05, "ODP": 7.6e-11, "SFP": 3.37e-2},
+        )
 
         model_0 = project.add_model("Model_0")
 
-        electricity_2 = model_0.add_energy(name="Electricity for Chemical Reaction", stage="A3",
-                                           qty=10.0, unit=KILO * WATT_HOUR, impacts_from="Electricity_New")
+        electricity_2 = model_0.add_energy(
+            name="Electricity for Chemical Reaction",
+            stage="A3",
+            qty=10.0,
+            unit=KILO * WATT_HOUR,
+            impacts_from="Electricity_New",
+        )
 
         project.save(file_path)
 
@@ -230,20 +234,21 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(electricity_2, Fuel, " ")
 
     def test_12_create_waste(self):
-        """ Test creating a Waste.
-        """
-        print('testing creating a waste.')
+        """Test creating a Waste."""
+        print("testing creating a waste.")
 
-        file_path = r'save_files/test.pkl'
+        file_path = r"save_files/test.pkl"
 
         project = Project()
-        custom_impact_database = ImpactsDatabase.new("My database", './data/impact_categories_TRACI.json')
-        custom_impact_database.set_data(r'data/impact_data_smoothie.csv')
+        custom_impact_database = ImpactsDatabase.new("My database", "./data/impact_categories_TRACI.json")
+        custom_impact_database.set_data(r"data/impact_data_smoothie.csv")
         project.set_database(custom_impact_database)
 
         model_0 = project.add_model("Model_0")
 
-        waste = model_0.add_waste(name="Waste to landfill", stage="A3", qty=1.0, unit=KILOGRAM, impacts_from="Waste to landfill")
+        waste = model_0.add_waste(
+            name="Waste to landfill", stage="A3", qty=1.0, unit=KILOGRAM, impacts_from="Waste to landfill"
+        )
 
         project.save(file_path)
 
@@ -252,15 +257,14 @@ class TestBuilder(unittest.TestCase):
         self.assertIsInstance(waste, Waste, " ")
 
     def test_13a_units_and_conversions(self):
-        """ Test units and there conversions.
-        """
-        print('testing prefix mutliplication and conversion.')
+        """Test units and there conversions."""
+        print("testing prefix mutliplication and conversion.")
 
         from utilities.units.common_units import GRAM
         from utilities.units.metric_prefixes import KILO, MEGA, DEKA
 
         new_prefix_mult = KILO * MEGA
-        new_prefix_div  = KILO / DEKA
+        new_prefix_div = KILO / DEKA
 
         self.assertEqual(new_prefix_mult.get_power(), 9)
         self.assertEqual(new_prefix_div.get_power(), 2)
@@ -272,11 +276,19 @@ class TestBuilder(unittest.TestCase):
         self.assertEqual(kilogram.convert_to(megagram), 1000)
 
     def test_13b_units_and_conversions(self):
-        """ Test units and there conversions.
-        """
-        print('testing unit mutliplication and conversion.')
+        """Test units and there conversions."""
+        print("testing unit mutliplication and conversion.")
 
-        from utilities.units.common_units import GRAM, METER, TON_KILOMETER, POUND, MILE, TON_MILE, CUBIC_METER, CUBIC_FEET
+        from utilities.units.common_units import (
+            GRAM,
+            METER,
+            TON_KILOMETER,
+            POUND,
+            MILE,
+            TON_MILE,
+            CUBIC_METER,
+            CUBIC_FEET,
+        )
         from utilities.units.metric_prefixes import KILO, MEGA, DEKA
 
         kilogram = KILO * GRAM
@@ -290,11 +302,9 @@ class TestBuilder(unittest.TestCase):
         self.assertAlmostEqual(TON_KILOMETER.convert_to(pound_mile), 1369.891, places=1)
         self.assertAlmostEqual(wt_density_metric.convert_to(wt_density_imperial), 0.06242796, places=4)
 
-        
     def test_13c_units_and_conversions(self):
-        """ Test units and there conversions.
-        """
-        print('save and load units.')
+        """Test units and there conversions."""
+        print("save and load units.")
 
         from utilities.units.common_units import GRAM
         from utilities.units.metric_prefixes import KILO
@@ -302,10 +312,10 @@ class TestBuilder(unittest.TestCase):
 
         kilogram = KILO * GRAM
 
-        file_path = r'save_files\unit_test.pkl'
+        file_path = r"save_files\unit_test.pkl"
         with open(file_path, "wb") as file:
             pickle.dump(kilogram, file)
-        with open(file_path, 'rb') as file:
+        with open(file_path, "rb") as file:
             unit_loaded = pickle.load(file)
 
         self.assertEqual(unit_loaded.get_name(), kilogram.get_name())
@@ -314,5 +324,5 @@ class TestBuilder(unittest.TestCase):
         self.assertEqual(unit_loaded.get_prefix().get_power(), kilogram.get_prefix().get_power())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

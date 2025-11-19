@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -14,12 +13,12 @@ from ...units import KILOMETER
 
 
 class USGlobalTransportationManager(TransportationManager):
-    """ A project in US using global logistic.
+    """A project in US using global logistic.
 
     Attributes
     ----------
     dataset : ~pod_lca.transportation.TransportDataset
-        Dataset corresponding to the project.    
+        Dataset corresponding to the project.
     """
 
     def __init__(self):
@@ -31,7 +30,7 @@ class USGlobalTransportationManager(TransportationManager):
     # ================================
     @classmethod
     def new(cls, name=None):
-        """ Create a new project.
+        """Create a new project.
 
         Parameters
         ----------
@@ -46,25 +45,25 @@ class USGlobalTransportationManager(TransportationManager):
         new_project = super().new(name)
         new_project.set_dataset(USGlobalDataset())
 
-        return new_project  
-    
+        return new_project
+
     # ================================
     # Setters and Getters
     # ================================
     def set_dataset(self, dataset):
-        """ Set background dataset for the proect.
+        """Set background dataset for the proect.
 
         Parameters
         ----------
         dataset : ~pod_lca.transportation.TransportDataset
-            Dataset corresponding to the project.           
+            Dataset corresponding to the project.
         """
         self.dataset = dataset
 
         return self
 
     def get_dataset(self, name=None):
-        """ Return the dataset corresponding to the project.
+        """Return the dataset corresponding to the project.
 
         Returns
         -------
@@ -74,15 +73,24 @@ class USGlobalTransportationManager(TransportationManager):
         if name is None:
             return self.dataset
         elif isinstance(self.database, dict) and isinstance(name, str):
-            return self.dataset[name] 
-        
+            return self.dataset[name]
+
     # ================================
     # Model Methods
     # ================================
-    def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None,
-                 transport_scenario=None, distance_unit= KILOMETER, return_trip_factor=None, 
-                 mode_name='Ocean', mode_efficiency='Median'):
-        """ Add good to the project. This method creates the appropriate tranportation leg based on the data provided
+    def add_good(
+        self,
+        good,
+        travel_dist=None,
+        shipping_dest=None,
+        shipping_org=None,
+        transport_scenario=None,
+        distance_unit=KILOMETER,
+        return_trip_factor=None,
+        mode_name="Ocean",
+        mode_efficiency="Median",
+    ):
+        """Add good to the project. This method creates the appropriate tranportation leg based on the data provided
 
         Parameters
         ----------
@@ -117,7 +125,7 @@ class USGlobalTransportationManager(TransportationManager):
             LinkClass = TransportationLeg
 
         elif (shipping_dest is not None) and (shipping_org is not None):
-            if (shipping_dest.get_country_code() == 'US') and not (shipping_org.get_country_code() == 'US'):
+            if (shipping_dest.get_country_code() == "US") and not (shipping_org.get_country_code() == "US"):
                 LinkClass = ForeignLeg
             else:
                 raise ValueError("This project is for US global logistics only")
@@ -126,8 +134,8 @@ class USGlobalTransportationManager(TransportationManager):
             LinkClass = ForeignLeg
 
         # create transport leg
-        leg = LinkClass.in_project(good, self, 'transport_' + good.get_name())
-        
+        leg = LinkClass.in_project(good, self, "transport_" + good.get_name())
+
         leg.set_mode(mode_name, mode_efficiency)
 
         leg.set_travel_dist(travel_dist, distance_unit, return_trip_factor)
@@ -139,5 +147,5 @@ class USGlobalTransportationManager(TransportationManager):
         return self
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

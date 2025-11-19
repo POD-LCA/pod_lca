@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -12,13 +11,13 @@ from pandas import read_csv
 
 
 class DataImporter:
-  
+
     # ========================
     # CSV
     # ========================
     def csv_to_pandas(file_path, headers=None, multipliers=None):
-        """ Import data to database from a CSV file.
-        
+        """Import data to database from a CSV file.
+
         Parameters
         ----------
         file_path : str
@@ -45,48 +44,48 @@ class DataImporter:
         return data_frame
 
     def csv_to_dict(file_path, primary_key):
-        """ Import data to dictionary from a CSV file.
-        
+        """Import data to dictionary from a CSV file.
+
         Parameters
         ----------
         file_path : str
             Location of the CSV
         primary_key : str
             The column name that will be used as the primary key in the dictionary.
-        
+
         Returns
         -------
         dict
             A dictionary with the UUID as the key and the row as the
         """
         data = {}
-        with open(file_path, mode='r', encoding="utf-8-sig") as file:
+        with open(file_path, mode="r", encoding="utf-8-sig") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 id = row[primary_key]
-                data[id] = {key: value for key, value in row.items()} 
+                data[id] = {key: value for key, value in row.items()}
 
         return data
 
     def csv_to_list(file_path, column_header=None):
-        """ Import data to list from a CSV file. The first row of the CSV file is used as the header. Only one column identified by the column header is imported. If the column header is not provided, the first column of the CSV file is imported.
-        
+        """Import data to list from a CSV file. The first row of the CSV file is used as the header. Only one column identified by the column header is imported. If the column header is not provided, the first column of the CSV file is imported.
+
         Parameters
         ----------
         file_path : str
             Location of the CSV file.
         column_header : str
             Header of the column from where the data to be read to the list, when the file has headers.
-        
+
         Returns
         -------
-        list 
+        list
             A list of data.
         """
         data = []
         column_index = 0 if column_header is None else None
         current_row = 0
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             reader = csv.reader(file)
             if not (column_header is None):
                 headers = next(reader, None)
@@ -100,16 +99,16 @@ class DataImporter:
 
     # ========================
     # JSON
-    # ========================    
+    # ========================
     @staticmethod
     def json_to_dict(file_path):
-        """ Import data to dictionary from a JSON file.
-        
+        """Import data to dictionary from a JSON file.
+
         Parameters
         ----------
         file_path : str
             Location of the JSON file.
-        
+
         Returns
         -------
         dict
@@ -121,9 +120,5 @@ class DataImporter:
         return data
 
 
-if __name__ == '__main__':
-
-    # Example usage
-    file_path = "data/transportation_dataset/transportation_faf_domestic-region.json"
-    data = DataImporter.json_to_dict(file_path)
-    print(data)
+if __name__ == "__main__":
+    pass

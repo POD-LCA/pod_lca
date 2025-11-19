@@ -18,24 +18,24 @@ class NodeList(object):
     ----------
     name: str, optional
     """
-    def __init__(self):
-        self.__type__         = 'NodeList'
-        self.name             = None
-        self.nodes            = None
 
+    def __init__(self):
+        self.__type__ = "NodeList"
+        self.name = None
+        self.nodes = None
 
     @classmethod
     def from_data(cls, data):
         zlst = cls()
-        zlst.__type__         = 'NodeList'
-        zlst.name             = data['name']
-        zlst.nodes            = data['nodes']
+        zlst.__type__ = "NodeList"
+        zlst.name = data["name"]
+        zlst.nodes = data["nodes"]
         return zlst
 
     @property
     def data(self):
         data = {}
-        data['__type__'] = self.__type__
-        data['name']     = self.name    
-        data['nodes']    = self.nodes   
+        data["__type__"] = self.__type__
+        data["name"] = self.name
+        data["nodes"] = self.nodes
         return data

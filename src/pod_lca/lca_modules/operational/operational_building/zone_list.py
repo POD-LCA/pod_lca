@@ -18,16 +18,16 @@ class ZoneList(object):
     ----------
     name: str, optional
     """
-    def __init__(self):
-        self.__type__         = 'ZoneList'
-        self.name             = None
-        self.zones            = None
 
+    def __init__(self):
+        self.__type__ = "ZoneList"
+        self.name = None
+        self.zones = None
 
     @classmethod
     def from_data(cls, data):
         zlst = cls()
-        zlst.__type__         = 'ZoneList'
-        zlst.name             = data['name']
-        zlst.zones            = data['zones']
+        zlst.__type__ = "ZoneList"
+        zlst.name = data["name"]
+        zlst.zones = data["zones"]
         return zlst

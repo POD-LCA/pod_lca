@@ -1,5 +1,3 @@
-
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -15,7 +13,7 @@ from ...utilities import log
 
 
 class CFSDataset(TransportDataset):
-    """ A class to handle the CFS dataset for transportation legs.
+    """A class to handle the CFS dataset for transportation legs.
 
     Attributes
     ----------
@@ -35,13 +33,13 @@ class CFSDataset(TransportDataset):
         self.force_location = True
         self.force_mode = True
         self.force_mode_value = "Truck"
-        
-        self.cfs_dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH']) 
-        self.cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
+
+        self.cfs_dataset = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["CFS_DATA_PATH"])
+        self.cfs_modes_mapping = DataImporter.json_to_dict(config["file_paths"]["transportation"]["CFS_MODE_CODE"])
 
     def filter_datasets(self, material=None, destination=None, origin=None, mode=None):
-        """ Filter the CFS dataset based on the provided parameters.
-        
+        """Filter the CFS dataset based on the provided parameters.
+
         Parameters
         ----------
         material : ~pod_lca.materials_screening.Product
@@ -52,12 +50,12 @@ class CFSDataset(TransportDataset):
             The origin location to filter by.
         mode : ~pod_lca.transportation.TransportMode
             The transportation mode to filter by.
-        
+
         Returns
         -------
         pandas.DataFrame
             The filtered CFS dataset.
-        
+
         Raises
         ------
         ValueError
@@ -78,9 +76,14 @@ class CFSDataset(TransportDataset):
             cfs_filtered = cfs[cfs["DEST_STATE"] == destination.get_cfs_area()]
             if cfs_filtered.empty:
                 if self.force_location:
-                    closest_state_name, closest_state_code = Location.get_closest_state_CFS(destination, cfs["DEST_STATE"].tolist())
+                    closest_state_name, closest_state_code = Location.get_closest_state_CFS(
+                        destination, cfs["DEST_STATE"].tolist()
+                    )
                     cfs_filtered = cfs[cfs["DEST_STATE"] == closest_state_code]
-                    log(f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+                    log(
+                        f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.",
+                        "Info",
+                    )
                 else:
                     raise ValueError("Destination not in CFS Dataset.")
             cfs = cfs_filtered
@@ -90,15 +93,20 @@ class CFSDataset(TransportDataset):
             cfs_filtered = cfs[cfs["ORIG_STATE"] == origin.get_cfs_area()]
             if cfs_filtered.empty:
                 if self.force_location:
-                    closest_state_name, closest_state_code = Location.get_closest_state_CFS(origin, cfs["ORIG_STATE"].tolist())
+                    closest_state_name, closest_state_code = Location.get_closest_state_CFS(
+                        origin, cfs["ORIG_STATE"].tolist()
+                    )
                     cfs_filtered = cfs[cfs["ORIG_STATE"] == closest_state_code]
-                    log(f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.", "Info")
+                    log(
+                        f"Closest state to {origin.get_location_name()}, {closest_state_name}, is used to estimate travel distance.",
+                        "Info",
+                    )
                 else:
-                    raise ValueError("Origin not in CFS Dataset.")    
+                    raise ValueError("Origin not in CFS Dataset.")
             cfs = cfs_filtered
 
         # Mode
-        if isinstance(mode,  TransportMode):
+        if isinstance(mode, TransportMode):
             cfs_modes_mapping = self.cfs_modes_mapping
             cfs_filtered = cfs[cfs["MODE"].isin(cfs_modes_mapping[mode.get_name()])]
             if cfs_filtered.empty:
@@ -107,26 +115,26 @@ class CFSDataset(TransportDataset):
                     log(f"Forced mode {self.force_mode_value} is used to estimate travel distance.", "Info")
                 else:
                     raise ValueError("Transportation mode not in CFS dataset")
-            cfs = cfs_filtered  
-        
+            cfs = cfs_filtered
+
         return cfs
-    
+
     @staticmethod
     def get_distance_estimate(dataset, scenario):
-        """ Get the average distance from the CFS dataset based on the scenario.
-        
+        """Get the average distance from the CFS dataset based on the scenario.
+
         Parameters
         ----------
         dataset : pandas.DataFrame
             The filtered CFS dataset.
         scenario : {'Local', 'Regional'. 'Regional_c', 'National', 'Average'}
             The scenario to filter the distances by.
-        
+
         Returns
         -------
         float
             The average distance for the specified scenario.
-        
+
         Raises
         ------
         ValueError
@@ -153,7 +161,7 @@ class CFSDataset(TransportDataset):
 
             group_sizes = [base_size + (1 if i < extras else 0) for i in range(4)]
 
-            start = sum(group_sizes[:n - 1])
+            start = sum(group_sizes[: n - 1])
             end = start + group_sizes[n - 1]
 
             group = sorted_data[start:end]
@@ -161,5 +169,5 @@ class CFSDataset(TransportDataset):
             return group.mean()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

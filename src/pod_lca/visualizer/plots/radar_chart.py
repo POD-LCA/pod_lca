@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -11,24 +10,22 @@ from ...utilities import config
 from ...visualizer import AbstractPlot
 
 
-
 class RadarChart(AbstractPlot):
-    """Bar chart with data upto three levels: category, group, and component levels.
-    """
+    """Bar chart with data upto three levels: category, group, and component levels."""
 
     def __init__(self):
         super().__init__()
 
     # ================================
     # Setters and Getters
-    # ================================  
+    # ================================
     def set_plot(self, plotter):
-        """ Set the plot.
-    
+        """Set the plot.
+
         Parameters
         ----------
         plotter : ~pod_lca.visualizer.AbstractPlotter
-            Plotter.        
+            Plotter.
         """
         self.plot = plotter.create_plot(polar=True)
 
@@ -36,10 +33,10 @@ class RadarChart(AbstractPlot):
 
     # ================================
     # Methods
-    # ================================ 
+    # ================================
     def draw(self, data, title):
-        """ Draw the radar chart.
-        
+        """Draw the radar chart.
+
         Parameters
         ----------
         data : dict
@@ -50,21 +47,23 @@ class RadarChart(AbstractPlot):
             Title of the radar plot.
         """
         self.get_plot().clear_plot()
-        COLOUR_BASE = config['Preferences']['COLOUR_BASE']
-        COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
-        COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
+        COLOUR_BASE = config["Preferences"]["COLOUR_BASE"]
+        COLOUR_PALETTES = config["Preferences"]["COLOUR_PALETTES"]
+        COLOUR_ORDER_LIST = config["Preferences"]["COLOUR_ORDER_LIST"]
 
         counter = 0
-        for key, group in data.items(): 
+        for key, group in data.items():
             if isinstance(group, float):
                 num_spokes = len(data)
                 angles = linspace(0, 2 * pi, num_spokes, endpoint=False).tolist()
                 angles += angles[:1]
 
                 values = [value for value in data.values()]
-                values += values[:1] 
+                values += values[:1]
 
-                self.get_plot().draw_radar(angles, values, key, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[counter]][COLOUR_BASE], alpha=0.25)
+                self.get_plot().draw_radar(
+                    angles, values, key, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[counter]][COLOUR_BASE], alpha=0.25
+                )
                 break
             elif isinstance(group, dict):
                 num_spokes = len(data[list(data.keys())[0]])
@@ -72,9 +71,11 @@ class RadarChart(AbstractPlot):
                 angles += angles[:1]
 
                 values = [group[item] for item in group.keys()]
-                values += values[:1] 
-            
-                self.get_plot().draw_radar(angles, values, key, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[counter]][COLOUR_BASE], alpha=0.25)
+                values += values[:1]
+
+                self.get_plot().draw_radar(
+                    angles, values, key, color=COLOUR_PALETTES[COLOUR_ORDER_LIST[counter]][COLOUR_BASE], alpha=0.25
+                )
                 counter += 1
             else:
                 raise NotImplementedError
@@ -91,5 +92,5 @@ class RadarChart(AbstractPlot):
             raise NotImplementedError
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

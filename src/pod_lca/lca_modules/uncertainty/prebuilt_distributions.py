@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -13,13 +12,12 @@ from . import DataDistribution
 
 
 class Uniform(DataDistribution):
-    """ A uniform data distribution.
-    """
+    """A uniform data distribution."""
 
     @classmethod
-    def from_params(cls, start, step, name='unspecified'):
-        """ Create a uniform distribution from parameters specified.
-        
+    def from_params(cls, start, step, name="unspecified"):
+        """Create a uniform distribution from parameters specified.
+
         Parameters
         ----------
         start : int or float
@@ -31,19 +29,18 @@ class Uniform(DataDistribution):
         """
         dist = stats.uniform(loc=start, scale=step)
         uniform = super().from_distributions(dist, is_cts=True, name=name)
-        uniform.dist_name = 'uniform'
+        uniform.dist_name = "uniform"
 
         return uniform
-    
+
 
 class Norm(DataDistribution):
-    """ A normal data distribution.
-    """
+    """A normal data distribution."""
 
     @classmethod
-    def from_params(cls, mean, std_dev, name='unspecified'):
-        """ Create a normal distribution from parameters (mean and standard deviation) specified.
-        
+    def from_params(cls, mean, std_dev, name="unspecified"):
+        """Create a normal distribution from parameters (mean and standard deviation) specified.
+
         Parameters
         ----------
         mean : int or float
@@ -55,19 +52,18 @@ class Norm(DataDistribution):
         """
         dist = stats.norm(loc=mean, scale=std_dev)
         norm = super().from_distributions(dist, is_cts=True, name=name)
-        norm.dist_name = 'norm'
+        norm.dist_name = "norm"
 
         return norm
 
 
 class LogNorm(DataDistribution):
-    """ A log-normal data distribution.
-    """
+    """A log-normal data distribution."""
 
     @classmethod
-    def from_params(cls, mean, std_dev, start, name='unspecified'):
-        """ Create a log-normal distribution from parameters specified. Parameters specified are the mean and standard deviation of the corresponding normal distribution, and the starting point of the log-normal distribution.
-        
+    def from_params(cls, mean, std_dev, start, name="unspecified"):
+        """Create a log-normal distribution from parameters specified. Parameters specified are the mean and standard deviation of the corresponding normal distribution, and the starting point of the log-normal distribution.
+
         Parameters
         ----------
         mean : int or float
@@ -81,19 +77,18 @@ class LogNorm(DataDistribution):
         """
         dist = stats.lognorm(s=std_dev, loc=start, scale=exp(mean))
         lognorm = super().from_distributions(dist, is_cts=True, name=name)
-        lognorm.dist_name = 'lognorm'
+        lognorm.dist_name = "lognorm"
 
         return lognorm
-    
+
 
 class ExponentDecay(DataDistribution):
-    """ A exponential decay distribution.
-    """
+    """A exponential decay distribution."""
 
     @classmethod
-    def from_params(cls, start, decay_rate, name='unspecified'):
-        """ Create a exponential distribution from parameters specified.
-        
+    def from_params(cls, start, decay_rate, name="unspecified"):
+        """Create a exponential distribution from parameters specified.
+
         Parameters
         ----------
         start : int or float
@@ -103,12 +98,12 @@ class ExponentDecay(DataDistribution):
         name : str
             Name of the data distribution.
         """
-        dist = stats.expon(loc=start, scale=decay_rate) 
+        dist = stats.expon(loc=start, scale=decay_rate)
         expon = super().from_distributions(dist, is_cts=True, name=name)
-        expon.dist_name = 'expon'
+        expon.dist_name = "expon"
 
         return expon
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

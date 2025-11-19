@@ -7,6 +7,7 @@ import gc
 from numpy import ceil, power, log10
 from tkinter import Menu
 
+
 class ParamObj:
 
     # =================================
@@ -23,9 +24,9 @@ class ParamObj:
 
         self.qty = qty
         master.update_dependent_qtys(self, qty)
-    
+
     def edit_name(self, name):
-        
+
         self.name = name
 
     def set_unit(self, unit):
@@ -37,21 +38,20 @@ class ParamObj:
         self.id = id
 
     def get_name(self):
-    
+
         return self.name
-    
+
     def get_unit(self):
 
         return self.unit
 
     def get_id(self):
-        
+
         return self.id
-    
+
     def get_qty(self):
 
         return self.qty
-
 
 
 class Parameter(Item):
@@ -63,14 +63,14 @@ class Parameter(Item):
     def open_popup_parameter(self):
 
         popup = Popup(self, "Parameter", "300x175")
-        
-        name =  Popup._popup_input_field(popup, "Parameter name: ", default_val="new Parameter")   
+
+        name = Popup._popup_input_field(popup, "Parameter name: ", default_val="new Parameter")
         qty = Popup._popup_input_field(popup, "qty: ", validate_num=True, default_val=0.0)
-        units = Popup._popup_input_combo(popup, "units: ", ["m3", "kg", "unit"])  
+        units = Popup._popup_input_combo(popup, "units: ", ["m3", "kg", "unit"])
 
         cmd = lambda: self.create_parameter(popup, name.get(), qty.get(), units.get())
         Popup.button_pack_OKCancel(popup, popup, cmd)
-        
+
     def create_parameter(self, popup, name, qty, unit):
 
         model_id = self.get_current_model()
@@ -79,11 +79,15 @@ class Parameter(Item):
         slider_cmd = lambda x: param.update_qty(self, x)
 
         slider_min = 0.0
-        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+        slider_max = power(10, ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
-        item_id, text_item, text_id = Parameter.create_canvas_item(self, model_id, name, '', '', '', self.color_parameter, tags=["parameter"])
-        slider, slider_data = Parameter.create_slider(self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Parameter.create_canvas_item(
+            self, model_id, name, "", "", "", self.color_parameter, tags=["parameter"]
+        )
+        slider, slider_data = Parameter.create_slider(
+            self, model_id, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution
+        )
         slider.set_always_visible()
         Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 
@@ -101,20 +105,28 @@ class Parameter(Item):
             master.highlight_dependents(event)
         else:
             item = master.current_canvas.find_closest(event.x, event.y)[0]
-            if "parameter" in master.current_canvas.gettags(item):   
+            if "parameter" in master.current_canvas.gettags(item):
                 master.context_menu = Menu(master, tearoff=0)
-                master.context_menu.add_command(label="Edit name", command=lambda: Parameter.edit_name(master,item))
-                master.context_menu.add_command(label="Change units", command=lambda: Parameter.change_unit(master,item))
+                master.context_menu.add_command(label="Edit name", command=lambda: Parameter.edit_name(master, item))
+                master.context_menu.add_command(
+                    label="Change units", command=lambda: Parameter.change_unit(master, item)
+                )
                 master.context_menu.add_separator()
-                master.context_menu.add_command(label="Set slider properties", command=lambda: Parameter.set_slider_properties(master,item))
+                master.context_menu.add_command(
+                    label="Set slider properties", command=lambda: Parameter.set_slider_properties(master, item)
+                )
                 master.context_menu.add_separator()
                 relationships_menu = Menu(master, tearoff=False)
                 master.context_menu.add_cascade(menu=relationships_menu, label="Relationships")
-                relationships_menu.add_command(label="Set relationship", command=lambda: master.set_relationship(item, slider))
-                relationships_menu.add_command(label="Clear relationship", command=lambda: master.clear_relationship(item))
+                relationships_menu.add_command(
+                    label="Set relationship", command=lambda: master.set_relationship(item, slider)
+                )
+                relationships_menu.add_command(
+                    label="Clear relationship", command=lambda: master.clear_relationship(item)
+                )
                 master.context_menu.add_separator()
                 master.context_menu.add_command(label="Delete", command=lambda: Parameter.delete_item(master, item))
-                master.context_menu.post(event.x_root, event.y_root)  
+                master.context_menu.post(event.x_root, event.y_root)
 
     @classmethod
     def edit_name(cls, master, item_id):
@@ -123,9 +135,9 @@ class Parameter(Item):
         param = master.item_map[model_id][item_id]
 
         popup = Popup(master, "Edit name", "300x200")
-        name = Popup._popup_input_field(popup, "Item name: ", default_val=param.get_name()) 
+        name = Popup._popup_input_field(popup, "Item name: ", default_val=param.get_name())
 
-        _cmd = lambda: param.edit_name(name.get()) 
+        _cmd = lambda: param.edit_name(name.get())
         cmd = lambda: cls._on_update(master, item_id, _cmd)
         Popup.button_pack_OKCancel(popup, popup, cmd)
 
@@ -148,7 +160,9 @@ class Parameter(Item):
 
         unit_list = ["m3", "kg", "lb", "MJ", "km", "mi"]
         default_entry = unit_list.index(item.get_unit())
-        unit = Popup._popup_input_combo(popup, "units: ", unit_list, default_entry=default_entry) # TODO: Units to match current units
+        unit = Popup._popup_input_combo(
+            popup, "units: ", unit_list, default_entry=default_entry
+        )  # TODO: Units to match current units
 
         cmd = lambda: cls._update_slider_label(master, item_id, unit.get(), unit_list[default_entry])
         Popup.button_pack_OKCancel(popup, popup, cmd)
@@ -170,8 +184,7 @@ class Parameter(Item):
 
             master.sliders[item_id]["widget"].update_value(new_val)
 
-        master.slider_map[model_id][item_id].config(label= "Qty (in {})".format(new_unit))
-
+        master.slider_map[model_id][item_id].config(label="Qty (in {})".format(new_unit))
 
     @classmethod
     def delete_item(cls, master, item):
@@ -195,21 +208,35 @@ class Parameter(Item):
 
         x1, y1, x2, y2 = cords[0], cords[1], cords[2], cords[3]
         start = [x1, y1]
-        height = abs(y2-y1)
-        width = abs(x2-x1)
+        height = abs(y2 - y1)
+        width = abs(x2 - x1)
 
         name = param.get_name()
         unit = param.get_unit()
         qty = param.get_qty()
 
         slider_min = 0.0
-        slider_max = power(10,ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
+        slider_max = power(10, ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
         resolution = (slider_max - slider_min) / 100
 
         slider_cmd = lambda x: param.update_qty(self, x)
 
-        item_id, text_item, text_id = Item.create_canvas_item(self, model, name, '', qty, unit, self.color_parameter, tags=["parameter"], start=start, height=height, width=width)
-        slider, slider_data = Parameter.create_slider(self, model, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution)
+        item_id, text_item, text_id = Item.create_canvas_item(
+            self,
+            model,
+            name,
+            "",
+            qty,
+            unit,
+            self.color_parameter,
+            tags=["parameter"],
+            start=start,
+            height=height,
+            width=width,
+        )
+        slider, slider_data = Parameter.create_slider(
+            self, model, qty, unit, item_id, slider_cmd, slider_min, slider_max, resolution
+        )
         slider.set_always_visible()
         Parameter.item_bind(self, item_id, text_item, text_id, slider, slider_data)
 

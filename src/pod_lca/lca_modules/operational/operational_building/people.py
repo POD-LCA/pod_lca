@@ -27,46 +27,32 @@ class People(object):
     sensible_heat_fraction
     activity_level_schedule_name
     """
+
     def __init__(self):
-        self.__type__                           = 'People'
-        self.name                               = None
-        self.zone_name                          = None
-        self.schedule_name                      = None
-        self.calculation_method                 = None
-        self.number_of_people                   = None
-        self.people_per_floor_area              = None
-        self.floor_area_per_person              = None
-        self.fraction_radiant                   = None
-        self.sensible_heat_fraction             = None
-        self.activity_level_schedule_name       = None
-    
+        self.__type__ = "People"
+        self.name = None
+        self.zone_name = None
+        self.schedule_name = None
+        self.calculation_method = None
+        self.number_of_people = None
+        self.people_per_floor_area = None
+        self.floor_area_per_person = None
+        self.fraction_radiant = None
+        self.sensible_heat_fraction = None
+        self.activity_level_schedule_name = None
 
     @classmethod
     def from_data(cls, data):
         people = cls()
-        people.__type__                           = 'People'
-        people.name                              = data['name']   
-        people.zone_name                         = data['zone_name']   
-        people.schedule_name                     = data['schedule_name']   
-        people.calculation_method                = data['calculation_method']   
-        people.number_of_people                  = data['number_of_people']   
-        people.people_per_floor_area             = data['people_per_floor_area']   
-        people.floor_area_per_person             = data['floor_area_per_person']   
-        people.fraction_radiant                  = data['fraction_radiant']   
-        people.sensible_heat_fraction            = data['sensible_heat_fraction']   
-        people.activity_level_schedule_name      = data['activity_level_schedule_name']   
+        people.__type__ = "People"
+        people.name = data["name"]
+        people.zone_name = data["zone_name"]
+        people.schedule_name = data["schedule_name"]
+        people.calculation_method = data["calculation_method"]
+        people.number_of_people = data["number_of_people"]
+        people.people_per_floor_area = data["people_per_floor_area"]
+        people.floor_area_per_person = data["floor_area_per_person"]
+        people.fraction_radiant = data["fraction_radiant"]
+        people.sensible_heat_fraction = data["sensible_heat_fraction"]
+        people.activity_level_schedule_name = data["activity_level_schedule_name"]
         return people
-
-
-
-
-
-
-
-
-
-
-
-
-
-

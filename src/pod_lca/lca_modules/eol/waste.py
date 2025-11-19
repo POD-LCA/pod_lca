@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -16,8 +15,8 @@ from ...utilities import log
 
 
 class Waste(Product):
-    """ Waste product handling the end-of-life or product.
-    
+    """Waste product handling the end-of-life or product.
+
     Attributes
     ----------
     parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
@@ -25,14 +24,14 @@ class Waste(Product):
     waste_processes : list of ~pod_lca.eol.WasteProcess
         List of processes the waste will be subjected to. These processes are in parallel.
     process_mix : dict
-        The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}. 
-        Percentage can be in the form of string with a % sign or decimal value.              
+        The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
+        Percentage can be in the form of string with a % sign or decimal value.
     impacts : dict
         Impact objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}
     emissions : dict
         Emission objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
     bio_based : bool
-        True if the material is bio-based.          
+        True if the material is bio-based.
     """
 
     def __init__(self):
@@ -40,12 +39,12 @@ class Waste(Product):
         self.parent = None
         self.waste_processes = None
         self.process_mix = None
-        self.impacts = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
-        self.emissions = {'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.impacts = {"C2": [], "C3": [], "C4": [], "D": []}
+        self.emissions = {"C2": [], "C3": [], "C4": [], "D": []}
         self.bio_based = True
 
     def __str__(self):
-        str = "="*50 + "\n" + f"Waste Product ({self.get_name()})\n" + "="*50 + "\n"
+        str = "=" * 50 + "\n" + f"Waste Product ({self.get_name()})\n" + "=" * 50 + "\n"
         str += f"Total qty: {self.get_qty()} {self.get_unit().get_standard_notation()}\n"
         str += "Process mix:\n"
         for process in self.get_waste_processes():
@@ -62,8 +61,8 @@ class Waste(Product):
     # ================================
     @classmethod
     def new(cls, parent, database_item, qty, unit, process_mix, bio_based=None):
-        """ Create new waste product.
-        
+        """Create new waste product.
+
         Parameters
         ----------
         parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
@@ -83,12 +82,12 @@ class Waste(Product):
         Returns
         -------
         ~pod_lca.eol.Waste
-            Waste product.     
+            Waste product.
         """
         waste_item = cls()
 
         waste_item.set_parent(parent)
-        waste_item.set_name('Waste ' + database_item)
+        waste_item.set_name("Waste " + database_item)
         waste_item.set_bio_based(bio_based)
         waste_item.set_impact_database_entry(database_item)
         waste_item.set_qty(qty)
@@ -101,10 +100,10 @@ class Waste(Product):
 
     # ================================
     # Setters
-    # ================================  
+    # ================================
     def set_parent(self, parent):
-        """ Set parent of the waste product.
-        
+        """Set parent of the waste product.
+
         Parameters
         ----------
         parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
@@ -114,10 +113,10 @@ class Waste(Product):
 
         return self
 
-    def set_impact_database_entry(self, database_item:str):
-        """ Sets the impacts database entry corresponding to the item.
+    def set_impact_database_entry(self, database_item: str):
+        """Sets the impacts database entry corresponding to the item.
         This method will also update the corresponding impact quanitities.
-        
+
         Parameters
         ----------
         database_item : str
@@ -127,16 +126,16 @@ class Waste(Product):
         row_id = database.data.index[(database.data[database.get_primary_key()] == database_item)]
         if len(row_id) == 0:
             if self.get_bio_based():
-                database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_BIOBASED'
+                database_item = config["setup"]["eol"]["EOL_DEFAULT_KEY"] + "_BIOBASED"
             else:
-                database_item = config['setup']['eol']['EOL_DEFAULT_KEY'] + '_OTHER'
+                database_item = config["setup"]["eol"]["EOL_DEFAULT_KEY"] + "_OTHER"
 
         self.impact_database_entry = database_item
 
         return self
-        
+
     def set_waste_processess(self):
-        """ Set waste processe for the waste product. Also sets the process mix.
+        """Set waste processe for the waste product. Also sets the process mix.
 
         Notes
         -----
@@ -146,13 +145,13 @@ class Waste(Product):
         ----------
         process_mix : dict
             The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
-            Percentage can be in the form of string with a % sign or decimal value. 
+            Percentage can be in the form of string with a % sign or decimal value.
         """
-        waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
+        waste_process_dict = config["setup"]["eol"]["WASTE_PROCESS_STAGES"]
         self.waste_processes = []
 
         transfer_to_landfill_quantity = 0.0
-        for waste_process_name in waste_process_dict.keys() - ['Landfill']:
+        for waste_process_name in waste_process_dict.keys() - ["Landfill"]:
             mix_percent = self.get_process_mix(waste_process_name)
             if mix_percent:
                 process_qty = self.get_qty() * mix_percent
@@ -161,17 +160,17 @@ class Waste(Product):
                     transfer_to_landfill_quantity += result
 
         # set landfill process
-        mix_percent = self.get_process_mix('Landfill')
+        mix_percent = self.get_process_mix("Landfill")
         process_qty = self.get_qty() * mix_percent
         process_qty += transfer_to_landfill_quantity
 
-        self.set_waste_process('Landfill', process_qty)
+        self.set_waste_process("Landfill", process_qty)
 
         return self
-    
+
     def set_waste_process(self, process_name, process_qty):
-        """ Set waste process. If cutoff due to distance, returns the unprocessed waste quantity.
-        
+        """Set waste process. If cutoff due to distance, returns the unprocessed waste quantity.
+
         Parameters
         ----------
         process_name : {'Landfill', 'Recycle', 'Compost', 'Incinerate'}
@@ -190,7 +189,7 @@ class Waste(Product):
         :class:`float`
             If the process is cutoff, the balance waste quantity to be processed
         """
-        waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
+        waste_process_dict = config["setup"]["eol"]["WASTE_PROCESS_STAGES"]
 
         lc_stage = waste_process_dict[process_name]
         linked_process = None
@@ -198,28 +197,29 @@ class Waste(Product):
             lc_stage = waste_process_dict[process_name][0]
             linked_process = waste_process_dict[process_name][1:]
 
-        waste_process_obj = WasteProcess.new(self, 
-                                            process_name, 
-                                            process_qty, 
-                                            self.get_unit(), 
-                                            lc_stage,
-                                            linked_process)
+        waste_process_obj = WasteProcess.new(self, process_name, process_qty, self.get_unit(), lc_stage, linked_process)
 
-        waste_process_obj.transporation_leg = WasteTransportLeg.from_object(material=waste_process_obj,
-                                                                    manager=self.get_parent().get_eol_manager(),
-                                                                    eol_pathway=process_name)
+        waste_process_obj.transporation_leg = WasteTransportLeg.from_object(
+            material=waste_process_obj, manager=self.get_parent().get_eol_manager(), eol_pathway=process_name
+        )
 
-        if waste_process_obj.transporation_leg.get_travel_dist() > waste_process_obj.transporation_leg.get_cutoff_distance():
+        if (
+            waste_process_obj.transporation_leg.get_travel_dist()
+            > waste_process_obj.transporation_leg.get_cutoff_distance()
+        ):
             waste_process_obj.set_qty(0.0)
-            log(f"Waste process {process_name} quantity for {waste_process_obj.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
+            log(
+                f"Waste process {process_name} quantity for {waste_process_obj.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.",
+                "Info",
+            )
 
             return process_qty
 
         return waste_process_obj
-        
+
     def set_bio_based(self, is_bio_based):
-        """ Set the bio-based nature of the material.
-        
+        """Set the bio-based nature of the material.
+
         Parameters
         ----------
         is_bio_based : bool
@@ -231,9 +231,9 @@ class Waste(Product):
             self.bio_based = is_bio_based
 
         return self
-    
+
     def set_process_mix(self, process_mix):
-        """ Get the mix of process the waste product is subjected to.
+        """Get the mix of process the waste product is subjected to.
 
         Parameters
         ----------
@@ -243,12 +243,12 @@ class Waste(Product):
 
         Raises
         ------
-        TypeError  
+        TypeError
             Mix percentates are unrecognized.
         ValueError
             Mix percentages does not sum to 100%.
         """
-        waste_process_dict = config['setup']['eol']['WASTE_PROCESS_STAGES']
+        waste_process_dict = config["setup"]["eol"]["WASTE_PROCESS_STAGES"]
         process_mix_cleaned = {}
         if Waste.check_mix_sum(process_mix):
             for process_name in waste_process_dict.keys():
@@ -260,41 +260,41 @@ class Waste(Product):
                         else:
                             mix_percent = mix_percent_input
                     elif isinstance(mix_percent_input, str):
-                        if mix_percent_input in ['NA', 'N/A']:
+                        if mix_percent_input in ["NA", "N/A"]:
                             mix_percent = 0.0
                         if mix_percent_input[-1] == "%":
                             mix_percent = float(mix_percent_input[:-1]) / 100.0
                         else:
-                            mix_percent = float(mix_percent_input)                
+                            mix_percent = float(mix_percent_input)
                     else:
                         raise TypeError(f"mix percentages are of unrecognized type. Must be float, int, or string.")
                 else:
                     mix_percent = 0.0
 
                 process_mix_cleaned[process_name] = mix_percent
-            
+
             self.process_mix = process_mix_cleaned
 
             return self
-        
+
         else:
-            raise ValueError('Waste mix does not sum to 100%.') 
+            raise ValueError("Waste mix does not sum to 100%.")
 
     # ================================
     # Getters
     # ================================
     def get_parent(self):
-        """ Get parent of the waste product.
-    
+        """Get parent of the waste product.
+
         Returns
         -------
         ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         """
         return self.parent
-    
+
     def get_waste_processes(self):
-        """ Get waste processe for the waste product.
+        """Get waste processe for the waste product.
 
         Returns
         -------
@@ -302,9 +302,9 @@ class Waste(Product):
             List of processes the waste will be subjected to. These processes are in parallel.
         """
         return self.waste_processes
-    
-    def get_process_mix(self, process_name=None, mode='assigned'):
-        """ Get the mix of process the waste product is subjected to.
+
+    def get_process_mix(self, process_name=None, mode="assigned"):
+        """Get the mix of process the waste product is subjected to.
 
         Parameters
         ----------
@@ -319,7 +319,7 @@ class Waste(Product):
             - `'assigned'`: the prescribed process mix.
             - `'actual'`: realized process mix. The differences due to cut-off distances are considered.
             Default is 'assigned'
-        
+
         Returns
         -------
         dict
@@ -329,27 +329,27 @@ class Waste(Product):
         Raises
         ------
         ValueError
-            Calculation mode not recognized.   
+            Calculation mode not recognized.
         """
-        if mode == 'assigned':
+        if mode == "assigned":
             if process_name is None:
                 return self.process_mix
             else:
                 return self.process_mix[process_name]
-        elif mode == 'actual':
+        elif mode == "actual":
             self.update_waste_processess()
             process_mix = {}
             for process in self.get_waste_processes():
                 if process.get_linked_process(to=False) is None:
                     process_mix[process.get_life_cycle_stage()] = process.get_qty() / self.get_qty()
-            
+
             return process_mix
         else:
-            raise ValueError('Calucation mode of process mix is not recognized.')
+            raise ValueError("Calucation mode of process mix is not recognized.")
 
     def get_bio_based(self):
-        """ Get the bio-based nature of the material.
-        
+        """Get the bio-based nature of the material.
+
         Returns
         -------
         bool
@@ -361,8 +361,7 @@ class Waste(Product):
     # Methods
     # ================================
     def update_inventory_records(self):
-        """ Update the transportation and processing impacts of the waste (C2-C4).
-        """
+        """Update the transportation and processing impacts of the waste (C2-C4)."""
         self.update_waste_processess()
         if self.get_waste_processes():
 
@@ -381,17 +380,17 @@ class Waste(Product):
                 emissions[process.get_life_cycle_stage()].append(process_emission)
 
                 if process.get_transportation_leg() is not None:
-                    impacts['C2'].append(process.get_transportation_leg().get_impacts())
-                    emissions['C2'].append(process.get_transportation_leg().get_emissions())
+                    impacts["C2"].append(process.get_transportation_leg().get_impacts())
+                    emissions["C2"].append(process.get_transportation_leg().get_emissions())
 
         return self
 
     def update_waste_processess(self):
-        """ Update the waste processess.
+        """Update the waste processess.
 
         Notes
         -----
-        The waste mix allocated to any process which is beyond its cutoff distance is reallocated to Landfill.        
+        The waste mix allocated to any process which is beyond its cutoff distance is reallocated to Landfill.
         """
         process_mix = self.get_process_mix()
 
@@ -401,13 +400,20 @@ class Waste(Product):
         # update existing processes
         for process in self.get_waste_processes():
             process_name = process.get_process_name()
-            if (process_name in process_mix.keys()) and not (process_name == 'Landfill') and (process.get_linked_process(to=False) is None):
+            if (
+                (process_name in process_mix.keys())
+                and not (process_name == "Landfill")
+                and (process.get_linked_process(to=False) is None)
+            ):
                 new_qty = self.get_qty() * process_mix[process_name]
                 if process.transporation_leg.get_travel_dist() > process.transporation_leg.get_cutoff_distance():
                     transfer_to_landfill_quantity += new_qty
                     process.set_qty(0.0)
-                    log(f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
-            elif process_name == 'Landfill':
+                    log(
+                        f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.",
+                        "Info",
+                    )
+            elif process_name == "Landfill":
                 landfill_process = process
             else:
                 pass
@@ -424,20 +430,20 @@ class Waste(Product):
 
         # set landfill process
         if not landfill_process is None:
-            new_qty = self.get_qty() * process_mix['Landfill'] + transfer_to_landfill_quantity
+            new_qty = self.get_qty() * process_mix["Landfill"] + transfer_to_landfill_quantity
             landfill_process.set_qty(new_qty)
 
         return self
-    
+
     @staticmethod
     def check_mix_sum(process_mix, tol=0.00001):
-        """ check if the process mix adds up to 100%.
-        
+        """check if the process mix adds up to 100%.
+
         Parameters
         ----------
         process_mix : dict
             The mix of processes the waste product will be subject to: {**process name** (:class:`str`): **percentage** (:class:`str` or :class:`float`)}.
-            Percentage can be in the form of string with a % sign or decimal value.  
+            Percentage can be in the form of string with a % sign or decimal value.
         tol : float
             Tolerence checked against
 
@@ -460,7 +466,7 @@ class Waste(Product):
             return True
         else:
             return False
-        
-        
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     pass
