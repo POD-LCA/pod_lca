@@ -513,9 +513,9 @@ class Model:
         obj : ~pod_lca.materials_screening.Master
             Product or process to be removed from the model.
         """
-        if type(obj) == Product:
+        if isinstance(obj, Product):
             self.get_products().remove(obj)
-        elif type(obj) == Process:
+        elif isinstance(obj, Process):
             self.get_processes().remove(obj)
 
         obj.remove_inventory_records_from_model(obj.get_life_cycle_stage())

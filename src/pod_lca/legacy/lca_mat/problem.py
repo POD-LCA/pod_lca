@@ -400,7 +400,6 @@ if __name__ == "__main__":
     from lca_mat import HOME
     from lca_mat.ecoinvent_database import EcoinventDatabase
 
-
     test_problem = Problem()
 
     process_database_path = HOME + "\Archive\ecoinvent_391_en15804gd_upr_n2_20230629"

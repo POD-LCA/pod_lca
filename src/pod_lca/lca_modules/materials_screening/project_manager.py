@@ -118,6 +118,7 @@ class Project:
         ----------
         database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
             Impact database object or if a string, filepath to the corresponding csv file containing impact data.
+
         Raises
         ------
         TypeError
@@ -322,7 +323,7 @@ class Project:
     # Calcualotror Methods
     # ================================
     def get_impacts_by_LCstages_models(self, impact_category, model_lst=None):
-        """Returns impact data by life cycle stage for given multiple model and impact category.
+        """Return impact data by life cycle stage for given multiple model and impact category.
 
         Parameters
         ----------
@@ -347,7 +348,7 @@ class Project:
         return data
 
     def get_impacts_by_category_models(self, model_lst=None):
-        """Returns impact data by impact category for given multiple models.
+        """Return impact data by impact category for given multiple models.
 
         Parameters
         ----------
@@ -372,7 +373,7 @@ class Project:
         return data
 
     def get_normalized_impacts_by_category_models(self, model_lst=None):
-        """Returns impact data by impact category for given multiple models.
+        """Return impact data by impact category for given multiple models.
 
         Parameters
         ----------
@@ -401,7 +402,7 @@ class Project:
         return data
 
     def get_impacts_by_LCstages_models_items(self, impact_category, model_lst=None):
-        """Returns impact data by life cycle stage for given multiple model and impact category, with impacts
+        """Return impact data by life cycle stage for given multiple model and impact category, with impacts
             identifieable by individaul item.
 
         Parameters
@@ -439,7 +440,7 @@ class Project:
         pass  # TODO implement
 
     def get_impacts_by_impactcategorys_models_LCstage(self, impact_categories, model_lst=None):
-        """Returns data for a barchart.
+        """Return data for a barchart.
 
         Parameters
         ----------

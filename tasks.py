@@ -2,6 +2,7 @@ import os
 import pathlib
 import shutil
 from invoke import task
+from invoke.exceptions import UnexpectedExit
 
 
 @task
@@ -35,26 +36,29 @@ def check(c):
     - MyPy (static type checking)
     - Docstring (documentation linting)
     """
-    commands = ["black check .", "ruff check .", "mypy src", "pydocstyle src --convention=numpy"]
+    failures = []
+    commands = ["black . --check", "ruff check .", "mypy src", "pydocstyle src --convention=numpy"]
 
     for cmd in commands:
-        print(f"Running: {cmd}")
-        c.run(cmd, echo=True)
+        print(f"\nRunning: {cmd}")
+        try:
+            c.run(cmd, echo=True)
+        except UnexpectedExit:
+            print(f"Failed: {cmd}")
+            failures.append(cmd)
 
-    print("All checks passed (or reported).")
+    if failures:
+        print("\nSummary of failures:")
+        for f in failures:
+            print(" -", f)
+    else:
+        print("\nAll checks passed!")
 
 
 @task
 def fix(c):
-    """Run various code and documentation style checks.
-
-    This includes:
-    - Black (formatting check)
-    - Ruff (linting)
-    - MyPy (static type checking)
-    - Docstring (documentation linting)
-    """
-    commands = ["black .", "ruff --fix .", "mypy src", "pydocstyle src --convention=numpy"]
+    """Fix code formatting using Black (formatting) and Ruff (linting)"""
+    commands = ["black .", "ruff check . --fix"]
 
     for cmd in commands:
         print(f"Running: {cmd}")

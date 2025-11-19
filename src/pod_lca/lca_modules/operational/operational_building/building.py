@@ -267,8 +267,7 @@ class OperationalBuilding(object):
 
     @classmethod
     def from_json(cls, filepath):
-        """
-        Create a new instance of the building datastructure from a JSON file
+        """Create a new instance of the building datastructure from a JSON file.
 
         Parameters
         ----------
@@ -279,7 +278,6 @@ class OperationalBuilding(object):
         -------
             Building
                 The instance of the building datastructure
-
         """
 
         with open(filepath, "r") as fp:
@@ -1229,7 +1227,6 @@ class OperationalBuilding(object):
         self.set_schedules.update(tls)
 
     def set_zone_systems(self):
-
 
         eqc_key = list(self.equipment_connections.keys())[0]
         eql_key = list(self.equipment_lists.keys())[0]

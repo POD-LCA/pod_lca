@@ -123,15 +123,13 @@ class TestBuilder(unittest.TestCase):
 
         project.save(file_path)
 
-        load_project = Project.load(file_path)
+        Project.load(file_path)
 
         self.assertIsInstance(sprinkles, Product, " ")
 
     def test_08_create_process(self):
         """Test creating a Product."""
         print("testing creating a process.")
-
-        file_path = r"save_files/test.pkl"
 
         project = Project()
 
@@ -196,7 +194,7 @@ class TestBuilder(unittest.TestCase):
 
         project.save(file_path)
 
-        load_project = Project.load(file_path)
+        Project.load(file_path)
 
         self.assertIsInstance(CO2, Emission, " ")
 
@@ -229,7 +227,7 @@ class TestBuilder(unittest.TestCase):
 
         project.save(file_path)
 
-        load_project = Project.load(file_path)
+        Project.load(file_path)
 
         self.assertIsInstance(electricity_2, Fuel, " ")
 
@@ -252,7 +250,7 @@ class TestBuilder(unittest.TestCase):
 
         project.save(file_path)
 
-        load_project = Project.load(file_path)
+        Project.load(file_path)
 
         self.assertIsInstance(waste, Waste, " ")
 

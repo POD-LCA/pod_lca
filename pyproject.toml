@@ -50,7 +50,22 @@ pod_lca = ["config.yaml"]
 
 [tool.black]
 line-length = 120
+exclude = '''
+( 
+    legacy
+|   ui
+| dist
+| docs/_build
+| data
+| temp
+| .venv
+)
+'''
+
+[tool.ruff]
+exclude = ["legacy*", "ui*"]
 
 [tool.pydocstyle]
 convention = "numpy"
-add-ignore = ["D419", "D107", "D203"]
+add-ignore = ["D419", "D107", "D203", "D104", "D100"]
+match-dir = '^(?!build|dist|docs/_build|data|\.venv|legacy|ui).*'

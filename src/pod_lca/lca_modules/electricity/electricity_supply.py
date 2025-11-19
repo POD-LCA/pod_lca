@@ -509,7 +509,7 @@ class ElectricitySupply:
 
         # impacts by technology
         if self.impact_database_national is None:
-            self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", geographical_scope)
+            self.impact_database_national = ElectricityImpactsDatabase.new("Electricity - National", " National")
             self.impact_database_national.set_data(
                 config["file_paths"]["electricity"]["ELECTRICITY_IMPACT_NATIONAL_DATA"]
             )

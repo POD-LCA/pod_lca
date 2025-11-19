@@ -35,7 +35,6 @@ UNITS_MAP.update(
         "kg": KILOGRAM,
         "t": M_TON,
         "km": KILOMETER,
-        "t": M_TON,
         "tonne": M_TON,
         "tkm": TON_KILOMETER,
         "t*km": TON_KILOMETER,

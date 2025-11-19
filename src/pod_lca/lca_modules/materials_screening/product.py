@@ -499,7 +499,7 @@ class Product(Master):
     # Methods
     # ================================
     def update_inventory_records(self):
-        """Sets inventory quantities, based on database item asigned to the product/process and the product/process quantity. If no database entry is asigned, impacts are not updated.
+        """Set inventory quantities, based on database item asigned to the product/process and the product/process quantity. If no database entry is asigned, impacts are not updated.
 
         Raises
         ------

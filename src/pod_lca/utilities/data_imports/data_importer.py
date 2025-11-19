@@ -35,7 +35,7 @@ class DataImporter:
 
         data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers_present)
 
-        if not multipliers == None:
+        if multipliers is not None:
             n = len(headers)
             for i in range(n):
                 if multipliers[i] is not None and headers[i] in headers_present:
