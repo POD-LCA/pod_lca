@@ -25,7 +25,9 @@ project.set_year(2025)
 
 pod_lca_impact_database = ImpactsDatabase.new("pod_lca_impact_database")
 pod_lca_impact_database.set_data(
-    r"src/pod_lca/data/impacts_podlca_data.csv", grouped_data="Electricity", density_headers=["Density (dry basis)", "Density unit"]
+    r"src/pod_lca/data/impacts_podlca_data.csv",
+    grouped_data="Electricity",
+    density_headers=["Density (dry basis)", "Density unit"],
 )
 project.set_impact_database(pod_lca_impact_database)
 

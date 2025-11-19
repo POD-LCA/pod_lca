@@ -1,3 +1,5 @@
+import importlib.util
+import inspect
 import os
 import pathlib
 import shutil
@@ -76,19 +78,44 @@ def docs(c, out="md"):
         c.run("sphinx-build -b markdown docs/source docs/_build/md")
 
 
-@task
-def tests(c):
-    """Run test files"""
-    test_dir = pathlib.Path("tests")
-    scripts = sorted(test_dir.glob("*_test_script.py"))
+def load_test_module(filepath):
+    """Dynamically import a Python file as a module."""
+    filepath = pathlib.Path(filepath)
+    spec = importlib.util.spec_from_file_location(filepath.stem, filepath)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
 
-    if not scripts:
-        print("No test scripts found.")
+    return module
+
+
+@task
+def test(c):
+    """Discover every test_script.py file, import it, and run its test_* functions."""
+    test_files = list(pathlib.Path("tests").rglob("*_test_script.py"))
+
+    if not test_files:
+        print("No test_script.py files found.")
         return
 
-    for script in scripts:
-        print(f"Running {script}...")
-        c.run(f"python {script}")
+    total_passed = 0
+    total_failed = 0
+    for file in test_files:
+        print(f"\n=== Running tests in {file} ===")
+        module = load_test_module(file)
+
+        for name, func in inspect.getmembers(module, inspect.isfunction):
+            if name.startswith("test_"):
+                print(f"Running {name}...")
+                try:
+                    func()
+                except AssertionError:
+                    total_failed += 1
+                except Exception:
+                    total_failed += 1
+                else:
+                    total_passed += 1
+
+    print(f">>{total_passed} of {total_passed + total_failed} tests passed.")
 
 
 @task(pre=[clean])
@@ -96,9 +123,3 @@ def tests(c):
 def package(c):
     """Build only the wheel."""
     c.run("python -m build --wheel")
-
-
-# * `invoke clean`: Clean all generated artifacts.
-# * `invoke check`: Run various code and documentation style checks.
-# * `invoke docs`: Generate documentation.
-# * `invoke test`: Run all tests and checks in one swift command.

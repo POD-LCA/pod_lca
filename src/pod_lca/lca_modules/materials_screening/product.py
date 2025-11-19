@@ -153,8 +153,9 @@ class Product(Master):
         elif density is None:
             database = self.get_project().get_impact_database()
             unit_inventories = database.get_data_entry(self.get_impact_database_entry())
-            self.density_unit = unit_inventories[database.get_density_unit_key()]
-            self.density = unit_inventories[database.get_density_key()]
+            if database.get_density_unit_key() is not None:
+                self.density_unit = unit_inventories[database.get_density_unit_key()]
+                self.density = unit_inventories[database.get_density_key()]
         else:
             raise ValueError("Density input not recognized.")
 
