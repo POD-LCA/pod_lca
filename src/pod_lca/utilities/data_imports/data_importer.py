@@ -87,7 +87,7 @@ class DataImporter:
         current_row = 0
         with open(file_path, "r") as file:
             reader = csv.reader(file)
-            if not (column_header is None):
+            if column_header is not None:
                 headers = next(reader, None)
                 column_index = headers.index(column_header)
             for row in reader:

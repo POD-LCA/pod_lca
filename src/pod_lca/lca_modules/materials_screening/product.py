@@ -108,7 +108,7 @@ class Product(Master):
         """
         self.production_year = year
 
-        if not self.electricity["by_location"] is None:
+        if self.electricity["by_location"] is not None:
             self.electricity["by_location"].set_year(year)
 
         return self
@@ -475,7 +475,7 @@ class Product(Master):
         ValueError
             SCTG code length shorter that digits requested.
         """
-        if not self.sctg_code is None:
+        if self.sctg_code is not None:
             if digits <= len(str(self.sctg_code)):
                 return int(str(self.sctg_code)[:digits])
             else:

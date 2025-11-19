@@ -6,8 +6,6 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-import json
-from ast import literal_eval
 
 # TODO: To and from json?
 

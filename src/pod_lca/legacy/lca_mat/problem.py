@@ -1,13 +1,12 @@
 from lca_mat.processess import ProcessessMatrix
 from lca_mat.linear_algebra import LinearAlgebra
 
-from numpy import zeros, ones, matmul
-from scipy.linalg import inv, det
+from numpy import zeros, matmul
+from scipy.linalg import inv
 from scipy.sparse import csr_matrix
 
 import os
 import shutil
-import time
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -401,7 +400,6 @@ if __name__ == "__main__":
     from lca_mat import HOME
     from lca_mat.ecoinvent_database import EcoinventDatabase
 
-    from numpy import sum as npsum
 
     test_problem = Problem()
 

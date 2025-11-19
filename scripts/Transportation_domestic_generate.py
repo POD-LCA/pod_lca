@@ -65,8 +65,8 @@ for sctg_code, material in Material_names.items():
     output_dict = {}
     for origin_state in tqdm(origin_states):
         for destination_state in destination_states:
-            origin_state_obj = Location.from_US_state(origin_state) if not origin_state is None else None
-            destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
+            origin_state_obj = Location.from_US_state(origin_state) if origin_state is not None else None
+            destination_state_obj = Location.from_US_state(destination_state) if destination_state is not None else None
             scenarios = tranpsort_scenarios if origin_state_obj is None else ["Average"]
 
             project.add_good(product, None, destination_state_obj, origin_state_obj, None, KILOMETER)

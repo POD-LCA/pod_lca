@@ -165,7 +165,7 @@ class Model:
                     transported_product = model.find_item(
                         transported_item
                     )  # TODO: create functionality for multiple transported items
-                    if not (transported_product is None):
+                    if transported_product is not None:
                         item.set_transported_products(transported_product)
                     else:
                         if not (transported_item == ""):

@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-import os
-import json
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"

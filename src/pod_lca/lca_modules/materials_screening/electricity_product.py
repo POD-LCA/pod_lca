@@ -291,7 +291,7 @@ class Electricity(Master):
     # ================================
     def update_inventory_records(self):
         """Sets impacts quantities, based on database item asigned to the product/process and the product/process quantity. If no database entry is asigned, impacts are not updated."""
-        if not self.get_supplier() is None:
+        if self.get_supplier() is not None:
             supplier = self.get_supplier()
             supplier.update_inventory_records()
 

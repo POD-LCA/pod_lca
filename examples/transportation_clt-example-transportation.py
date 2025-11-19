@@ -6,14 +6,12 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from pod_lca.impacts import ImpactsDatabase
 from pod_lca.location import Location
 from pod_lca.materials_screening import Project
 from pod_lca.uncertainty import HotSpotAnalysis
 from pod_lca.units import CUBIC_METER
 from pod_lca.units import KILO
 from pod_lca.units import KILOGRAM
-from pod_lca.units import KILOMETER
 from pod_lca.units import WATT_HOUR
 
 project = Project()

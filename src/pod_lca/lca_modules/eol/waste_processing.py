@@ -153,7 +153,7 @@ class WasteProcess:
         """
         self.qty = qty
 
-        if not (self.get_linked_process() is None):
+        if self.get_linked_process() is not None:
             if self.get_unit() == self.get_linked_process().get_unit():
                 self.get_linked_process().set_qty(qty)
             else:

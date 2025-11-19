@@ -68,9 +68,7 @@ class SensitivityAnalysis:
             for i in [0, 1]:
                 method(range_lst[i])
                 impact_new = model.get_total_impact(impact_cat)
-                relative_percentage_change = (
-                    100 * (impact_new - base_impact) / base_impact
-                )
+                relative_percentage_change = 100 * (impact_new - base_impact) / base_impact
                 symmetric_percentage_change = 100 * (impact_new - base_impact) / (base_impact + impact_new)
 
                 if sensitivity_type == "relative":
@@ -115,7 +113,7 @@ class SensitivityAnalysis:
             ]
 
         else:
-            raise KeyError(f"Either the range or option data not provided or key used is invalid.")
+            raise KeyError("Either the range or option data not provided or key used is invalid.")
 
         if printout:
             print("*" * 50 + "\nSENSITIVITY ANALYSIS\n" + "*" * 50)
@@ -241,7 +239,7 @@ class SensitivityAnalysis:
                         group["max_option"] = selected_option
 
                 else:
-                    raise KeyError(f"Either the range or option data not provided or key used is invalid.")
+                    raise KeyError("Either the range or option data not provided or key used is invalid.")
 
             impact_new = model.get_total_impact(impact_cat)
 

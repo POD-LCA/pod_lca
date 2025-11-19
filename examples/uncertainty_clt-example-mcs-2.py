@@ -11,7 +11,6 @@ from numpy import log
 from numpy import sqrt
 from scipy import stats
 
-from pod_lca.impacts import ImpactsDatabase
 from pod_lca.location import Location
 from pod_lca.materials_screening import Project
 from pod_lca.uncertainty import DataDistribution
@@ -19,7 +18,6 @@ from pod_lca.uncertainty import MonteCarloSimulator
 from pod_lca.units import CUBIC_METER
 from pod_lca.units import KILO
 from pod_lca.units import KILOGRAM
-from pod_lca.units import KILOMETER
 from pod_lca.units import WATT_HOUR
 from pod_lca.utilities import config
 from pod_lca.visualizer import Histogram

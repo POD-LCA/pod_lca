@@ -22,7 +22,7 @@ from tkinter import (
     StringVar,
     Canvas,
 )
-from tkinter.ttk import Notebook, Combobox, Scrollbar, Style
+from tkinter.ttk import Notebook, Combobox, Scrollbar
 
 
 class MenubarMixin:

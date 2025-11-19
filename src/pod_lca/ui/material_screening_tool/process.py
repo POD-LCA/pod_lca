@@ -37,7 +37,7 @@ class Process(Item):
 
         process = GUIInputManager.create_process(self.project, model_id, name, unit, float(qty), stage, lca_data)
 
-        if not process is None:
+        if process is not None:
             slider_min = 0.0
             slider_max = power(10, ceil(log10(abs(float(qty))))) if float(qty) != 0 else 10.0
             resolution = (slider_max - slider_min) / 100
@@ -58,7 +58,7 @@ class Process(Item):
             if self.hotspot_on_off.get():
                 self.show_hotspots()
 
-            if not popup is None:
+            if popup is not None:
                 popup.destroy()
 
             return item_id

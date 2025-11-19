@@ -136,7 +136,7 @@ class BuildingComponent:
         if self.deconstructed_to:
             return self.deconstructed_to
         else:
-            raise ValueError(f"The component is not deconstructed and therefore no waste products exist.")
+            raise ValueError("The component is not deconstructed and therefore no waste products exist.")
 
     def get_eol_manager(self):
         """Return the place where end-of-life transport dataset reside."""

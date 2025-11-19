@@ -74,7 +74,7 @@ class PlotsMixin:
             graph = BarChart.from_plotter(MatplotlibPlotter)
             graph.draw(
                 Calculator.get_impacts_by_LCstages_models(self.get_impact_selection(), model_lst),
-                f"Impacts by Life Cycle Stages",
+                "Impacts by Life Cycle Stages",
                 "Life Cycle Stages",
                 f"{self.get_impact_selection()}",
             )
@@ -126,7 +126,7 @@ class PlotsMixin:
                 graph = BarChart.from_plot(self.plot)
                 graph.draw(
                     Calculator.get_impacts_by_LCstages_models(self.get_impact_selection(), model_lst),
-                    f"Impacts by Life Cycle Stages",
+                    "Impacts by Life Cycle Stages",
                     "Life Cycle Stages",
                     f"{self.get_impact_selection()}",
                 )

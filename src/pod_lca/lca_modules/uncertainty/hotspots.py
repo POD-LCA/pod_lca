@@ -5,8 +5,6 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.utilities import ArrayMethods
-from pod_lca.utilities import config
-from pod_lca.utilities import log
 
 
 class HotSpotAnalysis:
@@ -126,7 +124,7 @@ class HotSpotAnalysis:
         list of ~pod_lca.materials_screening.Master
             List of hotspot object of the model.None if hotspots are not set.
         """
-        if not impact_category in self.hotspots:
+        if impact_category not in self.hotspots:
             self.run(impact_category)
 
         return self.hotspots[impact_category]

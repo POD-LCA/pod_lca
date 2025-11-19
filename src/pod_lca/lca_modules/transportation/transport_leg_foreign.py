@@ -279,7 +279,7 @@ class ForeignLeg(TransportationLeg):
         dataset = self.get_dataset()
 
         if not self.check_mode_origin_compatibility():
-            raise ValueError(f"The transportation origin and transportation mode are inconsistant.")
+            raise ValueError("The transportation origin and transportation mode are inconsistant.")
 
         conversion_factor = self.get_dist_unit().convert_to(KILOMETER)
         datasets_filtered = dataset.filter_datasets(
@@ -301,7 +301,7 @@ class ForeignLeg(TransportationLeg):
             if self.get_shipping_origin() is None:
                 if not self.get_transport_scenario() == "North America":
                     return False
-            elif not self.get_shipping_origin().get_country_code() in ["CA", "MX"]:
+            elif self.get_shipping_origin().get_country_code() not in ["CA", "MX"]:
                 return False
 
         if self.get_mode().get_name() == "Rail":

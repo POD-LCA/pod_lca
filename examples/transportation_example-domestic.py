@@ -1,4 +1,3 @@
-from pod_lca.impacts import TranportationModeImpactsDatabase
 from pod_lca.location import Location
 from pod_lca.materials_screening import Product
 from pod_lca.transportation import USDomesticTransportationManager

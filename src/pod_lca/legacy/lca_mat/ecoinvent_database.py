@@ -104,7 +104,7 @@ class EcoinventDatabase(LCIDatabase):
             unit_process = EcoinventDatabase.get_unit_process(process_id, path)
             dependent_processes = EcoinventDatabase.get_dependent_processes(unit_process)
             for dependent_process in dependent_processes:
-                if not dependent_process in id_list:
+                if dependent_process not in id_list:
                     id_list.extend([dependent_process])
 
             i += 1

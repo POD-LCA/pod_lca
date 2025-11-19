@@ -75,7 +75,7 @@ class UnitProcess:
 
     def set_exchange(self, name, exchange):
 
-        if not (exchange in self.get_exchanges.keys()):
+        if exchange not in self.get_exchanges.keys():
             self.exchanges[name] = exchange
         else:
             raise NotImplementedError

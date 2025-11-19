@@ -476,7 +476,7 @@ class openLCA:
             The client object for the openLCA server.
         """
         if OLCA_IMPORTED:
-            import olca_ipc.utree as utree
+            pass
         else:
             raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
 
@@ -521,7 +521,7 @@ class openLCA:
             filter_by = [filter_by]
 
         new_process_lst = []
-        if not filter_by is None:
+        if filter_by is not None:
             for filter in filter_by:
                 if isinstance(filter, int):
                     filter = str(filter)
@@ -671,7 +671,7 @@ class openLCA:
                 client.put(type_object)
             elif duplicates == "update":
                 for key, value in json_dict.items():
-                    if value is not None and not key in ["@type", "@id"]:
+                    if value is not None and key not in ["@type", "@id"]:
                         result[key] = value
                 type_object = obj.from_dict(result)
                 client.put(type_object)
@@ -804,7 +804,7 @@ class openLCA:
                 amount = impact_results[impact + " [" + unit + "]"]
                 impact_amounts_list.append(amount)
 
-            if (not group_by is None) and (not all(impact_amount == 0 for impact_amount in impact_amounts_list)):
+            if (group_by is not None) and (not all(impact_amount == 0 for impact_amount in impact_amounts_list)):
                 if not isinstance(group_by, list):
                     group_by = [group_by]
 

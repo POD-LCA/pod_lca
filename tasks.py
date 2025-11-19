@@ -31,11 +31,30 @@ def check(c):
 
     This includes:
     - Black (formatting check)
-    - Ruff or Flake8 (linting)
+    - Ruff (linting)
     - MyPy (static type checking)
-    - Docstring / documentation linting (optional)
+    - Docstring (documentation linting)
     """
-    commands = ["black .", "ruff check .", "mypy src", "pydocstyle src --convention=numpy"]
+    commands = ["black check .", "ruff check .", "mypy src", "pydocstyle src --convention=numpy"]
+
+    for cmd in commands:
+        print(f"Running: {cmd}")
+        c.run(cmd, echo=True)
+
+    print("All checks passed (or reported).")
+
+
+@task
+def fix(c):
+    """Run various code and documentation style checks.
+
+    This includes:
+    - Black (formatting check)
+    - Ruff (linting)
+    - MyPy (static type checking)
+    - Docstring (documentation linting)
+    """
+    commands = ["black .", "ruff --fix .", "mypy src", "pydocstyle src --convention=numpy"]
 
     for cmd in commands:
         print(f"Running: {cmd}")

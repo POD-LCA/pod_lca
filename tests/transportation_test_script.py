@@ -4,8 +4,6 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-import os
-import csv
 import time
 
 import pandas as pd

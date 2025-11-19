@@ -9,7 +9,6 @@ from math import isnan
 from . import WasteProcess
 from ..materials_screening import Product
 from ..transportation import WasteTransportLeg
-from ...utilities import ArrayMethods
 from ...utilities import config
 from ...utilities import log
 
@@ -267,7 +266,7 @@ class Waste(Product):
                         else:
                             mix_percent = float(mix_percent_input)
                     else:
-                        raise TypeError(f"mix percentages are of unrecognized type. Must be float, int, or string.")
+                        raise TypeError("mix percentages are of unrecognized type. Must be float, int, or string.")
                 else:
                     mix_percent = 0.0
 
@@ -429,7 +428,7 @@ class Waste(Product):
                     transfer_to_landfill_quantity += result
 
         # set landfill process
-        if not landfill_process is None:
+        if landfill_process is not None:
             new_qty = self.get_qty() * process_mix["Landfill"] + transfer_to_landfill_quantity
             landfill_process.set_qty(new_qty)
 

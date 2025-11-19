@@ -4,7 +4,7 @@ from lca_modules.material.process import Process, TransportationProcess
 from lca_modules.impacts.impacts_database import ImpactsDatabase
 from lca_modules.uncertainty.data_quality_assessment import DataQualityAnalysis
 from utilities.settings import config
-from utilities.units.common_units import METER, MILE, GRAM, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
+from utilities.units.common_units import METER, MILE, POUND, GRAM, CUBIC_METER, JOULE, WATT_HOUR
 from utilities.units.metric_prefixes import KILO, MEGA
 
 from tkinter import messagebox

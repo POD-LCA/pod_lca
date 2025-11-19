@@ -15,7 +15,6 @@ import pickle
 
 from ast import literal_eval
 from copy import deepcopy
-from math import sin
 
 from pod_lca.lca_modules.operational.operational_building.construction import Construction
 from pod_lca.lca_modules.operational.operational_building.material import Material
@@ -26,7 +25,6 @@ from pod_lca.lca_modules.operational.operational_building.material import Window
 from pod_lca.lca_modules.operational.operational_building.shading import Shading
 from pod_lca.lca_modules.operational.operational_building.window import Window
 from pod_lca.lca_modules.operational.operational_building.zone import Zone
-from pod_lca.lca_modules.operational.operational_building.zone import ZoneSurfaces
 from pod_lca.lca_modules.operational.operational_building.schedule import Schedule
 from pod_lca.lca_modules.operational.operational_building.light import Light
 from pod_lca.lca_modules.operational.operational_building.light import DaylightingReferencePoint
@@ -1232,7 +1230,6 @@ class OperationalBuilding(object):
 
     def set_zone_systems(self):
 
-        from copy import deepcopy
 
         eqc_key = list(self.equipment_connections.keys())[0]
         eql_key = list(self.equipment_lists.keys())[0]

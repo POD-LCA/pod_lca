@@ -52,7 +52,7 @@ class RelationshipsMixin:
                 if int(master_item_id) not in self.dependents[model_name]:
                     self.dependents[model_name][int(master_item_id)] = [item]
                 else:
-                    if not item in self.dependents[model_name][int(master_item_id)]:
+                    if item not in self.dependents[model_name][int(master_item_id)]:
                         self.dependents[model_name][int(master_item_id)].append(item)
 
                 master_item = self.item_map[model_name][master_item_id]

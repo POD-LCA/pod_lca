@@ -14,10 +14,9 @@ from ui.materials_screening_tool.canvas_opps import CanvasOperationsMixin
 from ui.materials_screening_tool.save_load import SaveLoadMethods
 from ui.materials_screening_tool.hotspots import HotspotMixins
 
-from tkinter import Menu, Frame, Button, Canvas, Tk, Label, font, Checkbutton, BooleanVar, IntVar
-from tkinter import RIGHT, LEFT, X, Y, BOTH, TOP, NW
+from tkinter import Menu, Frame, Button, Canvas, Tk, Label, Checkbutton, BooleanVar, IntVar
+from tkinter import RIGHT, LEFT, BOTH, TOP, NW
 from tkinter.ttk import Combobox, Style, Notebook
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
 class App(

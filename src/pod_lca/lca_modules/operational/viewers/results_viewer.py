@@ -7,7 +7,6 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-import plotly.graph_objects as go
 import plotly.express as px
 from datetime import datetime
 import pandas as pd
@@ -186,7 +185,6 @@ if __name__ == "__main__":
 
     import os
     import compas_eplus
-    from compas_eplus.read_write import read_results_file
     from compas_eplus.building import Building
     from compas_eplus.viewers import BuildingViewer
 

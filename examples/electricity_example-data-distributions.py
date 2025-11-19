@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from numpy import percentile, linspace
+from numpy import percentile
 
 from pod_lca.materials_screening import Project
 from pod_lca.location import Location

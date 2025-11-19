@@ -2,8 +2,6 @@ from __future__ import print_function
 
 import os
 import json
-import networkx as nx
-import numpy as np
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"

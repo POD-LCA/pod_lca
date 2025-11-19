@@ -10,7 +10,6 @@ from ..impacts import Impacts
 from ..location import Location
 from . import TransportMode
 from ...units import KILOMETER
-from ...units import MILE
 
 
 class TransportationLeg:

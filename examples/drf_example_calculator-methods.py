@@ -81,7 +81,7 @@ x_data_CH4fossil, _, y_data_CH4fossil = DynamicRadiativeForcing().get_radiative_
 graph = LinePlot.from_plotter(MatplotlibPlotter)
 graph.draw(
     {"CH4_fossil": list(zip(x_data_CH4fossil, y_data_CH4fossil)), "CH4": list(zip(x_data_CH4, y_data_CH4))},
-    f"Instantaneous Dynamic Radiative Forcing CO2",
+    "Instantaneous Dynamic Radiative Forcing CO2",
     "Year",
     "dynamic radiative forcing (Wm-2)",
 )

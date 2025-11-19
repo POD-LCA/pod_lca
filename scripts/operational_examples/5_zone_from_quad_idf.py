@@ -7,10 +7,6 @@ from pod_lca.lca_modules.operational.read_write import get_idf_data
 
 from pod_lca.lca_modules.operational.operational_building import OperationalBuilding
 from pod_lca.lca_modules.operational.operational_building import Window
-from pod_lca.lca_modules.operational.operational_building import EquipmentList
-from pod_lca.lca_modules.operational.operational_building import EquipmentConnection
-from pod_lca.lca_modules.operational.operational_building import NodeList
-from pod_lca.lca_modules.operational.operational_building import IdealAirLoad
 
 
 for i in range(50):

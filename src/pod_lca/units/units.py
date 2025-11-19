@@ -146,7 +146,7 @@ class Unit:
             return newUnit
 
         elif isinstance(other, MetricPrefix):
-            raise TypeError(f"Metric prefixes not defined for post multiplication.")
+            raise TypeError("Metric prefixes not defined for post multiplication.")
 
     def __rmul__(self, other):
         """Reflexive multiplication of units by metric prefixes."""
@@ -505,7 +505,7 @@ class MetricPrefix:
         """Reflective division of metric prefixes with numbers."""
         if isinstance(other, int) or isinstance(other, float):
             if other <= 0 or not log10(other).is_integer():
-                raise TypeError(f"Reflexive division of prefixes constrained to values that are integer powers of 10.")
+                raise TypeError("Reflexive division of prefixes constrained to values that are integer powers of 10.")
 
             new_power = log10(other) - self.get_power()
             all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")

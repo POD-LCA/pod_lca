@@ -10,7 +10,6 @@ from tqdm import tqdm
 
 from pod_lca.impacts import ImpactsDatabase
 from pod_lca.materials_screening import Project
-from pod_lca.units import KILOGRAM
 from pod_lca.units import UNITS_MAP
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import DataExporter

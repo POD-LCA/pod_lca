@@ -3,7 +3,6 @@ from tqdm import tqdm
 from pod_lca.impacts import openLCA
 from pod_lca.units import JOULE
 from pod_lca.units import MEGA
-from pod_lca.utilities import config
 from pod_lca.utilities import DataExporter
 from pod_lca.utilities import DataImporter
 

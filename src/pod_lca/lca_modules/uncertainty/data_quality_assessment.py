@@ -29,7 +29,7 @@ class PedigreeScore:
         string = "*" * 50 + "\nPEDIGREE SCORE\n" + "*" * 50
         string += f"\nPedigree score for {self.get_parent().get_name()}"
         for attr in vars(self):
-            if not attr in ["DQS", "parent"]:
+            if attr not in ["DQS", "parent"]:
                 string += f"\n{attr}: {getattr(self, attr)}"
 
         return string

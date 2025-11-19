@@ -281,7 +281,6 @@ class TestBuilder(unittest.TestCase):
 
         from utilities.units.common_units import (
             GRAM,
-            METER,
             TON_KILOMETER,
             POUND,
             MILE,
@@ -289,7 +288,7 @@ class TestBuilder(unittest.TestCase):
             CUBIC_METER,
             CUBIC_FEET,
         )
-        from utilities.units.metric_prefixes import KILO, MEGA, DEKA
+        from utilities.units.metric_prefixes import KILO
 
         kilogram = KILO * GRAM
         pound_mile = POUND * MILE

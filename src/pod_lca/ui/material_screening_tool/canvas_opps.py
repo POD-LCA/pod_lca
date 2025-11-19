@@ -1,4 +1,3 @@
-from ui.materials_screening_tool.GUI_inputManager import GUIInputManager
 from tkinter import Canvas
 
 

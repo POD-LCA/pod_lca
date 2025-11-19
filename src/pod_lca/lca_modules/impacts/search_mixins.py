@@ -7,7 +7,6 @@ __version__ = "0.1.0"
 from functools import lru_cache
 from numpy import abs
 from numpy import array
-from numpy import mean
 from numpy import sort
 from pandas import DataFrame
 

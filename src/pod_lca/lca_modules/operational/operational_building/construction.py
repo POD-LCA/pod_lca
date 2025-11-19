@@ -104,8 +104,6 @@ class Construction(object):
 
 
 if __name__ == "__main__":
-    import compas_eplus
-    import os
 
     for i in range(50):
         print("")

@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
-from lca_modules.transportation.logistics_link import Link
-import matplotlib.pyplot as plt
 
 # Initialize Session State for Links and Impacts
 if "transport_links" not in st.session_state:

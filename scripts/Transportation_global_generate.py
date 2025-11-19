@@ -77,9 +77,9 @@ for sctg_code, material in Material_names.items():
         output_dict = {}  # data dict
         for destination_state in destination_states:
             origin_obj = (
-                Location.from_faf_regions(origin) if not origin in ["Canada", "Mexico"] else Location.from_str(origin)
+                Location.from_faf_regions(origin) if origin not in ["Canada", "Mexico"] else Location.from_str(origin)
             )
-            destination_state_obj = Location.from_US_state(destination_state) if not destination_state is None else None
+            destination_state_obj = Location.from_US_state(destination_state) if destination_state is not None else None
             scenarios = tranpsort_scenarios
             project.add_good(product, None, destination_state_obj, origin_obj, None, KILOMETER)
             foreign_transport_leg = project.get_transportation_leg(product)[0]

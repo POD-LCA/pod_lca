@@ -173,7 +173,7 @@ class Popup(Toplevel):
 
         test = cmd()
 
-        if not test is None:
+        if test is not None:
             if not is_apply:
                 popup.on_popup_close()
 

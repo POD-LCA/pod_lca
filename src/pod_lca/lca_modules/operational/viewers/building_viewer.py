@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 
 import plotly
 import plotly.graph_objects as go
-import plotly.express as px
 
 from pod_lca.utilities.geometry import Mesh
 
