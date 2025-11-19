@@ -37,6 +37,7 @@ command line to ease recurring operations:
 
 * `invoke clean`: Clean all generated artifacts.
 * `invoke check`: Run various code and documentation style checks.
+* `invoke fix`: Fix code code formatting and linting.
 * `invoke docs`: Generate documentation.
 * `invoke test`: Run all tests and checks in one swift command.
 * `invoke`: Show available tasks.
