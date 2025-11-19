@@ -5,7 +5,6 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from math import exp
-from math import log
 
 from numpy import log
 from numpy import where

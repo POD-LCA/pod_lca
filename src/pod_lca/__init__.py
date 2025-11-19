@@ -5,16 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import os
-
-HERE = os.path.dirname(__file__)
-
-HOME = os.path.abspath(os.path.join(HERE, "../../"))
-DATA = os.path.abspath(os.path.join(HOME, "data"))
-DOCS = os.path.abspath(os.path.join(HOME, "docs"))
-TEMP = os.path.abspath(os.path.join(HOME, "temp"))
-
-seattle = "USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw"
-SEATTLE = os.path.abspath(os.path.join(DATA, "operational_dataset", "weather_files", seattle))
+import sys
 
 from . import units
 from . import visualizer
@@ -29,8 +20,6 @@ from .lca_modules import eol
 from .lca_modules import building
 from .lca_modules import dynamic_radiative_forcing
 from .lca_modules import operational
-
-import sys
 
 sys.modules["pod_lca.location"] = location
 sys.modules["pod_lca.impacts"] = impacts
@@ -57,3 +46,13 @@ __all__ = [
     "utilities",
     "visualizer",
 ]
+
+HERE = os.path.dirname(__file__)
+
+HOME = os.path.abspath(os.path.join(HERE, "../../"))
+DATA = os.path.abspath(os.path.join(HOME, "data"))
+DOCS = os.path.abspath(os.path.join(HOME, "docs"))
+TEMP = os.path.abspath(os.path.join(HOME, "temp"))
+
+seattle = "USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw"
+SEATTLE = os.path.abspath(os.path.join(DATA, "operational_dataset", "weather_files", seattle))

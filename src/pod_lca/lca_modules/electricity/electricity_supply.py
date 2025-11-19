@@ -310,6 +310,8 @@ class ElectricitySupply:
 
             data_dict = impact_database.get_data_entry(region, key)
             declared_qty = data_dict[impact_database.get_qty_key()]
+            if not declared_qty == 1:
+                raise ValueError("Declared quantity should be one for unit impacts.")
 
             impact_data_dict = {
                 cat: impact for cat, impact in data_dict.items() if cat in producer.get_unit_impacts().get_categories()

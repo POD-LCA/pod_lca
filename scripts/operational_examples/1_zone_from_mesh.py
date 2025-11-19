@@ -1,5 +1,8 @@
-for i in range(50):
-    print("")
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "kiun@uw.edu"
+__version__ = "0.1.0"
 
 import os
 import pod_lca
@@ -16,12 +19,8 @@ from pod_lca.lca_modules.operational.read_write import get_idf_data
 from pod_lca.lca_modules.operational.viewers import BuildingViewer
 from pod_lca.lca_modules.operational.viewers import ResultsViewer
 
-__author__ = ["POD/LCA Team"]
-__copyright__ = "University of Washington"
-__license__ = "MIT License"
-__email__ = "kiun@uw.edu"
-__version__ = "0.1.0"
-
+for i in range(50):
+    print("")
 
 # making a mesh for the zone - - - - - - - - - - - - - - - - - - - - - - - - - -
 
