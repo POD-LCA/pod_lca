@@ -222,7 +222,7 @@ class Product(Master):
             Source of electricity inventories data. Default 'from_database'.
         """
         if source in [key for key in self.electricity if not key.startswith("_")]:
-            if self.electricity["from_database"] is None:
+            if self.electricity["from_database"] is not None:
                 original_source = self.electricity["_current"]
                 try:
                     self.electricity["_current"] = source
