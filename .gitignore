@@ -24,6 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+conda.recipe/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -35,24 +36,13 @@ wheels/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-
 # Translations
 *.mo
 *.pot
 
-
 # Sphinx documentation
 docs/_build/
+docs/api/generated/
 
 # PyBuilder
 target/
@@ -72,33 +62,21 @@ ENV/
 .spyderproject
 .spyproject
 
+# Visual Studio files
+.vscode
+
 # mkdocs documentation
 /site
 
-# mypy
-.mypy_cache/
-
-# ==============================================================================
-# POD-LCA
-# ==============================================================================
-
+# Rhino back up files
 *.3dmbak
 *.rhl
 *.rui_bak
 
+# temperory folders
 temp/**
 !temp/PLACEHOLDER
-
-.DS_Store
-
-.vscode
-
-docs/api/generated/
-
-conda.recipe/
-
-# ==============================================================================
-# LCA_MAT
-# ==============================================================================
-
 lca_mat/Archive/
+
+# mac OS
+.DS_Store
