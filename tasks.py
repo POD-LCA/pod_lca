@@ -1,10 +1,10 @@
+from invoke import task
+from invoke.exceptions import UnexpectedExit
+from pathlib import Path
+from shutil import rmtree
 import importlib.util
 import inspect
 import os
-import pathlib
-import shutil
-from invoke import task
-from invoke.exceptions import UnexpectedExit
 
 
 @task
@@ -14,14 +14,14 @@ def clean(c):
 
     for d in dirs_to_remove:
         if os.path.isdir(d):
-            shutil.rmtree(d)
+            rmtree(d)
             print(f"Removed directory: {d}")
 
-    for pycache in pathlib.Path(".").rglob("__pycache__"):
-        shutil.rmtree(pycache)
+    for pycache in Path(".").rglob("__pycache__"):
+        rmtree(pycache)
         print(f"Removed: {pycache}")
 
-    for pyc in pathlib.Path(".").rglob("*.pyc"):
+    for pyc in Path(".").rglob("*.pyc"):
         pyc.unlink()
         print(f"Removed: {pyc}")
 
@@ -80,7 +80,7 @@ def docs(c, out="md"):
 
 def load_test_module(filepath):
     """Dynamically import a Python file as a module."""
-    filepath = pathlib.Path(filepath)
+    filepath = Path(filepath)
     spec = importlib.util.spec_from_file_location(filepath.stem, filepath)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -90,8 +90,8 @@ def load_test_module(filepath):
 
 @task
 def test(c):
-    """Discover every test_script.py file, import it, and run its test_* functions."""
-    test_files = list(pathlib.Path("tests").rglob("*_test_script.py"))
+    """Discover every *_test_script.py file, import it, and run its test_* functions."""
+    test_files = list(Path("tests").rglob("*_test_script.py"))
 
     if not test_files:
         print("No test_script.py files found.")

@@ -1,13 +1,16 @@
-attrs >=17.4
-black ==22.12.0
+matplotlib >= 3.9
+numpy >= 1.26
+pandas >= 2.2
+PyYAML >= 6.0
+scipy >= 1.14
+geopy >= 2.4
+invoke >=2.2
+black >=22.12
 bump2version >=1.0.1
-check-manifest >=0.36
-compas_invocations
-doc8
-flake8
-invoke >=0.14
-isort
-sphinx_compas2_theme
-twine
 wheel
+tqdm>4.66
+build
+ruff>=0.14
+pydocstyle>=6.3
+mypy>0.14
 -e .
