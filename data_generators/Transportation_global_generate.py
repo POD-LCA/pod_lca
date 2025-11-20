@@ -1,6 +1,7 @@
 
 from tqdm import tqdm
 import time
+import uuid
 
 from pod_lca.units import KILO
 from pod_lca.units import KILOMETER
@@ -14,8 +15,18 @@ from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import DataExporter
 
+# ================================================
+# INSTRUCTIONS
+# ================================================
+# Follow the instruction for generating the data set for the version-of-record 
+
+# 1. Run tests/transportation_global-test_script.py. If all tests pass, you are ready to generate the dataset.
+# 2. Check the output file location and make sure the their is no existing file of same name, or if exists, it is empty.
+# 3. Set the version_of_record parameter to True
+# 4. Run the script
 
 output_file = "save_files\\transportation_dataset_global.csv"
+version_of_record = False
 
 states_list = list(DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_STATE_CODE']).keys())
 
@@ -117,6 +128,7 @@ for sctg_code, material in Material_names.items():
                                 continue
 
                             output_dict[str(sequence_no)] = {  
+                                **({"uuid": uuid.uuid4()} if version_of_record else {}),
                                 'Material': material,
                                 'SCTG code': product.get_sctg_code(digits=2),
                                 'Scenario scope': 'Global',
@@ -131,8 +143,7 @@ for sctg_code, material in Material_names.items():
                                 'foreign mode efficiency': foreign_travel_eff,
                                 'foreign distance (km)': foreign_distance,
                                 'domestic distance (km)': domestic_distance,
-                                'return trip factor_fr': RTT_fr,
-                                'return trip factor_dms': RTT_dms}
+                                'return trip factor': RTT_dms}
                             
                             for impact_cat in impact_categories:
                                 output_dict[str(sequence_no)][impact_cat + ' (' + impact_categories[impact_cat]  + '/ tonne)'] = 'NO DATA' if impacts is None else impacts.get_record(impact_cat)
