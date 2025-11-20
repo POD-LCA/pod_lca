@@ -1,2 +1,0 @@
-honeybee-standards 
-honeybee_energy_standards

@@ -20,11 +20,12 @@ class Construction(object):
         The name for the construction instance
     layers: dict
         Dicitionary containing a name and thickness for each of the layersthat make up the construction
-    
+
     """
+
     def __init__(self):
-        self.name           = 'Construction'
-        self.layers         = {}
+        self.name = "Construction"
+        self.layers = {}
 
     def to_json(self, filepath):
         """
@@ -34,26 +35,27 @@ class Construction(object):
         ----------
         filepath: str
             Path for the JSON file to be created
-        
+
         Returns
         -------
         None
 
         """
-        with open(filepath, 'w+') as fp:
+        with open(filepath, "w+") as fp:
             json.dump(self.data, fp)
 
     @property
     def data(self):
-        data = {'name'      : self.name,
-                'layers'    : self.layers,
-                }
+        data = {
+            "name": self.name,
+            "layers": self.layers,
+        }
         return data
-    
+
     @data.setter
     def data(self, data):
-        self.name   = data.get('name') or {}
-        layers = data.get('layers') or {}
+        self.name = data.get("name") or {}
+        layers = data.get("layers") or {}
 
         for lk in layers:
             self.layers[literal_eval(lk)] = layers[lk]
@@ -67,12 +69,12 @@ class Construction(object):
         ----------
         data: dict
             Data dictionary
-        
+
         Returns
         -------
             Construction
                 The instance of the construction datastructure
-        
+
         """
         construction = cls()
         construction.data = data
@@ -87,28 +89,30 @@ class Construction(object):
         ----------
         filepath: str
             Path to the JSON file
-        
+
         Returns
         -------
             Construction
                 The instance of the construction datastructure
-        
+
         """
-        with open(filepath, 'r') as fp:
+        with open(filepath, "r") as fp:
             data = json.load(fp)
         construction = cls()
         construction.data = data
         return construction
 
-if __name__ == '__main__':
-    import compas_eplus
-    import os
 
-    for i in range(50): print('')
+if __name__ == "__main__":
+
+    for i in range(50):
+        print("")
 
     c = Construction()
-    name = 'Tomas Double Pane'
-    layers = {0: {'name': 'Generic Low-e Glass', 'thickness':.006},
-              1: {'name': 'Generic Window Air Gap', 'thickness':.0127},
-              2: {'name': 'Generic Clear Glass', 'thickness':.006}}
+    name = "Tomas Double Pane"
+    layers = {
+        0: {"name": "Generic Low-e Glass", "thickness": 0.006},
+        1: {"name": "Generic Window Air Gap", "thickness": 0.0127},
+        2: {"name": "Generic Clear Glass", "thickness": 0.006},
+    }
     c.layers = layers

@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -15,8 +14,8 @@ class DataExporter:
     # CSV
     # ========================
     def dict_to_csv(input_dict, file_path, append=False):
-        """ Transfer data from a dictionary to a CSV file.
-        
+        """Transfer data from a dictionary to a CSV file.
+
         Parameters
         ----------
         input_dict : dict
@@ -27,7 +26,7 @@ class DataExporter:
             If true, append to the file, otherwise overwrite.
         """
         fieldnames = list(next(iter(input_dict.values())).keys())
-        mode = 'a' if append else 'w'
+        mode = "a" if append else "w"
 
         with open(file_path, mode, newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -36,25 +35,25 @@ class DataExporter:
                 writer.writerow(data)
 
     def list_to_csv(input_list, file_path, append=False):
-        """ Write data to a CSV file from a list of str.
-        
+        """Write data to a CSV file from a list of str.
+
         Parameters
         ----------
         input_list : list of str
-            List of strings to be written to the CSV file. 
+            List of strings to be written to the CSV file.
         file_path : str
             Location of the CSV file.
         append : bool
             If true, append to the file, otherwise overwrite.
         """
-        mode = 'a' if append else 'w'
-        with open(file_path, mode, newline = "") as file:
+        mode = "a" if append else "w"
+        with open(file_path, mode, newline="") as file:
             writer = csv.writer(file)
             writer.writerows(input_list)
 
     def lists_to_csv(input_lists, file_path, as_columns=False, headers=None):
-        """ Write data to a CSV file from a list of str.
-        
+        """Write data to a CSV file from a list of str.
+
         Parameters
         ----------
         input_list : list of list
@@ -68,7 +67,7 @@ class DataExporter:
         """
         rows = list(zip(*input_lists)) if as_columns else input_lists
 
-        with open(file_path, "w", newline = "") as file:
+        with open(file_path, "w", newline="") as file:
             writer = csv.writer(file)
             if headers is not None:
                 writer.writerow(headers)
@@ -76,10 +75,10 @@ class DataExporter:
 
     # ========================
     # JSON
-    # ========================    
+    # ========================
     def dict_to_json(input_dict, file_path):
-        """ Transfer data from a dictionary to a JSON file.
-        
+        """Transfer data from a dictionary to a JSON file.
+
         Parameters
         ----------
         input_dict : dict
@@ -91,5 +90,5 @@ class DataExporter:
             json.dump(input_dict, file)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

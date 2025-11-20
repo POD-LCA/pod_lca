@@ -1,7 +1,6 @@
-
-from .plotters.abstract_plotter import AbstractPlotter
+from .plotters.abstract_plotter import AbstractPlotter as AbstractPlotter
 from .plotters.matplotlib_plotter import MatplotlibPlotter
-from .plots.abstract_plot import AbstractPlot
+from .plots.abstract_plot import AbstractPlot as AbstractPlot
 from .plots.bar_chart import BarChart
 from .plots.box_plot import BoxPlot
 from .plots.histogram import Histogram

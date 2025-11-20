@@ -10,13 +10,14 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+
 def create_ecoinvent_maps(path):
     # folders = ['processes',
     #            'flows',
     #            'flow_properties',
     #            'flow_properties',]
 
-    folders = ['processes']
+    folders = ["processes"]
 
     for folder in folders:
         path_ = os.path.join(path, folder)
@@ -24,40 +25,43 @@ def create_ecoinvent_maps(path):
         # print(len(files))
         map = {}
         for file in files:
-            with open(os.path.join(path_, file), 'r') as fp:
+            with open(os.path.join(path_, file), "r") as fp:
                 data = json.load(fp)
             # print(data.keys())
-            name = data['name']
-            location = data['location']['name']
-            key = '{} - {}'.format(name, location)
+            name = data["name"]
+            location = data["location"]["name"]
+            key = "{} - {}".format(name, location)
             uuid = os.path.splitext(file)[0]
             map[key] = uuid
 
-        with open(os.path.join(legacy.pod_lca_tomas.DATA, 'maps', 'ecoinvent_{}_map.json'.format(folder)), 'w') as f:
+        with open(os.path.join(legacy.pod_lca_tomas.DATA, "maps", "ecoinvent_{}_map.json".format(folder)), "w") as f:
             json.dump(map, f)
 
+
 def create_ecoinvent_maps_lcia_maps(path):
-    path = os.path.join(path, 'lcia_categories')
+    path = os.path.join(path, "lcia_categories")
     files = os.listdir(path)
     cmap = {}
     for file in files:
         filepath = os.path.join(path, file)
-        if file.endswith('json'):
-            with open(filepath, 'r') as fp:
+        if file.endswith("json"):
+            with open(filepath, "r") as fp:
                 lcia = json.load(fp)
-            category = lcia['name']
-            id_ = lcia['@id']
+            category = lcia["name"]
+            id_ = lcia["@id"]
             cmap[category] = id_
 
-    with open(os.path.join(legacy.pod_lca_tomas.DATA, 'maps', 'ecoinvent_lcia_categories_map.json'), 'w') as f:
+    with open(os.path.join(legacy.pod_lca_tomas.DATA, "maps", "ecoinvent_lcia_categories_map.json"), "w") as f:
         json.dump(cmap, f)
     return cmap
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     # TODO: How does TRACI relate to Ecoinvent? Does it?
 
-    for i in range(50): print('')
+    for i in range(50):
+        print("")
 
     # LCIA ---------------------------------------------------------------------
 
@@ -68,11 +72,9 @@ if __name__ == '__main__':
     #     print(category_dict[k])
     #     print('')
 
-
-
     # # CREATE MAP ---------------------------------------------------------------
 
-    path = os.path.join(legacy.pod_lca_tomas.TEMP, 'ecoinvent_391_en15804gd_upr_n2_20230629')
+    path = os.path.join(legacy.pod_lca_tomas.TEMP, "ecoinvent_391_en15804gd_upr_n2_20230629")
     create_ecoinvent_maps(path)
 
     # # OPEN JSON FILES FROM MAPS ------------------------------------------------
@@ -95,7 +97,7 @@ if __name__ == '__main__':
     # #     # print(k, data[k])
     # #     print('')
 
-    # # open one dict inside JSON file - - - - 
+    # # open one dict inside JSON file - - - -
 
     # key = 'exchanges'
     # flows = {}
@@ -119,5 +121,3 @@ if __name__ == '__main__':
     # #         ex = json.load(fp)
     # #     for k in ex:
     # #         print(k)
-
-

@@ -1,4 +1,3 @@
-
 from .master import Master
 from .process import Process
 from .electricity_product import Electricity

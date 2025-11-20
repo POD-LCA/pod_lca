@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -10,18 +9,17 @@ from ...visualizer import AbstractPlot
 
 
 class Stackplot(AbstractPlot):
-    """Stackplot.
-    """
+    """Stackplot."""
 
     def __init__(self):
         super().__init__()
 
     # ================================
     # Methods
-    # ================================ 
+    # ================================
     def draw(self, x_data, y_data, title, x_label, y_label, colors=None):
-        """ Draw the bar chart.
-        
+        """Draw the bar chart.
+
         Parameters
         ----------
         x_data : list or array
@@ -40,7 +38,7 @@ class Stackplot(AbstractPlot):
             Colors of each stack.
         """
         self.get_plot().clear_plot()
- 
+
         if isinstance(y_data, dict):
             label_lst = []
             y_data_lst = []
@@ -50,16 +48,16 @@ class Stackplot(AbstractPlot):
             y_data = y_data_lst
 
         if colors is None:
-            color_idxs =  [i % len(config['Preferences']['COLOUR_ORDER_LIST']) for i in range(len(y_data))]
-            colors = [config['Preferences']['COLOUR_ORDER_LIST'][i] for i in color_idxs]
+            color_idxs = [i % len(config["Preferences"]["COLOUR_ORDER_LIST"]) for i in range(len(y_data))]
+            colors = [config["Preferences"]["COLOUR_ORDER_LIST"][i] for i in color_idxs]
 
         self.get_plot().draw_stackplot(x_data, y_data, label_lst, colors)
-        
+
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
         self.get_plot().set_legend()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

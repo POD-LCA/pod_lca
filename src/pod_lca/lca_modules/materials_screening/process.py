@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -9,7 +8,7 @@ from . import Master
 
 
 class Process(Master):
-    """ A process taking products as input.
+    """A process taking products as input.
 
     Attributes
     ----------
@@ -25,5 +24,5 @@ class Process(Master):
         return f"Process(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

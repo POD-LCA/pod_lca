@@ -10,10 +10,9 @@ import json
 from pod_lca.utilities.geometry import Mesh
 
 
-
 class Zone(object):
     """
-    Zone datastructure for energy+ analysis. 
+    Zone datastructure for energy+ analysis.
 
     Parameters
     ----------
@@ -21,13 +20,14 @@ class Zone(object):
         Name for the zone
     surfaces: object
         A compas mesh representing the surfaces of the zone
-    
+
     """
+
     def __init__(self):
-        self.name =  ''
+        self.name = ""
         self.surfaces = None
-        self.volume = 0.
-        self.origin = [0., 0., 0.]
+        self.volume = 0.0
+        self.origin = [0.0, 0.0, 0.0]
         self.height = 0
 
     def to_json(self, filepath):
@@ -38,41 +38,42 @@ class Zone(object):
         ----------
         filepath: str
             Path for the JSON file to be created
-        
+
         Returns
         -------
         None
 
         """
-        with open(filepath, 'w+') as fp:
+        with open(filepath, "w+") as fp:
             json.dump(self.data, fp)
 
     @property
     def area(self):
         for fk in self.surfaces.faces:
-            st = self.surfaces.get_face_attribute(fk, 'surface_type')
-            if st == 'Floor':
+            st = self.surfaces.get_face_attribute(fk, "surface_type")
+            if st == "Floor":
                 return self.surfaces.face_area(fk)
 
     @property
     def centroid_xy(self):
         for fk in self.surfaces.faces:
-            st = self.surfaces.get_face_attribute(fk, 'surface_type')
-            if st == 'Floor':
+            st = self.surfaces.get_face_attribute(fk, "surface_type")
+            if st == "Floor":
                 return self.surfaces.face_centroid(fk)
 
     @property
     def data(self):
-        data = {'name'                  : self.name,
-                'surfaces'              : self.surfaces.to_data(),
-                }
+        data = {
+            "name": self.name,
+            "surfaces": self.surfaces.to_data(),
+        }
         return data
-    
+
     @data.setter
     def data(self, data):
-        surfaces = data.get('surfaces') or {}
-        self.name               = data.get('name') or {}
-        self.surfaces      = ZoneSurfaces.from_data(surfaces)
+        surfaces = data.get("surfaces") or {}
+        self.name = data.get("name") or {}
+        self.surfaces = ZoneSurfaces.from_data(surfaces)
         self.surfaces.name = self.name
 
     def add_surfaces(self, mesh):
@@ -100,12 +101,12 @@ class Zone(object):
         ----------
         data: dict
             Data dictionary
-        
+
         Returns
         -------
         Zone
             The instance of the zone datastructure
-        
+
         """
         zone = cls()
         zone.data = data
@@ -120,14 +121,14 @@ class Zone(object):
         ----------
         filepath: str
             Path to the JSON file
-        
+
         Returns
         -------
         Zone
             The instance of the zone datastructure
-        
+
         """
-        with open(filepath, 'r') as fp:
+        with open(filepath, "r") as fp:
             data = json.load(fp)
         zone = cls()
         zone.data = data
@@ -137,7 +138,7 @@ class Zone(object):
     def from_mesh(cls, mesh, name):
         """
         Create a new instance of the zone datastructure from a compas mesh.
-        Mesh faces must be provided in the following order: 1 - Floor face, 
+        Mesh faces must be provided in the following order: 1 - Floor face,
         2 - Ceiling face, 3 to n - Wall faces.
 
         Parameters
@@ -146,12 +147,12 @@ class Zone(object):
             Mesh to create the zone
         name: str, optional
             The name of the zone
-        
+
         Returns
         -------
         Zone
             The instance of the zone datastructure
-        
+
         """
         zone = cls()
         zone.name = name
@@ -159,54 +160,57 @@ class Zone(object):
         return zone
 
 
-
-
 class ZoneSurfaces(Mesh):
     def __init__(self):
         """
         Custom mesh object for the zone surfaces. Assigns face attributes
-        representing surface constructions, and boundary conditions. 
+        representing surface constructions, and boundary conditions.
 
         """
         super().__init__()
-        self.default_face_attributes.update({'name': None,
-                                             'construction':None,
-                                             'surface_type': None,
-                                             'outside_boundary_condition': None,
-                                             'outside_boundary_condition_object': None,
-                                             })
-    
+        self.default_face_attributes.update(
+            {
+                "name": None,
+                "construction": None,
+                "surface_type": None,
+                "outside_boundary_condition": None,
+                "outside_boundary_condition_object": None,
+            }
+        )
+
     def __str__(self):
-        return 'pod_lca Zone Surfaces - {}'.format(self.name)
+        return "pod_lca Zone Surfaces - {}".format(self.name)
 
     def assign_zone_surface_attributes(self, zname):
-    #     """
-    #     Assigns basic and pre-defined surface attributes based on mesh face order. 
+        #     """
+        #     Assigns basic and pre-defined surface attributes based on mesh face order.
 
-    #     Parameters
-    #     ----------
-    #     None
+        #     Parameters
+        #     ----------
+        #     None
 
-    #     Returns
-    #     -------
-    #     None
-        
-    #     """
+        #     Returns
+        #     -------
+        #     None
 
-        self.set_face_attribute(0, 'name', '{}_floor'.format(zname))
-        self.set_face_attribute(0, 'surface_type', 'Floor')
+        #     """
 
-        self.set_face_attribute(1, 'name', '{}_ceiling'.format(zname))
-        self.set_face_attribute(1, 'surface_type', 'Roof')
+        self.set_face_attribute(0, "name", "{}_floor".format(zname))
+        self.set_face_attribute(0, "surface_type", "Floor")
+
+        self.set_face_attribute(1, "name", "{}_ceiling".format(zname))
+        self.set_face_attribute(1, "surface_type", "Roof")
 
         for i in range(2, self.number_of_faces()):
-            self.set_face_attribute(i, 'name', '{}_wall_{}'.format(zname, i))
-            self.set_face_attribute(i, 'surface_type', 'Wall')
+            self.set_face_attribute(i, "name", "{}_wall_{}".format(zname, i))
+            self.set_face_attribute(i, "surface_type", "Wall")
 
 
-if __name__ == '__main__':
-    for i in range(50): print('')
-    for i in range(50): print('')
+if __name__ == "__main__":
+    for i in range(50):
+        print("")
+    for i in range(50):
+        print("")
 
     w = 10
     l = 20
@@ -215,11 +219,11 @@ if __name__ == '__main__':
     v0 = [0, 0, 0]
     v1 = [w, 0, 0]
     v2 = [w, l, 0]
-    v3 = [0 ,l, 0]
+    v3 = [0, l, 0]
     v4 = [0, 0, h]
     v5 = [w, 0, h]
     v6 = [w, l, h]
-    v7 = [0 ,l, h]
+    v7 = [0, l, h]
 
     f0 = [0, 3, 2, 1]
     f1 = [4, 5, 6, 7]

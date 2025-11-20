@@ -1,7 +1,5 @@
-
-
 from pod_lca.location import Location
-from pod_lca.materials_screening import Project 
+from pod_lca.materials_screening import Project
 from pod_lca.utilities import DataExporter
 from pod_lca.utilities import config
 from pod_lca.units import WATT_HOUR
@@ -17,10 +15,19 @@ __version__ = "0.1.0"
 
 # This script generates a CSV file with electricity data for different cities, years, and scenarios.
 
-city_list = ['Seattle', 'Portland', 'Los Angeles', 'Denver', 'Chicago', 'Atlanta']
+city_list = ["Seattle", "Portland", "Los Angeles", "Denver", "Chicago", "Atlanta"]
 
 year_list = [2025, 2030, 2035, 2040, 2045, 2050]
-scenario_list = ['MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035']
+scenario_list = [
+    "MidCase",
+    "LowRECost",
+    "HighRECost",
+    "HighDemandGrowth",
+    "LowNGPrice",
+    "HighNGPrice",
+    "Decarb95by2050",
+    "Decarb100by2035",
+]
 qty = 1
 unit = MEGA * WATT_HOUR
 
@@ -29,8 +36,8 @@ output_file = "save_files\\electricity_city_values.csv"
 my_manufacturing_project = Project()
 output_dict = {}
 
-impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']
-emission_inventories = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
+impact_categories = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]
+emission_inventories = config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"]
 
 sequence_no = 1
 for city in tqdm(city_list):
@@ -44,22 +51,27 @@ for city in tqdm(city_list):
             electricity = model_one.add_electricity(name="Electricity", stage="A3", qty=1, unit=unit)
             electricity.set_year(year)
             electricity.set_scenario(scenario)
-            output_dict[str(sequence_no)] = { 
-                                                'city': city,
-                                                'Zip Code': my_factory_location.get_zip(), 
-                                                'spatial resolution': electricity.get_supplier().get_geographical_scope(), 
-                                                'year': year, 
-                                                'cambium_scenario': scenario,
-                                                'qty': qty, 
-                                                'unit': unit.get_standard_notation()}
-                                                    
+            output_dict[str(sequence_no)] = {
+                "city": city,
+                "Zip Code": my_factory_location.get_zip(),
+                "spatial resolution": electricity.get_supplier().get_geographical_scope(),
+                "year": year,
+                "cambium_scenario": scenario,
+                "qty": qty,
+                "unit": unit.get_standard_notation(),
+            }
+
             impacts = electricity.get_impacts()
             emissions = electricity.get_emissions()
-            
+
             for impact_cat in impact_categories:
-                output_dict[str(sequence_no)][impact_cat + '(' + impact_categories[impact_cat] + ')'] = impacts.get_record(impact_cat)
+                output_dict[str(sequence_no)][impact_cat + "(" + impact_categories[impact_cat] + ")"] = (
+                    impacts.get_record(impact_cat)
+                )
             for emission in emission_inventories:
-                output_dict[str(sequence_no)][emission + '(' + emission_inventories[emission] + ')'] = emissions.get_record(emission)
+                output_dict[str(sequence_no)][emission + "(" + emission_inventories[emission] + ")"] = (
+                    emissions.get_record(emission)
+                )
             sequence_no += 1
 
 DataExporter.dict_to_csv(output_dict, output_file)

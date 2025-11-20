@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 from lca_modules.transportation.project_logistic_manager import ProjectLogisticManager
-from lca_modules.transportation.logistics_link import Link
-import matplotlib.pyplot as plt
 
 # Initialize Session State for Links and Impacts
 if "transport_links" not in st.session_state:
@@ -12,17 +10,19 @@ if "impacts" not in st.session_state:
     st.session_state["impacts"] = []
 
 # Initialize the ProjectLogisticManager
-data_folder = r'C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset'
+data_folder = r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\data\transportation_dataset"
 
 
 # Streamlit App Title
-st.image(r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\PODLCA logo - transparent.png", use_column_width=False, width=100)
+st.image(
+    r"C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\temp\PODLCA logo - transparent.png", use_column_width=False, width=100
+)
 st.title("Transportation Environmental Impact Calculator")
 
 # Sidebar for Adding and Editing Transportation Links
 with st.sidebar:
     st.header("Manage Transportation Links")
-    
+
     tab_selection = st.radio("Choose Action", ["Add Link", "Edit Link"])
 
     if tab_selection == "Add Link":
@@ -32,18 +32,22 @@ with st.sidebar:
         material = st.text_input("Material (e.g., Steel, Concrete):", "Steel")
         qty = st.number_input("Quantity (tonnes):", min_value=0.0, value=1000.0)
         travel_dist = st.number_input("Travel Distance:", min_value=0.0, value=200.0)
-        scenario = st.selectbox("Transportation scenario:", [None, "Local", "Regional", "Regional_c", "National", "NA", "Global"])
+        scenario = st.selectbox(
+            "Transportation scenario:", [None, "Local", "Regional", "Regional_c", "National", "NA", "Global"]
+        )
         return_trip_factor = st.number_input("Return Trip Factor:", min_value=1.0, value=2.0)
         dist_unit = st.selectbox("Distance Unit:", ["km", "Ml"])
-        mode_name = st.selectbox("Transportation mode_name:", [None,"Truck", "Rail", "Water", "Air"])
+        mode_name = st.selectbox("Transportation mode_name:", [None, "Truck", "Rail", "Water", "Air"])
         efficiency = st.slider("efficiencyiciency Factor (1-3):", min_value=1, max_value=3, value=2)
         st.subheader("Additional Details for NA and Global Scenarios")
-        mode_dms_name = st.selectbox("Transportation mode_name for DMS:", [None,"Truck", "Rail", "Water", "Air"])
+        mode_dms_name = st.selectbox("Transportation mode_name for DMS:", [None, "Truck", "Rail", "Water", "Air"])
         efficiency_dms = st.slider("efficiencyiciency Factor for DMS (1-3):", min_value=1, max_value=3, value=2)
 
         if st.button("Add Link"):
-            
-            project = ProjectLogisticManager(name="Building A", shipping_dest=shipping_dest, data_folder=data_folder, shipping_org=shipping_org)
+
+            project = ProjectLogisticManager(
+                name="Building A", shipping_dest=shipping_dest, data_folder=data_folder, shipping_org=shipping_org
+            )
             # Get coordinates for shipping origin and destination
 
             if shipping_dest:
@@ -58,18 +62,29 @@ with st.sidebar:
                 location_data = []
                 if origin_coordinates and dest_coordinates:
                     # Determine size based on the scenario
-                    scenario_sizes = {"Local": 10000, "Regional": 2, "Regional_c": 3, "National": 4, "NA": 5, "Global": 6}
+                    scenario_sizes = {
+                        "Local": 10000,
+                        "Regional": 2,
+                        "Regional_c": 3,
+                        "National": 4,
+                        "NA": 5,
+                        "Global": 6,
+                    }
                     size_origin = scenario_sizes.get(scenario, 3 if scenario else 5)  # Default to 3 if scenario is None
                     size_dest = size_origin if not scenario else size_origin + 1
 
-                    location_data.append({"latitude": origin_coordinates[0], "longitude": origin_coordinates[1], "size": size_origin})
-                    location_data.append({"latitude": dest_coordinates[0], "longitude": dest_coordinates[1], "size": size_dest})
+                    location_data.append(
+                        {"latitude": origin_coordinates[0], "longitude": origin_coordinates[1], "size": size_origin}
+                    )
+                    location_data.append(
+                        {"latitude": dest_coordinates[0], "longitude": dest_coordinates[1], "size": size_dest}
+                    )
 
                 location_df = pd.DataFrame(location_data)
 
-            if scenario:  
-                travel_dist = scenario  
-            else:  
+            if scenario:
+                travel_dist = scenario
+            else:
                 travel_dist = travel_dist
             project.create_link(
                 material=material,
@@ -106,21 +121,71 @@ with st.sidebar:
             st.write("No transportation links added yet. Please add a link first.")
         else:
             st.subheader("Edit Transportation Details")
-            link_index = st.selectbox("Select a Link to Edit", range(len(st.session_state["transport_links"])),
-                                      format_func=lambda x: f"Link {x+1}")
+            link_index = st.selectbox(
+                "Select a Link to Edit",
+                range(len(st.session_state["transport_links"])),
+                format_func=lambda x: f"Link {x+1}",
+            )
             selected_link = st.session_state["transport_links"][link_index]
-            selected_link["Shipping Destination"] = st.text_input("Shipping Destination:", selected_link["Shipping Destination"], key=f"dest_{link_index}")
-            selected_link["Shipping Origin"] = st.text_input("Shipping Origin:", selected_link["Shipping Origin"], key=f"org_{link_index}")
-            selected_link["Material"] = st.text_input("Material:", selected_link["Material"], key=f"material_{link_index}")
-            selected_link["Quantity (tonnes)"] = st.number_input("Quantity (tonnes):", min_value=0.0, value=selected_link["Quantity (tonnes)"], key=f"qty_{link_index}")
-            selected_link["Travel Distance"] = st.number_input("Travel Distance:", min_value=0.0, value=selected_link["Travel Distance"], key=f"dist_{link_index}")
-            selected_link["Scenario"] = st.selectbox("Transportation scenario:", ["Local", "Regional", "Regional_c", "National", "NA", "Global"], index=["Local", "Regional", "Regional_c", "National", "NA", "Global"].index(selected_link["Scenario"]), key=f"scenario_{link_index}")
-            selected_link["Return Trip Factor"] = st.number_input("Return Trip Factor:", min_value=1.0, value=selected_link["Return Trip Factor"], key=f"return_trip_{link_index}")
-            selected_link["Distance Unit"] = st.selectbox("Distance Unit:", ["km", "Ml"], index=["km", "Ml"].index(selected_link["Distance Unit"]), key=f"unit_{link_index}")
-            selected_link["mode_name"] = st.selectbox("Transportation mode_name:", ["Truck", "Rail", "Barge", "Air"], index=["Truck", "Rail", "Barge", "Air"].index(selected_link["mode_name"]), key=f"mode_name_{link_index}")
-            selected_link["efficiencyiciency Factor"] = st.slider("efficiencyiciency Factor (1-3):", min_value=1, max_value=3, value=selected_link["efficiencyiciency Factor"], key=f"efficiency_{link_index}")
-            selected_link["mode_dms_name"] = st.selectbox("Transportation mode_name for DMS:", ["Truck", "Rail", "Barge", "Air"], index=["Truck", "Rail", "Barge", "Air"].index(selected_link["mode_dms_name"]), key=f"mode_dms_{link_index}")
-            selected_link["efficiency_dms"] = st.slider("efficiencyiciency Factor for DMS (1-3):", min_value=1, max_value=3, value=selected_link["efficiency_dms"], key=f"efficiency_dms_{link_index}")
+            selected_link["Shipping Destination"] = st.text_input(
+                "Shipping Destination:", selected_link["Shipping Destination"], key=f"dest_{link_index}"
+            )
+            selected_link["Shipping Origin"] = st.text_input(
+                "Shipping Origin:", selected_link["Shipping Origin"], key=f"org_{link_index}"
+            )
+            selected_link["Material"] = st.text_input(
+                "Material:", selected_link["Material"], key=f"material_{link_index}"
+            )
+            selected_link["Quantity (tonnes)"] = st.number_input(
+                "Quantity (tonnes):", min_value=0.0, value=selected_link["Quantity (tonnes)"], key=f"qty_{link_index}"
+            )
+            selected_link["Travel Distance"] = st.number_input(
+                "Travel Distance:", min_value=0.0, value=selected_link["Travel Distance"], key=f"dist_{link_index}"
+            )
+            selected_link["Scenario"] = st.selectbox(
+                "Transportation scenario:",
+                ["Local", "Regional", "Regional_c", "National", "NA", "Global"],
+                index=["Local", "Regional", "Regional_c", "National", "NA", "Global"].index(selected_link["Scenario"]),
+                key=f"scenario_{link_index}",
+            )
+            selected_link["Return Trip Factor"] = st.number_input(
+                "Return Trip Factor:",
+                min_value=1.0,
+                value=selected_link["Return Trip Factor"],
+                key=f"return_trip_{link_index}",
+            )
+            selected_link["Distance Unit"] = st.selectbox(
+                "Distance Unit:",
+                ["km", "Ml"],
+                index=["km", "Ml"].index(selected_link["Distance Unit"]),
+                key=f"unit_{link_index}",
+            )
+            selected_link["mode_name"] = st.selectbox(
+                "Transportation mode_name:",
+                ["Truck", "Rail", "Barge", "Air"],
+                index=["Truck", "Rail", "Barge", "Air"].index(selected_link["mode_name"]),
+                key=f"mode_name_{link_index}",
+            )
+            selected_link["efficiencyiciency Factor"] = st.slider(
+                "efficiencyiciency Factor (1-3):",
+                min_value=1,
+                max_value=3,
+                value=selected_link["efficiencyiciency Factor"],
+                key=f"efficiency_{link_index}",
+            )
+            selected_link["mode_dms_name"] = st.selectbox(
+                "Transportation mode_name for DMS:",
+                ["Truck", "Rail", "Barge", "Air"],
+                index=["Truck", "Rail", "Barge", "Air"].index(selected_link["mode_dms_name"]),
+                key=f"mode_dms_{link_index}",
+            )
+            selected_link["efficiency_dms"] = st.slider(
+                "efficiencyiciency Factor for DMS (1-3):",
+                min_value=1,
+                max_value=3,
+                value=selected_link["efficiency_dms"],
+                key=f"efficiency_dms_{link_index}",
+            )
 
             if st.button("Update Link"):
                 st.session_state["transport_links"][link_index] = selected_link
@@ -152,7 +217,7 @@ with tab2:
         st.write("No transportation links added yet. Please add links first.")
     else:
         st.subheader("Impact Results by Category")
-        
+
         # Prepare Data for Visualization
         impacts_df = pd.DataFrame(st.session_state["impacts"])
         impacts_df.index = [f"Link {i+1}" for i in range(len(st.session_state["impacts"]))]
@@ -163,7 +228,5 @@ with tab2:
             st.bar_chart(impacts_df[category])
 
 
-
-
 # streamlit run transportation_app.py
-#C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\src\ui\transportation
+# C:\Users\mhtaba\Desktop\pod_lca_git\pod_lca\src\ui\transportation

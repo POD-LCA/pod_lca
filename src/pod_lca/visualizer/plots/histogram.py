@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -10,18 +9,17 @@ from ...visualizer import AbstractPlot
 
 
 class Histogram(AbstractPlot):
-    """Bar chart with data upto three levels: category, group, and component levels.
-    """
+    """Bar chart with data upto three levels: category, group, and component levels."""
 
     def __init__(self):
         super().__init__()
 
     # ================================
     # Methods
-    # ================================ 
-    def draw(self, data, no_bins, title, x_label, y_label, label='', color=None, unitize=True):
-        """ Draw the histogram.
-        
+    # ================================
+    def draw(self, data, no_bins, title, x_label, y_label, label="", color=None, unitize=True):
+        """Draw the histogram.
+
         Parameters
         ----------
         data : list
@@ -36,21 +34,21 @@ class Histogram(AbstractPlot):
             Y-label of the barchart.
         """
         if color is None:
-            COLOUR_BASE = config['Preferences']['COLOUR_BASE']
-            COLOUR_PALETTES = config['Preferences']['COLOUR_PALETTES']
-            COLOUR_ORDER_LIST = config['Preferences']['COLOUR_ORDER_LIST']
+            COLOUR_BASE = config["Preferences"]["COLOUR_BASE"]
+            COLOUR_PALETTES = config["Preferences"]["COLOUR_PALETTES"]
+            COLOUR_ORDER_LIST = config["Preferences"]["COLOUR_ORDER_LIST"]
             color = COLOUR_PALETTES[COLOUR_ORDER_LIST[0]][COLOUR_BASE]
 
         self.get_plot().draw_histogram(data, no_bins, label=label, color=color, unitize=unitize, alpha=0.5)
-        
+
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
         # self.get_plot().set_legend(title="legend")
 
     def draw_pdf(self, x_data, y_data, label, title=None, x_label=None, y_label=None):
-        """ Overlay the probability distribution function on a histogram.
-        
+        """Overlay the probability distribution function on a histogram.
+
         Parameters
         ----------
         x_data : list
@@ -76,6 +74,5 @@ class Histogram(AbstractPlot):
             self.get_plot().set_labels(x_label, y_label)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
-       

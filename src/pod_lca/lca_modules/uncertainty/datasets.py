@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -14,8 +13,8 @@ from .utils import UncertainityUtils
 from ...utilities import log
 
 
-class DataDistribution: 
-    """ Dataset object with the corresponding distribution fitted from Scipy.stats package.
+class DataDistribution:
+    """Dataset object with the corresponding distribution fitted from Scipy.stats package.
         A Dataset is a collection (list) of data points.
 
     Attributes
@@ -39,7 +38,7 @@ class DataDistribution:
         If true, the data are from a contrinous variable, otherwise a discrete variable.
     """
 
-    CONTNS_DIST_SHORTLIST = ['norm', 'expon', 'uniform', 'beta', 'gamma', 'chi2', 't', 'f', 'lognorm', 'weibull_min']
+    CONTNS_DIST_SHORTLIST = ["norm", "expon", "uniform", "beta", "gamma", "chi2", "t", "f", "lognorm", "weibull_min"]
 
     def __init__(self):
         self.name = None
@@ -48,32 +47,32 @@ class DataDistribution:
         self.distribution = None
         self.attribute = None
         self.parent = None
-        self.scenarios = {'low': 0.2, 'med': 0.5, 'high':0.8}
-        self.is_cts =None
+        self.scenarios = {"low": 0.2, "med": 0.5, "high": 0.8}
+        self.is_cts = None
 
     def __str__(self):
         string = f"Dataset has {len(self.get_data())} entries in the range {min(self.get_data()):.2f} to {max(self.get_data()):.2f}"
-        if  self.get_distribution() is not None:             
-            string += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}" 
+        if self.get_distribution() is not None:
+            string += f"\nData fitted to a {self.get_dist_name()} distribution with \nmean : {self.get_distribution().mean():.2f} \nstd : {self.get_distribution().std():.2f}"
 
         return string
 
     # ================================
     # Constructors
-    # ================================    
+    # ================================
     @classmethod
-    def from_data(cls, data, is_cts, name='unspecified', del_data=False, set_dist=True):
-        """ Create a Dataset object from data input.
-        
+    def from_data(cls, data, is_cts, name="unspecified", del_data=False, set_dist=True):
+        """Create a Dataset object from data input.
+
         Parameters
         ----------
         data : list of float
-            The data set.  
+            The data set.
         name : str
             Name of the data set.
         is_cts : bool
-            If true, the data are from a contrinous variable, otherwise a discrete variable. 
-                
+            If true, the data are from a contrinous variable, otherwise a discrete variable.
+
         Returns
         -------
         ~pod_lca.uncertainty.DataDistribution
@@ -83,7 +82,7 @@ class DataDistribution:
         dataset.set_data(data)
         dataset.set_name(name)
         dataset.is_cts = is_cts
-        
+
         if set_dist:
             dataset.set_distribution()
 
@@ -93,17 +92,17 @@ class DataDistribution:
         return dataset
 
     @classmethod
-    def from_distributions(cls, dist, is_cts, name='unspecified'):
-        """ Create a Dataset object from data input.
-        
+    def from_distributions(cls, dist, is_cts, name="unspecified"):
+        """Create a Dataset object from data input.
+
         Parameters
         ----------
         dist : scipy.stats.rv_continuous
-            Fitted distribution object from Scipy.  
+            Fitted distribution object from Scipy.
         name : str
             Name of the data set.
         is_cts : bool
-            If true, the data are from a contrinous variable, otherwise a discrete variable. 
+            If true, the data are from a contrinous variable, otherwise a discrete variable.
 
         Returns
         -------
@@ -113,29 +112,29 @@ class DataDistribution:
         dataset = cls()
         dataset.set_name(name)
         dataset.set_distribution(dist)
-        
+
         dataset.is_cts = is_cts
 
-        return dataset    
+        return dataset
 
     # ================================
     # Setters
     # ================================
     def set_data(self, data):
-        """ Set data to the Data distribution.
-        
+        """Set data to the Data distribution.
+
         Parameters
         ----------
         data : list of float
-            The data set.  
+            The data set.
         """
         self.data = data
 
         return self
-    
+
     def set_name(self, name):
-        """ Set name to the data distribution.
-        
+        """Set name to the data distribution.
+
         Parameters
         ----------
         name : str
@@ -146,7 +145,7 @@ class DataDistribution:
         return self
 
     def set_distribution(self, dist=None):
-        """ Set a distribution function to the data distribution.
+        """Set a distribution function to the data distribution.
 
         Parameters
         ----------
@@ -163,49 +162,53 @@ class DataDistribution:
                 try:
                     best_fit = self.find_best_fit(is_cts=True)
                     if best_fit is not None:
-                        dist, _ = self.fit_cts_distribution(best_fit, fit_method='MLE')
+                        dist, _ = self.fit_cts_distribution(best_fit, fit_method="MLE")
                         self.distribution = dist
                         self.dist_name = best_fit
                     else:
                         raise ValueError("A best-fit found could not be found.")
                 except:
-                    log("A valid distribution could not be fitted.", "Warn")        
+                    log("A valid distribution could not be fitted.", "Warn")
             else:
                 self.distribution = self.generate_discrete_distribution()
                 self.dist_name = self.distribution.name
         else:
             self.distribution = dist
-            self.dist_name = dist.dist.name if isinstance(self.distribution, stats._distn_infrastructure.rv_continuous_frozen) else dist.name
+            self.dist_name = (
+                dist.dist.name
+                if isinstance(self.distribution, stats._distn_infrastructure.rv_continuous_frozen)
+                else dist.name
+            )
 
         return self
-    
+
     def set_parent(self, obj):
-        """ Set parent of the dataset.
+        """Set parent of the dataset.
 
         Parameters
         ----------
         obj : object
             Object to which the dataset correspond.
-        """ 
+        """
         self.parent = obj
-        
+
         return self
 
     def set_attr_name(self, attr):
-        """ Set attribute to which the dataset belong.
+        """Set attribute to which the dataset belong.
 
         Parameters
         ----------
         attr : str
             Attribute to which the dataset correspond.
-        """ 
+        """
         self.attribute = attr
 
         return self
-    
+
     def set_scenario(self, scenario_name, value):
-        """ Set the statistic for a given scenario.
-        
+        """Set the statistic for a given scenario.
+
         Parameters
         ----------
         scenario_name : {'high', 'med', 'low'}
@@ -219,18 +222,18 @@ class DataDistribution:
     # Getters
     # ================================
     def get_data(self):
-        """ Get data list.
-        
+        """Get data list.
+
         Returns
         ----------
         list of float
-            The data set.  
+            The data set.
         """
         return self.data
-    
+
     def get_name(self):
-        """ Get the name of the data distribution.
-    
+        """Get the name of the data distribution.
+
         Returns
         ----------
         str
@@ -239,7 +242,7 @@ class DataDistribution:
         return self.name
 
     def get_distribution(self):
-        """ Get the distribution fitted to the dataset.
+        """Get the distribution fitted to the dataset.
 
         Returns
         ----------
@@ -249,38 +252,38 @@ class DataDistribution:
         return self.distribution
 
     def get_dist_name(self):
-        """ Get the name of the distribution fitted.
+        """Get the name of the distribution fitted.
 
         Returns
         ----------
         str
             Distribution name as used in :class:`scipy.stats`.
         """
-        return self.dist_name   
+        return self.dist_name
 
     def get_attr(self):
-        """ Get the attribute to which the dataset belong.
+        """Get the attribute to which the dataset belong.
 
         Returns
         -------
         str
             Attribute to which the dataset correspond.
-        """ 
+        """
         return self.attribute
 
     def get_parent(self):
-        """ Get parent of the dataset.
+        """Get parent of the dataset.
 
         Returns
         -------
         object
             Object to which the dataset correspond.
-        """ 
+        """
         return self.parent
-    
+
     def get_scenario(self, scenario_name):
-        """ Get the statistic for a given scenario.
-        
+        """Get the statistic for a given scenario.
+
         Parameters
         ----------
         scenario_name : str
@@ -292,8 +295,7 @@ class DataDistribution:
     # Delete
     # ================================
     def delete_data(self):
-        """ Delete data from the dataset.
-        """
+        """Delete data from the dataset."""
         self.data = None
 
         return self
@@ -301,8 +303,8 @@ class DataDistribution:
     # ================================
     # Methods for fitting distributions
     # ================================
-    def find_best_fit(self, is_cts=True, fit_method='MLE'):
-        """ Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
+    def find_best_fit(self, is_cts=True, fit_method="MLE"):
+        """Find the best fit probability distribution for the data, considering the Kolmogorov–Smirnov (KS) test.
 
         Parameters
         ----------
@@ -349,15 +351,15 @@ class DataDistribution:
                 elif k_test.statistic == best_k_param:
                     raise NotImplementedError(f"Equally best fit distributions found!! {best_fit} and {dist_name}")
                     # TODO: what if multiple best fits
-            
-            if best_fit is not None: # a best-fit is found from the short list
+
+            if best_fit is not None:  # a best-fit is found from the short list
                 return best_fit
 
         return best_fit
 
     def validate_dist_fit(self, dist_name, params):
-        """ Validate a distribution fitted to a dataset.
-        
+        """Validate a distribution fitted to a dataset.
+
         Parameters
         ----------
         dist_name : str
@@ -368,7 +370,7 @@ class DataDistribution:
         Returns
         -------
         bool
-            True if validated, otherwise False.      
+            True if validated, otherwise False.
         """
         alpha = 0.05
         critical_ks_param = UncertainityUtils.get_critical_ks_param(alpha, len(self.data))
@@ -379,9 +381,9 @@ class DataDistribution:
             return True
         else:
             return False
-     
-    def fit_cts_distribution(self, dist_fit, fit_method='MLE'):
-        """ Fit a distribution to the data.
+
+    def fit_cts_distribution(self, dist_fit, fit_method="MLE"):
+        """Fit a distribution to the data.
 
         Parameters
         ----------
@@ -391,7 +393,7 @@ class DataDistribution:
             Best fitting method: \n
             - 'MLE' - Maximum Likelihood Estimate
             - 'MSE' - Mean Squared Error
-        
+
         Returns
         -------
         :class:`scipy.stats.rv_continuous`
@@ -400,13 +402,13 @@ class DataDistribution:
             Parameters of the fitted distribution.
         """
         dist_tmp = getattr(stats, dist_fit)
-        params  = dist_tmp.fit(self.data, method=fit_method)
+        params = dist_tmp.fit(self.data, method=fit_method)
         dist = dist_tmp(*params)
 
         return dist, params
-    
+
     def generate_discrete_distribution(self):
-        """ Generate a discrete distribution from the data.
+        """Generate a discrete distribution from the data.
 
         Returns
         -------
@@ -418,13 +420,13 @@ class DataDistribution:
         xk = np.array(list(freq.keys()))
         pk = np.array(list(freq.values())) / len(self.data)
 
-        return stats.rv_discrete(name='from_data', values=(xk, pk))
+        return stats.rv_discrete(name="from_data", values=(xk, pk))
 
     # ================================
     # Methods on distributions
     # ================================
     def pick_data_point_from_distribution(self):
-        """ Pick a random variate from the distibution.
+        """Pick a random variate from the distibution.
 
         Returns
         -------
@@ -434,7 +436,7 @@ class DataDistribution:
         return self.distribution.rvs(size=1)[0]
 
     def pick_data_points_from_distribution(self, n):
-        """ Pick a random variate from the distibution.
+        """Pick a random variate from the distibution.
 
         Parameters
         ----------
@@ -453,13 +455,13 @@ class DataDistribution:
                 return self.distribution.rvs(size=n)
             else:
                 xk, pk = self.distribution.xk, self.distribution.pk
-                dist_tmp = stats.rv_discrete(name='custm', values=(np.arange(len(xk)), pk))
+                dist_tmp = stats.rv_discrete(name="custm", values=(np.arange(len(xk)), pk))
                 inidces = dist_tmp.rvs(size=n)
 
                 return [xk[idx] for idx in inidces]
 
     def prob_of(self, x):
-        """ Get the probability density at the given random variate.
+        """Get the probability density at the given random variate.
 
         Parameters
         ----------
@@ -476,9 +478,9 @@ class DataDistribution:
             # return self.dist.cdf(x+0.5) - self.dist.cdf(x-0.5) # FIXME: Probability density to probability
         else:
             return self.distribution.pmf(x)
-        
+
     def percentile(self, p):
-        """ Get the percentile of the distribution.
+        """Get the percentile of the distribution.
 
         Parameters
         ----------
@@ -494,9 +496,9 @@ class DataDistribution:
             return self.distribution.ppf(p)
         else:
             return self.distribution.ppf(p)
-        
-    def discrete_from_continous(self, start, range, step, integrate_point='left'):
-        """ Create a discrete data set from the continous distribution.
+
+    def discrete_from_continous(self, start, range, step, integrate_point="left"):
+        """Create a discrete data set from the continous distribution.
 
         Parameters
         ----------
@@ -522,13 +524,13 @@ class DataDistribution:
         t = np.arange(start, start + range + step, step)
         if t[-1] > start + range:
             t = np.delete(t, -1)
-        if integrate_point == 'left':
-            interval_starts = t 
+        if integrate_point == "left":
+            interval_starts = t
             interval_ends = t + step
-        elif integrate_point == 'middle':
+        elif integrate_point == "middle":
             interval_starts = t - step / 2
             interval_ends = t + step / 2
-        elif integrate_point == 'right':
+        elif integrate_point == "right":
             interval_starts = t - step
             interval_ends = t
         else:
@@ -537,7 +539,6 @@ class DataDistribution:
         if self.is_cts:
             return t, np.asarray(self.distribution.cdf(interval_ends) - self.distribution.cdf(interval_starts))
 
-        
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

@@ -107,7 +107,7 @@ def distance_point_plane(point, plane):
 
 
 def is_point_on_plane(point, plane, tol=None):
-    return distance_point_plane(point, plane) < .001
+    return distance_point_plane(point, plane) < 0.001
 
 
 def distance_point_point(a, b):
@@ -178,15 +178,15 @@ def geometric_key(xyz, precision=3, sanitize=True):
     return "{0:.{3}f},{1:.{3}f},{2:.{3}f}".format(x, y, z, precision)
 
 
-def make_box(w, l, h, spt=[0,0,0]):
-    p0 = [spt[0]    , spt[1]    , spt[2]]
-    p1 = [spt[0] + w, spt[1]    , spt[2]]
+def make_box(w, l, h, spt=[0, 0, 0]):
+    p0 = [spt[0], spt[1], spt[2]]
+    p1 = [spt[0] + w, spt[1], spt[2]]
     p2 = [spt[0] + w, spt[1] + l, spt[2]]
-    p3 = [spt[0]    , spt[1] + l, spt[2]]
-    p4 = [spt[0]    , spt[1]    , spt[2] + h]
-    p5 = [spt[0] + w, spt[1]    , spt[2] + h]
+    p3 = [spt[0], spt[1] + l, spt[2]]
+    p4 = [spt[0], spt[1], spt[2] + h]
+    p5 = [spt[0] + w, spt[1], spt[2] + h]
     p6 = [spt[0] + w, spt[1] + l, spt[2] + h]
-    p7 = [spt[0]    , spt[1] + l, spt[2] + h]
+    p7 = [spt[0], spt[1] + l, spt[2] + h]
 
     f0 = [0, 3, 2, 1]
     f1 = [4, 5, 6, 7]
@@ -195,7 +195,7 @@ def make_box(w, l, h, spt=[0,0,0]):
     f4 = [2, 3, 7, 6]
     f5 = [3, 0, 4, 7]
 
-    vertices  = [p0, p1, p2, p3, p4, p5, p6, p7]
+    vertices = [p0, p1, p2, p3, p4, p5, p6, p7]
     faces = [f0, f1, f2, f3, f4, f5]
 
     mesh = Mesh.from_vertices_and_faces(vertices, faces)
@@ -219,19 +219,18 @@ def make_box_from_quad(quad, height):
     return mesh
 
 
-
 class Mesh(object):
 
     def __init__(self):
-        self.vertices   = {}
-        self.faces      = {}
+        self.vertices = {}
+        self.faces = {}
         self.face_attributes = {}
         self.default_face_attributes = {}
 
     @classmethod
     def from_vertices_and_faces(cls, vertices, faces):
         mesh = cls()
-        mesh.vertices = {i: {'x': v[0], 'y': v[1], 'z':v[2]} for i, v in enumerate(vertices)}
+        mesh.vertices = {i: {"x": v[0], "y": v[1], "z": v[2]} for i, v in enumerate(vertices)}
         # mesh.faces = {i: v for i, v in enumerate(faces)}
         for face in faces:
             mesh.add_face(face)
@@ -245,17 +244,18 @@ class Mesh(object):
 
     @property
     def data(self):
-        data = {'vertices': self.vertices,
-                'faces': self.faces,
-                'default_face_attributes': self.default_face_attributes,
-                }
+        data = {
+            "vertices": self.vertices,
+            "faces": self.faces,
+            "default_face_attributes": self.default_face_attributes,
+        }
         return data
 
     @data.setter
     def data(self, data):
-        self.vertices                   = data.get('vertices') or {}
-        self.faces                      = data.get('faces') or {}
-        self.default_face_attributes    = data.get('default_face_attributes') or {}
+        self.vertices = data.get("vertices") or {}
+        self.faces = data.get("faces") or {}
+        self.default_face_attributes = data.get("default_face_attributes") or {}
 
     def edges(self):
         edges = []
@@ -270,7 +270,6 @@ class Mesh(object):
                     edges.append(edge)
         return edges
 
-
     def to_vertices_and_faces(self):
         vertices = [self.vertex_xyz(vk) for vk in sorted(self.vertices.keys())]
         faces = [self.face_vertices(fk) for fk in sorted(self.faces.keys())]
@@ -281,7 +280,7 @@ class Mesh(object):
         self.faces[key] = face
         self.face_attributes[key] = {}
         for attr in self.default_face_attributes:
-            self.face_attributes[key][attr] =  self.default_face_attributes[attr]
+            self.face_attributes[key][attr] = self.default_face_attributes[attr]
 
     def set_face_attribute(self, key, attr, value):
         if key in self.face_attributes:
@@ -301,7 +300,7 @@ class Mesh(object):
         return self.faces[key]
 
     def vertex_xyz(self, key):
-        return self.vertices[key]['x'], self.vertices[key]['y'], self.vertices[key]['z']
+        return self.vertices[key]["x"], self.vertices[key]["y"], self.vertices[key]["z"]
 
     def face_centroid(self, key):
         points = [self.vertex_xyz(vk) for vk in self.face_vertices(key)]

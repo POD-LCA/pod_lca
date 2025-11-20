@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -14,7 +13,7 @@ from pod_lca.units import MEGA
 # ================================================
 # INSTRUCTIONS
 # ================================================
-# The following steps shall be followed to create the connection between POD|LCA Python framework and the OpenLCA application. 
+# The following steps shall be followed to create the connection between POD|LCA Python framework and the OpenLCA application.
 
 # 1. Open the OpenLCA application
 # 2. Import the database into OpenLCA. The following is the procedure to import source data from a zip file (for importing a database from zolca files or other means, refer to the OpenLCA manual).
@@ -25,55 +24,84 @@ from pod_lca.units import MEGA
 #       2d. Select ‘Linked Data (JSON-LD)’ and follow the instructions to import the *.zip file. Select ‘update data sets with newer versions’
 # 3. Start up the Inter-Process Communication (IPC) server.
 #    The database intended for impact evaluation must be open before starting the IPC server.
-#       3a. Tools > Developer Tools > IPC Server 
-#       3b. Set Port to 8080 
+#       3a. Tools > Developer Tools > IPC Server
+#       3b. Set Port to 8080
 #       3c. Click the green arrow
 # 4. Run this script
 
 openLCA_client = openLCA.set_connection()
 
 process_list_all = openLCA.get_process_list(openLCA_client)
-filter_by = ['01', '02', '13', '16', '17', '19', '20', '22', '23', '24', '25', '27', '35', '36', '38', 'F', 'H', '8292']
+filter_by = ["01", "02", "13", "16", "17", "19", "20", "22", "23", "24", "25", "27", "35", "36", "38", "F", "H", "8292"]
 process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 
-impact_categories = DataImporter.json_to_dict('./data/impacts_ecoinvent391_categories.json')
-emission_inventories = DataImporter.json_to_dict('./data/impacts_ecoinvent391_emission-inventories.json')
+impact_categories = DataImporter.json_to_dict("./data/impacts_ecoinvent391_categories.json")
+emission_inventories = DataImporter.json_to_dict("./data/impacts_ecoinvent391_emission-inventories.json")
 
-impact_method_uuid = '5d5b2a0c-0a99-48d4-93e9-2f2b9d852655'
+impact_method_uuid = "5d5b2a0c-0a99-48d4-93e9-2f2b9d852655"
 
-electricity_process_list = DataImporter.csv_to_list('./data/impacts_ecoinvent391_electricity-group.csv', column_header='UUID')
-renewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_ecoinvent391_renewable-fuels-group.csv', column_header='UUID')
-nonrenewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_ecoinvent391_nonrenewable-fuels-group.csv', column_header='UUID')
-heating_values = DataImporter.csv_to_dict('./data/impacts_ecoinvent391_heating-values.csv', 'UUID')
-group_by = [{'name':'electricity','ids': electricity_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values},
-            {'name':'nonrenewable fuel combustion','ids':nonrenewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}, 
-            {'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
+electricity_process_list = DataImporter.csv_to_list(
+    "./data/impacts_ecoinvent391_electricity-group.csv", column_header="UUID"
+)
+renewable_fuels_process_list = DataImporter.csv_to_list(
+    "./data/impacts_ecoinvent391_renewable-fuels-group.csv", column_header="UUID"
+)
+nonrenewable_fuels_process_list = DataImporter.csv_to_list(
+    "./data/impacts_ecoinvent391_nonrenewable-fuels-group.csv", column_header="UUID"
+)
+heating_values = DataImporter.csv_to_dict("./data/impacts_ecoinvent391_heating-values.csv", "UUID")
+group_by = [
+    {"name": "electricity", "ids": electricity_process_list, "unit": MEGA * JOULE, "conversion_map": heating_values},
+    {
+        "name": "nonrenewable fuel combustion",
+        "ids": nonrenewable_fuels_process_list,
+        "unit": MEGA * JOULE,
+        "conversion_map": heating_values,
+    },
+    {
+        "name": "renewable fuel combustion",
+        "ids": renewable_fuels_process_list,
+        "unit": MEGA * JOULE,
+        "conversion_map": heating_values,
+    },
+]
 
 
-results = openLCA.generate_impacts_dir( openLCA_client, process_list, 
-                                        impact_categories | emission_inventories, 
-                                        impact_method_uuid, 
-                                        group_by)
+results = openLCA.generate_impacts_dir(
+    openLCA_client, process_list, impact_categories | emission_inventories, impact_method_uuid, group_by
+)
 
-# Note: When using ecoinvent391, renewable fuel group contributions need to be recalculated for all processes that use wood chips as a raw material (instead of fuel). 
-# wood chips: (uuids: d47a4435-3089-4263-af99-8611eed2698c, 7fe99768-d571-4bc2-a272-7df585bd0d48) 
-uuid_list_with_wood_chips = DataImporter.csv_to_list('./data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv', column_header='UUID')
+# Note: When using ecoinvent391, renewable fuel group contributions need to be recalculated for all processes that use wood chips as a raw material (instead of fuel).
+# wood chips: (uuids: d47a4435-3089-4263-af99-8611eed2698c, 7fe99768-d571-4bc2-a272-7df585bd0d48)
+uuid_list_with_wood_chips = DataImporter.csv_to_list(
+    "./data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv", column_header="UUID"
+)
 process_list = openLCA.get_process_list(openLCA_client, uuid_list_with_wood_chips)
 
-renewable_fuels_process_list = DataImporter.csv_to_list('./data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv', column_header='UUID')
+renewable_fuels_process_list = DataImporter.csv_to_list(
+    "./data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv", column_header="UUID"
+)
 
-group_by = [{'name':'renewable fuel combustion', 'ids':renewable_fuels_process_list, 'unit': MEGA * JOULE, 'conversion_map':heating_values}]
+group_by = [
+    {
+        "name": "renewable fuel combustion",
+        "ids": renewable_fuels_process_list,
+        "unit": MEGA * JOULE,
+        "conversion_map": heating_values,
+    }
+]
 
-results_with_wood_chips = openLCA.generate_impacts_dir( openLCA_client, process_list, 
-                                                        impact_categories | emission_inventories, 
-                                                        impact_method_uuid, 
-                                                        group_by)
+results_with_wood_chips = openLCA.generate_impacts_dir(
+    openLCA_client, process_list, impact_categories | emission_inventories, impact_method_uuid, group_by
+)
 
 for uuid in results_with_wood_chips:
     if uuid in results:
         for inventory in impact_categories | emission_inventories:
-            results[uuid]['renewable fuel combustion_'+ inventory] = results_with_wood_chips[uuid]['renewable fuel combustion_'+ inventory]
+            results[uuid]["renewable fuel combustion_" + inventory] = results_with_wood_chips[uuid][
+                "renewable fuel combustion_" + inventory
+            ]
 
 # save results
-save_path = './data/impacts_ecoinvent391_categorized-data.csv'
+save_path = "./data/impacts_ecoinvent391_categorized-data.csv"
 DataExporter.dict_to_csv(results, save_path)

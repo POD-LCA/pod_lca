@@ -17,9 +17,10 @@ from pod_lca.utilities.geometry import distance_point_point
 from pod_lca.utilities.geometry import is_point_on_plane
 from pod_lca.utilities.geometry import area_polygon
 
+
 class Window(object):
     """
-    Window datastructure for energy+ analysis. 
+    Window datastructure for energy+ analysis.
 
     Parameters
     ----------
@@ -31,14 +32,15 @@ class Window(object):
         The name of the building surface the window is attached to
     construction: str
         The name of the window construction
-    
+
     """
+
     def __init__(self):
         self.name = None
         self.nodes = None
         self.building_surface = None
         self.construction = None
-    
+
     @classmethod
     def from_wall_and_wwr(cls, zone, wall_key, wwr, construction=None):
         """
@@ -59,20 +61,20 @@ class Window(object):
         -------
         Window
             The instance of the created window object
-        
+
         """
-        if wwr > .95:
-            wwr = .95
+        if wwr > 0.95:
+            wwr = 0.95
         nks = zone.surfaces.face_vertices(wall_key)
         pts = [zone.surfaces.vertex_xyz(nk) for nk in nks]
         cpt = zone.surfaces.face_centroid(wall_key)
         a = zone.surfaces.face_area(wall_key) * wwr
-        lx = distance_point_point(pts[0], pts[1]) - .1
+        lx = distance_point_point(pts[0], pts[1]) - 0.1
         ly = a / lx
-        vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.)
-        vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.)
-        vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.)
-        vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.)
+        vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.0)
+        vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.0)
+        vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.0)
+        vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.0)
 
         p0 = add_vectors(cpt, add_vectors(vx_, vy_))
         p1 = add_vectors(cpt, add_vectors(vx, vy_))
@@ -80,12 +82,11 @@ class Window(object):
         p3 = add_vectors(cpt, add_vectors(vx_, vy))
 
         window = cls()
-        window.name = f'win_{zone.name}_{wall_key}'
+        window.name = f"win_{zone.name}_{wall_key}"
         window.nodes = [p0, p1, p2, p3]
-        window.building_surface = f'{zone.name}_wall_{wall_key}' 
+        window.building_surface = f"{zone.name}_wall_{wall_key}"
         window.construction = construction
         return window
-    
 
     def to_json(self, filepath):
         """
@@ -95,24 +96,24 @@ class Window(object):
         ----------
         filepath: str
             Path for the JSON file to be created
-        
+
         Returns
         -------
         None
 
         """
-        with open(filepath, 'w+') as fp:
+        with open(filepath, "w+") as fp:
             json.dump(self.data, fp)
 
     @property
     def data(self):
-        data = {'name'                  : self.name,
-                'nodes'                 : self.nodes,
-                'building_surface'      : self.building_surface,
-                'construction'          : self.construction,
-                }
+        data = {
+            "name": self.name,
+            "nodes": self.nodes,
+            "building_surface": self.building_surface,
+            "construction": self.construction,
+        }
         return data
-    
 
     @property
     def area(self):
@@ -121,10 +122,10 @@ class Window(object):
 
     @data.setter
     def data(self, data):
-        self.name               = data.get('name') or {}
-        self.nodes              = data.get('nodes') or {}
-        self.building_surface   = data.get('building_surface') or {}
-        self.construction       = data.get('construction') or {}
+        self.name = data.get("name") or {}
+        self.nodes = data.get("nodes") or {}
+        self.building_surface = data.get("building_surface") or {}
+        self.construction = data.get("construction") or {}
 
     @classmethod
     def from_data(cls, data):
@@ -135,17 +136,16 @@ class Window(object):
         ----------
         data: dict
             Data dictionary
-        
+
         Returns
         -------
         Window
             The instance of the window datastructure
-        
+
         """
         window = cls()
         window.data = data
         return window
-
 
     @classmethod
     def from_json(cls, filepath):
@@ -156,14 +156,14 @@ class Window(object):
         ----------
         filepath: str
             Path to the JSON file
-        
+
         Returns
         -------
         Window
             The instance of the window datastructure
-        
+
         """
-        with open(filepath, 'r') as fp:
+        with open(filepath, "r") as fp:
             data = json.load(fp)
         window = cls()
         window.data = data
@@ -182,46 +182,31 @@ class Window(object):
                 wall_key = fk
                 break
 
-        
         window = cls()
-        window.name = 'win_{}_{}'.format(zone.name, wall_key)
+        window.name = "win_{}_{}".format(zone.name, wall_key)
         window.nodes = points
-        window.building_surface = '{}_wall_{}'.format(zone.name, wall_key) 
+        window.building_surface = "{}_wall_{}".format(zone.name, wall_key)
         window.construction = None
         return window
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     from compas.datastructures import Mesh
     from compas_eplus.building import Zone
 
-    for i in range(50): print('')
+    for i in range(50):
+        print("")
 
     w = 20
     l = 10
     h = 4
 
-    vertices = [[0, 0, 0],
-                [w, 0, 0],
-                [w, l, 0],
-                [0, l, 0],
-                [0, 0, h],
-                [w, 0, h],
-                [w, l, h],
-                [0, l, h]]
-    faces = [[0, 1, 2, 3],
-            [4, 7, 6, 5],
-            [0, 4, 5, 1],
-            [1, 5, 6, 2],
-            [2, 6, 7, 3],
-         [3, 7, 4, 0]]
+    vertices = [[0, 0, 0], [w, 0, 0], [w, l, 0], [0, l, 0], [0, 0, h], [w, 0, h], [w, l, h], [0, l, h]]
+    faces = [[0, 1, 2, 3], [4, 7, 6, 5], [0, 4, 5, 1], [1, 5, 6, 2], [2, 6, 7, 3], [3, 7, 4, 0]]
 
     mesh = Mesh.from_vertices_and_faces(vertices, faces)
-    zone = Zone.from_mesh(mesh, 'zone_0')
+    zone = Zone.from_mesh(mesh, "zone_0")
 
-    points = [[w / 4., 0, h / 4.],
-              [w / 2., 0, h / 4. ],
-              [w / 2., 0, h / 2.],
-              [w / 4., 0, w / 2.]
-             ]
+    points = [[w / 4.0, 0, h / 4.0], [w / 2.0, 0, h / 4.0], [w / 2.0, 0, h / 2.0], [w / 4.0, 0, w / 2.0]]
 
     w = Window.from_points_and_zone(points, zone)

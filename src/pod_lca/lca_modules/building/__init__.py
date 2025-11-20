@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -8,4 +7,4 @@ __version__ = "0.1.0"
 from .building_structure import Building
 from .components import BuildingComponent
 
-__all__ = ["Building","BuildingComponent"]
+__all__ = ["Building", "BuildingComponent"]

@@ -9,8 +9,8 @@ class ArrayMethods:
 
     @staticmethod
     def get_attribute_as_list(objects, attr_name):
-        """ Get a specified attribute from objects in a list, and returns the attribute entries in a list.
-            
+        """Get a specified attribute from objects in a list, and returns the attribute entries in a list.
+
         Parameters
         ----------
         objects : list of object
@@ -27,8 +27,8 @@ class ArrayMethods:
 
     @staticmethod
     def sort_by_attribute(objects, attr_name, descending=True):
-        """ Sort a list of objects by a specified attribute value.
-            
+        """Sort a list of objects by a specified attribute value.
+
         Parameters
         ----------
         objects : list of object
@@ -47,8 +47,8 @@ class ArrayMethods:
 
     @staticmethod
     def set_value(objects, attr_name, value):
-        """ Sort a list of objects by a specified attribute value.
-            
+        """Sort a list of objects by a specified attribute value.
+
         Parameters
         ----------
         objects : list of object
@@ -62,5 +62,5 @@ class ArrayMethods:
             setattr(obj, attr_name, value)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

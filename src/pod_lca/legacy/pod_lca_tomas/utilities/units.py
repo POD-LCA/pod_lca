@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-import os
-
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
@@ -11,4 +9,4 @@ __version__ = "0.1.0"
 
 
 def lbs_to_kgs(lbs):
-    return lbs * .45359237
+    return lbs * 0.45359237

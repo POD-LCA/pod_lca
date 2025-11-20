@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -11,11 +10,11 @@ from ...utilities import log
 
 
 class TransportMode:
-    """ Transportation mode object.
+    """Transportation mode object.
 
     Attributes
     ----------
-    parent : ~pod_lca.transportation.TransportationLeg 
+    parent : ~pod_lca.transportation.TransportationLeg
         Transportation leg to which the transportation mode correspond to.
     mode_name: {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
         The name of the transportation mode.
@@ -44,7 +43,7 @@ class TransportMode:
         self.cfs_mode = None
 
     def __str__(self):
-        str = "="*75 + "\n" + f"Transportation Mode: {self.get_name()}\n" + "="*75 + "\n"
+        str = "=" * 75 + "\n" + f"Transportation Mode: {self.get_name()}\n" + "=" * 75 + "\n"
 
         return str
 
@@ -53,7 +52,7 @@ class TransportMode:
     # ================================
     @classmethod
     def new(cls, mode_name, efficiency="Median"):
-        """ Create a new transportation mode.
+        """Create a new transportation mode.
 
         Parameters
         ----------
@@ -80,8 +79,8 @@ class TransportMode:
     # Setters
     # ================================
     def set_parent(self, parent):
-        """ Set the parent transportation leg.
-        
+        """Set the parent transportation leg.
+
         Parameters
         ----------
         parent : ~pod_lca.transportation.TransportationLeg
@@ -90,9 +89,9 @@ class TransportMode:
         self.parent = parent
 
         return self
-    
-    def set_name(self, mode_name:(str)):
-        """ Set the name of the transportation mode.
+
+    def set_name(self, mode_name: str):
+        """Set the name of the transportation mode.
 
         Parameters
         ----------
@@ -104,8 +103,8 @@ class TransportMode:
 
         return self
 
-    def set_efficiency(self, efficiency:(str)):
-        """ Set the efficiency of the transportation mode.
+    def set_efficiency(self, efficiency: str):
+        """Set the efficiency of the transportation mode.
 
         Parameters
         ----------
@@ -121,17 +120,17 @@ class TransportMode:
     # Getters
     # ================================
     def get_parent(self):
-        """ Set the parent transportation leg.
-        
+        """Set the parent transportation leg.
+
         Returns
         ----------
-        ~pod_lca.transportation.TransportationLeg 
+        ~pod_lca.transportation.TransportationLeg
             The transportation leg to which this mode belong.
         """
         return self.parent
-    
-    def get_name (self):
-        """ Retrieve the name of the transportation mode.
+
+    def get_name(self):
+        """Retrieve the name of the transportation mode.
 
         Returns
         ----------
@@ -140,8 +139,8 @@ class TransportMode:
         """
         return self.mode_name
 
-    def get_efficiency (self):
-        """ Retrieve the efficiency of the transportation mode.
+    def get_efficiency(self):
+        """Retrieve the efficiency of the transportation mode.
 
         Returns
         ----------
@@ -149,19 +148,19 @@ class TransportMode:
             the efficiency level.
         """
         return self.efficiency
-    
+
     def get_unit_impacts(self):
-        """ Get unit impacts from the transportation mode.
-        
+        """Get unit impacts from the transportation mode.
+
         Returns
         -------
         ~pod_lca.impacts.Impacts
             Impacts from the transportation mode, per declared quantity and unit.
         """
         return self.unit_impacts
-    
+
     def get_unit_emissions(self):
-        """ Get unit emissions from the transportation mode.
+        """Get unit emissions from the transportation mode.
 
         Returns
         -------
@@ -169,19 +168,19 @@ class TransportMode:
             Emissions from the transportation mode, per declared quantity and unit.
         """
         return self.unit_emissions
-    
+
     def get_declared_unit(self):
-        """ Get the declared unit of the transportation mode.
+        """Get the declared unit of the transportation mode.
 
         Returns
         -------
         ~pod_lca.units.Unit
-            The unit corresponding to declared quantity of inventories.    
+            The unit corresponding to declared quantity of inventories.
         """
         return self.declared_unit
-    
+
     def get_impact_database(self):
-        """ Get the impact database.
+        """Get the impact database.
 
         Returns
         -------
@@ -194,8 +193,7 @@ class TransportMode:
     # Methods
     # ================================
     def set_inventory_records(self):
-        """ Set unit inventory records of impacts and emissions for the transportation mode.
-        """
+        """Set unit inventory records of impacts and emissions for the transportation mode."""
         if (self.get_name() is not None) and (self.get_efficiency() is not None) and (self.get_parent() is not None):
             database = self.get_impact_database()
             if database is not None:
@@ -203,10 +201,14 @@ class TransportMode:
                 self.declared_unit = inventories[database.get_unit_key()]
                 inventories_declared_qty = inventories[database.get_qty_key()]
 
-                impacts = {key: inventories[key] / inventories_declared_qty for key in self.unit_impacts.record_attr_dict}
+                impacts = {
+                    key: inventories[key] / inventories_declared_qty for key in self.unit_impacts.record_attr_dict
+                }
                 self.unit_impacts.update_qty(impacts)
 
-                emissions = {key: inventories[key] / inventories_declared_qty for key in self.unit_emissions.record_attr_dict}
+                emissions = {
+                    key: inventories[key] / inventories_declared_qty for key in self.unit_emissions.record_attr_dict
+                }
                 self.unit_emissions.update_qty(emissions)
 
                 return self
@@ -215,6 +217,6 @@ class TransportMode:
 
                 return None
 
-    
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     pass

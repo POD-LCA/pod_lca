@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
@@ -10,7 +9,7 @@ from ...utilities import config
 
 
 class CarbonStorage(Records):
-    """ CarbonStorage object keep record of the carbon storage records created by a product or a process.
+    """CarbonStorage object keep record of the carbon storage records created by a product or a process.
 
     Attributes
     ----------
@@ -22,11 +21,11 @@ class CarbonStorage(Records):
     """
 
     record_type = "Carbon Storage"
-    record_attr_dict = config['setup']['INVENTORY_ITEMS']['CARBON_STORAGE']
+    record_attr_dict = config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"]
 
     def __init__(self):
         super().__init__()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

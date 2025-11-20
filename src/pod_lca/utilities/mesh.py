@@ -108,7 +108,7 @@
 #         return self.faces.keys()
 
 # if __name__ == '__main__':
-    
+
 #     for i in range(50): print('')
 
 #     w = 10
@@ -138,5 +138,3 @@
 #     print(mesh.face_vertices(0))
 #     print(mesh.vertex_xyz(3))
 #     print(mesh.face_centroid(1))
-
-    

@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -9,18 +8,17 @@ from ...visualizer import AbstractPlot
 
 
 class ViolinPlot(AbstractPlot):
-    """Line chart with multiple lines.
-    """
+    """Line chart with multiple lines."""
 
     def __init__(self):
         super().__init__()
 
     # ================================
     # Methods
-    # ================================ 
+    # ================================
     def draw(self, data, title, x_label, y_label):
-        """ Draw the bar chart.
-        
+        """Draw the bar chart.
+
         Parameters
         ----------
         data : array
@@ -37,12 +35,11 @@ class ViolinPlot(AbstractPlot):
         self.get_plot().clear_plot()
 
         self.get_plot().draw_violinplot(data)
-                
+
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
-       

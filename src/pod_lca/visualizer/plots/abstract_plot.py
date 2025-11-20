@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -6,8 +5,8 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 
-class AbstractPlot():
-    """ An abstract class for specific implementation of graphs and charts. A plot is a set of instructions for plotting the graph.
+class AbstractPlot:
+    """An abstract class for specific implementation of graphs and charts. A plot is a set of instructions for plotting the graph.
 
     Attributes
     ----------
@@ -23,8 +22,8 @@ class AbstractPlot():
     # ================================
     @classmethod
     def from_plotter(cls, plotter):
-        """ Create a plot from a plotter.
-        
+        """Create a plot from a plotter.
+
         Parameters
         ----------
         plotter : ~pod_lca.visualizer.AbstractPlotter
@@ -40,11 +39,11 @@ class AbstractPlot():
         chart.set_plot(plotter)
 
         return chart
-    
+
     @classmethod
     def from_plot(cls, plot):
-        """ Create a plot from an existing plot.
-        
+        """Create a plot from an existing plot.
+
         Parameters
         ----------
         plot : ~pod_lca.visualizer.AbstractPlot
@@ -53,52 +52,50 @@ class AbstractPlot():
         Returns
         -------
         ~pod_lca.visualizer.AbstractPlot
-            Plot created.        
+            Plot created.
         """
         chart = cls()
 
         chart.plot = plot
 
         return chart
-    
+
     # ================================
     # Setters and Getters
-    # ================================  
+    # ================================
     def set_plot(self, plotter):
-        """ Set the plot.
-        
+        """Set the plot.
+
         Parameters
         ----------
         plotter : ~pod_lca.visualizer.AbstractPlotter
-            Plotter.        
+            Plotter.
         """
         self.plot = plotter.create_plot()
 
         return self
-    
+
     def get_plot(self):
-        """ Get the plot.
-        
+        """Get the plot.
+
         Returns
         ----------
         ~pod_lca.visualizer.AbstractPlot
-            Plotter.        
+            Plotter.
         """
         return self.plot
 
     # ================================
     # Methods
-    # ================================ 
+    # ================================
     def draw(self):
-        """ Draw the plot.
-        """
+        """Draw the plot."""
         pass
 
     def show(self):
-        """ Display the barchart.
-        """
+        """Display the barchart."""
         self.get_plot().show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

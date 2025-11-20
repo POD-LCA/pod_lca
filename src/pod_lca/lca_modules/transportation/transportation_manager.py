@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -15,7 +14,7 @@ from ...units import KILOMETER
 
 
 class TransportationManager:
-    """ This class maintains the legs of transportation for products transported.
+    """This class maintains the legs of transportation for products transported.
 
     Attributes
     ----------
@@ -33,7 +32,7 @@ class TransportationManager:
         self.mode_impact_database = None
 
     def __str__(self):
-        str = "="*75 + "\n" + f"Project: {self.get_name()}\n" + "="*75 + "\n"
+        str = "=" * 75 + "\n" + f"Project: {self.get_name()}\n" + "=" * 75 + "\n"
 
         for leg in self.get_transportation_legs():
             str += f"{leg} \n"
@@ -45,7 +44,7 @@ class TransportationManager:
     # ================================
     @classmethod
     def new(cls, name=None):
-        """ Create a new project.
+        """Create a new project.
 
         Parameters
         ----------
@@ -60,13 +59,13 @@ class TransportationManager:
         new_project = cls()
         new_project.set_name(name)
 
-        return new_project  
+        return new_project
 
     # ================================
     # Setters
     # ================================
-    def set_name(self, name:(str)):
-        """ Set the name of the project.
+    def set_name(self, name: str):
+        """Set the name of the project.
 
         Parameters
         ----------
@@ -76,15 +75,15 @@ class TransportationManager:
         self.name = name
 
         return self
-    
+
     def set_impact_database(self, database):
-        """ Set mode impact database used in the project.
-        
+        """Set mode impact database used in the project.
+
         Parameters
         ----------
         database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
             Impact database object or if a string, filepath to the corresponding csv file containing impact data.
-        
+
         Raises
         ------
         TypeError
@@ -98,11 +97,11 @@ class TransportationManager:
             self.set_impact_database(transport_impact_database)
         else:
             raise TypeError("Database input not recognized")
-        
+
         return self
-    
-    def set_project_origin(self, origin:(str)):
-        """ Set the origin location of the project.
+
+    def set_project_origin(self, origin: str):
+        """Set the origin location of the project.
 
         Parameters
         ----------
@@ -113,8 +112,8 @@ class TransportationManager:
             leg.set_shipping_org(origin)
         # TODO consider having a project level variable for origin
 
-    def set_project_destination(self, destination:(str)):
-        """ Set the destination location of the project.
+    def set_project_destination(self, destination: str):
+        """Set the destination location of the project.
 
         Parameters
         ----------
@@ -126,13 +125,13 @@ class TransportationManager:
         # TODO consider having a project level variable for origin
 
     def set_scenario(self, transportation_scenario):
-        pass # TODO: set project level scenario
+        pass  # TODO: set project level scenario
 
     # ================================
     # Setters
     # ================================
     def get_name(self):
-        """ Retrieve the name of the project.
+        """Retrieve the name of the project.
 
         Returns
         -------
@@ -142,7 +141,7 @@ class TransportationManager:
         return self.name
 
     def get_transportation_legs(self):
-        """ Retrieve the transportation legs of the project.
+        """Retrieve the transportation legs of the project.
 
         Returns
         -------
@@ -152,8 +151,8 @@ class TransportationManager:
         return sum(self.transport_legs.values(), [])
 
     def get_transportation_leg(self, product):
-        """ Retrieve the transportation legs corresponding to a product.
-        
+        """Retrieve the transportation legs corresponding to a product.
+
         Parameters
         ----------
         product : ~pod_lca.materials_screening.Product
@@ -162,13 +161,13 @@ class TransportationManager:
         Returns
         -------
         ~pod_lca.transportation.TransportationLeg
-            Transportation leg.        
+            Transportation leg.
         """
         if product in self.transport_legs:
             return self.transport_legs[product]
 
     def get_goods(self):
-        """ Retrieve the goods of the project.
+        """Retrieve the goods of the project.
 
         Returns
         -------
@@ -178,17 +177,17 @@ class TransportationManager:
         return list(self.transport_legs.keys())
 
     def get_impact_database(self):
-        """ Retrieve the transportation mode impact database.
-        
+        """Retrieve the transportation mode impact database.
+
         Returns
         -------
         ~pod_lca.impacts.TranportationModeImpactsDatabase
             Transportation mode impact database.
         """
         return self.mode_impact_database
-    
+
     def get_impacts(self, product=None):
-        """ Retrieve the impacts of the project.
+        """Retrieve the impacts of the project.
 
         Parameters
         ----------
@@ -211,11 +210,11 @@ class TransportationManager:
                 impact += leg.get_impacts()
 
             return impact
-        
+
         else:
             if product not in self.transport_legs:
                 raise ValueError(f"Product '{product}' not found in the project.")
-            
+
             impact = Impacts.from_parent(self)
             for leg in self.transport_legs[product]:
                 impact += leg.get_impacts()
@@ -223,7 +222,7 @@ class TransportationManager:
             return impact
 
     def get_emissions(self, product=None):
-        """ Retrieve the emissions of the product.
+        """Retrieve the emissions of the product.
 
         Parameters
         ----------
@@ -238,7 +237,7 @@ class TransportationManager:
         Raises
         ------
         ValueError
-            Product not found in the project.        
+            Product not found in the project.
         """
         if product is None:
             impact = Emissions.from_parent(self)
@@ -246,32 +245,34 @@ class TransportationManager:
                 impact += leg.get_emissions()
 
             return impact
-        
+
         else:
             if product not in self.transport_legs:
                 raise ValueError(f"Product '{product}' not found in the project.")
-            
+
             impact = Emissions.from_parent(self)
             for leg in self.transport_legs[product]:
                 impact += leg.get_emissions()
 
             return impact
-    
+
     # ================================
     # Model Methods
     # ================================
-    def add_good(self, 
-                  good, 
-                  travel_dist=None,
-                  shipping_dest=None, 
-                  shipping_org=None,
-                  transport_scenario=None,
-                  distance_unit=KILOMETER, 
-                  return_trip_factor=None, 
-                  mode_name=None,
-                  mode_fuel_type="Regular", 
-                  mode_efficiency="Median"):
-        """ Add goods to the project. This method creates the appropriate transportation legs based on the data provided
+    def add_good(
+        self,
+        good,
+        travel_dist=None,
+        shipping_dest=None,
+        shipping_org=None,
+        transport_scenario=None,
+        distance_unit=KILOMETER,
+        return_trip_factor=None,
+        mode_name=None,
+        mode_fuel_type="Regular",
+        mode_efficiency="Median",
+    ):
+        """Add goods to the project. This method creates the appropriate transportation legs based on the data provided
 
         Parameters
         ----------
@@ -306,9 +307,9 @@ class TransportationManager:
             LinkClass = TransportationLeg
 
         elif (shipping_dest is not None) and (shipping_org is not None):
-            if (shipping_dest.get_country_code() == 'US') and not (shipping_org.get_country_code() == 'US'):
+            if (shipping_dest.get_country_code() == "US") and not (shipping_org.get_country_code() == "US"):
                 LinkClass = ForeignLeg
-            elif (shipping_dest.get_country_code() == 'US') and (shipping_org.get_country_code() == 'US'):
+            elif (shipping_dest.get_country_code() == "US") and (shipping_org.get_country_code() == "US"):
                 LinkClass = DomesticLeg
             else:
                 raise NotImplementedError
@@ -320,13 +321,13 @@ class TransportationManager:
                 LinkClass = DomesticLeg
             else:
                 raise ValueError("Transport scenario not recognized.")
-            
+
         else:
             LinkClass = DomesticLeg
 
         # create transportation leg
-        leg = LinkClass.in_project(good, self, 'transport_' + good.get_name())
-        
+        leg = LinkClass.in_project(good, self, "transport_" + good.get_name())
+
         leg.set_mode(mode_name, mode_efficiency)
 
         leg.set_travel_dist(travel_dist, distance_unit, return_trip_factor)
@@ -340,15 +341,14 @@ class TransportationManager:
     # ================================
     # Project Methods
     # ================================
-    def clear_project(self):  
-        """ Clear the project by removing all transportation legs.
-        """
+    def clear_project(self):
+        """Clear the project by removing all transportation legs."""
         self.transport_legs = {}
 
         return self
 
-    def save(self, file_path:(str)):
-        """ Save as a *.pkl file.
+    def save(self, file_path: str):
+        """Save as a *.pkl file.
 
         Parameters
         ----------
@@ -359,8 +359,8 @@ class TransportationManager:
             pickle.dump(self, file)
 
     @staticmethod
-    def load(file_path:(str)):
-        """ Load a project from a pickled file.
+    def load(file_path: str):
+        """Load a project from a pickled file.
 
         Parameters
         ----------
@@ -375,7 +375,7 @@ class TransportationManager:
             Permission denied to access file.
         """
         try:
-            with open(file_path, 'rb') as file:
+            with open(file_path, "rb") as file:
                 project = pickle.load(file)
             return project
         except FileNotFoundError:
@@ -386,5 +386,5 @@ class TransportationManager:
             print("An error occurred:", e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

@@ -1,28 +1,31 @@
 import networkx as nx
+
 # # from pyvis.network import Network
-# # TODO: Test the recursion with a known (and small) network. 
+# # TODO: Test the recursion with a known (and small) network.
 
-for i in range(50): print('')
+for i in range(50):
+    print("")
 
-data = {'a' : ['b', 'c', 'd'],
-        'b' : ['i', 'j', 'k'],
-        'c' : ['h'],
-        'd' : ['e', 'f', 'g'],
-        'e' : [],
-        'f' : [],
-        'g' : [],
-        'h' : [],
-        'i' : [],
-        'j' : [],
-        'k' : ['l', 'm', 'n'],
-        'l' : [],
-        'm' : ['o'],
-        'n' : [],
-        'o' : [],
-        }
+data = {
+    "a": ["b", "c", "d"],
+    "b": ["i", "j", "k"],
+    "c": ["h"],
+    "d": ["e", "f", "g"],
+    "e": [],
+    "f": [],
+    "g": [],
+    "h": [],
+    "i": [],
+    "j": [],
+    "k": ["l", "m", "n"],
+    "l": [],
+    "m": ["o"],
+    "n": [],
+    "o": [],
+}
 
 G = nx.Graph()
-root = 'a'
+root = "a"
 q = data[root]
 for c in data[root]:
     G.add_edge(root, c)
@@ -40,13 +43,12 @@ while q:
             q.append(child)
     # root = parent
 
-    
 
 from pyvis.network import Network
-nt = Network('1000px', '1700px', notebook=True)
-nt.from_nx(G)
-nt.show('nx.html')
 
+nt = Network("1000px", "1700px", notebook=True)
+nt.from_nx(G)
+nt.show("nx.html")
 
 
 ##################################

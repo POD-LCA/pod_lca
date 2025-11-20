@@ -1,4 +1,3 @@
-
 from .transport_mode import TransportMode
 from .electirc_transport_mode import ElectricTransportMode
 from .transport_dataset import TransportDataset
@@ -13,4 +12,14 @@ from .transportation_manager import TransportationManager
 from .us_domestic_transport_manager import USDomesticTransportationManager
 from .us_global_logistics_manager import USGlobalTransportationManager
 
-__all__ = ["DomesticLeg", "ForeignLeg", "TransportationLeg", "TransportationManager", "Scenario", "TransportMode"]
+__all__ = [
+    "CFSDataset",
+    "DomesticLeg",
+    "ElectricTransportMode",
+    "ForeignLeg",
+    "TransportationLeg",
+    "TransportationManager",
+    "Scenario",
+    "TransportDataset",
+    "TransportMode",
+]

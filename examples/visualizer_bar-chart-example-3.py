@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -10,19 +9,13 @@ from pod_lca.visualizer import MatplotlibPlotter
 
 data = {
     "Fruits": {
-        "Nutrients": {'Carbs': 12000,  # mg
-                      'Protein': 800},  # mg
-        "Minerals": {'Potassium': 250,  # mg
-                     'Magnesium': 15,  # mg
-                     'Calcium': 10}  # mg
+        "Nutrients": {"Carbs": 12000, "Protein": 800},  # mg  # mg
+        "Minerals": {"Potassium": 250, "Magnesium": 15, "Calcium": 10},  # mg  # mg  # mg
     },
     "Vegetables": {
-        "Nutrients": {'Carbs': 7500,  # mg
-                      'Protein': 2100,  # mg
-                      'Fiber': 3400},  # mg
-        "Minerals": {'Potassium': 300,  # mg
-                     'Iron': 2.7}  # mg
-    }
+        "Nutrients": {"Carbs": 7500, "Protein": 2100, "Fiber": 3400},  # mg  # mg  # mg
+        "Minerals": {"Potassium": 300, "Iron": 2.7},  # mg  # mg
+    },
 }
 
 graph = BarChart.from_plotter(MatplotlibPlotter)

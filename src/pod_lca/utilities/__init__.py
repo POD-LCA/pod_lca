@@ -14,4 +14,4 @@ from .maths.funcs import MathFuncs
 from .objects.array_methods import ArrayMethods
 from .logger import log
 
-__all__ = ["config", "DataExporter", "DataImporter", "ArrayMethods","MathFuncs", "log"]
+__all__ = ["config", "DataExporter", "DataImporter", "ArrayMethods", "MathFuncs", "log"]

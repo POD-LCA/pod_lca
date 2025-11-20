@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
@@ -9,9 +8,9 @@ from . import Records
 from ..uncertainty import DataDistribution
 from ...utilities import config
 
-    
+
 class Emissions(Records):
-    """ Emissions object keep record of the emissions created by a product or a process.
+    """Emissions object keep record of the emissions created by a product or a process.
 
     Attributes
     ----------
@@ -25,8 +24,9 @@ class Emissions(Records):
     methane_bio_oxidation : float
         Percentage of biogenic methane oxidating to CO2.
     """
+
     record_type = "Emissions"
-    record_attr_dict = config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']
+    record_attr_dict = config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"]
 
     def __init__(self):
         super().__init__()
@@ -38,13 +38,13 @@ class Emissions(Records):
     # ========================
     @classmethod
     def from_parent(cls, parent):
-        """ Create an record object from a parent object.
-        
+        """Create an record object from a parent object.
+
         Parameters
         ----------
         parent : ~pod_lca.materials_screening.Master
             The product or process object to which this record belong.
-        
+
         Returns
         -------
         ~pod_lca.impacts.Emissions
@@ -53,16 +53,16 @@ class Emissions(Records):
         record_obj = super().from_parent(parent)
 
         return record_obj
-    
+
     @classmethod
     def from_dict(cls, record_dict):
-        """ Create an record object from a dictionary.
-        
+        """Create an record object from a dictionary.
+
         Parameters
         ----------
         record_dict : dict
             Dictionary of records {**record catergory** (:class:`str`): **record quantity** (:class:`float`)}
-        
+
         Returns
         -------
         ~pod_lca.impacts.Record
@@ -74,10 +74,10 @@ class Emissions(Records):
 
     # ========================
     # Setters
-    # ========================    
+    # ========================
     def set_temporal_emission_profile(self, time_profile):
-        """ Set the dyanamic emissions function.
-        
+        """Set the dyanamic emissions function.
+
         Parameters
         ----------
         time_profile : ~pod_lca.uncertainty.DataDistribution
@@ -97,9 +97,9 @@ class Emissions(Records):
 
     # ========================
     # Getters
-    # ========================    
+    # ========================
     def get_temporal_emission_profile(self):
-        """ Get the dyanamic emissions function.
+        """Get the dyanamic emissions function.
 
         Returns
         -------
@@ -107,20 +107,20 @@ class Emissions(Records):
             Function describing the dynamic emission profile.
         """
         return self.temporal_emission_profile
-    
+
     def get_start_year(self):
-        """ Set year of the emission.
-        
+        """Set year of the emission.
+
         Returns
         -------
         int
             Year of the emission occuring.
         """
         return self.get_temporal_emission_profile().get_start()
-    
+
     def get_emission_duration(self):
-        """ Get the duration of emissions.
-        
+        """Get the duration of emissions.
+
         Returns
         -------
         float
@@ -129,5 +129,5 @@ class Emissions(Records):
         return self.get_temporal_emission_profile().get_duration()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -13,7 +12,7 @@ from ..utilities import ArrayMethods
 
 
 class Unit:
-    """ Unit object from which units are created.
+    """Unit object from which units are created.
 
     Attributes
     ----------
@@ -53,15 +52,14 @@ class Unit:
             test_3 = self.get_qty_measured() == other.get_qty_measured()
             return bool(test_1 * test_2 * test_3)
         return NotImplemented
-    
+
     def __mul__(self, other):
-        """ Multiplication of units by other units.
-        """
+        """Multiplication of units by other units."""
         if isinstance(other, Unit):
             # check for cancelling units
             other_copy = deepcopy(other)
             self_copy = deepcopy(self)
-            parts_self = self.get_components() if self_copy.convert_compound else [self_copy] 
+            parts_self = self.get_components() if self_copy.convert_compound else [self_copy]
             parts_other = other_copy.get_components() if other_copy.convert_compound else [other_copy]
             for component_self in parts_self:
                 for component_other in parts_other:
@@ -74,16 +72,28 @@ class Unit:
                         else:
                             if other_copy.denominator is not None:
                                 if component_other in other_copy.denominator:
-                                    other_copy.name = other_copy.get_name().replace(' per ' + component_other.get_name(), '')
-                                    other_copy.standard_notation = other_copy.get_standard_notation().replace('/' + component_other.get_standard_notation(), '')
-                                    other_copy.qty_measured = other_copy.get_qty_measured().replace(' per ' + component_other.get_qty_measured(), '')
+                                    other_copy.name = other_copy.get_name().replace(
+                                        " per " + component_other.get_name(), ""
+                                    )
+                                    other_copy.standard_notation = other_copy.get_standard_notation().replace(
+                                        "/" + component_other.get_standard_notation(), ""
+                                    )
+                                    other_copy.qty_measured = other_copy.get_qty_measured().replace(
+                                        " per " + component_other.get_qty_measured(), ""
+                                    )
                                     other_copy.components.remove(component_other)
                                     other_copy.convert_compound = False if len(other_copy.components) > 0 else True
                                     other_copy.denominator = None
                                 else:
-                                    other_copy.name = other_copy.get_name().replace('-' + component_other.get_name(), '')
-                                    other_copy.standard_notation = other_copy.get_standard_notation().replace(component_other.get_standard_notation(), '')
-                                    other_copy.qty_measured = other_copy.get_qty_measured().replace('-' + component_other.get_qty_measured(), '')
+                                    other_copy.name = other_copy.get_name().replace(
+                                        "-" + component_other.get_name(), ""
+                                    )
+                                    other_copy.standard_notation = other_copy.get_standard_notation().replace(
+                                        component_other.get_standard_notation(), ""
+                                    )
+                                    other_copy.qty_measured = other_copy.get_qty_measured().replace(
+                                        "-" + component_other.get_qty_measured(), ""
+                                    )
                                     other_copy.components.remove(component_other)
                                     other_copy.convert_compound = False if len(other_copy.components) > 0 else True
                         # update self
@@ -92,32 +102,42 @@ class Unit:
                         else:
                             if self_copy.denominator is not None:
                                 if component_self in self_copy.denominator:
-                                    self_copy.name = self_copy.get_name().replace(' per ' + component_self.get_name(), '')
-                                    self_copy.standard_notation = self_copy.get_standard_notation().replace('/' + component_self.get_standard_notation(), '')
-                                    self_copy.qty_measured = self_copy.get_qty_measured().replace(' per ' + component_self.get_qty_measured(), '')
+                                    self_copy.name = self_copy.get_name().replace(
+                                        " per " + component_self.get_name(), ""
+                                    )
+                                    self_copy.standard_notation = self_copy.get_standard_notation().replace(
+                                        "/" + component_self.get_standard_notation(), ""
+                                    )
+                                    self_copy.qty_measured = self_copy.get_qty_measured().replace(
+                                        " per " + component_self.get_qty_measured(), ""
+                                    )
                                     self_copy.components.remove(component_self)
                                     self_copy.convert_compound = False if len(self_copy.components) > 0 else True
                                     self_copy.denominator = None
                                 else:
-                                    self_copy.name = self_copy.get_name().replace('-' + component_self.get_name(), '')
-                                    self_copy.standard_notation = self_copy.get_standard_notation().replace(component_self.get_standard_notation(), '')
-                                    self_copy.qty_measured = self_copy.get_qty_measured().replace('-' + component_self.get_qty_measured(), '')
+                                    self_copy.name = self_copy.get_name().replace("-" + component_self.get_name(), "")
+                                    self_copy.standard_notation = self_copy.get_standard_notation().replace(
+                                        component_self.get_standard_notation(), ""
+                                    )
+                                    self_copy.qty_measured = self_copy.get_qty_measured().replace(
+                                        "-" + component_self.get_qty_measured(), ""
+                                    )
                                     self_copy.components.remove(component_self)
                                     self_copy.convert_compound = False if len(self_copy.components) > 0 else True
 
                         if return_self:
                             if not self_copy.convert_compound:
-                                return self_copy.components[0] 
+                                return self_copy.components[0]
                             return self_copy
                         elif return_other:
                             if not other_copy.convert_compound:
                                 return other_copy.components[0]
                             return other_copy
 
-            # parts post cancellation being added      
-            name = self_copy.get_name() + '-' + other_copy.get_name()
+            # parts post cancellation being added
+            name = self_copy.get_name() + "-" + other_copy.get_name()
             standard_notation = self_copy.get_standard_notation() + other_copy.get_standard_notation()
-            qty_measured = self_copy.get_qty_measured() + '-' + other_copy.get_qty_measured()
+            qty_measured = self_copy.get_qty_measured() + "-" + other_copy.get_qty_measured()
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
             newUnit.convert_compound = True
@@ -126,14 +146,13 @@ class Unit:
             return newUnit
 
         elif isinstance(other, MetricPrefix):
-            raise TypeError(f"Metric prefixes not defined for post multiplication.")
+            raise TypeError("Metric prefixes not defined for post multiplication.")
 
     def __rmul__(self, other):
-        """ Reflexive multiplication of units by metric prefixes.
-        """
+        """Reflexive multiplication of units by metric prefixes."""
         if isinstance(other, MetricPrefix):
             if self.get_base() is None:
-                name = other.get_name()  + self.get_name()
+                name = other.get_name() + self.get_name()
                 standard_notation = other.get_symbol() + self.get_standard_notation()
                 qty_measured = self.get_qty_measured()
 
@@ -145,7 +164,7 @@ class Unit:
             else:
                 new_prefix = self.get_prefix() * other
 
-                name = new_prefix.get_name()  + self.get_base().get_name()
+                name = new_prefix.get_name() + self.get_base().get_name()
                 standard_notation = new_prefix.get_symbol() + self.get_base().get_standard_notation()
                 qty_measured = self.get_qty_measured()
 
@@ -155,15 +174,16 @@ class Unit:
 
                 return newUnit
         else:
-            raise TypeError(f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}")
+            raise TypeError(
+                f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}"
+            )
 
     def __truediv__(self, other):
-        """ Devision of units by other units.
-        """
+        """Devision of units by other units."""
         if isinstance(other, Unit):
-            name = self.get_name() + ' per ' + other.get_name()
-            standard_notation = self.get_standard_notation() + '/' + other.get_standard_notation()
-            qty_measured = self.get_qty_measured() + ' per ' + other.get_qty_measured()
+            name = self.get_name() + " per " + other.get_name()
+            standard_notation = self.get_standard_notation() + "/" + other.get_standard_notation()
+            qty_measured = self.get_qty_measured() + " per " + other.get_qty_measured()
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
             newUnit.convert_compound = True
@@ -173,20 +193,21 @@ class Unit:
             return newUnit
 
         else:
-            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
-        
+            raise TypeError(
+                f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}"
+            )
+
     def __rtruediv__(self, other):
-        """ Reflexive division of units by unit value (1).
-        """
+        """Reflexive division of units by unit value (1)."""
         if other == 1:
-            if self.get_name().startswith('per '):
+            if self.get_name().startswith("per "):
                 name = self.get_name()[4:]
                 standard_notation = self.get_standard_notation()[:-2]
-                qty_measured =  self.get_qty_measured()[4:]
+                qty_measured = self.get_qty_measured()[4:]
             else:
-                name = 'per ' + self.get_name()
-                standard_notation = self.get_standard_notation() + '-1'
-                qty_measured =  'per ' + self.get_qty_measured()
+                name = "per " + self.get_name()
+                standard_notation = self.get_standard_notation() + "-1"
+                qty_measured = "per " + self.get_qty_measured()
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
             newUnit.base_unit = self.get_base()
@@ -197,12 +218,13 @@ class Unit:
 
             return newUnit
         else:
-            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
-
+            raise TypeError(
+                f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}"
+            )
 
     @classmethod
     def from_basics(cls, name, standard_notation, qty_measured):
-        """ Create a unit from basic data.
+        """Create a unit from basic data.
 
         Parameters
         ----------
@@ -219,10 +241,10 @@ class Unit:
         unit.set_qty_measured(qty_measured)
 
         return unit
-    
+
     def set_name(self, name):
-        """ Set the name of the unit of measurement.
-        
+        """Set the name of the unit of measurement.
+
         Parameters
         ----------
         name : str
@@ -233,8 +255,8 @@ class Unit:
         return self
 
     def set_standard_notation(self, standard_notatoion):
-        """ Set the standard notation of the unit of measurement.
-        
+        """Set the standard notation of the unit of measurement.
+
         Parameters
         ----------
         standard_notatoion : str
@@ -245,8 +267,8 @@ class Unit:
         return self
 
     def set_qty_measured(self, qty_measured):
-        """ Set the quantity measured by the unit of measurement.
-        
+        """Set the quantity measured by the unit of measurement.
+
         Parameters
         ----------
         qty_measured : str
@@ -257,7 +279,7 @@ class Unit:
         return self
 
     def get_name(self):
-        """ Get the name of the unit of measurement.
+        """Get the name of the unit of measurement.
 
         Returns
         -------
@@ -265,9 +287,9 @@ class Unit:
             Name of the unit of measurement.
         """
         return self.name
-    
+
     def get_standard_notation(self):
-        """ Retrieve the standard notation of the unit of measurement.
+        """Retrieve the standard notation of the unit of measurement.
 
         Returns
         -------
@@ -275,9 +297,9 @@ class Unit:
             Standard notation of the unit of measurement.
         """
         return self.standard_notation
-    
+
     def get_qty_measured(self):
-        """ Get the quantity measured by the unit of measurement.
+        """Get the quantity measured by the unit of measurement.
 
         Returns
         -------
@@ -285,9 +307,9 @@ class Unit:
             Quantity measured by the unit of measurement.
         """
         return self.qty_measured
-    
+
     def get_base(self):
-        """ Retrieve the base unit of the unit of measurement, if exist.
+        """Retrieve the base unit of the unit of measurement, if exist.
 
         Returns
         -------
@@ -297,7 +319,7 @@ class Unit:
         return self.base_unit
 
     def get_prefix(self):
-        """ Retrieve the metric prefix of the unit of measurement, if exist.
+        """Retrieve the metric prefix of the unit of measurement, if exist.
 
         Returns
         -------
@@ -307,7 +329,7 @@ class Unit:
         return self.prefix
 
     def get_components(self):
-        """ Retrieve components of the unit of measurement, if a compound unit.
+        """Retrieve components of the unit of measurement, if a compound unit.
 
         Returns
         -------
@@ -317,7 +339,7 @@ class Unit:
         return self.components
 
     def convert_to(self, to_unit):
-        """ Returns conversion factor.
+        """Returns conversion factor.
 
         Parameters
         ----------
@@ -342,23 +364,27 @@ class Unit:
                     return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
                 elif self.get_base() == to_unit.get_base():
                     return self.prefix.convert_to(to_unit.get_prefix())
-                else: # both units are prefixed
+                else:  # both units are prefixed
                     return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
             else:
                 components_in = self.get_components()
                 components_out = to_unit.get_components()
 
                 conversion_factor = 1.0
-                for component_in, component_out in zip(components_in, components_out): # it is assumed components of in and out are in same order
+                for component_in, component_out in zip(
+                    components_in, components_out
+                ):  # it is assumed components of in and out are in same order
                     conversion_factor *= component_in.convert_to(component_out)
                 return conversion_factor
-            
+
         else:
-            raise TypeError(f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible.")
-        
+            raise TypeError(
+                f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible."
+            )
+
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out, qty_measured):
-        """ Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and 
+        """Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and
             (b) they are not compound units.
 
         Parameters
@@ -369,41 +395,41 @@ class Unit:
             Unit of measurement to which the value will be converted.
         qty_measured : str
             Quantity measured by the units of measruements considered.
-            
+
         Returns
         -------
         float
-            Conversion factor to be applied on the value.        
+            Conversion factor to be applied on the value.
         """
         inverse_flag = False
         unit_in_name = unit_in.get_name() if unit_in.get_base() is None else unit_in.get_base().get_name()
         unit_out_name = unit_out.get_name() if unit_out.get_base() is None else unit_out.get_base().get_name()
-        
-        if qty_measured.startswith('per '):
+
+        if qty_measured.startswith("per "):
             inverse_flag = True
-            qty_measured = qty_measured.replace('per ', "")
-            unit_in_name = unit_in_name.replace('per ', "")
-            unit_out_name = unit_out_name.replace('per ', "")
+            qty_measured = qty_measured.replace("per ", "")
+            unit_in_name = unit_in_name.replace("per ", "")
+            unit_out_name = unit_out_name.replace("per ", "")
 
         if unit_in.get_base() is None:
             factor_in = UNIT_CONVERSIONS[qty_measured][unit_in_name]
         else:
-            factor_in = UNIT_CONVERSIONS[qty_measured][unit_in_name] / 10**(unit_in.get_prefix().get_power())
+            factor_in = UNIT_CONVERSIONS[qty_measured][unit_in_name] / 10 ** (unit_in.get_prefix().get_power())
 
         if unit_out.get_base() is None:
-            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out_name]  
+            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out_name]
         else:
-            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out_name] / 10**(unit_out.get_prefix().get_power())
+            factor_out = UNIT_CONVERSIONS[qty_measured][unit_out_name] / 10 ** (unit_out.get_prefix().get_power())
 
         conversion_factor = factor_out / factor_in
         if inverse_flag:
             conversion_factor = 1 / conversion_factor
 
         return conversion_factor
-    
+
 
 class MetricPrefix:
-    """ Unit object from which units are created.
+    """Unit object from which units are created.
 
     Attributes
     ----------
@@ -426,35 +452,37 @@ class MetricPrefix:
         return f"Metric prefix {self.get_name()} ({self.get_symbol()}) representing a value of e{self.get_power()}."
 
     def __mul__(self, other):
-        """ Multiplication of metric prefixes with other metric prefixes or units.
-        """
+        """Multiplication of metric prefixes with other metric prefixes or units."""
         if isinstance(other, MetricPrefix):
 
             new_power = self.get_power() + other.get_power()
-            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, 'power')
+            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
 
             try:
                 index = all_powers.index(new_power)
                 newPrefix = ALL_PREFIXES[index]
                 return newPrefix
             except ValueError:
-                print(f"Multiplication of {self.get_name()} and {other.get_name()} does not return a standard metric prefix.")
+                print(
+                    f"Multiplication of {self.get_name()} and {other.get_name()} does not return a standard metric prefix."
+                )
 
         elif isinstance(other, Unit):
 
             return other.__rmul__(self)
-        
+
         else:
 
-            raise TypeError(f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}")
-        
+            raise TypeError(
+                f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}"
+            )
+
     def __truediv__(self, other):
-        """ Division of metric prefixes with other metric prefixes or units.
-        """
+        """Division of metric prefixes with other metric prefixes or units."""
         if isinstance(other, MetricPrefix):
 
             new_power = self.get_power() - other.get_power()
-            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, 'power')
+            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
 
             try:
                 index = all_powers.index(new_power)
@@ -466,33 +494,36 @@ class MetricPrefix:
         elif isinstance(other, Unit):
 
             return other.__rmul__(self)
-        
+
         else:
 
-            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")
-        
+            raise TypeError(
+                f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}"
+            )
+
     def __rtruediv__(self, other):
-        """ Reflective division of metric prefixes with numbers.
-        """
+        """Reflective division of metric prefixes with numbers."""
         if isinstance(other, int) or isinstance(other, float):
             if other <= 0 or not log10(other).is_integer():
-                raise TypeError(f"Reflexive division of prefixes constrained to values that are integer powers of 10.")
-            
+                raise TypeError("Reflexive division of prefixes constrained to values that are integer powers of 10.")
+
             new_power = log10(other) - self.get_power()
-            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, 'power')
+            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
 
             try:
                 index = all_powers.index(new_power)
                 newPrefix = ALL_PREFIXES[index]
                 return newPrefix
             except ValueError:
-                print(f"Division of {self.get_name()} and {other.get_name()} does not return a standard metric prefix.") 
+                print(f"Division of {self.get_name()} and {other.get_name()} does not return a standard metric prefix.")
 
         else:
-            raise TypeError(f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}")           
+            raise TypeError(
+                f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}"
+            )
 
     def get_name(self):
-        """ Retrieve the name of the prefix.
+        """Retrieve the name of the prefix.
 
         Returns
         -------
@@ -500,9 +531,9 @@ class MetricPrefix:
             Standard name of the prefix.
         """
         return self.name
-    
+
     def get_symbol(self):
-        """ Retrieve the symbol of the prefix.
+        """Retrieve the symbol of the prefix.
 
         Returns
         -------
@@ -512,7 +543,7 @@ class MetricPrefix:
         return self.symbol
 
     def get_power(self):
-        """ Retrieve the power to the ten corresponding to the prefix.
+        """Retrieve the power to the ten corresponding to the prefix.
 
         Returns
         -------
@@ -520,10 +551,10 @@ class MetricPrefix:
             Power to the ten corresponding to the prefix.
         """
         return self.power
-        
+
     def convert_to(self, to_prefix):
-        """ Compute conversion factor for converting preixes.
-        
+        """Compute conversion factor for converting preixes.
+
         Parameters
         ----------
         to_prefix : ~pod_lca.units.MetricPrefix
@@ -534,8 +565,8 @@ class MetricPrefix:
         float
             Conversion factor to be applied on the value.
         """
-        return 10**(to_prefix.get_power() - self.get_power())
+        return 10 ** (to_prefix.get_power() - self.get_power())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

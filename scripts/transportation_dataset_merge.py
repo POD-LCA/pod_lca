@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-date_tag = '17SEPT2025'
+date_tag = "17SEPT2025"
 
 file_1 = "save_files\\transportation_dataset_domestic_" + date_tag + ".csv"
 file_2 = "save_files\\transportation_dataset_global_" + date_tag + ".csv"
@@ -17,4 +17,3 @@ mask = ~combined[first_col].astype(str).str.startswith("Material", na=False)
 combined = combined[mask]
 
 combined.to_csv(merged_file, index=False)
-

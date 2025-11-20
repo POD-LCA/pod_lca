@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -14,7 +13,7 @@ from ...units import KILOMETER
 
 
 class USDomesticTransportationManager(TransportationManager):
-    """ A project in US using domestic logistic.
+    """A project in US using domestic logistic.
 
     Attributes
     ----------
@@ -31,7 +30,7 @@ class USDomesticTransportationManager(TransportationManager):
     # ================================
     @classmethod
     def new(cls, name=None):
-        """ Create a new project.
+        """Create a new project.
 
         Parameters
         ----------
@@ -46,13 +45,13 @@ class USDomesticTransportationManager(TransportationManager):
         new_project = super().new(name)
         new_project.set_dataset(CFSDataset())
 
-        return new_project  
-    
+        return new_project
+
     # ================================
     # Setters and Getters
     # ================================
     def set_dataset(self, dataset):
-        """ Set background dataset for the proect.
+        """Set background dataset for the proect.
 
         Parameters
         ----------
@@ -64,7 +63,7 @@ class USDomesticTransportationManager(TransportationManager):
         return self
 
     def get_dataset(self, name=None):
-        """ Return the dataset corresponding to the project.
+        """Return the dataset corresponding to the project.
 
         Returns
         -------
@@ -74,15 +73,24 @@ class USDomesticTransportationManager(TransportationManager):
         if name is None:
             return self.dataset
         elif isinstance(self.database, dict) and isinstance(name, str):
-            return self.dataset[name] 
+            return self.dataset[name]
 
     # ================================
     # Model Methods
     # ================================
-    def add_good(self, good, travel_dist=None, shipping_dest=None, shipping_org=None, 
-                 transport_scenario='Average', distance_unit= KILOMETER, return_trip_factor=None, 
-                 mode_name='Truck', mode_efficiency='Median'):
-        """ Add goods to the project. This method creates the appropriate transportation legs based on the data provided
+    def add_good(
+        self,
+        good,
+        travel_dist=None,
+        shipping_dest=None,
+        shipping_org=None,
+        transport_scenario="Average",
+        distance_unit=KILOMETER,
+        return_trip_factor=None,
+        mode_name="Truck",
+        mode_efficiency="Median",
+    ):
+        """Add goods to the project. This method creates the appropriate transportation legs based on the data provided
 
         Parameters
         ----------
@@ -117,7 +125,7 @@ class USDomesticTransportationManager(TransportationManager):
             LinkClass = TransportationLeg
 
         elif (shipping_dest is not None) and (shipping_org is not None):
-            if (shipping_dest.get_country_code() == 'US') and (shipping_org.get_country_code() == 'US'):
+            if (shipping_dest.get_country_code() == "US") and (shipping_org.get_country_code() == "US"):
                 LinkClass = DomesticLeg
             else:
                 raise ValueError("This project is for US domestic logistics only")
@@ -127,13 +135,13 @@ class USDomesticTransportationManager(TransportationManager):
                 LinkClass = DomesticLeg
             else:
                 raise ValueError("Transport scenario not recognized.")
-            
+
         else:
             LinkClass = DomesticLeg
 
         # create transportation leg
-        leg = LinkClass.in_project(good, self, 'transport_' + good.get_name())
-        
+        leg = LinkClass.in_project(good, self, "transport_" + good.get_name())
+
         leg.set_mode(mode_name, mode_efficiency)
 
         leg.set_travel_dist(travel_dist, distance_unit, return_trip_factor)
@@ -145,5 +153,5 @@ class USDomesticTransportationManager(TransportationManager):
         return self
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

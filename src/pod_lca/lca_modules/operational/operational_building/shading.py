@@ -28,8 +28,9 @@ class Shading(object):
         compas Mesh object representing the surfaces making up the shading device
 
     """
+
     def __init__(self):
-        self.name =  'Shading'
+        self.name = "Shading"
         self.mesh = None
 
     def to_json(self, filepath):
@@ -40,28 +41,28 @@ class Shading(object):
         ----------
         filepath: str
             Path for the JSON file to be created
-        
+
         Returns
         -------
         None
 
         """
-        with open(filepath, 'w+') as fp:
+        with open(filepath, "w+") as fp:
             json.dump(self.data, fp)
 
     @property
     def data(self):
-        data = {'name'              : self.name,
-                'mesh'              : self.mesh.to_data(),
-                }
+        data = {
+            "name": self.name,
+            "mesh": self.mesh.to_data(),
+        }
         return data
-    
+
     @data.setter
     def data(self, data):
-        mesh           = data.get('mesh') or {}
-        self.name      = data.get('name') or {}
-        self.mesh      = Mesh.from_data(mesh)
-
+        mesh = data.get("mesh") or {}
+        self.name = data.get("name") or {}
+        self.mesh = Mesh.from_data(mesh)
 
     def add_mesh(self, mesh):
         """
@@ -88,12 +89,12 @@ class Shading(object):
         ----------
         data: dict
             Data dictionary
-        
+
         Returns
         -------
             Shading
                 The instance of the shading datastructure
-        
+
         """
         zone = cls()
         zone.data = data
@@ -108,14 +109,14 @@ class Shading(object):
         ----------
         filepath: str
             Path to the JSON file
-        
+
         Returns
         -------
             Shading
                 The instance of the shading datastructure
-        
+
         """
-        with open(filepath, 'r') as fp:
+        with open(filepath, "r") as fp:
             data = json.load(fp)
         zone = cls()
         zone.data = data
@@ -126,7 +127,7 @@ class Shading(object):
         """
         Create a new instance of the shading from a window object. The shading device will
         be made up of a top, left and right rectangular surfaces surrounding the given
-        window. 
+        window.
 
         Parameters
         ----------
@@ -138,16 +139,14 @@ class Shading(object):
             Length of the left of the shading device (m)
         right: float, optional
             Length of the right of the shading device (m)
-        
+
         Returns
         -------
             Shading
                 The instance of the shading device datastructure
-        
+
         """
         vertices = list(window.nodes)
-
-        
 
         v1 = subtract_vectors(vertices[3], vertices[2])
         v2 = subtract_vectors(vertices[3], vertices[0])
@@ -172,11 +171,8 @@ class Shading(object):
             num = len(vertices) - 1
             faces.append([3, 0, num - 1, num])
 
-
         mesh = Mesh.from_vertices_and_faces(vertices, faces)
         shading = cls()
-        shading.name = f'sh_win{window.name}'
+        shading.name = f"sh_win{window.name}"
         shading.mesh = mesh
         return shading
-
-

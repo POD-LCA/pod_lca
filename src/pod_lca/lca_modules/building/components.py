@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -14,7 +13,7 @@ from ...utilities import log
 
 
 class BuildingComponent:
-    """ Building object to keep track of the building materials flow (i.e., embodied energy component).
+    """Building object to keep track of the building materials flow (i.e., embodied energy component).
 
     Attributes
     ----------
@@ -36,11 +35,11 @@ class BuildingComponent:
 
     # ================================
     # Constructors
-    # ================================        
+    # ================================
     @classmethod
     def create(cls, name, materials):
-        """ Create a building component from its constituent materials.
-        
+        """Create a building component from its constituent materials.
+
         Parameters
         ----------
         name : str
@@ -62,9 +61,9 @@ class BuildingComponent:
 
     # ================================
     # Setters
-    # ================================  
+    # ================================
     def set_name(self, name):
-        """ Set the name of the building component.
+        """Set the name of the building component.
 
         Parameters
         ----------
@@ -74,10 +73,10 @@ class BuildingComponent:
         self.name = name
 
         return self
-    
+
     def set_building(self, building):
-        """ Set the building of the component.
-        
+        """Set the building of the component.
+
         Parameters
         ----------
         building : Building Obj.
@@ -86,10 +85,10 @@ class BuildingComponent:
         self.building = building
 
         return self
-    
+
     def set_materials(self, materials):
-        """ Set the materials constituiting the building component.
-        
+        """Set the materials constituiting the building component.
+
         Parameters
         ----------
         materials : list of material.Model Objs. or Product Objs
@@ -103,7 +102,7 @@ class BuildingComponent:
     # Getters
     # ================================
     def get_name(self):
-        """ Get the name of the building component.
+        """Get the name of the building component.
 
         Returns
         -------
@@ -113,8 +112,8 @@ class BuildingComponent:
         return self.name
 
     def get_building(self):
-        """ Get the building of the component.
-        
+        """Get the building of the component.
+
         Returns
         -------
         Building Obj.
@@ -123,28 +122,26 @@ class BuildingComponent:
         return self.building
 
     def get_materials(self):
-        """ Get the materials constituiting the building component.
-        
+        """Get the materials constituiting the building component.
+
         Returns
         -------
         list of material.Model Objs. or Product Objs
             Materials making up the component.
         """
         return self.materials
-    
+
     def get_waste_products(self):
-        """ Get the waste products the component was deconstructed/demolished to.
-        """
+        """Get the waste products the component was deconstructed/demolished to."""
         if self.deconstructed_to:
             return self.deconstructed_to
         else:
-            raise ValueError(f"The component is not deconstructed and therefore no waste products exist.")
-        
+            raise ValueError("The component is not deconstructed and therefore no waste products exist.")
+
     def get_eol_manager(self):
-        """ Return the place where end-of-life transport dataset reside.
-        """
+        """Return the place where end-of-life transport dataset reside."""
         return self.get_building()
-    
+
     # ================================
     # Methods
     # ================================
@@ -158,43 +155,60 @@ class BuildingComponent:
 
     # ================================
     # Transportation Methods
-    # ================================ 
+    # ================================
     def set_transportation_inward(self, material):
 
-        pass # TODO: pick ProjectLogisticManager Obj. and set transportation link to each of the material inputs
-             # and add them to the impacts directory of the components
+        pass  # TODO: pick ProjectLogisticManager Obj. and set transportation link to each of the material inputs
+        # and add them to the impacts directory of the components
 
     def set_transportation_outward(self, waste):
 
-        pass # TODO: pick ProjectLogisticManager Obj. and set transportation link to each of the material inputs
-             # and add them to the impacts directory of the components    
+        pass  # TODO: pick ProjectLogisticManager Obj. and set transportation link to each of the material inputs
+        # and add them to the impacts directory of the components
 
     # ================================
     # EOL Methods
-    # ================================ 
+    # ================================
     def deconstruct(self, deconstruction_map):
-        """ Deconstruct the building component to waste products as specified in the deconstruction map.
-        
+        """Deconstruct the building component to waste products as specified in the deconstruction map.
+
         Parameters
         ----------
         deconstruction_map : dict
             Deconstruction map in the form of { End-of-Life product (str) : {'qty': (float), 'unit': (Unit Obj.)}}
-        
-        """
-        eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
-        
-        for key, value in deconstruction_map.items():
-            if eol_mix_data['Material'].isin([key]).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== key].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
-            elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
-                eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
-            else:
-                log("A mix doesnt exist", 0) # TODO: test this sequence / shall a hardcode default set here
 
-            if 'bio_based' in value.keys():
-                waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix, bio_based=value['bio_based'])
+        """
+        eol_mix_data = DataImporter.csv_to_pandas(config["file_paths"]["eol"]["EOL_DEFAULT_MIXES"])
+
+        for key, value in deconstruction_map.items():
+            if eol_mix_data["Material"].isin([key]).any():
+                eol_mix = (
+                    eol_mix_data[eol_mix_data["Material"] == key]
+                    .drop(labels="Material", axis=1)
+                    .to_dict(orient="records")[0]
+                )
+            elif eol_mix_data["Material"].isin([config["setup"]["eol"]["EOL_DEFAULT_KEY"]]).any():
+                eol_mix = (
+                    eol_mix_data[eol_mix_data["Material"] == config["setup"]["eol"]["EOL_DEFAULT_KEY"]]
+                    .drop(labels="Material", axis=1)
+                    .to_dict(orient="records")[0]
+                )
             else:
-                waste_obj = Waste.new(self, database_item=key, qty=value['qty'], unit=value['unit'], process_mix=eol_mix)
+                log("A mix doesnt exist", 0)  # TODO: test this sequence / shall a hardcode default set here
+
+            if "bio_based" in value.keys():
+                waste_obj = Waste.new(
+                    self,
+                    database_item=key,
+                    qty=value["qty"],
+                    unit=value["unit"],
+                    process_mix=eol_mix,
+                    bio_based=value["bio_based"],
+                )
+            else:
+                waste_obj = Waste.new(
+                    self, database_item=key, qty=value["qty"], unit=value["unit"], process_mix=eol_mix
+                )
             self.deconstructed_to.append(waste_obj)
 
         # delete data
@@ -204,5 +218,5 @@ class BuildingComponent:
         return self
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

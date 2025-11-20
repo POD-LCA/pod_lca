@@ -1,4 +1,3 @@
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -12,7 +11,7 @@ from ...utilities import log
 
 
 class DomesticLeg(TransportationLeg):
-    """ A leg of domestic US transportation.
+    """A leg of domestic US transportation.
 
     Attributes
     ----------
@@ -28,9 +27,9 @@ class DomesticLeg(TransportationLeg):
 
     # ================================
     # Setters
-    # ================================  
-    def set_transport_scenario(self, transport_scenario:(str)):
-        """ Set the transport scenario of the transportation leg.
+    # ================================
+    def set_transport_scenario(self, transport_scenario: str):
+        """Set the transport scenario of the transportation leg.
 
         Parameters
         ----------
@@ -56,9 +55,9 @@ class DomesticLeg(TransportationLeg):
 
         self._invalidate_cache()
         return self
-    
+
     def set_material(self, material):
-        """ Set the material being transported.
+        """Set the material being transported.
 
         Parameters
         ----------
@@ -68,9 +67,9 @@ class DomesticLeg(TransportationLeg):
         self = super().set_material(material)
         self._invalidate_cache()
         return self
-    
+
     def set_shipping_destination(self, shipping_dest):
-        """ Set the shipping destination of the project.
+        """Set the shipping destination of the project.
 
         Parameters
         ----------
@@ -80,9 +79,9 @@ class DomesticLeg(TransportationLeg):
         self = super().set_shipping_destination(shipping_dest)
         self._invalidate_cache()
         return self
-        
+
     def set_shipping_origin(self, shipping_org):
-        """ Set the shipping origin of the project.
+        """Set the shipping origin of the project.
 
         Parameters
         ----------
@@ -94,13 +93,13 @@ class DomesticLeg(TransportationLeg):
         return self
 
     def set_mode(self, mode=None, efficiency=None):
-        """ Set the transportation mode of the transportation leg.
+        """Set the transportation mode of the transportation leg.
 
         Note
         ----
         1. Prefix `'E_'` in the mode_name is used as the identifier of an electricity based transportation mode.
         2. Electric vehicles takes electricity based on origin location.
-        
+
         Parameters
         ----------
         mode : str or ~pod_lca.transportation.TransportMode
@@ -111,9 +110,9 @@ class DomesticLeg(TransportationLeg):
         self = super().set_mode(mode, efficiency)
         self._invalidate_cache()
         return self
-    
+
     def set_travel_dist(self, travel_dist=None, dist_unit=None, return_trip_factor=None):
-        """ Set the travel distance of the transportation leg.
+        """Set the travel distance of the transportation leg.
 
         Parameters
         ----------
@@ -130,9 +129,9 @@ class DomesticLeg(TransportationLeg):
 
     # ================================
     # Getters
-    # ================================  
+    # ================================
     def get_transport_scenario(self):
-        """ Retrieve the transport scenario of the transportation leg.
+        """Retrieve the transport scenario of the transportation leg.
 
         Returns
         -------
@@ -140,9 +139,9 @@ class DomesticLeg(TransportationLeg):
             The transport scenario of the transportation leg.
         """
         return self.transport_scenario
-    
+
     def get_travel_dist(self):
-        """ Set the travel distance of the transportation leg.
+        """Set the travel distance of the transportation leg.
 
         Returns
         -------
@@ -154,14 +153,16 @@ class DomesticLeg(TransportationLeg):
         ValueError
             Transport scenario not recognized.
         """
-        current_params = (self.get_material(), 
-                          self.get_shipping_destination(), 
-                          self.get_shipping_origin(), 
-                          self.get_mode().get_name(),
-                          self.get_mode().get_efficiency(),
-                          self.get_transport_scenario(), 
-                          self.get_dist_unit())
-        
+        current_params = (
+            self.get_material(),
+            self.get_shipping_destination(),
+            self.get_shipping_origin(),
+            self.get_mode().get_name(),
+            self.get_mode().get_efficiency(),
+            self.get_transport_scenario(),
+            self.get_dist_unit(),
+        )
+
         if self._last_params == current_params and self._cache_travel_dist is not None:
             log("Returning cached result.", "Info")
             return self._cache_travel_dist
@@ -178,7 +179,7 @@ class DomesticLeg(TransportationLeg):
             return travel_dist
 
     def get_return_trip_factor(self):
-        """ Retrieve the return trip factor of the transportation leg.
+        """Retrieve the return trip factor of the transportation leg.
 
         Returns
         -------
@@ -189,17 +190,16 @@ class DomesticLeg(TransportationLeg):
         convertion_factor = self.get_dist_unit().convert_to(MILE)
 
         return 1.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 1.0
-    
+
     def get_dataset(self):
-        """ Get the dataset.
-        """
+        """Get the dataset."""
         return self.get_manager().get_dataset()
-    
+
     # ================================
     # CFS Methods
     # ================================
     def get_distance_from_datset(self, transport_scenario):
-        """ Get the average distance from the CFS dataset based on the scenario.
+        """Get the average distance from the CFS dataset based on the scenario.
 
         Note
         ----
@@ -216,14 +216,20 @@ class DomesticLeg(TransportationLeg):
             The distance estimate for the specified scenario.
         """
         dataset = self.get_dataset()
-        transport_scenario = transport_scenario if (self.get_shipping_destination() is None or self.get_shipping_origin() is None) else "Average"
+        transport_scenario = (
+            transport_scenario
+            if (self.get_shipping_destination() is None or self.get_shipping_origin() is None)
+            else "Average"
+        )
 
         conversion_factor = KILOMETER.convert_to(self.get_dist_unit())
-        cfs_filtered = dataset.filter_datasets(self.get_material(), self.get_shipping_destination(), self.get_shipping_origin(), self.get_mode())
+        cfs_filtered = dataset.filter_datasets(
+            self.get_material(), self.get_shipping_destination(), self.get_shipping_origin(), self.get_mode()
+        )
         travel_dist = dataset.get_distance_estimate(cfs_filtered, transport_scenario) * conversion_factor
 
         return travel_dist
-    
+
     # ================================
     # Cache Method
     # ================================
@@ -232,5 +238,5 @@ class DomesticLeg(TransportationLeg):
         self._last_params = None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
