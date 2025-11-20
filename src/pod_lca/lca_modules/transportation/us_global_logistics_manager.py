@@ -146,6 +146,13 @@ class USGlobalTransportationManager(TransportationManager):
 
         return self
 
+    def set_data_generator_mode(self):
+        """Set variables used for data generator."""
+        self.get_dataset().force_closest_location = False
+        self.get_dataset().force_default_mode = False
+
+        return self
+
 
 if __name__ == "__main__":
     pass

@@ -1,10 +1,16 @@
-import pandas as pd
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
+
+import pandas as pd
+
+from pod_lca.units import KILOMETER
+from pod_lca.units import MILE
+from pod_lca.utilities import config
+
+
 
 
 def faf_preprocessing(output_file, input_file, input_url="https://ops.fhwa.dot.gov/freight/freight_analysis/faf/"):
@@ -20,7 +26,7 @@ def faf_preprocessing(output_file, input_file, input_url="https://ops.fhwa.dot.g
     input_file : str
         The path to the original FAF dataset CSV file. If None, downloads the dataset from the web.
     """
-    faf_dist_band = pd.read_csv(r"data\transportation_podlca_faf-dist-band.csv")
+    faf_dist_band = pd.read_csv(config['file_paths']['transportation']['FAF_DISTANCE_BANDS'])
 
     faf = pd.read_csv(input_file)
 
@@ -82,8 +88,8 @@ def faf_preprocessing(output_file, input_file, input_url="https://ops.fhwa.dot.g
     faf_merged = faf_cleaned.merge(faf_dist_band, on="dist_band", how="left")
 
     # Convert 'min_dms_dist' and 'max_dms_dist' from miles to kilometers
-    faf_merged["min_dom_dist_km"] = faf_merged["min_dom_dist"] * 1.60934
-    faf_merged["max_dom_dist_km"] = faf_merged["max_dom_dist"] * 1.60934
+    faf_merged['min_dom_dist_km'] = faf_merged['min_dom_dist'] * MILE.convert_to(KILOMETER)
+    faf_merged['max_dom_dist_km'] = faf_merged['max_dom_dist'] * MILE.convert_to(KILOMETER)
 
     faf_merged["avr_dom_dist_km"] = (faf_merged["min_dom_dist_km"] + faf_merged["max_dom_dist_km"]) / 2
     faf_merged.drop(
@@ -95,16 +101,17 @@ def faf_preprocessing(output_file, input_file, input_url="https://ops.fhwa.dot.g
 
     return faf
 
-
-def cfaf_preprocessing(input_path_cfaf, output_path_cfaf):
+def cfaf_preprocessing (input_path_cfaf , output_path_cfaf, mode='RL'):
     """
     This function cleans the CFaf dataset by filtering the data for specific conditions, dropping unrelated columns,
     and creating a mapping for SCTG groups to their corresponding numbers. It also calculates the average distance per shipment.
     """
+    cfaf = pd.read_csv(input_path_cfaf)
 
-    cfaf = pd.read_excel(input_path_cfaf)
-
-    cfaf_filtered = cfaf[(cfaf["Year"] == 2017) & (cfaf["DestCtry"].isin(["UM"])) & (cfaf["OrigCtry"] == "CA")]
+    cfaf_filtered = cfaf[(cfaf['Mode'] == mode) & # CFAF data only used for transportation by rail.
+                         (cfaf['Year'] == 2017) & 
+                         (cfaf['DestCtry'].isin(['UM'])) & 
+                         (cfaf['OrigCtry'] == 'CA')]
 
     # Drop the specified columns
     columns_to_drop = ["Weight", "Revenue", "TonneKm", "Value", "DestProv", "DestCMA", "OrigCMA", "OrigProv"]
@@ -148,9 +155,11 @@ def cfaf_preprocessing(input_path_cfaf, output_path_cfaf):
 
     # Create a new dataframe from the list of new rows
     cfaf = pd.DataFrame(new_rows)
-    cfaf["Distance_per_Shipment"] = cfaf["Distance"] / cfaf["Shipments"]
-    cfaf = cfaf.dropna(subset=["Distance_per_Shipment"])
-
+    distances = cfaf['Distance'].str.replace(',', '').astype(float)
+    shipments = cfaf['Shipments'].str.replace(',', '').astype(float)
+    cfaf['Distance_per_Shipment'] =  distances / shipments
+    cfaf = cfaf.dropna(subset=['Distance_per_Shipment'])
+    
     # Group by 'SCTG_2digits' and calculate the average 'Distance_per_Shipment'
     cfaf2017 = cfaf.groupby("SCTG_2digits", as_index=False)["Distance_per_Shipment"].mean()
 
@@ -187,36 +196,36 @@ def cfs_preprocessing(input_path, output_path):
 
     cfs = cfs[cfs["EXPORT_YN"] == "N"]
     cfs = cfs[cfs["MODE"].isin([3, 4, 5, 6, 7, 8, 9, 10, 101, 11])]
-    cfs["SHIPMT_DIST_ROUTED"] = cfs["SHIPMT_DIST_ROUTED"] * 1.60934
+    cfs ["SHIPMT_DIST_ROUTED"] = cfs ["SHIPMT_DIST_ROUTED"] * MILE.convert_to(KILOMETER)
 
     cfs.to_csv(output_path, index=False)
     return cfs
 
 
 if __name__ == "__main__":
-    """ "
-    Original data sources:
+    # ================================================
+    # INSTRUCTIONS
+    # ================================================
+    # Follow the instructions to generate the source data set for US domestic and foreign transportation
+    #
+    # 1. Download the following datasets from the given URLs.
+    #       i. CFS (Commodity Flow Survey) dataset: https://www.census.gov/programs-surveys/cfs.html
+    #       ii. FAF (Freight Analysis Framework) dataset: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
+    #       iii. CFaf (Canadian Freight Analysis Framework) dataset: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
+    # 2. Set the path to source datafiles in the input_path_* variables below.
+    # 3. Run this script
 
-    FAF () dataset: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
-    CFaf (Canadian Freight Analysis Framework) dataset: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
-    CFS (Commodity Flow Survey) dataset: https://www.census.gov/programs-surveys/cfs.html
-    """
     # Preprocessing Freight Analysis Framework (FAF) dataset
-    # original data from: https://ops.fhwa.dot.gov/freight/freight_analysis/faf/
-    input_path_faf = r"C:\Users\mhtaba\Downloads\FAF561.csv"
-    output_path_faf = r"data\transportation_faf_dataset.csv"
+    input_path_faf = r'C:\Users\mhtaba\Downloads\FAF561.csv'
+    output_path_faf = r"src\pod_lca\data\transportation_faf_dataset.csv"
     faf_preprocessing(input_path_faf, output_path_faf)
 
     # Preprocessing Canadian Freight Analysis Framework (CFaf) dataset
-    # original data from: https://www150.statcan.gc.ca/n1/pub/50-503-x/50-503-x2018001-eng.htm
-    input_path_cfaf = r"C:\Users\mhtaba\Downloads\CFaf_2017.xlsx"
-    output_path_cfaf = r"data\transportation_cfaf_dataset.csv"
-    cfaf_preprocessing(input_path_cfaf, output_path_cfaf)
+    input_path_cfaf = r"C:\Users\kiun\Downloads\CFAF_C2011-2017_Code_E.csv"
+    output_path_cfaf = r"src\pod_lca\data\transportation_cfaf_rail_dataset.csv"
+    cfaf_preprocessing (input_path_cfaf, output_path_cfaf, 'RL')
 
     # Preprocessing Commodity Flow Survey (CFS) dataset
-    # original data from: https://www.census.gov/programs-surveys/cfs.html
     input_path_cfs = r"C:\Users\mhtaba\Downloads\cfs_2017.csv"
-    output_path_cfs = r"data\transportation_cfs_dataset.csv"
-    cfs_preprocessing(input_path_cfs, output_path_cfs)
-
-    # TODO: create option to download the datasets from the web if input_path is None
+    output_path_cfs = r"src\pod_lca\data\transportation_cfs_dataset.csv"
+    cfs_preprocessing (input_path_cfs, output_path_cfs)

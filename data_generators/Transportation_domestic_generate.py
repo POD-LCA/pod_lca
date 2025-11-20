@@ -1,5 +1,6 @@
 from tqdm import tqdm
 import time
+import uuid
 
 from pod_lca.units import KILO
 from pod_lca.units import KILOMETER
@@ -13,13 +14,24 @@ from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import DataExporter
 
+# ================================================
+# INSTRUCTIONS
+# ================================================
+# Follow the instruction for generating the data set for the version-of-record 
+
+# 1. Run tests/transportation_domestic-test_script.py. If all tests pass, you are ready to generate the dataset.
+# 2. Check the output file location and make sure the their is no existing file of same name, or if exists, it is empty.
+# 3. Set the version_of_record parameter to True
+# 4. Run the script
+
 output_file = "save_files\\transportation_dataset_domestic.csv"
+version_of_record = False
 
 states_list = list(DataImporter.json_to_dict(config["file_paths"]["transportation"]["CFS_STATE_CODE"]).keys())
 origin_states = [None] + states_list
-destination_states = states_list
+destination_states = [None] + states_list
 
-tranpsort_scenarios = ["National", "Regional_c", "Regional", "Local", "Average"]
+tranpsort_scenarios = ["Local", "Achievable", "Conservative"]
 Material_names = {
     "10": {"SCTG code": "10", "material": "monumental or building stone"},
     "11": {"SCTG code": "11", "material": "natural sands"},
@@ -42,9 +54,8 @@ travel_modes = ["Truck", "Rail", "Air", "Barge", "E_Truck"]
 travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USDomesticTransportationManager.new("Building A")
-project.get_dataset().force_location = False  # Stops defaulting to closest state
-project.get_dataset().force_mode = False  # Stops defaulting to default mode
-project.set_impact_database(r"data/transportation_podlca_emission.csv")
+project.set_data_generator_mode()
+project.set_impact_database(r'data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
 impact_categories = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]
@@ -65,15 +76,22 @@ for sctg_code, material in Material_names.items():
     output_dict = {}
     for origin_state in tqdm(origin_states):
         for destination_state in destination_states:
+            if destination_state is None and origin_state is not None:
+                continue
             origin_state_obj = Location.from_US_state(origin_state) if origin_state is not None else None
             destination_state_obj = Location.from_US_state(destination_state) if destination_state is not None else None
-            scenarios = tranpsort_scenarios if origin_state_obj is None else ["Average"]
-
-            project.add_good(product, None, destination_state_obj, origin_state_obj, None, KILOMETER)
-            transport_leg = project.get_transportation_leg(product)[0]
-            for scenario in scenarios:
-                transport_leg.set_transport_scenario(scenario)
-                for travel_mode in travel_modes:
+            scenarios = tranpsort_scenarios if origin_state is None else ['N/A']
+            
+            project.add_good(product, 
+                            None,
+                            destination_state_obj, 
+                            origin_state_obj,
+                            None,
+                            KILOMETER)  
+            transport_leg = project.get_transportation_leg(product)[0] 
+            for travel_mode in travel_modes:             
+                for scenario in scenarios:
+                    transport_leg.set_transport_scenario(scenario)
                     for eff in travel_mode_efficiency:
                         transport_leg.set_mode(travel_mode, efficiency=eff)
                         try:
@@ -92,31 +110,26 @@ for sctg_code, material in Material_names.items():
                                 electricity_consumption = 0.0
                         except:
                             continue
-                            # distance = 'NO DATA'
-                            # RTT = 'NO DATA'
-                            # impacts = None
-                            # emissions = None
-                            # electricity_consumption = 'NO DATA'
 
                         output_dict[str(sequence_no)] = {
-                            "Material": material,
-                            "SCTG code": product.get_sctg_code(digits=2),
-                            "Scenario scope": "Domestic",
-                            "scenario": "US_Average" if scenario == "Average" else scenario,
-                            "destination state": destination_state,
-                            "origin state": origin_state,
-                            "FAF foreign zone": "N/A",
-                            "dms_orig_port": "N/A",
-                            "domestic mode": travel_mode,
-                            "domestic mode efficiency": eff,
-                            "domestic distance (km)": distance,
-                            "foreign mode": "N/A",
-                            "foreign mode efficiency": "N/A",
-                            "foreign distance (km)": "N/A",
-                            "return trip factor": RTT,
-                            f"electricity consumption ({electricity_report_unit.get_standard_notation()})": electricity_consumption,
-                        }
-
+                            **({"uuid": uuid.uuid4()} if version_of_record else {}),
+                            'Material': material,
+                            'SCTG code': product.get_sctg_code(digits=2),
+                            'Scenario scope': 'Domestic',
+                            'scenario': transport_leg.get_transport_scenario(),
+                            'destination state':destination_state, 
+                            'origin state': origin_state,
+                            'FAF foreign zone': 'N/A',
+                            'dms_orig_port': 'N/A',
+                            'domestic mode': travel_mode, 
+                            'domestic mode efficiency': eff,
+                            'domestic distance (km)': distance,
+                            'foreign mode': 'N/A', 
+                            'foreign mode efficiency': 'N/A',
+                            'foreign distance (km)': 'N/A',
+                            'return trip factor': RTT,
+                            f'electricity consumption ({electricity_report_unit.get_standard_notation()})': electricity_consumption}
+                        
                         for impact_cat in impact_categories:
                             output_dict[str(sequence_no)][
                                 impact_cat + " (" + impact_categories[impact_cat] + "/ tonne)"
@@ -145,5 +158,8 @@ for sctg_code, material in Material_names.items():
 
                         sequence_no += 1
 
+                    if transport_leg.get_transport_scenario() == 'No Scenario':
+                        break
+                
     DataExporter.dict_to_csv(output_dict, output_file, append=True)
     print(f"\n Backup written at {time.strftime('%H:%M:%S')}")

@@ -28,9 +28,12 @@ class DataExporter:
         fieldnames = list(next(iter(input_dict.values())).keys())
         mode = "a" if append else "w"
 
+        ignore_header = True if append and DataExporter.csv_has_headers(file_path) else False
+
         with open(file_path, mode, newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
+            if not ignore_header:
+                writer.writeheader()
             for data in input_dict.values():
                 writer.writerow(data)
 
@@ -73,6 +76,34 @@ class DataExporter:
                 writer.writerow(headers)
             writer.writerows(rows)
 
+    def csv_has_headers(file_path):
+        """ Check if CSV file has data in it.
+        
+        Parameters
+        ----------
+        file_path : str
+            Location of the CSV file.
+
+        Returns
+        -------
+        bool
+            True, if the file already has data: false,  otherwise.      
+        """ 
+        try:
+            with open(file_path, 'r', newline='') as csvfile:
+                sample = csvfile.read(2048) # read a large enough chunk to capture headers
+                if not sample:
+                    return False
+                
+                has_header = csv.Sniffer().has_header(sample)
+                return has_header
+            
+        except FileNotFoundError:
+            print(f"Error: The file '{file_path}' was not found.")
+            return False
+        except csv.Error:
+            return False
+    
     # ========================
     # JSON
     # ========================

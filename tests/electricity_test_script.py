@@ -93,7 +93,7 @@ def test_electricity():
             tests_passed += 1
 
     DataExporter.dict_to_csv(output_dict, output_file)
-    print(f"Electricity tests passed: {tests_passed} of {tests_total}")
+    print(f">>>> Electricity tests passed: {tests_passed} of {tests_total}")
 
     assert tests_passed == tests_total
 

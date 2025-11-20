@@ -50,8 +50,9 @@ setup:
 file_paths:
   transportation:
     CFS_DATA_PATH: data\\transportation_cfs_dataset.csv
-    CFAF_DATA_PATH: data\\transportation_cfaf_dataset.csv
+    CFAF_RAIL_DATA_PATH: data\\transportation_cfaf_rail_dataset.csv
     FAF_DATA_PATH: data\\transportation_faf_dataset.csv
+    FAF_DISTANCE_BANDS: data\\transportation_podlca_faf-dist-band.scv
     CFS_STATE_CODE: data\\transportation_cfs_state-code.json
     CFS_SCTG_CODE: data\\transportation_bt_material-sctg.csv
     MARINE_DATA_PATH: data\\transportation_podlca_marine.csv

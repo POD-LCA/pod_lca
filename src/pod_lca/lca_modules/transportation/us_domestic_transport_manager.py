@@ -84,11 +84,11 @@ class USDomesticTransportationManager(TransportationManager):
         travel_dist=None,
         shipping_dest=None,
         shipping_org=None,
-        transport_scenario="Average",
+        transport_scenario=None,
         distance_unit=KILOMETER,
         return_trip_factor=None,
-        mode_name="Truck",
-        mode_efficiency="Median",
+        mode_name=None,
+        mode_efficiency=None,
     ):
         """Add goods to the project. This method creates the appropriate transportation legs based on the data provided
 
@@ -131,7 +131,7 @@ class USDomesticTransportationManager(TransportationManager):
                 raise ValueError("This project is for US domestic logistics only")
 
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ["National", "Regional_c", "Regional", "Local", "Average"]:
+            if transport_scenario in ["Local", "Achievable", "Conservative"]:
                 LinkClass = DomesticLeg
             else:
                 raise ValueError("Transport scenario not recognized.")
@@ -149,6 +149,13 @@ class USDomesticTransportationManager(TransportationManager):
         leg.set_shipping_origin(shipping_org)
         if isinstance(leg, (DomesticLeg, ForeignLeg)):
             leg.set_transport_scenario(transport_scenario)
+
+        return self
+
+    def set_data_generator_mode(self):
+        """Set variables used for data generator."""
+        self.get_dataset().force_closest_location = False
+        self.get_dataset().force_default_mode = False
 
         return self
 

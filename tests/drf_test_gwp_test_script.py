@@ -33,7 +33,7 @@ def test_drf_gwp():
 
         sym_diff_agwp = 2 * abs(agwp - test_agwp) / abs(agwp + test_agwp)
 
-        if sym_diff_agwp > 0.005 and test_gwp == gwp:
+        if (sym_diff_agwp > 0.005) or not (test_gwp == gwp):
             test_status = False
 
         output_dict[test_name]["greenhouse gas"] = greenhouse_gas

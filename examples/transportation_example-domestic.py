@@ -7,20 +7,20 @@ project = USDomesticTransportationManager.new(name="Building A")
 project.set_impact_database(r"data/transportation_podlca_emission.csv")
 
 product = Product()
-product.set_name("Coal")
+product.set_name("Crushed stone")
 product.set_qty(1)
 product.set_unit(M_TON)
-product.set_sctg_code("01")
+product.set_sctg_code("12")
 
-destination_state = Location.from_US_state("Arkansas")
-origin_state = None
+project.set_data_generator_mode()
 
 project.add_good(
     product,
-    shipping_dest=destination_state,
-    shipping_org=origin_state,
+    shipping_dest=Location.from_US_state("Alaska"),
+    shipping_org=None,
     mode_name="Truck",
-    transport_scenario="National",
+    transport_scenario=None,
+    mode_efficiency=None,
 )
 
 transport_leg = project.get_transportation_leg(product)[0]
@@ -30,5 +30,6 @@ impacts = project.get_impacts(product)
 emissions = project.get_emissions(product)
 
 print(distance)
+print(transport_leg.get_transport_scenario())
 print(impacts)
 print(emissions)

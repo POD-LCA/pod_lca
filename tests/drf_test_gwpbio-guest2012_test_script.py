@@ -4,7 +4,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from tqdm import tqdm
 
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcing
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
@@ -69,7 +68,6 @@ def test_gwp_guest():
             bio_agwp_dict = dict(bio_agwp_data)
             agwp_bio = bio_agwp_dict[float(time_horizon)]
 
-
             gwpbio = agwp_bio / agwp_ref
             if time_horizon == 100:
                 gwpbio = round(gwpbio, 2)  # GWP-bio factors rounded to two decimal points for 100 yr TH
@@ -78,13 +76,15 @@ def test_gwp_guest():
 
             test_gwpbio = float(rotation_dict[rotation_period]["GWPbio" + str(storage_period)])
 
+            abs_diff = abs(gwpbio - test_gwpbio)
             if (gwpbio and test_gwpbio) != 0:
-                sym_diff_gwpbio = 2 * abs(gwpbio - test_gwpbio) / abs(gwpbio + test_gwpbio)
+                sym_diff_gwpbio = 2 * abs_diff / abs(gwpbio + test_gwpbio)
             else:
                 sym_diff_gwpbio = "DNE"
 
-            if (not (sym_diff_gwpbio == "DNE") and sym_diff_gwpbio > 0.005) and test_gwpbio == gwpbio:
-                test_status = False
+            if abs_diff > 0.02:
+                if sym_diff_gwpbio > 0.10:
+                    test_status = False
 
             output_dict[rotation_period]["rotation [years]"] = rotation_period
             output_dict[rotation_period]["GWPbio" + str(storage_period) + "(test value)"] = test_gwpbio
@@ -97,7 +97,7 @@ def test_gwp_guest():
             tests_passed += 1
 
     DataExporter.dict_to_csv(output_dict, output_file)
-    print(f"GWP Guest(2012) test passed: {tests_passed} of {tests_total}")
+    print(f">>>> GWP Guest(2012) test passed: {tests_passed} of {tests_total}")
 
     assert tests_passed == tests_total
 

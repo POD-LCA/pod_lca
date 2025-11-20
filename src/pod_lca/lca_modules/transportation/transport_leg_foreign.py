@@ -6,7 +6,9 @@ __version__ = "0.1.0"
 
 from . import TransportationLeg
 from . import TransportMode
+from ..location import Location
 from ...units import KILOMETER
+from ...units import MILE
 from ...utilities import log
 
 
@@ -48,7 +50,7 @@ class ForeignLeg(TransportationLeg):
         """
         leg = super().in_project(good, project, name)
 
-        domestic_leg = TransportationLeg.in_project(good, project, name + "_domestic")
+        domestic_leg = LinkedDomesticLeg.in_project(good, project, name + "_domestic")
         leg.set_next(domestic_leg)
 
         return leg
@@ -96,7 +98,7 @@ class ForeignLeg(TransportationLeg):
         self._invalidate_cache()
         return self
 
-    def set_shipping_destination(self, shipping_dest):
+    def set_shipping_destination(self, shipping_dest=None):
         """Set the shipping destination of the project.
 
         Parameters
@@ -104,11 +106,16 @@ class ForeignLeg(TransportationLeg):
         shipping_dest : ~pod_lca.location.Location
             Name of the shipping destination location.
         """
-        self = super().set_shipping_destination(shipping_dest)
+        if shipping_dest is None:
+            most_common_state = self.get_dataset().find_most_common_US_destination(self.get_material())
+            self.shipping_destination = Location.from_US_state(most_common_state)
+        else:
+            super().set_shipping_destination(shipping_dest)
+
         self._invalidate_cache()
         return self
 
-    def set_shipping_origin(self, shipping_org):
+    def set_shipping_origin(self, shipping_org=None):
         """Set the shipping origin of the project.
 
         Parameters
@@ -116,7 +123,14 @@ class ForeignLeg(TransportationLeg):
         shipping_org : ~pod_lca.location.Location
             Name of the shipping origin location.
         """
-        self = super().set_shipping_origin(shipping_org)
+        if shipping_org is None:
+            most_common_faf_region = self.get_dataset().find_most_common_FAF_origin(
+                self.get_material(), self.get_shipping_destination()
+            )
+            self.shipping_origin = Location.from_faf_regions(most_common_faf_region)
+        else:
+            super().set_shipping_origin(shipping_org)
+
         self._invalidate_cache()
         return self
 
@@ -298,17 +312,11 @@ class ForeignLeg(TransportationLeg):
     def check_mode_origin_compatibility(self):
         """Check if the mode and origin combinations are realistic."""
         if self.get_mode().get_name() == "Truck":
-            if self.get_shipping_origin() is None:
-                if not self.get_transport_scenario() == "North America":
-                    return False
-            elif self.get_shipping_origin().get_country_code() not in ["CA", "MX"]:
+            if self.get_shipping_origin().get_faf_foreign_region("name") not in ["Canada", "Mexico"]:
                 return False
 
         if self.get_mode().get_name() == "Rail":
-            if self.get_shipping_origin() is None:
-                if not self.get_transport_scenario() == "North America":
-                    return False
-            elif not self.get_shipping_origin().get_country_code() == "CA":
+            if not self.get_shipping_origin().get_faf_foreign_region("name") == "Canada":
                 return False
 
         return True
@@ -319,6 +327,26 @@ class ForeignLeg(TransportationLeg):
     def _invalidate_cache(self):
         self._cache_travel_dist = None
         self._last_params = None
+
+
+class LinkedDomesticLeg(TransportationLeg):
+    """A leg of Domestic transportation linked to a Foreign transportation leg."""
+
+    def __init__(self):
+        super().__init__()
+
+    def get_return_trip_factor(self):
+        """Retrieve the return trip factor of the transportation leg.
+
+        Returns
+        -------
+        float
+            The return trip factor of the transportation leg.
+        """
+        dist = self.get_travel_dist()
+        convertion_factor = self.get_dist_unit().convert_to(MILE)
+
+        return 1.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 1.0
 
 
 if __name__ == "__main__":

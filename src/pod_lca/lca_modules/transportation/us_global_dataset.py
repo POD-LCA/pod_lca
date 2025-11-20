@@ -21,10 +21,12 @@ class USGlobalDataset(TransportDataset):
     ----------
     force_location : bool
         If true, when location (origin/destination) not found in the dataset, use closest location.
-    force_mode : bool
+    force_default_mode : bool
         If true, when mode not found in the dataset, use forced_mode
-    force_mode_value : str
-        The mode to use when the specified mode is not found in the dataset.
+    force_default_mode_foreign_value : str
+        The foreign mode to use when the specified mode is not found in the dataset.
+    force_default_mode_domestic_value : str
+        The domestic mode to use when the specified mode is not found in the dataset.        
     faf : ~pandas.DataFrame
         Pre-processed dataset from FAF.
     cfaf : ~pandas.DataFrame
@@ -34,14 +36,67 @@ class USGlobalDataset(TransportDataset):
     """
 
     def __init__(self):
-        self.force_location = False
-        self.force_mode = True
-        self.force_mode_foreign_value = "Ocean"
-        self.force_mode_domestic_value = "Truck"
+        self.force_closest_location = True
+        self.force_default_mode = True
+        self.force_default_mode_foreign_value = "Ocean"
+        self.force_default_mode_domestic_value = "Truck"
 
-        self.faf = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["FAF_DATA_PATH"])
-        self.marine = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["MARINE_DATA_PATH"])
-        self.cfaf = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["CFAF_DATA_PATH"])
+        self.faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
+        self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH']) 
+        self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_RAIL_DATA_PATH'])
+    
+    def find_most_common_US_destination(self, material=None):
+        """ Find the most common US destination state in the FAF dataset.
+        
+        Parameters
+        ----------
+        material : ~pod_lca.materials_screening.Master
+            The material transported.
+        """
+        faf = self.faf
+        
+        # filter dataset
+        if material is not None:
+            sctg_code = material.get_sctg_code(digits=2)
+            faf = faf[faf["sctg2"] == sctg_code]
+            if faf.empty:
+                raise ValueError("Material not in FAF Dataset.")
+
+        faf_states_city = DataImporter.json_to_dict(config['file_paths']['location']['FAF_DOMESTIC_REGION'])
+        counts = {}
+        for letter, values in faf_states_city.items():
+            counts[letter] = faf['dms_dest'].isin(values).sum()
+
+        return max(counts, key=counts.get)
+
+    def find_most_common_FAF_origin(self, material=None, destination=None):
+        """ Find the most common US destination state in the FAF dataset.
+        
+        Parameters
+        ----------
+        material : ~pod_lca.materials_screening.Master
+            The material transported.
+        """
+        faf = self.faf
+        
+        # filter dataset
+        if material is not None:
+            sctg_code = material.get_sctg_code(digits=2)
+            faf = faf[faf["sctg2"] == sctg_code]
+            if faf.empty:
+                raise ValueError("Material not in FAF Dataset.")
+            
+        if isinstance(destination, Location):
+            faf = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
+            if faf.empty:
+                raise ValueError("Destination not in FAF Dataset.")
+       
+        faf_foreign_origin = DataImporter.json_to_dict(config['file_paths']['location']['FAF_FOREIGN_REGION'])
+        counts = {}
+        for letter, value in faf_foreign_origin.items():
+            counts[letter] = (faf['fr_orig'] == int(value)).sum()
+
+        return max(counts, key=counts.get)
 
     def filter_datasets(self, material=None, destination=None, origin=None, mode_domestic=None, mode_foreign=None):
         """Filter all datasets corresponding to foreign travel.
@@ -49,7 +104,7 @@ class USGlobalDataset(TransportDataset):
         Parameters
         ----------
         material : ~pod_lca.materials_screening.Master
-            The Standard Classification of Transported Goods (SCTG) code to filter by.
+            The material transported.
         destination : ~pod_lca.location.Location
             The destination location to filter by.
         origin : ~pod_lca.location.Location
@@ -137,10 +192,8 @@ class USGlobalDataset(TransportDataset):
         if isinstance(destination, Location):
             faf_filtered = faf[faf["dms_dest"].isin(destination.get_faf_domestic_region())]
             if faf_filtered.empty:
-                if self.force_location:
-                    closest_state_name, closest_faf_region_codes = Location.get_closest_regions_FAF(
-                        origin, faf["dms_dest"].tolist()
-                    )
+                if self.force_closest_location:
+                    closest_state_name, closest_faf_region_codes = Location.get_closest_regions_FAF(origin, faf["dms_dest"].tolist())
                     faf_filtered = faf[faf["dms_dest"].isin(closest_faf_region_codes)]
                     log(
                         f"Closest state to {destination.get_location_name()}, {closest_state_name}, is used to estimate travel distance.",
@@ -150,21 +203,21 @@ class USGlobalDataset(TransportDataset):
                     raise ValueError("Destination not in CFS Dataset.")
             faf = faf_filtered
 
-        # Origin
+        # Origin (FAF zone)
         if isinstance(origin, Location):
             faf_filtered = faf[faf["fr_orig"] == float(origin.get_faf_foreign_region())]
             if faf_filtered.empty:
                 raise ValueError("Origin not in FAF dataset.")
             faf = faf_filtered
-
-        # Mode
+            
+        # Foreign Mode
         if isinstance(mode_foreign, TransportMode):
             faf_modes_mapping = DataImporter.json_to_dict(config["file_paths"]["transportation"]["FAF_MODE_CODE"])
             faf_filtered = faf[faf["fr_inmode"] == faf_modes_mapping[mode_foreign.get_name()]]
             if faf_filtered.empty:
-                if self.force_mode:
-                    faf_filtered = faf[faf["fr_inmode"] == faf_modes_mapping[self.force_mode_foreign_value]]
-                    log(f"Forced mode {self.force_mode_foreign_value} is used to estimate travel distance.", "Info")
+                if self.force_default_mode:
+                    faf_filtered = faf[faf["fr_inmode"] == faf_modes_mapping[self.force_default_mode_foreign_value]]
+                    log(f"Forced mode {self.force_default_mode_foreign_value} is used to estimate travel distance.", "Info")
                 else:
                     raise ValueError("Transportation mode not in FAF dataset.")
             faf = faf_filtered
@@ -174,9 +227,11 @@ class USGlobalDataset(TransportDataset):
             faf_modes_mapping = DataImporter.json_to_dict(config["file_paths"]["transportation"]["FAF_MODE_CODE"])
             faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[mode_domestic.get_name()]]
             if faf_filtered.empty:
-                if self.force_mode:
-                    faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[self.force_mode_domestic_value]]
-                    log(f"Forced mode {self.force_mode_domestic_value} is used to estimate travel distance.", "Info")
+                if self.force_default_mode:
+                    faf_filtered = faf[faf["dms_mode"] == faf_modes_mapping[self.force_default_mode_domestic_value]]
+                    log(f"Forced mode {self.force_default_mode_domestic_value} is used to estimate travel distance.", "Info")
+                    if faf_filtered.empty:
+                        raise ValueError("Forced transportation mode not in dataset")
                 else:
                     raise ValueError("Transportation mode not in dataset")
             faf = faf_filtered
@@ -235,6 +290,7 @@ class USGlobalDataset(TransportDataset):
 
         # Destination
         if isinstance(destination, Location):
+            #FIXME see flow chart 
             marine = marine[marine["Coast"] == destination.get_us_coast()]
             if marine.empty:
                 raise ValueError("No data for the selected destination in marine dataset")
