@@ -45,8 +45,7 @@ exclude = ["legacy*", "ui*"]
 namespaces = false
 
 [tool.setuptools.package-data]
-pod_lca = ["config.yaml"]
-"pod_lca.data" = ["*.json", "*.csv", "*.idf"]
+pod_lca = ["config.yaml", "data/*.json", "data/*.csv"]
 
 [tool.black]
 line-length = 120
