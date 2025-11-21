@@ -24,11 +24,11 @@ eol_impact_database = EOLImpactsDatabase.new("EOL database")
 eol_impact_database.set_primary_key("Material")
 eol_impact_database.set_process_key("Process")
 eol_impact_database.set_life_cycle_stage_key("LCA Stage")
-eol_impact_database.set_data(r"data/impacts_podlca_eol-impacts.csv")
+eol_impact_database.set_data(r"src/pod_lca/data/impacts_podlca_eol-impacts.csv")
 
 my_building.set_eol_database(eol_impact_database)
 my_building.set_eol_transport_dataset(EOLTransportDataset())
-my_building.set_transportation_impact_database(r"data/transportation_podlca_emission.csv")
+my_building.set_transportation_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
 
 # add a window to the building
 my_timber_window = BuildingComponent.create(

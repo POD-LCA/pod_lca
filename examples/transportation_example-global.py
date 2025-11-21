@@ -4,7 +4,7 @@ from pod_lca.transportation import USGlobalTransportationManager
 from pod_lca.units import M_TON
 
 project = USGlobalTransportationManager.new(name="Building A")
-project.set_impact_database(r"data/transportation_podlca_emission.csv")
+project.set_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
 project.set_data_generator_mode()
 
 product = Product()

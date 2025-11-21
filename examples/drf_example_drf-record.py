@@ -37,5 +37,5 @@ drf_record.plot(
     "emission intensity", "lineplot"
 )  # 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'
 
-output_file = "save_files\\drf_record_temp.csv"
+output_file = "temp\\drf_record_temp.csv"
 drf_record.save(output_file)

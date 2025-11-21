@@ -1,6 +1,6 @@
 from pod_lca.impacts import ImpactsDatabase
 
-databse_path = "data/impacts_podlca_data.csv"
+databse_path = "src/pod_lca/data/impacts_podlca_data.csv"
 
 impact_database = ImpactsDatabase.new("impact database")
 impact_database.set_data(databse_path, additional_headers=["Taxanomy", "Category", "Sub-category", "Description"])

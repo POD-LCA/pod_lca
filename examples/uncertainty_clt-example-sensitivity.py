@@ -23,7 +23,7 @@ project.set_location(factory)
 
 custom_impact_database = ImpactsDatabase.new("My database")
 custom_impact_database.set_data(
-    r"data/impacts_podlca_material-data.csv",
+    r"src/pod_lca/data/impacts_podlca_material-data.csv",
     impact_headers_map={"GWP": "GWP", "AP": "AP", "EP": "EP", "ODP": "ODP", "SFP": "POCP"},
 )
 custom_impact_database.set_data_entry(
@@ -43,44 +43,18 @@ meth_diphenyl_d = CLT_model.add_product(
     qty=3.22,
     unit=KILOGRAM,
     impacts_from="Methylene diphenyl diisocyanate resin_[FHWA_MTU]",
+    sctg_code=26,
 )
 prop_glycol = CLT_model.add_product(
     name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, impacts_from="Propylene glycol_[ecoinvent]"
 )
-dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None)
-dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
-dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None)
+dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None,sctg_code=28)
+dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None,sctg_code=28)
+dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None,sctg_code=28)
 electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR)
 natural_gas = CLT_model.add_energy(
     name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]"
 )
-
-lumber_by_truck = CLT_model.add_transportation_process(
-    name="Lumber Transportation",
-    stage="A2",
-    transported_distance=302,
-    unit=KILOMETER,
-    impacts_from="Transportation_combination_truck_short-haul_diesel_NW_[USLCI]",
-)
-lumber_by_truck.set_transported_product(lumber)
-
-PUR1_by_truck = CLT_model.add_transportation_process(
-    name="Lumber Transportation",
-    stage="A2",
-    transported_distance=2160,
-    unit=KILOMETER,
-    impacts_from="Transportation_combination_truck_diesel_US_[USLCI]",
-)
-PUR1_by_truck.set_transported_product(dummy_PUR_1)
-
-PUR2_by_truck = CLT_model.add_transportation_process(
-    name="Lumber Transportation",
-    stage="A2",
-    transported_distance=64800,
-    unit=KILOMETER,
-    impacts_from="Transportation_freight_train_diesel_US_[ecoinvent]",
-)
-PUR2_by_truck.set_transported_product(dummy_PUR_2)
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
@@ -108,15 +82,6 @@ lumber.get_pedigree_score().update_pedigree_scores(
         "technological representativeness": 4,
     }
 )
-lumber_by_truck.get_pedigree_score().update_pedigree_scores(
-    {
-        "reliability": 1,
-        "completeness": 3,
-        "temporal correlation": 4,
-        "geographical correlation": 3,
-        "technological representativeness": 3,
-    }
-)
 DQS, nDQS = data_quality_assessment.calculate_model_DQS("GWP")
 data_quality_assessment.print_results()
 
@@ -137,3 +102,4 @@ result_range = SensitivityAnalysis.compute_sensitivity_of_params(
     ],
     impact_cat="GWP",
 )
+# FIXME: Example to be fixed to extract transportation impacts
