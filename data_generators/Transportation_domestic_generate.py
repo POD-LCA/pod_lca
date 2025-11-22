@@ -31,7 +31,7 @@ states_list = list(DataImporter.json_to_dict(config["file_paths"]["transportatio
 origin_states = [None] + states_list
 destination_states = [None] + states_list
 
-tranpsort_scenarios = ["Local", "Achievable", "Conservative"]
+tranpsort_scenarios = ["Local", "Regional", "National"]
 Material_names = {
     "10": {"SCTG code": "10", "material": "monumental or building stone"},
     "11": {"SCTG code": "11", "material": "natural sands"},

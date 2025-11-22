@@ -124,9 +124,9 @@ class ElectricTransportMode(TransportMode):
                 self.get_electricity_inventories()
             )
 
-            conversion_factor = electricity_supply_unit.convert_to(electricity_consumption_unit)
+            conversion_factor = electricity_consumption_unit.convert_to(electricity_supply_unit)
 
-            impacts = electricity_unit_impacts * conversion_factor * electricity_consumption
+            impacts = electricity_unit_impacts * (electricity_consumption * conversion_factor)
             self.unit_impacts.update_qty(impacts.get_record_dict())
 
             emissions = electricity_unit_emissions * conversion_factor * electricity_consumption

@@ -18,7 +18,7 @@ project.add_good(
     product,
     shipping_dest=Location.from_US_state("Alaska"),
     shipping_org=None,
-    mode_name="Truck",
+    mode_name="E_Truck",
     transport_scenario=None,
     mode_efficiency=None,
 )

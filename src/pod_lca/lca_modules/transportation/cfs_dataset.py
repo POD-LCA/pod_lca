@@ -149,7 +149,7 @@ class CFSDataset(TransportDataset):
         ----------
         dataset : pandas.DataFrame
             The filtered CFS dataset.
-        scenario : {'Local', 'Achievable', 'Conservative', 'N/A', 'No Scenario'}
+        scenario : {'Local', 'Regional', 'National', 'N/A', 'No Scenario'}
             The scenario to filter the distances by.
 
         Returns
@@ -170,19 +170,19 @@ class CFSDataset(TransportDataset):
         if bins == 3:
             if scenario == 'Local':
                 return dataset.loc[groups == 'Q1', 'SHIPMT_DIST_ROUTED'].mean()
-            elif scenario == 'Achievable':
+            elif scenario == 'Regional':
                 return dataset.loc[groups == 'Q2', 'SHIPMT_DIST_ROUTED'].mean()
-            elif scenario == 'Conservative':
+            elif scenario == 'National':
                 return dataset.loc[groups == 'Q3', 'SHIPMT_DIST_ROUTED'].mean()
         elif bins == 2:
             if scenario == 'Local':
                 return dataset.loc[groups == 'Q1', 'SHIPMT_DIST_ROUTED'].mean()
-            elif scenario == 'Conservative':
+            elif scenario == 'National':
                 return dataset.loc[groups == 'Q2', 'SHIPMT_DIST_ROUTED'].mean()
             else:
                 raise ValueError('Scenario not achievable within data.')    
         elif bins == 1:
-            if scenario == 'Achievable':
+            if scenario == 'Regional':
                 return dataset['SHIPMT_DIST_ROUTED'].mean()  
             else:
                 raise ValueError('Scenario not achievable within data.')    

@@ -131,7 +131,7 @@ class USDomesticTransportationManager(TransportationManager):
                 raise ValueError("This project is for US domestic logistics only")
 
         elif isinstance(transport_scenario, str):
-            if transport_scenario in ["Local", "Achievable", "Conservative"]:
+            if transport_scenario in ["Local", "Regional", "National"]:
                 LinkClass = DomesticLeg
             else:
                 raise ValueError("Transport scenario not recognized.")
