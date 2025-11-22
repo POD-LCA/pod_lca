@@ -8,14 +8,14 @@ import io
 import json
 import zipfile
 
-from tqdm import tqdm
-
 from ...utilities import log
 from ...units import UNITS_MAP
 
 try:
     import olca_ipc as ipc
     import olca_schema as schema
+
+    from tqdm import tqdm
 
     OLCA_IMPORTED = True
 except ImportError:
@@ -41,7 +41,7 @@ class openLCA:
             olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         client = ipc.Client(8080)
 
@@ -126,7 +126,7 @@ class openLCA:
             olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         config = schema.LinkingConfig(
             prefer_unit_processes=True, provider_linking=schema.ProviderLinking.PREFER_DEFAULTS
@@ -157,7 +157,7 @@ class openLCA:
             olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         impact_method = client.get_descriptor(schema.ImpactMethod, impact_method_uuid)
 
@@ -186,7 +186,7 @@ class openLCA:
             Invalid uuid.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         if uuids is None:
             process_list = client.get_descriptors(schema.Process)
@@ -224,7 +224,7 @@ class openLCA:
             olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         results_dict = {"Amount": result.get_demand().amount, "Unit": result.get_demand().tech_flow.flow.ref_unit}
         for impact in impact_dict:
@@ -275,7 +275,7 @@ class openLCA:
             olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         if isinstance(categories, int):
             categories = [categories]
@@ -352,7 +352,7 @@ class openLCA:
             olca-ipc package not installed.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         if isinstance(processes, str):
             processes = [processes]
@@ -478,7 +478,7 @@ class openLCA:
         if OLCA_IMPORTED:
             pass
         else:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc', 'olca_schema', 'tqdm' packages to use the openLCA API.")
 
         lastid_count = 0
         exchangeid_count = 0
@@ -554,7 +554,7 @@ class openLCA:
             The action to take if a duplicate item is found. Default is 'overwrite'.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         with zipfile.ZipFile(path, "r") as zipObject:
             files = zipObject.namelist()
@@ -708,7 +708,7 @@ class openLCA:
             The result of the calculation.
         """
         if not OLCA_IMPORTED:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc' and 'olca_schema' packages to use the openLCA API.")
 
         setup = schema.CalculationSetup(
             allocation=schema.AllocationType.USE_DEFAULT_ALLOCATION,
@@ -759,7 +759,7 @@ class openLCA:
         if OLCA_IMPORTED:
             import olca_ipc.utree as utree
         else:
-            raise ImportError("Please install the 'olca-ipc' package to use the openLCA API.")
+            raise ImportError("Install the 'olca-ipc','olca_schema', 'tqdm' packages to use the openLCA API.")
 
         # prerocessing
         for impact_cat in impact_dict:
