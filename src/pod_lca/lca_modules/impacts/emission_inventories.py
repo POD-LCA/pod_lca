@@ -5,7 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from . import Records
-from ..uncertainty import DataDistribution
+from ..analysis import DataDistribution
 from ...utilities import config
 
 
@@ -33,6 +33,15 @@ class Emissions(Records):
         self.temporal_emission_profile = None
         self.methane_bio_oxidation = 0.5
 
+    def __mul__(self, scalar):
+        """ Multiplication of a record by a scalar.
+        """
+        new_record = super().__mul__(scalar)
+        if self.get_temporal_emission_profile() is not None:
+            new_record.set_temporal_emission_profile(self.get_temporal_emission_profile())
+
+        return new_record
+    
     # ========================
     # Constructors
     # ========================

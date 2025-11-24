@@ -15,6 +15,7 @@ def get_idf_data(filepath):
     find_sufaces(filepath, data)
     find_windows(filepath, data)
     find_materials(filepath, data)
+    find_materials_air_gap(filepath, data)
     find_no_mass_materials(filepath, data)
     find_gas_materials(filepath, data)
     find_glazing_materials(filepath, data)
@@ -174,6 +175,26 @@ def find_materials(filepath, data):
         }
 
 
+def find_materials_air_gap(filepath, data):
+    fh = open(filepath, 'r')
+    lines = fh.readlines()
+    fh.close()
+
+    i_lines = []
+    for i, line in enumerate(lines):
+        line = line.split(',')
+        if line[0].lower() == 'material:airgap':
+            i_lines.append(i)
+
+    for i in i_lines:
+        name = lines[i + 1].split(',')[0].strip()
+        resi = lines[i + 2].split(',')[0].strip()
+
+        data['materials'][name] = {'__type__': 'MaterialAirGap',
+                                'name': name,
+                                'resistance': resi,
+                                }
+
 def find_no_mass_materials(filepath, data):
     fh = open(filepath, "r")
     lines = fh.readlines()
@@ -187,22 +208,27 @@ def find_no_mass_materials(filepath, data):
 
     # data['materials_no_mass'] = {}
     for i in i_lines:
-        name = lines[i + 1].split(",")[0].strip()
-        rough = lines[i + 2].split(",")[0].strip()
-        thres = float(lines[i + 3].split(",")[0])
-        thabs = float(lines[i + 4].split(",")[0])
-        slra = float(lines[i + 5].split(",")[0])
-        visa = float(lines[i + 6].split(";")[0])
+        name = lines[i + 1].split(',')[0].strip()
+        rough = lines[i + 2].split(',')[0].strip()
+        thres  = float(lines[i + 3].split(',')[0])
+        thabs = float(lines[i + 4].split(',')[0])
+        slra = float(lines[i + 5].split(',')[0])
+        if ';' not in lines[i + 6]:
+            visa = float(lines[i + 6].split(',')[0])
+            thic = float(lines[i + 7].split(';')[0])
+        else:
+            visa = float(lines[i + 6].split(';')[0])
+            thic = None
 
-        data["materials"][name] = {
-            "__type__": "MaterialNoMass",
-            "name": name,
-            "roughness": rough,
-            "thermal_resistance": thres,
-            "thermal_absorptance": thabs,
-            "solar_absorptance": slra,
-            "visible_absorptance": visa,
-        }
+        data['materials'][name] = {'__type__': 'MaterialNoMass',
+                                   'name': name,
+                                   'roughness': rough,
+                                   'thermal_resistance': thres,
+                                   'thermal_absorptance': thabs,
+                                   'solar_absorptance': slra,
+                                   'visible_absorptance': visa,
+                                   'thickness':thic,
+                                          }
 
 
 def find_gas_materials(filepath, data):
@@ -241,7 +267,6 @@ def find_glazing_materials(filepath, data):
         if line[0].lower() == "windowmaterial:glazing":
             i_lines.append(i)
 
-    # data['materials_glazing'] = {}
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         odtype = lines[i + 2].split(",")[0].strip()

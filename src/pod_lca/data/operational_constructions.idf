@@ -1,0 +1,647 @@
+Construction,
+  Curtain Wall-aluminium spandrel,          ! Name # Teresa's construction for com template
+  Expanded polystyrene (EPS) Type I - 5in,  !- Layer 1    DONE!!!!
+  Mineral wool blanket baseline,            !- Layer 2    DONE!!!!
+  Gypsum board, 1/2 in;                     !- Layer 3    DONE!!!!
+
+Construction,
+  Rainscreen-Thinbrick,                             ! Name # Teresa's construction for res template
+  Clay brick,                                       !- Layer 1            DONE!!!!
+  Galvanized Steel Support System (air gap),        !- Layer 2      
+  Expanded polystyrene (EPS) Type I - 1.5in,        !- Layer 3            DONE!!!!
+  Gypsum board 1/2 in,                              !- Layer 4            DONE!!!!
+  Mineral wool blanket baseline,                    !- Layer 5            DONE!!!!
+  Gypsum board 1/2 in;                              !- Layer 6            DONE!!!!
+
+Material,
+  Gypsum board 1/2 in,                    !- Name
+  MediumRough,                            !- Roughness                     NO VALUE FROM TERESA
+  0.0127,                                 !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance           NO VALUE FROM TERESA
+  0.7,                                    !- Solar Absorptance             NO VALUE FROM TERESA
+  0.7;                                    !- Visible Absorptance           NO VALUE FROM TERESA
+
+Material:AirGap,
+  Galvanized Steel Support System (air gap),      ! Material Name
+  0.1603675;                                      ! Resistance {M**2K/W}      # number to be updated for units
+
+Material:NoMass,
+  Expanded polystyrene (EPS) Type I - 5in,     !- Name                              
+  Rough,                                       !- Roughness                        NO VALUE FROM TERESA     
+  3.17,                                        !- Thermal Resistance {m2-K/W}               
+  0.9000000,                                   !- Thermal Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                   !- Solar Absorptance                NO VALUE FROM TERESA     
+  0.7500000,                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.127;                                        ! Thickness (m)
+
+Material:NoMass,
+  Expanded polystyrene (EPS) Type I - 1.5in,     !- Name                              
+  Rough,                                         !- Roughness                        NO VALUE FROM TERESA     
+  0.95,                                          !- Thermal Resistance {m2-K/W}               
+  0.9000000,                                     !- Thermal Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Solar Absorptance                NO VALUE FROM TERESA     
+  0.7500000,                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.0381;                                        ! Thickness (m)
+
+Material:NoMass,
+  Mineral wool blanket baseline,                 !- Name                              
+  Rough,                                         !- Roughness                        NO VALUE FROM TERESA     
+  3.91,                                          !- Thermal Resistance {m2-K/W}               
+  0.9000000,                                     !- Thermal Absorptance              NO VALUE FROM TERESA   
+  0.7500000,                                     !- Solar Absorptance                NO VALUE FROM TERESA     
+  0.7500000,                                     !- Visible Absorptance              NO VALUE FROM TERESA   
+  0.1524;                                        ! Thickness (m)
+
+Material,
+  Clay brick,                             !- Name
+  MediumRough,                            !- Roughness                     NO VALUE FROM TERESA
+  0.01905,                                !- Thickness {m}
+  0.78,                                   !- Conductivity {W/m-K}
+  1920,                                   !- Density {kg/m3}
+  720,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance           NO VALUE FROM TERESA
+  0.7,                                    !- Solar Absorptance             NO VALUE FROM TERESA
+  0.7;                                    !- Visible Absorptance           NO VALUE FROM TERESA
+
+
+
+Construction,
+  Generic Context,                        !- Name
+  Material 2;                             !- Layer 1
+
+Construction,
+  Generic Ext wall variable_insulation,   !- Name
+  25mm Stucco,                            !- Layer 1
+  5/8 in. Gypsum Board,                   !- Layer 2
+  variable_insulation,                    !- Layer 3
+  5/8 in. Gypsum Board;                   !- Layer 4
+
+Construction,
+  Generic Double Pane,                    !- Name
+  Generic Low-e Glass,                    !- Layer 1
+  Generic Window Air Gap,                 !- Layer 2
+  Generic Clear Glass;                    !- Layer 3
+
+Construction,
+  Generic Exposed Floor,                  !- Name
+  Generic Painted Metal,                  !- Layer 1
+  Generic Ceiling Air Gap,                !- Layer 2
+  Generic 50mm Insulation,                !- Layer 3
+  Generic LW Concrete;                    !- Layer 4
+
+Construction,
+  Aluminum Shading,                                                  !- Name
+  Aluminum extrusion mill-finished Kawneer - EPD;                    !- Layer 4
+
+
+Construction,
+  Generic Exterior Door,                  !- Name
+  Generic Painted Metal,                  !- Layer 1
+  Generic 25mm Insulation,                !- Layer 2
+  Generic Painted Metal;                  !- Layer 3
+
+Construction,
+  Generic Exterior Wall,                                             !- Name
+  Generic Brick,                                                     !- Layer 1
+  Normalweight concrete 6000 psi,                                    !- Layer 2
+  Generic 25mm Insulation,                                           !- Layer 3
+  Generic Wall Air Gap,                                              !- Layer 4
+  Gypsum Wall Board;                                                 !- Layer 5
+
+Construction,
+  Generic Ground Slab,                    !- Name
+  Generic 25mm Insulation,                !- Layer 1  R13LAYER,                               ! Tomas added layer
+  Normalweight concrete 6000 psi;                    !- Layer 2
+
+Construction,
+  Generic Interior Ceiling,               !- Name
+  Normalweight concrete 6000 psi,                    !- Layer 1
+  Generic Ceiling Air Gap,                !- Layer 2
+  Generic Acoustic Tile;                  !- Layer 3
+
+Construction,
+  Generic Interior Door,                  !- Name
+  Generic 25mm Wood;                      !- Layer 1
+
+Construction,
+  Generic Interior Floor,                 !- Name
+  Generic Acoustic Tile,                  !- Layer 1
+  Generic Ceiling Air Gap,                !- Layer 2
+  Generic LW Concrete;                    !- Layer 3
+
+Construction,
+  Generic Interior Wall,                  !- Name
+  Gypsum Wall Board,                      !- Layer 1
+  Generic Wall Air Gap,                   !- Layer 2
+  Gypsum Wall Board;                      !- Layer 3
+
+Construction,
+  Generic Roof,                           !- Name
+  Generic Roof Membrane,                  !- Layer 1
+  Generic 25mm Insulation,                !- Layer 2
+  Normalweight concrete 6000 psi,                    !- Layer 3
+  Generic Ceiling Air Gap,                !- Layer 4
+  Generic Acoustic Tile;                  !- Layer 5
+
+Construction,
+  Generic Shade,                          !- Name
+  Material 1;                             !- Layer 1
+
+Construction,
+  Generic Single Pane,                    !- Name
+  Generic Clear Glass;                    !- Layer 1
+
+Construction,
+  Generic Underground Roof,               !- Name
+  Generic 50mm Insulation,                !- Layer 1
+  Generic HW Concrete,                    !- Layer 2
+  Generic Ceiling Air Gap,                !- Layer 3
+  Generic Acoustic Tile;                  !- Layer 4
+
+Construction,
+  Generic Underground Wall,               !- Name
+  Generic 50mm Insulation,                !- Layer 1
+  Generic HW Concrete,                    !- Layer 2
+  Generic Wall Air Gap,                   !- Layer 3
+  Gypsum Wall Board;                      !- Layer 4
+
+Construction,
+  Typical IEAD Roof-R32,                  !- Name
+  Roof Membrane,                          !- Layer 1
+  Typical Insulation-R31,                 !- Layer 2
+  Metal Roof Surface;                     !- Layer 3
+
+Construction,
+  Typical Insulated Basement Mass Wall-R8, !- Name
+  Typical Insulation-R7,                  !- Layer 1
+  8 in. Concrete Block Basement Wall;     !- Layer 2
+
+Construction,
+  Typical Insulated Carpeted 8in Slab Floor-R5, !- Name
+  Typical Insulation-R4,                  !- Layer 1
+  8 in. Normalweight Concrete Floor,      !- Layer 2
+  Typical Carpet Pad;                     !- Layer 3
+
+Construction,
+  Insulated 8in Slab Floor,        !- Name
+  Generic 25mm Insulation,                  !- Layer 1
+  Normalweight concrete 6000 psi;      !- Layer 2
+
+Construction,
+  Typical Insulated Metal Door-R3,        !- Name
+  F08 Metal surface,                      !- Layer 1
+  Typical Insulation-R3;                  !- Layer 2
+
+Construction,
+  Typical Insulated Steel Framed Exterior Floor-R27, !- Name
+  25mm Stucco,                            !- Layer 1
+  5/8 in. Gypsum Board,                   !- Layer 2
+  Typical Insulation-R24,                 !- Layer 3
+  5/8 in. Gypsum Board,                   !- Layer 4
+  Typical Carpet Pad;                     !- Layer 5
+
+Construction,
+  Typical Insulated Steel Framed Exterior Wall-R16, !- Name
+  25mm Stucco,                            !- Layer 1
+  5/8 in. Gypsum Board,                   !- Layer 2
+  Typical Insulation-R15,                 !- Layer 3
+  5/8 in. Gypsum Board;                   !- Layer 4
+
+Construction,
+  Typical Overhead Door-R4,               !- Name
+  Typical Insulation-R4;                  !- Layer 1
+
+Construction,
+  U 0.36 SHGC 0.36 Simple Glazing Window, !- Name
+  U 0.36 SHGC 0.36 Simple Glazing;        !- Layer 1
+
+Construction,
+  U 0.44 SHGC 0.26 Dbl Ref-B-H Clr 6mm/13mm Air, !- Name
+  REF B CLEAR HI 6MM,                     !- Layer 1
+  AIR 13MM,                               !- Layer 2
+  CLEAR 6MM;                              !- Layer 3
+
+Construction,
+  U 0.5 SHGC 0.4 Simple Glazing Skylight, !- Name
+  U 0.5 SHGC 0.4 Simple Glazing;          !- Layer 1
+
+Construction:AirBoundary,
+  Generic Air Boundary,                   !- Name
+  None,                                   !- Air Exchange Method
+  0,                                      !- Simple Mixing Air Changes per Hour {1/hr}
+  ;                                       !- Simple Mixing Schedule Name
+
+Material,
+  25mm Stucco,                            !- Name
+  Smooth,                                 !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.71951849592325,                       !- Conductivity {W/m-K}
+  1856.00424372353,                       !- Density {kg/m3}
+  839.458381452284,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  5/8 in. Gypsum Board,                   !- Name
+  MediumSmooth,                           !- Roughness
+  0.0159,                                 !- Thickness {m}
+  0.159892999094055,                      !- Conductivity {W/m-K}
+  800.001829191177,                       !- Density {kg/m3}
+  1089.29718545594,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  8 in. Concrete Block Basement Wall,     !- Name
+  MediumRough,                            !- Roughness
+  0.2032,                                 !- Thickness {m}
+  1.32511322999199,                       !- Conductivity {W/m-K}
+  1842.00421171268,                       !- Density {kg/m3}
+  911.411957005339,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  Normalweight concrete 6000 psi,      !- Name
+  MediumRough,                            !- Roughness
+  0.2032,                                 !- Thickness {m}
+  2.30845517442043,                       !- Conductivity {W/m-K}
+  2322.00530922738,                       !- Density {kg/m3}
+  831.463539724167,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  F08 Metal surface,                      !- Name
+  Smooth,                                 !- Roughness
+  0.0008,                                 !- Thickness {m}
+  45.2497187436178,                       !- Conductivity {W/m-K}
+  7824.01788948971,                       !- Density {kg/m3}
+  499.677608007314,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  Generic 25mm Insulation,                !- Name
+  MediumRough,                            !- Roughness
+  0.05,                                   !- Thickness {m}
+  0.03,                                   !- Conductivity {W/m-K}
+  43,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  Generic 25mm Wood,                      !- Name
+  MediumSmooth,                           !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.15,                                   !- Conductivity {W/m-K}
+  608,                                    !- Density {kg/m3}
+  1630,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+Material:NoMass,
+  R13LAYER,                !- Name
+  Rough,                   !- Roughness
+  2.290965,                !- Thermal Resistance {m2-K/W}
+  0.9000000,               !- Thermal Absorptance
+  0.7500000,               !- Solar Absorptance
+  0.7500000;               !- Visible Absorptance
+
+Material:NoMass,
+  R31LAYER,                !- Name
+  Rough,                   !- Roughness
+  5.456,                   !- Thermal Resistance {m2-K/W}
+  0.9000000,               !- Thermal Absorptance
+  0.7500000,               !- Solar Absorptance
+  0.7500000;               !- Visible Absorptance
+
+Material,
+  variable_insulation,                    !- Name
+  MediumRough,                            !- Roughness
+  0.05,                                   !- Thickness {m}
+  0.03,                                   !- Conductivity {W/m-K}
+  43,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  Generic 50mm Insulation,                !- Name
+  MediumRough,                            !- Roughness
+  0.05,                                   !- Thickness {m}
+  0.03,                                   !- Conductivity {W/m-K}
+  43,                                     !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  Generic Acoustic Tile,                  !- Name
+  MediumSmooth,                           !- Roughness
+  0.02,                                   !- Thickness {m}
+  0.06,                                   !- Conductivity {W/m-K}
+  368,                                    !- Density {kg/m3}
+  590,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.2,                                    !- Solar Absorptance
+  0.2;                                    !- Visible Absorptance
+
+Material,
+  Generic Brick,                          !- Name
+  MediumRough,                            !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.9,                                    !- Conductivity {W/m-K}
+  1920,                                   !- Density {kg/m3}
+  790,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.65,                                   !- Solar Absorptance
+  0.65;                                   !- Visible Absorptance
+
+Material,
+  Gypsum Wall Board,                      !- Name
+  MediumSmooth,                           !- Roughness
+  0.0127,                                 !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+Material,
+  Generic HW Concrete,                    !- Name
+  MediumRough,                            !- Roughness
+  0.2,                                    !- Thickness {m}
+  1.95,                                   !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  900,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.8,                                    !- Solar Absorptance
+  0.8;                                    !- Visible Absorptance
+
+Material,
+  Generic LW Concrete,                    !- Name
+  MediumRough,                            !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.53,                                   !- Conductivity {W/m-K}
+  1280,                                   !- Density {kg/m3}
+  840,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.8,                                    !- Solar Absorptance
+  0.8;                                    !- Visible Absorptance
+
+Material,
+  Generic Painted Metal,                  !- Name
+  Smooth,                                 !- Roughness
+  0.0015,                                 !- Thickness {m}
+  45,                                     !- Conductivity {W/m-K}
+  7690,                                   !- Density {kg/m3}
+  410,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+
+Material,
+  Aluminum extrusion mill-finished Kawneer - EPD,                  !- Name
+  Smooth,                                 !- Roughness
+  0.015,                                 !- Thickness {m}
+  45,                                     !- Conductivity {W/m-K}
+  7690,                                   !- Density {kg/m3}
+  410,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
+Material,
+  Generic Roof Membrane,                  !- Name
+  MediumRough,                            !- Roughness
+  0.01,                                   !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  1120,                                   !- Density {kg/m3}
+  1460,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.65,                                   !- Solar Absorptance
+  0.65;                                   !- Visible Absorptance
+
+Material:AirGap,
+Generic Wall Air Gap, ! Material Name
+  0.1603675; ! Resistance {M**2K/W}
+
+Material:AirGap,
+Generic Ceiling Air Gap, ! Material Name
+  0.1603675; ! Resistance {M**2K/W}
+
+Material,
+  Material 1,                             !- Name
+  Smooth,                                 !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.1,                                    !- Conductivity {W/m-K}
+  0.1,                                    !- Density {kg/m3}
+  100,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.65,                                   !- Solar Absorptance
+  0.65;                                   !- Visible Absorptance
+
+Material,
+  Material 2,                             !- Name
+  Smooth,                                 !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.1,                                    !- Conductivity {W/m-K}
+  0.1,                                    !- Density {kg/m3}
+  100,                                    !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.8,                                    !- Solar Absorptance
+  0.8;                                    !- Visible Absorptance
+
+Material,
+  Metal Roof Surface,                     !- Name
+  Smooth,                                 !- Roughness
+  0.000799999999999998,                   !- Thickness {m}
+  45.2497187436177,                       !- Conductivity {W/m-K}
+  7824.01788948971,                       !- Density {kg/m3}
+  499.67760800731,                        !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material,
+  Roof Membrane,                          !- Name
+  VeryRough,                              !- Roughness
+  0.0095,                                 !- Thickness {m}
+  0.159892999094056,                      !- Conductivity {W/m-K}
+  1121.29256381722,                       !- Density {kg/m3}
+  1459.05861538136,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Carpet Pad,                     !- Name
+  VeryRough,                              !- Roughness
+  0.2164799871521,                        !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.8;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Insulation-R15,                 !- Name
+  MediumSmooth,                           !- Roughness
+  2.64165275714827,                       !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Insulation-R24,                 !- Name
+  MediumSmooth,                           !- Roughness
+  4.22664441143724,                       !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Insulation-R3,                  !- Name
+  MediumSmooth,                           !- Roughness
+  0.528330551429654,                      !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Insulation-R31,                 !- Name
+  MediumSmooth,                           !- Roughness
+  5.45941569810643,                       !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Insulation-R4,                  !- Name
+  MediumSmooth,                           !- Roughness
+  0.704440735239539,                      !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+Material:NoMass,
+  Typical Insulation-R7,                  !- Name
+  MediumSmooth,                           !- Roughness
+  1.23277128666919,                       !- Thermal Resistance {m2-K/W}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+WindowMaterial:Gas,
+  AIR 13MM,                               !- Name
+  Air,                                    !- Gas Type
+  0.0127;                                 !- Thickness {m}
+
+WindowMaterial:Gas,
+  Generic Window Air Gap,                 !- Name
+  Air,                                    !- Gas Type
+  0.0127;                                 !- Thickness {m}
+
+WindowMaterial:Gas,
+  Generic Window Argon Gap,               !- Name
+  Argon,                                  !- Gas Type
+  0.0127;                                 !- Thickness {m}
+
+WindowMaterial:Glazing,
+  CLEAR 6MM,                              !- Name
+  SpectralAverage,                        !- Optical Data Type
+  ,                                       !- Window Glass Spectral Data Set Name
+  0.00599999999999998,                    !- Thickness {m}
+  0.775,                                  !- Solar Transmittance at Normal Incidence
+  0.071,                                  !- Front Side Solar Reflectance at Normal Incidence
+  0.071,                                  !- Back Side Solar Reflectance at Normal Incidence
+  0.881,                                  !- Visible Transmittance at Normal Incidence
+  0.08,                                   !- Front Side Visible Reflectance at Normal Incidence
+  0.08,                                   !- Back Side Visible Reflectance at Normal Incidence
+  0,                                      !- Infrared Transmittance at Normal Incidence
+  0.84,                                   !- Front Side Infrared Hemispherical Emissivity
+  0.84,                                   !- Back Side Infrared Hemispherical Emissivity
+  0.899398119904063,                      !- Conductivity {W/m-K}
+  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
+  No;                                     !- Solar Diffusing
+
+WindowMaterial:Glazing,
+  Generic Clear Glass,                    !- Name
+  SpectralAverage,                        !- Optical Data Type
+  ,                                       !- Window Glass Spectral Data Set Name
+  0.006,                                  !- Thickness {m}
+  0.77,                                   !- Solar Transmittance at Normal Incidence
+  0.07,                                   !- Front Side Solar Reflectance at Normal Incidence
+  0.07,                                   !- Back Side Solar Reflectance at Normal Incidence
+  0.88,                                   !- Visible Transmittance at Normal Incidence
+  0.08,                                   !- Front Side Visible Reflectance at Normal Incidence
+  0.08,                                   !- Back Side Visible Reflectance at Normal Incidence
+  0,                                      !- Infrared Transmittance at Normal Incidence
+  0.84,                                   !- Front Side Infrared Hemispherical Emissivity
+  0.84,                                   !- Back Side Infrared Hemispherical Emissivity
+  1,                                      !- Conductivity {W/m-K}
+  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
+  No;                                     !- Solar Diffusing
+
+WindowMaterial:Glazing,
+  Generic Low-e Glass,                    !- Name
+  SpectralAverage,                        !- Optical Data Type
+  ,                                       !- Window Glass Spectral Data Set Name
+  0.006,                                  !- Thickness {m}
+  0.45,                                   !- Solar Transmittance at Normal Incidence
+  0.36,                                   !- Front Side Solar Reflectance at Normal Incidence
+  0.36,                                   !- Back Side Solar Reflectance at Normal Incidence
+  0.71,                                   !- Visible Transmittance at Normal Incidence
+  0.21,                                   !- Front Side Visible Reflectance at Normal Incidence
+  0.21,                                   !- Back Side Visible Reflectance at Normal Incidence
+  0,                                      !- Infrared Transmittance at Normal Incidence
+  0.84,                                   !- Front Side Infrared Hemispherical Emissivity
+  0.047,                                  !- Back Side Infrared Hemispherical Emissivity
+  1,                                      !- Conductivity {W/m-K}
+  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
+  No;                                     !- Solar Diffusing
+
+WindowMaterial:Glazing,
+  REF B CLEAR HI 6MM,                     !- Name
+  SpectralAverage,                        !- Optical Data Type
+  ,                                       !- Window Glass Spectral Data Set Name
+  0.00599999999999998,                    !- Thickness {m}
+  0.24,                                   !- Solar Transmittance at Normal Incidence
+  0.16,                                   !- Front Side Solar Reflectance at Normal Incidence
+  0.32,                                   !- Back Side Solar Reflectance at Normal Incidence
+  0.3,                                    !- Visible Transmittance at Normal Incidence
+  0.16,                                   !- Front Side Visible Reflectance at Normal Incidence
+  0.29,                                   !- Back Side Visible Reflectance at Normal Incidence
+  0,                                      !- Infrared Transmittance at Normal Incidence
+  0.84,                                   !- Front Side Infrared Hemispherical Emissivity
+  0.6,                                    !- Back Side Infrared Hemispherical Emissivity
+  0.899398119904063,                      !- Conductivity {W/m-K}
+  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
+  No;                                     !- Solar Diffusing
+
+WindowMaterial:SimpleGlazingSystem,
+  U 0.36 SHGC 0.36 Simple Glazing,        !- Name
+  2.04408,                                !- U-Factor {W/m2-K}
+  0.36,                                   !- Solar Heat Gain Coefficient
+  0.6;                                    !- Visible Transmittance
+
+WindowMaterial:SimpleGlazingSystem,
+  U 0.5 SHGC 0.4 Simple Glazing,          !- Name
+  2.839,                                  !- U-Factor {W/m2-K}
+  0.4,                                    !- Solar Heat Gain Coefficient
+  0.6;                                    !- Visible Transmittance
+

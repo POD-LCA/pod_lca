@@ -9,8 +9,8 @@ from numpy import convolve
 from numpy import zeros
 
 from . import DynamicRadiativeForcing
-from . import UniformEmissionProfile
 from ..impacts import Emissions
+from ..impacts import UniformEmissionProfile
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config

@@ -156,12 +156,12 @@ class DaylightingReferencePoint(object):
     @classmethod
     def from_data(cls, data):
         drp = cls()
-        drp.__type__ = "Light"
-        drp.name = data["name"]
-        drp.zone_name = data["zone_name"]
-        drp.fraction = data["fraction"]
-        drp.illuminance_set_point = data["illuminance_set_point"]
-        drp.x = data["x"]
-        drp.y = data["y"]
-        drp.z = data["z"]
+        drp.__type__                    = 'Light'
+        drp.name                        = data['name']
+        drp.zone_name                   = data['zone_name']
+        # drp.fraction                    = data['fraction']
+        # drp.illuminance_set_point       = data['illuminance_set_point']
+        drp.x                           = data['x']
+        drp.y                           = data['y']
+        drp.z                           = data['z']
         return drp

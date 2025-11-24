@@ -1,0 +1,6 @@
+﻿building_type,assembly,material,qty,unit,POD|LCA RSL Category
+commercial,"Glazing, double pane IGU",Double pane IGU,862.2,m2,ecl_windows_openings
+commercial,"Glazing, triple pane IGU",Triple pane IGU,54275,kg,ecl_windows_openings
+commercial,Operable window,Casement Window (glass + frame),45277,kg,ecl_windows_openings
+residential,"Glazing, operable window","Glazing, double pane IGU",33.1,m2,ecl_windows_openings
+residential,"Glazing, operable window","Window frame, vinyl, fixed",33.1,m2,ecl_windows_openings

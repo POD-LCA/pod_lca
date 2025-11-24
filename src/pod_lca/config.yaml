@@ -40,6 +40,13 @@ setup:
     ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
   drf:
     IPCC_REPORT_VERSION: AR5
+  operational:
+    EPLUS_VERSION: '25.1.0' # Version of Energy + used in this release of POD_LCA
+    TERRAIN: 'city'
+    NUM_TIMESTEPS: 1
+    SOLAR_DISTRIBUTION: 'FullExteriorWithReflections'
+  building:
+    DEFAULT_DATA_STANDARD: ASHRAE # Options: RICS, ASHRAE
   uncertainty:
     DATA_QUALITY_INDICATORS: [reliability, completeness, temporal correlation, geographical correlation, technological representativeness]
     MAX_DQS: 5
@@ -49,51 +56,71 @@ setup:
 
 file_paths:
   transportation:
-    CFS_DATA_PATH: data\\transportation_cfs_dataset.csv
-    CFAF_RAIL_DATA_PATH: data\\transportation_cfaf_rail_dataset.csv
-    FAF_DATA_PATH: data\\transportation_faf_dataset.csv
-    FAF_DISTANCE_BANDS: data\\transportation_podlca_faf-dist-band.scv
-    CFS_STATE_CODE: data\\transportation_cfs_state-code.json
-    CFS_SCTG_CODE: data\\transportation_bt_material-sctg.csv
-    MARINE_DATA_PATH: data\\transportation_podlca_marine.csv
-    CFS_MODE_CODE: data\\transportation_cfs_mode-codes.json
-    FAF_MODE_CODE: data\\transportation_faf_mode-codes.json
-    ELECTRIC_VEHICLES: data\\transportation_podlca_electric-vehicles.csv
-    WASTE_TRANSPORT: data\\transportation_podlca_waste-transport.csv
+    CFS_DATA_PATH: data/transportation_cfs_dataset.csv
+    CFAF_RAIL_DATA_PATH: data/transportation_cfaf_rail_dataset.csv
+    FAF_DATA_PATH: data/transportation_faf_dataset.csv
+    FAF_DISTANCE_BANDS: data/transportation_podlca_faf-dist-band.scv
+    CFS_STATE_CODE: data/transportation_cfs_state-code.json
+    CFS_SCTG_CODE: data/transportation_bt_material-sctg.csv
+    MARINE_DATA_PATH: data/transportation_podlca_marine.csv
+    CFS_MODE_CODE: data/transportation_cfs_mode-codes.json
+    FAF_MODE_CODE: data/transportation_faf_mode-codes.json
+    ELECTRIC_VEHICLES: data/transportation_podlca_electric-vehicles.csv
+    WASTE_TRANSPORT: data/transportation_podlca_waste-transport.csv
+    MODE_IMPACTS: data/transportation_podlca_emission.csv
   electricity:
-    CAMBIUM_NATIONAL_DATA: data\\electricity_cambium_consumption-national.csv
-    CAMBIUM_REGIONAL_DATA: data\\electricity_cambium_consumption-regional.csv
-    CAMBIUM_LOCAL_DATA: data\\electricity_cambium_consumption-local.csv
-    CAMBIUM_HEADER_MAP: data\\electricity_cambium_technology-headers.json
-    CAMBIUM_TECHNOLOGY_MAP: data\\electricity_cambium_technology-map.json
-    CAMBIUM_REGIONS_MAP: data\\electricity_cambium_regions-map.json
-    ELECTRICITY_IMPACT_NATIONAL_DATA: data\\electricity_netl_national-consumption-impacts-by-technology.csv
-    ELECTRICITY_IMPACT_REGIONAL_DATA: data\\electricity_netl_regional-consumption-impacts-by-technology.csv
-    ELECTRICITY_TECHNOLOGIES: data\\electricity_netl_electricity-technologies.csv
+    CAMBIUM_NATIONAL_DATA: data/electricity_cambium_consumption-national.csv
+    CAMBIUM_REGIONAL_DATA: data/electricity_cambium_consumption-regional.csv
+    CAMBIUM_LOCAL_DATA: data/electricity_cambium_consumption-local.csv
+    CAMBIUM_HEADER_MAP: data/electricity_cambium_technology-headers.json
+    CAMBIUM_TECHNOLOGY_MAP: data/electricity_cambium_technology-map.json
+    CAMBIUM_REGIONS_MAP: data/electricity_cambium_regions-map.json
+    ELECTRICITY_IMPACT_NATIONAL_DATA: data/electricity_netl_national-consumption-impacts-by-technology.csv
+    ELECTRICITY_IMPACT_REGIONAL_DATA: data/electricity_netl_regional-consumption-impacts-by-technology.csv
+    ELECTRICITY_TECHNOLOGIES: data/electricity_netl_electricity-technologies.csv
   eol:
-    EOL_DEFAULT_MIXES: data\eol_podlca_default-mixes.csv
+    EOL_DEFAULT_MIXES: data/eol_podlca_default-mixes.csv
+    EOL_DEMOLITION_IMPACTS: data/impacts_podlca_eol-demolition-impacts.csv
+    EOL_PROCESS_IMPACTS: data/impacts_podlca_eol-process-impacts.csv
   impacts:
-    IMPACT_NORMALIZATION_FACTORS: data\\impacts_clf_normalization-factors.csv
-    IMPACT_WEIGHTING_FACTOR_EPA: data\\impacts_epa_weighting-factors.csv
-    IMPACT_WEIGHTING_FACTOR_NIST: data\\impacts_nist_weighting-factors.csv
+    IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
+    IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv
+    IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.csv
   location:
-    US_STATES: data\\location_faa_us-states.json
-    US_STATE_COORDS: data\\location_podlca_us-state-coords.csv
-    FAF_DOMESTIC_REGION: data\\transportation_faf_domestic-region.json
-    FAF_FOREIGN_REGION: data\\transportation_faf_foreign-region.json
-    FAF_CITY_REPRESENTATION: data\\transportation_podlca_faf-city-representation.json
-    US_COAST: data\\transportation_podlca_us-coast.json
-    FAF_FOREIGN_REGION_COUNTRY: data\\transportation_faf_foreign-region-countries.json
-    FERC_ZIPCODE_MAP_PATH: data\\location_netl_ferc-ba-mapping.csv
-    FERC_BA_ZIPCODE_MAP_PATH: data\\location_doe_ba-zip-mapping.csv
-    GEA_ZIPCODE_MAP_PATH: data\\location_cambium_gea-reeds-zip-mapping.csv
-    REEDS_BA_ZIPCODE_MAP_PATH: data\\location_cambium_gea-reeds-zip-mapping.csv
+    US_STATES: data/location_faa_us-states.json
+    US_STATE_COORDS: data/location_podlca_us-state-coords.csv
+    FAF_DOMESTIC_REGION: data/transportation_faf_domestic-region.json
+    FAF_FOREIGN_REGION: data/transportation_faf_foreign-region.json
+    FAF_CITY_REPRESENTATION: data/transportation_podlca_faf-city-representation.json
+    US_COAST: data/transportation_podlca_us-coast.json
+    FAF_FOREIGN_REGION_COUNTRY: data/transportation_faf_foreign-region-countries.json
+    FERC_ZIPCODE_MAP_PATH: data/location_netl_ferc-ba-mapping.csv
+    FERC_BA_ZIPCODE_MAP_PATH: data/location_doe_ba-zip-mapping.csv
+    GEA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
+    REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
+  operational:
+    CONSTRUCTIONS: data/operational_constructions.idf
+    SYSTEMS: data/operational_systems.idf
+    SEATTLE: data/operational_weather_seattle.epw
   drf:
-    PERTUBATION_LIFETIMES: data\\drf_ipcc_pertubation-lifetimes.json
-    RADIATIVE_EFFICIENCY: data\\drf_ipcc_radiative-efficiency.json
-    MOLECULER_WEIGHT: data\\drf_none_moleculer-weight.json
-    CO2_IRF_PARAMETERS: data\\drf_ipcc_co2-irf-parameters.json
-    INDIRECT_EFFECTS_FACTORS: data\\drf_ipcc_indirect-contributions.json
+    PERTUBATION_LIFETIMES: data/drf_ipcc_pertubation-lifetimes.json
+    RADIATIVE_EFFICIENCY: data/drf_ipcc_radiative-efficiency.json
+    MOLECULER_WEIGHT: data/drf_none_moleculer-weight.json
+    CO2_IRF_PARAMETERS: data/drf_ipcc_co2-irf-parameters.json
+    INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
+  building:
+    DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
+    TEMPLATE_BOM_STRUCTURE: data/buildings_podlca_template-models-structure.csv
+    TEMPLATE_BOM_ENCLOSURE_OPAQUE: data/buildings_podlca_template-models-enclosure-opaque.csv
+    TEMPLATE_BOM_ENCLOSURE_TRANSLUCENT: data/buildings_podlca_template-models-enclosure-translucent.csv
+    TEMPLATE_BOM_ROOFING: data/buildings_podlca_template-models-roofing.csv
+    TEMPLATE_MATERIALS_DEFAULT_MAP: data/building_podlca_default-impact-database-entry-mapping.csv
+    RICS_SERVICE_LIFE: data/building_rics_service-life.csv
+    ASHRAE_SERVICE_LIFE: data/building_ashrae_service-life.csv
+    RICS_WASTE_RATE: data/building_rics_waste-rate.csv
+    ASHRAE_WASTE_RATE: data/building_ashrae_waste-rate.csv
+    DRF_CATEGORIES: data/buildings_podlca_drf-categoris.csv
+    EUI: data/building_podlca_eui.csv
 Keys and Credentials:
   material screening tool: cG9kbGNhbWF0bWFzdGVy
 

@@ -12,7 +12,6 @@ import subprocess
 import shutil
 import pickle
 
-
 from ast import literal_eval
 from copy import deepcopy
 
@@ -63,9 +62,11 @@ from pod_lca.utilities.geometry import make_box_from_quad
 
 from pod_lca.utilities.geometry import Mesh
 
+from pod_lca.utilities import log
+
+from pod_lca.utilities import log
 
 # TODO: update to/from JSON eventually, or give a OBJ pickle option
-
 
 class OperationalBuilding(object):
     """
@@ -252,7 +253,7 @@ class OperationalBuilding(object):
             self.materials[literal_eval(mk)] = mat.from_data(materials[mk])
 
         for ck in constructions:
-            # print(ck, type(ck))
+            log(f"{ck}, {type(ck)}", 'Debug')
             self.constructions[literal_eval(ck)] = Construction.from_data(constructions[ck])
 
         for sk in shadings:
@@ -383,7 +384,7 @@ class OperationalBuilding(object):
             building = pickle.load(f)
 
         if output:
-            print("***** Building loaded from: {0} *****".format(filename))
+            log('***** Building loaded from: {0} *****'.format(filename), "Info")
 
         return building
 
@@ -410,7 +411,7 @@ class OperationalBuilding(object):
             pickle.dump(self, f, protocol=2)
 
         if output:
-            print("***** Building saved to: {0} *****\n".format(filename))
+            log('***** Building saved to: {0} *****\n'.format(filename), 'Info')
 
     def add_data_from_idf(self, data):
         zones = data["zones"]
@@ -430,13 +431,13 @@ class OperationalBuilding(object):
             z.origin = zones[zone]["origin"]
 
             for i, srf in enumerate(surfaces):
-                srf = zones[zone]["surfaces"][srf]
-                # print(srf['name'])
-                z.surfaces.set_face_attribute(i, "name", srf["name"])
-                z.surfaces.set_face_attribute(i, "construction", srf["construction"])
-                z.surfaces.set_face_attribute(i, "surface_type", srf["surface_type"])
-                z.surfaces.set_face_attribute(i, "outside_boundary_condition", srf["outside_condition"])
-                # print(srf['outside_condition'])
+                srf = zones[zone]['surfaces'][srf]
+                log(f"{srf['name']}", "Debug")
+                z.surfaces.set_face_attribute(i, 'name', srf['name'])
+                z.surfaces.set_face_attribute(i, 'construction', srf['construction'])
+                z.surfaces.set_face_attribute(i, 'surface_type', srf['surface_type'])
+                z.surfaces.set_face_attribute(i, 'outside_boundary_condition', srf['outside_condition'])
+                log(f"{srf['outside_condition']}", "Debug")
             self.add_zone(z)
 
         windows = data["windows"]
@@ -1079,8 +1080,8 @@ class OperationalBuilding(object):
             except:
                 pass
 
-        print(exe, "-w", self.weather, "--output-directory", out, idf)
-        subprocess.call([exe, "-w", self.weather, "--output-directory", out, idf])
+        log(f"{exe}-w{self.weather}--output-directory{out}{idf}", 'Info')
+        subprocess.call([exe, '-w', self.weather,'--output-directory', out, idf])
 
     def load_results(self, print_error=True):
         """

@@ -9,7 +9,7 @@ from ..electricity import ElectricitySupply
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..uncertainty import DataDistribution
+from ..analysis import DataDistribution
 from ...utilities import config
 
 
@@ -71,7 +71,7 @@ class Electricity(Master):
         item.emissions = Emissions.from_parent(item)
         item.carbon_storage = CarbonStorage.from_parent(item)
 
-        electricity_supplier = ElectricitySupply.from_location(model.get_project().get_location(), year)
+        electricity_supplier = ElectricitySupply.from_location(model.get_location(), year)
         item.set_supplier(electricity_supplier)
 
         return item

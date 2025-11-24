@@ -5,52 +5,35 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.building import Building
-from pod_lca.building import BuildingComponent
+from pod_lca.building import Assembly
+from pod_lca.building import BuildingMaterial
 from pod_lca.impacts import Emissions
-from pod_lca.impacts import EOLImpactsDatabase
 from pod_lca.impacts import Impacts
 from pod_lca.location import Location
-from pod_lca.transportation import EOLTransportDataset
 from pod_lca.units import KILOGRAM
 
 # create building
 my_land_plot = Location.from_str("98126, Seattle")
 
-my_building = Building.build(
-    name="My Shopping Mall", type="Commercial", location=my_land_plot, built_year=2025, geometry=None
-)  # Dealing with geometry is not within the scope of EOL
-
-eol_impact_database = EOLImpactsDatabase.new("EOL database")
-eol_impact_database.set_primary_key("Material")
-eol_impact_database.set_process_key("Process")
-eol_impact_database.set_life_cycle_stage_key("LCA Stage")
-eol_impact_database.set_data(r"src/pod_lca/data/impacts_podlca_eol-impacts.csv")
-
-my_building.set_eol_database(eol_impact_database)
-my_building.set_eol_transport_dataset(EOLTransportDataset())
-my_building.set_transportation_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
+my_building = Building()
+my_building.set_eol_database('data/impacts_podlca_eol-impacts.csv')
+my_building.set_transportation_impact_database('data/transportation_podlca_emission.csv')
 
 # add a window to the building
-my_timber_window = BuildingComponent.create(
-    name="Window", materials=[None]
-)  # Making a building component from materials not within the scope of EOL
-my_building.add_component(my_timber_window)
+# TODO try with the database
+wood = BuildingMaterial()
+wood.qty = 4.2
+wood.unit = KILOGRAM
+wood.eol_product = 'Wood'
 
-# deconstruct window
-deconstruction_map = {
-    "Wood": {"qty": 4.2, "unit": KILOGRAM},
-    "Glass": {"qty": 0.5, "unit": KILOGRAM, "bio_based": False},
-}
-my_timber_window.deconstruct(deconstruction_map)
+glass = BuildingMaterial()
+glass.qty = 0.5
+glass.unit = KILOGRAM
+glass.eol_product = 'Glass'
 
-# impacts by material and life cycle stage
-# for waste in my_timber_window.get_waste_products():
-#    print(waste)
-#    for lc_stage, impacts_lst in waste.get_impacts().items():
-#       if impacts_lst:
-#          print(f"Life cycle stage: {lc_stage}")
-#          for impact in impacts_lst:
-#             print(impact)
+my_timber_window = Assembly.create(name='Window',
+                                            building=my_building,
+                                            materials=[wood, glass])
 
 # impacts by life cycle stage
 impact_dict = {

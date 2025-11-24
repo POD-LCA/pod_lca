@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 from importlib import resources
 
 import yaml
+import os
 
 
 def load_config():

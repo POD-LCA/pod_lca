@@ -1,0 +1,98 @@
+﻿building_type,assembly,material,qty,unit,POD|LCA RSL Category
+commercial,Curtain wall: steel spandrel,Double glazing,75920,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,IGU spacer,415,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,Low-e coating,349,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,Steel Curtain Wall System,31445,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,"Fluoropolymer coating, metal stock",479,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,"5"" mineral wool insulation",10981,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,"6"" Galvanized Steel Stud Framing",14975,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,Gypsum Wall Board,30644,kg,encl_curtainwall
+commercial,Curtain wall: steel spandrel,Acrylic latex paint,509,kg,encl_curtainwall
+commercial,Curtain wall: aluminum spandrel,Aluminum Curtain Wall System,10917,kg,encl_curtainwall
+commercial,Curtain wall: aluminum spandrel,"5"" mineral wool insulation",10806,kg,encl_curtainwall
+commercial,Curtain wall: aluminum spandrel,"6"" Galvanized Steel Stud Framing",14975,kg,encl_curtainwall
+commercial,Curtain wall: aluminum spandrel,Gypsum Wall Board,30644,kg,encl_curtainwall
+commercial,Curtain wall: aluminum spandrel,Acrylic latex paint,509,kg,encl_curtainwall
+commercial,MV - Brick,Brick,360492,kg,encl_rs_mvbrick
+commercial,MV - Brick,Type N Mortar,57846,kg,encl_rs_mvbrick
+commercial,MV - Brick,Galvanized steel shelf angle with knife plate,12117,kg,encl_rs_mvbrick
+commercial,MV - Brick,"4"" mineral wool insulation",9412,kg,encl_rs_mvbrick
+commercial,MV - Brick,AVB membrane,6719,kg,encl_rs_mvbrick
+commercial,MV - Brick,Sheathing,30261,kg,encl_rs_mvbrick
+commercial,MV - Brick,"6"" galvanized steel stud framing",14975,kg,int_steelstuds
+commercial,MV - Brick,Gypsum wall board,30644,kg,fin_gwb
+commercial,MV - Brick,Acrylic latex paint,509,kg,fin_paint
+commercial,MV - Granite,"4"" granite veneer",624440,kg,encl_rs_mvgranite
+commercial,MV - Granite,Type S mortar,22658,kg,encl_rs_mvgranite
+commercial,MV - Granite,Galvanized steel shelf angle with knife plate,12117,kg,encl_rs_mvgranite
+commercial,MV - Granite,"4"" mineral wool insulation",9412,kg,encl_rs_mvgranite
+commercial,MV - Granite,AVB membrane,6719,kg,encl_rs_mvgranite
+commercial,MV - Granite,Sheathing,30261,kg,encl_rs_mvgranite
+commercial,MV - Granite,"6"" galvanized steel stud framing",14975,kg,int_steelstuds
+commercial,MV - Granite,Gypsum wall board,30644,kg,fin_gwb
+commercial,MV - Granite,Acrylic latex paint,509,kg,fin_paint
+commercial,Insulated Metal Panel,Insulated 24 ga. steel sandwich panel with polyurethane foam,29658,kg,encl_rs_steelpanel
+commercial,Insulated Metal Panel,Fluoropolymer coating,753,kg,encl_rs_steelpanel
+commercial,Insulated Metal Panel,Stainless steel fastener,2077,kg,encl_rs_steelpanel
+commercial,Insulated Metal Panel,"6"" Galvanized steel stud framing",14975,kg,int_steelstuds
+commercial,Insulated Metal Panel,Gypsum wall Board,30644,kg,fin_gwb
+commercial,Insulated Metal Panel,Acrylic latex paint,509,kg,fin_paint
+commercial,EIFS (XPS),"3/8"" Synthetic Stucco",1564,kg,encl_rs_eifs
+commercial,EIFS (XPS),Glass fiber mesh,0,kg,encl_rs_eifs
+commercial,EIFS (XPS),"2.5"" XPS insulation",3969,kg,encl_rs_eifs
+commercial,EIFS (XPS),AVB Membrane,6719,kg,encl_rs_eifs
+commercial,EIFS (XPS),Sheathing,30261,kg,encl_rs_eifs
+commercial,EIFS (XPS),"6"" Galvanized Steel Stud Framing",14975,kg,int_steelstuds
+commercial,EIFS (XPS),Gypsum Wall Board,30644,kg,fin_gwb
+commercial,EIFS (XPS),Acrylic latex paint,509,kg,fin_paint
+commercial,"Rainscreen, GFRC",Glass Fiber Reinforced Concrete (GFRC) Panel,170263,kg,encl_rs_gfrc
+commercial,"Rainscreen, GFRC",Galvanized steel support system,97036,kg,encl_rs_gfrc
+commercial,"Rainscreen, GFRC","4.5"" Mineral Wool insulation",10632,kg,encl_rs_gfrc
+commercial,"Rainscreen, GFRC",AVB membrane,6719,kg,encl_rs_gfrc
+commercial,"Rainscreen, GFRC",Sheathing,30261,kg,encl_rs_gfrc
+commercial,"Rainscreen, GFRC","6"" Galvanized Steel Stud Framing",14975,kg,int_steelstuds
+commercial,"Rainscreen, GFRC",Gypsum Wall Board,30644,kg,fin_gwb
+commercial,"Rainscreen, GFRC",Acrylic latex paint,509,kg,fin_paint
+commercial,"Rainscreen, Thin brick","3/4"" Brick",74168,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",Type S Mortar,11329,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",Galvanized Steel Backer Tray,425,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",,16759,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",Galvanized Steel Support System,4039,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",Thermal Break,96,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick","3.5"" Mineral Wool insulation",8366,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",AVB membrane,6719,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick",Sheathing,30261,kg,encl_rs_thinbrick
+commercial,"Rainscreen, Thin brick","6"" Galvanized Steel Stud Framing",14975,kg,int_steelstuds
+commercial,"Rainscreen, Thin brick",Gypsum Wall Board,30644,kg,fin_gwb
+commercial,"Rainscreen, Thin brick",Acrylic latex paint,509,kg,fin_paint
+commercial,"Rainscreen, Wood","6"" x 1' Tulipwood/Poplar Lumber",25945,kg,encl_rs_wood
+commercial,"Rainscreen, Wood",Water based stain,208,kg,encl_rs_wood
+commercial,"Rainscreen, Wood",Aluminum extrusion,2717,kg,encl_rs_wood
+commercial,"Rainscreen, Wood",Galvanized steel support system,4039,kg,encl_rs_wood
+commercial,"Rainscreen, Wood",Thermal Break,96,kg,encl_rs_wood
+commercial,"Rainscreen, Wood","3.5"" Mineral Wool insulation",8366,kg,encl_rs_wood
+commercial,"Rainscreen, Wood",AVB membrane,6719,kg,encl_rs_wood
+commercial,"Rainscreen, Wood",Sheathing,30261,kg,encl_rs_wood
+commercial,"Rainscreen, Wood","6"" Galvanized Steel Stud Framing",14975,kg,int_steelstuds
+commercial,"Rainscreen, Wood",Gypsum Wall Board,30644,kg,fin_gwb
+commercial,"Rainscreen, Wood",Acrylic latex paint,509,kg,fin_paint
+commercial,"Rainscreen, Formed Steel Panel",Formed Steel Sheet,11388,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel",Enamel Paint,661,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel",Stainless Steel Fasteners,323,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel",Galvanized Steel Support,4039,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel",Thermal Break,96,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel","3.5"" Mineral Wool insulation",8366,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel",AVB membrane,6719,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel",Sheathing,30261,kg,encl_rs_steelpanel
+commercial,"Rainscreen, Formed Steel Panel","6"" Galvanized Steel Stud Framing",14975,kg,int_steelstuds
+commercial,"Rainscreen, Formed Steel Panel",Gypsum Wall Board,30644,kg,fin_gwb
+commercial,"Rainscreen, Formed Steel Panel",Acrylic latex paint,509,kg,fin_paint
+residential,"Brick, wood framing",Brick,3115930,kg,encl_rs_thinbrick
+residential,"Brick, wood framing",Type N Mortar,54987,kg,encl_rs_thinbrick
+residential,"Brick, wood framing",AVB membrane,187.8,m2,encl_rs_thinbrick
+residential,"Brick, wood framing",Oriented strandboard (OSB),1849,kg,superstructure
+residential,"Brick, wood framing",Light wood framing,3017,kg,superstructure
+residential,"Brick, wood framing","Expanded polystyrene (EPS), board",129,kg,encl_rs_thinbrick
+residential,"Brick, wood framing","Fiberglass blanket insulation, paper faced",236,kg,encl_rs_thinbrick
+residential,"Brick, wood framing",AVB membrane,187.8,m2,encl_rs_thinbrick
+residential,"Brick, wood framing",Gypsum wall board,187.8,m2,fin_gwb

@@ -1,0 +1,32 @@
+﻿POD|LCA RSL Category,ASHRAE 240p Element Category,service_life
+substructure,Foundations,Life of Building
+superstructure,Superstructure,Life of Building
+encl_curtainwall,Exterior Walls,35
+encl_brickconc_panels,Exterior Walls,35
+encl_woodpanel,Exterior Walls,35
+encl_rs_thinbrick,Exterior Walls,35
+encl_rs_wood,Exterior Walls,35
+encl_rs_gfrc,Exterior Walls,35
+encl_rs_eifs,Exterior Walls,35
+encl_rs_mvbrick,Exterior Walls,35
+encl_rs_mvgranite,Exterior Walls,35
+encl_rs_steelpanel,Exterior Walls,35
+ecl_windows_openings,Exterior Windows,30
+encl_horiz_openings,Exterior Horizontal Enclosures-Roofing-(assorted),20
+glazing,Exterior Windows,30
+roofing_asphaltshingle,Roofing,20
+roofing_singleply,Roofing,20
+roofing_EPDM,Roofing,20
+roofing_metal,Roofing,20
+roofing_tiles,Roofing,20
+int_studs,Interior partitions including walls,25
+int_blockwall,Interior partitions including walls,25
+fin_gwb,Interior partitions including walls,25
+fin_paint,Paint,5
+fin_ceramictile,,
+fin_vinyltile,,
+fin_ff&e,,
+fin_carpet_Vinyl,,
+fin_stonetile,,
+fin_accessfloorsupport,Raised Floor Construction,25
+fin_accessfloortile,Raised Floor Construction,25

@@ -4,9 +4,11 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..units import BTU
 from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
 from ..units import DAY
+from ..units import FEET
 from ..units import HOUR
 from ..units import ITEM
 from ..units import JOULE
@@ -17,6 +19,8 @@ from ..units import KILOGRAM
 from ..units import KILOMETER
 from ..units import LITER
 from ..units import MEGA
+from ..units import METER
+from ..units import SQUARE_FEET
 from ..units import SQUARE_METER
 from ..units import M_TON
 from ..units import TON_KILOMETER
@@ -35,11 +39,15 @@ UNITS_MAP.update(
         "kg": KILOGRAM,
         "t": M_TON,
         "km": KILOMETER,
+        "m": METER,
+        "ft": FEET,
         "tonne": M_TON,
+        "metric ton": M_TON,
         "tkm": TON_KILOMETER,
         "t*km": TON_KILOMETER,
         "kgkm": KILOGRAM * KILOMETER,
         "m2": SQUARE_METER,
+        "ft2": SQUARE_FEET,
         "l": LITER,
         "m3": CUBIC_METER,
         "ft3": CUBIC_FEET,
@@ -47,10 +55,15 @@ UNITS_MAP.update(
         "MJ": MEGA * JOULE,
         "kWh": KILO * WATT_HOUR,
         "MWh": MEGA * WATT_HOUR,
+        "kBtu/ft2": KILO * BTU / SQUARE_FEET,
+        "kWh/ft2": KILO * WATT_HOUR / SQUARE_FEET,
         "Item(s)": ITEM,
         "kg C": KG_CARBON,
         "kg CO2": KG_CARBON_DIOXIDE,
         "kg CO2 eq": KG_CARBON_DIOXIDE,
+        "kg/m": KILOGRAM / METER,
+        "kg/m2": KILOGRAM / SQUARE_METER,
+        "kg/ft2": KILOGRAM / SQUARE_FEET,
         "kg/m3": KILOGRAM / CUBIC_METER,
         "kg/item": KILOGRAM / ITEM,
     }

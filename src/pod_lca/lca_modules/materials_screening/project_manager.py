@@ -145,6 +145,9 @@ class Project:
         """
         self.location = location
 
+        for model in self.get_model_names():
+            self.get_model(model).set_location(location)
+
         return self
 
     def set_year(self, year):

@@ -1,7 +1,3 @@
-from .temporal_emission_profiles import UniformEmissionProfile
-from .temporal_emission_profiles import NormEmissionProfile
-from .temporal_emission_profiles import LogNormEmissionProfile
-from .temporal_emission_profiles import ExponentDecayEmissionProfile
 from .arx_calculations import ARXCalculation as ARXCalculation
 from .ar4_calculations import AR4Calculations as AR4Calculations
 from .ar5_calculations import AR5Calculations as AR5Calculations

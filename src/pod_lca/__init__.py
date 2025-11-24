@@ -11,7 +11,7 @@ from . import units
 from . import visualizer
 from . import utilities
 from .lca_modules import location
-from .lca_modules import uncertainty
+from .lca_modules import analysis
 from .lca_modules import impacts
 from .lca_modules import electricity
 from .lca_modules import transportation
@@ -20,17 +20,22 @@ from .lca_modules import eol
 from .lca_modules import building
 from .lca_modules import dynamic_radiative_forcing
 from .lca_modules import operational
+from .lca_modules import building_structure
+from .lca_modules import building_envelope
 
-sys.modules["pod_lca.location"] = location
-sys.modules["pod_lca.impacts"] = impacts
-sys.modules["pod_lca.uncertainty"] = uncertainty
-sys.modules["pod_lca.electricity"] = electricity
-sys.modules["pod_lca.materials_screening"] = materials_screening
-sys.modules["pod_lca.building"] = building
-sys.modules["pod_lca.eol"] = eol
-sys.modules["pod_lca.transportation"] = transportation
-sys.modules["pod_lca.dynamic_radiative_forcing"] = dynamic_radiative_forcing
-sys.modules["pod_lca.operational"] = operational
+import sys
+sys.modules['pod_lca.location'] = location
+sys.modules['pod_lca.impacts'] = impacts
+sys.modules['pod_lca.analysis'] = analysis
+sys.modules['pod_lca.electricity'] = electricity
+sys.modules['pod_lca.materials_screening'] = materials_screening
+sys.modules['pod_lca.building'] = building
+sys.modules['pod_lca.eol'] = eol
+sys.modules['pod_lca.transportation'] = transportation
+sys.modules['pod_lca.dynamic_radiative_forcing'] = dynamic_radiative_forcing
+sys.modules['pod_lca.operational'] = operational
+sys.modules['pod_lca.building_structure'] = building_structure
+sys.modules['pod_lca.building_envelope'] = building_envelope
 
 __all__ = [
     "building",

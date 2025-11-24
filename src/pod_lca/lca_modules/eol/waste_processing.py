@@ -96,9 +96,7 @@ class WasteProcess:
 
         waste_process.set_parent(parent)
         waste_process.set_life_cycle_stage(life_cycle_stage)
-        waste_process.set_unit(unit)
         waste_process.set_process_name(process_name)
-        waste_process.set_qty(qty)
 
         parent.get_waste_processes().append(waste_process)
 
@@ -143,54 +141,6 @@ class WasteProcess:
 
         return self
 
-    def set_qty(self, qty):
-        """Set quantity of the parent subjected to this waste process.
-
-        Parameters
-        ----------
-        qty : float
-            Quantity of the parent object subjected to this process.
-        """
-        self.qty = qty
-
-        if self.get_linked_process() is not None:
-            if self.get_unit() == self.get_linked_process().get_unit():
-                self.get_linked_process().set_qty(qty)
-            else:
-                self.get_linked_process().set_unit(self.get_unit())
-                self.get_linked_process().set_qty(qty)
-
-        return self
-
-    def set_unit(self, unit):
-        """Set unit of measurement for the waste amount processed.
-
-        Parameters
-        ----------
-        unit : ~pod_lca.units.Unit
-            Unit of measurement.
-
-        Raises
-        ------
-        ValueError
-            New unit incompatible with the existing units.
-        """
-        if self.get_unit() is None:
-            self.unit = unit
-        else:
-            value_in = self.get_qty()
-            unit_in = self.get_unit()
-
-            conversion_factor = unit_in.convert_to(unit)
-
-            if conversion_factor is not None:
-                self.unit = unit
-                self.set_qty(value_in * conversion_factor)
-            else:
-                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
-
-        return self
-
     def set_life_cycle_stage(self, life_cycle_stage):
         """Set life cycle stage of the product/process.
 
@@ -213,27 +163,6 @@ class WasteProcess:
                     break
 
             self.get_parent().get_impacts()[life_cycle_stage].append(impact_obj)
-
-        return self
-
-    def set_unit_inventories(self):
-        """Set unit impacts of the waste process."""
-        material = self.get_parent().get_impact_database_entry()
-        process = self.get_process_name()
-        life_cycle_stage = self.get_life_cycle_stage()
-        unit = self.get_unit()
-        database = self.get_parent().get_parent().get_building().get_eol_database()
-
-        database_entry = database.get_data_entry(material, process, life_cycle_stage)
-
-        declared_unit = database_entry[database.get_unit_key()]
-        conversion_factor = declared_unit.get_conversion_factor(unit)
-
-        impacts = {key: database_entry[key] * conversion_factor for key in self.get_unit_impacts().get_categories()}
-        emissions = {key: database_entry[key] * conversion_factor for key in self.get_unit_emissions().get_categories()}
-
-        self.get_unit_impacts().update_qty(impacts)
-        self.get_unit_emissions().update_qty(emissions)
 
         return self
 
@@ -294,7 +223,7 @@ class WasteProcess:
         str
             Name identifyer.
         """
-        return self.get_parent().get_parent().get_name() + "_" + self.get_process_name()
+        return self.get_parent().get_name() + '_' + self.get_process_name()
 
     def get_qty(self):
         """Get quantity of the parent subjected to this waste process.
@@ -304,8 +233,11 @@ class WasteProcess:
         float
             Quantity of the parent object subjected to this process.
         """
-        return self.qty
+        total_waste_quantity = self.get_parent().get_qty()
+        percentage_in_process = self.get_parent().get_process_mix()[self.get_process_name()]
 
+        return total_waste_quantity * percentage_in_process
+    
     def get_unit(self):
         """Get unit of measurement for the waste amount processed.
 
@@ -313,9 +245,32 @@ class WasteProcess:
         -------
         ~pod_lca.units.Unit
             Unit of measurement.
+        """        
+        return self.get_parent().get_unit()
+      
+    def get_weight(self):
+        """ Get weight of the parent subjected to this waste process.
+        
+        Returns
+        -------
+        float
+            Quantity of the parent object subjected to this process.
         """
-        return self.unit
-
+        total_waste_quantity = self.get_parent().get_weight()
+        percentage_in_process = self.get_parent().get_process_mix()[self.get_process_name()]
+        
+        return total_waste_quantity * percentage_in_process
+    
+    def get_weight_unit(self):
+        """ Get unit of measurement for the weight of waste processed.
+        
+        Returns
+        -------
+        ~pod_lca.units.Unit
+            Unit of measurement.
+        """        
+        return self.get_parent().get_weight_unit()
+    
     def get_life_cycle_stage(self):
         """Retrieve the life cycle stage corresponding to the waste process.
 
@@ -385,7 +340,7 @@ class WasteProcess:
         process = self.get_process_name()
         life_cycle_stage = self.get_life_cycle_stage()
         unit = self.get_unit()
-        database = self.get_parent().get_parent().get_building().get_eol_database()
+        database = self.get_parent().get_eol_process_impact_database()
 
         database_entry = database.get_data_entry(material, process, life_cycle_stage)
 
@@ -394,7 +349,7 @@ class WasteProcess:
 
         impacts = {key: database_entry[key] * conversion_factor for key in self.unit_impacts.record_attr_dict}
         emissions = {key: database_entry[key] * conversion_factor for key in self.unit_emissions.record_attr_dict}
-
+        
         self.unit_impacts.update_qty(impacts)
         self.unit_emissions.update_qty(emissions)
 

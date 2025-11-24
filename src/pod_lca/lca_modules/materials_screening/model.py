@@ -13,7 +13,7 @@ from . import Fuel
 from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
-from ..dynamic_radiative_forcing import UniformEmissionProfile
+from ..impacts import UniformEmissionProfile
 from ..transportation import TransportationManager
 from ..transportation import USDomesticTransportationManager
 from ..transportation import USGlobalTransportationManager
@@ -34,6 +34,8 @@ class Model:
         Project on which the calculator operates.
     name : str
         Name of the model.
+    location : ~pod_lca.location.Location
+        Location of the project.
     processes : list of ~pod_lca.materials_screening.Process
         Processes in the model.
     products : list of ~pod_lca.materials_screening.Product
@@ -51,6 +53,7 @@ class Model:
     def __init__(self):
         self.project = None
         self.name = None
+        self.location = None
         self.processes = []
         self.products = []
         self.transportation_manager = None
@@ -100,6 +103,7 @@ class Model:
         else:
             model.set_name(f"Model_{len(project.models)}")
 
+        model.set_location(project.get_location())
         model.set_transportation_manager(transport_scope)
         if project.get_transportation_mode_impact_database() is not None:
             model.get_transportation_manager().set_impact_database(project.get_transportation_mode_impact_database())
@@ -175,10 +179,10 @@ class Model:
                                 tmp_transportation_map[transported_item] = {}
                                 tmp_transportation_map[transported_item]["transporter"] = [item]
                 else:
-                    if not (row[header_map["density"]] == ""):
-                        item.set_density(row[header_map["density"]])
-                    if not (row[header_map["weight unit"]] == ""):
-                        item.set_weight_unit(UNITS_MAP[row[header_map["weight unit"]]])
+                    if not (row[header_map['density']] == ''):
+                        item.set_density(row[header_map['density']])        
+                    if not (row[header_map['weight unit']] == ''):
+                        item.set_density_unit(UNITS_MAP[row[header_map['weight unit']]])  
 
                     if name in tmp_transportation_map:
                         tmp_transportation_map[name]["product"] = item
@@ -217,6 +221,18 @@ class Model:
             Name of the model.
         """
         self.name = name
+
+        return self
+
+    def set_location(self, location):
+        """ Set the location of the model.
+        
+        Parameters
+        ----------
+        location : ~pod_lca.location.Location
+            Location of the model.
+        """
+        self.location = location
 
         return self
 
@@ -267,6 +283,16 @@ class Model:
         """
         return self.name
 
+    def get_location(self):
+        """ Retrieve the location of the model.
+        
+        Returns
+        -------
+        ~pod_lca.location.Location
+            Location of the model.
+        """
+        return self.location
+    
     def get_processes(self):
         """Retrieve all the processes in the model.
 
@@ -296,8 +322,8 @@ class Model:
             All products and processess in the model.
 
         """
-        return self.get_products() + self.get_processes()
-
+        return self.get_products() + self.get_processes() + self.get_transportation_manager().get_transportation_legs()
+    
     def get_transportation_manager(self):
         """Retrieve the logistics manager of the model.
 
@@ -384,9 +410,9 @@ class Model:
         self.processes.append(process)
 
         return process
-
-    def add_product(self, name, stage, qty, unit, impacts_from, sctg_code=None):
-        """Create and add product to the model.
+    
+    def add_product(self, name, stage, qty, unit, impacts_from, **kwargs):
+        """ Create and add product to the model.
 
         Parameters
         ----------
@@ -400,8 +426,17 @@ class Model:
             Unit of measurement.
         impacts_from : str
             Name of the impact database entry from which to use impacts.
+
+        Other Parameters
+        ----------------
         sctg_code : int
-            Standard Classification of Transported Goods (SCTG) code of the material
+            Standard Classification of Transported Goods (SCTG) code of the material.
+        density : float
+            Density of the material.
+        density_unit : ~pod_lca.units.Unit
+            Units corresponding to material density.
+        ignore_transport : bool
+            If true, ignore setting transportation.             
 
         Returns
         -------
@@ -411,11 +446,16 @@ class Model:
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
 
-        product.set_sctg_code(sctg_code)
-        product.set_transportation()
+        if 'sctg_code' in kwargs:
+            product.set_sctg_code(kwargs['sctg_code'])
+        if 'density' in kwargs:
+            product.set_density(kwargs['density'])
+            product.set_density_unit(kwargs['density_unit'])
+            
+        if not kwargs.get('ignore_transport', False):
+            product.set_transportation()
 
-        pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
-        product.get_emissions().set_temporal_emission_profile(pulse)
+        product.set_production_year(self.get_project().get_year())
 
         self.products.append(product)
 

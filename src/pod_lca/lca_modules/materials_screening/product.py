@@ -11,6 +11,7 @@ from . import Electricity
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOMETER
@@ -43,6 +44,8 @@ class Product(Master):
         The mass of product in weight units per unit of product's unit of measurement. Default is 1.0.
     sctg_code : str
         Standard Classification of Transported Goods (SCTG) code.
+    transport_legs : list of ~pod_lca.transportation.TransportLeg
+        Transportation leg corresponding to the product.
     mineral_carbonation_potential : bool
         Mineral carbonation potential of the product.
     is_material : bool
@@ -62,6 +65,7 @@ class Product(Master):
         self.mineral_carbonation_potential = None
         self.is_material = True
         self.sctg_code = None
+        self.transport_legs = None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -92,10 +96,6 @@ class Product(Master):
         """
         super().set_unit(unit)
 
-        if unit.get_qty_measured() == "mass":
-            self.set_weight_unit(unit)
-            self.density = 1.0
-
         return self
 
     def set_production_year(self, year):
@@ -111,17 +111,33 @@ class Product(Master):
         if self.electricity["by_location"] is not None:
             self.electricity["by_location"].set_year(year)
 
-        return self
+        if self.emissions is not None:
+            pulse = UniformEmissionProfile.unit_pulse(at=year)
+            self.get_emissions().set_temporal_emission_profile(pulse)
 
-    def set_weight_unit(self, unit):
-        """Set unit of measurement for the mass of the product.
+        if self.get_transportation() is not None:
+            for leg in self.get_transportation():
+                leg.get_emissions().set_temporal_emission_profile(pulse)
+
+        if self.emissions is not None:
+            pulse = UniformEmissionProfile.unit_pulse(at=year)
+            self.get_emissions().set_temporal_emission_profile(pulse)
+
+        if self.get_transportation() is not None:
+            for leg in self.get_transportation():
+                leg.get_emissions().set_temporal_emission_profile(pulse)
+
+        return self
+    
+    def set_density_unit(self, unit):
+        """ Set unit of measurement for the mass of the product.
 
         Parameters
         ----------
         unit : ~pod_lca.units.Unit
             Unit of measurement. of mass.
         """
-        self.weight_unit = unit
+        self.density_unit = unit
 
         return self
 
@@ -187,7 +203,7 @@ class Product(Master):
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
-        if not self.get_unit().get_qty_measured() == "mass":
+        if (not self.get_unit().get_qty_measured() == 'mass') and (self.get_density() is None):
             self.set_density()
 
         if travel_dist is None:
@@ -197,20 +213,23 @@ class Product(Master):
 
         dist_unit = KILOMETER if dist_unit is None else dist_unit
 
-        transportation_manager = self.get_model().get_transportation_manager()
+        transportation_manager = self.get_transportation_manager()
         if transportation_manager.get_impact_database() is not None:
-            transportation_manager.add_good(
-                self,
-                travel_dist=travel_dist,
-                shipping_dest=self.get_project().get_location(),
-                shipping_org=None,
-                transport_scenario=transport_scenario,
-                distance_unit=dist_unit,
-                return_trip_factor=None,
-                mode_name=mode_name,
-                mode_efficiency=mode_efficiency,
-            )
+            transportation_manager.add_good(self, 
+                                            travel_dist=travel_dist,
+                                            shipping_dest=self.get_project().get_location(), 
+                                            shipping_org=None,
+                                            transport_scenario=transport_scenario,
+                                            distance_unit=dist_unit, 
+                                            return_trip_factor=None, 
+                                            mode_name=mode_name,
+                                            mode_efficiency=mode_efficiency)
 
+        if self.get_production_year() is not None:
+            pulse = UniformEmissionProfile.unit_pulse(at=self.get_production_year())
+            for leg in self.get_transportation():
+                leg.get_emissions().set_temporal_emission_profile(pulse)
+            
         return self
 
     def set_electricity_source(self, source="from_database"):
@@ -241,7 +260,7 @@ class Product(Master):
     def set_electricity_database_tag(self):
         """Find the tag used to identify electricity data in the database."""
         if self.get_impact_database_entry() is not None:
-            database = self.get_project().get_impact_database()
+            database = self.get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
 
             electricity_tag = None
@@ -342,7 +361,7 @@ class Product(Master):
         year : int
             Year of production.
         """
-        return self.production_yea
+        return self.production_year
 
     def get_electricity(self):
         """Get the electricity product of the item.
@@ -404,7 +423,10 @@ class Product(Master):
         if self.get_unit().get_qty_measured() == "mass":
             return self.get_qty()
         else:
-            return self.get_qty() * self.get_density()
+            if self.get_density() is None:
+                return None
+            else:
+                return self.get_qty() * self.get_density()
 
     def get_weight_unit(self):
         """Retrieve the unit of measurement of mass of the product.
@@ -440,7 +462,17 @@ class Product(Master):
             Unit of measurement of the denisty of product.
         """
         return self.density_unit
-
+    
+    def get_transportation_manager(self):
+        """ Get the transportation manager corresponding to the product.
+        
+        Returns
+        -------
+        ~pod_lca.transportation.TransportationManager
+            Transportation manager
+        """
+        return self.get_model().get_transportation_manager()
+      
     def get_transportation(self):
         """Retrieve transport processes the product is subject to, if any.
 
@@ -449,9 +481,9 @@ class Product(Master):
         list of ~pod_lca.transportation.TransportationLeg
             Transportation legs the product is subject to.
         """
-        transportation_manager = self.get_model().get_transportation_manager()
+        transportation_manager = self.get_transportation_manager()
 
-        return transportation_manager.get_link(self)
+        return transportation_manager.get_transportation_leg(self)
 
     def get_mineral_carbonation_potential(self):
         """Set mineral carbonation potential of the product.
@@ -511,7 +543,7 @@ class Product(Master):
         self.update_electricity_records()
 
         if self.get_mineral_carbonation_potential() is None and self.get_impact_database_entry() is not None:
-            data_entry = self.get_project().get_impact_database().get_data_entry(self.get_impact_database_entry())
+            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
             key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
             if key in data_entry.index:
                 if isinstance(data_entry[key], (bool, np_bool)):
@@ -541,8 +573,8 @@ class Product(Master):
         if self.get_impact_database_entry() is not None:
             if self.get_electricity_database_tag() is None:
                 self.set_electricity_database_tag()
-
-            database = self.get_project().get_impact_database()
+            
+            database = self.get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
 
             electricity_tag = self.get_electricity_database_tag()

@@ -11,11 +11,11 @@ from numpy import where
 from scipy import stats
 from scipy import optimize
 
-from ..uncertainty import DataDistribution
-from ..uncertainty import ExponentDecay
-from ..uncertainty import LogNorm
-from ..uncertainty import Norm
-from ..uncertainty import Uniform
+from ..analysis import DataDistribution
+from ..analysis import ExponentDecay 
+from ..analysis import LogNorm 
+from ..analysis import Norm 
+from ..analysis import Uniform 
 
 
 class TemporalEmissionProfiles(DataDistribution):

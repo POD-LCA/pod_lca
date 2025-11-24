@@ -17,17 +17,17 @@ __all__ = [
 
 def read_results_file(building, filepath):
     pre_dict = read_eso_preamble(building, filepath)
-    building.results = read_eso(building, filepath, pre_dict)
+    zone_units_dict = get_zone_units(pre_dict)
+    return read_eso(building, filepath, pre_dict), zone_units_dict
 
 
 def read_eso(building, filepath, pre_dict):
     fh = open(filepath, "r")
     lines = fh.readlines()
     fh.close()
-
-    zones = [building.zones[zk].name for zk in building.zones]
-
-    del lines[: 9 + pre_dict["len_preamble"]]
+    zones = [building.floors[zk].envelope.name.lower() for zk in building.floors] 
+    
+    del lines[:9 + pre_dict['len_preamble']]
     del lines[-2:]
 
     data = {}
@@ -36,12 +36,12 @@ def read_eso(building, filepath, pre_dict):
         key = line[0]
         if key not in pre_dict and key != "2":
             continue
-        elif key == "2":
-            month = int(line[2])
-            day = int(line[3])
-            hour = int(line[5]) - 1
-            minutes = int(float(line[6]))
-            time_key = "{}_{}_{}_{}".format(minutes, hour, day, month)
+        elif key == '2':
+            month = str(int(line[2])).zfill(2)
+            day = str(int(line[3])).zfill(2)
+            hour = str(int(line[5]) - 1).zfill(2)
+            minutes = str(int(float(line[6]))).zfill(2)
+            time_key = '{}_{}_{}_{}'.format(minutes, hour, day, month)
             if time_key not in data:
                 data[time_key] = {zk: {} for zk in zones}
         else:
@@ -50,6 +50,14 @@ def read_eso(building, filepath, pre_dict):
             value = float(line[1].strip())
             data[time_key][zone][item] = value
     return data
+
+def get_zone_units(pre_dict):
+    units = {}
+    for val in pre_dict.values():
+        if isinstance(val, dict):
+            zone = val['zone']
+            units.setdefault(zone, {})[val['item']] = val['unit']
+    return units
 
 
 def read_eso_preamble(building, filepath):
@@ -60,33 +68,33 @@ def read_eso_preamble(building, filepath):
     del lines[:7]
     del lines[-2:]
 
-    zones = [building.zones[zk].name.lower() for zk in building.zones]
+    zones = [building.floors[zk].envelope.name.lower() for zk in building.floors] 
 
     data = {}
     len_preamble = 0
     for line in lines:
-        line = line.lower()
         line = line.strip()
-        if line == "end of data dictionary":
+        if line.lower() == 'end of data dictionary':
             break
         # print(line)
         len_preamble += 1
         stuff = line.split(",")
         key = stuff[0]
-        zone = stuff[2].split(" ")[0]
-        item = stuff[3]
+        zone = stuff[2].split(' ')[0].lower()
+        item = stuff[3].lower()
+        unit = stuff[3][stuff[3].find("[")+1 : stuff[3].find("]")]
         if zone in zones:
-            if "cooling" in item:
-                item = "cooling"
-            elif "heating" in item:
-                item = "heating"
-            elif "lights" in item:
-                item = "lighting"
-            elif "temperature" in item:
-                item = "mean_air_temperature"
-
-            data[key] = {"zone": zone, "item": item}
-    data["len_preamble"] = len_preamble
+            if 'cooling' in item:
+                item = 'cooling'
+            elif 'heating' in item:
+                item = 'heating'
+            elif 'lights' in item:
+                item = 'lighting'
+            elif 'temperature' in item:
+                item = 'mean_air_temperature'
+            
+            data[key] = {'zone': zone, 'item': item, 'unit':unit}
+    data['len_preamble'] = len_preamble
     return data
 
 

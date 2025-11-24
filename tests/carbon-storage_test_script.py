@@ -53,7 +53,7 @@ def test_carbon_storage():
             qty=qty,
             unit=UNITS_MAP[test_dict[test]["Unit"]],
             impacts_from=test_dict[test]["Material"],
-        )
+            ignore_transport=True)
 
         if test_dict[test]["set_mineral_carbon"].lower() == "yes":
             try:

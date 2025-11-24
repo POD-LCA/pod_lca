@@ -6,9 +6,9 @@ __version__ = "0.1.0"
 
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcing
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
-from pod_lca.dynamic_radiative_forcing import UniformEmissionProfile
-from pod_lca.dynamic_radiative_forcing import NormEmissionProfile
 from pod_lca.impacts import Emissions
+from pod_lca.impacts import NormEmissionProfile
+from pod_lca.impacts import UniformEmissionProfile
 from pod_lca.utilities import DataImporter
 from pod_lca.utilities import DataExporter
 from pod_lca.visualizer import LinePlot

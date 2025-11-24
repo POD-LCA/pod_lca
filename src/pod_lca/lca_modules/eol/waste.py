@@ -7,6 +7,9 @@ __version__ = "0.1.0"
 from math import isnan
 
 from . import WasteProcess
+from ..impacts import Impacts
+from ..impacts import Emissions
+from ..impacts import UniformEmissionProfile
 from ..materials_screening import Product
 from ..transportation import WasteTransportLeg
 from ...utilities import config
@@ -18,7 +21,7 @@ class Waste(Product):
 
     Attributes
     ----------
-    parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+    parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
         The thing being was converted to waste.
     waste_processes : list of ~pod_lca.eol.WasteProcess
         List of processes the waste will be subjected to. These processes are in parallel.
@@ -38,9 +41,13 @@ class Waste(Product):
         self.parent = None
         self.waste_processes = None
         self.process_mix = None
-        self.impacts = {"C2": [], "C3": [], "C4": [], "D": []}
-        self.emissions = {"C2": [], "C3": [], "C4": [], "D": []}
+        self.impacts = {'C1':Impacts.from_parent(self), 'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.emissions = {'C1':Emissions.from_parent(self), 'C2':[], 'C3':[], 'C4':[], 'D':[]}
         self.bio_based = True
+        
+        # cache
+        self._inventory_records_uptodata = False
+
 
     def __str__(self):
         str = "=" * 50 + "\n" + f"Waste Product ({self.get_name()})\n" + "=" * 50 + "\n"
@@ -64,7 +71,7 @@ class Waste(Product):
 
         Parameters
         ----------
-        parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+        parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         database_item : str
             Material name corresponding to the database entry which gives the unit impact of the product.
@@ -105,7 +112,7 @@ class Waste(Product):
 
         Parameters
         ----------
-        parent : ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+        parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         """
         self.parent = parent
@@ -121,15 +128,15 @@ class Waste(Product):
         database_item : str
             The name of the database item which gives the item impacts.
         """
-        database = self.get_parent().get_building().get_eol_database()
-        row_id = database.data.index[(database.data[database.get_primary_key()] == database_item)]
-        if len(row_id) == 0:
+        database = self.get_eol_process_impact_database()
+        if not database.check_database_entry(database_item):
             if self.get_bio_based():
                 database_item = config["setup"]["eol"]["EOL_DEFAULT_KEY"] + "_BIOBASED"
             else:
                 database_item = config["setup"]["eol"]["EOL_DEFAULT_KEY"] + "_OTHER"
 
         self.impact_database_entry = database_item
+        self._inventory_records_uptodata = False
 
         return self
 
@@ -199,20 +206,10 @@ class Waste(Product):
         waste_process_obj = WasteProcess.new(self, process_name, process_qty, self.get_unit(), lc_stage, linked_process)
 
         waste_process_obj.transporation_leg = WasteTransportLeg.from_object(
-            material=waste_process_obj, manager=self.get_parent().get_eol_manager(), eol_pathway=process_name
+            material=waste_process_obj,
+            manager=self.get_parent().get_eol_manager(),
+            eol_pathway=process_name
         )
-
-        if (
-            waste_process_obj.transporation_leg.get_travel_dist()
-            > waste_process_obj.transporation_leg.get_cutoff_distance()
-        ):
-            waste_process_obj.set_qty(0.0)
-            log(
-                f"Waste process {process_name} quantity for {waste_process_obj.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.",
-                "Info",
-            )
-
-            return process_qty
 
         return waste_process_obj
 
@@ -273,11 +270,31 @@ class Waste(Product):
                 process_mix_cleaned[process_name] = mix_percent
 
             self.process_mix = process_mix_cleaned
+            self._inventory_records_uptodata = False
 
             return self
 
         else:
-            raise ValueError("Waste mix does not sum to 100%.")
+            raise ValueError('Waste mix does not sum to 100%.') 
+        
+    def set_production_year(self, year):
+        """ Set the production year of the waste product.
+        
+        Parameters
+        ----------
+        year : int
+            Year in which the waste is generated.
+        """
+        self.production_year = year
+    
+        for emission_lst in self.get_emissions().values():
+            if isinstance(emission_lst, Emissions):
+                emission_lst = [emission_lst]
+            for emission in emission_lst:
+                pulse = UniformEmissionProfile.unit_pulse(at=year)
+                emission.set_temporal_emission_profile(pulse)
+
+        return self
 
     # ================================
     # Getters
@@ -287,7 +304,7 @@ class Waste(Product):
 
         Returns
         -------
-        ~pod_lca.buildings.BuildingComponent or ~pod_lca.materials_screening.Product
+        ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
             The thing that which was converted to waste.
         """
         return self.parent
@@ -335,13 +352,15 @@ class Waste(Product):
                 return self.process_mix
             else:
                 return self.process_mix[process_name]
-        elif mode == "actual":
-            self.update_waste_processess()
+        elif mode == 'actual':
+            self.update_waste_process_mix()
             process_mix = {}
             for process in self.get_waste_processes():
                 if process.get_linked_process(to=False) is None:
                     process_mix[process.get_life_cycle_stage()] = process.get_qty() / self.get_qty()
 
+            self._last_process_mix = process_mix        
+            
             return process_mix
         else:
             raise ValueError("Calucation mode of process mix is not recognized.")
@@ -356,36 +375,85 @@ class Waste(Product):
         """
         return self.bio_based
 
+    def get_production_year(self):
+        """ Get the production year of the waste product.
+        
+        Returns
+        -------
+        int
+            Year in which the waste is generated.
+        """
+        return self.production_year
+
+    def get_eol_process_impact_database(self):
+        """ Get the end-of-life product database corresponding to the project.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.EOLImpactsDatabase
+            True, if the material is bio-based.        
+        """
+        return self.get_parent().get_eol_process_impact_database()
+    
+    def get_demolition_impact_database(self):
+
+        return self.get_parent().get_eol_demolition_database()
+    
+
     # ================================
     # Methods
-    # ================================
+    # ================================       
     def update_inventory_records(self):
-        """Update the transportation and processing impacts of the waste (C2-C4)."""
-        self.update_waste_processess()
+        """ Update the demolition (C1), transportation (C2), and processing (C3-C4) impacts of waste. 
+        """
+        self.update_waste_process_mix()
         if self.get_waste_processes():
+            if not self._inventory_records_uptodata:
+                self._inventory_records_uptodata = True
 
-            impacts = self.impacts
-            for key in impacts.keys():
-                impacts[key] = []
+                # C1 impacts
+                demolition_impact_database = self.get_demolition_impact_database()
+                database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
+                declared_unit = database_entry[demolition_impact_database.get_unit_key()]
+                declared_qty = database_entry[demolition_impact_database.get_qty_key()]
+                conversion_factor = declared_unit.convert_to(self.get_unit())
 
-            emissions = self.emissions
-            for key in emissions.keys():
-                emissions[key] = []
+                impacts_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
+                                for key in self.impacts['C1'].record_attr_dict}
+                emissions_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
+                                for key in self.emissions['C1'].record_attr_dict}
 
-            for process in self.get_waste_processes():
-                process_impact = process.get_unit_impacts() * process.get_qty()
-                process_emission = process.get_unit_emissions() * process.get_qty()
-                impacts[process.get_life_cycle_stage()].append(process_impact)
-                emissions[process.get_life_cycle_stage()].append(process_emission)
+                self.impacts['C1'].update_qty(impacts_data)
+                self.emissions['C1'].update_qty(emissions_data)
 
-                if process.get_transportation_leg() is not None:
-                    impacts["C2"].append(process.get_transportation_leg().get_impacts())
-                    emissions["C2"].append(process.get_transportation_leg().get_emissions())
+                impacts = self.impacts
+                for key in impacts.keys():
+                    if key != 'C1':
+                        impacts[key] = []
+
+                emissions = self.emissions
+                for key in emissions.keys():
+                    if key != 'C1':
+                        emissions[key] = []
+
+                for process in self.get_waste_processes():
+                    # C3-C4 impacts
+                    process_impact = process.get_unit_impacts() * process.get_qty()
+                    process_emission = process.get_unit_emissions() * process.get_qty()
+                    impacts[process.get_life_cycle_stage()].append(process_impact)
+                    emissions[process.get_life_cycle_stage()].append(process_emission)
+
+                    if process.get_transportation_leg() is not None:
+                        # C2 impacts
+                        impacts['C2'].append(process.get_transportation_leg().get_impacts())
+                        emissions['C2'].append(process.get_transportation_leg().get_emissions())
+
+                self.set_production_year(self.get_production_year())
 
         return self
 
-    def update_waste_processess(self):
-        """Update the waste processess.
+    def update_waste_process_mix(self):
+        """ Update the waste process mix based on cutoof distances.
 
         Notes
         -----
@@ -393,26 +461,18 @@ class Waste(Product):
         """
         process_mix = self.get_process_mix()
 
-        transfer_to_landfill_quantity = 0.0
+        transfer_to_landfill_percentage = 0.0
         landfill_process = None
         existing_processes = []
         # update existing processes
         for process in self.get_waste_processes():
             process_name = process.get_process_name()
-            if (
-                (process_name in process_mix.keys())
-                and not (process_name == "Landfill")
-                and (process.get_linked_process(to=False) is None)
-            ):
-                new_qty = self.get_qty() * process_mix[process_name]
-                if process.transporation_leg.get_travel_dist() > process.transporation_leg.get_cutoff_distance():
-                    transfer_to_landfill_quantity += new_qty
-                    process.set_qty(0.0)
-                    log(
-                        f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.",
-                        "Info",
-                    )
-            elif process_name == "Landfill":
+            if (process_name in process_mix.keys()) and not (process_name == 'Landfill') and (process.get_linked_process(to=False) is None):
+                if process.get_transportation_leg().get_travel_dist() > process.transporation_leg.get_cutoff_distance():
+                    transfer_to_landfill_percentage += process_mix[process_name]
+                    process_mix[process_name] = 0.0
+                    log(f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
+            elif process_name == 'Landfill':
                 landfill_process = process
             else:
                 pass
@@ -425,12 +485,11 @@ class Waste(Product):
             if process_qty:
                 result = self.set_waste_process(process_name, process_qty)
                 if isinstance(result, (float, int)):
-                    transfer_to_landfill_quantity += result
+                    transfer_to_landfill_percentage += result
 
         # set landfill process
-        if landfill_process is not None:
-            new_qty = self.get_qty() * process_mix["Landfill"] + transfer_to_landfill_quantity
-            landfill_process.set_qty(new_qty)
+        if not landfill_process is None:
+            process_mix['Landfill'] += transfer_to_landfill_percentage
 
         return self
 
@@ -464,8 +523,8 @@ class Waste(Product):
         if abs(sum - 1) < tol:
             return True
         else:
-            return False
+            return False     
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     pass

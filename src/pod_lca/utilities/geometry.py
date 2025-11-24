@@ -228,6 +228,21 @@ class Mesh(object):
         self.default_face_attributes = {}
 
     @classmethod
+    def from_surfaces(cls, surfaces):
+        all_vertices = []
+        for srf in surfaces:
+            all_vertices.extend(surfaces[srf].polygon)
+        gk_dict = {geometric_key(v): v for v in all_vertices}
+        vertices = [gk_dict[k] for k in gk_dict]
+        gk_dict = {geometric_key(v): i for i, v in enumerate(vertices)}
+        faces = []
+        for srf in surfaces:
+            face = [gk_dict[geometric_key(v)] for v in surfaces[srf].polygon]
+            faces.append(face)
+        mesh = cls.from_vertices_and_faces(vertices, faces)
+        return mesh
+
+    @classmethod
     def from_vertices_and_faces(cls, vertices, faces):
         mesh = cls()
         mesh.vertices = {i: {"x": v[0], "y": v[1], "z": v[2]} for i, v in enumerate(vertices)}
