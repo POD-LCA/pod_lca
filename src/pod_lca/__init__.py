@@ -16,6 +16,7 @@ from .lca_modules import impacts
 from .lca_modules import electricity
 from .lca_modules import transportation
 from .lca_modules import materials_screening
+from .lca_modules import carbon_stroage
 from .lca_modules import eol
 from .lca_modules import building
 from .lca_modules import dynamic_radiative_forcing
@@ -36,6 +37,7 @@ sys.modules["pod_lca.dynamic_radiative_forcing"] = dynamic_radiative_forcing
 sys.modules["pod_lca.operational"] = operational
 sys.modules["pod_lca.building_structure"] = building_structure
 sys.modules["pod_lca.building_envelope"] = building_envelope
+sys.modules["pod_lca.carbon_storage"] = carbon_stroage
 
 __all__ = [
     "building",
