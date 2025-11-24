@@ -9,11 +9,6 @@ from .material_property import EnvelopeMaterialAirGap
 from .material_property import EnvelopeMaterialNoMass
 from .material_property import WindowMaterialGlazing
 from .material_property import WindowMaterialGas
-from ..operational import find_materials
-from ..operational import find_materials_air_gap
-from ..operational import find_no_mass_materials
-from ..operational import find_gas_materials
-from ..operational import find_glazing_materials
 
 
 class Layer(object):

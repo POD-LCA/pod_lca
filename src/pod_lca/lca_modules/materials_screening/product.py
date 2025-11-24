@@ -128,9 +128,9 @@ class Product(Master):
                 leg.get_emissions().set_temporal_emission_profile(pulse)
 
         return self
-    
+
     def set_density_unit(self, unit):
-        """ Set unit of measurement for the mass of the product.
+        """Set unit of measurement for the mass of the product.
 
         Parameters
         ----------
@@ -203,7 +203,7 @@ class Product(Master):
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
-        if (not self.get_unit().get_qty_measured() == 'mass') and (self.get_density() is None):
+        if (not self.get_unit().get_qty_measured() == "mass") and (self.get_density() is None):
             self.set_density()
 
         if travel_dist is None:
@@ -215,21 +215,23 @@ class Product(Master):
 
         transportation_manager = self.get_transportation_manager()
         if transportation_manager.get_impact_database() is not None:
-            transportation_manager.add_good(self, 
-                                            travel_dist=travel_dist,
-                                            shipping_dest=self.get_project().get_location(), 
-                                            shipping_org=None,
-                                            transport_scenario=transport_scenario,
-                                            distance_unit=dist_unit, 
-                                            return_trip_factor=None, 
-                                            mode_name=mode_name,
-                                            mode_efficiency=mode_efficiency)
+            transportation_manager.add_good(
+                self,
+                travel_dist=travel_dist,
+                shipping_dest=self.get_project().get_location(),
+                shipping_org=None,
+                transport_scenario=transport_scenario,
+                distance_unit=dist_unit,
+                return_trip_factor=None,
+                mode_name=mode_name,
+                mode_efficiency=mode_efficiency,
+            )
 
         if self.get_production_year() is not None:
             pulse = UniformEmissionProfile.unit_pulse(at=self.get_production_year())
             for leg in self.get_transportation():
                 leg.get_emissions().set_temporal_emission_profile(pulse)
-            
+
         return self
 
     def set_electricity_source(self, source="from_database"):
@@ -462,17 +464,17 @@ class Product(Master):
             Unit of measurement of the denisty of product.
         """
         return self.density_unit
-    
+
     def get_transportation_manager(self):
-        """ Get the transportation manager corresponding to the product.
-        
+        """Get the transportation manager corresponding to the product.
+
         Returns
         -------
         ~pod_lca.transportation.TransportationManager
             Transportation manager
         """
         return self.get_model().get_transportation_manager()
-      
+
     def get_transportation(self):
         """Retrieve transport processes the product is subject to, if any.
 
@@ -573,7 +575,7 @@ class Product(Master):
         if self.get_impact_database_entry() is not None:
             if self.get_electricity_database_tag() is None:
                 self.set_electricity_database_tag()
-            
+
             database = self.get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
 

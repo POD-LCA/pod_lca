@@ -46,12 +46,14 @@ def test_electricity_swap():
         if isinstance(year, str):
             year = int(year)
 
-        product = model_one.add_product(name=test, 
-                                    stage="A1", 
-                                    qty=qty, 
-                                    unit=UNITS_MAP[test_dict[test]['unit']], 
-                                    impacts_from=test_dict[test]['material'],
-                                    ignore_transport=True)
+        product = model_one.add_product(
+            name=test,
+            stage="A1",
+            qty=qty,
+            unit=UNITS_MAP[test_dict[test]["unit"]],
+            impacts_from=test_dict[test]["material"],
+            ignore_transport=True,
+        )
 
         # my_manufacturing_project.set_year(year)
         product.set_production_year(year)

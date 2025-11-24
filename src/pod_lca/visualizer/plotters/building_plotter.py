@@ -1,6 +1,4 @@
-import plotly
 import plotly.graph_objects as go
-import plotly.express as px
 
 from pod_lca.utilities.geometry import Mesh
 from pod_lca.utilities.geometry import centroid

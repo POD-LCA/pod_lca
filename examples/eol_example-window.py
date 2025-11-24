@@ -16,24 +16,22 @@ from pod_lca.units import KILOGRAM
 my_land_plot = Location.from_str("98126, Seattle")
 
 my_building = Building()
-my_building.set_eol_database('data/impacts_podlca_eol-impacts.csv')
-my_building.set_transportation_impact_database('data/transportation_podlca_emission.csv')
+my_building.set_eol_database("data/impacts_podlca_eol-impacts.csv")
+my_building.set_transportation_impact_database("data/transportation_podlca_emission.csv")
 
 # add a window to the building
 # TODO try with the database
 wood = BuildingMaterial()
 wood.qty = 4.2
 wood.unit = KILOGRAM
-wood.eol_product = 'Wood'
+wood.eol_product = "Wood"
 
 glass = BuildingMaterial()
 glass.qty = 0.5
 glass.unit = KILOGRAM
-glass.eol_product = 'Glass'
+glass.eol_product = "Glass"
 
-my_timber_window = Assembly.create(name='Window',
-                                            building=my_building,
-                                            materials=[wood, glass])
+my_timber_window = Assembly.create(name="Window", building=my_building, materials=[wood, glass])
 
 # impacts by life cycle stage
 impact_dict = {

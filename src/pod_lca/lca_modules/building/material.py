@@ -563,7 +563,7 @@ class Material(Product):
             A4-A5 impacts of the material. List of impacts if objs is True.
         """
         impacts = [] if objs else Impacts.from_parent(self)
-        if not self.get_transportation() is None:
+        if self.get_transportation() is not None:
             for leg in self.get_transportation():
                 if objs:
                     impacts.append(leg.get_impacts())
@@ -587,7 +587,7 @@ class Material(Product):
             A4-A5 emissions of the building. List of emissions if objs is True.
         """
         emissions = [] if objs else Emissions.from_parent(self)
-        if not self.get_transportation() is None:
+        if self.get_transportation() is not None:
             for leg in self.get_transportation():
                 if objs:
                     emissions.append(leg.get_emissions())

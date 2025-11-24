@@ -34,7 +34,7 @@ class Schedule(object):
 
     @classmethod
     def from_data(cls, data):
-        name = data['name']
+        name = data["name"]
         schedule = cls(name)
         schedule.type = data["__type__"]
 

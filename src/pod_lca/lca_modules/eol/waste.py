@@ -41,13 +41,12 @@ class Waste(Product):
         self.parent = None
         self.waste_processes = None
         self.process_mix = None
-        self.impacts = {'C1':Impacts.from_parent(self), 'C2':[], 'C3':[], 'C4':[], 'D':[]}
-        self.emissions = {'C1':Emissions.from_parent(self), 'C2':[], 'C3':[], 'C4':[], 'D':[]}
+        self.impacts = {"C1": Impacts.from_parent(self), "C2": [], "C3": [], "C4": [], "D": []}
+        self.emissions = {"C1": Emissions.from_parent(self), "C2": [], "C3": [], "C4": [], "D": []}
         self.bio_based = True
-        
+
         # cache
         self._inventory_records_uptodata = False
-
 
     def __str__(self):
         str = "=" * 50 + "\n" + f"Waste Product ({self.get_name()})\n" + "=" * 50 + "\n"
@@ -206,9 +205,7 @@ class Waste(Product):
         waste_process_obj = WasteProcess.new(self, process_name, process_qty, self.get_unit(), lc_stage, linked_process)
 
         waste_process_obj.transporation_leg = WasteTransportLeg.from_object(
-            material=waste_process_obj,
-            manager=self.get_parent().get_eol_manager(),
-            eol_pathway=process_name
+            material=waste_process_obj, manager=self.get_parent().get_eol_manager(), eol_pathway=process_name
         )
 
         return waste_process_obj
@@ -275,18 +272,18 @@ class Waste(Product):
             return self
 
         else:
-            raise ValueError('Waste mix does not sum to 100%.') 
-        
+            raise ValueError("Waste mix does not sum to 100%.")
+
     def set_production_year(self, year):
-        """ Set the production year of the waste product.
-        
+        """Set the production year of the waste product.
+
         Parameters
         ----------
         year : int
             Year in which the waste is generated.
         """
         self.production_year = year
-    
+
         for emission_lst in self.get_emissions().values():
             if isinstance(emission_lst, Emissions):
                 emission_lst = [emission_lst]
@@ -352,15 +349,15 @@ class Waste(Product):
                 return self.process_mix
             else:
                 return self.process_mix[process_name]
-        elif mode == 'actual':
+        elif mode == "actual":
             self.update_waste_process_mix()
             process_mix = {}
             for process in self.get_waste_processes():
                 if process.get_linked_process(to=False) is None:
                     process_mix[process.get_life_cycle_stage()] = process.get_qty() / self.get_qty()
 
-            self._last_process_mix = process_mix        
-            
+            self._last_process_mix = process_mix
+
             return process_mix
         else:
             raise ValueError("Calucation mode of process mix is not recognized.")
@@ -376,8 +373,8 @@ class Waste(Product):
         return self.bio_based
 
     def get_production_year(self):
-        """ Get the production year of the waste product.
-        
+        """Get the production year of the waste product.
+
         Returns
         -------
         int
@@ -386,26 +383,24 @@ class Waste(Product):
         return self.production_year
 
     def get_eol_process_impact_database(self):
-        """ Get the end-of-life product database corresponding to the project.
-        
+        """Get the end-of-life product database corresponding to the project.
+
         Returns
         -------
         ~pod_lca.impacts.EOLImpactsDatabase
-            True, if the material is bio-based.        
+            True, if the material is bio-based.
         """
         return self.get_parent().get_eol_process_impact_database()
-    
+
     def get_demolition_impact_database(self):
 
         return self.get_parent().get_eol_demolition_database()
-    
 
     # ================================
     # Methods
-    # ================================       
+    # ================================
     def update_inventory_records(self):
-        """ Update the demolition (C1), transportation (C2), and processing (C3-C4) impacts of waste. 
-        """
+        """Update the demolition (C1), transportation (C2), and processing (C3-C4) impacts of waste."""
         self.update_waste_process_mix()
         if self.get_waste_processes():
             if not self._inventory_records_uptodata:
@@ -418,22 +413,26 @@ class Waste(Product):
                 declared_qty = database_entry[demolition_impact_database.get_qty_key()]
                 conversion_factor = declared_unit.convert_to(self.get_unit())
 
-                impacts_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
-                                for key in self.impacts['C1'].record_attr_dict}
-                emissions_data = {key: database_entry[key] * conversion_factor * self.get_qty() /declared_qty 
-                                for key in self.emissions['C1'].record_attr_dict}
+                impacts_data = {
+                    key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
+                    for key in self.impacts["C1"].record_attr_dict
+                }
+                emissions_data = {
+                    key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
+                    for key in self.emissions["C1"].record_attr_dict
+                }
 
-                self.impacts['C1'].update_qty(impacts_data)
-                self.emissions['C1'].update_qty(emissions_data)
+                self.impacts["C1"].update_qty(impacts_data)
+                self.emissions["C1"].update_qty(emissions_data)
 
                 impacts = self.impacts
                 for key in impacts.keys():
-                    if key != 'C1':
+                    if key != "C1":
                         impacts[key] = []
 
                 emissions = self.emissions
                 for key in emissions.keys():
-                    if key != 'C1':
+                    if key != "C1":
                         emissions[key] = []
 
                 for process in self.get_waste_processes():
@@ -445,15 +444,15 @@ class Waste(Product):
 
                     if process.get_transportation_leg() is not None:
                         # C2 impacts
-                        impacts['C2'].append(process.get_transportation_leg().get_impacts())
-                        emissions['C2'].append(process.get_transportation_leg().get_emissions())
+                        impacts["C2"].append(process.get_transportation_leg().get_impacts())
+                        emissions["C2"].append(process.get_transportation_leg().get_emissions())
 
                 self.set_production_year(self.get_production_year())
 
         return self
 
     def update_waste_process_mix(self):
-        """ Update the waste process mix based on cutoof distances.
+        """Update the waste process mix based on cutoof distances.
 
         Notes
         -----
@@ -467,12 +466,19 @@ class Waste(Product):
         # update existing processes
         for process in self.get_waste_processes():
             process_name = process.get_process_name()
-            if (process_name in process_mix.keys()) and not (process_name == 'Landfill') and (process.get_linked_process(to=False) is None):
+            if (
+                (process_name in process_mix.keys())
+                and not (process_name == "Landfill")
+                and (process.get_linked_process(to=False) is None)
+            ):
                 if process.get_transportation_leg().get_travel_dist() > process.transporation_leg.get_cutoff_distance():
                     transfer_to_landfill_percentage += process_mix[process_name]
                     process_mix[process_name] = 0.0
-                    log(f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.", "Info")
-            elif process_name == 'Landfill':
+                    log(
+                        f"Waste process {process.get_process_name()} quantity for {process.get_name()} is set to zero as the closes facility at a distance greater than the cutoff distance.",
+                        "Info",
+                    )
+            elif process_name == "Landfill":
                 landfill_process = process
             else:
                 pass
@@ -488,8 +494,8 @@ class Waste(Product):
                     transfer_to_landfill_percentage += result
 
         # set landfill process
-        if not landfill_process is None:
-            process_mix['Landfill'] += transfer_to_landfill_percentage
+        if landfill_process is not None:
+            process_mix["Landfill"] += transfer_to_landfill_percentage
 
         return self
 
@@ -523,8 +529,8 @@ class Waste(Product):
         if abs(sum - 1) < tol:
             return True
         else:
-            return False     
+            return False
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

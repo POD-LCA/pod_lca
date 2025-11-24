@@ -13,7 +13,7 @@ from pod_lca.analysis import HotSpotAnalysis
 from pod_lca.analysis import DataQualityAnalysis
 from pod_lca.analysis import SensitivityAnalysis
 
-from pod_lca.units import KILOGRAM, KILOMETER, WATT_HOUR, CUBIC_METER
+from pod_lca.units import KILOGRAM, WATT_HOUR, CUBIC_METER
 from pod_lca.units import KILO
 
 project = Project()
@@ -48,9 +48,9 @@ meth_diphenyl_d = CLT_model.add_product(
 prop_glycol = CLT_model.add_product(
     name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, impacts_from="Propylene glycol_[ecoinvent]"
 )
-dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None,sctg_code=28)
-dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None,sctg_code=28)
-dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None,sctg_code=28)
+dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None, sctg_code=28)
+dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None, sctg_code=28)
+dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None, sctg_code=28)
 electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR)
 natural_gas = CLT_model.add_energy(
     name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]"

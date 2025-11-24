@@ -179,10 +179,10 @@ class Model:
                                 tmp_transportation_map[transported_item] = {}
                                 tmp_transportation_map[transported_item]["transporter"] = [item]
                 else:
-                    if not (row[header_map['density']] == ''):
-                        item.set_density(row[header_map['density']])        
-                    if not (row[header_map['weight unit']] == ''):
-                        item.set_density_unit(UNITS_MAP[row[header_map['weight unit']]])  
+                    if not (row[header_map["density"]] == ""):
+                        item.set_density(row[header_map["density"]])
+                    if not (row[header_map["weight unit"]] == ""):
+                        item.set_density_unit(UNITS_MAP[row[header_map["weight unit"]]])
 
                     if name in tmp_transportation_map:
                         tmp_transportation_map[name]["product"] = item
@@ -225,8 +225,8 @@ class Model:
         return self
 
     def set_location(self, location):
-        """ Set the location of the model.
-        
+        """Set the location of the model.
+
         Parameters
         ----------
         location : ~pod_lca.location.Location
@@ -284,15 +284,15 @@ class Model:
         return self.name
 
     def get_location(self):
-        """ Retrieve the location of the model.
-        
+        """Retrieve the location of the model.
+
         Returns
         -------
         ~pod_lca.location.Location
             Location of the model.
         """
         return self.location
-    
+
     def get_processes(self):
         """Retrieve all the processes in the model.
 
@@ -323,7 +323,7 @@ class Model:
 
         """
         return self.get_products() + self.get_processes() + self.get_transportation_manager().get_transportation_legs()
-    
+
     def get_transportation_manager(self):
         """Retrieve the logistics manager of the model.
 
@@ -410,9 +410,9 @@ class Model:
         self.processes.append(process)
 
         return process
-    
+
     def add_product(self, name, stage, qty, unit, impacts_from, **kwargs):
-        """ Create and add product to the model.
+        """Create and add product to the model.
 
         Parameters
         ----------
@@ -436,7 +436,7 @@ class Model:
         density_unit : ~pod_lca.units.Unit
             Units corresponding to material density.
         ignore_transport : bool
-            If true, ignore setting transportation.             
+            If true, ignore setting transportation.
 
         Returns
         -------
@@ -446,13 +446,13 @@ class Model:
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
 
-        if 'sctg_code' in kwargs:
-            product.set_sctg_code(kwargs['sctg_code'])
-        if 'density' in kwargs:
-            product.set_density(kwargs['density'])
-            product.set_density_unit(kwargs['density_unit'])
-            
-        if not kwargs.get('ignore_transport', False):
+        if "sctg_code" in kwargs:
+            product.set_sctg_code(kwargs["sctg_code"])
+        if "density" in kwargs:
+            product.set_density(kwargs["density"])
+            product.set_density_unit(kwargs["density_unit"])
+
+        if not kwargs.get("ignore_transport", False):
             product.set_transportation()
 
         product.set_production_year(self.get_project().get_year())

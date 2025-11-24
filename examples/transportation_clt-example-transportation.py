@@ -24,19 +24,16 @@ project.set_transportation_mode_impact_database(r"src/pod_lca/data/transportatio
 
 CLT_model = project.add_model("CLT_01")
 
-lumber = CLT_model.add_product(name="Lumber", 
-                               stage="A1", 
-                               qty=562.75, 
-                               unit=KILOGRAM, 
-                               impacts_from="Lumber_[CORRIM_LCA]",
-                               sctg_code=26)
+lumber = CLT_model.add_product(
+    name="Lumber", stage="A1", qty=562.75, unit=KILOGRAM, impacts_from="Lumber_[CORRIM_LCA]", sctg_code=26
+)
 meth_diphenyl_d = CLT_model.add_product(
     name="Methylene diphenyl diisocyanate resin",
     stage="A1",
     qty=3.22,
     unit=KILOGRAM,
     impacts_from="Methylene diphenyl diisocyanate resin_[FHWA_MTU]",
-    sctg_code=28
+    sctg_code=28,
 )
 prop_glycol = CLT_model.add_product(
     name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, impacts_from="Propylene glycol_[ecoinvent]"
@@ -49,7 +46,7 @@ natural_gas = CLT_model.add_energy(
     name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]"
 )
 
-print(CLT_model) # TODO: print model to include all transportation impacts
+print(CLT_model)  # TODO: print model to include all transportation impacts
 print(project)
 
 # Hotspot analysis

@@ -64,7 +64,6 @@ from pod_lca.utilities.geometry import Mesh
 
 from pod_lca.utilities import log
 
-from pod_lca.utilities import log
 
 # TODO: update to/from JSON eventually, or give a OBJ pickle option
 

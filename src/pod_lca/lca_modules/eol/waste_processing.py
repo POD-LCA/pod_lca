@@ -223,7 +223,7 @@ class WasteProcess:
         str
             Name identifyer.
         """
-        return self.get_parent().get_name() + '_' + self.get_process_name()
+        return self.get_parent().get_name() + "_" + self.get_process_name()
 
     def get_qty(self):
         """Get quantity of the parent subjected to this waste process.
@@ -237,7 +237,7 @@ class WasteProcess:
         percentage_in_process = self.get_parent().get_process_mix()[self.get_process_name()]
 
         return total_waste_quantity * percentage_in_process
-    
+
     def get_unit(self):
         """Get unit of measurement for the waste amount processed.
 
@@ -245,12 +245,12 @@ class WasteProcess:
         -------
         ~pod_lca.units.Unit
             Unit of measurement.
-        """        
+        """
         return self.get_parent().get_unit()
-      
+
     def get_weight(self):
-        """ Get weight of the parent subjected to this waste process.
-        
+        """Get weight of the parent subjected to this waste process.
+
         Returns
         -------
         float
@@ -258,19 +258,19 @@ class WasteProcess:
         """
         total_waste_quantity = self.get_parent().get_weight()
         percentage_in_process = self.get_parent().get_process_mix()[self.get_process_name()]
-        
+
         return total_waste_quantity * percentage_in_process
-    
+
     def get_weight_unit(self):
-        """ Get unit of measurement for the weight of waste processed.
-        
+        """Get unit of measurement for the weight of waste processed.
+
         Returns
         -------
         ~pod_lca.units.Unit
             Unit of measurement.
-        """        
+        """
         return self.get_parent().get_weight_unit()
-    
+
     def get_life_cycle_stage(self):
         """Retrieve the life cycle stage corresponding to the waste process.
 
@@ -349,7 +349,7 @@ class WasteProcess:
 
         impacts = {key: database_entry[key] * conversion_factor for key in self.unit_impacts.record_attr_dict}
         emissions = {key: database_entry[key] * conversion_factor for key in self.unit_emissions.record_attr_dict}
-        
+
         self.unit_impacts.update_qty(impacts)
         self.unit_emissions.update_qty(emissions)
 

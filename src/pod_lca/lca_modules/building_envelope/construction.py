@@ -6,9 +6,7 @@ __version__ = "0.1.0"
 
 from . import EnvelopeMaterial
 from ..building_envelope import Layer
-from ..operational import find_constructions
 from pod_lca.lca_modules.building.assembly import Assembly
-from pod_lca.lca_modules.building.material import Material
 from ...units import CUBIC_METER
 from ...utilities import DataImporter
 from ...utilities import config

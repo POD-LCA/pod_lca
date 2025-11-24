@@ -6,9 +6,6 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..building import Material
-from ...utilities import config
-from ...utilities import DataImporter
-from ...utilities import log
 
 
 class EnvelopeMaterial(Material):

@@ -10,7 +10,6 @@ from math import sqrt
 from ...units import MEGA
 from ...units import WATT_HOUR
 from ...units import UNITS_MAP
-from ...utilities import config
 
 
 class TemplateModels:

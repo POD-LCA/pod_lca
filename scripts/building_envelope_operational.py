@@ -27,7 +27,6 @@ from pod_lca.lca_modules.geometry.building_geometry import shading_surfaces_from
 from pod_lca.lca_modules.location import Location
 from pod_lca.units import METER
 from pod_lca.utilities import config
-from pod_lca.visualizer.plotters.building_plotter import plot_building
 
 for i in range(50): print('')
 

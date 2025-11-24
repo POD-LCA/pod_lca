@@ -17,18 +17,18 @@ from pod_lca.units import KILOGRAM
 my_land_plot = Location.from_str("98126, Seattle")
 
 my_building = Building()
-my_building.set_eol_process_impact_database('src/pod_lca/data/impacts_podlca_eol-impacts.csv')
-my_building.set_transportation_mode_impact_database('src/pod_lca/data/transportation_podlca_emission.csv')
+my_building.set_eol_process_impact_database("src/pod_lca/data/impacts_podlca_eol-impacts.csv")
+my_building.set_transportation_mode_impact_database("src/pod_lca/data/transportation_podlca_emission.csv")
 
 # add a window to the building
 bamboo = Material()
 bamboo.qty = 538
 bamboo.unit = KILOGRAM
-bamboo.eol_product = 'Bamboo'
+bamboo.eol_product = "Bamboo"
 
-my_bamboo_roof = Assembly.create(name='Bamboo Roof', 
-                                          building=my_building,
-                                          materials=[bamboo]) # Making a building assembly from materials not within the scope of EOL
+my_bamboo_roof = Assembly.create(
+    name="Bamboo Roof", building=my_building, materials=[bamboo]
+)  # Making a building assembly from materials not within the scope of EOL
 
 # impacts by cycle stage
 impact_dict = {

@@ -1,13 +1,12 @@
 import os
 import pod_lca
+
 # from pathlib import Path
 # from pod_lca.building import Building
 # from pod_lca.building import Scenario
 # from pod_lca.location import Location
 # from pod_lca.units import METER
 # from pod_lca.utilities import DataImporter
-from pod_lca.visualizer import BarChart
-from pod_lca.visualizer import MatplotlibPlotter
 
 
 from pod_lca.lca_modules.building import Building
@@ -17,21 +16,19 @@ from pod_lca.lca_modules.building_envelope import Wall
 from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
-from pod_lca.lca_modules.building_envelope import Shading
 
 from pod_lca.lca_modules.operational.operational_object import OperationalObject
 
 from pod_lca.lca_modules.geometry.building_geometry import window_surfaces_from_wwr
-from pod_lca.lca_modules.geometry.building_geometry import shading_surfaces_from_window
 
 from pod_lca.lca_modules.location import Location
 from pod_lca.units import METER
 from pod_lca.utilities import config
-from pod_lca.visualizer.plotters.building_plotter import plot_building
 
-for i in range(50): print('')
+for i in range(50):
+    print("")
 
-# Create Building - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+# Create Building - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 x = 20
 y = 10
@@ -39,23 +36,24 @@ floor_to_floor = 3
 num_floors = 2
 num_below_grade = 0
 
-my_location = Location.from_str('Seattle, USA')
-b = Building.from_parameters(name='test',
-                             type='residential',
-                             location=my_location,
-                             built_year=2025,
-                             life_span=60,
-                             no_floors=num_floors, 
-                             f2f_height=floor_to_floor, 
-                             floor_plan=[[0,0], [x,0], [x,y], [0,y]], 
-                             floors_below_grade=num_below_grade, 
-                             geometry_units=METER)
+my_location = Location.from_str("Seattle, USA")
+b = Building.from_parameters(
+    name="test",
+    type="residential",
+    location=my_location,
+    built_year=2025,
+    life_span=60,
+    no_floors=num_floors,
+    f2f_height=floor_to_floor,
+    floor_plan=[[0, 0], [x, 0], [x, y], [0, y]],
+    floors_below_grade=num_below_grade,
+    geometry_units=METER,
+)
 
 
+# Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# Add Envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-path = config['file_paths']['operational']['CONSTRUCTIONS']
+path = config["file_paths"]["operational"]["CONSTRUCTIONS"]
 b.read_constructions_data(path)
 b.read_material_properties_data(path)
 
@@ -69,10 +67,9 @@ for fk in b.floors:
     e = Envelope.from_floor(floor)
     floor.add_envelope(e)
 
-
     # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    walls = 'Rainscreen-Thinbrick'
+    walls = "Rainscreen-Thinbrick"
     surfaces = [e.surfaces[sk] for sk in e.wall_surface_keys]
     walls = Wall.from_idf(walls, b, surfaces, wall_service_life)
     e.add_construction(walls)
@@ -80,30 +77,28 @@ for fk in b.floors:
     # add floor slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if floor.is_on_ground:
-        gslab = 'Generic Ground Slab'
-        surfaces = [e.surfaces['floor']]
+        gslab = "Generic Ground Slab"
+        surfaces = [e.surfaces["floor"]]
         gslab = Floor.from_idf(gslab, b, surfaces, structure_service_life)
         e.add_construction(gslab)
     else:
-        slab = 'Insulated 8in Slab Floor'
-        surfaces = [e.surfaces['floor']]
+        slab = "Insulated 8in Slab Floor"
+        surfaces = [e.surfaces["floor"]]
         slab = Floor.from_idf(slab, b, surfaces, structure_service_life)
         e.add_construction(slab)
-
 
     # add ceiling slabs - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     if floor.is_last:
-        roof = 'Generic Roof'
-        surfaces = [e.surfaces['ceiling']]
+        roof = "Generic Roof"
+        surfaces = [e.surfaces["ceiling"]]
         roof = Ceiling.from_idf(roof, b, surfaces, structure_service_life)
         e.add_construction(roof)
     else:
-        ciel = 'Generic Interior Ceiling'
-        surfaces = [e.surfaces['ceiling']]
+        ciel = "Generic Interior Ceiling"
+        surfaces = [e.surfaces["ceiling"]]
         ciel = Ceiling.from_idf(ciel, b, surfaces, structure_service_life)
         e.add_construction(ciel)
-
 
 
 # # add windows - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,9 +106,9 @@ for fk in b.floors:
 for fk in b.floors:
     if not b.floors[fk].is_below_grade:
         env = b.floors[fk].envelope
-        wall_key = 'wall_1'
-        wwr = .4
-        window = 'Generic Double Pane'
+        wall_key = "wall_1"
+        wwr = 0.4
+        window = "Generic Double Pane"
         surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
         window = Window.from_idf(window, b, surfaces, window_service_life)
         env.add_window(window, wall_key)
@@ -121,13 +116,12 @@ for fk in b.floors:
 for fk in b.floors:
     if not b.floors[fk].is_below_grade:
         env = b.floors[fk].envelope
-        wall_key = 'wall_3'
-        wwr = .9
-        window = 'Generic Double Pane'
+        wall_key = "wall_3"
+        wwr = 0.9
+        window = "Generic Double Pane"
         surfaces = window_surfaces_from_wwr(env, wall_key, wwr)
         window = Window.from_idf(window, b, surfaces, window_service_life)
         env.add_window(window, wall_key)
-
 
 
 b.update_envelope_surfaces()
@@ -138,16 +132,15 @@ b.update_envelope_surfaces()
 # TODO: Implement outdoor boundary condition generator
 # TODO: No Mass materials need to get their thickness from somewhere else, not the IDF...
 
-path = config['file_paths']['operational']['SYSTEMS']
+path = config["file_paths"]["operational"]["SYSTEMS"]
 b.operational_object = OperationalObject.from_idf(path)
 b.set_zone_systems()
 
 
-
 # plot_building(b)
 b.write_idf()
-eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-wea = config['file_paths']['operational']['SEATTLE']
+eplus_path = os.path.join(pod_lca.TEMP, "EnergyPlus-25-1-0")
+wea = config["file_paths"]["operational"]["SEATTLE"]
 b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
 # # print(b.get_operational_impacts('heating'))

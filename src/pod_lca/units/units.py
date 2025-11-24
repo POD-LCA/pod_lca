@@ -153,7 +153,7 @@ class Unit:
                 else:
                     newUnit.denominator = None
             elif self_copy.convert_compound and not other_copy.convert_compound:
-                newUnit.components = self_copy.components + [other_copy] 
+                newUnit.components = self_copy.components + [other_copy]
                 if self_copy.denominator is not None:
                     newUnit.denominator = self_copy.denominator
             elif not self_copy.convert_compound and other_copy.convert_compound:
@@ -162,7 +162,6 @@ class Unit:
                     newUnit.denominator = other_copy.denominator
             else:
                 newUnit.components = [self_copy, other_copy]
-
 
             return newUnit
 
@@ -397,15 +396,19 @@ class Unit:
                 ):  # it is assumed components of in and out are in same order
                     conversion_factor *= component_in.convert_to(component_out)
                 return conversion_factor
-    
+
         else:
             simplification_factor, self = self.simplify()
-            if self.get_qty_measured() == to_unit.get_qty_measured(): # TODO: test this branch... potential issues with quantity measured after simplification
+            if (
+                self.get_qty_measured() == to_unit.get_qty_measured()
+            ):  # TODO: test this branch... potential issues with quantity measured after simplification
                 conversion_factor = self.convert_to(to_unit)
                 return simplification_factor * conversion_factor
             else:
-                raise TypeError(f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible.")
-        
+                raise TypeError(
+                    f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible."
+                )
+
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out, qty_measured):
         """Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and
@@ -450,9 +453,9 @@ class Unit:
             conversion_factor = 1 / conversion_factor
 
         return conversion_factor
-    
+
     def simplify(self):
-        """ Simplify a compound unit by cancelling common components in numerator and denominator.
+        """Simplify a compound unit by cancelling common components in numerator and denominator.
 
         Returns
         -------
@@ -463,7 +466,7 @@ class Unit:
         """
         if self.convert_compound:
             parts = self.get_components()
-            for component in combinations(parts,2):
+            for component in combinations(parts, 2):
                 if component[0] in self.denominator and component[1] in self.denominator:
                     continue
                 elif component[0] not in self.denominator and component[1] not in self.denominator:
@@ -476,13 +479,17 @@ class Unit:
 
                     factor = numerator.convert_to(denominator)
 
-                    self.name = self.name.replace(numerator.get_name(),'').replace(' per ' + denominator.get_name(), '')
-                    self.standard_notation = self.standard_notation.replace(numerator.get_standard_notation(),'').replace('/' + denominator.get_standard_notation(), '')
-                    self.qty_measured = self.qty_measured.replace(numerator.get_qty_measured(),'').replace(' per ', '')
-                    
-                    if '-' in self.name:
-                        self.name = self.name.replace('-', '')
-                        self.qty_measured = self.qty_measured.replace('-', '')
+                    self.name = self.name.replace(numerator.get_name(), "").replace(
+                        " per " + denominator.get_name(), ""
+                    )
+                    self.standard_notation = self.standard_notation.replace(
+                        numerator.get_standard_notation(), ""
+                    ).replace("/" + denominator.get_standard_notation(), "")
+                    self.qty_measured = self.qty_measured.replace(numerator.get_qty_measured(), "").replace(" per ", "")
+
+                    if "-" in self.name:
+                        self.name = self.name.replace("-", "")
+                        self.qty_measured = self.qty_measured.replace("-", "")
 
                     self.components.remove(numerator)
                     self.components.remove(denominator)
@@ -491,16 +498,16 @@ class Unit:
                     self.convert_compound = False if len(self.components) < 2 else True
                     if len(self.components) == 1:
                         self = self.components[0]
-                
+
                     if self.convert_compound:
                         factor, self = self.simplify()
-                    
+
                     return factor, self
 
             return 1.0, self
         else:
             return 1.0, self
-    
+
 
 class MetricPrefix:
     """Unit object from which units are created.

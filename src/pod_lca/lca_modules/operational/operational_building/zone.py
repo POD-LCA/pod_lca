@@ -5,7 +5,6 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-import json
 from pod_lca.utilities.geometry import area_polygon
 # from pod_lca.utilities.geometry import Mesh
 

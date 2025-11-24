@@ -15,18 +15,16 @@ from pod_lca.units import KILOGRAM
 my_land_plot = Location.from_str("98126, Seattle")
 
 my_building = Building()
-my_building.set_eol_database('data/impacts_podlca_eol-impacts.csv')
-my_building.set_transportation_impact_database('data/transportation_podlca_emission.csv')
+my_building.set_eol_database("data/impacts_podlca_eol-impacts.csv")
+my_building.set_transportation_impact_database("data/transportation_podlca_emission.csv")
 
 # add a window to the building
 concrete = BuildingMaterial()
 concrete.qty = 4.100000
 concrete.unit = KILOGRAM
-concrete.eol_product = 'Concrete'
+concrete.eol_product = "Concrete"
 
-my_concrete_structure = Assembly.create(name='Structure', 
-                                                 building=my_building, 
-                                                 materials=[concrete]) 
+my_concrete_structure = Assembly.create(name="Structure", building=my_building, materials=[concrete])
 
 # impacts by cycle stage
 impact_dict = {

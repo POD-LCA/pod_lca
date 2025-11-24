@@ -1,16 +1,10 @@
 
-import os
 from pathlib import Path
-import pod_lca
 from pod_lca.building import Building
-from pod_lca.building import Scenario
 from pod_lca.location import Location
-from pod_lca.units import METER
 from pod_lca.utilities import DataImporter
 from pod_lca.visualizer import BarChart
 from pod_lca.visualizer import MatplotlibPlotter
-from pod_lca.utilities import config
-from pod_lca.visualizer.plotters.building_plotter import plot_building
 
 
 for i in range(50): print('')
