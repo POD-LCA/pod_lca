@@ -31,7 +31,7 @@ class Assembly:
     # Constructors
     # ================================        
     @classmethod
-    def create(cls, name, building, materials=None):
+    def create(cls, name, building, **kwargs):
         """ Create a building assembly from its constituent materials.
         
         Parameters
@@ -39,9 +39,14 @@ class Assembly:
         name : str
             Name of the assembly.
         building : ~pod_lca.building.Building
-            Building to which the assembly belong
+            Building to which the assembly belong.
+
+        Other Parameters
+        ----------------
         materials : list of material.Model  or Product Objs
             Materials making up the assembly.
+        service_life : float
+            Service life of the assembly in years.
 
         Returns
         -------
@@ -50,11 +55,12 @@ class Assembly:
         """
         assembly = cls()
 
-        assembly.set_name(name)
-        if materials is not None:
-            assembly.set_materials(materials)
-
         building.add_assembly(assembly)
+        assembly.set_name(name)
+        if "materials" in kwargs:
+            assembly.set_materials(kwargs["materials"])
+        if "service_life" in kwargs:
+            assembly.set_service_life(kwargs["service_life"])
 
         return assembly
 
@@ -154,7 +160,16 @@ class Assembly:
         float
             Service life of the material in years.
         """
-        return self.service_life
+        if self.service_life is None:
+            tmp_service_life = self.get_building().get_life_span()
+            for material in self.get_materials():
+                if material.get_service_life() is not None:
+                    tmp_service_life = min(tmp_service_life, material.get_service_life())
+            
+            return tmp_service_life
+        
+        else:
+            return self.service_life
     
     # ================================
     # Methods
@@ -169,8 +184,13 @@ class Assembly:
         """
         self.materials.append(material)
 
-        # TODO set A1-A3 impacts / material could be a Model object or a product
-        # TODO: add a output product to material models
+        material.set_parent(self)
+
+        if material.get_production_year() is None:
+            material.set_production_year(self.get_building().get_built_year())
+        if material.get_service_life() is None:
+            material.set_service_life(self.get_service_life())
+
         return self
 
     # ================================
