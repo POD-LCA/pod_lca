@@ -1,8 +1,12 @@
+from __future__ import annotations
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
+
+from typing import TYPE_CHECKING
 
 from numpy import bool_ as np_bool
 
@@ -21,6 +25,9 @@ from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
+
+if TYPE_CHECKING:
+    from ..eol.waste import Waste
 
 
 class Product(Master):
@@ -231,6 +238,54 @@ class Product(Master):
             pulse = UniformEmissionProfile.unit_pulse(at=self.get_production_year())
             for leg in self.get_transportation():
                 leg.get_emissions().set_temporal_emission_profile(pulse)
+
+        return self
+
+    def set_waste_product(self):
+        """ Set the end-of-life waste product of the material.
+        """
+        from ..eol.waste import Waste
+
+        eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
+            
+        eol_material = self.get_eol_material()
+        waste_qty = self.get_weight()
+        waste_unit = self.get_weight_unit()
+
+        if waste_qty is None:
+            waste_qty = 0.0
+            waste_unit = KILOGRAM
+            log(" Cannot determine waste quantity in mass.", level='Warn')
+
+        if eol_mix_data['Material'].isin([eol_material]).any():
+            eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
+        elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
+            eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
+        else:
+            log("A mix doesnt exist", 0)
+
+        if self.get_bio_based() is not None:
+            waste_obj = Waste.new(self, 
+                                database_item=eol_material, 
+                                qty=waste_qty, 
+                                unit=waste_unit, 
+                                process_mix=eol_mix, 
+                                bio_based=self.get_bio_based())
+        else:
+            waste_obj = Waste.new(self, 
+                                    database_item=eol_material, 
+                                    qty=waste_qty, 
+                                    unit=waste_unit, 
+                                    process_mix=eol_mix)
+            
+        self.waste_obj = waste_obj
+
+        waste_produced_year = min(self.get_production_year() + self.get_service_life(), # end of material service life
+                            self.get_building().get_built_year() + self.get_building().get_life_span()) # end of building life span
+        self.waste_obj.set_production_year(waste_produced_year)
+
+        del eol_mix_data
+        gc.collect()
 
         return self
 

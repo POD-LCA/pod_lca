@@ -238,7 +238,7 @@ class Material(Product):
 
         return self
     
-    def set_eol_material(self, eol_material, is_bio_based=None, is_composite=None):
+    def set_eol_material(self, eol_material):
         """ Set the end-of-life product corresponding to the material.
 
         Parameters
@@ -251,8 +251,6 @@ class Material(Product):
             Flag to identify if the material is a composite.    
         """
         self.eol_product = eol_material
-        self.bio_based = is_bio_based if is_bio_based is not None else True
-        self.composite = is_composite if is_composite is not None else True
 
         return self
 

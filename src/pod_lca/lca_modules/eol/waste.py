@@ -43,7 +43,13 @@ class Waste(Product):
         self.process_mix = None
         self.impacts = {"C1": Impacts.from_parent(self), "C2": [], "C3": [], "C4": [], "D": []}
         self.emissions = {"C1": Emissions.from_parent(self), "C2": [], "C3": [], "C4": [], "D": []}
+
+        # bio-based properties
         self.bio_based = True
+        self.bio_percentage = None
+        self.species = None
+        self.region = None
+        self.material_form = None
 
         # cache
         self._inventory_records_uptodata = False
@@ -65,7 +71,7 @@ class Waste(Product):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, parent, database_item, qty, unit, process_mix, bio_based=None):
+    def new(cls, parent, database_item, qty, unit, process_mix, bio_based=False, **kwargs):
         """Create new waste product.
 
         Parameters
@@ -84,6 +90,27 @@ class Waste(Product):
         bio_based : bool
             True if the material is bio-based.
 
+        Other Parameters
+        ----------------
+        bio_percentage : float
+            Percentage of bio-based content in the material.
+        species : str
+            Species identifier.
+        region : {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
+            Region of origin of the product.
+            -   'AU': Australia
+            -   'CA': Canada
+            -   'CD': Congo, the Democratic Republic of the
+            -   'CN': China
+            -   'GLO': Global
+            -   'IN': India
+            -   'RER': Europe
+            -   'RNA': North America
+            -   'US': United States
+            -   'US-MT': United States, Montana
+        material_form : str
+            Final form of the product.
+
         Returns
         -------
         ~pod_lca.eol.Waste
@@ -93,7 +120,7 @@ class Waste(Product):
 
         waste_item.set_parent(parent)
         waste_item.set_name("Waste " + database_item)
-        waste_item.set_bio_based(bio_based)
+        waste_item.set_bio_based(bio_based, **kwargs)
         waste_item.set_impact_database_entry(database_item)
         waste_item.set_qty(qty)
         waste_item.set_unit(unit)
@@ -210,18 +237,45 @@ class Waste(Product):
 
         return waste_process_obj
 
-    def set_bio_based(self, is_bio_based):
+    def set_bio_based(self, is_bio_based, **kwargs):
         """Set the bio-based nature of the material.
 
         Parameters
         ----------
         is_bio_based : bool
             True, if the material is bio-based.
+
+        Other Parameters
+        ----------------
+        bio_percentage : float
+            Percentage of bio-based content in the material.
+        species : str
+            Species identifier.
+        region : {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
+            Region of origin of the product.
+            -   'AU': Australia
+            -   'CA': Canada
+            -   'CD': Congo, the Democratic Republic of the
+            -   'CN': China
+            -   'GLO': Global
+            -   'IN': India
+            -   'RER': Europe
+            -   'RNA': North America
+            -   'US': United States
+            -   'US-MT': United States, Montana
+        material_form : str
+            Final form of the product.
         """
         if is_bio_based is None:
             self.bio_based = False
         else:
             self.bio_based = is_bio_based
+
+        if is_bio_based:
+            self.bio_percentage = kwargs.get("bio_percentage", 100.0)
+            self.species = kwargs.get("species", "unspecified")
+            self.region = kwargs.get("region", "unspecified")
+            self.material_form = kwargs.get("material_form", "unspecified")
 
         return self
 
