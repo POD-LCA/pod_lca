@@ -83,7 +83,7 @@ class Foundation(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        foundation_element = super().create(name, structure.get_parent(), materials)
+        foundation_element = super().create(name, structure.get_parent(), materials=materials)
         foundation_element.set_service_life('substructure')
         structure.foundations.append(foundation_element)
 
@@ -102,7 +102,7 @@ class Beam(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        beam = super().create(name, structure.get_parent(), materials)
+        beam = super().create(name, structure.get_parent(), materials=materials)
         beam.set_service_life('superstructure')
         structure.beams.append(beam)
 
@@ -116,7 +116,7 @@ class Column(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        column = super().create(name, structure.get_parent(), materials)
+        column = super().create(name, structure.get_parent(), materials=materials)
         column.set_service_life('superstructure')
         structure.columns.append(column)
 
@@ -130,7 +130,7 @@ class Slab(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        slab = super().create(name, structure.get_parent(), materials)
+        slab = super().create(name, structure.get_parent(), materials=materials)
         slab.set_service_life('superstructure')
         structure.slabs.append(slab)
 
@@ -144,7 +144,7 @@ class Wall(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        wall = super().create(name, structure.get_parent(), materials)
+        wall = super().create(name, structure.get_parent(), materials=materials)
         wall.set_service_life('superstructure')
         structure.columns.append(wall)
 
@@ -158,7 +158,7 @@ class RoofStructure(StructuralElement):
     @classmethod
     def create(cls, name, structure, materials):
 
-        roof = super().create(name, structure.get_parent(), materials)
+        roof = super().create(name, structure.get_parent(), materials=materials)
         roof.set_service_life('superstructure')
         structure.roof_structure.append(roof)
 

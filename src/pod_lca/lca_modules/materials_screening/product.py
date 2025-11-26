@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from typing import TYPE_CHECKING
+import gc
 
 from numpy import bool_ as np_bool
 
@@ -25,9 +23,6 @@ from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
-
-if TYPE_CHECKING:
-    from ..eol.waste import Waste
 
 
 class Product(Master):
@@ -73,6 +68,8 @@ class Product(Master):
         self.is_material = True
         self.sctg_code = None
         self.transport_legs = None
+        self.eol_material = None
+        self.waste_obj: None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -178,7 +175,7 @@ class Product(Master):
             unit_inventories = database.get_data_entry(self.get_impact_database_entry())
             if database.get_density_unit_key() is not None:
                 self.density_unit = unit_inventories[database.get_density_unit_key()]
-                self.density = unit_inventories[database.get_density_key()]
+                self.density = float(unit_inventories[database.get_density_key()])
         else:
             raise ValueError("Density input not recognized.")
 
@@ -265,24 +262,31 @@ class Product(Master):
             log("A mix doesnt exist", 0)
 
         if self.get_bio_based() is not None:
+            database = self.get_project().get_impact_database()
+            bio_percentage = database.get_data_entry(self.get_impact_database_entry())["%C (dry mass basis)"] if self.get_bio_based() else None
+            species = database.get_data_entry(self.get_impact_database_entry())["Biomaterial Species"] if self.get_bio_based() else None
+            region = database.get_data_entry(self.get_impact_database_entry())["Region"] if self.get_bio_based() else None
+            material_form = database.get_data_entry(self.get_impact_database_entry())["Biomaterial Form"] if self.get_bio_based() else None
+            
             waste_obj = Waste.new(self, 
                                 database_item=eol_material, 
                                 qty=waste_qty, 
                                 unit=waste_unit, 
                                 process_mix=eol_mix, 
-                                bio_based=self.get_bio_based())
+                                bio_based=self.get_bio_based(),
+                                bio_percentage=bio_percentage,
+                                species=species,
+                                region=region,
+                                material_form=material_form)
         else:
             waste_obj = Waste.new(self, 
                                     database_item=eol_material, 
                                     qty=waste_qty, 
                                     unit=waste_unit, 
-                                    process_mix=eol_mix)
+                                    process_mix=eol_mix,
+                                    bio_based=False)
             
         self.waste_obj = waste_obj
-
-        waste_produced_year = min(self.get_production_year() + self.get_service_life(), # end of material service life
-                            self.get_building().get_built_year() + self.get_building().get_life_span()) # end of building life span
-        self.waste_obj.set_production_year(waste_produced_year)
 
         del eol_mix_data
         gc.collect()
@@ -404,6 +408,18 @@ class Product(Master):
                 log("Material not found in the dataset", "Warn")
         else:
             self.sctg_code = code
+
+        return self
+    
+    def set_eol_material(self, eol_material):
+        """ Set the end-of-life product corresponding to the material.
+
+        Parameters
+        ----------
+        eol_material : str
+            EOL product name.
+        """
+        self.eol_material = eol_material
 
         return self
 
@@ -575,6 +591,26 @@ class Product(Master):
         else:
             return self.sctg_code
 
+    def get_bio_based(self):
+        """ Get the bio-based nature of the material.
+        
+        Returns
+        -------
+        bool
+            True if the material is bio-based.   
+        """
+        return self.bio_based
+
+    def get_eol_material(self):
+        """ Get the end-of-life product corresponding to the material.
+
+        Returns
+        -------
+        str
+            End-of-life product name corresponding to the material.      
+        """
+        return self.eol_material  
+    
     def get_eol_manager(self):
         """Return the place where end-of-life transport dataset reside.
 
@@ -585,6 +621,26 @@ class Product(Master):
         """
         return self.get_project()
 
+    def get_eol_process_impact_database(self):
+        """ Get the end-of-life process impact database giving the C2-C4 impacts of the building materials.
+
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            End-of-life process impact database object.
+        """
+        return self.get_project().get_eol_process_impact_database()
+    
+    def get_waste_product(self):
+        """ Set the end-of-life waste product of the material.
+
+        Returns
+        -------
+        ~pod_lca.eol.Waste
+            End-of-life waste object corresponding to the material.
+        """
+        return self.waste_obj
+    
     # ================================
     # Methods
     # ================================

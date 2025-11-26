@@ -106,16 +106,6 @@ class EndOfLifeMixins:
 
         return self
     
-    def get_transportation_impact_database(self):
-        """ Set the impact database for end-of-life impacts.
-        
-        Returns
-        -------
-        ~pod_lca.impacts.ImpactsDatabase
-            End-of-Life impacts database.
-        """
-        return self.transport_impact_database
-    
     def get_eol_process_impact_database(self):
         """ Get the impact database for end-of-life impacts.
         

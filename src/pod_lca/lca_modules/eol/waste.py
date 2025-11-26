@@ -34,6 +34,24 @@ class Waste(Product):
         Emission objects categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Emissions`}
     bio_based : bool
         True if the material is bio-based.
+    bio_percentage : float
+        Percentage of bio-based content in the material.
+    species : str
+        Species identifier.
+    region : {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
+        Region of origin of the product.
+        -   'AU': Australia
+        -   'CA': Canada
+        -   'CD': Congo, the Democratic Republic of the
+        -   'CN': China
+        -   'GLO': Global
+        -   'IN': India
+        -   'RER': Europe
+        -   'RNA': North America
+        -   'US': United States
+        -   'US-MT': United States, Montana
+    material_form : str
+        Final form of the product.
     """
 
     def __init__(self):

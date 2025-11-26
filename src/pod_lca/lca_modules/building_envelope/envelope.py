@@ -98,9 +98,9 @@ class Envelope:
         boms = [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
 
         # FIXME: if the wwr to be calculated from these
-        enclosure_walls = Construction.create('walls', building, None)
-        enclosure_windows = Construction.create('windows', building, None)
-        enclosure_roof = Construction.create('roof', building, None)
+        enclosure_walls = Construction.create('walls', building)
+        enclosure_windows = Construction.create('windows', building)
+        enclosure_roof = Construction.create('roof', building)
         enclosures =  [enclosure_walls, enclosure_windows, enclosure_roof]
         
         for assembly, bom in zip(enclosures, boms):

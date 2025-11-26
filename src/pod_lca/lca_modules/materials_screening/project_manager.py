@@ -4,11 +4,14 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pathlib import Path
 import pickle
 
 from . import Model
+from ..impacts import EOLImpactsDatabase
 from ..impacts import ImpactsDatabase
 from ..impacts import TranportationModeImpactsDatabase
+from ..transportation import EOLTransportDataset
 from ...utilities import log
 from ...utilities import config
 from ...utilities import DataImporter
@@ -40,6 +43,7 @@ class Project:
         self.year = None
         self.impact_database = None
         self.transport_mode_impact_database = None
+        self.eol_impact_database = None
 
     def __str__(self):
         str = "=" * 75 + "\n" + f"Project: {self.get_name()}\n" + "=" * 75 + "\n"
@@ -87,51 +91,115 @@ class Project:
 
         return self
 
-    def set_impact_database(self, database):
-        """Set the impacts database of the project.
+    def set_databases(self):
+        """ Set databases and datasets to be used in the LCA computations."""
+        self.set_material_database()
+        self.set_transportation_mode_impact_database()
+        self.set_eol_process_impact_database()
+        self.set_eol_transport_dataset()
 
+        return self
+    
+    def set_material_database(self, file_path=None):
+        """ Set the impact database. If file path is not provided, the default database will be used.
+        
         Parameters
         ----------
-        database : ~pod_lca.impacts.ImpactsDatabase or str
-            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
-
-        Raises
-        ------
-        TypeError
-            Database input not recognized.
+        file_path : str
+            Filepath to the csv file containing impact data. The csv file must contain headers 'sctg code' and 'eol material' in addition to the 
         """
-        if isinstance(database, ImpactsDatabase):
-            self.impact_database = database
-        elif isinstance(database, str):
+        if file_path is None:
+            file_path = config['file_paths']['materials_screening']['DEFAULT_IMPACT_DATABASE']
+        if isinstance(file_path, (str, Path)):
             impact_database = ImpactsDatabase.new("impact database")
-            impact_database.set_data(database)
-            self.set_impact_database(impact_database)
+            impact_database.set_primary_key('Name')
+            impact_database.set_qty_key('Declared qty')
+            impact_database.set_unit_key('Declared unit')
+            impact_database.set_data(file_path, 
+                                     grouped_data="Electricity",
+                                     density_headers=["Density", "Density unit"],
+                                     additional_headers=["Biomaterial Species",
+                                                         "Region",
+                                                         "Biomaterial Form", 
+                                                         "Stored Biogenic Carbon", 
+                                                         "%C (dry mass basis)"])
+            self.impact_database = impact_database
+        else:
+            raise TypeError("Database input not recognized")
+
+    def set_transportation_mode_impact_database(self, file_path=None):
+        """ Set the impact database for end-of-life impacts. If file path not given, the default database will be used.
+        
+        Parameters
+        ----------
+        file_path :str
+            Filepath to the csv file containing impact data.
+        """
+        if file_path is None:
+            file_path = config['file_paths']['transportation']['MODE_IMPACTS']
+
+        if isinstance(file_path, (Path, str)):
+            impact_database = TranportationModeImpactsDatabase.new("impact database")
+            impact_database.set_data(file_path)
+            self.transport_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")
 
         return self
 
-    def set_transportation_mode_impact_database(self, database):
-        """Set the impacts database for transportation impacts by mode.
+    def set_eol_process_impact_database(self, file_path=None, **kwargs):
+        """ Set the impact database for end-of-life impacts. If file path not given, default database will be used.
+        
+        Parameters
+        ----------
+        file_path : str
+            Filepath of the csv file containing impact data.
+
+        Other Parameters
+        ----------------
+        primary_key : str
+            Header of the primary identifier column in the csv file. Default is 'Material'.
+        process_key : str
+            Header of the process identifier column in the csv file. Default is 'Process'.
+        lc_stage_key : str
+            Header of the life cycle stage identifier column in the csv file. Default is 'LCA Stage'.
+        transport_dataset : ~pod_lca.transportation.TransportDataset
+            Transportation dataset corresponding to the end-of-life impacts.
+        """
+        if file_path is None:
+            file_path = config['file_paths']['eol']['EOL_PROCESS_IMPACTS']
+        
+        if isinstance(file_path, (str, Path)):
+            primary_key = kwargs['primary_key'] if 'primary_key' in kwargs else 'Material'
+            process_key = kwargs['process_key'] if 'process_key' in kwargs else 'Process'
+            lc_stage_key = kwargs['lc_stage_key'] if 'lc_stage_key' in kwargs else 'LCA Stage'
+
+            eol_impact_database = EOLImpactsDatabase.new("EOL database")
+
+            eol_impact_database.set_primary_key(primary_key)
+            eol_impact_database.set_process_key(process_key)
+            eol_impact_database.set_life_cycle_stage_key(lc_stage_key)
+            eol_impact_database.set_data(file_path)
+
+            self.eol_impact_database = eol_impact_database
+
+        else:
+            raise TypeError("Database input not recognized")
+        
+        return self
+
+    def set_eol_transport_dataset(self, dataset=None):
+        """ Set transportation dataset for the end-of-life impacts.
 
         Parameters
         ----------
-        database : ~pod_lca.impacts.TranportationModeImpactsDatabase or str
-            Impact database object or if a string, filepath to the corresponding csv file containing impact data.
-
-        Raises
-        ------
-        TypeError
-            Database input not recognized.
+        dataset : ~pod_lca.transportation.TransportDataset
+            End-of-life transportation dataset.
         """
-        if isinstance(database, TranportationModeImpactsDatabase):
-            self.transport_mode_impact_database = database
-        elif isinstance(database, str):
-            transport_impact_database = TranportationModeImpactsDatabase.new("impact database")
-            transport_impact_database.set_data(database)
-            self.set_transportation_mode_impact_database(transport_impact_database)
-        else:
-            raise TypeError("Database input not recognized")
+        if dataset is None:
+            dataset = EOLTransportDataset()
+
+        self.eol_transport_dataset = dataset
 
         return self
 
@@ -192,6 +260,16 @@ class Project:
         """
         return self.transport_mode_impact_database
 
+    def get_eol_process_impact_database(self):
+        """ Get the impact database for end-of-life impacts.
+        
+        Returns
+        -------
+        ~pod_lca.impacts.ImpactsDatabase
+            End-of-Life impacts database.
+        """
+        return self.eol_impact_database
+    
     def get_location(self):
         """Retrieve the location of the project.
 

@@ -435,6 +435,8 @@ class Model:
             Density of the material.
         density_unit : ~pod_lca.units.Unit
             Units corresponding to material density.
+        eol_material : str
+            Name of the end-of-life material corresponding to the product.
         ignore_transport : bool
             If true, ignore setting transportation.
 
@@ -451,6 +453,10 @@ class Model:
         if "density" in kwargs:
             product.set_density(kwargs["density"])
             product.set_density_unit(kwargs["density_unit"])
+        if "eol_material" in kwargs:
+            product.eol_material = kwargs["eol_material"]
+            database = self.get_project().get_impact_database()
+            product.bio_based = database.get_data_entry(impacts_from)["Stored Biogenic Carbon"]
 
         if not kwargs.get("ignore_transport", False):
             product.set_transportation()

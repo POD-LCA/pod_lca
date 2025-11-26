@@ -330,7 +330,7 @@ class WasteTransportLeg(TransportationLeg):
         ~pod_lca.impacts.ImpactsDatabase
             Impacts database
         """
-        return self.get_manager().get_transportation_impact_database()
+        return self.get_manager().get_transportation_mode_impact_database()
 
     # ================================
     # CFS Methods

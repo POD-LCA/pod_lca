@@ -99,8 +99,9 @@ class Assembly:
         materials : list of ~pod_lca.building.BuildingMaterial
             Materials making up the assembly.
         """
-        for material in materials:
-            self.add_material(material)
+        if materials is not None:
+            for material in materials:
+                self.add_material(material)
         return self
     
     def set_service_life(self, service_life):

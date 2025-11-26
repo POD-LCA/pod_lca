@@ -133,8 +133,7 @@ class Material(Product):
                 log(f"EOL material not specified for {name}. Skipping EOL material setting.", level='Warn')
             else:
                 if isinstance(data_entry['eol material'], str):
-                    material.set_eol_material(data_entry['eol material'], 
-                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
+                    material.set_eol_material(data_entry['eol material'])
                     material.set_waste_product()
                 else:
                     ValueError(f"EOL material value not recognized for {name}.")
@@ -237,22 +236,6 @@ class Material(Product):
         self.name = name + ' in ' + self.get_parent().get_name()
 
         return self
-    
-    def set_eol_material(self, eol_material):
-        """ Set the end-of-life product corresponding to the material.
-
-        Parameters
-        ----------
-        eol_material : str
-            EOL product name.
-        is_bio_based : bool
-            Flag to identify if the material is bio-based.
-        is_composite : bool
-            Flag to identify if the material is a composite.    
-        """
-        self.eol_product = eol_material
-
-        return self
 
     def set_waste_rate(self, waste_rate=None, waste_rate_category=None):
         """ Set the waste rate of the material.
@@ -328,46 +311,11 @@ class Material(Product):
     def set_waste_product(self):
         """ Set the end-of-life waste product of the material.
         """
-        eol_mix_data = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_DEFAULT_MIXES'])
-            
-        eol_material = self.get_eol_material()
-        waste_qty = self.get_weight()
-        waste_unit = self.get_weight_unit()
-
-        if waste_qty is None:
-            waste_qty = 0.0
-            waste_unit = KILOGRAM
-            log(" Cannot determine waste quantity in mass.", level='Warn')
-
-        if eol_mix_data['Material'].isin([eol_material]).any():
-            eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
-        elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
-            eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
-        else:
-            log("A mix doesnt exist", 0)
-
-        if self.get_bio_based() is not None:
-            waste_obj = Waste.new(self, 
-                                database_item=eol_material, 
-                                qty=waste_qty, 
-                                unit=waste_unit, 
-                                process_mix=eol_mix, 
-                                bio_based=self.get_bio_based())
-        else:
-            waste_obj = Waste.new(self, 
-                                    database_item=eol_material, 
-                                    qty=waste_qty, 
-                                    unit=waste_unit, 
-                                    process_mix=eol_mix)
-            
-        self.waste_obj = waste_obj
+        super().set_waste_product()
 
         waste_produced_year = min(self.get_production_year() + self.get_service_life(), # end of material service life
                             self.get_building().get_built_year() + self.get_building().get_life_span()) # end of building life span
         self.waste_obj.set_production_year(waste_produced_year)
-
-        del eol_mix_data
-        gc.collect()
 
         return self
 
@@ -402,16 +350,6 @@ class Material(Product):
             Building project to which the assembly belong.
         """
         return self.get_building()
-    
-    def get_eol_material(self):
-        """ Get the end-of-life product corresponding to the material.
-
-        Returns
-        -------
-        str
-            End-of-life product name corresponding to the material.      
-        """
-        return self.eol_product  
 
     def get_waste_rate(self):
         """ Get the waste rate of the material.
@@ -433,16 +371,7 @@ class Material(Product):
             Service life of the material in years.
         """
         return self.service_life
-        
-    def get_waste_product(self):
-        """ Set the end-of-life waste product of the material.
 
-        Returns
-        -------
-        ~pod_lca.eol.Waste
-            End-of-life waste object corresponding to the material.
-        """
-        return self.waste_obj
     
     def get_replacement_materials(self):
         """ Get replacement materials for the building based on the service life of its materials.
@@ -462,16 +391,6 @@ class Material(Product):
                 replacements.extend(self.replacement_product.get_replacement_materials())
 
         return replacements
-
-    def get_bio_based(self):
-        """ Get the bio-based nature of the material.
-        
-        Returns
-        -------
-        bool
-            True if the material is bio-based.   
-        """
-        return self.bio_based
 
     def get_building(self):
         """ Get the building to which this building material belong.
