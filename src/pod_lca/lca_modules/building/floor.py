@@ -5,9 +5,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from shapely.affinity import scale
-from shapely.geometry import box
-from shapely import Polygon
+from numpy import abs
+from numpy import array
+from numpy import dot
+from numpy import roll
 
 from ...units import FEET
 from ...units import METER
@@ -55,8 +56,8 @@ class Floor:
         ----------        
         floor_no : int
             Floor number. 
-        floor_plan : shapely.Polygon
-            Floor plan.   
+        floor_plan : list of tuples of float
+            A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].  
         height : float
             Floor height.   
         geometry_unit : ~pod_lca.units.Unit
@@ -93,7 +94,7 @@ class Floor:
         floor.set_floor_no(floor_no)
         floor.set_geometry_unit(geometry_unit)
 
-        floor_plan = box(xmin=0, ymin=0, xmax=width, ymax=length)
+        floor_plan = [(0, 0), (width, 0), (width, length), (0, length)]
 
         floor.set_floor_plan(floor_plan)
         floor.set_height(floor_height)
@@ -132,8 +133,8 @@ class Floor:
          
         Parameters
         ----------
-        floor_plan : shapely.Polygon
-            Floor plan.          
+        floor_plan : list of tuples of float
+            A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].        
         """
         self.floor_plan = floor_plan
 
@@ -153,7 +154,9 @@ class Floor:
         if self.get_height() is not None:
             self.height *= conversion_factor
         if self.get_floor_plan() is not None:
-            self.set_floor_plan(scale(self.get_floor_plan(), xfact=conversion_factor, yfact=conversion_factor, origin=(0, 0)))
+            points = array(self.get_floor_plan(), dtype=float)
+            scaled_points = points * conversion_factor
+            self.set_floor_plan([tuple(p) for p in scaled_points])
 
         self.geometry_unit = geometry_unit
         
@@ -201,8 +204,8 @@ class Floor:
          
         Returns
         -------
-        shapely.Polygon
-            Floor plan.          
+        list of tuples of float
+            A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].           
         """
         return self.floor_plan
     
@@ -224,7 +227,14 @@ class Floor:
         float
             Area of the floor.           
         """ 
-        return Polygon(self.get_floor_plan()).area
+        points = array(self.get_floor_plan(), dtype=float)
+        x = points[:, 0]
+        y = points[:, 1]
+        
+        x_next = roll(x, -1)
+        y_next = roll(y, -1)
+        
+        return 0.5 * abs(dot(x, y_next) - dot(y, x_next))
 
     def get_volume(self):
         """ Get the volume of the floor.
