@@ -116,8 +116,13 @@ def get_moisture_content(species, region, material_form):
         -   'US-MT': United States, Montana
     material_form : str
         Final form of the product.
+
+    Returns
+    -------
+    float
+        Moisture content at green condition (fraction).
     """
-    return _get_carbon_data('moisture content', species, region, material_form)
+    return _get_carbon_data('moisture content', species, region, material_form) / 100 # convert to fraction
 
 def get_dry_density(species, region, material_form):
     """ Get moisture content at green condition.

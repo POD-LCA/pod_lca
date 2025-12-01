@@ -10,6 +10,10 @@ from numpy import bool_ as np_bool
 
 from . import Master
 from . import Electricity
+from ..carbon_stroage import get_carbon_percentage
+from ..carbon_stroage import get_dry_density
+from ..carbon_stroage import get_moisture_content
+from ..carbon_stroage import get_biogenic_carbon_content
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
@@ -54,6 +58,14 @@ class Product(Master):
         True, if the product is a material.
     is_fuel : bool
         True, of the product is an energy source.
+    eol_material : str
+        End-of-life product corresponding to the material.
+    waste_obj : ~pod_lca.lca_modules.eol.waste.Waste
+        End-of-life waste product corresponding to the material.
+    bio_based : bool
+        True if the material is bio-based.
+    bio_percentage : float
+        Percentage of biogenic content in the bio-based material (0.00 - 1.00).
     """
 
     def __init__(self):
@@ -70,6 +82,8 @@ class Product(Master):
         self.transport_legs = None
         self.eol_material = None
         self.waste_obj: None
+        self.bio_based = None
+        self.bio_percentage = None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -178,6 +192,8 @@ class Product(Master):
                 self.density = float(unit_inventories[database.get_density_key()])
         else:
             raise ValueError("Density input not recognized.")
+        
+        self.update_unit_carbon_storage()
 
         return self
 
@@ -261,31 +277,13 @@ class Product(Master):
         else:
             log("A mix doesnt exist", 0)
 
-        if self.get_bio_based() is not None:
-            database = self.get_project().get_impact_database()
-            bio_percentage = database.get_data_entry(self.get_impact_database_entry())["%C (dry mass basis)"] if self.get_bio_based() else None
-            species = database.get_data_entry(self.get_impact_database_entry())["Biomaterial Species"] if self.get_bio_based() else None
-            region = database.get_data_entry(self.get_impact_database_entry())["Region"] if self.get_bio_based() else None
-            material_form = database.get_data_entry(self.get_impact_database_entry())["Biomaterial Form"] if self.get_bio_based() else None
-            
-            waste_obj = Waste.new(self, 
-                                database_item=eol_material, 
-                                qty=waste_qty, 
-                                unit=waste_unit, 
-                                process_mix=eol_mix, 
-                                bio_based=self.get_bio_based(),
-                                bio_percentage=bio_percentage,
-                                species=species,
-                                region=region,
-                                material_form=material_form)
-        else:
-            waste_obj = Waste.new(self, 
-                                    database_item=eol_material, 
-                                    qty=waste_qty, 
-                                    unit=waste_unit, 
-                                    process_mix=eol_mix,
-                                    bio_based=False)
-            
+        waste_obj = Waste.new(self, 
+                            database_item=eol_material, 
+                            qty=waste_qty, 
+                            unit=waste_unit, 
+                            process_mix=eol_mix,
+                            bio_based=self.get_bio_based(),)
+
         self.waste_obj = waste_obj
 
         del eol_mix_data
@@ -420,6 +418,38 @@ class Product(Master):
             EOL product name.
         """
         self.eol_material = eol_material
+
+        return self
+    
+    def set_bio_based(self, bio_based, bio_percentage=None):
+        """ Set the bio-based nature of the material.
+        
+        Parameters
+        ----------
+        bio_based : bool
+            True if the material is bio-based. 
+        bio_percentage : float
+            Percentage of biogenic content in the bio-based material (0 - 100). If None, set to 1.0 if bio_based is True, else 0.0.
+        
+        Raises
+        ------
+        ValueError
+            If bio_based is not a boolean or bio_percentage is not between 0.00 and 1.00.
+        """
+        if isinstance(bio_based, (bool, np_bool)):
+            self.bio_based = bio_based
+        else:
+            raise ValueError("Bio-based nature needs to be a boolean.")
+        
+        if bio_percentage is None:
+            if self.bio_based:
+                self.bio_percentage = 100
+            else:
+                self.bio_percentage = 0.0
+        else:
+            if not (0.0 <= bio_percentage <= 100):
+                raise ValueError("Biogenic content percentage needs to be between 000 and 100.")
+            self.bio_percentage = bio_percentage
 
         return self
 
@@ -600,6 +630,16 @@ class Product(Master):
             True if the material is bio-based.   
         """
         return self.bio_based
+    
+    def get_bio_percentage(self):
+        """ Get the percentage of biogenic content in the bio-based material.
+        
+        Returns
+        -------
+        float
+            Percentage of biogenic content in the bio-based material (0 - 100).   
+        """
+        return self.bio_percentage
 
     def get_eol_material(self):
         """ Get the end-of-life product corresponding to the material.
@@ -655,6 +695,7 @@ class Product(Master):
         super().update_inventory_records()
         self.update_electricity_records()
 
+        # mineral carbonation potential
         if self.get_mineral_carbonation_potential() is None and self.get_impact_database_entry() is not None:
             data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
             key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
@@ -760,6 +801,51 @@ class Product(Master):
                     product_record = getattr(self, record_type)
                     product_record -= getattr(self.electricity["from_database"], method_name)()
                     product_record += getattr(self.electricity["by_location"], method_name)()
+
+        return self
+    
+    def update_unit_carbon_storage(self):
+        """ Compute the unit carbon storage of the product.
+
+        Returns
+        -------
+        dict
+            Carbon storage quantity of the product.
+        """
+        carbon_storage = {"Biogenic C": 0.0, # TODO: this detaches from config setup
+                          "Mineral C": 0.0}
+        
+        database = self.get_impact_database()
+        database_item = self.get_impact_database_entry()
+
+        # Biogenic carbon storage
+        if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
+            self.set_bio_based(True)
+            bio_percentage = self.get_bio_percentage()
+            species = database.get_data_entry(database_item)["Biomaterial Species"].strip()
+            region = database.get_data_entry(database_item)["Region"].strip()
+            material_form = database.get_data_entry(database_item)["Biomaterial Form"].strip()
+
+            moisture_content = get_moisture_content(species, region, material_form)
+            carbon_percentage = get_carbon_percentage(species, region, material_form)
+            
+            if self.get_weight() is not None:
+                unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
+                                                                                                wet_mass_unit=self.get_weight_unit(),
+                                                                                                moisture_content=moisture_content,
+                                                                                                carbon_percentage_dry=carbon_percentage)                
+                
+                # TODO: unit conversion ( from biogencic carbon unit to record unit in config) self.unit_carbon_storage.get_categories(units=True)[1]["Biogenic C"]
+            else:
+                unit_biogenic_carbon_content = 0.0 # TODO: proper handling when weight is None
+
+
+            carbon_storage["Biogenic C"] = unit_biogenic_carbon_content * bio_percentage / 100.0
+
+        # Mineral carbonation uptake
+        carbon_storage["Mineral C"] = 0.0 # TODO: update logic for mineral carbonation uptake if any
+
+        self.unit_carbon_storage.update_qty(carbon_storage)
 
         return self
 

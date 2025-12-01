@@ -7,11 +7,9 @@ __version__ = "0.1.0"
 from pod_lca.building import Building
 from pod_lca.building import Assembly
 from pod_lca.building import Material
-from pod_lca.impacts import Impacts
 from pod_lca.location import Location
 from pod_lca.units import KILOGRAM
 from pod_lca.units import MEGA
-from pod_lca.units import METER
 from pod_lca.units import WATT_HOUR
 
 # create building

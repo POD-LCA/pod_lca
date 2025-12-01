@@ -1,0 +1,10 @@
+﻿Material,Process,emitted as CH4 (%),emitted as CO2 (%),Temporal Emission Profile
+Bamboo,Landfill,1,11,Exponential decay
+Wood,Recycle,0,0,N/A
+Wood,Compost,0,0,N/A
+Wood,Incinerate,0,100,Pulse
+Wood,Landfill,1,11,Exponential decay
+Agricultural Residues- High Lignin,Landfill,8,7,Exponential decay
+Agricultural Residues- Low Lignin,Landfill,23,23,Exponential decay
+Cellulose,Landfill,8,8,Exponential decay
+Fungi,Landfill,42,42,Exponential decay

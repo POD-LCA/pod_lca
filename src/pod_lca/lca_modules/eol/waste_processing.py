@@ -4,8 +4,11 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+
 from ..impacts import Impacts
 from ..impacts import Emissions
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class WasteProcess:
@@ -346,6 +349,20 @@ class WasteProcess:
 
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.convert_to(unit)
+
+        bio_carbon_emissions = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_STORED_CARBON_EMISSIONS'])
+        data = bio_carbon_emissions[
+            (bio_carbon_emissions['Material'] == material) &
+            (bio_carbon_emissions['Process'] == process)
+        ]
+        if not data.empty:
+            percentage_bio = self.get_parent().bio_percentage
+            
+            percentage_as_CH4 = data['emitted as CH4 (%)'].values[0]
+            percentage_as_C02 = data['emitted as CO2 (%)'].values[0]
+
+            carbon_storage = self.unit_carbon_storage
+            # TODO: Do carbon calculation here and add to impacts/emissions
 
         impacts = {key: database_entry[key] * conversion_factor for key in self.unit_impacts.record_attr_dict}
         emissions = {key: database_entry[key] * conversion_factor for key in self.unit_emissions.record_attr_dict}

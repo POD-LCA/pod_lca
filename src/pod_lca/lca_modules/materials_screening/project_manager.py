@@ -269,7 +269,17 @@ class Project:
             End-of-Life impacts database.
         """
         return self.eol_impact_database
-    
+
+    def get_eol_transport_dataset(self):
+        """ Get transportation dataset for the end-of-life impacts.
+
+        Returns
+        -------
+        ~pod_lca.transportation.TransportDataset
+            End-of-life transportation dataset.
+        """
+        return self.eol_transport_dataset
+        
     def get_location(self):
         """Retrieve the location of the project.
 

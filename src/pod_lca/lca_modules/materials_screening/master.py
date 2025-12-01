@@ -94,7 +94,7 @@ class Master:
             Name of the item.
         model : ~pod_lca.materials_screening.Model
             Model in which the item is created.
-        stage : {'A1', 'A3'}
+        stage : {"A1", 'A3'}
             LCA stage.
             - 'A1': Raw materials supply.
             - 'A3': manufacturing.
@@ -231,7 +231,7 @@ class Master:
         else:
             database = self.get_impact_database()
 
-            unit_inventories = database.get_data_entry(self.get_impact_database_entry()).fillna(0.0)
+            unit_inventories = database.get_data_entry(database_item).fillna(0.0)
             self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
             self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
 
@@ -241,13 +241,25 @@ class Master:
             emissions = {key: unit_inventories[key] for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
-            carbon_storage = {key: unit_inventories[key] for key in self.unit_carbon_storage.get_categories()}
-            self.unit_carbon_storage.update_qty(carbon_storage)
-
+            self.update_unit_carbon_storage()
+            
             del unit_inventories
 
         return self
 
+    def update_unit_carbon_storage(self):
+        """Compute the carbon storage of the product. To be implemented in child classes.
+
+        Returns
+        -------
+        dict
+            Carbon storage quantity of the product.
+        """
+        carbon_storage = {"Biogenic C": 0.0, "Mineral C": 0.0}
+        self.unit_carbon_storage.update_qty(carbon_storage)
+        
+        return self
+        
     def set_qty(self, qty):
         """Update the qty of the item.
             This will also re-calculate the corresponding impact quantities.

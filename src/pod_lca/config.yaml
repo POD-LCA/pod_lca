@@ -84,6 +84,7 @@ file_paths:
     EOL_DEFAULT_MIXES: data/eol_podlca_default-mixes.csv
     EOL_DEMOLITION_IMPACTS: data/impacts_podlca_eol-demolition-impacts.csv
     EOL_PROCESS_IMPACTS: data/impacts_podlca_eol-process-impacts.csv
+    EOL_STORED_CARBON_EMISSIONS: data/eol_podlca_stored-carbon-emissions.csv
   impacts:
     IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
     IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv

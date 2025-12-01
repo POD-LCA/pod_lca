@@ -448,18 +448,19 @@ class Model:
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
 
-        if "sctg_code" in kwargs:
-            product.set_sctg_code(kwargs["sctg_code"])
         if "density" in kwargs:
             product.set_density(kwargs["density"])
             product.set_density_unit(kwargs["density_unit"])
-        if "eol_material" in kwargs:
-            product.eol_material = kwargs["eol_material"]
-            database = self.get_project().get_impact_database()
-            product.bio_based = database.get_data_entry(impacts_from)["Stored Biogenic Carbon"]
+        else:
+            product.set_density()
 
         if not kwargs.get("ignore_transport", False):
-            product.set_transportation()
+            if "sctg_code" in kwargs:
+                product.set_sctg_code(kwargs["sctg_code"])
+                product.set_transportation()
+
+        if "eol_material" in kwargs:
+            product.eol_material = kwargs["eol_material"]
 
         product.set_production_year(self.get_project().get_year())
 

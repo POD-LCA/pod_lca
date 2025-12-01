@@ -48,6 +48,8 @@ def get_biogenic_carbon_content(**kwargs):
         Dry density of the product.
     dry_desnity_unit : ~pod_lca.units.Unit
         Unit corresponding to the dry density of the product.
+    carbon_percentage_dry : float
+        Carbon percentage on dry basis (0.00 - 1.00).
     moisture_content : float
         Moisture content of the wet product.
     volume : float
@@ -70,7 +72,7 @@ def get_biogenic_carbon_content(**kwargs):
     :class:`~pod_lca.units.Unit`
         Corresponding unit of the biogenic carbon content.
     """
-    carbon_percentage_dry = kwargs.get("%C dry", 0.0)
+    carbon_percentage_dry = kwargs.get("carbon_percentage_dry", 0.0)
 
     dry_mass = kwargs.get("dry_mass", None)
     dry_mass_unit = kwargs.get("dry_mass_unit", KILOGRAM)

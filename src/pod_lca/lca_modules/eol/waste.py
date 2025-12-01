@@ -89,7 +89,7 @@ class Waste(Product):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, parent, database_item, qty, unit, process_mix, bio_based=False, **kwargs):
+    def new(cls, parent, database_item, qty, unit, process_mix, bio_based=False):
         """Create new waste product.
 
         Parameters
@@ -108,27 +108,6 @@ class Waste(Product):
         bio_based : bool
             True if the material is bio-based.
 
-        Other Parameters
-        ----------------
-        bio_percentage : float
-            Percentage of bio-based content in the material.
-        species : str
-            Species identifier.
-        region : {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
-            Region of origin of the product.
-            -   'AU': Australia
-            -   'CA': Canada
-            -   'CD': Congo, the Democratic Republic of the
-            -   'CN': China
-            -   'GLO': Global
-            -   'IN': India
-            -   'RER': Europe
-            -   'RNA': North America
-            -   'US': United States
-            -   'US-MT': United States, Montana
-        material_form : str
-            Final form of the product.
-
         Returns
         -------
         ~pod_lca.eol.Waste
@@ -138,7 +117,7 @@ class Waste(Product):
 
         waste_item.set_parent(parent)
         waste_item.set_name("Waste " + database_item)
-        waste_item.set_bio_based(bio_based, **kwargs)
+        waste_item.set_bio_based(bio_based)
         waste_item.set_impact_database_entry(database_item)
         waste_item.set_qty(qty)
         waste_item.set_unit(unit)
@@ -289,11 +268,6 @@ class Waste(Product):
         else:
             self.bio_based = is_bio_based
 
-        if is_bio_based:
-            self.bio_percentage = kwargs.get("bio_percentage", 100.0)
-            self.species = kwargs.get("species", "unspecified")
-            self.region = kwargs.get("region", "unspecified")
-            self.material_form = kwargs.get("material_form", "unspecified")
 
         return self
 
@@ -362,6 +336,64 @@ class Waste(Product):
             for emission in emission_lst:
                 pulse = UniformEmissionProfile.unit_pulse(at=year)
                 emission.set_temporal_emission_profile(pulse)
+
+        return self
+    
+    def set_bio_percentage(self, bio_percentage):
+        """Set percentage of bio-based content in the material.
+
+        Parameters
+        ----------
+        bio_percentage : float
+            Percentage of bio-based content in the material.
+        """
+        self.bio_percentage = bio_percentage
+
+        return self
+    
+    def set_species(self, species):
+        """Set species identifier.
+
+        Parameters
+        ----------
+        species : str
+            Species identifier.
+        """
+        self.species = species
+
+        return self
+    
+    def set_region(self, region):
+        """Set region of origin.
+
+        Parameters
+        ----------
+        region : {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
+            Region of origin of the product.
+            -   'AU': Australia
+            -   'CA': Canada
+            -   'CD': Congo, the Democratic Republic of the
+            -   'CN': China
+            -   'GLO': Global
+            -   'IN': India
+            -   'RER': Europe
+            -   'RNA': North America
+            -   'US': United States
+            -   'US-MT': United States, Montana
+        """
+        self.region = region
+
+        return self
+    
+    def set_material_form(self, material_form):
+        """Set final form of the product.
+
+        Parameters
+        ----------
+        material_form : str
+            Final form of the product.
+        """
+        self.material_form = material_form
 
         return self
 
@@ -453,6 +485,56 @@ class Waste(Product):
             Year in which the waste is generated.
         """
         return self.production_year
+    
+    def get_bio_percentage(self):
+        """Get percentage of bio-based content in the material.
+
+        Returns
+        -------
+        float
+            Percentage of bio-based content in the material.
+        """
+        return self.bio_percentage
+    
+    def get_species(self):
+        """Get species identifier.
+
+        Returns
+        -------
+        str
+            Species identifier.
+        """
+        return self.species
+    
+    def get_region(self):
+        """Get region of origin.
+
+        Returns
+        -------
+        {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
+            Region of origin of the product.
+            -   'AU': Australia
+            -   'CA': Canada
+            -   'CD': Congo, the Democratic Republic of the
+            -   'CN': China
+            -   'GLO': Global
+            -   'IN': India
+            -   'RER': Europe
+            -   'RNA': North America
+            -   'US': United States
+            -   'US-MT': United States, Montana
+        """
+        return self.region
+    
+    def get_material_form(self):
+        """Get final form of the product.
+
+        Returns
+        -------
+        str
+            Final form of the product.
+        """
+        return self.material_form
 
     def get_eol_process_impact_database(self):
         """Get the end-of-life product database corresponding to the project.
@@ -468,34 +550,77 @@ class Waste(Product):
 
         return self.get_parent().get_eol_demolition_database()
 
+    def get_impacts(self, demolition=True, transportation=True, processing=True):
+        """Retrieve the impacts of the product/process.
+
+        Parameters
+        ----------
+        demolition : bool   
+            Include demolition impacts.
+        transportation : bool
+            Include transportation impacts.
+        processing: bool
+            Include processing impacts.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            Impacts of the product/process.
+        """
+        self.update_inventory_records(demolition, transportation, processing)
+
+        return self.impacts
+    
+    def get_emissions(self, demolition=True, transportation=True, processing=True):
+        """Retrieve the emissions of the product/process.
+
+        Parameters
+        ----------
+        demolition : bool   
+            Include demolition impacts.
+        transportation : bool
+            Include transportation impacts.
+        processing: bool
+            Include processing impacts.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Emissions
+            Emissions of the product/process.
+        """
+        self.update_inventory_records(demolition, transportation, processing)
+
+        return self.emissions    
     # ================================
     # Methods
     # ================================
-    def update_inventory_records(self):
+    def update_inventory_records(self, demolition=True, transportation=True, processing=True):
         """Update the demolition (C1), transportation (C2), and processing (C3-C4) impacts of waste."""
         self.update_waste_process_mix()
         if self.get_waste_processes():
             if not self._inventory_records_uptodata:
                 self._inventory_records_uptodata = True
 
-                # C1 impacts
-                demolition_impact_database = self.get_demolition_impact_database()
-                database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
-                declared_unit = database_entry[demolition_impact_database.get_unit_key()]
-                declared_qty = database_entry[demolition_impact_database.get_qty_key()]
-                conversion_factor = declared_unit.convert_to(self.get_unit())
+                if demolition:
+                    # C1 impacts
+                    demolition_impact_database = self.get_demolition_impact_database()
+                    database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
+                    declared_unit = database_entry[demolition_impact_database.get_unit_key()]
+                    declared_qty = database_entry[demolition_impact_database.get_qty_key()]
+                    conversion_factor = declared_unit.convert_to(self.get_unit())
 
-                impacts_data = {
-                    key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
-                    for key in self.impacts["C1"].record_attr_dict
-                }
-                emissions_data = {
-                    key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
-                    for key in self.emissions["C1"].record_attr_dict
-                }
+                    impacts_data = {
+                        key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
+                        for key in self.impacts["C1"].record_attr_dict
+                    }
+                    emissions_data = {
+                        key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
+                        for key in self.emissions["C1"].record_attr_dict
+                    }
 
-                self.impacts["C1"].update_qty(impacts_data)
-                self.emissions["C1"].update_qty(emissions_data)
+                    self.impacts["C1"].update_qty(impacts_data)
+                    self.emissions["C1"].update_qty(emissions_data)
+
 
                 impacts = self.impacts
                 for key in impacts.keys():
@@ -508,16 +633,18 @@ class Waste(Product):
                         emissions[key] = []
 
                 for process in self.get_waste_processes():
-                    # C3-C4 impacts
-                    process_impact = process.get_unit_impacts() * process.get_qty()
-                    process_emission = process.get_unit_emissions() * process.get_qty()
-                    impacts[process.get_life_cycle_stage()].append(process_impact)
-                    emissions[process.get_life_cycle_stage()].append(process_emission)
+                    if processing: 
+                        # C3-C4 impacts
+                        process_impact = process.get_unit_impacts() * process.get_qty()
+                        process_emission = process.get_unit_emissions() * process.get_qty()
+                        impacts[process.get_life_cycle_stage()].append(process_impact)
+                        emissions[process.get_life_cycle_stage()].append(process_emission)
 
                     if process.get_transportation_leg() is not None:
-                        # C2 impacts
-                        impacts["C2"].append(process.get_transportation_leg().get_impacts())
-                        emissions["C2"].append(process.get_transportation_leg().get_emissions())
+                        if transportation:
+                            # C2 impacts
+                            impacts["C2"].append(process.get_transportation_leg().get_impacts())
+                            emissions["C2"].append(process.get_transportation_leg().get_emissions())
 
                 self.set_production_year(self.get_production_year())
 
