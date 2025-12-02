@@ -481,8 +481,8 @@ class Master:
 
         Returns
         -------
-        dict
-            Distributions Datasets corresponding to attributes: {**attr** (:class:`str`): :class:`~pod_lca.uncertainty.DataDistribution`}.
+        ~pod_lca.uncertainty.PedigreeScore
+            Data quality indicator for the object
         """
         return self.pedigree_score
 
