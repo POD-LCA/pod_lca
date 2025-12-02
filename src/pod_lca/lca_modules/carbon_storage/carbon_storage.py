@@ -26,6 +26,28 @@ class CarbonStorage(Records):
     def __init__(self):
         super().__init__()
 
+    @classmethod
+    def get_bio_tag(cls):
+        """Get the biogenic carbon storage tag from the configuration file.
+
+        Returns
+        -------
+        bio_tag : str
+            The biogenic carbon storage tag.
+        """
+        bio_tag_candidates = [
+            k
+            for k in config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"].keys()
+            if "bio" in k.lower()
+        ]
+        if len(bio_tag_candidates) == 1:
+            bio_tag = bio_tag_candidates[0]
+        else:
+            raise KeyError(
+                "Biogenic carbon storage tag not recognized in the configuration file."
+            )
+        return bio_tag
+
 
 if __name__ == "__main__":
     pass

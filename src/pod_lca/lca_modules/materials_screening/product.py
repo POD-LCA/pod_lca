@@ -10,10 +10,10 @@ from numpy import bool_ as np_bool
 
 from . import Master
 from . import Electricity
-from ..carbon_stroage import CarbonStorage
-from ..carbon_stroage import get_carbon_percentage
-from ..carbon_stroage import get_moisture_content
-from ..carbon_stroage import get_biogenic_carbon_content
+from ..carbon_storage import CarbonStorage
+from ..carbon_storage import get_carbon_percentage
+from ..carbon_storage import get_moisture_content
+from ..carbon_storage import get_biogenic_carbon_content
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
@@ -826,12 +826,7 @@ class Product(Master):
         database_item = self.get_impact_database_entry()
 
         # Biogenic carbon storage
-        bio_tag_candidates = [k for k in config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"].keys() if "bio" in k.lower()]
-        if len(bio_tag_candidates) == 1:
-            bio_tag = bio_tag_candidates[0]
-        else:
-            raise KeyError("Biogenic carbon storage tag not recognized in the configuration file.")
-        
+        bio_tag = CarbonStorage.get_bio_tag()
         if "Stored Biogenic Carbon" in database.get_data_entry(database_item):
             if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
                 self.set_bio_based(True)
@@ -843,15 +838,20 @@ class Product(Master):
                 moisture_content = get_moisture_content(species, region, material_form)
                 carbon_percentage = get_carbon_percentage(species, region, material_form)
                 
-                if self.get_weight() is not None:
+                if self.get_unit().get_qty_measured() == "mass":
                     unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
-                                                                                                    wet_mass_unit=self.get_weight_unit(),
-                                                                                                    moisture_content=moisture_content,
-                                                                                                    carbon_percentage_dry=carbon_percentage)                
-                    
+                                                                                                     wet_mass_unit=self.get_unit(),
+                                                                                                     moisture_content=moisture_content,
+                                                                                                     carbon_percentage_dry=carbon_percentage) 
                 else:
-                    unit_biogenic_carbon_content = 0.0 # TODO: proper handling when weight is None
-                    biogenic_carbon_unit = UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]]
+                    if self.get_density() is None:
+                        self.set_density()          
+                    unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(volume=1.0,
+                                                                                                     volume_unit=self.get_unit(),
+                                                                                                     wet_density=self.get_density(),
+                                                                                                     wet_density_unit=self.get_density_unit(),
+                                                                                                     moisture_content=moisture_content,
+                                                                                                     carbon_percentage_dry=carbon_percentage) 
 
                 conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
                 carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0

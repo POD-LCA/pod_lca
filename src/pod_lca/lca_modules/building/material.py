@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 from math import isnan
 
-from ..carbon_stroage import CarbonStorage
+from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile

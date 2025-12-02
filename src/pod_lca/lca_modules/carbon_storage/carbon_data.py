@@ -93,7 +93,7 @@ def get_carbon_percentage(species=None, region=None, material_form=None):
     material_form : str
         Final form of the product. Search is case insensitive.
     """
-    return _get_carbon_data('carbon percentage', species, region, material_form)
+    return _get_carbon_data('carbon percentage', species, region, material_form) / 100 # convert to fraction
 
 def get_moisture_content(species, region, material_form):
     """ Get moisture content at green condition.
