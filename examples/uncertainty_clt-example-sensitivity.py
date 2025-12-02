@@ -18,43 +18,51 @@ from pod_lca.units import KILO
 
 project = Project()
 
-factory = Location.from_str("98126, seattle")
+factory = Location.from_str("Seattle, Washington")
 project.set_location(factory)
+project.set_year(2025)
 
-custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(
-    r"src/pod_lca/data/impacts_podlca_material-data.csv",
-    impact_headers_map={"GWP": "GWP", "AP": "AP", "EP": "EP", "ODP": "ODP", "SFP": "POCP"},
+pod_lca_impact_database = ImpactsDatabase.new("pod_lca_impact_database")
+pod_lca_impact_database.set_data(
+    r"src/pod_lca/data/impacts_podlca_data.csv",
+    grouped_data="Electricity",
+    density_headers=["Density (dry basis)", "Density unit"],
 )
-custom_impact_database.set_data_entry(
-    "Electricity_New",
-    1.0,
-    KILO * WATT_HOUR,
-    impacts={"GWP": 0.503, "AP": 0.0036, "EP": 5.83e-05, "ODP": 7.6e-11, "POCP": 3.37e-2},
-)
-project.set_impact_database(custom_impact_database)
+project.set_impact_database(pod_lca_impact_database)
+
+project.set_transportation_mode_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
 
 CLT_model = project.add_model("CLT_01")
 
-lumber = CLT_model.add_product(name="Lumber", stage="A1", qty=562.75, unit=KILOGRAM, impacts_from="Lumber_[CORRIM_LCA]")
+lumber = CLT_model.add_product(
+    name="Lumber",
+    stage="A1",
+    qty=1.21,
+    unit=CUBIC_METER,
+    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW",
+    sctg_code=26,
+)
 meth_diphenyl_d = CLT_model.add_product(
     name="Methylene diphenyl diisocyanate resin",
     stage="A1",
     qty=3.22,
     unit=KILOGRAM,
-    impacts_from="Methylene diphenyl diisocyanate resin_[FHWA_MTU]",
-    sctg_code=26,
+    impacts_from="Methylene diphenyl diisocyanate, MDI, at plant, US PNW",
+    sctg_code=28,
 )
 prop_glycol = CLT_model.add_product(
-    name="Propylene glycol", stage="A1", qty=2.77, unit=KILOGRAM, impacts_from="Propylene glycol_[ecoinvent]"
+    name="Propylene glycol",
+    stage="A1",
+    qty=2.77,
+    unit=KILOGRAM,
+    impacts_from="Ethylene glycol, materials production, organic compound, at plant, kg",
+    sctg_code=28,
 )
 dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None, sctg_code=28)
 dummy_PUR_2 = CLT_model.add_product(name="PUR_2", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None, sctg_code=28)
 dummy_PUR_3 = CLT_model.add_product(name="PUR_3", stage="A1", qty=0.01, unit=KILOGRAM, impacts_from=None, sctg_code=28)
+
 electricity = CLT_model.add_electricity(name="Electricity", stage="A3", qty=128.75, unit=KILO * WATT_HOUR)
-natural_gas = CLT_model.add_energy(
-    name="Natural gas", stage="A3", qty=2.63, unit=CUBIC_METER, impacts_from="Natural gas_insustrial_equipment_[USLCI]"
-)
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
@@ -82,24 +90,23 @@ lumber.get_pedigree_score().update_pedigree_scores(
         "technological representativeness": 4,
     }
 )
-DQS, nDQS = data_quality_assessment.calculate_model_DQS("GWP")
-data_quality_assessment.print_results()
+DQS = data_quality_assessment.get_model_DQS("GWP")
+print(data_quality_assessment)
 
-# # Sensitivity Analysis
+# Sensitivity Analysis
 result_range = SensitivityAnalysis.compute_sensitivity_of_param(
     electricity,
     "impact_database_entry",
     impact_cat="GWP",
     options=["Electricity_NWPP(eGrid)_[USLCI]", "Electricity_UnknownHigh_[USLCI]", "Electricity_UnknownLow_[USLCI]"],
 )
-result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber, "qty", impact_cat="GWP", range=(506.48, 619.03))
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber, "qty", impact_cat="GWP", range=(0.96, 1.46))
 result_range = SensitivityAnalysis.compute_sensitivity_of_params(
     CLT_model,
     [
-        {"obj": lumber_by_truck, "param": "transported_distance", "range": (226.57, 453.13)},
-        {"obj": PUR1_by_truck, "param": "transported_distance", "range": (1620, 3240)},
-        {"obj": PUR2_by_truck, "param": "transported_distance", "range": (48600, 97200)},
+        {"obj": lumber.get_transportation()[0], "param": "travel_dist", "range": (20, 200)},
+        {"obj": dummy_PUR_1.get_transportation()[0], "param": "travel_dist", "range": (10, 200)},
+        {"obj": dummy_PUR_2.get_transportation()[0], "param": "travel_dist", "range": (10, 350)},
     ],
     impact_cat="GWP",
 )
-# FIXME: Example to be fixed to extract transportation impacts
