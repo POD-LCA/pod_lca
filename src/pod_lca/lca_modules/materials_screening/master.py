@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ..impacts import CarbonStorage
+from ..carbon_stroage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ...utilities import log
@@ -255,7 +255,9 @@ class Master:
         dict
             Carbon storage quantity of the product.
         """
-        carbon_storage = {"Biogenic C": 0.0, "Mineral C": 0.0}
+        carbon_storage = self.unit_carbon_storage.get_record_dict()
+        for category in carbon_storage:
+            carbon_storage[category] = 0.0
         self.unit_carbon_storage.update_qty(carbon_storage)
         
         return self

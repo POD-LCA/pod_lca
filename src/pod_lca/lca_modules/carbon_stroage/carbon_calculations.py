@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from ...units import CUBIC_METER
 from ...units import KILOGRAM
+from ...units import KG_CARBON
 from ...units import METER
 from ...units import SQUARE_METER
 from ...utilities import config
@@ -84,7 +85,8 @@ def get_biogenic_carbon_content(**kwargs):
         dry_mass_unit = wet_mass_unit
 
     if dry_mass is not None:
-        return dry_mass * carbon_percentage_dry, dry_mass_unit
+        conversion_factor = dry_mass_unit.convert_to(KILOGRAM)
+        return dry_mass * conversion_factor * carbon_percentage_dry, KG_CARBON
 
     volume = kwargs.get("volume", None)
     volume_unit = kwargs.get("volume_unit", CUBIC_METER)
@@ -92,7 +94,9 @@ def get_biogenic_carbon_content(**kwargs):
     dry_density_unit = kwargs.get("dry_desnity_unit", KILOGRAM / CUBIC_METER)
 
     if (volume is not None) and (dry_density is not None):
-        return volume * dry_density * carbon_percentage_dry, volume_unit * dry_density_unit
+        mass_unit = volume_unit * dry_density_unit
+        conversion_factor = mass_unit.convert_to(KILOGRAM)
+        return volume * dry_density * conversion_factor * carbon_percentage_dry, KG_CARBON
 
     area = kwargs.get("area", None)
     area_unit = kwargs.get("area_unit", SQUARE_METER)
@@ -100,11 +104,13 @@ def get_biogenic_carbon_content(**kwargs):
     thickness_unit = kwargs.get("thickness_unit", METER)
 
     if (area is not None) and (thickness is not None) and (dry_density is not None):
-        return area * thickness * dry_density * carbon_percentage_dry, area_unit * thickness_unit * dry_density_unit
+        mass_unit = area_unit * thickness_unit * dry_density_unit
+        conversion_factor = mass_unit.convert_to(KILOGRAM)
+        return area * thickness * dry_density * conversion_factor * carbon_percentage_dry, KG_CARBON
 
     log("Data insuficient to determine carbon content.", "Warn")
 
-    return 0, KILOGRAM
+    return 0, KG_CARBON
 
 
 def get_biogenic_carbon_dioxide_content(biogenic_carbon_content):

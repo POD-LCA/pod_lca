@@ -5,16 +5,13 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-import gc
 from math import isnan
 
-from ..eol.waste import Waste
-from ..impacts import CarbonStorage
+from ..carbon_stroage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
 from ..materials_screening import Product
-from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter

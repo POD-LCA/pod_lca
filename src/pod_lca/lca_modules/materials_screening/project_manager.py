@@ -73,6 +73,7 @@ class Project:
         new_project = cls()
 
         new_project.set_name(name)
+        new_project.set_databases()
 
         return new_project
 

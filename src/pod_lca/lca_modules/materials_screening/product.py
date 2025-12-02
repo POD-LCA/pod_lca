@@ -10,11 +10,10 @@ from numpy import bool_ as np_bool
 
 from . import Master
 from . import Electricity
+from ..carbon_stroage import CarbonStorage
 from ..carbon_stroage import get_carbon_percentage
-from ..carbon_stroage import get_dry_density
 from ..carbon_stroage import get_moisture_content
 from ..carbon_stroage import get_biogenic_carbon_content
-from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
@@ -807,18 +806,27 @@ class Product(Master):
     def update_unit_carbon_storage(self):
         """ Compute the unit carbon storage of the product.
 
+        Notes
+        -----
+        1. Biogenic carbon storage is recorded under the tag containing "bio" in the configuration file.
+
         Returns
         -------
         dict
             Carbon storage quantity of the product.
         """
-        carbon_storage = {"Biogenic C": 0.0, # TODO: this detaches from config setup
-                          "Mineral C": 0.0}
+        carbon_storage = self.unit_carbon_storage.get_record_dict()
         
         database = self.get_impact_database()
         database_item = self.get_impact_database_entry()
 
         # Biogenic carbon storage
+        bio_tag_candidates = [k for k in config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"].keys() if "bio" in k.lower()]
+        if len(bio_tag_candidates) == 1:
+            bio_tag = bio_tag_candidates[0]
+        else:
+            raise KeyError("Biogenic carbon storage tag not recognized in the configuration file.")
+        
         if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
             self.set_bio_based(True)
             bio_percentage = self.get_bio_percentage()
@@ -835,12 +843,12 @@ class Product(Master):
                                                                                                 moisture_content=moisture_content,
                                                                                                 carbon_percentage_dry=carbon_percentage)                
                 
-                # TODO: unit conversion ( from biogencic carbon unit to record unit in config) self.unit_carbon_storage.get_categories(units=True)[1]["Biogenic C"]
             else:
                 unit_biogenic_carbon_content = 0.0 # TODO: proper handling when weight is None
+                biogenic_carbon_unit = UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]]
 
-
-            carbon_storage["Biogenic C"] = unit_biogenic_carbon_content * bio_percentage / 100.0
+            conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
+            carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0
 
         # Mineral carbonation uptake
         carbon_storage["Mineral C"] = 0.0 # TODO: update logic for mineral carbonation uptake if any
