@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-
+from ..carbon_storage import CarbonStorage
 from ..impacts import Impacts
 from ..impacts import Emissions
 from ...utilities import config
@@ -350,20 +350,36 @@ class WasteProcess:
         declared_unit = database_entry[database.get_unit_key()]
         conversion_factor = declared_unit.convert_to(unit)
 
+        # biogenic carbon effects
+        bio_tag = CarbonStorage.get_bio_tag()
         bio_carbon_emissions = DataImporter.csv_to_pandas(config['file_paths']['eol']['EOL_STORED_CARBON_EMISSIONS'])
         data = bio_carbon_emissions[
             (bio_carbon_emissions['Material'] == material) &
             (bio_carbon_emissions['Process'] == process)
         ]
         if not data.empty:
-            percentage_bio = self.get_parent().bio_percentage
+            if self.get_parent().get_parent().get_unit().get_qty_measured() == "mass":
+                waste_conversion_factor = self.get_parent().get_parent().get_unit().convert_to(unit)
+            else:
+                waste_conversion_factor = (1 / self.get_parent().get_parent().get_density()) * self.get_parent().get_parent().get_weight_unit().convert_to(unit)
+                    
+            bio_carbon_storage = self.get_parent().get_parent().unit_carbon_storage.get_record(bio_tag) * waste_conversion_factor
             
-            percentage_as_CH4 = data['emitted as CH4 (%)'].values[0]
-            percentage_as_C02 = data['emitted as CO2 (%)'].values[0]
+            molecular_weights = DataImporter.json_to_dict(config["file_paths"]["drf"]["MOLECULER_WEIGHT"])
 
-            carbon_storage = self.get_parent().unit_carbon_storage
-            # TODO: Do carbon calculation here and add to impacts/emissions
+            unit_CH4_emissions = bio_carbon_storage * (data['emitted as CH4 (%)'].values[0] / 100) * molecular_weights['CO2'] / molecular_weights['C']
+            unit_C02_emissions = bio_carbon_storage * (data['emitted as CO2 (%)'].values[0] / 100) * molecular_weights['CH4'] / molecular_weights['C']
 
+            self.unit_emissions.update_qty({"CO2": self.unit_emissions.get_record("CO2") + unit_C02_emissions * conversion_factor,
+                                            "CH4": self.unit_emissions.get_record("CH4") + unit_CH4_emissions * conversion_factor})
+
+            from ..dynamic_radiative_forcing import DynamicRadiativeForcing
+            drf_calcualator = DynamicRadiativeForcing()
+
+            self.unit_impacts.update_qty({"GWP": self.unit_impacts.get_record("GWP") + 
+                                          unit_C02_emissions * drf_calcualator.get_GWP("CO2", time_horizon=100) * conversion_factor +
+                                          unit_CH4_emissions * drf_calcualator.get_GWP("CH4", time_horizon=100) * conversion_factor})
+        
         impacts = {key: database_entry[key] * conversion_factor for key in self.unit_impacts.record_attr_dict}
         emissions = {key: database_entry[key] * conversion_factor for key in self.unit_emissions.record_attr_dict}
 

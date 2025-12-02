@@ -626,7 +626,6 @@ class Waste(Product):
                     self.impacts["C1"].update_qty(impacts_data)
                     self.emissions["C1"].update_qty(emissions_data)
 
-
                 impacts = self.impacts
                 for key in impacts.keys():
                     if key != "C1":

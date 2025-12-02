@@ -12,7 +12,6 @@ setup:
     EMISSION_INVENTORIES:
       CO2: kg
       CH4: kg
-      CH4 fossil: kg
       N2O: kg
     CARBON_STORAGE:
       Biogenic C: kg C
