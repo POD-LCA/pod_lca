@@ -361,7 +361,7 @@ class WasteProcess:
             percentage_as_CH4 = data['emitted as CH4 (%)'].values[0]
             percentage_as_C02 = data['emitted as CO2 (%)'].values[0]
 
-            carbon_storage = self.unit_carbon_storage
+            carbon_storage = self.get_parent().unit_carbon_storage
             # TODO: Do carbon calculation here and add to impacts/emissions
 
         impacts = {key: database_entry[key] * conversion_factor for key in self.unit_impacts.record_attr_dict}

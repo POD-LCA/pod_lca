@@ -10,6 +10,7 @@ from . import WasteProcess
 from ..impacts import Impacts
 from ..impacts import Emissions
 from ..impacts import UniformEmissionProfile
+from ..materials_screening import Model
 from ..materials_screening import Product
 from ..transportation import WasteTransportLeg
 from ...utilities import config
@@ -550,7 +551,7 @@ class Waste(Product):
 
         return self.get_parent().get_eol_demolition_database()
 
-    def get_impacts(self, demolition=True, transportation=True, processing=True):
+    def get_impacts(self):
         """Retrieve the impacts of the product/process.
 
         Parameters
@@ -567,30 +568,34 @@ class Waste(Product):
         ~pod_lca.impacts.Impacts
             Impacts of the product/process.
         """
-        self.update_inventory_records(demolition, transportation, processing)
+        demolition=True
+        transportation=True
+        if isinstance(self.get_parent().get_parent(), Model): # No demolition for material scale EOL
+            demolition = False
+            transportation = False
+
+        self.update_inventory_records(demolition=demolition, transportation=transportation, processing=True)
 
         return self.impacts
     
-    def get_emissions(self, demolition=True, transportation=True, processing=True):
+    def get_emissions(self):
         """Retrieve the emissions of the product/process.
-
-        Parameters
-        ----------
-        demolition : bool   
-            Include demolition impacts.
-        transportation : bool
-            Include transportation impacts.
-        processing: bool
-            Include processing impacts.
 
         Returns
         -------
         ~pod_lca.impacts.Emissions
             Emissions of the product/process.
         """
-        self.update_inventory_records(demolition, transportation, processing)
+        demolition=True
+        transportation=True
+        if isinstance(self.get_parent().get_parent(), Model): # No demolition for material scale EOL
+            demolition = False
+            transportation = False
 
-        return self.emissions    
+        self.update_inventory_records(demolition=demolition, transportation=transportation, processing=True)
+
+        return self.emissions
+
     # ================================
     # Methods
     # ================================

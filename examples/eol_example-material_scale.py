@@ -29,14 +29,14 @@ lumber = CLT_model.add_product(
     impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW",
     sctg_code=26,
     eol_material="Wood",
-) #TOOD: specify production year
+)
 
 print(lumber.get_carbon_storage())
 
 # set material EOL
-lumber.set_waste_product() # TODO: specify waste year
+lumber.set_waste_product(expiry_year=2050)
 
-print(lumber.waste_obj.get_emissions(demolition=False, transportation=False,))
+print(lumber.waste_obj.get_emissions())
 
 # # impacts by cycle stage
 # impacts_dict = {}

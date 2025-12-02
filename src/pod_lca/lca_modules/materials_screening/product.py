@@ -253,8 +253,13 @@ class Product(Master):
 
         return self
 
-    def set_waste_product(self):
+    def set_waste_product(self, expiry_year=None):
         """ Set the end-of-life waste product of the material.
+
+        Parameters
+        ----------
+        expiry_year : int
+            Year when the product becomes waste. If None, set to production year.
         """
         from ..eol.waste import Waste
 
@@ -276,14 +281,14 @@ class Product(Master):
         else:
             log("A mix doesnt exist", 0)
 
-        waste_obj = Waste.new(self, 
+        self.waste_obj = Waste.new(self, 
                             database_item=eol_material, 
                             qty=waste_qty, 
                             unit=waste_unit, 
                             process_mix=eol_mix,
                             bio_based=self.get_bio_based(),)
 
-        self.waste_obj = waste_obj
+        self.waste_obj.set_production_year(expiry_year if expiry_year is not None else self.get_production_year())
 
         del eol_mix_data
         gc.collect()
@@ -827,28 +832,29 @@ class Product(Master):
         else:
             raise KeyError("Biogenic carbon storage tag not recognized in the configuration file.")
         
-        if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
-            self.set_bio_based(True)
-            bio_percentage = self.get_bio_percentage()
-            species = database.get_data_entry(database_item)["Biomaterial Species"].strip()
-            region = database.get_data_entry(database_item)["Region"].strip()
-            material_form = database.get_data_entry(database_item)["Biomaterial Form"].strip()
+        if "Stored Biogenic Carbon" in database.get_data_entry(database_item):
+            if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
+                self.set_bio_based(True)
+                bio_percentage = self.get_bio_percentage()
+                species = database.get_data_entry(database_item)["Biomaterial Species"].strip()
+                region = database.get_data_entry(database_item)["Region"].strip()
+                material_form = database.get_data_entry(database_item)["Biomaterial Form"].strip()
 
-            moisture_content = get_moisture_content(species, region, material_form)
-            carbon_percentage = get_carbon_percentage(species, region, material_form)
-            
-            if self.get_weight() is not None:
-                unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
-                                                                                                wet_mass_unit=self.get_weight_unit(),
-                                                                                                moisture_content=moisture_content,
-                                                                                                carbon_percentage_dry=carbon_percentage)                
+                moisture_content = get_moisture_content(species, region, material_form)
+                carbon_percentage = get_carbon_percentage(species, region, material_form)
                 
-            else:
-                unit_biogenic_carbon_content = 0.0 # TODO: proper handling when weight is None
-                biogenic_carbon_unit = UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]]
+                if self.get_weight() is not None:
+                    unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
+                                                                                                    wet_mass_unit=self.get_weight_unit(),
+                                                                                                    moisture_content=moisture_content,
+                                                                                                    carbon_percentage_dry=carbon_percentage)                
+                    
+                else:
+                    unit_biogenic_carbon_content = 0.0 # TODO: proper handling when weight is None
+                    biogenic_carbon_unit = UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]]
 
-            conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
-            carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0
+                conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
+                carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0
 
         # Mineral carbonation uptake
         carbon_storage["Mineral C"] = 0.0 # TODO: update logic for mineral carbonation uptake if any
