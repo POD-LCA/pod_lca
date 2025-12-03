@@ -13,7 +13,7 @@ emission_02 = Emissions.from_dict(record_dict={"CH4": 0.01})
 uniform = UniformEmissionProfile.from_params(start=2045, step=10)
 emission_02.set_temporal_emission_profile(uniform)
 
-emission_03 = Emissions.from_dict(record_dict={"CH4 fossil": 0.01})
+emission_03 = Emissions.from_dict(record_dict={"CH4": 0.01})
 norm = NormEmissionProfile.from_range(start=2060, range=10)
 emission_03.set_temporal_emission_profile(norm)
 emission_03.methane_bio_oxidation = 0.5

@@ -12,6 +12,9 @@ from pod_lca.units import KILOGRAM
 project = Project()
 
 custom_impact_database = ImpactsDatabase.new("My database")
+custom_impact_database.set_primary_key("Name")
+custom_impact_database.set_unit_key("Declared unit")
+custom_impact_database.set_qty_key("Declared qty")
 custom_impact_database.set_data(
     r"src/pod_lca/data/impacts_podlca_data.csv", additional_headers="Mineral Carbonation Potential"
 )

@@ -3,7 +3,11 @@ from pod_lca.impacts import ImpactsDatabase
 databse_path = "src/pod_lca/data/impacts_podlca_data.csv"
 
 impact_database = ImpactsDatabase.new("impact database")
-impact_database.set_data(databse_path, additional_headers=["Taxanomy", "Category", "Sub-category", "Description"])
+impact_database.set_primary_key("Name")
+impact_database.set_unit_key("Declared unit")
+impact_database.set_qty_key("Declared qty")
+impact_database.set_data(databse_path, 
+                         additional_headers=["Taxanomy", "Category", "Sub-category", "Description"])
 
 # impact_database.find('cement')
 
