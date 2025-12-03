@@ -30,23 +30,12 @@ lumber = CLT_model.add_product(
     sctg_code=26,
     eol_material="Wood",
 )
+lumber.set_bio_based(bio_based=True, bio_percentage=0.95)
 
 print(lumber.get_carbon_storage())
 
 # set material EOL
 lumber.set_waste_product(expiry_year=2050)
 
-print(lumber.waste_obj.get_emissions())
-
-# # impacts by cycle stage
-# impacts_dict = {}
-# emissions_dict = {}
-# for material in my_bamboo_roof.get_materials():
-#     for lc_stage in ["C1", "C2", "C3", "C4", "D"]:
-#         impacts_dict[lc_stage] = material.get_eol_impacts(lc_stage=lc_stage)
-#         emissions_dict[lc_stage] = material.get_eol_emissions(lc_stage=lc_stage)
-
-
-# for lc_stage, impact in impacts_dict.items():
-#     print(f"Life cycle stage: {lc_stage}")
-#     print(impact)
+drf_record = CLT_model.get_drf_record(time_horizon=100, time_step=1 / 12)
+drf_record.plot("instantaneous radiative forcing")

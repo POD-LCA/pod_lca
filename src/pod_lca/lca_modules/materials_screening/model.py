@@ -706,9 +706,10 @@ class Model:
 
         return self
 
-    def get_drf_record(self, time_horizon=100, time_step=1 / 12):
-        """Get the dynamic radiative forcing record for all the products and procesess in the model.
 
+    def get_drf_record(self, time_horizon=100, time_step=1/12):
+        """ Get the dynamic radiative forcing record for all the products and procesess in the model.
+        
         Parameters
         ----------
         time_horizon : int
@@ -721,9 +722,23 @@ class Model:
         ~pod_lca.drf.DynamicRadiativeForcingRecord
             Dynamic Radiative Forcing Record
         """
-        return DynamicRadiativeForcingRecord.from_products(
-            self.get_all_items(), self.get_project().get_year(), time_horizon, time_step
-        )
+        emissions_lst = []
+        for product in self.get_products():
+            product.update_inventory_records()
+            emissions_lst.append(product.get_emissions())
+            if product.get_transportation() is not None:
+                for transport_leg in product.get_transportation():
+                    emissions_lst.append(transport_leg.get_emissions())
+            if product.get_waste_product() is not None:
+                for item in product.get_waste_product().get_emissions().values():
+                    item = [item] if not isinstance(item, list) else item
+                    emissions_lst.extend(item)
+
+              
+        return DynamicRadiativeForcingRecord.from_emissions(emissions_lst, 
+                                                           self.get_project().get_year(), 
+                                                           time_horizon, 
+                                                           time_step)
 
 
 if __name__ == "__main__":
