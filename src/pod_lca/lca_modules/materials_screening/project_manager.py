@@ -142,7 +142,7 @@ class Project:
         if isinstance(file_path, (Path, str)):
             impact_database = TranportationModeImpactsDatabase.new("impact database")
             impact_database.set_data(file_path)
-            self.transport_impact_database = impact_database
+            self.transport_mode_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")
 
