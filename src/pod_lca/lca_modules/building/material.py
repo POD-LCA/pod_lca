@@ -148,6 +148,8 @@ class Material(Product):
             # set replacement materials
             material.set_replacement_material()
 
+        # TODO: resolve adding material to the parent. Currently done in assembly.add_material() 
+
         return material
     
     @classmethod
@@ -308,11 +310,9 @@ class Material(Product):
     def set_waste_product(self):
         """ Set the end-of-life waste product of the material.
         """
-        super().set_waste_product()
-
         waste_produced_year = min(self.get_production_year() + self.get_service_life(), # end of material service life
                             self.get_building().get_built_year() + self.get_building().get_life_span()) # end of building life span
-        self.waste_obj.set_production_year(waste_produced_year)
+        super().set_waste_product(expiry_year=waste_produced_year)
 
         return self
 

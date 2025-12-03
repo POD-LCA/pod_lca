@@ -372,6 +372,7 @@ class WasteProcess:
 
             self.unit_emissions.update_qty({"CO2": self.unit_emissions.get_record("CO2") + unit_C02_emissions * conversion_factor,
                                             "CH4": self.unit_emissions.get_record("CH4") + unit_CH4_emissions * conversion_factor})
+            # TODO: set temporal emission profile for biogenic emissions.
 
             from ..dynamic_radiative_forcing import DynamicRadiativeForcing
             drf_calcualator = DynamicRadiativeForcing()
