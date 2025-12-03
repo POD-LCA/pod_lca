@@ -184,11 +184,16 @@ class Product(Master):
             self.density = density
             self.density_unit = density_unit
         elif density is None:
-            database = self.get_project().get_impact_database()
-            unit_inventories = database.get_data_entry(self.get_impact_database_entry())
-            if database.get_density_unit_key() is not None:
-                self.density_unit = unit_inventories[database.get_density_unit_key()]
-                self.density = float(unit_inventories[database.get_density_key()])
+            if self.get_impact_database_entry() is not None:
+                database = self.get_project().get_impact_database()
+                unit_inventories = database.get_data_entry(self.get_impact_database_entry())
+                if database.get_density_unit_key() is not None:
+                    self.density_unit = unit_inventories[database.get_density_unit_key()]
+                    self.density = float(unit_inventories[database.get_density_key()])
+                else:
+                    log("Density unit key not found in database.", level="Warn")
+            else:
+                log("Cannot set density without database entry.", level="Warn")
         else:
             raise ValueError("Density input not recognized.")
         
@@ -827,34 +832,44 @@ class Product(Master):
 
         # Biogenic carbon storage
         bio_tag = CarbonStorage.get_bio_tag()
-        if "Stored Biogenic Carbon" in database.get_data_entry(database_item):
-            if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
-                self.set_bio_based(True)
-                bio_percentage = self.get_bio_percentage()
-                species = database.get_data_entry(database_item)["Biomaterial Species"].strip()
-                region = database.get_data_entry(database_item)["Region"].strip()
-                material_form = database.get_data_entry(database_item)["Biomaterial Form"].strip()
+        if database_item is not None:
+            if "Stored Biogenic Carbon" in database.get_data_entry(database_item):
+                if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
+                    self.set_bio_based(True)
+                    bio_percentage = self.get_bio_percentage()
+                    species = database.get_data_entry(database_item)["Biomaterial Species"]
+                    region = database.get_data_entry(database_item)["Region"]
+                    material_form = database.get_data_entry(database_item)["Biomaterial Form"]
 
-                moisture_content = get_moisture_content(species, region, material_form)
-                carbon_percentage = get_carbon_percentage(species, region, material_form)
-                
-                if self.get_unit().get_qty_measured() == "mass":
-                    unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
-                                                                                                     wet_mass_unit=self.get_unit(),
-                                                                                                     moisture_content=moisture_content,
-                                                                                                     carbon_percentage_dry=carbon_percentage) 
+                    if isinstance(species, str) and isinstance(region, str) and isinstance(material_form, str):
+                        moisture_content = get_moisture_content(species.strip(), region.strip(), material_form.strip())
+                        carbon_percentage = get_carbon_percentage(species.strip(), region.strip(), material_form.strip())
+                        
+                        if self.get_unit().get_qty_measured() == "mass":
+                            unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
+                                                                                                            wet_mass_unit=self.get_unit(),
+                                                                                                            moisture_content=moisture_content,
+                                                                                                            carbon_percentage_dry=carbon_percentage) 
+                        else:
+                            if self.get_density() is None:
+                                self.set_density()          
+                            unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(volume=1.0,
+                                                                                                            volume_unit=self.get_unit(),
+                                                                                                            wet_density=self.get_density(),
+                                                                                                            wet_density_unit=self.get_density_unit(),
+                                                                                                            moisture_content=moisture_content,
+                                                                                                            carbon_percentage_dry=carbon_percentage) 
+
+                        conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
+                        carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0
+                    else:
+                        log("Biogenic carbon content cannot be determined due to missing species, region, or material form in database.", level="Warn")
                 else:
-                    if self.get_density() is None:
-                        self.set_density()          
-                    unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(volume=1.0,
-                                                                                                     volume_unit=self.get_unit(),
-                                                                                                     wet_density=self.get_density(),
-                                                                                                     wet_density_unit=self.get_density_unit(),
-                                                                                                     moisture_content=moisture_content,
-                                                                                                     carbon_percentage_dry=carbon_percentage) 
-
-                conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
-                carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0
+                    log("Biogenic carbon content cannot be determined due to missing stored biogenic carbon tag in database.", level="Warn")
+            else:
+                log("Biogenic carbon content cannot be determined due to missing data header in database.", level="Warn")
+        else:
+            log("Biogenic carbon content cannot be determined due to missing database entry.", level="Warn")
 
         # Mineral carbonation uptake
         carbon_storage["Mineral C"] = 0.0 # TODO: update logic for mineral carbonation uptake if any
