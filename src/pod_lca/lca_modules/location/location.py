@@ -7,6 +7,8 @@ __version__ = "0.1.0"
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 
+from ...units import INCH
+from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
@@ -769,6 +771,22 @@ class Location:
             Regional Energy Deployment System (ReEDS) balancing area corresponding to the location.
         """
         return self.reeds_balancing_area
+    
+    def get_annual_precipitation(self, unit=INCH):
+
+        annual_precipitation_data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["NOAA_ANNUAL_PRECIPITATION_STATES"])
+        state = self.get_state()
+        if state in annual_precipitation_data["State"].values:
+            precipitation = annual_precipitation_data[annual_precipitation_data["State"] == state]["Total Precipitation"].values[0]
+            precipitation_unit = UNITS_MAP[annual_precipitation_data[annual_precipitation_data["State"] == state]["Precipitation Unit"].values[0]]
+
+            convertion_factor = precipitation_unit.convert_to(unit)
+
+            return precipitation * convertion_factor
+        
+        else:
+            log("State name not found in annual precipitation data.")
+            return 0
 
     # ================================
     # Methods

@@ -640,9 +640,10 @@ class Waste(Product):
                     if processing: 
                         # C3-C4 impacts
                         process_impact = process.get_unit_impacts() * process.get_qty()
-                        process_emission = process.get_unit_emissions() * process.get_qty()
+                        process_emission = [process.get_unit_emissions() * process.get_qty(), 
+                                            process.get_unit_stored_carbon_release() * process.get_qty()]
                         impacts[process.get_life_cycle_stage()].append(process_impact)
-                        emissions[process.get_life_cycle_stage()].append(process_emission)
+                        emissions[process.get_life_cycle_stage()].extend(process_emission)
 
                     if process.get_transportation_leg() is not None:
                         if transportation:

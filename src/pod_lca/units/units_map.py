@@ -11,6 +11,7 @@ from ..units import DAY
 from ..units import FEET
 from ..units import HOUR
 from ..units import ITEM
+from ..units import INCH
 from ..units import JOULE
 from ..units import KG_CARBON
 from ..units import KG_CARBON_DIOXIDE
@@ -41,6 +42,7 @@ UNITS_MAP.update(
         "km": KILOMETER,
         "m": METER,
         "ft": FEET,
+        "in": INCH,
         "tonne": M_TON,
         "metric ton": M_TON,
         "tkm": TON_KILOMETER,

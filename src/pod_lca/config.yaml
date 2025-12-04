@@ -84,6 +84,7 @@ file_paths:
     EOL_DEMOLITION_IMPACTS: data/impacts_podlca_eol-demolition-impacts.csv
     EOL_PROCESS_IMPACTS: data/impacts_podlca_eol-process-impacts.csv
     EOL_STORED_CARBON_EMISSIONS: data/eol_podlca_stored-carbon-emissions.csv
+    EOL_WOOD_LANDFILL_METHANE: data/eol_podlca_wood-landfill-methane.csv
   impacts:
     IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
     IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv
@@ -100,6 +101,7 @@ file_paths:
     FERC_BA_ZIPCODE_MAP_PATH: data/location_doe_ba-zip-mapping.csv
     GEA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
     REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
+    NOAA_ANNUAL_PRECIPITATION_STATES: data/location_noaa_annual-precipitation-us-states.csv
   operational:
     CONSTRUCTIONS: data/operational_constructions.idf
     SYSTEMS: data/operational_systems.idf
