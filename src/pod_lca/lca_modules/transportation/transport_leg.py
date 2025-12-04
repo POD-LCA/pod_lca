@@ -57,6 +57,7 @@ class TransportationLeg:
         self.mode = None
         self.impacts = None
         self.emissions = None
+        self.pedigree_score = None
         self.next = None
         self.previous = None
 
@@ -260,6 +261,17 @@ class TransportationLeg:
 
         return self
 
+    def set_pedigree_score(self, pedigree_score):
+        """Set a pedigree score (data quality score) to the transportation leg.
+
+        Parameters
+        ----------
+        pedigree_score : ~pod_lca.uncertainty.PedigreeScore
+            Data quality indicator for the transportation leg.
+        """
+        self.pedigree_score = pedigree_score
+
+        return self
     # ================================
     # Getters
     # ================================
@@ -405,6 +417,16 @@ class TransportationLeg:
         """
         return self.get_manager().get_impact_database()
 
+    def get_pedigree_score(self):
+        """Get pedigree score of the transportation leg.
+
+        Returns
+        -------
+        ~pod_lca.uncertainty.PedigreeScore
+            Data quality indicator for the transportation leg.
+        """
+        return self.pedigree_score
+    
     # ================================
     # Methods
     # ================================

@@ -55,7 +55,7 @@ travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USDomesticTransportationManager.new("Building A")
 project.set_data_generator_mode()
-project.set_impact_database(r'data/transportation_podlca_emission.csv')
+project.set_impact_database(r'src/pod_lca/data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
 impact_categories = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]

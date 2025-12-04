@@ -52,7 +52,7 @@ class SensitivityAnalysis:
         model = obj.get_model()
 
         base_impact = model.get_total_impact(impact_cat)
-        base_val = getattr(obj, param)
+        base_val = getattr(obj, "get_" + param)()
 
         method_name = "set_" + param
         method = getattr(obj, method_name)
@@ -118,16 +118,17 @@ class SensitivityAnalysis:
         if printout:
             print("*" * 50 + "\nSENSITIVITY ANALYSIS\n" + "*" * 50)
             print(f"Product: {obj.get_name()}")
-            print(f"Param: {param}")
-            print(f"Base value: {base_val}")
-            print(f"Base impact: {base_impact}")
+            print(f"Parameter: {param}")
+            print(f"Base parameter value: {base_val}")
+            print(f"Base impact result: {base_impact}")
+            print("-" * 50)
             if "range" in kwargs:
-                print(f"Range: {range_lst}")
+                print(f"Parameter value range: {range_lst}")
             elif "options" in kwargs:
                 print(f"Options: {kwargs['options']}")
             formatted_result = ", ".join(f"{num:.1f}" for num in result_range)
             print(f"Sensitivity (%): ({formatted_result})")
-            print(f"Impacts Range: {impacts_range}")
+            print(f"Impacts range: {impacts_range}")
             if "options" in kwargs:
                 print(f"       : {corr_options}")
             if sensitivity_type == "relative":
@@ -192,7 +193,7 @@ class SensitivityAnalysis:
         for group in groups:
             obj = group["obj"]
             param = group["param"]
-            base_val = getattr(obj, param)
+            base_val = getattr(obj, "get_" + param)()
 
             method_name = "set_" + param
             method = getattr(obj, method_name)
@@ -201,6 +202,7 @@ class SensitivityAnalysis:
             group["method"] = method
 
         results = {}
+        impacts_range = {}
         for objective in ["min", "max"]:
             for group in groups:
                 obj = group["obj"]
@@ -243,6 +245,7 @@ class SensitivityAnalysis:
 
             impact_new = model.get_total_impact(impact_cat)
 
+            impacts_range[objective] = impact_new
             if sensitivity_type == "relative":
                 results[objective] = 100 * (impact_new - base_impact) / base_impact
             elif sensitivity_type == "symmetric":
@@ -254,21 +257,22 @@ class SensitivityAnalysis:
                 base_val = group["base_val"]
                 method = group["method"]
 
-                method(base_val)
+                method(base_val) # FIXME: for transportation leg, need to reset the travel distance to None... but how to elegantly do this?
 
         if printout:
             print("*" * 50 + "\nSENSITIVITY ANALYSIS\n" + "*" * 50)
             for group in groups:
                 print(f"Product: {obj.get_name()}")
-                print(f"Param: {param}")
-                print(f"Base value: {base_val}")
+                print(f"Parameter: {param}")
+                print(f"Base parameter value: {base_val}")
                 if "range" in group:
-                    print(f"Range: {group['range']}")
+                    print(f"Parameter value range: {group['range']}")
                 elif "options" in group:
                     print(f"Options: {group['options']}")
+                print("-" * 25)
             print("-" * 50)
-            formatted_result = f"{results['min']:.1f}, {results['max']:.1f}"
-            print(f"Sensitivity (%): ({formatted_result})")
+            print(f"Sensitivity (%): ({results['min']:.1f}, {results['max']:.1f})")
+            print(f"Impacts range: ({impacts_range['min']:.1f}, {impacts_range['max']:.1f})")
             for group in groups:
                 if "options" in group:
                     print(f"       : ({group['min_option']}, {group['max_option']})")

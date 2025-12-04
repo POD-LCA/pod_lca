@@ -32,7 +32,7 @@ states_list = list(DataImporter.json_to_dict(config['file_paths']['transportatio
 
 origin_locations = ['Canada',
                     'Mexico',
-                    'Rest of Americas', 
+                    'Rest of Americas',
                     'Europe', 
                     'Africa', 
                     'SW & Central Asia', 
@@ -62,7 +62,7 @@ travel_mode_efficiency = ["Low", "Median", "High"]
 
 project = USGlobalTransportationManager.new("Building A")
 project.set_data_generator_mode()
-project.set_impact_database(r'data/transportation_podlca_emission.csv')
+project.set_impact_database(r'src/pod_lca/data/transportation_podlca_emission.csv')
 electricity_report_unit = KILO * WATT_HOUR
 
 impact_categories = config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES']

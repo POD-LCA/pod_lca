@@ -125,6 +125,9 @@ class DomesticLeg(TransportationLeg):
             Return trip factor of the transportation leg.
         """
         self.dist_unit = KILOMETER if dist_unit is None else dist_unit
+        self.travel_dist = travel_dist
+        self.return_trip_factor = return_trip_factor
+
         self._invalidate_cache()
         return self
 
@@ -167,6 +170,8 @@ class DomesticLeg(TransportationLeg):
         if self._last_params == current_params and self._cache_travel_dist is not None:
             log("Returning cached result.", "Info")
             return self._cache_travel_dist
+        elif self.travel_dist is not None:
+            return self.travel_dist
         else:
             travel_dist = self.get_distance_from_datset()
 
