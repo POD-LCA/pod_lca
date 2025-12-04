@@ -111,7 +111,7 @@ class Impacts(Records):
         else:
             raise KeyError(f"{key} not in impact categories of config.")
 
-        # adjust GWP
+        # adjust GWP #FIXME is this relevant with neschanges to carbon storage
         if key in self.record_attr_dict:
             gwp_qty = self.get_record(key)
             carbon_storage_record = self.get_parent().get_carbon_storage()

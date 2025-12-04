@@ -117,13 +117,14 @@ class Project:
             impact_database.set_qty_key('Declared qty')
             impact_database.set_unit_key('Declared unit')
             impact_database.set_data(file_path, 
-                                     grouped_data="Electricity",
+                                     grouped_data="electricity",
                                      density_headers=["Density", "Density unit"],
                                      additional_headers=["Biomaterial Species",
                                                          "Region",
                                                          "Biomaterial Form", 
                                                          "Stored Biogenic Carbon", 
-                                                         "%C (dry mass basis)"])
+                                                         "%C (dry mass basis)",
+                                                         "Mineral Carbonation Potential"])
             self.impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")
