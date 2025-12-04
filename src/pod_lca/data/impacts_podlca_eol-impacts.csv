@@ -1,4 +1,4 @@
-LCA Stage,Process,Material,Qty,Unit,GWP,AP,EP,ODP,POCP,Fossil CO2,CH4,N2O,Biogenic CO2 Emission,Biogenic CO2 removal
+LCA Stage,Process,Material,Qty,Unit,GWP,AP,EP,ODP,POCP,CO2,CH4,N2O,Biogenic CO2 Emission,Biogenic CO2 removal
 C3,Recycle,Aluminum,1,kg,0.243,0.00065,0.000781,7.9E-09,0.00552,0,0,0,0,0
 C3,Recycle,Steel,1,kg,0.0218,0.000165,0.000117,2.13E-09,0.00336,0,0,0,0,0
 C3,Recycle,Drywall,1,kg,0.0218,0.000165,0.000117,2.13E-09,0.00336,0,0,0,0,0
