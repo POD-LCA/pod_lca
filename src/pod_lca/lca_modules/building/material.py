@@ -398,7 +398,17 @@ class Material(Product):
             Building to which this building material belong.       
         """
         return self.get_parent().get_building()
-    
+
+    def get_model(self):
+        """Retrieve the model corresponding to the product/process --- for building material, this is the building.
+
+        Returns
+        -------
+        ~pod_lca.building.Building
+            Model (Building) corresponding to the product/process (building material).
+        """
+        return self.get_building()
+        
     def get_impact_database(self):
         """ Get the impact database giving the A1-A3 impacts of the building materials.
 
