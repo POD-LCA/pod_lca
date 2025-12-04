@@ -65,6 +65,7 @@ def _get_carbon_data(data, species=None, region=None, material_form=None):
             
     if data_entry.empty:
         log("No matching data found.", "Warn")
+        return 0
     elif len(data_entry) > 1:
         log("Multiple matching data found. Mean valuer returned", "Warn")
         return data_entry[header].mean()
