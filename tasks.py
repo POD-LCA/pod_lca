@@ -71,7 +71,7 @@ def fix(c):
 
 @task
 def docs(c, out="md"):
-    """Build Sphinx HTML docs"""
+    """Build Sphinx docs"""
     if out == "html":
         c.run("sphinx-build -b html docs/source docs/_build/html")
     elif out == "md":
