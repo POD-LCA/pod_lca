@@ -123,26 +123,29 @@ class Product(Master):
         year : int
             Year of production.
         """
-        self.production_year = year
+        if isinstance(year, int):
+            self.production_year = year
 
-        if self.electricity["by_location"] is not None:
-            self.electricity["by_location"].set_year(year)
+            if self.electricity["by_location"] is not None:
+                self.electricity["by_location"].set_year(year)
 
-        if self.emissions is not None:
-            pulse = UniformEmissionProfile.unit_pulse(at=year)
-            self.get_emissions().set_temporal_emission_profile(pulse)
+            if self.emissions is not None:
+                pulse = UniformEmissionProfile.unit_pulse(at=year)
+                self.get_emissions().set_temporal_emission_profile(pulse)
 
-        if self.get_transportation() is not None:
-            for leg in self.get_transportation():
-                leg.get_emissions().set_temporal_emission_profile(pulse)
+            if self.get_transportation() is not None:
+                for leg in self.get_transportation():
+                    leg.get_emissions().set_temporal_emission_profile(pulse)
 
-        if self.emissions is not None:
-            pulse = UniformEmissionProfile.unit_pulse(at=year)
-            self.get_emissions().set_temporal_emission_profile(pulse)
+            if self.emissions is not None:
+                pulse = UniformEmissionProfile.unit_pulse(at=year)
+                self.get_emissions().set_temporal_emission_profile(pulse)
 
-        if self.get_transportation() is not None:
-            for leg in self.get_transportation():
-                leg.get_emissions().set_temporal_emission_profile(pulse)
+            if self.get_transportation() is not None:
+                for leg in self.get_transportation():
+                    leg.get_emissions().set_temporal_emission_profile(pulse)
+        else:
+            log("Year not set as input is None.", "Warn")
 
         return self
 
@@ -317,7 +320,7 @@ class Product(Master):
                 except:
                     self.electricity["_current"] = original_source
                     log(
-                        f"Cannont set electricity data to '{source}'. Electricity source reveted to '{self.electricity['_current']}'.",
+                        f"Cannot set electricity data to '{source}'. Electricity source reveted to '{self.electricity['_current']}'.",
                         "Warn",
                     )
         else:

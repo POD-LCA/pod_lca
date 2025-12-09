@@ -323,7 +323,7 @@ class Material(Product):
         building_end_year = self.get_building().get_built_year() + self.get_building().get_life_span()
 
         if material_end_year < building_end_year:
-            self.replacement_product = Material.copy(self, material_end_year)
+            self.replacement_product = Material.copy(self, int(material_end_year))
 
     # ================================
     # Getters
