@@ -26,3 +26,4 @@ lumber = CLT_model.add_product(
 )
 
 print(lumber.get_carbon_storage())
+print(lumber.get_impacts())

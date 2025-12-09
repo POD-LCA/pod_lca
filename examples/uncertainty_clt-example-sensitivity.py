@@ -21,14 +21,7 @@ project = Project()
 factory = Location.from_str("Seattle, Washington")
 project.set_location(factory)
 project.set_year(2025)
-
-pod_lca_impact_database = ImpactsDatabase.new("pod_lca_impact_database")
-pod_lca_impact_database.set_data(
-    r"src/pod_lca/data/impacts_podlca_data.csv",
-    grouped_data="Electricity",
-    density_headers=["Density (dry basis)", "Density unit"],
-)
-project.set_impact_database(pod_lca_impact_database)
+project.set_databases()
 
 project.set_transportation_mode_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
 
