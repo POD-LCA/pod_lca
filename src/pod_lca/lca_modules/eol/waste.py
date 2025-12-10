@@ -235,43 +235,6 @@ class Waste(Product):
 
         return waste_process_obj
 
-    def set_bio_based(self, is_bio_based, **kwargs):
-        """Set the bio-based nature of the material.
-
-        Parameters
-        ----------
-        is_bio_based : bool
-            True, if the material is bio-based.
-
-        Other Parameters
-        ----------------
-        bio_percentage : float
-            Percentage of bio-based content in the material.
-        species : str
-            Species identifier.
-        region : {'AU', 'CA', 'CD', 'CN', 'GLO', 'IN', 'RER','RNA', 'US','US-MT'}
-            Region of origin of the product.
-            -   'AU': Australia
-            -   'CA': Canada
-            -   'CD': Congo, the Democratic Republic of the
-            -   'CN': China
-            -   'GLO': Global
-            -   'IN': India
-            -   'RER': Europe
-            -   'RNA': North America
-            -   'US': United States
-            -   'US-MT': United States, Montana
-        material_form : str
-            Final form of the product.
-        """
-        if is_bio_based is None:
-            self.bio_based = False
-        else:
-            self.bio_based = is_bio_based
-
-
-        return self
-
     def set_process_mix(self, process_mix):
         """Get the mix of process the waste product is subjected to.
 
@@ -466,16 +429,6 @@ class Waste(Product):
             return process_mix
         else:
             raise ValueError("Calucation mode of process mix is not recognized.")
-
-    def get_bio_based(self):
-        """Get the bio-based nature of the material.
-
-        Returns
-        -------
-        bool
-            True, if the material is bio-based.
-        """
-        return self.bio_based
 
     def get_production_year(self):
         """Get the production year of the waste product.

@@ -289,12 +289,14 @@ class Product(Master):
         else:
             log("A mix doesnt exist", 0)
 
+        bio_based = self.get_bio_based() if isinstance(self.get_bio_based(), (bool, np_bool)) else False
+
         self.waste_obj = Waste.new(self, 
                             database_item=eol_material, 
                             qty=waste_qty, 
                             unit=waste_unit, 
                             process_mix=eol_mix,
-                            bio_based=self.get_bio_based(),)
+                            bio_based=bio_based)
 
         self.waste_obj.set_production_year(expiry_year if expiry_year is not None else self.get_production_year())
 
