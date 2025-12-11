@@ -65,5 +65,5 @@ results = openLCA.generate_impacts_dir( openLCA_client, process_list_all,
                                         impact_method_uuid, 
                                         group_by)
 
-save_path = './data/impacts_flcac_categorized-data.csv'
+save_path = './data/impacts_flcac_v0.2_categorized-data.csv'
 DataExporter.dict_to_csv(results, save_path) 

@@ -50,3 +50,5 @@ Wood combusted; at boiler; at lumber mill; INW,0a5c32df-e88e-3a0d-ac27-e08784b95
 "Residual fuel oil, combusted in industrial boiler",9d9b6815-9349-30af-869b-57362428c42e,1,m3,41756.32,MJ
 "RFO, combusted in industrial boiler, at pulp and paper mill (EXCL.)",7ee5b4ca-1a5e-3d26-8e79-0805a115e444,1,m3,41756.32,MJ
 "TDF, combusted in industrial boiler, at pulp and paper mill (EXCL.)",a515132e-c816-34ea-9773-d56c11dc1cb0,1,kg,37.81,MJ
+Kerosene; combusted in industrial equipment Bridge; Construction Materials to USLCI,a7c6606d-20dc-4259-930f-1205fb36fb4b,1,m3,44253.08,MJ
+Bridge_CDD_to_USLCI_natgas_combusted,c0ef7c01-fb16-4192-a358-752c13064fdf,1,m3,39.08,MJ
