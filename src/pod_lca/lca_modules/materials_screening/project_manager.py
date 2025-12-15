@@ -112,8 +112,8 @@ class Project:
         if isinstance(file_path, (str, Path)):
             impact_database = ImpactsDatabase.new("impact database")
             impact_database.set_primary_key('Name')
-            impact_database.set_qty_key('qty')
-            impact_database.set_unit_key('unit')
+            impact_database.set_qty_key('Qty')
+            impact_database.set_unit_key('Unit')
             impact_database.set_data(file_path, 
                                      grouped_data="electricity",
                                      density_headers=["Density", "Density unit"],
