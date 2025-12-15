@@ -55,6 +55,8 @@ setup:
     LOG_LEVEL: Error # Options: Fatal, Error, Warn, Info, Debug, Trace
 
 file_paths:
+  materials_screening:
+    DEFAULT_IMPACT_DATABASE: data/impacts_podlca_data.csv
   transportation:
     CFS_DATA_PATH: data/transportation_cfs_dataset.csv
     CFAF_RAIL_DATA_PATH: data/transportation_cfaf_rail_dataset.csv
