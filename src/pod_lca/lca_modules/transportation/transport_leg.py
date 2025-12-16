@@ -10,6 +10,7 @@ from ..impacts import Impacts
 from ..location import Location
 from . import TransportMode
 from ...units import KILOMETER
+from ...utilities import log
 
 
 class TransportationLeg:
@@ -438,40 +439,43 @@ class TransportationLeg:
         ImportError
             Incompatible units.
         """
-        inventories_declared_unit = self.get_mode().get_declared_unit()
-        computed_unit = self.get_material().get_weight_unit() * self.get_dist_unit()
-        conversion_factor = computed_unit.convert_to(inventories_declared_unit)
+        if self.get_material().get_weight() is None:
+            log("No material weight to set transportation impacts.")
+        else:
+            inventories_declared_unit = self.get_mode().get_declared_unit() 
+            computed_unit = self.get_material().get_weight_unit() * self.get_dist_unit()
+            conversion_factor = computed_unit.convert_to(inventories_declared_unit)
 
-        travel_dist = self.get_travel_dist()
-        transport_material_qty = self.get_material().get_weight()
-        return_trip_factor = self.get_return_trip_factor()
+            travel_dist = self.get_travel_dist()
+            transport_material_qty = self.get_material().get_weight()
+            return_trip_factor = self.get_return_trip_factor()
 
-        if conversion_factor is None:
-            raise ImportError(
-                f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.declared_unit}) are of incompatible units."
-            )
+            if conversion_factor is None:
+                raise ImportError(
+                    f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.declared_unit}) are of incompatible units."
+                )
 
-        impacts = {
-            key: self.get_mode().get_unit_impacts().get_record(key)
-            * conversion_factor
-            * transport_material_qty
-            * travel_dist
-            * return_trip_factor
-            for key in self.impacts.record_attr_dict
-        }
-        self.impacts.update_qty(impacts)
+            impacts = {
+                key: self.get_mode().get_unit_impacts().get_record(key)
+                * conversion_factor
+                * transport_material_qty
+                * travel_dist
+                * return_trip_factor
+                for key in self.impacts.record_attr_dict
+            }
+            self.impacts.update_qty(impacts)
 
-        emissions = {
-            key: self.get_mode().get_unit_emissions().get_record(key)
-            * conversion_factor
-            * transport_material_qty
-            * travel_dist
-            * return_trip_factor
-            for key in self.emissions.record_attr_dict
-        }
-        self.emissions.update_qty(emissions)
+            emissions = {
+                key: self.get_mode().get_unit_emissions().get_record(key)
+                * conversion_factor
+                * transport_material_qty
+                * travel_dist
+                * return_trip_factor
+                for key in self.emissions.record_attr_dict
+            }
+            self.emissions.update_qty(emissions)
 
-        return self
+            return self
 
 
 if __name__ == "__main__":
