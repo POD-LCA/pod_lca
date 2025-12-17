@@ -297,7 +297,8 @@ class Master:
                 self.unit = unit
                 self.set_qty(value_in * conversion_factor)
             else:
-                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
+                self.unit = unit
+                log(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}). New unit set without resetting quantity.", "Warn")
 
         return self
 
