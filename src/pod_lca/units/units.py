@@ -404,10 +404,6 @@ class Unit:
             ):  # TODO: test this branch... potential issues with quantity measured after simplification
                 conversion_factor = self.convert_to(to_unit)
                 return simplification_factor * conversion_factor
-            else:
-                raise TypeError(
-                    f"{self.get_name()} of dimensions {self.get_qty_measured()} and {to_unit.get_name()} of dimensions {to_unit.get_qty_measured()} are incompatible."
-                )
 
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out, qty_measured):
