@@ -128,22 +128,23 @@ class PedigreeScore:
         """
         max = config["setup"]["uncertainty"]["MAX_DQS"]
         min = config["setup"]["uncertainty"]["MIN_DQS"]
-        if len(args) == 1 and isinstance(args[0], dict):
-            for indicator, score in args[0].items():
-                if score >= min and score <= max:
-                    if hasattr(self, indicator):
-                        setattr(self, indicator, score)
+        if len(args) == 1:
+            if isinstance(args[0], dict):
+                for indicator, score in args[0].items():
+                    if score >= min and score <= max:
+                        if hasattr(self, indicator):
+                            setattr(self, indicator, score)
+                        else:
+                            raise KeyError(
+                                f"{indicator} is not an valid indicator. Valid indicators are: {config['setup']['uncertainty']['DATA_QUALITY_INDICATORS']}"
+                            )
                     else:
-                        raise KeyError(
-                            f"{indicator} is not an valid indicator. Valid indicators are: {config['setup']['uncertainty']['DATA_QUALITY_INDICATORS']}"
-                        )
+                        raise ValueError(f"Pedigree score should be between {min} and {max}.")
+            if isinstance(args[0], tuple):
+                if args[0][1] >= min and args[0][1] <= max:
+                    setattr(self, args[0][0], args[0][1])
                 else:
                     raise ValueError(f"Pedigree score should be between {min} and {max}.")
-        elif len(args) == 2:
-            if args[1] >= min and args[1] <= max:
-                setattr(self, args[0], args[1])
-            else:
-                raise ValueError(f"Pedigree score should be between {min} and {max}.")
         else:
             raise TypeError(
                 "Invalid input. Provide a (indicator, score) pair or a dictionary of indicator-score pairs."
