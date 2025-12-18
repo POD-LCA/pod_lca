@@ -238,9 +238,13 @@ class DataQualityAnalysis:
                 else obj.get_impacts().get_record(impact_cat)
             )
             if impact is not None:
-                obj.get_pedigree_score().set_DQS()
-                DQS_tmp += obj.get_pedigree_score().get_DQS() * impact
-                impact_sum += impact
+                pedigree_score = obj.get_pedigree_score()
+                if pedigree_score is not None:
+                    pedigree_score.set_DQS()
+                    DQS_tmp += pedigree_score.get_DQS() * impact
+                    impact_sum += impact
+                else:
+                    log(f"{obj.get_name()} has no pedigree score.", "Info")
             else:
                 log(f"{obj.get_name()} has no impacts.", "Info")
 
@@ -271,10 +275,6 @@ class DataQualityAnalysis:
 
     def set_pedigree_scores(self):
         """Set pedigree scores for all products/processes in a model."""
-        for obj in self.model.get_all_items():
-            if obj.get_pedigree_score() is None:
-                PedigreeScore.from_parent(obj)
-
         self.set_temporal_correlation_scores()
         self.set_geographical_correlation_scores()
 
