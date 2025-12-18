@@ -60,13 +60,13 @@ class Impacts(Records):
             Weighing method not recognied.
         """
         if method == "TRACI_EPA":
-            weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])
+            weights = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_WEIGHTING_FACTOR_EPA"])
         elif method == "TRACI_NIST":
-            weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_NIST"])
+            weights = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_WEIGHTING_FACTOR_NIST"])
         else:
             raise KeyError("Weighing method not recognized")
 
-        normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTORS"])
+        normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_NORMALIZATION_FACTORS"])
 
         for impact_cat in self.record_attr_dict:
             if impact_cat not in weights:

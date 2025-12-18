@@ -1,9 +1,12 @@
 {
     "GWP": 29,
+    "GWP_fossil": 29,
+    "GWP_biogenic": 29,
+    "GWP_luluc": 29,
     "AP": 3,
     "EP": 6,
     "ODP": 2,
-    "SFP": 4,
+    "POCP": 4,
     "_source": {
         "title": "Life Cycle ASssesment of Buildings: A Practice Guide",
         "author": "The Carbon Leadership Forum",

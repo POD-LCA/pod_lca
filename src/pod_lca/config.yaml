@@ -85,9 +85,9 @@ file_paths:
     EOL_DEMOLITION_IMPACTS: data/impacts_podlca_eol-demolition-impacts.csv
     EOL_PROCESS_IMPACTS: data/impacts_podlca_eol-process-impacts.csv
   impacts:
-    IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
-    IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv
-    IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.csv
+    IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.json
+    IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.json
+    IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.json
   location:
     US_STATES: data/location_faa_us-states.json
     US_STATE_COORDS: data/location_podlca_us-state-coords.csv
