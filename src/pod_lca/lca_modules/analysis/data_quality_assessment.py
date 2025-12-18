@@ -271,7 +271,8 @@ class DataQualityAnalysis:
     def set_pedigree_scores(self):
         """Set pedigree scores for all products/processes in a model."""
         for obj in self.model.get_all_items():
-            PedigreeScore.from_parent(obj)
+            if obj.get_pedigree_score() is None:
+                PedigreeScore.from_parent(obj)
 
         self.set_temporal_correlation_scores()
         self.set_geographical_correlation_scores()

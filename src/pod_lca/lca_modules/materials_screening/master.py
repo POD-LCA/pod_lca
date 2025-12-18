@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..analysis import PedigreeScore
 from ...utilities import log
 
 
@@ -77,7 +78,7 @@ class Master:
 
         self.is_hotspot = False
         self.data_distributions = {}
-        self.pedigree_score = None
+        self.pedigree_score = PedigreeScore.from_parent(self)
 
     # ================================
     # Constructors
