@@ -79,7 +79,7 @@ class ImpactsDatabase:
         """
         new_db = cls()
         new_db.set_name(name)
-        new_db.set_primary_key("Flow")
+        new_db.set_primary_key("Name")
         new_db.set_unit_key("Unit")
         new_db.set_qty_key("Qty")
 
