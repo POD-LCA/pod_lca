@@ -57,7 +57,6 @@ pip install -r requirements.txt
     * [Mathematical Functions](mathematical_functions.md)
     * [Object Array Methods](object-array-methods.md)
 * [License](license.md)
-* [Acknowledgements](acknowledgements.md)
 * [Developer Guide](developer.md)
 
 ## Indices and tables
