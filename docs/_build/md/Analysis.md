@@ -4,8 +4,8 @@ This sub-package manage analysis of LCA outputs, including data quality analysis
 
 ---
 
-* [Data Quality Assessment](python-libraru/data-quality-assessment)
-* [Hotspot Analysis](python-libraru/hotspot-analysis)
-* [Sensitivity Analysis](python-libraru/sensitivity-analysis)
-* [Monte Carlo Simulation](python-libraru/monte-carlo-simulation)
-* [Data Distributions](python-libraru/data-distributions)
+* [Data Quality Assessment](data-quality-assessment.md)
+* [Hotspot Analysis](hotspot-analysis.md)
+* [Sensitivity Analysis](sensitivity-analysis.md)
+* [Monte Carlo Simulation](monte-carlo-simulation.md)
+* [Data Distributions](data-distributions.md)

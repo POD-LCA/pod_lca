@@ -4,7 +4,7 @@ This sub-package manage [`Unit`](units-object.md#pod_lca.units.Unit) objects, wh
 
 ---
 
-* [Units Object](python-libraru/units-object)
+* [Units Object](units-object.md)
   * [`Unit`](units-object.md#pod_lca.units.Unit)
     * [`Unit.name`](units-object.md#pod_lca.units.Unit.name)
     * [`Unit.standard_notation`](units-object.md#pod_lca.units.Unit.standard_notation)
@@ -26,7 +26,7 @@ This sub-package manage [`Unit`](units-object.md#pod_lca.units.Unit) objects, wh
     * [`Unit.convert_to()`](units-object.md#pod_lca.units.Unit.convert_to)
     * [`Unit.compute_conversion_factor()`](units-object.md#pod_lca.units.Unit.compute_conversion_factor)
     * [`Unit.simplify()`](units-object.md#pod_lca.units.Unit.simplify)
-* [Metrix Prefixes](python-libraru/metrix-prefixes)
+* [Metrix Prefixes](metrix-prefixes.md)
   * [`MetricPrefix`](metrix-prefixes.md#pod_lca.units.MetricPrefix)
     * [`MetricPrefix.name`](metrix-prefixes.md#pod_lca.units.MetricPrefix.name)
     * [`MetricPrefix.symbol`](metrix-prefixes.md#pod_lca.units.MetricPrefix.symbol)
@@ -35,7 +35,7 @@ This sub-package manage [`Unit`](units-object.md#pod_lca.units.Unit) objects, wh
     * [`MetricPrefix.get_symbol()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.get_symbol)
     * [`MetricPrefix.get_power()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.get_power)
     * [`MetricPrefix.convert_to()`](metrix-prefixes.md#pod_lca.units.MetricPrefix.convert_to)
-* [Common Units](python-libraru/common-units)
+* [Common Units](common-units.md)
   * [Time](common-units.md#time)
   * [Mass](common-units.md#mass)
   * [Length](common-units.md#length)
@@ -46,4 +46,4 @@ This sub-package manage [`Unit`](units-object.md#pod_lca.units.Unit) objects, wh
   * [Energy](common-units.md#energy)
   * [Count](common-units.md#count)
   * [Carbon Storage](common-units.md#carbon-storage)
-* [Units Map](python-libraru/units-map)
+* [Units Map](units-map.md)

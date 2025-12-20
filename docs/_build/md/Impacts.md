@@ -6,7 +6,7 @@ In addition, the [`openLCA`](openlca-pipeline.md#pod_lca.impacts.openLCA) class 
 
 ---
 
-* [Inventory Records](python-libraru/inventory-records)
+* [Inventory Records](inventory-records.md)
   * [`Records`](inventory-records.md#pod_lca.impacts.Records)
     * [`Records.parent`](inventory-records.md#pod_lca.impacts.Records.parent)
     * [`Records.from_parent()`](inventory-records.md#pod_lca.impacts.Records.from_parent)
@@ -35,7 +35,7 @@ In addition, the [`openLCA`](openlca-pipeline.md#pod_lca.impacts.openLCA) class 
     * [`Emissions.get_emission_duration()`](inventory-records.md#pod_lca.impacts.Emissions.get_emission_duration)
   * [`CarbonStorage`](inventory-records.md#pod_lca.impacts.CarbonStorage)
     * [`CarbonStorage.parent`](inventory-records.md#pod_lca.impacts.CarbonStorage.parent)
-* [Impacts Database](python-libraru/impacts-database)
+* [Impacts Database](impacts-database.md)
   * [`ImpactsDatabase`](impacts-database.md#pod_lca.impacts.ImpactsDatabase)
     * [`ImpactsDatabase.name`](impacts-database.md#pod_lca.impacts.ImpactsDatabase.name)
     * [`ImpactsDatabase.primary_key`](impacts-database.md#pod_lca.impacts.ImpactsDatabase.primary_key)
@@ -89,7 +89,7 @@ In addition, the [`openLCA`](openlca-pipeline.md#pod_lca.impacts.openLCA) class 
     * [`TranportationModeImpactsDatabase.get_mode_efficiency_key()`](impacts-database.md#pod_lca.impacts.TranportationModeImpactsDatabase.get_mode_efficiency_key)
     * [`TranportationModeImpactsDatabase.get_required_headers()`](impacts-database.md#pod_lca.impacts.TranportationModeImpactsDatabase.get_required_headers)
     * [`TranportationModeImpactsDatabase.get_data_entry()`](impacts-database.md#pod_lca.impacts.TranportationModeImpactsDatabase.get_data_entry)
-* [OpenLCA Pipeline](python-libraru/openlca-pipeline)
+* [OpenLCA Pipeline](openlca-pipeline.md)
   * [`openLCA`](openlca-pipeline.md#pod_lca.impacts.openLCA)
     * [`openLCA.set_connection()`](openlca-pipeline.md#pod_lca.impacts.openLCA.set_connection)
     * [`openLCA.create_product_system()`](openlca-pipeline.md#pod_lca.impacts.openLCA.create_product_system)

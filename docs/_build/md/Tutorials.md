@@ -4,5 +4,5 @@ Here is a list of examples
 
 ---
 
-* [Concrete Example](python-libraru/concrete-example)
-* [CLT Example](python-libraru/clt-example)
+* [Concrete Example](concrete-example.md)
+* [CLT Example](clt-example.md)

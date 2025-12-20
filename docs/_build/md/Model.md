@@ -1,6 +1,6 @@
 # Model
 
-A material screening [`Model`](#pod_lca.materials_screening.Model) will maintain a list of [`Product`](python-library/Products and Processes.md#pod_lca.materials_screening.Product) and [`Process`](python-library/Products and Processes.md#pod_lca.materials_screening.Process) objects going into the material production.
+A material screening [`Model`](#pod_lca.materials_screening.Model) will maintain a list of [`Product`](products-and-processes.md#pod_lca.materials_screening.Product) and [`Process`](products-and-processes.md#pod_lca.materials_screening.Process) objects going into the material production.
 
 This also is a point to retrive the LCA output (e.g., [`get_total_impact()`](#pod_lca.materials_screening.Model.get_total_impact))
 
@@ -16,7 +16,7 @@ Model object is the canvas to which the processes and prodcuts are added.
 Project on which the calculator operates.
 
 * **Type:**
-  [*Project*](python-library/Project.md#pod_lca.materials_screening.Project)
+  [*Project*](project.md#pod_lca.materials_screening.Project)
 
 #### name
 
@@ -30,53 +30,53 @@ Name of the model.
 Location of the project.
 
 * **Type:**
-  [*Location*](python-library/Location.md#pod_lca.location.Location)
+  [*Location*](location.md#pod_lca.location.Location)
 
 #### processes
 
 Processes in the model.
 
 * **Type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Process*](python-library/Products and Processes.md#pod_lca.materials_screening.Process)
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Process*](products-and-processes.md#pod_lca.materials_screening.Process)
 
 #### products
 
 Products in the model.
 
 * **Type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Product*](python-library/Products and Processes.md#pod_lca.materials_screening.Product)
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Product*](products-and-processes.md#pod_lca.materials_screening.Product)
 
 #### transportation_manager
 
 Logistics manager for the model.
 
 * **Type:**
-  [*TransportationManager*](python-library/Project Logistics Manager.md#pod_lca.transportation.TransportationManager)
+  [*TransportationManager*](project-logistics-manager.md#pod_lca.transportation.TransportationManager)
 
 #### impacts
 
-Impacts of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Impacts`](python-library/Inventory Records.md#pod_lca.impacts.Impacts)}
+Impacts of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Impacts`](inventory-records.md#pod_lca.impacts.Impacts)}
 
 * **Type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 #### emissions
 
-Emissions of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Emissions`](python-library/Inventory Records.md#pod_lca.impacts.Emissions)}
+Emissions of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Emissions`](inventory-records.md#pod_lca.impacts.Emissions)}
 
 * **Type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
 #### carbon_storage
 
-Carbon storage of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`CarbonStorage`](python-library/Inventory Records.md#pod_lca.impacts.CarbonStorage)}
+Carbon storage of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`CarbonStorage`](inventory-records.md#pod_lca.impacts.CarbonStorage)}
 
 #### *classmethod* in_project(project, name=None, transport_scope='local')
 
 Create a model object from a parent object.
 
 * **Parameters:**
-  * **project** (python-library/[*Project*](project.md#pod_lca.materials_screening.Project)) -- Project to which the model belong.
+  * **project** ([*Project*](project.md#pod_lca.materials_screening.Project)) -- Project to which the model belong.
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the model.
   * **transport_scope** ( *{'local'* *,*  *'global'}*) -- Transportation scope of the model.
 * **Returns:**
@@ -94,7 +94,7 @@ Create a model from data in a csv file.
 * **Parameters:**
   * **file_path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Location of the csv file.
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the model to be created.
-  * **project** (python-library/[*Project*](project.md#pod_lca.materials_screening.Project)) -- Project to which the model belong.
+  * **project** ([*Project*](project.md#pod_lca.materials_screening.Project)) -- Project to which the model belong.
 * **Raises:**
   [**TypeError**](https://docs.python.org/3/library/exceptions.html#TypeError) -- Item type not recognized.
 
@@ -103,7 +103,7 @@ Create a model from data in a csv file.
 Set the project object.
 
 * **Parameters:**
-  **project** (python-library/[*Project*](project.md#pod_lca.materials_screening.Project)) -- Project to which the model belong.
+  **project** ([*Project*](project.md#pod_lca.materials_screening.Project)) -- Project to which the model belong.
 
 #### set_name(name)
 
@@ -117,7 +117,7 @@ Set the name of the model.
 Set the location of the model.
 
 * **Parameters:**
-  **location** (python-library/[*Location*](location.md#pod_lca.location.Location)) -- Location of the model.
+  **location** ([*Location*](location.md#pod_lca.location.Location)) -- Location of the model.
 
 #### set_transportation_manager(logistic_type='local')
 
@@ -135,7 +135,7 @@ Retrieve the project object.
 * **Returns:**
   Project to which the model belong.
 * **Return type:**
-  [*Project*](python-library/Project.md#pod_lca.materials_screening.Project)
+  [*Project*](project.md#pod_lca.materials_screening.Project)
 
 #### get_name()
 
@@ -153,7 +153,7 @@ Retrieve the location of the model.
 * **Returns:**
   Location of the model.
 * **Return type:**
-  [*Location*](python-library/Location.md#pod_lca.location.Location)
+  [*Location*](location.md#pod_lca.location.Location)
 
 #### get_processes()
 
@@ -162,7 +162,7 @@ Retrieve all the processes in the model.
 * **Returns:**
   All processes in the model.
 * **Return type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Process*](python-library/Products and Processes.md#pod_lca.materials_screening.Process)
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Process*](products-and-processes.md#pod_lca.materials_screening.Process)
 
 #### get_products()
 
@@ -171,7 +171,7 @@ Retrieve all the products in the model.
 * **Returns:**
   All products in the model.
 * **Return type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Product*](python-library/Products and Processes.md#pod_lca.materials_screening.Product)
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Product*](products-and-processes.md#pod_lca.materials_screening.Product)
 
 #### get_all_items()
 
@@ -180,7 +180,7 @@ Retrieve all the products and processes in the model.
 * **Returns:**
   All products and processess in the model.
 * **Return type:**
-  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Master*](python-library/Products and Processes.md#pod_lca.materials_screening.Master)
+  [list](https://docs.python.org/3/library/stdtypes.html#list) of [*Master*](products-and-processes.md#pod_lca.materials_screening.Master)
 
 #### get_transportation_manager()
 
@@ -189,14 +189,14 @@ Retrieve the logistics manager of the model.
 * **Returns:**
   Logistics manager for the model.
 * **Return type:**
-  [*TransportationManager*](python-library/Project Logistics Manager.md#pod_lca.transportation.TransportationManager)
+  [*TransportationManager*](project-logistics-manager.md#pod_lca.transportation.TransportationManager)
 
 #### get_impacts()
 
 Retrieve all the impacts in the model categorized by life cycle stage.
 
 * **Returns:**
-  Impacts of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Impacts`](python-library/Inventory Records.md#pod_lca.impacts.Impacts)}
+  Impacts of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Impacts`](inventory-records.md#pod_lca.impacts.Impacts)}
 * **Return type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
@@ -205,7 +205,7 @@ Retrieve all the impacts in the model categorized by life cycle stage.
 Retrieve all the emissions in the model categorized by life cycle stage.
 
 * **Returns:**
-  Emissions of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Emissions`](python-library/Inventory Records.md#pod_lca.impacts.Emissions)}
+  Emissions of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`Emissions`](inventory-records.md#pod_lca.impacts.Emissions)}
 * **Return type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
@@ -214,7 +214,7 @@ Retrieve all the emissions in the model categorized by life cycle stage.
 Retrieve all the carbon storage in the model categorized by life cycle stage.
 
 * **Returns:**
-  Carbon Storage of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`CarbonStorage`](python-library/Inventory Records.md#pod_lca.impacts.CarbonStorage)}
+  Carbon Storage of products and processes categorized by life cycle stage {**life cycle stage** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`list`](https://docs.python.org/3/library/stdtypes.html#list) of [`CarbonStorage`](inventory-records.md#pod_lca.impacts.CarbonStorage)}
 * **Return type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
 
@@ -226,12 +226,12 @@ Create and add process to the model.
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the process.
   * **stage** ( *{'A3'}*) -- Life cycle stage.
   * **qty** ([*float*](https://docs.python.org/3/library/functions.html#float)) -- Quantity processed.
-  * **unit** (python-library/[*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of the quantity.
+  * **unit** ([*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of the quantity.
   * **impacts_from** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the impact database entry from which to use impacts.
 * **Returns:**
   Process object created.
 * **Return type:**
-  [*Process*](python-library/Products and Processes.md#pod_lca.materials_screening.Process)
+  [*Process*](products-and-processes.md#pod_lca.materials_screening.Process)
 
 #### add_product(name, stage, qty, unit, impacts_from, \*\*kwargs)
 
@@ -241,16 +241,16 @@ Create and add product to the model.
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the product.
   * **stage** ( *{'A1'}*) -- Life cycle stage.
   * **qty** ([*float*](https://docs.python.org/3/library/functions.html#float)) -- Product quantity.
-  * **unit** (python-library/[*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of measurement.
+  * **unit** ([*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of measurement.
   * **impacts_from** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the impact database entry from which to use impacts.
   * **sctg_code** ([*int*](https://docs.python.org/3/library/functions.html#int)) -- Standard Classification of Transported Goods (SCTG) code of the material.
   * **density** ([*float*](https://docs.python.org/3/library/functions.html#float)) -- Density of the material.
-  * **density_unit** (python-library/[*Unit*](units-object.md#pod_lca.units.Unit)) -- Units corresponding to material density.
+  * **density_unit** ([*Unit*](units-object.md#pod_lca.units.Unit)) -- Units corresponding to material density.
   * **ignore_transport** ([*bool*](https://docs.python.org/3/library/functions.html#bool)) -- If true, ignore setting transportation.
 * **Returns:**
   Product object created.
 * **Return type:**
-  [*Product*](python-library/Products and Processes.md#pod_lca.materials_screening.Product)
+  [*Product*](products-and-processes.md#pod_lca.materials_screening.Product)
 
 #### add_energy(name, stage, qty, unit, impacts_from)
 
@@ -260,12 +260,12 @@ Create and add energy product to the model.
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the product.
   * **stage** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Life cycle stage.
   * **qty** ([*float*](https://docs.python.org/3/library/functions.html#float)) -- Product quantity.
-  * **unit** (python-library/[*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of measurement.
+  * **unit** ([*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of measurement.
   * **impacts_from** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the impact database entry from which to use impacts.
 * **Returns:**
   Energy product object created.
 * **Return type:**
-  [*Fuel*](python-library/Products and Processes.md#pod_lca.materials_screening.Fuel)
+  [*Fuel*](products-and-processes.md#pod_lca.materials_screening.Fuel)
 
 #### add_electricity(name, stage, qty, unit=<pod_lca.units.units.Unit object>)
 
@@ -275,11 +275,11 @@ Create and add electricity product to the model.
   * **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the product.
   * **stage** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Life cycle stage: 'A1', 'A2', 'A3'.
   * **qty** ([*float*](https://docs.python.org/3/library/functions.html#float)) -- Product quantity.
-  * **unit** (python-library/[*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of measurement.
+  * **unit** ([*Unit*](units-object.md#pod_lca.units.Unit)) -- Unit of measurement.
 * **Returns:**
   Electricity object created.
 * **Return type:**
-  [*Electricity*](python-library/Products and Processes.md#pod_lca.materials_screening.Electricity)
+  [*Electricity*](products-and-processes.md#pod_lca.materials_screening.Electricity)
 
 #### find_item(name)
 
@@ -291,14 +291,14 @@ Find an item (product/process) in the model, given a name string.
 * **Returns:**
   Product / Process object
 * **Return type:**
-  [*Master*](python-library/Products and Processes.md#pod_lca.materials_screening.Master)
+  [*Master*](products-and-processes.md#pod_lca.materials_screening.Master)
 
 #### delete_item(obj)
 
 Removes products or processes, along with the impact objects, from the model.
 
 * **Parameters:**
-  **obj** (python-library/[*Master*](products-and-processes.md#pod_lca.materials_screening.Master)) -- Product or process to be removed from the model.
+  **obj** ([*Master*](products-and-processes.md#pod_lca.materials_screening.Master)) -- Product or process to be removed from the model.
 
 #### get_total_impact(impact_cat)
 

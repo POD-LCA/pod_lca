@@ -1,6 +1,6 @@
 # Location
 
-[`Location`](#pod_lca.location.Location) object maintains a record of location and is used by other classes to store and retrieve location specific data (e.g., [`get_ferc_region()`](#pod_lca.location.Location.get_ferc_region) in [`ElectricitySupply`](python-library/Electricity Supply.md#pod_lca.electricity.ElectricitySupply)).
+[`Location`](#pod_lca.location.Location) object maintains a record of location and is used by other classes to store and retrieve location specific data (e.g., [`get_ferc_region()`](#pod_lca.location.Location.get_ferc_region) in [`ElectricitySupply`](electricity-supply.md#pod_lca.electricity.ElectricitySupply)).
 
 ---
 

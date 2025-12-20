@@ -1,6 +1,6 @@
 # Project
 
-A material screening [`Project`](#pod_lca.materials_screening.Project) maintain the project metadata (python-library/e.g., year, [`Location`](location.md#pod_lca.location.Location)), [`ImpactsDatabase`](python-library/Impacts Database.md#pod_lca.impacts.ImpactsDatabase), and the alternative [`Model`](python-library/Model.md#pod_lca.materials_screening.Model) objects.
+A material screening [`Project`](#pod_lca.materials_screening.Project) maintain the project metadata (e.g., year, [`Location`](location.md#pod_lca.location.Location)), [`ImpactsDatabase`](impacts-database.md#pod_lca.impacts.ImpactsDatabase), and the alternative [`Model`](model.md#pod_lca.materials_screening.Model) objects.
 
 This also is a point to retrive the LCA output (e.g., [`get_impacts_by_category_models()`](#pod_lca.materials_screening.Project.get_impacts_by_category_models))
 
@@ -19,7 +19,7 @@ Name of the project.
 
 #### models
 
-All models created/compared in the current project: {**model name** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`Model`](python-library/Model.md#pod_lca.materials_screening.Model)}.
+All models created/compared in the current project: {**model name** ([`str`](https://docs.python.org/3/library/stdtypes.html#str)): [`Model`](model.md#pod_lca.materials_screening.Model)}.
 
 * **Type:**
   [dict](https://docs.python.org/3/library/stdtypes.html#dict)
@@ -36,7 +36,7 @@ Year of material production project.
 Location of the project.
 
 * **Type:**
-  [*Location*](python-library/Location.md#pod_lca.location.Location)
+  [*Location*](location.md#pod_lca.location.Location)
 
 #### impact_database
 
@@ -68,30 +68,48 @@ Set the name of the project.
 * **Parameters:**
   **name** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Name of the project.
 
-#### set_impact_database(database)
+#### set_databases()
 
-Set the impacts database of the project.
+Set databases and datasets to be used in the LCA computations.
 
-* **Parameters:**
-  **database** (python-library/[*ImpactsDatabase*](impacts-database.md#pod_lca.impacts.ImpactsDatabase) *or* [*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Impact database object or if a string, filepath to the corresponding csv file containing impact data.
-* **Raises:**
-  [**TypeError**](https://docs.python.org/3/library/exceptions.html#TypeError) -- Database input not recognized.
+#### set_material_database(file_path=None)
 
-#### set_transportation_mode_impact_database(database)
-
-Set the impacts database for transportation impacts by mode.
+Set the impact database. If file path is not provided, the default database will be used.
 
 * **Parameters:**
-  **database** (python-library/[*TranportationModeImpactsDatabase*](impacts-database.md#pod_lca.impacts.TranportationModeImpactsDatabase) *or* [*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Impact database object or if a string, filepath to the corresponding csv file containing impact data.
-* **Raises:**
-  [**TypeError**](https://docs.python.org/3/library/exceptions.html#TypeError) -- Database input not recognized.
+  **file_path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Filepath to the csv file containing impact data. The csv file must contain headers 'sctg code' and 'eol material' in addition to the
+
+#### set_transportation_mode_impact_database(file_path=None)
+
+Set the impact database for end-of-life impacts. If file path not given, the default database will be used.
+
+* **Parameters:**
+  **file_path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Filepath to the csv file containing impact data.
+
+#### set_eol_process_impact_database(file_path=None, \*\*kwargs)
+
+Set the impact database for end-of-life impacts. If file path not given, default database will be used.
+
+* **Parameters:**
+  * **file_path** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Filepath of the csv file containing impact data.
+  * **primary_key** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Header of the primary identifier column in the csv file. Default is 'Material'.
+  * **process_key** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Header of the process identifier column in the csv file. Default is 'Process'.
+  * **lc_stage_key** ([*str*](https://docs.python.org/3/library/stdtypes.html#str)) -- Header of the life cycle stage identifier column in the csv file. Default is 'LCA Stage'.
+  * **transport_dataset** ([*TransportDataset*](transport_datasets.md#pod_lca.transportation.TransportDataset)) -- Transportation dataset corresponding to the end-of-life impacts.
+
+#### set_eol_transport_dataset(dataset=None)
+
+Set transportation dataset for the end-of-life impacts.
+
+* **Parameters:**
+  **dataset** ([*TransportDataset*](transport_datasets.md#pod_lca.transportation.TransportDataset)) -- End-of-life transportation dataset.
 
 #### set_location(location)
 
 Set the location of the project.
 
 * **Parameters:**
-  **location** (python-library/[*Location*](location.md#pod_lca.location.Location)) -- Location of the project.
+  **location** ([*Location*](location.md#pod_lca.location.Location)) -- Location of the project.
 
 #### set_year(year)
 
@@ -116,7 +134,7 @@ Get the impacts database of the project.
 * **Returns:**
   Impact database of the project.
 * **Return type:**
-  [*ImpactsDatabase*](python-library/Impacts Database.md#pod_lca.impacts.ImpactsDatabase)
+  [*ImpactsDatabase*](impacts-database.md#pod_lca.impacts.ImpactsDatabase)
 
 #### get_transportation_mode_impact_database()
 
@@ -125,7 +143,7 @@ Get the impacts database of the project.
 * **Returns:**
   Impact database of the tranportation modes.
 * **Return type:**
-  [*TranportationModeImpactsDatabase*](python-library/Impacts Database.md#pod_lca.impacts.TranportationModeImpactsDatabase)
+  [*TranportationModeImpactsDatabase*](impacts-database.md#pod_lca.impacts.TranportationModeImpactsDatabase)
 
 #### get_location()
 
@@ -134,7 +152,7 @@ Retrieve the location of the project.
 * **Returns:**
   Location of the project.
 * **Return type:**
-  [*Location*](python-library/Location.md#pod_lca.location.Location)
+  [*Location*](location.md#pod_lca.location.Location)
 
 #### get_year()
 
@@ -161,7 +179,7 @@ Retrieve a model.
 * **Returns:**
   Current working model.
 * **Return type:**
-  [*Model*](python-library/Model.md#pod_lca.materials_screening.Model)
+  [*Model*](model.md#pod_lca.materials_screening.Model)
 * **Raises:**
   [**KeyError**](https://docs.python.org/3/library/exceptions.html#KeyError) -- A model by such name does not exist in the current project.
 

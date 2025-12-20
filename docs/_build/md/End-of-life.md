@@ -4,7 +4,7 @@ This sub-package manages [`Waste`](waste-products.md#pod_lca.eol.Waste) and thei
 
 ---
 
-* [Waste Products](python-libraru/waste-products)
+* [Waste Products](waste-products.md)
   * [`Waste`](waste-products.md#pod_lca.eol.Waste)
     * [`Waste.parent`](waste-products.md#pod_lca.eol.Waste.parent)
     * [`Waste.waste_processes`](waste-products.md#pod_lca.eol.Waste.waste_processes)
@@ -29,7 +29,7 @@ This sub-package manages [`Waste`](waste-products.md#pod_lca.eol.Waste) and thei
     * [`Waste.update_inventory_records()`](waste-products.md#pod_lca.eol.Waste.update_inventory_records)
     * [`Waste.update_waste_process_mix()`](waste-products.md#pod_lca.eol.Waste.update_waste_process_mix)
     * [`Waste.check_mix_sum()`](waste-products.md#pod_lca.eol.Waste.check_mix_sum)
-* [Waste Processing](python-libraru/waste-processing)
+* [Waste Processing](waste-processing.md)
   * [`WasteProcess`](waste-processing.md#pod_lca.eol.WasteProcess)
     * [`WasteProcess.parent`](waste-processing.md#pod_lca.eol.WasteProcess.parent)
     * [`WasteProcess.process_name`](waste-processing.md#pod_lca.eol.WasteProcess.process_name)

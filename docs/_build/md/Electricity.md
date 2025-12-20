@@ -4,7 +4,7 @@ Electricity sub-package manages classes relevent to managing data on electricity
 
 ---
 
-* [Electricity Generation](python-libraru/electricity-generation)
+* [Electricity Generation](electricity-generation.md)
   * [`ElectricityProducer`](electricity-generation.md#pod_lca.electricity.ElectricityProducer)
     * [`ElectricityProducer.name`](electricity-generation.md#pod_lca.electricity.ElectricityProducer.name)
     * [`ElectricityProducer.technology`](electricity-generation.md#pod_lca.electricity.ElectricityProducer.technology)
@@ -25,7 +25,7 @@ Electricity sub-package manages classes relevent to managing data on electricity
     * [`ElectricityProducer.get_unit_impacts()`](electricity-generation.md#pod_lca.electricity.ElectricityProducer.get_unit_impacts)
     * [`ElectricityProducer.get_unit_emissions()`](electricity-generation.md#pod_lca.electricity.ElectricityProducer.get_unit_emissions)
     * [`ElectricityProducer.get_declared_unit()`](electricity-generation.md#pod_lca.electricity.ElectricityProducer.get_declared_unit)
-* [Electricity Supply](python-libraru/electricity-supply)
+* [Electricity Supply](electricity-supply.md)
   * [`ElectricitySupply`](electricity-supply.md#pod_lca.electricity.ElectricitySupply)
     * [`ElectricitySupply.name`](electricity-supply.md#pod_lca.electricity.ElectricitySupply.name)
     * [`ElectricitySupply.geographical_scope`](electricity-supply.md#pod_lca.electricity.ElectricitySupply.geographical_scope)

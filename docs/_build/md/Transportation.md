@@ -4,7 +4,7 @@ This sub-package handles transportation. [`TransportationManager`](project-logis
 
 ---
 
-* [Project Logistics Manager](python-libraru/project-logistics-manager)
+* [Project Logistics Manager](project-logistics-manager.md)
   * [`TransportationManager`](project-logistics-manager.md#pod_lca.transportation.TransportationManager)
     * [`TransportationManager.name`](project-logistics-manager.md#pod_lca.transportation.TransportationManager.name)
     * [`TransportationManager.transport_legs`](project-logistics-manager.md#pod_lca.transportation.TransportationManager.transport_legs)
@@ -39,7 +39,7 @@ This sub-package handles transportation. [`TransportationManager`](project-logis
     * [`USGlobalTransportationManager.get_dataset()`](project-logistics-manager.md#pod_lca.transportation.USGlobalTransportationManager.get_dataset)
     * [`USGlobalTransportationManager.add_good()`](project-logistics-manager.md#pod_lca.transportation.USGlobalTransportationManager.add_good)
     * [`USGlobalTransportationManager.set_data_generator_mode()`](project-logistics-manager.md#pod_lca.transportation.USGlobalTransportationManager.set_data_generator_mode)
-* [Logistics Leg](python-libraru/logistics-leg)
+* [Logistics Leg](logistics-leg.md)
   * [`TransportationLeg`](logistics-leg.md#pod_lca.transportation.TransportationLeg)
     * [`TransportationLeg.manager`](logistics-leg.md#pod_lca.transportation.TransportationLeg.manager)
     * [`TransportationLeg.name`](logistics-leg.md#pod_lca.transportation.TransportationLeg.name)
@@ -130,7 +130,7 @@ This sub-package handles transportation. [`TransportationManager`](project-logis
     * [`WasteTransportLeg.get_dataset()`](logistics-leg.md#pod_lca.transportation.WasteTransportLeg.get_dataset)
     * [`WasteTransportLeg.get_impact_database()`](logistics-leg.md#pod_lca.transportation.WasteTransportLeg.get_impact_database)
     * [`WasteTransportLeg.get_distance_from_dataset()`](logistics-leg.md#pod_lca.transportation.WasteTransportLeg.get_distance_from_dataset)
-* [Transport Mode](python-libraru/transport-mode)
+* [Transport Mode](transport-mode.md)
   * [`TransportMode`](transport-mode.md#pod_lca.transportation.TransportMode)
     * [`TransportMode.parent`](transport-mode.md#pod_lca.transportation.TransportMode.parent)
     * [`TransportMode.mode_name`](transport-mode.md#pod_lca.transportation.TransportMode.mode_name)
@@ -162,7 +162,7 @@ This sub-package handles transportation. [`TransportationManager`](project-logis
     * [`ElectricTransportMode.get_electricity_consumption()`](transport-mode.md#pod_lca.transportation.ElectricTransportMode.get_electricity_consumption)
     * [`ElectricTransportMode.get_electricity_inventories()`](transport-mode.md#pod_lca.transportation.ElectricTransportMode.get_electricity_inventories)
     * [`ElectricTransportMode.set_inventory_records()`](transport-mode.md#pod_lca.transportation.ElectricTransportMode.set_inventory_records)
-* [Transport Datasets](python-libraru/transport_datasets)
+* [Transport Datasets](transport_datasets.md)
   * [`TransportDataset`](transport_datasets.md#pod_lca.transportation.TransportDataset)
     * [`TransportDataset.filter_datasets()`](transport_datasets.md#pod_lca.transportation.TransportDataset.filter_datasets)
     * [`TransportDataset.get_distance_estimate()`](transport_datasets.md#pod_lca.transportation.TransportDataset.get_distance_estimate)
