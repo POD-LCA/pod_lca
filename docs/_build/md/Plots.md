@@ -20,7 +20,7 @@ Plot.
 Create a plot from a plotter.
 
 * **Parameters:**
-  **plotter** (python-library/[*AbstractPlotter*](plotters.md#pod_lca.visualizer.AbstractPlotter)) -- Plotter.
+  **plotter** ([*AbstractPlotter*](plotters.md#pod_lca.visualizer.AbstractPlotter)) -- Plotter.
 * **Returns:**
   Plot created.
 * **Return type:**
@@ -42,7 +42,7 @@ Create a plot from an existing plot.
 Set the plot.
 
 * **Parameters:**
-  **plotter** (python-library/[*AbstractPlotter*](plotters.md#pod_lca.visualizer.AbstractPlotter)) -- Plotter.
+  **plotter** ([*AbstractPlotter*](plotters.md#pod_lca.visualizer.AbstractPlotter)) -- Plotter.
 
 #### get_plot()
 
@@ -162,7 +162,7 @@ Bar chart with data upto three levels: category, group, and component levels.
 Set the plot.
 
 * **Parameters:**
-  **plotter** (python-library/[*AbstractPlotter*](plotters.md#pod_lca.visualizer.AbstractPlotter)) -- Plotter.
+  **plotter** ([*AbstractPlotter*](plotters.md#pod_lca.visualizer.AbstractPlotter)) -- Plotter.
 
 #### draw(data, title)
 
