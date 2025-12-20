@@ -21,7 +21,8 @@ release = "v0.1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.napoleon", "sphinx.ext.intersphinx"]
+extensions = ["sphinx.ext.napoleon", 
+              "sphinx.ext.intersphinx"]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
@@ -43,3 +44,6 @@ language = "Python"
 
 html_theme = "piccolo_theme"  # https://piccolo-theme.readthedocs.io/en/latest/index.html
 html_static_path = ["../_static"]
+
+markdown_http_base = ""
+markdown_uri_doc_suffix = ".md"

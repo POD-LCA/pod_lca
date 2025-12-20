@@ -78,7 +78,7 @@ def docs(c, out="md"):
         c.run("sphinx-build -b html docs/source docs/_build/html")
     elif out == "md":
         c.run("sphinx-build -b markdown docs/source docs/_build/md")
-        gitbookify_structure_with_summary("docs/source", "docs/_build/md")
+        gitbookify_structure_with_summary()
 
 def load_test_module(filepath):
     """Dynamically import a Python file as a module."""
