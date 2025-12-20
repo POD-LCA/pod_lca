@@ -1,10 +1,6 @@
-.. POD|LCA Materials Tool documentation master file, created by
-   sphinx-quickstart on Tue Sep 24 17:29:59 2024.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-POD|LCA Packages
-==================================================
+***********************
+POD|LCA Python Library
+***********************
 
 The POD|LCA Materials Tool is developed by ....
 
@@ -21,7 +17,6 @@ This python module is written in Python 3.11.9. The other dependendent packages 
    tutorials
    api-reference
    license
-   acknowledgements
    developer
 
 Indices and tables
