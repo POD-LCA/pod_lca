@@ -314,7 +314,9 @@ class ElectricitySupply:
                 raise ValueError("Declared quantity should be one for unit impacts.")
 
             impact_data_dict = {
-                cat: impact for cat, impact in data_dict.items() if cat in producer.get_unit_impacts().get_categories()
+                cat: impact 
+                for cat, impact in data_dict.items() 
+                if cat in producer.get_unit_impacts().get_categories()
             }
             producer.get_unit_impacts().update_qty(impact_data_dict)
 
@@ -479,16 +481,17 @@ class ElectricitySupply:
         self.unit_emissions.clear_qty()
         supply_unit = self.get_declared_unit()
         for technology, percentage in self.get_consumption_mix().items():
-            if technology in self.electricity_producers:
-                production_unit = self.electricity_producers[technology].get_declared_unit()
-                conversion_factor = production_unit.convert_to(supply_unit)
+            if percentage > 0.0:
+                if technology in self.electricity_producers:
+                    production_unit = self.electricity_producers[technology].get_declared_unit()
+                    conversion_factor = production_unit.convert_to(supply_unit)
 
-                self.unit_impacts += (
-                    self.electricity_producers[technology].get_unit_impacts() * conversion_factor * percentage
-                )
-                self.unit_emissions += (
-                    self.electricity_producers[technology].get_unit_emissions() * conversion_factor * percentage
-                )
+                    self.unit_impacts += (
+                        self.electricity_producers[technology].get_unit_impacts() * conversion_factor * percentage
+                    )
+                    self.unit_emissions += (
+                        self.electricity_producers[technology].get_unit_emissions() * conversion_factor * percentage
+                    )
 
         return self
 
