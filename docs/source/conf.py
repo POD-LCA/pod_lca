@@ -21,7 +21,8 @@ release = "v0.1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.napoleon", 
+extensions = ["sphinx.ext.autodoc",
+              "sphinx.ext.napoleon", 
               "sphinx.ext.intersphinx"]
 
 intersphinx_mapping = {

@@ -2,15 +2,11 @@
 POD|LCA Python Library
 ***********************
 
-The POD|LCA Materials Tool is developed by ....
+The **POD|LCA Python Library** is a   `Python<https://www.python.org/>`_ library implementing the LCA metholdologies developed in the POD|LCA project.
 
-This python module is written in Python 3.11.9. The other dependendent packages can be installed by running the following command:
-
-.. code-block:: console
-
-   pip install -r requirements.txt
 
 .. toctree::
+   :hidden:
    :maxdepth: 3
 
    installation
@@ -18,10 +14,3 @@ This python module is written in Python 3.11.9. The other dependendent packages 
    api-reference
    license
    developer
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
