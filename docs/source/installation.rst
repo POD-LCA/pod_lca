@@ -14,17 +14,17 @@ The package also comes with two extras; search mode, openLCA linking. The search
 
 .. code-block:: console
 
-pip install pod_lca[search]
+    pip install pod_lca[search]
 
 or
 
 .. code-block:: console
 
-pip install pod_lca[olca]
+    pip install pod_lca[olca]
 
 or 
 
 .. code-block:: console
-
-pip install pod_lca[search, olca]
+    
+    pip install pod_lca[search, olca]
 

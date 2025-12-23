@@ -12,20 +12,17 @@ pip install pod_lca
 The package also comes with two extras; search mode, openLCA linking. The search mode allows searching the databases and require additional dependencies for natural language processing. OpenLCA provides a pipeline to connect to the OpenLCA API for pre-processing of LCI data.
 
 ```console
-```
-
 pip install pod_lca[search]
+```
 
 or
 
 ```console
-```
-
 pip install pod_lca[olca]
+```
 
 or
 
 ```console
-```
-
 pip install pod_lca[search, olca]
+```
