@@ -17,7 +17,7 @@ MD_ROOT_PATH = Path(MD_ROOT).resolve()
 MD_ROOT_PATH.mkdir(parents=True, exist_ok=True)
 
 
-def gitbookify_structure_with_summary():
+def preprocess_for_gitbook():
     """
     Rearrange MD files into GitBook folder structure.
     Generates SUMMARY.md:

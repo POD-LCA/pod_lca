@@ -4,8 +4,6 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import os
-import re
-import shutil
 import sys
 
 sys.path.insert(0, os.path.abspath("../../src"))
@@ -23,7 +21,8 @@ release = "v0.1.0"
 
 extensions = ["sphinx.ext.autodoc",
               "sphinx.ext.napoleon", 
-              "sphinx.ext.intersphinx"]
+              "sphinx.ext.intersphinx",
+              "sphinx_markdown_builder"]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),

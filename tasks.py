@@ -6,7 +6,7 @@ import importlib.util
 import inspect
 import os
 
-from docs.scripts.format_gitbook import gitbookify_structure_with_summary
+from docs.scripts.format_gitbook import preprocess_for_gitbook
 
 
 @task
@@ -78,7 +78,7 @@ def docs(c, out="md"):
         c.run("sphinx-build -b html docs/source docs/_build/html")
     elif out == "md":
         c.run("sphinx-build -b markdown docs/source docs/_build/md")
-        gitbookify_structure_with_summary()
+        preprocess_for_gitbook()
 
 def load_test_module(filepath):
     """Dynamically import a Python file as a module."""
