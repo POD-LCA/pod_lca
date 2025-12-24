@@ -5,16 +5,21 @@ The **POD|LCA Python Library** is a [Python](https://www.python.org/) library im
 
 
 {% cards %}
-{% card title="⚙️ Installation" description="Install the POD|LCA Python Library." link="./installation/" %}
-{% endcard %}
-{% card title="🧪 Tutorials" description="Practical examples and workflows." link="./tutorials/" %}
-{% endcard %}
-{% card title="🧩 API Documentation" description="Full API reference and internals." link="./api/" %}
-{% endcard %}
-{% card title="📄 License" description="Read license information." link="./license/" %}
-{% endcard %}
-{% card title="🛠️ Developer Guide" description="Download developer documentation." link="./developer/" %}
-{% endcard %}
+*   **⚙️ Installation**
+    Install the POD|LCA Python Library.
+    [⚙️ Installation](./installation/)
+*   **🧪 Tutorials**
+    Practical examples and workflows.
+    [🧪 Tutorials](./tutorials/)
+*   **🧩 API Documentation**
+    Full API reference and internals.
+    [🧩 API Documentation](./api/)
+*   **📄 License**
+    Read license information.
+    [📄 License](./license/)
+*   **🛠️ Developer Guide**
+    Download developer documentation.
+    [🛠️ Developer Guide](./developer/)
 {% endcards %}
 
 
