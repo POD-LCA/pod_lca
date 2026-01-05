@@ -115,7 +115,7 @@ class Project:
             impact_database.set_qty_key('Qty')
             impact_database.set_unit_key('Unit')
             impact_database.set_data(file_path, 
-                                     grouped_data="electricity",
+                                     grouped_data="Electricity",
                                      density_headers=["Density", "Density unit"],
                                      additional_headers=["Biomaterial Species",
                                                          "Region",
