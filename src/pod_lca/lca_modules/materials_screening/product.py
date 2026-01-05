@@ -108,17 +108,6 @@ class Product(Master):
         """
         self.production_year = year
 
-        if self.electricity["by_location"] is not None:
-            self.electricity["by_location"].set_year(year)
-
-        if self.emissions is not None:
-            pulse = UniformEmissionProfile.unit_pulse(at=year)
-            self.get_emissions().set_temporal_emission_profile(pulse)
-
-        if self.get_transportation() is not None:
-            for leg in self.get_transportation():
-                leg.get_emissions().set_temporal_emission_profile(pulse)
-
         if self.emissions is not None:
             pulse = UniformEmissionProfile.unit_pulse(at=year)
             self.get_emissions().set_temporal_emission_profile(pulse)
@@ -600,15 +589,14 @@ class Product(Master):
                         stage=None,
                         qty=electricity_qty,
                         unit=electricity_unit,
-                        year=self.get_project().get_year(),
+                        year=self.get_production_year(),
                     )
                     self.electricity["by_location"] = electricity_by_location
 
                 else:
                     self.electricity["by_location"].set_qty(electricity_qty)
                     self.electricity["by_location"].set_unit(electricity_unit)
-                    if self.get_project().get_year() is not None:
-                        self.electricity["by_location"].set_year(self.get_project().get_year())
+                    self.electricity["by_location"].set_year(self.get_production_year())
 
                 # electricity from database
                 if self.electricity["from_database"] is None:
