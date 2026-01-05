@@ -4,7 +4,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from pod_lca.impacts import ImpactsDatabase
 from pod_lca.location import Location
 from pod_lca.materials_screening import Project
 from pod_lca.units import KILOGRAM, POUND
@@ -14,6 +13,7 @@ project = Project()
 factory = Location.from_str("98126, seattle")
 project.set_location(factory)
 project.set_databases()
+project.set_year(2025)
 
 CLT_model = project.add_model("CLT_01")
 
@@ -34,7 +34,7 @@ epoxy.set_qty(200)
 epoxy.set_unit(POUND)
 print(epoxy.get_impacts())
 
-epoxy.get_electricity().set_geographical_scope("Local")
+epoxy.get_electricity().set_geographical_scope("Regional")
 print(epoxy.get_impacts())
 
 epoxy.set_production_year(2035)
