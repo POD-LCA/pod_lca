@@ -589,7 +589,7 @@ class Product(Master):
                         stage=None,
                         qty=electricity_qty,
                         unit=electricity_unit,
-                        year=self.get_production_year(),
+                        year=self.get_production_year()
                     )
                     self.electricity["by_location"] = electricity_by_location
 

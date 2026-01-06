@@ -9,6 +9,7 @@ from ..electricity import ElectricitySupply
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..location import Location
 from ..analysis import DataDistribution
 from ...utilities import config
 
@@ -33,13 +34,14 @@ class Electricity(Master):
         self.electricity_supplier = None
         self.year = None
         self.geographical_scope = None
+        self.location = None
         self.scenario = None
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def new(cls, id, name, model, stage, qty, unit, year=None):
+    def new(cls, id, name, model, stage, qty, unit, location=None, year=None):
         """Create a new electricity product in a model.
 
         Parameters
@@ -71,7 +73,9 @@ class Electricity(Master):
         item.emissions = Emissions.from_parent(item)
         item.carbon_storage = CarbonStorage.from_parent(item)
 
-        electricity_supplier = ElectricitySupply.from_location(model.get_location(), year)
+        if location is None:
+            location = model.get_location()
+        electricity_supplier = ElectricitySupply.from_location(location, year)
         item.set_supplier(electricity_supplier)
 
         return item
@@ -170,6 +174,32 @@ class Electricity(Master):
             self.get_supplier().set_geographical_scope(geographical_scope)
 
         return self
+    
+    def set_location(self, **kwargs):
+        """Set location object for electricity supply.
+
+        Other Parameters
+        ----------------
+        location_obj : ~pod_lca.location.Location, optional
+            Location object to set, by default None
+        zip_code : str, optional
+            Zip code to set, by default None
+        state : str, optional
+            US State to set, by default None
+        """
+        location_obj = None
+        if "location_obj" in kwargs:
+            location_obj = kwargs["location_obj"]
+        if "zip_code" in kwargs:
+            location_obj = Location.from_US_zip(kwargs["zip_code"])
+        if "state" in kwargs:
+            location_obj = Location.from_US_state(kwargs["state"])
+
+        self.location = location_obj
+        if self.get_supplier() is not None:
+            self.get_supplier().set_location(location_obj)
+
+        return self
 
     def set_scenario(self, scenario):
         """Set scenario name. This will be used with cambium data.
@@ -242,6 +272,19 @@ class Electricity(Master):
         """
         return self.geographical_scope
 
+    def get_location(self):
+        """Get location object for electricity supply.
+
+        Returns
+        -------
+        ~pod_lca.location.Location
+            Location object.
+        """
+        if self.location is None:
+            return self.get_model().get_location()
+        else:
+            return self.location
+    
     def get_scenario(self):
         """Get scenario name. This will what used with cambium data.
 

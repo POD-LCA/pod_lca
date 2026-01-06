@@ -234,6 +234,10 @@ class Model:
         """
         self.location = location
 
+        for product in self.get_products():
+            if isinstance(product, Electricity):
+                product.set_location(location_obj=location)
+
         return self
 
     def set_transportation_manager(self, logistic_type="local"):

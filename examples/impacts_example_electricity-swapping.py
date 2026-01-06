@@ -10,7 +10,7 @@ from pod_lca.units import KILOGRAM, POUND
 
 project = Project()
 
-factory = Location.from_str("98126, seattle")
+factory = Location.from_US_state("Washington")
 project.set_location(factory)
 project.set_databases()
 project.set_year(2025)
@@ -39,7 +39,9 @@ print(epoxy.get_impacts())
 
 epoxy.set_production_year(2035)
 print(epoxy.get_impacts())
-# print(epoxy.electricity['by_location'].year)
+
+epoxy.get_electricity().set_location(state="Texas")
+print(epoxy.get_impacts())
 
 epoxy.set_electricity_source(source="from_database")
 print(epoxy.get_impacts())
