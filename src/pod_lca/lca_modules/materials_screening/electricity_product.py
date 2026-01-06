@@ -260,6 +260,8 @@ class Electricity(Master):
         int
             Year of electricity consumption.
         """
+        if self.year is None:
+            self.year = self.get_supplier().get_year()
         return self.year
 
     def get_geographical_scope(self):
@@ -270,6 +272,8 @@ class Electricity(Master):
         str
             Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
         """
+        if self.geographical_scope is None:
+            self.geographical_scope = self.get_supplier().get_geographical_scope()
         return self.geographical_scope
 
     def get_location(self):
@@ -281,7 +285,7 @@ class Electricity(Master):
             Location object.
         """
         if self.location is None:
-            return self.get_model().get_location()
+            return self.get_supplier().get_location()
         else:
             return self.location
     
@@ -293,6 +297,8 @@ class Electricity(Master):
         str
             Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
         """
+        if self.scenario is None:
+            self.scenario = self.get_supplier().get_scenario()
         return self.scenario
 
     def get_data_distribution(self, attr):
