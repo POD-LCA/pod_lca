@@ -221,6 +221,7 @@ class Location:
                 )
                 location.set_regionality(location_data)
                 location.set_cordinates(location_data)
+                location.set_zip(location_data)
 
                 location_data = geolocator.reverse(
                     location.get_cordinates(), addressdetails=True, zoom=15, language="en"
