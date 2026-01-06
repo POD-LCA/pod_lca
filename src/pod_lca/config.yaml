@@ -91,6 +91,7 @@ file_paths:
   location:
     US_STATES: data/location_faa_us-states.json
     US_STATE_COORDS: data/location_podlca_us-state-coords.csv
+    US_STATE_ZIP: data/location_podlca_us-state-zip.csv
     FAF_DOMESTIC_REGION: data/transportation_faf_domestic-region.json
     FAF_FOREIGN_REGION: data/transportation_faf_foreign-region.json
     FAF_CITY_REPRESENTATION: data/transportation_podlca_faf-city-representation.json

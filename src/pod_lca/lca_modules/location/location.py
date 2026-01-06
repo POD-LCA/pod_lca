@@ -203,9 +203,11 @@ class Location:
             raise ValueError(f"{state} not recognized as a US State.")
 
         location.regionality = "Regional"
+        location.set_zip(None, state=state)
         location.set_cfs_area()
         location.set_faf_domestic_region()
         location.set_us_coast()
+        
 
         if set_all_location_data:
             try:
@@ -366,21 +368,31 @@ class Location:
 
         return self
 
-    def set_zip(self, geopy_location):
+    def set_zip(self, geopy_location, state=None):
         """Set the zipcode of the location.
 
         Parameters
         ----------
         geopy_location : geopy.location.Location
             Geopy location object.
+        state : str
+            US state name.
         """
-        try:
-            if "postcode" in geopy_location.raw["address"]:
-                self.zipcode = geopy_location.raw["address"]["postcode"]
+        if geopy_location is not None:
+            try:
+                if "postcode" in geopy_location.raw["address"]:
+                    self.zipcode = geopy_location.raw["address"]["postcode"]
+                else:
+                    self.zipcode = self.get_closest_zip(geopy_location)
+            except:
+                self.zipcode = None
+        elif state is not None:
+            us_state_zip = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_STATE_ZIP"])
+            state_zips = us_state_zip[us_state_zip["State"] == state]["ZIP"].tolist()
+            if len(state_zips) > 0:
+                self.zipcode = str(state_zips[0])
             else:
-                self.zipcode = self.get_closest_zip(geopy_location)
-        except:
-            self.zipcode = None
+                self.zipcode = None
 
         return self
 
