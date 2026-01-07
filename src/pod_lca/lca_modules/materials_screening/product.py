@@ -103,9 +103,12 @@ class Product(Master):
 
         Parameters
         ----------
-        year : int
+        year : int or str
             Year of production.
         """
+        if isinstance(year, str):
+            year = int(year)
+            
         self.production_year = year
 
         if self.emissions is not None:
@@ -286,6 +289,9 @@ class Product(Master):
                     carbon_storage=carbon_storage,
                 )
                 self.electricity["from_database"] = electiricity_from_data
+
+            # set default electricity source
+            self.set_electricity_source()
 
         return self
 
