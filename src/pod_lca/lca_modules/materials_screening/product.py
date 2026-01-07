@@ -108,7 +108,7 @@ class Product(Master):
         """
         if isinstance(year, str):
             year = int(year)
-            
+
         self.production_year = year
 
         if self.emissions is not None:
@@ -295,7 +295,6 @@ class Product(Master):
 
         return self
 
-
     def set_electricity_source(self, source="from_database"):
         """Set the source of electricity inventories.
 
@@ -320,7 +319,6 @@ class Product(Master):
             raise KeyError(f"Source of electricty ({source} not recognized.)")
 
         return self
-
 
     def set_electricity_database_tag(self):
         """Find the tag used to identify electricity data in the database."""

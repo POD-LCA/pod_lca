@@ -457,6 +457,8 @@ class Model:
         if "density" in kwargs:
             product.set_density(kwargs["density"])
             product.set_density_unit(kwargs["density_unit"])
+        else:
+            product.set_density()
 
         if not kwargs.get("ignore_transport", False):
             product.set_transportation()
