@@ -116,6 +116,9 @@ class Product(Master):
             for leg in self.get_transportation():
                 leg.get_emissions().set_temporal_emission_profile(pulse)
 
+        if self.electricity["by_location"] is not None:
+            self.electricity["by_location"].set_year(year)
+
         return self
 
     def set_density_unit(self, unit):
@@ -224,6 +227,69 @@ class Product(Master):
 
         return self
 
+    def set_electricity_product(self):
+        """Set electricity product for the item from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of **'Electricity_'**, **'electricity_'**, **'elec_'**, or **'Elec_'**."""
+        if self.get_impact_database_entry() is not None:
+            if self.get_electricity_database_tag() is None:
+                self.set_electricity_database_tag()
+
+            database = self.get_impact_database()
+            data_set = database.get_data_entry(self.get_impact_database_entry())
+
+            electricity_tag = self.get_electricity_database_tag()
+
+            if electricity_tag is not None:
+                # electricity quantity and unit
+                electricity_qty = self.get_electricity_qty()
+                if electricity_qty > 0.0:
+                    electricity_unit = UNITS_MAP[data_set[electricity_tag + database.get_unit_key()]]
+                else:
+                    electricity_unit = UNITS_MAP[config["setup"]["electricity"]["DEFAULT_DECLARED_UNIT"]]
+
+                # electricity by location
+                electricity_by_location = Electricity.new(
+                    id=None,
+                    name=self.get_name() + "_electricity",
+                    model=self.get_model(),
+                    stage=None,
+                    qty=electricity_qty,
+                    unit=electricity_unit,
+                    year=self.get_production_year()
+                )
+                self.electricity["by_location"] = electricity_by_location
+
+                # electricity from database
+                database_electricity_qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
+                for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
+                    record_dict = {}
+                    for cat in DATA_HEADERS_DICT:
+                        if (database_electricity_qty > 0.0) and (electricity_tag + cat in list(data_set.index)):
+                            record_dict[cat] = data_set[electricity_tag + cat] / database_electricity_qty
+                        else:
+                            record_dict[cat] = 0.0
+
+                    if data_type == "impacts":
+                        impacts = Impacts.from_dict(record_dict)
+                    elif data_type == "emissions":
+                        emissons = Emissions.from_dict(record_dict)
+                    elif data_type == "carbon_storage":
+                        carbon_storage = CarbonStorage.from_dict(record_dict)
+                    else:
+                        raise KeyError(f"Record type {data_type} not recognized.")
+
+                electiricity_from_data = Electricity.from_unit_inventories(
+                    name=self.get_name() + "_electricity",
+                    qty=electricity_qty,
+                    unit=electricity_unit,
+                    impacts=impacts,
+                    emissions=emissons,
+                    carbon_storage=carbon_storage,
+                )
+                self.electricity["from_database"] = electiricity_from_data
+
+        return self
+
+
     def set_electricity_source(self, source="from_database"):
         """Set the source of electricity inventories.
 
@@ -248,6 +314,7 @@ class Product(Master):
             raise KeyError(f"Source of electricty ({source} not recognized.)")
 
         return self
+
 
     def set_electricity_database_tag(self):
         """Find the tag used to identify electricity data in the database."""
@@ -563,73 +630,20 @@ class Product(Master):
         KeyError
             Inventory type not recognized.
         """
+        if self.electricity["from_database"] is None:
+            self.set_electricity_product()
+        
         if self.get_impact_database_entry() is not None:
             if self.get_electricity_database_tag() is None:
                 self.set_electricity_database_tag()
 
             database = self.get_impact_database()
-            data_set = database.get_data_entry(self.get_impact_database_entry())
-
             electricity_tag = self.get_electricity_database_tag()
 
             if electricity_tag is not None:
-                # electricity quantity and unit
                 electricity_qty = self.get_electricity_qty()
-                if electricity_qty > 0.0:
-                    electricity_unit = UNITS_MAP[data_set[electricity_tag + database.get_unit_key()]]
-                else:
-                    electricity_unit = UNITS_MAP[config["setup"]["electricity"]["DEFAULT_DECLARED_UNIT"]]
-
-                # electricity by location
-                if self.electricity["by_location"] is None:
-                    electricity_by_location = Electricity.new(
-                        id=None,
-                        name=self.get_name() + "_electricity",
-                        model=self.get_model(),
-                        stage=None,
-                        qty=electricity_qty,
-                        unit=electricity_unit,
-                        year=self.get_production_year()
-                    )
-                    self.electricity["by_location"] = electricity_by_location
-
-                else:
-                    self.electricity["by_location"].set_qty(electricity_qty)
-                    self.electricity["by_location"].set_unit(electricity_unit)
-                    self.electricity["by_location"].set_year(self.get_production_year())
-
-                # electricity from database
-                if self.electricity["from_database"] is None:
-                    database_electricity_qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
-                    for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
-                        record_dict = {}
-                        for cat in DATA_HEADERS_DICT:
-                            if (database_electricity_qty > 0.0) and (electricity_tag + cat in list(data_set.index)):
-                                record_dict[cat] = data_set[electricity_tag + cat] / database_electricity_qty
-                            else:
-                                record_dict[cat] = 0.0
-
-                        if data_type == "impacts":
-                            impacts = Impacts.from_dict(record_dict)
-                        elif data_type == "emissions":
-                            emissons = Emissions.from_dict(record_dict)
-                        elif data_type == "carbon_storage":
-                            carbon_storage = CarbonStorage.from_dict(record_dict)
-                        else:
-                            raise KeyError(f"Record type {data_type} not recognized.")
-
-                    electiricity_from_data = Electricity.from_unit_inventories(
-                        name=self.get_name() + "_electricity",
-                        qty=electricity_qty,
-                        unit=electricity_unit,
-                        impacts=impacts,
-                        emissions=emissons,
-                        carbon_storage=carbon_storage,
-                    )
-                    self.electricity["from_database"] = electiricity_from_data
-                else:
-                    self.electricity["from_database"].set_qty(electricity_qty)
-                    self.electricity["from_database"].set_unit(electricity_unit)
+                self.electricity["by_location"].set_qty(electricity_qty)
+                self.electricity["from_database"].set_qty(electricity_qty)
 
             if self.get_electricity_source() is None:
                 self.electricity["_current"] = "from_database"

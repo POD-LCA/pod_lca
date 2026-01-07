@@ -450,6 +450,8 @@ class Model:
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
 
+        product.set_electricity_product()
+
         if "sctg_code" in kwargs:
             product.set_sctg_code(kwargs["sctg_code"])
         if "density" in kwargs:
