@@ -68,3 +68,25 @@ exclude = ["legacy*", "ui*"]
 convention = "numpy"
 add-ignore = ["D419", "D107", "D203", "D104", "D100"]
 match-dir = '^(?!build|dist|docs/_build|data|\.venv|legacy|ui).*'
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit = true
+tag = true
+message = "Bump version to {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+glob = "**/*.py"
+ignore_missing_version = true
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = "Unreleased"
+replace = "[{new_version}] {now:%Y-%m-%d}"
