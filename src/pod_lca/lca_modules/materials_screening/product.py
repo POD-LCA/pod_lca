@@ -402,7 +402,7 @@ class Product(Master):
             Standard Classification of Transported Goods (SCTG) code of the material
         """
         if code is None:
-            data_material = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["CFS_SCTG_CODE"])
+            data_material = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["BT_SCTG_CODE"])
             if self.get_name() in data_material["material"].values:
                 sctg = data_material[data_material["material"] == self.get_name()].iloc[0, 1]
                 self.sctg_code = str(sctg)

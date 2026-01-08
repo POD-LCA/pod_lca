@@ -63,7 +63,8 @@ file_paths:
     FAF_DATA_PATH: data/transportation_faf_dataset.csv
     FAF_DISTANCE_BANDS: data/transportation_podlca_faf-dist-band.scv
     CFS_STATE_CODE: data/transportation_cfs_state-code.json
-    CFS_SCTG_CODE: data/transportation_bt_material-sctg.csv
+    BT_SCTG_CODE: data/transportation_bt_material-sctg.csv
+    SCTG_CODE_LIST: data/transportation_cf_sctg-codes.csv
     MARINE_DATA_PATH: data/transportation_podlca_marine.csv
     CFS_MODE_CODE: data/transportation_cfs_mode-codes.json
     FAF_MODE_CODE: data/transportation_faf_mode-codes.json
