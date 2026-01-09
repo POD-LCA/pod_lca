@@ -120,6 +120,13 @@ def test(c):
 
 @task(pre=[clean])
 @task
-def package(c):
-    """Build only the wheel."""
+def package(c, version_bump="patch"):
+    """Build only the wheel.
+    
+    Parameters
+    ----------
+    version_bump : str
+        One of 'major', 'minor', or 'patch' to indicate the type of version bump.
+    """
+    c.run(f"bump-my-version bump {version_bump} ")
     c.run("python -m build --wheel")
