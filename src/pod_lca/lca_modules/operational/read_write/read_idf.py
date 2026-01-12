@@ -173,6 +173,7 @@ def find_materials(filepath, data):
             "solar_absorptance": slea,
             "visible_absorptance": vsba,
         }
+    return data
 
 
 def find_materials_air_gap(filepath, data):
@@ -195,6 +196,7 @@ def find_materials_air_gap(filepath, data):
             "name": name,
             "resistance": resi,
         }
+    return data
 
 
 def find_no_mass_materials(filepath, data):
@@ -232,6 +234,7 @@ def find_no_mass_materials(filepath, data):
             "visible_absorptance": visa,
             "thickness": thic,
         }
+    return data
 
 
 def find_gas_materials(filepath, data):

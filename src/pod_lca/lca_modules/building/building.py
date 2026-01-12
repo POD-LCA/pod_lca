@@ -186,7 +186,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         building.add_floors(no_floors, floors_below_grade, f2f_height, floor_plan,  geometry_units)
 
         building.make_structure('from geometry', building_type='commercial', structure_type='concrete')
-        building.make_envelope('from geometry', 'commercial', None, None, None) # TODO: Does the type of enclosure: opaque, enclosure:transparent, roofing get selected here... for the eplus model
+        # building.make_envelope('from geometry', 'commercial', None, None, None) # TODO: Does the type of enclosure: opaque, enclosure:transparent, roofing get selected here... for the eplus model
 
         return building
 
@@ -232,7 +232,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
                                              electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
 
         building.make_structure()
-        building.make_envelope()
+        # building.make_envelope()
 
         return building
     
