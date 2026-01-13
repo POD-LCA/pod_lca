@@ -267,7 +267,7 @@ class ForeignLeg(TransportationLeg):
         ~pod_lca.transportation.TransportDataset
             Dataset used.
         """
-        return self.get_manager().get_dataset()
+        return self.get_manager().get_dataset()["global"]
 
     # ================================
     # Dataset Methods

@@ -195,7 +195,7 @@ class DomesticLeg(TransportationLeg):
 
     def get_dataset(self):
         """Get the dataset."""
-        return self.get_manager().get_dataset()
+        return self.get_manager().get_dataset()["domestic"]
 
     # ================================
     # CFS Methods

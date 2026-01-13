@@ -11,8 +11,7 @@ from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import TranportationModeImpactsDatabase
 from ..transportation import TransportationManager
-from ..transportation import USDomesticTransportationManager
-from ..transportation import USGlobalTransportationManager
+from ..transportation import USTransportationManager
 from ...utilities import config
 
 
@@ -36,12 +35,7 @@ class TransportationMixins:
         if self.get_location() is None:
             self.transportation_manager = TransportationManager.new('transportation')
         elif self.get_location().get_country_code() == 'US':
-            if logistic_type == 'local':
-                self.transportation_manager = USDomesticTransportationManager.new('transportation')
-            elif logistic_type == 'global':
-                self.transportation_manager = USGlobalTransportationManager.new('transportation')
-            else: 
-                raise ValueError(f"Logistic type {logistic_type} not recognized.")
+            self.transportation_manager = USTransportationManager.new('transportation')
         else:
             self.transportation_manager = TransportationManager.new('transportation')
 

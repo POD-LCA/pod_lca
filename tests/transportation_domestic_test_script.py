@@ -9,7 +9,7 @@ __version__ = "0.1.0"
 from pod_lca.units import KILO
 from pod_lca.units import KILOMETER
 from pod_lca.units import WATT_HOUR
-from pod_lca.transportation import USDomesticTransportationManager
+from pod_lca.transportation import USTransportationManager
 from pod_lca.materials_screening import Product
 from pod_lca.units import UNITS_MAP
 from pod_lca.location import Location
@@ -23,7 +23,7 @@ def test_transportation_domestic():
     output_file = "tests\\transportation-domestic_test_report.csv"
     test_dict = DataImporter.csv_to_dict(test_data, "test name")
 
-    project = USDomesticTransportationManager.new("Building A")
+    project = USTransportationManager.new("Building A")
     project.set_data_generator_mode()
     project.set_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
     electricity_report_unit = KILO * WATT_HOUR

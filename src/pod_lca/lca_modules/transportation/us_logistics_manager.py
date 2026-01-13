@@ -4,20 +4,21 @@ __license__ = "MIT License"
 __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
-from ..transportation import USGlobalDataset
-from ..transportation import DomesticLeg
-from ..transportation import ForeignLeg
-from ..transportation import TransportationLeg
-from ..transportation import TransportationManager
+from . import USGlobalDataset
+from . import CFSDataset
+from . import DomesticLeg
+from . import ForeignLeg
+from . import TransportationLeg
+from . import TransportationManager
 from ...units import KILOMETER
 
 
-class USGlobalTransportationManager(TransportationManager):
-    """A project in US using global logistic.
+class USTransportationManager(TransportationManager):
+    """A project in US using domestic or global logistic.
 
     Attributes
     ----------
-    dataset : ~pod_lca.transportation.TransportDataset
+    dataset : dict of ~pod_lca.transportation.TransportDataset
         Dataset corresponding to the project.
     """
 
@@ -43,7 +44,8 @@ class USGlobalTransportationManager(TransportationManager):
             Project created.
         """
         new_project = super().new(name)
-        new_project.set_dataset(USGlobalDataset())
+        new_project.set_dataset({"domestic": CFSDataset(),
+                                 "global": USGlobalDataset()})
 
         return new_project
 
@@ -87,8 +89,8 @@ class USGlobalTransportationManager(TransportationManager):
         transport_scenario=None,
         distance_unit=KILOMETER,
         return_trip_factor=None,
-        mode_name="Ocean",
-        mode_efficiency="Median",
+        mode_name=None,
+        mode_efficiency=None,
     ):
         """Add good to the project. This method creates the appropriate tranportation leg based on the data provided
 
@@ -102,13 +104,13 @@ class USGlobalTransportationManager(TransportationManager):
             Shipping destination.
         shipping_org : ~pod_lca.location.Location
             Shipping origin
-        transport_scenario : {'Global'}
+        transport_scenario : {'Local', 'Regional', 'National', 'Global'}
             Transportation scenario considered.
         distance_unit : ~pod_lca.units.Unit
             Unit of measurement of distances.
         return_trip_factor : float
             Return trip factor.
-        mode_name : {'Truck', 'E_Truck', 'Rail', 'Ocean', 'Air'}
+        mode_name : {'Truck', 'E_Truck', 'Rail', 'Ocean', 'Barge', 'Air'}
             Name of the transportation mode.
         mode_efficiency : {'High', 'Median', 'Low'}
             Efficiency of the transportation mode. Default is 'Median'.
@@ -125,13 +127,24 @@ class USGlobalTransportationManager(TransportationManager):
             LinkClass = TransportationLeg
 
         elif (shipping_dest is not None) and (shipping_org is not None):
-            if (shipping_dest.get_country_code() == "US") and not (shipping_org.get_country_code() == "US"):
+            if shipping_dest.get_country_code() == "US":
+                if transport_scenario == "Global" or not (shipping_org.get_country_code() == "US"):
+                    LinkClass = ForeignLeg
+                else:
+                    LinkClass = DomesticLeg
+            else:
+                raise ValueError(f"This project is for US logistics only. Destination country: {shipping_dest.get_country_code()}")
+
+        elif isinstance(transport_scenario, str):
+            if transport_scenario in ["Local", "Regional", "National"]:
+                LinkClass = DomesticLeg
+            elif transport_scenario == "Global":
                 LinkClass = ForeignLeg
             else:
-                raise ValueError("This project is for US global logistics only")
+                raise ValueError("Transport scenario not recognized.")
 
         else:
-            LinkClass = ForeignLeg
+            LinkClass = DomesticLeg
 
         # create transport leg
         leg = LinkClass.in_project(good, self, "transport_" + good.get_name())
@@ -148,8 +161,10 @@ class USGlobalTransportationManager(TransportationManager):
 
     def set_data_generator_mode(self):
         """Set variables used for data generator."""
-        self.get_dataset().force_closest_location = False
-        self.get_dataset().force_default_mode = False
+        dataset = self.get_dataset()
+        for scope in dataset:
+            dataset[scope].force_closest_location = False
+            dataset[scope].force_default_mode = False
 
         return self
 

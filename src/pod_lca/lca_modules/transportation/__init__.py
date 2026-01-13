@@ -9,8 +9,7 @@ from .transport_leg_domestic import DomesticLeg
 from .transport_leg_foreign import ForeignLeg
 from .transport_leg_waste import WasteTransportLeg
 from .transportation_manager import TransportationManager
-from .us_domestic_transport_manager import USDomesticTransportationManager
-from .us_global_logistics_manager import USGlobalTransportationManager
+from .us_logistics_manager import USTransportationManager
 
 __all__ = [
     "CFSDataset",
