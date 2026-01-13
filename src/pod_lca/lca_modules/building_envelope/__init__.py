@@ -12,9 +12,11 @@ from .surface import Surface
 from .envelope import Envelope
 from .window import Window
 from .wall import Wall
+from .wall import FramedWall
 from .floor import Floor
 from .ceiling import Ceiling
 from .shading import Shading
+from .framing import Framing
 
 
 __all__ = ["Envelope"]

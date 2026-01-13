@@ -126,6 +126,10 @@ class Envelope:
         
         return envelope
 
+    @classmethod
+    def from_components(cls, geometry, floors= None, ceilings=None, wall=None, windows=None, shadings=None):
+        pass
+
     # ================================
     # Setters
     # ================================

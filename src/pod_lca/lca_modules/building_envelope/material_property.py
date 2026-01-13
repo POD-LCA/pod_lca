@@ -25,7 +25,7 @@ class EnvelopeMaterial(EnvelopeMaterialProperty):
         self.visible_absorptance = None
 
     @classmethod
-    def from_idf_data(cls, data):
+    def from_data(cls, data):
         material = cls()
         material.__type__            = 'Material'
         material.name                = data['name']
@@ -47,7 +47,7 @@ class EnvelopeMaterialAirGap(EnvelopeMaterialProperty):
         self.resistace = None
 
     @classmethod
-    def from_idf_data(cls, data):
+    def from_data(cls, data):
         material = cls()
         material.__type__            = 'EnvelopeMaterialAirGap'
         material.name                = data['name']
@@ -68,7 +68,7 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
         self.thickness           = None
 
     @classmethod
-    def from_idf_data(cls, data):
+    def from_data(cls, data):
         material = cls()
         material.__type__            = 'MaterialNoMass'
         material.name                = data['name']
@@ -103,7 +103,7 @@ class WindowMaterialGlazing(EnvelopeMaterialProperty):
         self.solar_diffusing                            = None
 
     @classmethod
-    def from_idf_data(cls, data):
+    def from_data(cls, data):
         material = cls()
         material.name                                    = data.get('name') or {}
         material.optical_data_type                       = data.get('optical_data_type') or {}
@@ -144,7 +144,7 @@ class WindowMaterialGas(EnvelopeMaterialProperty):
         self.gas_type          = None
     
     @classmethod
-    def from_idf_data(cls, data):
+    def from_data(cls, data):
         material = cls()
         material.__type__           = data.get('__type__') or {}
         material.name               = data.get('name') or {}
