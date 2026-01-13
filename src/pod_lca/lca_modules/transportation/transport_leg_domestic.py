@@ -158,7 +158,7 @@ class DomesticLeg(TransportationLeg):
             Transport scenario not recognized.
         """
         current_params = (
-            self.get_material(),
+            self.get_material().get_sctg_code(digits=2),
             self.get_shipping_destination(),
             self.get_shipping_origin(),
             self.get_mode().get_name(),
