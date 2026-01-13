@@ -337,6 +337,26 @@ class TransportationManager:
             leg.set_transport_scenario(transport_scenario)
 
         return self
+    
+    def remove_good(self, good):
+        """Remove a good and its corresponding transportation legs from the project.
+
+        Parameters
+        ----------
+        good : ~pod_lca.materials_screening.Product
+            Good to be removed.
+
+        Raises
+        ------
+        ValueError
+            Good not found in the project.
+        """
+        if good not in self.transport_legs:
+            raise ValueError(f"Good '{good}' not found in the project.")
+
+        del self.transport_legs[good]
+
+        return self
 
     # ================================
     # Project Methods

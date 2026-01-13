@@ -177,6 +177,7 @@ class Product(Master):
         self,
         travel_dist=None,
         dist_unit=None,
+        shipping_org=None,
         transport_scenario=None,
         return_trip_factor=None,
         mode_name=None,
@@ -215,7 +216,7 @@ class Product(Master):
                 self,
                 travel_dist=travel_dist,
                 shipping_dest=self.get_project().get_location(),
-                shipping_org=None,
+                shipping_org=shipping_org,
                 transport_scenario=transport_scenario,
                 distance_unit=dist_unit,
                 return_trip_factor=None,
@@ -547,6 +548,19 @@ class Product(Master):
         transportation_manager = self.get_transportation_manager()
 
         return transportation_manager.get_transportation_leg(self)
+    
+    def clear_transportation(self):
+        """Clear transport processes the product is subject to, if any.
+
+        Returns
+        -------
+        ~pod_lca.materials_screening.product.Product
+            The product with cleared transportation legs.
+        """
+        transportation_manager = self.get_transportation_manager()
+        transportation_manager.remove_good(self)
+
+        return self
 
     def get_mineral_carbonation_potential(self):
         """Set mineral carbonation potential of the product.
