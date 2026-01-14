@@ -610,8 +610,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         else:
             raise ValueError('Method of creating envelope is not recognized.')
         
-        
-        
         self.envelope = envelope
 
         return self

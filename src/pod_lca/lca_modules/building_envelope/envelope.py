@@ -73,7 +73,7 @@ class Envelope:
             Structure created.
         """
         envelope = cls()
-        envelope.set_parent(building)
+        envelope.set_building(building)
 
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
         
@@ -98,31 +98,30 @@ class Envelope:
         boms = [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
 
         # FIXME: if the wwr to be calculated from these
-        enclosure_walls = Construction.create('walls', building, None)
-        enclosure_windows = Construction.create('windows', building, None)
-        enclosure_roof = Construction.create('roof', building, None)
+        enclosure_walls = Construction.create('walls', None)
+        enclosure_windows = Construction.create('windows', None)
+        enclosure_roof = Construction.create('roof', None)
         enclosures =  [enclosure_walls, enclosure_windows, enclosure_roof]
         
         for assembly, bom in zip(enclosures, boms):
-            for item in bom.values():
-                    
+            for item in bom.values():        
                 building_assembly = item['assembly'].lower().replace(" ", "_").replace(",", "")
                 if not (isnan(item['qty']) or (item['qty'] == '') or (isinstance(item['material'], (float, int)) and isnan(item['material'])) or (item['material'] == '')): # TODO: better check for qty
                     building_material = EnvelopeMaterial.new(
-                        parent=assembly,
                         name=item['material'] + '_in_' + building_assembly,
                         qty=float(item['qty']),
                         unit=UNITS_MAP[item['unit']],
                         material_database_entry=default_database_entry_map[item['material']]['impact database entry'],
                         product_year=building.get_built_year(),
-                        service_life=item['POD|LCA RSL Category']
+                        service_life_category=item['POD|LCA RSL Category']
                     )
                     assembly.add_material(building_material)
                 else:
                     log("Quantity or material not specified for {} in {}. Skipping.".format(item['material'], building_assembly), level='Warn')
                 
-                
-            # TODO:update component servie life based on materials
+        for assembly in enclosures:
+            if assembly.get_materials():
+                envelope.add_assembly(assembly)
         
         return envelope
 
@@ -133,7 +132,7 @@ class Envelope:
     # ================================
     # Setters
     # ================================
-    def set_parent(self, parent):
+    def set_building(self, parent):
         """ Set the parent building of the envelope.
         
         Parameters
@@ -141,14 +140,14 @@ class Envelope:
         parent : ~pod_lca.building.Building
             The building to which the envelope belong.
         """
-        self.parent = parent
+        self.building = parent
 
         return self
 
     # ================================
     # Getters
     # ================================
-    def get_parent(self):
+    def get_building(self):
         """ Get the parent building of the envelope.
         
         Returns
@@ -156,7 +155,7 @@ class Envelope:
         ~pod_lca.building.Building
             The building to which the envelope belong.
         """
-        return self.parent
+        return self.building
         
     @property
     def height(self):
@@ -199,6 +198,38 @@ class Envelope:
     def get_assemblies(self):
         # TODO implement method to return all envelop elements as a list
         return []
+
+    # ================================
+    # Add
+    # ================================
+    def add_assemblies(self, assemblies):
+        """Add assemblies to the building structure.
+        
+        Parameters
+        ----------
+        assemblies : list of ~pod_lca.buildings.Assembly
+            Assemblies to be added to the building structure.
+        """
+        for assembly in assemblies:
+            self.add_assembly(assembly)
+
+    def add_assembly(self, assembly):
+        """Add assembly to the building structure.
+        
+        Parameters
+        ----------
+        assembly : ~pod_lca.buildings.Assembly
+            Assembly to be added to the building structure.        
+        """
+        building = self.get_building()
+        if building is not None:
+            building.add_assembly(assembly)
+
+        for material in assembly.get_materials():
+            material.set_service_life()
+            material.set_properties_from_database()
+            
+        return self
 
     def add_construction(self, construction):
         con_dict = self.construction_map[construction.__type__]

@@ -547,7 +547,10 @@ class Product(Master):
         """
         transportation_manager = self.get_transportation_manager()
 
-        return transportation_manager.get_transportation_leg(self)
+        if transportation_manager is None:
+            return None
+        else:
+            return transportation_manager.get_transportation_leg(self)
     
     def clear_transportation(self):
         """Clear transport processes the product is subject to, if any.

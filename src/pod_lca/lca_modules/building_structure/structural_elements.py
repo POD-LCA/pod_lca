@@ -15,6 +15,8 @@ class StructuralElement(Assembly):
     
     Attributes
     ----------
+    element_type : str
+        Element type.
     floor :
         Floor to which the element belong.
     material : list of ~pod_lca.building.BuildingMaterial
@@ -29,6 +31,7 @@ class StructuralElement(Assembly):
 
     def __init__(self):
         super().__init__()
+        self.element_type = None
         self.floor = None
         self.material = None
         self.geometry = None
@@ -43,6 +46,14 @@ class StructuralElement(Assembly):
     def from_geometry(cls, geometry):
         pass
 
+    @classmethod
+    def create(cls, name, materials):
+        """Create a structural element."""
+
+        structural_element = super().create(name, materials)
+
+        return structural_element
+    
     def set_floor(self):
         pass
 
@@ -66,12 +77,15 @@ class StructuralElement(Assembly):
         service_life = data[part]['service_life']
         
         return super().set_service_life(service_life)
-
+    
     def get_capacity(self):
         pass
 
     def size_member(self):
         pass
+
+    def get_element_type(self):
+        return self.element_type
 
 
 class Foundation(StructuralElement):
@@ -79,90 +93,56 @@ class Foundation(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = "substructure"
+        self.element_type = "foundations"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        foundation_element = super().create(name, structure.get_parent(), materials)
-        foundation_element.set_service_life('substructure')
-        structure.foundations.append(foundation_element)
-
-        return foundation_element
 
 class LateralStabilitySystem(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+
 
 class Beam(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "beams"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        beam = super().create(name, structure.get_parent(), materials)
-        beam.set_service_life('superstructure')
-        structure.beams.append(beam)
-
-        return beam
 
 class Column(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "columns"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        column = super().create(name, structure.get_parent(), materials)
-        column.set_service_life('superstructure')
-        structure.columns.append(column)
-
-        return column
 
 class Slab(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "slabs"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        slab = super().create(name, structure.get_parent(), materials)
-        slab.set_service_life('superstructure')
-        structure.slabs.append(slab)
-
-        return slab
 
 class Wall(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "structural_walls"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        wall = super().create(name, structure.get_parent(), materials)
-        wall.set_service_life('superstructure')
-        structure.columns.append(wall)
-
-        return wall
 
 class RoofStructure(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "roof_structure"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        roof = super().create(name, structure.get_parent(), materials)
-        roof.set_service_life('superstructure')
-        structure.roof_structure.append(roof)
-
-        return roof
 
 if __name__ == '__main__':
     pass

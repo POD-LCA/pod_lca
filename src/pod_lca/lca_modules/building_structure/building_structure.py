@@ -23,7 +23,7 @@ class BuildingStructure:
     
     Attributes
     ----------
-    parent : ~pod_lca.building.Building
+    building : ~pod_lca.building.Building
         The building to which the structure belong.
     structural_system :
         Major vertical gravity system of the structure.
@@ -37,16 +37,21 @@ class BuildingStructure:
         Column elements in the structure.
     slabs : list of ~pod_lca.building_structure.Slab
         Floor slabs in the structure.
+    structural_walls : list of ~pod_lca.building_structure.Wall
+        Structural walls in the structure.
+    roof_structure : list of ~pod_lca.building_structure.RoofStructure
+        Roof structure of the building.
     """
 
     def __init__(self):
-        self.parent = None
+        self.building = None
         self.structural_system = None
         self.structural_material = None
         self.foundations = []
         self.beams = []
         self.columns = []
         self.slabs = []
+        self.structural_walls = []
         self.roof_structure = []
 
     # ================================
@@ -71,7 +76,7 @@ class BuildingStructure:
             Structure created.
         """
         structure = cls()
-        structure.set_parent(building)
+        structure.set_building(building)
 
         bill_of_materials_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_STRUCTURE'])
         bill_of_materials = bill_of_materials_all[(bill_of_materials_all['building_type'].str.lower() == building_type.lower()) & 
@@ -82,15 +87,15 @@ class BuildingStructure:
 
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
 
-        column_foundation = Foundation.create('wall foundation', structure, None)
-        wall_foundation = Foundation.create('column foundation', structure, None)
-        slab_on_grade = Slab.create('slab on grade', structure, None)
-        elevated_slab = Slab.create('elevated slab', structure, None)
-        structural_beam = Beam.create('structural framing: beams', structure, None)
-        structural_girders = Beam.create('structural framing: girders', structure, None)
-        structural_columns = Column.create('structural walls', structure, None)
-        structural_walls = Wall.create('structural columns', structure, None)
-        roof_structure = RoofStructure.create('roof structure', structure, None)
+        column_foundation = Foundation.create('wall foundation', None)
+        wall_foundation = Foundation.create('column foundation', None)
+        slab_on_grade = Slab.create('slab on grade', None)
+        elevated_slab = Slab.create('elevated slab', None)
+        structural_beam = Beam.create('structural framing: beams', None)
+        structural_girders = Beam.create('structural framing: girders', None)
+        structural_columns = Column.create('structural walls', None)
+        structural_walls = Wall.create('structural columns', None)
+        roof_structure = RoofStructure.create('roof structure', None)
 
         for item in bill_of_materials.values():
                 
@@ -118,7 +123,6 @@ class BuildingStructure:
                     ValueError("Building assmebly not recognized.")
 
             building_material = StructuralMaterial.new(
-                parent=assembly_obj,
                 name=item['material'] + '_in_' + building_assembly, 
                 qty=float(item['qty']),
                 unit=UNITS_MAP[item['unit']],
@@ -128,10 +132,18 @@ class BuildingStructure:
             
             assembly_obj.add_material(building_material)
 
-        # remove unused assembly
-        del_list = [comp for comp in building.get_assemblies() if not comp.get_materials()]
-        for assembly in del_list:
-            building.remove_assembly(assembly)
+        # add assemblies
+        for assembly in [column_foundation,
+                         wall_foundation,
+                         slab_on_grade,
+                         elevated_slab,
+                         structural_beam,
+                         structural_girders,
+                         structural_columns,
+                         structural_walls,
+                         roof_structure]:
+            if assembly.get_materials():
+                structure.add_assembly(assembly)
 
         return structure
 
@@ -142,7 +154,7 @@ class BuildingStructure:
     # ================================
     # Setters
     # ================================
-    def set_parent(self, parent):
+    def set_building(self, parent):
         """ Set the parent building of the structure.
         
         Parameters
@@ -150,14 +162,14 @@ class BuildingStructure:
         parent : ~pod_lca.building.Building
             The building to which the structure belong.
         """
-        self.parent = parent
+        self.building = parent
 
         return self
 
     # ================================
     # Getters
     # ================================
-    def get_parent(self):
+    def get_building(self):
         """ Get the parent building of the structure.
         
         Returns
@@ -165,7 +177,7 @@ class BuildingStructure:
         ~pod_lca.building.Building
             The building to which the structure belong.
         """
-        return self.parent
+        return self.building
     
     def get_assemblies(self):
         """ Get a list of all structural elements (i.e., structural assemblies) of the building.
@@ -177,6 +189,41 @@ class BuildingStructure:
         """
         return  self.foundations + self.beams + self.columns + self.slabs
     
+    # ================================
+    # Add
+    # ================================
+    def add_assemblies(self, assemblies):
+        """Add assemblies to the building structure.
+        
+        Parameters
+        ----------
+        assemblies : list of ~pod_lca.buildings.Assembly
+            Assemblies to be added to the building structure.
+        """
+        for assembly in assemblies:
+            self.add_assembly(assembly)
+
+    def add_assembly(self, assembly):
+        """Add assembly to the building structure.
+        
+        Parameters
+        ----------
+        assembly : ~pod_lca.buildings.Assembly
+            Assembly to be added to the building structure.        
+        """
+        building = self.get_building()
+        if building is not None:
+            building.add_assembly(assembly)
+
+        getattr(self, assembly.get_element_type()).append(assembly)
+        assembly.set_service_life(assembly.get_service_life_category())
+
+        for material in assembly.get_materials():
+            material.set_service_life()
+            material.set_properties_from_database()
+
+        return self
+
 
 if __name__ == '__main__':
     pass    
