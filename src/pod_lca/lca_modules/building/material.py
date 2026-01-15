@@ -30,12 +30,16 @@ class Material(Product):
         Name of the building material.
     material_database_entry : str
         Identifier of LCA database entry corresponding to the material.
+    lca_data_flag : bool
+        Flag to indicate if LCA data are set.
     sctg_code : int
         SCTG code mapped to the material.
     eol_product : str
         End-of-life product name corresponding to the material.
     waste_rate : float
         Waste rate of the material during construction of the assembly/building.
+    service_life_category : str
+        Service life category at assembly level.
     service_life : float
         Service life of the material in years.  
     """
@@ -46,10 +50,12 @@ class Material(Product):
 
         # LCA attributes
         self.material_database_entry = None
+        self.lca_data_flag = False  # temp test variable
         self.sctg_code = None
         self.eol_product = None
         self.bio_based = None
         self.waste_rate = None
+        self.service_life_category = None
         self.service_life = None
 
         # impact objects
@@ -60,7 +66,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, parent, name, qty, unit, material_database_entry, product_year, service_life=None):
+    def new(cls, name, qty, unit, material_database_entry, service_life_category=None):
         """ Create new structural material.
         
         Parameters
@@ -75,8 +81,6 @@ class Material(Product):
             Unit of measurement.            
         material_database_entry : str
             Name of the impact database entry from which to use impacts.
-        service_life : float
-            Service life of the material in years.
         waste_rate : float
             Waste rate of the material during construction of the assembly/building. Default is 0.
         product_year : int, optional
@@ -84,12 +88,12 @@ class Material(Product):
         """
         material = cls()
 
-        material.set_parent(parent)
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
-        material.set_production_year(product_year)
-        material.set_service_life(service_life)
+        material.set_material_database_entry(material_database_entry)
+        if service_life_category is not None:
+            material.set_service_life_category(service_life_category)
 
         # set inventory objects
         material.impacts = Impacts.from_parent(material)
@@ -98,59 +102,6 @@ class Material(Product):
         material.unit_impacts = Impacts.from_parent(material)
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
-
-        pulse = UniformEmissionProfile.unit_pulse(at=product_year)
-        material.emissions.set_temporal_emission_profile(pulse)
-
-        # set properties from database
-        if material_database_entry in [None, '', 'N/A']:
-            material.set_impact_database_entry(None)
-            material.set_waste_rate(waste_rate_category='DEFAULT')
-        else:
-            material.set_impact_database_entry(material_database_entry)
-
-            database = material.get_impact_database()
-            data_entry = database.get_data_entry(material_database_entry)
-
-            # set density
-            if data_entry['Density unit'] in [None, '', 'N/A', 'Null']:
-                log(f"Density unit not specified for {name}. Skipping density setting.", level='Warn')
-            else:
-                if isinstance(data_entry['Density'], (int, float, str)) and isinstance(data_entry['Density'], str):
-                    material.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
-                else:
-                    ValueError(f"Density value/unit not recognized for {name}.")
-
-            # set transportation process
-            if isnan(data_entry['sctg code']) or data_entry['sctg code'] in [999, '999', None, '', 'N/A', 'Null']:
-                log(f"SCTG code not specified for {name}. Skipping SCTG setting.", level='Warn')
-            else:
-                material.set_sctg_code(data_entry['sctg code'])
-                material.set_transportation()
-
-            # set eol material
-            if data_entry['eol material'] in [None, '', 'N/A', 'Null']:
-                log(f"EOL material not specified for {name}. Skipping EOL material setting.", level='Warn')
-            else:
-                if isinstance(data_entry['eol material'], str):
-                    material.set_eol_material(data_entry['eol material'], 
-                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
-                    material.set_waste_product()
-                else:
-                    ValueError(f"EOL material value not recognized for {name}.")
-
-            # set waste rate
-            if data_entry['waste_rate_category'] in [None, '', 'N/A', 'Null'] :
-                material.set_waste_rate(waste_rate_category='DEFAULT')
-                log(f"Waste rate category not specified for {name}. 'DEFAULT' category set.", level='Warn')
-            else:
-                if isinstance(data_entry['waste_rate_category'], str):
-                    material.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
-                else:
-                    ValueError(f"Waste rate value not recognized for {name}.")
-
-            # set replacement materials
-            material.set_replacement_material()
 
         return material
     
@@ -172,12 +123,9 @@ class Material(Product):
         """
         material = cls()
 
-        material.set_parent(other.get_parent())
         material.set_name(other.get_name())
         material.set_qty(other.get_qty())
         material.set_unit(other.get_unit())
-        material.set_waste_rate(other.get_waste_rate())
-        material.set_service_life(other.get_service_life()) 
         material.set_production_year(production_year)
 
         material.impacts = Impacts.from_parent(material)
@@ -187,26 +135,8 @@ class Material(Product):
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
 
-        pulse = UniformEmissionProfile.unit_pulse(at=production_year)
+        pulse = UniformEmissionProfile.unit_pulse(at=production_year) # TODO: see if elimanable
         material.emissions.set_temporal_emission_profile(pulse)
-
-        material_database_entry = other.get_impact_database_entry()
-        material.set_impact_database_entry(material_database_entry)
-        # set density
-        if other.get_density() is not None:
-            material.set_density(other.get_density(), other.get_density_unit())
-        # set transportation process
-        if other.get_sctg_code(digits=2) in [99, '99', '', 'N/A', None]:
-            log(f"Material {other.get_name()} has SCTG code unasigned, transportation not set.", level='Warn')
-        else:    
-            material.set_sctg_code(other.get_sctg_code())
-            material.set_transportation()
-        # set waste rate
-        if other.get_eol_material() is not None:
-            material.set_eol_material(other.get_eol_material())
-            material.set_waste_product()
-        # set replacement materials
-        material.set_replacement_material()
 
         return material
     # ================================
@@ -221,10 +151,94 @@ class Material(Product):
             Building componet to which the material belong.
         """
         self.parent = parent
-        # TODO: this is created for integration with tranportation/or electricity modules
-        # ideally, this should be linked to the assembly, not the building structure
+        self.set_building()
 
         return self
+    
+    def set_material_database_entry(self, material_database_entry):
+        """Set material database entry name.
+        
+        Parameters
+        ----------
+        material_database_entry : str
+            Name of the impact database entry from which to use impacts.
+        """
+        self.material_database_entry = material_database_entry
+
+        if self.get_building() is not None:
+            self.set_properties_from_database()
+            self.set_replacement_material()
+
+    def set_properties_from_database(self):
+        """ Set properties from databases for LCA calculations."""
+        database_entry_name = self.get_material_database_entry()
+        replacement_materials = [] if self.get_replacement_materials() is None else self.get_replacement_materials()
+
+        if database_entry_name in [None, '', 'N/A']:
+            self.set_impact_database_entry(None)
+            self.set_waste_rate(waste_rate_category='DEFAULT')
+            for replacement_product in replacement_materials:
+                replacement_product.set_impact_database_entry(None)
+                replacement_product.set_waste_rate(waste_rate_category='DEFAULT')
+        else:
+            self.set_impact_database_entry(database_entry_name)
+            for replacement_product in replacement_materials:
+                replacement_product.set_impact_database_entry(database_entry_name)
+
+            database = self.get_impact_database()
+            data_entry = database.get_data_entry(database_entry_name)
+
+            # set density
+            if data_entry['Density unit'] in [None, '', 'N/A', 'Null']:
+                log(f"Density unit not specified for {self.get_name()}. Skipping density setting.", level='Warn')
+            else:
+                if isinstance(data_entry['Density'], (int, float, str)) and isinstance(data_entry['Density'], str):
+                    self.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
+                    for replacement_product in replacement_materials:
+                        replacement_product.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
+                else:
+                    ValueError(f"Density value/unit not recognized for {self.get_name()}.")
+
+            # set transportation process
+            if isnan(data_entry['sctg code']) or data_entry['sctg code'] in [999, '999', None, '', 'N/A', 'Null']:
+                log(f"SCTG code not specified for {self.get_name()}. Skipping SCTG setting.", level='Warn')
+            else:
+                self.set_sctg_code(data_entry['sctg code'])
+                self.set_transportation()
+                for replacement_product in replacement_materials:
+                    replacement_product.set_sctg_code(data_entry['sctg code'])
+                    replacement_product.set_transportation()    
+
+            # set eol material
+            if data_entry['eol material'] in [None, '', 'N/A', 'Null']:
+                log(f"EOL material not specified for {self.get_name()}. Skipping EOL material setting.", level='Warn')
+            else:
+                if isinstance(data_entry['eol material'], str):
+                    self.set_eol_material(data_entry['eol material'], 
+                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
+                    self.set_waste_product()
+                    for replacement_product in replacement_materials:
+                        replacement_product.set_eol_material(data_entry['eol material'], 
+                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
+                        replacement_product.set_waste_product()
+                else:
+                    ValueError(f"EOL material value not recognized for {self.get_name()}.")
+
+            # set waste rate
+            if data_entry['waste_rate_category'] in [None, '', 'N/A', 'Null'] :
+                self.set_waste_rate(waste_rate_category='DEFAULT')
+                for replacement_product in replacement_materials:
+                    replacement_product.set_waste_rate(waste_rate_category='DEFAULT')
+                log(f"Waste rate category not specified for {self.get_name()}. 'DEFAULT' category set.", level='Warn')
+            else:
+                if isinstance(data_entry['waste_rate_category'], str):
+                    self.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+                    for replacement_product in replacement_materials:
+                        replacement_product.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+                else:
+                    ValueError(f"Waste rate value not recognized for {self.get_name()}.")
+
+            self.lca_data_flag = True
 
     def set_name(self, name):
         """ Set name of the product/process.
@@ -234,7 +248,10 @@ class Material(Product):
         name : str
             Name of the product/process.
         """
-        self.name = name + ' in ' + self.get_parent().get_name()
+        if self.get_parent() is None:
+            self.name = name
+        else:
+            self.name = name + ' in ' + self.get_parent().get_name()
 
         return self
     
@@ -286,6 +303,16 @@ class Material(Product):
 
         return self
 
+    def set_service_life_category(self, service_life_category):
+        """ Set the service life category.
+        
+        Parameters
+        ----------       
+        service_life_category : str
+            Service life category at assembly level.
+        """
+        self.service_life_category = service_life_category
+
     def set_service_life(self, service_life=None):
         """ Set the service life of the material.
         
@@ -294,9 +321,11 @@ class Material(Product):
         service_life : float
             Service life of the material in years.
         """
-        if service_life is None:
+        if (service_life is None) and (self.get_service_life_category() is None) and (self.get_service_life() is None):
             self.service_life = self.get_parent().get_service_life()
-        elif isinstance(service_life, str):
+        elif isinstance(service_life, str) or (self.get_service_life_category() is not None):
+            if service_life is None:
+                service_life = self.get_service_life_category()
             building_standard = self.get_building().get_building_data_standard()
             service_life_mapping = DataImporter.csv_to_dict(config['file_paths']['building'][building_standard.upper() + '_SERVICE_LIFE'], 'POD|LCA RSL Category')
             if service_life in service_life_mapping:
@@ -324,6 +353,8 @@ class Material(Product):
             self.service_life = service_life
         else:
             raise ValueError("Service life input is not recognized.")
+        
+        self.set_replacement_material()
 
         return self
 
@@ -376,11 +407,24 @@ class Material(Product):
     def set_replacement_material(self):
         """ Set replacement materials for the building based on the service life of its materials.
         """
-        material_end_year = self.get_production_year() + self.get_service_life()
-        building_end_year = self.get_building().get_built_year() + self.get_building().get_life_span()
+        if self.get_service_life() is not None:
+            material_end_year = self.get_production_year() + self.get_service_life()
+            building_end_year = self.get_building().get_built_year() + self.get_building().get_life_span()
 
-        if material_end_year < building_end_year:
-            self.replacement_product = Material.copy(self, material_end_year)
+            if material_end_year < building_end_year:
+                self.replacement_product = Material.copy(self, material_end_year)
+                self.replacement_product.set_parent(self.get_parent())
+                self.replacement_product.set_service_life(self.get_service_life())
+                self.replacement_product.set_replacement_material()
+
+    def set_building(self):
+        """Set data from building level."""
+        building = self.get_building()
+        if building is not None:
+            if self.get_production_year() is None:
+                self.set_production_year(building.get_built_year())
+            self.set_service_life()
+            self.set_properties_from_database()
 
     # ================================
     # Getters
@@ -394,6 +438,16 @@ class Material(Product):
             Building assembly to which the material belong.
         """
         return self.parent  
+
+    def get_material_database_entry(self):
+        """Set material database entry name.
+        
+        Returns
+        -------
+        str
+            Name of the impact database entry from which to use impacts.
+        """
+        return self.material_database_entry
 
     def get_project(self):
         """ Get the project (building) of the assembly.
@@ -425,6 +479,16 @@ class Material(Product):
             Value between 0 and 100.
         """
         return self.waste_rate
+    
+    def get_service_life_category(self):
+        """ Get the service life category.
+        
+        Returns
+        -------        
+        str
+            Service life category at assembly level.        
+        """
+        return self.service_life_category
     
     def get_service_life(self):
         """ Set the service life of the material.
@@ -483,7 +547,10 @@ class Material(Product):
         ~pod_lca.building.Building
             Building to which this building material belong.       
         """
-        return self.get_parent().get_building()
+        if self.get_parent() is None:
+            return None
+        else:
+            return self.get_parent().get_building()
     
     def get_impact_database(self):
         """ Get the impact database giving the A1-A3 impacts of the building materials.
@@ -493,7 +560,10 @@ class Material(Product):
         ~pod_lca.impacts.ImpactsDatabase
             Impact database object.
         """
-        return self.get_building().get_material_impact_database()
+        if self.get_building() is None:
+            return None
+        else:
+            return self.get_building().get_material_impact_database()
 
     def get_eol_process_impact_database(self):
         """ Get the end-of-life process impact database giving the C2-C4 impacts of the building materials.
@@ -503,7 +573,10 @@ class Material(Product):
         ~pod_lca.impacts.ImpactsDatabase
             End-of-life process impact database object.
         """
-        return self.get_building().get_eol_process_impact_database()
+        if self.get_building() is None:
+            return None
+        else:
+            return self.get_building().get_eol_process_impact_database()
     
     def get_eol_demolition_database(self):
         """ Get the end-of-life demolition impact database giving the C1 impacts of the building materials.
@@ -513,7 +586,10 @@ class Material(Product):
         ~pod_lca.impacts.ImpactsDatabase
             End-of-life demolition impact database object.
         """
-        return self.get_building().get_eol_demolition_database()
+        if self.get_building() is None:
+            return None
+        else:
+            return self.get_building().get_eol_demolition_database()
 
     def get_transportation_manager(self):
         """ Get the transportation manager corresponding to the product.
@@ -523,7 +599,10 @@ class Material(Product):
         ~pod_lca.transportation.TransportationManager
             Transportation manager
         """
-        return self.get_building().get_transportation_manager()
+        if self.get_building() is None:
+            return None
+        else:
+            return self.get_building().get_transportation_manager()
     
     # ================================
     # Inventory Records Methods
