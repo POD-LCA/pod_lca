@@ -66,7 +66,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, name, qty, unit, product_year, material_database_entry, service_life_category=None):
+    def new(cls, name, qty, unit, material_database_entry, service_life_category=None):
         """ Create new structural material.
         
         Parameters
@@ -91,7 +91,6 @@ class Material(Product):
         material.set_name(name)
         material.set_qty(qty)
         material.set_unit(unit)
-        material.set_production_year(product_year)
         material.set_material_database_entry(material_database_entry)
         if service_life_category is not None:
             material.set_service_life_category(service_life_category)
@@ -103,9 +102,6 @@ class Material(Product):
         material.unit_impacts = Impacts.from_parent(material)
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
-
-        pulse = UniformEmissionProfile.unit_pulse(at=product_year)
-        material.emissions.set_temporal_emission_profile(pulse)
 
         return material
     
@@ -139,7 +135,7 @@ class Material(Product):
         material.unit_emissions = Emissions.from_parent(material)
         material.unit_carbon_storage = CarbonStorage.from_parent(material)
 
-        pulse = UniformEmissionProfile.unit_pulse(at=production_year)
+        pulse = UniformEmissionProfile.unit_pulse(at=production_year) # TODO: see if elimanable
         material.emissions.set_temporal_emission_profile(pulse)
 
         return material
@@ -155,13 +151,7 @@ class Material(Product):
             Building componet to which the material belong.
         """
         self.parent = parent
-
-        if parent.get_building() is not None:
-            self.set_service_life()
-            self.set_properties_from_database()
-            
-        # TODO: this is created for integration with tranportation/or electricity modules
-        # ideally, this should be linked to the assembly, not the building structure
+        self.set_building()
 
         return self
     
@@ -426,6 +416,15 @@ class Material(Product):
                 self.replacement_product.set_parent(self.get_parent())
                 self.replacement_product.set_service_life(self.get_service_life())
                 self.replacement_product.set_replacement_material()
+
+    def set_building(self):
+        """Set data from building level."""
+        building = self.get_building()
+        if building is not None:
+            if self.get_production_year() is None:
+                self.set_production_year(building.get_built_year())
+            self.set_service_life()
+            self.set_properties_from_database()
 
     # ================================
     # Getters

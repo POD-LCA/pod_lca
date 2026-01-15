@@ -139,7 +139,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         ----------
         name : str
             Name of the building.
-        type : {'Commercial', 'Residential'}
+        type : {'commercial', 'residential'}
             Type of building.
         location : ~pod_lca.location.Location
             Location of the building site.
@@ -185,8 +185,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         floors_below_grade = kwargs.get('floors_below_grade', 1 if no_floors > 2 else 0)
         building.add_floors(no_floors, floors_below_grade, f2f_height, floor_plan,  geometry_units)
 
-        building.make_structure('from geometry', building_type='commercial', structure_type='concrete')
+        building.make_structure('from geometry', building_type=type, structure_type='concrete')
         building.make_envelope('from geometry', 'commercial', None, None, None) # TODO: Does the type of enclosure: opaque, enclosure:transparent, roofing get selected here... for the eplus model
+
 
         return building
 
@@ -369,6 +370,17 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.set_construction_energy_product(construction_electricity_consumption, electricity_unit)
 
         return self
+    
+    def set_structure(self, structure):
+
+        self.structure = structure
+        structure.set_building(self)
+
+    def set_envelope(self, envelope):
+
+        self.envelope = envelope
+        envelope.set_building(self)
+
     # ================================
     # Getters
     # ================================
@@ -567,14 +579,14 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             structure_obj = BuildingStructure
 
         if method == 'from geometry':
-            structure = structure_obj.from_geometry(self)
+            structure = structure_obj.from_geometry()
         elif method == 'from template':
-            structure = structure_obj.from_template(self, building_type, structure_type)
+            structure = structure_obj.from_template(building_type, structure_type)
         else:
             raise ValueError('Method of creating structure is not recognized.')
         
-        self.structure = structure
-
+        self.set_structure(structure)
+        
         return self
 
     def make_envelope(self,  method, building_type, envelope_opaque, envelope_translucent, roofing, **kwargs):
@@ -606,11 +618,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             operational_sys_path = config['file_paths']['operational']['SYSTEMS']
             envelope = self.create_envelopes_from_template(operational_sys_path)
         elif method == 'from template':
-            envelope = Envelope.from_template(self, building_type, envelope_opaque, envelope_translucent, roofing)
+            envelope = Envelope.from_template(building_type, envelope_opaque, envelope_translucent, roofing)
         else:
             raise ValueError('Method of creating envelope is not recognized.')
         
-        self.envelope = envelope
+        self.set_envelope(envelope)
 
         return self
 
@@ -623,7 +635,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Structural or envelope element to be added to the building.
         """
         self.get_assemblies().append(assembly)
-        assembly.set_building(self)
 
         return self
     

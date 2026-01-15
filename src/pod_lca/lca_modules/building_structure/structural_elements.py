@@ -49,13 +49,22 @@ class StructuralElement(Assembly):
     @classmethod
     def create(cls, name, materials):
         """Create a structural element."""
-
         structural_element = super().create(name, materials)
 
         return structural_element
     
     def set_floor(self):
         pass
+
+    def set_building(self):
+        """Set data from building level."""
+        building = self.get_building()
+        if building is not None:
+            building.add_assembly(self)
+            self.set_service_life(self.get_service_life_category())
+
+            for material in self.get_materials():
+                material.set_building()
 
     def set_service_life(self, part):
         """ Set the service life of the assembly.
@@ -66,17 +75,20 @@ class StructuralElement(Assembly):
             Part of the structure the assembly belongs to
         """
         building = self.get_building()
-        building_standard = building.get_building_data_standard()
+        if building is not None:
+            building_standard = building.get_building_data_standard()
 
-        match building_standard:
-            case 'RICS':
-                data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_SERVICE_LIFE'], 'POD|LCA RSL Category')
-            case 'ASHRAE':
-                data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_SERVICE_LIFE'], 'POD|LCA RSL Category')
+            match building_standard:
+                case 'RICS':
+                    data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_SERVICE_LIFE'], 'POD|LCA RSL Category')
+                case 'ASHRAE':
+                    data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_SERVICE_LIFE'], 'POD|LCA RSL Category')
 
-        service_life = data[part]['service_life']
-        
-        return super().set_service_life(service_life)
+            service_life = data[part]['service_life']
+            
+            return super().set_service_life(service_life)
+        else:
+            return None
     
     def get_capacity(self):
         pass

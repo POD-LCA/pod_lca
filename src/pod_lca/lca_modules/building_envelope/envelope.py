@@ -7,9 +7,11 @@ __version__ = "0.1.0"
 
 from math import isnan
 
-from . import Construction
-from . import Surface
+from . import Ceiling
 from . import EnvelopeMaterial
+from . import Surface
+from . import Wall
+from . import Window
 from pod_lca.utilities import area_polygon
 from pod_lca.utilities import centroid
 from pod_lca.utilities import config
@@ -22,6 +24,7 @@ class Envelope:
 
     def __init__(self):
         self.name = None
+        self.building = None
         self.floor = None
         self.surfaces = {}
 
@@ -49,13 +52,11 @@ class Envelope:
         return envelope
     
     @classmethod
-    def from_template(cls, building, building_type, envelope_opaque, envelope_translucent, roofing):
+    def from_template(cls, building_type, envelope_opaque, envelope_translucent, roofing):
         """ Create a structure from a template model.
         
         Parameters
         ----------
-        building : ~pod_lca.building.Building
-            Building for which the structure belong.
         building_type : {'Commercial', 'Residential'}
             Type of building.
         envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
@@ -73,7 +74,6 @@ class Envelope:
             Structure created.
         """
         envelope = cls()
-        envelope.set_building(building)
 
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
         
@@ -98,9 +98,9 @@ class Envelope:
         boms = [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
 
         # FIXME: if the wwr to be calculated from these
-        enclosure_walls = Construction.create('walls', None)
-        enclosure_windows = Construction.create('windows', None)
-        enclosure_roof = Construction.create('roof', None)
+        enclosure_walls = Wall.create('walls', None)
+        enclosure_windows = Window.create('windows', None)
+        enclosure_roof = Ceiling.create('roof', None)
         enclosures =  [enclosure_walls, enclosure_windows, enclosure_roof]
         
         for assembly, bom in zip(enclosures, boms):
@@ -112,7 +112,6 @@ class Envelope:
                         qty=float(item['qty']),
                         unit=UNITS_MAP[item['unit']],
                         material_database_entry=default_database_entry_map[item['material']]['impact database entry'],
-                        product_year=building.get_built_year(),
                         service_life_category=item['POD|LCA RSL Category']
                     )
                     assembly.add_material(building_material)
@@ -121,7 +120,7 @@ class Envelope:
                 
         for assembly in enclosures:
             if assembly.get_materials():
-                envelope.add_assembly(assembly)
+                envelope.add_construction(assembly)
         
         return envelope
 
@@ -141,6 +140,9 @@ class Envelope:
             The building to which the envelope belong.
         """
         self.building = parent
+
+        for construction in self.get_constructions():     
+            construction.set_building()
 
         return self
 
@@ -195,46 +197,46 @@ class Envelope:
             self.surfaces[wk] = Surface.from_polygon(wk, wp)
             self.wall_surface_keys.append(wk)
 
-    def get_assemblies(self):
-        # TODO implement method to return all envelop elements as a list
-        return []
+    def get_constructions(self):
+        """ Get a list of all enbvelope constructions of the building.
+        
+        Returns
+        -------
+        list of ~pod_lca.building_structure.Construction
+            All the structural elements in the structure.
+        """
+        return [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
 
     # ================================
     # Add
     # ================================
-    def add_assemblies(self, assemblies):
-        """Add assemblies to the building structure.
+
+    def add_constructions(self, constructions):
+        """Add constructions to the building envelope.
         
         Parameters
         ----------
-        assemblies : list of ~pod_lca.buildings.Assembly
-            Assemblies to be added to the building structure.
+        constructions : list of ~pod_lca.buildings.Construction
+            Constructio to be added to the building envelope.
         """
-        for assembly in assemblies:
-            self.add_assembly(assembly)
-
-    def add_assembly(self, assembly):
-        """Add assembly to the building structure.
-        
-        Parameters
-        ----------
-        assembly : ~pod_lca.buildings.Assembly
-            Assembly to be added to the building structure.        
-        """
-        building = self.get_building()
-        if building is not None:
-            building.add_assembly(assembly)
-
-        for material in assembly.get_materials():
-            material.set_service_life()
-            material.set_properties_from_database()
+        for construction in constructions:
+            self.add_assembly(construction)
             
         return self
 
     def add_construction(self, construction):
+        """Add construction to the building envelope.
+        
+        Parameters
+        ----------
+        construction : ~pod_lca.buildings.Construction
+            Constructio to be added to the building envelope.
+        """
         con_dict = self.construction_map[construction.__type__]
         key = '{}_{}'.format(construction.__type__.lower(), len(con_dict))
         con_dict[key] = construction
+
+        construction.set_parent(self)
 
     def add_window(self, window, wall_key):
         window.wall_key = wall_key
