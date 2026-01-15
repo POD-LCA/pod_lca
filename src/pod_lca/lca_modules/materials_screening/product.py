@@ -435,7 +435,10 @@ class Product(Master):
         ~pod_lca.electricity.Electricity
             Electricity used in the production of the item.
         """
-        return self.electricity[self.get_electricity_source()]
+        if self.get_electricity_source() in self.electricity:
+            return self.electricity[self.get_electricity_source()]
+        else:
+            return None
 
     def get_electricity_source(self):
         """Get the source of electricity inventories.
