@@ -18,6 +18,7 @@ from pod_lca.lca_modules.operational.read_write import find_materials, find_no_m
 # from pod_lca.lca_modules.location import Location
 from pod_lca.units import INCH
 from pod_lca.units import METER
+from pod_lca.units import Quantity as Q
 
 
 for i in range(100): print('')
@@ -32,14 +33,14 @@ data = find_no_mass_materials(constructions_path, data)
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-layers = {0: {'classification':'exterior_cladding', 'material': 'Clay brick', 'thickness': Quantity(0.75, METER)},
-          1: {'classification':'air_gap', 'material': 'Generic Wall Air Gap', 'thickness': 1.5},
-          2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness': 1.5},
-          3: {'classification':'sheathing', 'material': 'Gypsum board', 'thickness': 0.5},
-          4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness': 0.0},
-          5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness': 0.5}}
+layers = {0: {'classification':'exterior_cladding', 'material': 'Clay brick', 'thickness': Q(0.75, INCH)},
+          1: {'classification':'air_gap', 'material': 'Generic Wall Air Gap', 'thickness': Q(1.5, INCH)},
+          2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness': Q(1.5, INCH)},
+          3: {'classification':'sheathing', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH)},
+          4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness': Q(0.0, INCH)},
+          5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH)}}
 
-framing = {'name': 'metal_16in', 'type': 'Metal', 'member': '400S125-18', 'spacing': 16.0}
+framing = {'name': 'metal_16in', 'type': 'Metal', 'member': '400S125-18', 'spacing': Q(16.0, INCH)}
 
 layers_ = {}
 for lk in layers:
@@ -53,7 +54,9 @@ framing = Framing.from_data(framing)
 
 w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 
-# make window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
 
 
 
