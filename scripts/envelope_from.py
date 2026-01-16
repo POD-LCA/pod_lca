@@ -1,8 +1,17 @@
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "tmendeze@uw.edu"
+__version__ = "0.1.0"
+
+
+
 from pod_lca.utilities import config
 
 from pod_lca.lca_modules.building_envelope import Layer
-from pod_lca.lca_modules.operational.read_write import find_materials, find_no_mass_materials, find_materials_air_gap
+from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
+from pod_lca.lca_modules.operational.read_write import find_materials, find_no_mass_materials, find_materials_air_gap
 
 # from pod_lca.lca_modules.building_envelope import Envelope
 # from pod_lca.lca_modules.building import Building
@@ -13,38 +22,38 @@ from pod_lca.units import METER
 
 for i in range(100): print('')
 
+constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
+data = find_materials(constructions_path, {})
+data = find_materials_air_gap(constructions_path, data)
+data = find_no_mass_materials(constructions_path, data)
 
 
-# make framed envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-layers = {0: {'classification':'exterior_cladding', 'material': 'Clay brick', 'thickness_in': 0.75},
-          1: {'classification':'air_gap', 'material': 'Generic Wall Air Gap', 'thickness_in': 1.5},
-          2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness_in': 1.5},
-          3: {'classification':'sheathing', 'material': 'Gypsum board', 'thickness_in': 0.5},
-          4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness_in': 0.0},
-          5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness_in': 0.5}}
 
-framing = {'type': 'Metal', 'member': '400S125-18', 'spacing_in': 16.0}
+# make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-path = config['file_paths']['operational']['CONSTRUCTIONS']
+layers = {0: {'classification':'exterior_cladding', 'material': 'Clay brick', 'thickness': Quantity(0.75, METER)},
+          1: {'classification':'air_gap', 'material': 'Generic Wall Air Gap', 'thickness': 1.5},
+          2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness': 1.5},
+          3: {'classification':'sheathing', 'material': 'Gypsum board', 'thickness': 0.5},
+          4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness': 0.0},
+          5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness': 0.5}}
 
-data = find_materials(path, {})
-data = find_materials_air_gap(path, data)
-data = find_no_mass_materials(path, data)
-
+framing = {'name': 'metal_16in', 'type': 'Metal', 'member': '400S125-18', 'spacing': 16.0}
 
 layers_ = {}
 for lk in layers:
     name = layers[lk]['material']
-    thickness = layers[lk]['thickness_in']
+    thickness = layers[lk]['thickness']
     mdata = data['materials'][name]
     l = Layer.from_data(mdata, thickness)
     layers_[lk] = l
 
+framing = Framing.from_data(framing)
 
 w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 
-print(w)
+# make window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
