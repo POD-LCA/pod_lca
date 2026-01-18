@@ -10,3 +10,15 @@ __version__ = "0.1.0"
 class Framing(object):
     def __init__(self):
         self.name = None
+        self.type = None
+        self.member = None
+        self.spacing = None
+
+    @classmethod
+    def from_data(cls, data):
+        framing = cls()
+        framing.name        = data['name']
+        framing.type        = data['type']
+        framing.member      = data['member']
+        framing.spacing     = data['spacing']
+        return framing

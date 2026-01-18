@@ -32,6 +32,16 @@ class Construction(Assembly):
             surface.add_construction(construction)
         return construction
     
+    def set_building(self):
+        """Set data from building level."""
+        building = self.get_building()
+        if building is not None:
+            building.add_assembly(self)
+
+            for material in self.get_materials():
+                material.set_building()
+
+
     def add_materials(self, building, service_life):
         
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')

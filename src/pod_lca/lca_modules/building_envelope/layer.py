@@ -16,6 +16,7 @@ class Layer(object):
         self.name = None
         self._material_property = None
         self.thickness = None
+        self.unit = None
 
     @classmethod
     def from_data(cls, data, thickness):
