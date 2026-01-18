@@ -72,7 +72,7 @@ class HotSpotAnalysis:
 
         return self
 
-    def set_hotspots(self, hotspots, impact_category):
+    def set_hotspots(self, impact_category):
         """Set attribute in hotspots to identify as hotspots.
 
         Parameters
@@ -84,12 +84,11 @@ class HotSpotAnalysis:
         """
         if impact_category not in self.hotspots:
             self.run(impact_category)
-        self.hotspots[impact_category] = hotspots
 
         all_items = self.model.get_all_items()
 
         ArrayMethods.set_value(all_items, "is_hotspot", False)
-        ArrayMethods.set_value(hotspots, "is_hotspot", True)
+        ArrayMethods.set_value( self.hotspots[impact_category], "is_hotspot", True)
 
         return self
 
@@ -197,7 +196,8 @@ class HotSpotAnalysis:
                     else False
                 )
 
-            self.set_hotspots(hot_spots, impact_category)
+            self.hotspots[impact_category] = hot_spots
+            self.set_hotspots(impact_category, hot_spots)
 
             return hot_spots
 
