@@ -82,6 +82,8 @@ class HotSpotAnalysis:
         impact_category : str
             Impact category for which the hotspot analysis was run.
         """
+        if impact_category not in self.hotspots:
+            self.run(impact_category)
         self.hotspots[impact_category] = hotspots
 
         all_items = self.model.get_all_items()
