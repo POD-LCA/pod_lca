@@ -197,10 +197,14 @@ class HotSpotAnalysis:
                 )
 
             self.hotspots[impact_category] = hot_spots
-            self.set_hotspots(impact_category, hot_spots)
+            self.set_hotspots(impact_category)
 
             return hot_spots
+        
+        else:
+            self.hotspots[impact_category] = []
 
+            return None
 
 if __name__ == "__main__":
     pass
