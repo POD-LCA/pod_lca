@@ -169,6 +169,7 @@ class HotSpotAnalysis:
 
             biggest_contribution = max(val_lst)
             if biggest_contribution == 0.0:
+                self.hotspots[impact_category] = []
                 return None
             max_index = val_lst.index(biggest_contribution)
             hot_spots.append(impacts_lst[max_index].get_parent())
@@ -203,7 +204,6 @@ class HotSpotAnalysis:
         
         else:
             self.hotspots[impact_category] = []
-
             return None
 
 if __name__ == "__main__":
