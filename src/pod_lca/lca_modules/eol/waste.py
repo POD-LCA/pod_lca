@@ -413,6 +413,9 @@ class Waste(Product):
                 declared_qty = database_entry[demolition_impact_database.get_qty_key()]
                 conversion_factor = declared_unit.convert_to(self.get_unit())
 
+                if conversion_factor is None:
+                    print("found")
+
                 impacts_data = {
                     key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
                     for key in self.impacts["C1"].record_attr_dict

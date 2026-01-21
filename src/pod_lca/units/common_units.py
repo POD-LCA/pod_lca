@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..units import UNIT_CONVERSIONS
+from ..units import POWER_RULES
 from ..units.metric_prefixes import KILO
 from ..units.units import Unit
 
@@ -112,6 +113,9 @@ HECTARE = Unit.from_basics("hectare", "ha", "area")
 UNIT_CONVERSIONS["area"] = {"square meter": 4046.8564224, "square feet": 43560, "acre": 1.0, "hectare": 0.40468564224}
 # REF [1] pp. C-14/15
 
+POWER_RULES[(METER, 2)] = SQUARE_METER
+POWER_RULES[(FEET, 2)] = SQUARE_FEET
+
 # ==================================
 # VOLUME UNITS
 # ==================================
@@ -128,6 +132,9 @@ UNIT_CONVERSIONS["volume"] = {
     "cubic feet": 1.0,
 }
 # REF [1] pp. C-17/18
+
+POWER_RULES[(METER, 3)] = CUBIC_METER
+POWER_RULES[(FEET, 3)] = CUBIC_FEET
 
 # ==================================
 # POWER UNITS

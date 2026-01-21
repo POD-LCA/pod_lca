@@ -1,6 +1,7 @@
 UNIT_CONVERSIONS = {}
 ALL_PREFIXES = []
 UNITS_MAP = {}
+POWER_RULES = {}
 
 from .units import Unit
 from .units import MetricPrefix
