@@ -475,7 +475,7 @@ class ImpactsDatabase:
             impact_map = self.data.set_index(self.get_primary_key())[
                 config["setup"]["impacts"]["PRIMARY_IMPACT_CATEGORY"]
             ].to_dict()
-            scores = ranked["product"].map(impact_map)
+            scores = ranked["item"].map(impact_map)
 
             search_result = adaptive_kmeans_cutoff(ranked, scores)
 
