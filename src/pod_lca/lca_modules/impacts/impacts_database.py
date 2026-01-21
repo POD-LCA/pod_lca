@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from pandas import concat
+from pandas import DataFrame
 
 from . import expand_search_terms
 from . import rank_entries
@@ -468,7 +469,7 @@ class ImpactsDatabase:
         ranked = rank_entries(products_all, expanded, product_support_data)
         if ranked.empty:
             log("No data found", "Info")
-            return []
+            return DataFrame()
 
         if shortlist:
             impact_map = self.data.set_index(self.get_primary_key())[

@@ -139,7 +139,7 @@ def rank_entries(products, search_terms, support_data_set=None, support_data_wei
     ranked = (
         DataFrame(
             {
-                "product": docs,
+                "item": docs,
                 "similarity": (
                     scores
                     if support_data_set is None
@@ -211,7 +211,7 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
 
     df = DataFrame(
         {
-            "item": items["product"].tolist(),
+            "item": items["item"].tolist(),
             "impact": subset_scores.flatten(),
             "similarity": items["similarity"].tolist(),
             "cluster": cluster_labels,
