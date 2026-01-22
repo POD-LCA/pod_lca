@@ -630,7 +630,5 @@ class MetricPrefix:
 if __name__ == "__main__":
     pass
 
-# TODO: check is_compound()
 # TODO: check conversion
-# TODO: unit test coverage for multiply and divide
 # TODO: replace == with is, where applicable
