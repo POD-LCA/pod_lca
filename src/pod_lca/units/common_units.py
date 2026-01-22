@@ -105,8 +105,8 @@ TON_MILE = M_TON * MILE
 # AREA UNITS
 # ==================================
 
-SQUARE_METER = Unit.from_basics("square meter", "m2", "area")
-SQUARE_FEET = Unit.from_basics("square feet", "ft2", "area")
+SQUARE_METER = Unit.from_basics("square meter", "m²", "area")
+SQUARE_FEET = Unit.from_basics("square feet", "ft²", "area")
 ACRE = Unit.from_basics("acre", "acre", "area")
 HECTARE = Unit.from_basics("hectare", "ha", "area")
 
@@ -122,8 +122,8 @@ POWER_RULES[(FEET, 2)] = SQUARE_FEET
 
 LITER = Unit.from_basics("liter", "l", "volume")
 US_GALLON = Unit.from_basics("US gallon", "US gal", "volume")
-CUBIC_METER = Unit.from_basics("cubic meter", "m3", "volume")
-CUBIC_FEET = Unit.from_basics("cubic feet", "ft3", "volume")
+CUBIC_METER = Unit.from_basics("cubic meter", "m³", "volume")
+CUBIC_FEET = Unit.from_basics("cubic feet", "ft³", "volume")
 
 UNIT_CONVERSIONS["volume"] = {
     "liter": 28.316846592,

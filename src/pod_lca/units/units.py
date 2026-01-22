@@ -24,8 +24,10 @@ class Unit:
         The quantity measured by the unit.
     prefix : ~pod_lca.units.MetricPrefix
         Metric prefix. None if a base unit or non-metric.
-    components : list of ~pod_lca.units.Unit
-        List of components the unit is made up of. None if not a compound unit
+    numerator : list of ~pod_lca.units.Unit
+        List of components in the numerator of the unit.
+    denominator : list of ~pod_lca.units.Unit
+        List of components in the denominator of the unit.
     """
 
     def __init__(self):
@@ -80,16 +82,16 @@ class Unit:
             else:
                 new_prefix = other
 
-            name = new_prefix.get_name() + self.get_name()
-            standard_notation = new_prefix.get_symbol() + self.get_standard_notation()
-            qty_measured = self.get_qty_measured()
+            result = Unit.from_basics("", "", "")
+            result.numerator = self.numerator[:]
+            result.denominator = self.denominator[:]
+            result.prefix = new_prefix
+    
+            result = result.simplify()
+            result.collapse_powers()
+            result._rebuild_strings()
 
-            newUnit = Unit.from_basics(name, standard_notation, qty_measured)
-            newUnit.numerator = self.numerator[:]
-            newUnit.denominator = self.denominator[:]
-            newUnit.prefix = new_prefix
-
-            return newUnit
+            return result
         else:
             raise TypeError(
                 f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}"
@@ -116,28 +118,23 @@ class Unit:
     def __rtruediv__(self, other):
         """Reflexive division of units by unit value (1)."""
         if other == 1:
-            if self.get_name().startswith("per "):
-                name = self.get_name()[4:]
-                standard_notation = self.get_standard_notation()[:-2]
-                qty_measured = self.get_qty_measured()[4:]
-            else:
-                name = "per " + self.get_name()
-                standard_notation = self.get_standard_notation() + "-1"
-                qty_measured = "per " + self.get_qty_measured()
+            result = Unit.from_basics("","","")
+            result.prefix = MetricPrefix.safe_combine_prefix(None, self.prefix, 'divide')
+            result.denominator = self.numerator
+            result.numerator = self.denominator
 
-            newUnit = Unit.from_basics(name, standard_notation, qty_measured)
-            newUnit.prefix = MetricPrefix.safe_combine_prefix(1, other.prefix, 'divide')
-            newUnit.denominator = self.numerator
-            newUnit.numerator = self.denominator
+            result = result.simplify()
+            result.collapse_powers()
+            result._rebuild_strings()
 
-            return newUnit
+            return result
         else:
             raise TypeError(
                 f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}"
             )
 
     @classmethod
-    def from_basics(cls, name, standard_notation, qty_measured, is_compound=False):
+    def from_basics(cls, name, standard_notation, qty_measured):
         """Create a unit from basic data.
 
         Parameters
@@ -154,8 +151,7 @@ class Unit:
         unit.set_standard_notation(standard_notation)
         unit.set_qty_measured(qty_measured)
 
-        if not is_compound:
-            unit.numerator = [unit]
+        unit.numerator = [unit]
 
         return unit
 
@@ -351,6 +347,11 @@ class Unit:
     def simplify(self, return_factor=False):
         """Simplify a compound unit by cancelling common components in numerator and denominator.
 
+        Parameters
+        ----------
+        return_factor: bool
+            If false, no unit conversion operations carried out.
+
         Returns
         -------
         :class:`float`
@@ -444,14 +445,16 @@ class Unit:
         return self
 
     def _rebuild_strings(self):
-        """
-        Rebuild name, standard notation, and quantity.
-        Rules:
+        """ Rebuild name, standard notation, and quantity.
+
+        Notes
+        -----
+        The following rules apply:
         - Numerator units joined by '-'
         - Denominator units joined by '-'
         - 'per' (name) or '/' (notation) between numerator and denominator only if denominator exists
         - Parentheses if more than one unit in numerator or denominator
-        - Prefix applied at the front if present
+        - Prefix applied at the front if present. If no numerator, prefix indicated in the denominator
         """
         num_units = [u for u in self.numerator if not u.is_dimensionless()]
         denom_units = [u for u in (self.denominator or []) if not u.is_dimensionless()]
@@ -500,8 +503,13 @@ class Unit:
 
         # Apply prefix at the front
         if self.prefix:
-            self.name = f"{self.prefix.get_name()}{self.name}" if self.name else self.prefix.get_name()
-            self.standard_notation = f"{self.prefix.get_symbol()}{self.standard_notation}" if self.standard_notation else self.prefix.get_symbol()
+            if not self.numerator:
+                denom_prefix = self.prefix.inverse()
+                self.name = f"per {denom_prefix.get_name()}{denom_name}" if self.denominator else self.prefix.get_name()
+                self.standard_notation = f"1/{denom_prefix.get_symbol()}{denom_notation}"
+            else:
+                self.name = f"{self.prefix.get_name()}{self.name}" if self.name else self.prefix.get_name()
+                self.standard_notation = f"{self.prefix.get_symbol()}{self.standard_notation}" if self.standard_notation else self.prefix.get_symbol()
 
 class MetricPrefix:
     """Unit object from which units are created.
@@ -538,10 +546,8 @@ class MetricPrefix:
                 newPrefix = ALL_PREFIXES[index]
                 return newPrefix
             except ValueError:
-                print(
-                    f"Multiplication of {self.get_name()} and {other.get_name()} does not return a standard metric prefix."
-                )
-                # FIXME: return prefix with new name and symbol // add logic to multiplying with this
+                superscript = str(new_power).translate(str.maketrans("0123456789-", "⁰¹²³⁴⁵⁶⁷⁸⁹⁻"))
+                return MetricPrefix("", f"10{superscript}", new_power)
 
         elif isinstance(other, Unit):
 
@@ -644,16 +650,34 @@ class MetricPrefix:
         return 10 ** (self.get_power() - to_prefix.get_power())
 
     @staticmethod
-    def safe_combine_prefix(p1, p2, operator='multiply'):
-        if p1 and p2:
-            if operator == 'multiply':
+    def safe_combine_prefix(p1, p2, operator="multiply"):
+        if operator == "multiply":
+            if p1 and p2:
                 return p1 * p2
-            elif operator == 'divide':
-                return p1 / p2
-        return p1 or p2
+            return p1 or p2
 
+        if operator == "divide":
+            if p1 and p2:
+                return p1 / p2
+            if p1 and not p2:
+                return p1 
+            if not p1 and p2:
+                return p2.inverse()
+            return None
+
+        raise ValueError(f"Unknown operator: {operator}")
+
+    def inverse(self):
+        new_power = -self.power
+
+        all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
+        try:
+            index = all_powers.index(new_power)
+            newPrefix = ALL_PREFIXES[index]
+            return newPrefix
+        except ValueError:
+            superscript = str(new_power).translate(str.maketrans("0123456789-", "⁰¹²³⁴⁵⁶⁷⁸⁹⁻"))
+            return MetricPrefix("", f"10{superscript}", new_power)
+    
 if __name__ == "__main__":
     pass
-
-# TODO: check conversion unit tests
-

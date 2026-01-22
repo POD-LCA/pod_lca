@@ -11,7 +11,9 @@ from pod_lca.units import KILOMETER
 from pod_lca.units import GRAM
 from pod_lca.units import KILO
 from pod_lca.units import MEGA
-from pod_lca.units import GIGA
+from pod_lca.units import CENTI
+from pod_lca.units import DEKA
+from pod_lca.units import DECI
 
 
 @pytest.fixture
@@ -86,7 +88,6 @@ def test_multiply_unit_with_prefix():
     assert unit.numerator[0] is METER
     assert unit.denominator is None or len(KILOMETER.denominator) == 0
 
-
 def test_prefix_divide():
     u = KILO * METER
     v = KILO * GRAM
@@ -95,6 +96,24 @@ def test_prefix_divide():
     assert result.prefix is None
     assert METER in result.numerator
     assert GRAM in result.denominator
+
+def test_prefix_resulting_non_standard():
+    v = CENTI * METER
+    result = v * v
+
+    assert result.prefix is not None
+    assert result.prefix.get_power() == -4
+    assert len(result.numerator) > 0
+    assert result.denominator == []
+
+def test_prefix_resulting_standard():
+    u = DEKA * GRAM
+    v = CENTI * METER
+    result = u * v
+
+    assert result.prefix is not None
+    assert result.prefix.get_power() == -1
+    assert result.prefix == DECI
 
 
 def test__prefix_multiply():
