@@ -23,12 +23,8 @@ class Unit:
         Standard notation of the unit.
     qty_measured : {'time', 'mass', 'length', 'area', 'volume', 'power', 'energy', 'count', 'carbon storage'}
         The quantity measured by the unit.
-    base_unit : ~pod_lca.units.Unit
-        Base unit of the Obj. None if itself a base unit.
     prefix : ~pod_lca.units.MetricPrefix
         Metric prefix. None if a base unit or non-metric.
-    convert_compound : bool
-        If True, unit conversion assuming the unit to be a compound unit.
     components : list of ~pod_lca.units.Unit
         List of components the unit is made up of. None if not a compound unit
     """
@@ -37,11 +33,10 @@ class Unit:
         self.name = None
         self.standard_notation = None
         self.qty_measured = None
-        self.base_unit = None
         self.prefix = None
-        self.convert_compound = False # TODO: try and omit and stick to numerator and denominator
         self.numerator = []
         self.denominator = []
+
 
     def __str__(self):
         return f"Unit {self.get_name()} ({self.get_standard_notation()}) measuring {self.get_qty_measured()}."
@@ -67,16 +62,17 @@ class Unit:
         if not isinstance(other, Unit):
             raise TypeError(f"unsupported operand type(s) for *: {type(self)} and {type(other)}")
 
+        new_prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
+        prefix_name = "" if new_prefix is None else new_prefix.get_name()
+
         result = Unit.from_basics(
-            name=self.get_name() + "-" + other.get_name(),
+            name=prefix_name + self.get_name() + "-" + other.get_name(),
             standard_notation=self.get_standard_notation() + other.get_standard_notation(),
             qty_measured=self.get_qty_measured() + "-" + other.get_qty_measured()
         )
-        result.convert_compound = True
-
         result.numerator = self.numerator + other.numerator
-        if self.denominator or other.denominator:
-            result.denominator = self.denominator + other.denominator
+        result.denominator = self.denominator + other.denominator
+        result.prefix = new_prefix
 
         _, result = result.simplify()
         result.collapse_powers()
@@ -86,28 +82,21 @@ class Unit:
     def __rmul__(self, other):
         """Reflexive multiplication of units by metric prefixes."""
         if isinstance(other, MetricPrefix):
-            if self.get_base() is None:
-                name = other.get_name() + self.get_name()
-                standard_notation = other.get_symbol() + self.get_standard_notation()
-                qty_measured = self.get_qty_measured()
-
-                newUnit = Unit.from_basics(name, standard_notation, qty_measured)
-                newUnit.base_unit = self
-                newUnit.prefix = other
-
-                return newUnit
+            if self.prefix:
+                new_prefix = self.prefix * other
             else:
-                new_prefix = self.get_prefix() * other
+                new_prefix = other
 
-                name = new_prefix.get_name() + self.get_base().get_name()
-                standard_notation = new_prefix.get_symbol() + self.get_base().get_standard_notation()
-                qty_measured = self.get_qty_measured()
+            name = new_prefix.get_name() + self.get_name()
+            standard_notation = new_prefix.get_symbol() + self.get_standard_notation()
+            qty_measured = self.get_qty_measured()
 
-                newUnit = Unit.from_basics(name, standard_notation, qty_measured)
-                newUnit.base_unit = self.get_base()
-                newUnit.prefix = new_prefix
+            newUnit = Unit.from_basics(name, standard_notation, qty_measured)
+            newUnit.numerator = self.numerator[:]
+            newUnit.denominator = self.denominator[:]
+            newUnit.prefix = new_prefix
 
-                return newUnit
+            return newUnit
         else:
             raise TypeError(
                 f"unsupported operand type(s) for *: {self.__class__.__name__} and {other.__class__.__name__}"
@@ -119,34 +108,22 @@ class Unit:
             raise TypeError(
                 f"unsupported operand type(s) for /: {type(self).__name__} and {type(other).__name__}"
             )
+        
+        new_prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
+        prefix_name = "" if new_prefix is None else new_prefix.get_name()
 
-        # Create new compound unit container
         result = Unit.from_basics(
-            name=self.get_name() + " per " + other.get_name(),
+            name=prefix_name + self.get_name() + " per " + other.get_name(),
             standard_notation=self.get_standard_notation() + "/" + other.get_standard_notation(),
             qty_measured=self.get_qty_measured() + " per " + other.get_qty_measured()
         )
-        result.convert_compound = True
 
-        # Reuse numerator / denominator components
-        result.numerator = list(self.numerator) if self.convert_compound else [self]
-        if other.convert_compound:
-            # append other's numerator to denominator
-            result.denominator = list(other.numerator)
-            # also add other's denominator to numerator (division by fraction)
-            if other.denominator:
-                result.numerator += list(other.denominator)
-        else:
-            # simple unit: goes to denominator
-            result.denominator = [other]
+        result.numerator = self.numerator + other.denominator
+        result.denominator = self.denominator + other.numerator
+        result.prefix = new_prefix
 
-        # Simplify and collapse powers in-place
         factor, result = result.simplify()
         result.collapse_powers()
-
-        # Normalize empty denominator → None
-        if result.denominator == []:
-            result.denominator = None
 
         return result
 
@@ -163,11 +140,9 @@ class Unit:
                 qty_measured = "per " + self.get_qty_measured()
 
             newUnit = Unit.from_basics(name, standard_notation, qty_measured)
-            newUnit.base_unit = self.get_base()
-            newUnit.prefix = self.get_prefix()
-            newUnit.convert_compound = self.convert_compound
-            newUnit.components = [self] if self.get_components() is None else self.get_components()
-            newUnit.denominator = [self]
+            newUnit.prefix = MetricPrefix.safe_combine_prefix(1, other.prefix, 'divide')
+            newUnit.denominator = self.numerator
+            newUnit.numerator = self.denominator
 
             return newUnit
         else:
@@ -264,16 +239,6 @@ class Unit:
         """
         return self.qty_measured
 
-    def get_base(self):
-        """Retrieve the base unit of the unit of measurement, if exist.
-
-        Returns
-        -------
-        ~pod_lca.units.Unit
-            Base unit of measurement, or None if itself a base unit of measurement.
-        """
-        return self.base_unit
-
     def get_prefix(self):
         """Retrieve the metric prefix of the unit of measurement, if exist.
 
@@ -294,6 +259,12 @@ class Unit:
         """
         return self.numerator + self.denominator
 
+    def is_compound(self):
+        if (self.get_prefix() is None) and (len(self.numerator) == 1) and (len(self.get_components()) == 1):
+            return False
+        else:
+            return True
+        
     def convert_to(self, to_unit):
         """Returns conversion factor.
 
@@ -313,36 +284,36 @@ class Unit:
             Incompatible units for conversion.
         """
         if self.get_qty_measured() == to_unit.get_qty_measured():
-            if not self.convert_compound:
+            if not self.is_compound():
                 if self == to_unit:
                     return 1.0
-                elif self.get_base() is None or to_unit.get_base() is None:
-                    return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
-                elif self.get_base() == to_unit.get_base():
-                    return self.prefix.convert_to(to_unit.get_prefix())
-                else:  # both units are prefixed
-                    return Unit.compute_conversion_factor(self, to_unit, self.get_qty_measured())
-            else:
-                components_in = self.get_components()
-                components_out = to_unit.get_components()
+                return Unit.compute_conversion_factor(self, to_unit)
 
-                conversion_factor = 1.0
-                for component_in, component_out in zip(
-                    components_in, components_out
-                ):  # it is assumed components of in and out are in same order
-                    conversion_factor *= component_in.convert_to(component_out)
-                return conversion_factor
+            factor = 1.0
 
-        else:
-            simplification_factor, self = self.simplify()
-            if (
-                self.get_qty_measured() == to_unit.get_qty_measured()
-            ):  # TODO: test this branch... potential issues with quantity measured after simplification
-                conversion_factor = self.convert_to(to_unit)
-                return simplification_factor * conversion_factor
+            # Numerator conversions
+            self_num = self.numerator
+            to_num = to_unit.numerator 
+            for u_in, u_out in zip(self_num, to_num):
+                factor *= u_in.convert_to(u_out)
+
+            # Denominator conversions (inverse)
+            self_den = self.denominator
+            to_den = to_unit.denominator
+            for u_in, u_out in zip(self_den, to_den):
+                factor /= u_in.convert_to(u_out)
+
+            return factor
+
+        simplification_factor, simplified = self.simplify()
+
+        if simplified.get_qty_measured() == to_unit.get_qty_measured():
+            return simplification_factor * simplified.convert_to(to_unit)
+
+        raise TypeError("Incompatible units for conversion.")
 
     @staticmethod
-    def compute_conversion_factor(unit_in, unit_out, qty_measured):
+    def compute_conversion_factor(unit_in, unit_out):
         """Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and
             (b) they are not compound units.
 
@@ -352,8 +323,6 @@ class Unit:
             Unit of measurement from which the value will be converted.
         unit_out : ~pod_lca.units.Unit
             Unit of measurement to which the value will be converted.
-        qty_measured : str
-            Quantity measured by the units of measruements considered.
 
         Returns
         -------
@@ -362,16 +331,17 @@ class Unit:
         """
         qty = unit_in.get_qty_measured()
 
-        name_in = unit_in.get_base().get_name() if unit_in.get_base() else unit_in.get_name()
-        name_out = unit_out.get_base().get_name() if unit_out.get_base() else unit_out.get_name()
+        name_in = unit_in.get_name()
+        name_out = unit_out.get_name()
 
         factor_in = UNIT_CONVERSIONS[qty][name_in]
         factor_out = UNIT_CONVERSIONS[qty][name_out]
 
-        if unit_in.get_prefix():
-            factor_in /= 10 ** unit_in.get_prefix().get_power()
-        if unit_out.get_prefix():
-            factor_out /= 10 ** unit_out.get_prefix().get_power()
+        if unit_in.prefix:
+            factor_in /= 10 ** unit_in.prefix.get_power()
+
+        if unit_out.prefix:
+            factor_out /= 10 ** unit_out.prefix.get_power()
 
         return factor_out / factor_in
 
@@ -385,7 +355,7 @@ class Unit:
         :class:`~pod_lca.units.Unit`
             Simplified unit.
         """
-        if not self.convert_compound:
+        if not self.is_compound():
             return 1.0, self
 
         factor = 1.0
@@ -403,21 +373,29 @@ class Unit:
                     pass # TODO: extend with unit conversion
 
         total = len(self.numerator) + len(self.denominator)
-        self.convert_compound = total > 1
 
         # Update metadata
-        self.name = "-".join([u.name for u in self.numerator] +
+        base_name = "-".join([u.name for u in self.numerator] +
                              [u.name for u in self.denominator])
-        self.standard_notation = "".join([u.standard_notation for u in self.numerator]) + \
-                                 "".join([f"/{u.standard_notation}" for u in self.denominator])
-        self.qty_measured = "-".join([u.qty_measured for u in self.numerator] +
+        base_notation = "".join([u.standard_notation for u in self.numerator]) + \
+                        "".join([f"/{u.standard_notation}" for u in self.denominator])
+        base_qty_measured = "-".join([u.qty_measured for u in self.numerator] +
                                      [u.qty_measured for u in self.denominator])
+        
+        if self.prefix:
+            self.name = self.prefix.get_name() + base_name
+            self.standard_notation = self.prefix.get_symbol() + base_notation
+        else:
+            self.name = base_name
+            self.standard_notation = base_notation
+        self.qty_measured = base_qty_measured
+
         return factor, self
 
     def collapse_powers(self, power_rules=POWER_RULES):
         """Collapse repeated units into squared/cubed forms based on a rules dict.
         """
-        if not self.convert_compound:
+        if not self.is_compound():
             return self
         
         # expand power rules
@@ -462,14 +440,22 @@ class Unit:
 
         # Update metadata
         total = len(self.numerator) + len(self.denominator)
-        self.convert_compound = total > 1
 
-        self.name = "-".join([u.name for u in self.numerator] +
+        base_name = "-".join([u.name for u in self.numerator] +
                              [u.name for u in self.denominator])
-        self.standard_notation = "".join([u.standard_notation for u in self.numerator]) + \
-                                 "".join([f"/{u.standard_notation}" for u in self.denominator])
-        self.qty_measured = "-".join([u.qty_measured for u in self.numerator] +
+        base_notation = "".join([u.standard_notation for u in self.numerator]) + \
+                        "".join([f"/{u.standard_notation}" for u in self.denominator])
+        base_qty_measured = "-".join([u.qty_measured for u in self.numerator] +
                                      [u.qty_measured for u in self.denominator])
+        
+        if self.prefix:
+            self.name = self.prefix.get_name() + base_name
+            self.standard_notation = self.prefix.get_symbol() + base_notation
+        else:
+            self.name = base_name
+            self.standard_notation = base_notation
+        self.qty_measured = base_qty_measured
+
         return self
 
 
@@ -612,8 +598,19 @@ class MetricPrefix:
         """
         return 10 ** (self.get_power() - to_prefix.get_power())
 
+    @staticmethod
+    def safe_combine_prefix(p1, p2, operator='multiply'):
+        if p1 and p2:
+            if operator == 'multiply':
+                return p1 * p2
+            elif operator == 'divide':
+                return p1 / p2
+        return p1 or p2
 
 if __name__ == "__main__":
     pass
 
+# TODO: check is_compound()
+# TODO: check conversion
+# TODO: unit test coverage for multiply and divide
 # TODO: replace == with is, where applicable
