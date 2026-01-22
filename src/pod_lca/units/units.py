@@ -4,7 +4,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from copy import deepcopy
 from collections import Counter
 from math import log10
 
@@ -67,7 +66,7 @@ class Unit:
         result.denominator = self.denominator + other.denominator
         result.prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
 
-        factor, result = result.simplify() # TODO: check factor is 1
+        result = result.simplify()
         result.collapse_powers()
         result._rebuild_strings()
 
@@ -108,7 +107,7 @@ class Unit:
         result.denominator = self.denominator + other.numerator
         result.prefix =  MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
 
-        factor, result = result.simplify() # TODO: check factor is 1
+        result = result.simplify()
         result.collapse_powers()
         result._rebuild_strings()
 
@@ -349,7 +348,7 @@ class Unit:
 
         return factor_out / factor_in
 
-    def simplify(self):
+    def simplify(self, return_factor=False):
         """Simplify a compound unit by cancelling common components in numerator and denominator.
 
         Returns
@@ -360,7 +359,10 @@ class Unit:
             Simplified unit.
         """
         if not self.is_compound():
-            return 1.0, self
+            if return_factor:
+                return 1.0, self
+            else:
+                return self
 
         factor = 1.0
         numerator = self.numerator
@@ -374,9 +376,24 @@ class Unit:
                     self.numerator.remove(n)
                     self.denominator.remove(d)
                 else:
-                    pass # TODO: extend with unit conversion
+                    if return_factor:
+                        factor *= n.convert_to(d)
+                        self.numerator.remove(n)
+                        self.denominator.remove(d)
 
-        return factor, self
+        if return_factor:
+            if self.prefix:
+                factor *= 10 ** self.prefix.power
+                self.prefix = None
+                self._rebuild_strings()
+                
+            return factor, self
+        else: 
+            self._rebuild_strings()
+            if factor == 1.0:
+                return self
+            else:
+                raise ValueError
 
     def collapse_powers(self, power_rules=POWER_RULES):
         """Collapse repeated units into squared/cubed forms based on a rules dict.
@@ -524,6 +541,7 @@ class MetricPrefix:
                 print(
                     f"Multiplication of {self.get_name()} and {other.get_name()} does not return a standard metric prefix."
                 )
+                # FIXME: return prefix with new name and symbol // add logic to multiplying with this
 
         elif isinstance(other, Unit):
 
