@@ -62,20 +62,14 @@ class Unit:
         if not isinstance(other, Unit):
             raise TypeError(f"unsupported operand type(s) for *: {type(self)} and {type(other)}")
 
-        new_prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
-        prefix_name = "" if new_prefix is None else new_prefix.get_name()
-
-        result = Unit.from_basics(
-            name=prefix_name + self.get_name() + "-" + other.get_name(),
-            standard_notation=self.get_standard_notation() + other.get_standard_notation(),
-            qty_measured=self.get_qty_measured() + "-" + other.get_qty_measured()
-        )
+        result = Unit.from_basics("", "", "")
         result.numerator = self.numerator + other.numerator
         result.denominator = self.denominator + other.denominator
-        result.prefix = new_prefix
+        result.prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
 
-        _, result = result.simplify()
+        factor, result = result.simplify() # TODO: check factor is 1
         result.collapse_powers()
+        result._rebuild_strings()
 
         return result
 
@@ -108,22 +102,15 @@ class Unit:
             raise TypeError(
                 f"unsupported operand type(s) for /: {type(self).__name__} and {type(other).__name__}"
             )
-        
-        new_prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
-        prefix_name = "" if new_prefix is None else new_prefix.get_name()
 
-        result = Unit.from_basics(
-            name=prefix_name + self.get_name() + " per " + other.get_name(),
-            standard_notation=self.get_standard_notation() + "/" + other.get_standard_notation(),
-            qty_measured=self.get_qty_measured() + " per " + other.get_qty_measured()
-        )
-
+        result = Unit.from_basics("","","")
         result.numerator = self.numerator + other.denominator
         result.denominator = self.denominator + other.numerator
-        result.prefix = new_prefix
+        result.prefix =  MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
 
-        factor, result = result.simplify()
+        factor, result = result.simplify() # TODO: check factor is 1
         result.collapse_powers()
+        result._rebuild_strings()
 
         return result
 
@@ -260,11 +247,21 @@ class Unit:
         return self.numerator + self.denominator
 
     def is_compound(self):
-        if (self.get_prefix() is None) and (len(self.numerator) == 1) and (len(self.get_components()) == 1):
+        if (self.get_prefix() is None) and (len(self.numerator) <= 1) and (len(self.get_components()) <= 1):
             return False
         else:
             return True
-        
+
+    def is_dimensionless(self):
+        """Check if the unit is dimensionless (no numerator or denominator, no name)."""
+        return (
+            not self.numerator and
+            not self.denominator and
+            not self.name and
+            not self.standard_notation and
+            not self.qty_measured
+        )
+    
     def convert_to(self, to_unit):
         """Returns conversion factor.
 
@@ -372,24 +369,6 @@ class Unit:
                 else:
                     pass # TODO: extend with unit conversion
 
-        total = len(self.numerator) + len(self.denominator)
-
-        # Update metadata
-        base_name = "-".join([u.name for u in self.numerator] +
-                             [u.name for u in self.denominator])
-        base_notation = "".join([u.standard_notation for u in self.numerator]) + \
-                        "".join([f"/{u.standard_notation}" for u in self.denominator])
-        base_qty_measured = "-".join([u.qty_measured for u in self.numerator] +
-                                     [u.qty_measured for u in self.denominator])
-        
-        if self.prefix:
-            self.name = self.prefix.get_name() + base_name
-            self.standard_notation = self.prefix.get_symbol() + base_notation
-        else:
-            self.name = base_name
-            self.standard_notation = base_notation
-        self.qty_measured = base_qty_measured
-
         return factor, self
 
     def collapse_powers(self, power_rules=POWER_RULES):
@@ -438,26 +417,67 @@ class Unit:
                     new_denominator.extend([unit] * count)
             self.denominator = new_denominator
 
-        # Update metadata
-        total = len(self.numerator) + len(self.denominator)
-
-        base_name = "-".join([u.name for u in self.numerator] +
-                             [u.name for u in self.denominator])
-        base_notation = "".join([u.standard_notation for u in self.numerator]) + \
-                        "".join([f"/{u.standard_notation}" for u in self.denominator])
-        base_qty_measured = "-".join([u.qty_measured for u in self.numerator] +
-                                     [u.qty_measured for u in self.denominator])
-        
-        if self.prefix:
-            self.name = self.prefix.get_name() + base_name
-            self.standard_notation = self.prefix.get_symbol() + base_notation
-        else:
-            self.name = base_name
-            self.standard_notation = base_notation
-        self.qty_measured = base_qty_measured
-
         return self
 
+    def _rebuild_strings(self):
+        """
+        Rebuild name, standard notation, and quantity.
+        Rules:
+        - Numerator units joined by '-'
+        - Denominator units joined by '-'
+        - 'per' (name) or '/' (notation) between numerator and denominator only if denominator exists
+        - Parentheses if more than one unit in numerator or denominator
+        - Prefix applied at the front if present
+        """
+        num_units = [u for u in self.numerator if not u.is_dimensionless()]
+        denom_units = [u for u in (self.denominator or []) if not u.is_dimensionless()]
+
+        # Helper
+        def join_group(units):
+            if not units:
+                return ""
+            if len(units) == 1:
+                return units[0].name
+            return "(" + "-".join(u.name for u in units) + ")"
+
+        def join_group_notation(units):
+            if not units:
+                return ""
+            if len(units) == 1:
+                return units[0].standard_notation
+            return "(" + "-".join(u.standard_notation for u in units) + ")"
+
+        def join_group_qty(units):
+            if not units:
+                return ""
+            if len(units) == 1:
+                return units[0].qty_measured
+            return "(" + "-".join(u.qty_measured for u in units) + ")"
+
+        # Build numerator/denominator strings
+        num_name = join_group(num_units)
+        denom_name = join_group(denom_units)
+
+        num_notation = join_group_notation(num_units)
+        denom_notation = join_group_notation(denom_units)
+
+        num_qty = join_group_qty(num_units)
+        denom_qty = join_group_qty(denom_units)
+
+        # Combine numerator and denominator
+        if denom_name:
+            self.name = f"{num_name} per {denom_name}" if num_name else f"per {denom_name}"
+            self.standard_notation = f"{num_notation}/{denom_notation}" if num_notation else f"1/{denom_notation}"
+            self.qty_measured = f"{num_qty} per {denom_qty}" if num_qty else f"per {denom_qty}"
+        else:
+            self.name = num_name
+            self.standard_notation = num_notation
+            self.qty_measured = num_qty
+
+        # Apply prefix at the front
+        if self.prefix:
+            self.name = f"{self.prefix.get_name()}{self.name}" if self.name else self.prefix.get_name()
+            self.standard_notation = f"{self.prefix.get_symbol()}{self.standard_notation}" if self.standard_notation else self.prefix.get_symbol()
 
 class MetricPrefix:
     """Unit object from which units are created.
