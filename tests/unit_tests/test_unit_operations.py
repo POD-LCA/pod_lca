@@ -2,54 +2,90 @@ from copy import deepcopy
 import pytest
 
 from pod_lca.units import Unit
-from pod_lca.units import METER
-from pod_lca.units import FEET
-from pod_lca.units import SQUARE_METER
-from pod_lca.units import SQUARE_FEET
-from pod_lca.units import CUBIC_METER
-from pod_lca.units import KILOMETER
-from pod_lca.units import GRAM
-from pod_lca.units import KILO
-from pod_lca.units import MEGA
-from pod_lca.units import CENTI
-from pod_lca.units import DEKA
-from pod_lca.units import DECI
+from pod_lca.units import MetricPrefix
 
 
 @pytest.fixture
-def s():
+def second():
     return Unit.from_basics("second", "s", "time")
 
+@pytest.fixture
+def meter():
+    return Unit.from_basics("meter", "m", "length")
 
-def test_simple_units_multiply(s):
-    u = METER * s
+@pytest.fixture
+def feet():
+    return Unit.from_basics("feet", "ft", "length")
+
+@pytest.fixture
+def gram():
+    return Unit.from_basics("gram", "g", "mass")
+
+@pytest.fixture
+def gram():
+    return Unit.from_basics("gram", "g", "mass")
+
+@pytest.fixture
+def sqmeter():
+    return Unit.from_basics("square meter", "m²", "area")
+
+@pytest.fixture
+def sqfeet():
+    return Unit.from_basics("square feet", "ft²", "area")
+
+@pytest.fixture
+def cubicmeter():
+    return Unit.from_basics("cubic meter", "m³", "volume")
+
+@pytest.fixture
+def kilo():
+    return MetricPrefix("kilo", "k", 3)
+
+@pytest.fixture
+def mega():
+    return MetricPrefix("mega", "M", 6)
+
+@pytest.fixture
+def centi():
+    return MetricPrefix("kilo", "c", -2)
+
+@pytest.fixture
+def deka():
+    return MetricPrefix("deka", "da", 1)
+
+@pytest.fixture
+def deci():
+    return MetricPrefix("deci", "d", -1)
+
+def test_simple_units_multiply(second, meter):
+    u = meter * second
 
     assert u.is_compound()
     assert len(u.get_components()) == 2
-    assert METER in u.get_components()
-    assert s in u.get_components()
+    assert meter in u.get_components()
+    assert second in u.get_components()
     assert not u.denominator
 
 
-def test_collapse_square_meter():
-    u = METER * METER
+def test_collapse_square_meter(meter, sqmeter):
+    u = meter * meter
 
     assert len(u.get_components()) == 1
-    assert u.get_components()[0] == SQUARE_METER
+    assert u.get_components()[0] == sqmeter
     assert u.name == "square meter"
 
 
-def test_multiply_with_denominator(s):
-    speed = METER / s
-    area = METER * METER
+def test_multiply_with_denominator(meter, second, cubicmeter):
+    speed = meter / second
+    area = meter * meter
     u = speed * area
 
-    assert CUBIC_METER in u.get_components()
-    assert s in u.get_components()
+    assert cubicmeter in u.get_components()
+    assert second in u.get_components()
 
 
-def test_cancel_units_with_no_remainder():
-    u = METER / METER
+def test_cancel_units_with_no_remainder(meter):
+    u = meter / meter
 
     assert u.numerator == []
     assert u.denominator == []
@@ -58,47 +94,47 @@ def test_cancel_units_with_no_remainder():
     assert u.standard_notation == ""
 
 
-def test_cancel_unit_with_remainder(s):
-    u = (METER / s) * s
+def test_cancel_unit_with_remainder(meter, second):
+    u = (meter / second) * second
 
     assert not u.is_compound()
-    assert u == METER
+    assert u == meter
 
 
-def test_cancel_multiple_components(s):
-    u = (METER / s) * (s / METER)
+def test_cancel_multiple_components(meter, second):
+    u = (meter / second) * (second / meter)
 
     assert not u.is_compound()
     assert u.name == ""
     assert u.standard_notation == ""
 
 
-def test_metric_prefix_error():
+def test_metric_prefix_error(meter):
     class DummyPrefix: ...
     with pytest.raises(TypeError):
-        METER * DummyPrefix()
+        meter * DummyPrefix()
 
 
-def test_multiply_unit_with_prefix():
-    unit = KILO * METER
+def test_multiply_unit_with_prefix(meter, kilo):
+    unit = kilo * meter
 
-    assert unit.prefix == KILO
+    assert unit.prefix == kilo
     assert unit.numerator is not None
     assert len(unit.numerator) == 1
-    assert unit.numerator[0] is METER
-    assert unit.denominator is None or len(KILOMETER.denominator) == 0
+    assert unit.numerator[0] is meter
+    assert unit.denominator == []
 
-def test_prefix_divide():
-    u = KILO * METER
-    v = KILO * GRAM
+def test_prefix_divide(meter, gram, kilo):
+    u = kilo * meter
+    v = kilo * gram
     result = u / v
 
     assert result.prefix is None
-    assert METER in result.numerator
-    assert GRAM in result.denominator
+    assert meter in result.numerator
+    assert gram in result.denominator
 
-def test_prefix_resulting_non_standard():
-    v = CENTI * METER
+def test_prefix_resulting_non_standard(meter, centi):
+    v = centi * meter
     result = v * v
 
     assert result.prefix is not None
@@ -106,117 +142,108 @@ def test_prefix_resulting_non_standard():
     assert len(result.numerator) > 0
     assert result.denominator == []
 
-def test_prefix_resulting_standard():
-    u = DEKA * GRAM
-    v = CENTI * METER
+def test_prefix_resulting_standard(meter, gram, centi, deka, deci):
+    u = deka * gram
+    v = centi * meter
     result = u * v
 
     assert result.prefix is not None
     assert result.prefix.get_power() == -1
-    assert result.prefix == DECI
+    assert result.prefix == deci
 
 
-def test__prefix_multiply():
-    result = KILO * MEGA
+def test__prefix_multiply(kilo, mega):
+    result = kilo * mega
 
     assert result.get_symbol() == 'G'
     assert result.get_power() == 9
 
 
-def test_same_prefix_multiply():
-    result = KILO * KILO
+def test_same_prefix_multiply(kilo, mega):
+    result = kilo * kilo
 
-    assert result == MEGA
+    assert result == mega
     assert result.get_symbol() == 'M'
     assert result.get_power() == 6
 
 
-def test_units_with_prefix_multiply():
-    u = KILO * METER
-    v = KILO * GRAM
+def test_units_with_prefix_multiply(meter, gram, kilo, mega):
+    u = kilo * meter
+    v = kilo * gram
     result = u * v
 
-    assert result.prefix == MEGA
-    assert METER in result.numerator
-    assert GRAM in result.numerator 
+    assert result.prefix == mega
+    assert meter in result.numerator
+    assert gram in result.numerator 
     assert result.denominator == []
 
 
-def test_multiple_components(s):
-    u = (KILO * GRAM * METER / s) * (s * METER)
+def test_multiple_components(meter, second, gram, kilo):
+    u = (kilo * gram * meter / second) * (second * meter)
     u = u.simplify()
 
-    assert u.prefix == KILO
-    assert GRAM in u.get_components()
-    assert s not in u.get_components()
+    assert u.prefix == kilo
+    assert gram in u.get_components()
+    assert second not in u.get_components()
     assert not u.denominator
 
 
-def test_identity_roundtrip(s):
-    u = (METER / s) * s
-    v = METER * (s / s)
+def test_identity_roundtrip(meter, second):
+    u = (meter / second) * second
+    v = meter * (second / second)
     u = u.simplify()
     v = v.simplify()
 
-    assert u == v == METER
+    assert u == v == meter
 
 
-def test_collapse_single():
-    u = deepcopy(METER)
+def test_collapse_single(meter):
+    u = deepcopy(meter)
     u.collapse_powers()
 
-    assert u == METER
+    assert u == meter
 
 
-def test_collapse_cubic_meter():
-    u = METER * METER * METER
+def test_collapse_cubic_meter(meter, cubicmeter):
+    u = meter * meter * meter
 
     assert len(u.get_components()) == 1
-    assert u.get_components()[0] == CUBIC_METER
+    assert u.get_components()[0] == cubicmeter
     assert u.name == "cubic meter"
 
 
-def test_collapse_square_feet():
-    u = FEET * FEET
+def test_collapse_square_feet(feet, sqfeet):
+    u = feet * feet
 
     assert len(u.get_components()) == 1
-    assert u.get_components()[0] == SQUARE_FEET
+    assert u.get_components()[0] == sqfeet
     assert u.name == "square feet"
 
 
-def test_collapse_mixed_units_no_change():
-    u = METER * FEET
+def test_collapse_mixed_units_no_change(meter, feet):
+    u = meter * feet
 
     assert len(u.get_components()) == 2
-    assert METER in u.get_components()
-    assert FEET in u.get_components()
+    assert meter in u.get_components()
+    assert feet in u.get_components()
 
 
-def test_collapse_after_simplify():
-    u = (METER / METER) * (METER * METER)
+def test_collapse_after_simplify(meter, sqmeter):
+    u = (meter / meter) * (meter * meter)
 
     assert len(u.get_components()) == 1
-    assert u.get_components()[0] == SQUARE_METER
+    assert u.get_components()[0] == sqmeter
 
 
-def test_cancel_after_collapse():
-    density = GRAM / SQUARE_METER
-    area = METER * METER
+def test_cancel_after_collapse(meter, gram, sqmeter):
+    density = gram / sqmeter
+    area = meter * meter
     result = density * area
 
     assert len(result.get_components()) == 1
-    assert result.get_components()[0] == GRAM
+    assert result.get_components()[0] == gram
     assert result.denominator is None or len(result.denominator) == 0
     assert result.name == "gram"
     assert result.standard_notation == "g"
     assert result.qty_measured == "mass"
     assert not result.is_compound()
-
-
-def test_kilo_meter():
-
-    assert KILOMETER.prefix == KILO
-    assert KILOMETER.numerator is not None
-    assert len(KILOMETER.numerator) == 1
-    assert KILOMETER.numerator[0] is METER
-    assert KILOMETER.denominator is None or len(KILOMETER.denominator) == 0

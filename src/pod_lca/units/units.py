@@ -531,6 +531,15 @@ class MetricPrefix:
         self.symbol = symbol
         self.power = power
 
+    def __eq__(self, other):
+        if isinstance(other, MetricPrefix):
+            return (
+                self.get_name() == other.get_name() and
+                self.get_symbol() == other.get_symbol() and
+                self.get_power() == other.get_power()
+            )
+        return NotImplemented
+    
     def __str__(self):
         return f"Metric prefix {self.get_name()} ({self.get_symbol()}) representing a value of e{self.get_power()}."
 
