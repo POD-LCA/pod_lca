@@ -281,7 +281,7 @@ class Unit:
             Incompatible units for conversion.
         """
         if self.get_qty_measured() == to_unit.get_qty_measured():
-            if not self.is_compound():
+            if (not self.is_compound()) and (not to_unit.is_compound()):
                 if self == to_unit:
                     return 1.0
                 return Unit.compute_conversion_factor(self, to_unit)
@@ -299,6 +299,13 @@ class Unit:
             to_den = to_unit.denominator
             for u_in, u_out in zip(self_den, to_den):
                 factor /= u_in.convert_to(u_out)
+
+            # prefix
+            if self.prefix:
+                factor *= 10 ** self.prefix.get_power()
+
+            if to_unit.prefix:
+                factor /= 10 ** to_unit.prefix.get_power()
 
             return factor
 
@@ -630,5 +637,5 @@ class MetricPrefix:
 if __name__ == "__main__":
     pass
 
-# TODO: check conversion
-# TODO: replace == with is, where applicable
+# TODO: check conversion unit tests
+
