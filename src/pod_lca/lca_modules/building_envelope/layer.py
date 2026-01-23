@@ -17,13 +17,15 @@ class Layer(object):
         self._material_property = None
         self.thickness = None
         self.unit = None
+        self.classification = None
 
     @classmethod
-    def from_data(cls, data, thickness):
+    def from_data(cls, data, thickness, classification=None):
         layer = cls()
         layer.name = '{}_{}'.format(data['name'], thickness)
         layer.thickness = thickness
         layer.material_property = layer.add_envelope_material_property(data)
+        layer.classification = classification
         return layer
 
 

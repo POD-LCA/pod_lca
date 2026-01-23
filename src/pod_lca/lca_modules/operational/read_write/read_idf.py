@@ -7,7 +7,8 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 import re
-
+from pod_lca.units import METER
+from pod_lca.units import Quantity as Q
 
 def get_idf_data(filepath):
     data = {}
@@ -153,7 +154,7 @@ def find_materials(filepath, data):
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         rough = lines[i + 2].split(",")[0].strip()
-        thick = float(lines[i + 3].split(",")[0])
+        thick = Q(float(lines[i + 3].split(",")[0]), METER)
         cond = float(lines[i + 4].split(",")[0])
         dens = float(lines[i + 5].split(",")[0])
         sphe = float(lines[i + 6].split(",")[0])

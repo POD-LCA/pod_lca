@@ -13,9 +13,6 @@ from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
 from pod_lca.lca_modules.operational.read_write import find_materials, find_no_mass_materials, find_materials_air_gap
 
-# from pod_lca.lca_modules.building_envelope import Envelope
-# from pod_lca.lca_modules.building import Building
-# from pod_lca.lca_modules.location import Location
 from pod_lca.units import INCH
 from pod_lca.units import METER
 from pod_lca.units import Quantity as Q
@@ -24,11 +21,12 @@ from pod_lca.units import Quantity as Q
 for i in range(100): print('')
 
 constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
+
+#TODO: All IDF reading functions must implement Quantity / Units
+
 data = find_materials(constructions_path, {})
 data = find_materials_air_gap(constructions_path, data)
 data = find_no_mass_materials(constructions_path, data)
-
-
 
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -46,14 +44,15 @@ layers_ = {}
 for lk in layers:
     name = layers[lk]['material']
     thickness = layers[lk]['thickness']
+    classification = layers[lk]['classification']
     mdata = data['materials'][name]
-    l = Layer.from_data(mdata, thickness)
+    l = Layer.from_data(mdata, thickness, classification)
     layers_[lk] = l
 
 framing = Framing.from_data(framing)
 
 w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
-
+w.compute_wall_r()
 
 
 

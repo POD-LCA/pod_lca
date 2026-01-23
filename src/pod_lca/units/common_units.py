@@ -179,3 +179,19 @@ KG_CARBON = Unit.from_basics("kg of Carbon", "kg C", "carbon storage")
 KG_CARBON_DIOXIDE = Unit.from_basics("kg of Carbon dioxide", "kg CO2", "carbon storage")
 
 UNIT_CONVERSIONS["carbon storage"] = {"kg of Carbon": 1.0, "kg of Carbon dioxide": 44.01 / 12.01}
+
+
+# ==================================
+# TEMPERATURE UNITS
+# ==================================
+
+CELSIUS = Unit.from_basics("celsius", "°C", "temperature")
+KELVIN = Unit.from_basics("kelvin", "K", "temperature")
+FAHRENHEIT = Unit.from_basics("fahrenheit", "°F", "temperature")
+
+
+UNIT_CONVERSIONS["temperature"] = {
+    "celsius": 1.,
+    "kelvin": None,
+    "fahrenheit": None,
+}
