@@ -17,14 +17,26 @@ class Quantity(object):
         return '{} ({})'.format(self.value, self.unit.name)
 
     def __add__(self, val):
-
         if isinstance(val, Quantity):
-            val = val.unit.convert_to(self.unit) * val.value
-        return Quantity(self.value + val, self.units)
+            if self.unit.qty_measured == val.unit.qty_measured:
+                val = val.unit.convert_to(self.unit) * val.value
+                return Quantity(self.value + val, self.unit)
+            else:
+                raise TypeError(f"unsupported operand type(s) for + {self.unit.name} and {val.unit.name}")
+        else:
+            self.value += val
+            return self
 
     def __sub__(self, val):
-        f = val.unit.convert_to(self.unit)
-        return Quantity(self.value - (val.value * f), self.unit)
+        if isinstance(val, Quantity):
+            if self.unit.qty_measured == val.unit.qty_measured:
+                val = val.unit.convert_to(self.unit) * val.value
+                return Quantity(self.value - val, self.unit)
+            else:
+                raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
+        else:
+            self.value -= val
+            return self
 
     def __mul__(self, val):
         if isinstance(val, Quantity):
@@ -46,14 +58,14 @@ class Quantity(object):
 if __name__ == '__main__':
 
 
-    from pod_lca.units import METER, INCH, MILE
+    from pod_lca.units import METER, INCH, MILE, M_TON
 
     for i in range(50): print('')
 
     a = Quantity(1, METER)
-    # b = Quantity(2, INCH)
-    b = 4
-    # c = Quantity(1, MILE)
+    b = Quantity(1, INCH)
+    c = Quantity(10, M_TON)
+    d = a * b 
 
-    c = a * b
-    print(c)
+    print(d)
+    print(d.unit.qty_measured)
