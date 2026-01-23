@@ -51,21 +51,36 @@ class Quantity(object):
             return Quantity(self.value * val, self.unit)
 
     def __truediv__(self, val):
-        f = val.unit.convert_to(self.unit)
-        return Quantity(self.value / (val.value * f), self.unit)
+        if isinstance(val, Quantity):
+            if self.unit.qty_measured == val.unit.qty_measured:
+                value  = self.value * (val.value * val.unit.convert_to(self.unit))
+                unit = self.unit / self.unit
+            else:
+                value = self.value / val.value
+                unit = self.unit / val.unit
+            return Quantity(value, unit)
+        else:
+            return Quantity(self.value / val, self.unit)
+        
+        
+    def __iadd__(self, val):
+        return self + val
+    
+    def invert(self):
+        return Quantity(1 / self.value, 1 / self.unit)
 
 
 if __name__ == '__main__':
 
 
-    from pod_lca.units import METER, INCH, MILE, M_TON
+    from pod_lca.units import METER, INCH, MILE, M_TON, CUBIC_METER, KILOGRAM, GRAM
+
 
     for i in range(50): print('')
 
-    a = Quantity(1, METER)
+    a = Quantity(0, METER)
     b = Quantity(1, INCH)
-    c = Quantity(10, M_TON)
-    d = a * b 
+    c = a + b
 
-    print(d)
-    print(d.unit.qty_measured)
+    print(c)
+    print(c.unit.qty_measured)

@@ -7,8 +7,14 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 import re
-from pod_lca.units import METER
+from pod_lca.units import METER, WATT, KELVIN, KILOGRAM, CUBIC_METER, JOULE, SQUARE_METER
 from pod_lca.units import Quantity as Q
+
+WmK = WATT / (METER * KELVIN)
+kgm3 = KILOGRAM / CUBIC_METER
+JkK = JOULE / (KILOGRAM * KELVIN)
+m2KW = (SQUARE_METER * KELVIN) / WATT
+
 
 def get_idf_data(filepath):
     data = {}
@@ -155,9 +161,9 @@ def find_materials(filepath, data):
         name = lines[i + 1].split(",")[0].strip()
         rough = lines[i + 2].split(",")[0].strip()
         thick = Q(float(lines[i + 3].split(",")[0]), METER)
-        cond = float(lines[i + 4].split(",")[0])
-        dens = float(lines[i + 5].split(",")[0])
-        sphe = float(lines[i + 6].split(",")[0])
+        cond = Q(float(lines[i + 4].split(",")[0]), WmK)
+        dens = Q(float(lines[i + 5].split(",")[0]), kgm3)
+        sphe = Q(float(lines[i + 6].split(",")[0]), JkK)
         thra = float(lines[i + 7].split(",")[0])
         slea = float(lines[i + 8].split(",")[0])
         vsba = float(lines[i + 9].split(";")[0])
@@ -190,12 +196,12 @@ def find_materials_air_gap(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        resi = lines[i + 2].split(",")[0].strip()
+        resi = Q(float(lines[i + 2].split(";")[0].strip()), m2KW)
 
         data["materials"][name] = {
             "__type__": "MaterialAirGap",
             "name": name,
-            "resistance": resi,
+            "thermal_resistance": resi,
         }
     return data
 
@@ -215,7 +221,7 @@ def find_no_mass_materials(filepath, data):
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         rough = lines[i + 2].split(",")[0].strip()
-        thres = float(lines[i + 3].split(",")[0])
+        thres = Q(float(lines[i + 3].split(",")[0]), m2KW)
         thabs = float(lines[i + 4].split(",")[0])
         slra = float(lines[i + 5].split(",")[0])
         if ";" not in lines[i + 6]:
@@ -1177,22 +1183,4 @@ def find_space_lists(filepath, data):
 
 
 if __name__ == "__main__":
-    import os
-    import compas_eplus
-
-    for i in range(50):
-        print("")
-
-    file = "doe_midrise_apt.idf"
-    path = os.path.join(compas_eplus.DATA, "idf_examples", file)
-
-    data = get_idf_data(path)
-    # print(data.keys())
-
-    object = "daylighting:referencepoint"
-
-    for k in data[object]:
-        print(k)
-        for j in data[object][k]:
-            print(j)
-        print("")
+    pass

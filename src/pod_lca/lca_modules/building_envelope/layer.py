@@ -59,6 +59,28 @@ class Layer(object):
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 
         return material_prop
+    
+    def get_r(self, thickness=None):
+        mtype = self.material_property.__type__
+        if mtype == 'Material':
+            resistivity =  self.material_property.conductivity.invert()
+            return resistivity * thickness
+        elif mtype == 'EnvelopeMaterialAirGap':
+            return self.material_property.thermal_resistance
+        elif mtype == 'MaterialNoMass':
+            return self.material_property.thermal_resistance
+        else:
+            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+
+    def get_resistivity(self, thickness=None):
+        mat = self.material_property
+        mtype = mat.__type__
+        if mtype == 'Material':
+            return mat.conductivity.invert()
+        elif mtype == 'MaterialNoMass':
+            return mat.thermal_resistance / thickness
+        else:
+            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 
 if __name__ == '__main__':
     pass

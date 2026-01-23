@@ -51,7 +51,7 @@ class EnvelopeMaterialAirGap(EnvelopeMaterialProperty):
         material = cls()
         material.__type__            = 'EnvelopeMaterialAirGap'
         material.name                = data['name']
-        material.resistance          = data['resistance']
+        material.thermal_resistance  = data['thermal_resistance']
         return material
 
 

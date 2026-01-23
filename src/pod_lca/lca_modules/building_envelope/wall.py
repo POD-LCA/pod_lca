@@ -5,6 +5,13 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.lca_modules.building_envelope.construction import Construction
+from pod_lca.units import Quantity as Q
+from pod_lca.units import METER, SQUARE_METER, KELVIN, WATT
+
+m2KW = (SQUARE_METER * KELVIN) / WATT
+mKW = (METER * KELVIN) / WATT
+
+print('hheeeeere', mKW)
 
 
 class Wall(Construction):
@@ -30,37 +37,40 @@ class FramedWall(Construction):
     
     def compute_wall_r(self):
 
-        Ra   = 0.0
-        Rb   = 0.0
-        ri   = 0.0
-        rins = 0.0
+        Ra   = Q(0., m2KW)
+        Rb   = Q(0., m2KW)
+        ri   = Q(0., mKW)
+        rins = Q(0., mKW)
         for key in self.layers:
-            classification = self.layers[key].classification
-            material_property       = self.layers[key].material_property
-            thickness      = self.layers[key].thickness
+            layer = self.layers[key]
+            classification      = layer.classification
+            thickness           = layer.thickness
+            # material_property   = layer.material_property
 
             if classification == "exterior_cladding":
-                Ra += self.compute_layer_r(material_property, thickness)
+                # Ra += self.compute_layer_r(material_property, thickness)
+                Ra += layer.get_r(thickness)
 
-        #     elif classification == "air_gap":
-        #         Ra += compute_layer_r(material, None, material_properties)
+            elif classification == "air_gap":
+                # Ra += self.compute_layer_r(material_property, None)
+                Ra += layer.get_r(None)
 
-        #     elif classification == "exterior_insulation":
-        #         Ra += compute_layer_r(material, thickness, material_properties)
-        #         ri += compute_resistivity(material, material_properties)
+            elif classification == "exterior_insulation":
+                Ra += layer.get_r(thickness)
+                ri += layer.get_resistivity(thickness)
 
-        #     elif classification == "sheathing":
-        #         di = thickness
-        #         Ra += compute_layer_r(material, thickness, material_properties)
-        #         ri += compute_resistivity(material, material_properties)
+            elif classification == "sheathing":
+                di = thickness
+                Ra += layer.get_r(thickness)
+                ri += layer.get_resistivity(thickness)
 
-        #     elif classification == "framing_insulation":
-        #         rins = compute_resistivity(material, material_properties)
+            elif classification == "framing_insulation":
+                rins = layer.get_resistivity(thickness)
 
-        #     elif classification == "interior_finish":
-        #         Rb += compute_layer_r(material, thickness, material_properties)
-        #         interior_finish_material = material
-        #         interior_finish_thickness = thickness
+            elif classification == "interior_finish":
+                Rb += layer.get_r(thickness)
+                # interior_finish_material = material_property
+                interior_finish_thickness = thickness
 
         # # Add air films
         # Ra += .2 # ft²·°F·h/Btu
@@ -87,17 +97,3 @@ class FramedWall(Construction):
 
         # print(results)
 
-
-    def compute_layer_r(self, material_property, thickness):
-        mtype = material_property.__type__
-        print(mtype)
-
-        if hasattr(material_property, 'thermal_resistance'):
-            if material_property.thermal_resistance:
-                return float(material_property['thermal_resistance']) * 5.678
-
-        if mtype == 'No Mass':
-            return float(material_property['rsi_per_in']) * material_property * 5.678
-        else:
-            resistivity =  0.144 / float(material_property['conductivity'])
-            return resistivity * thickness
