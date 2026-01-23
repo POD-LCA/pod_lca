@@ -5,6 +5,7 @@ from shutil import rmtree
 import importlib.util
 import inspect
 import os
+import sys
 
 
 @task
@@ -87,9 +88,22 @@ def load_test_module(filepath):
 
     return module
 
+@task
+def unittests(c, verbose=True):
+    """Run unit tests in tests/unit_tests using pytest."""
+    test_path = os.path.join("tests", "unit_tests")
+    
+    cmd = f"pytest {test_path}"
+    if verbose:
+        cmd += " -vv"
+    
+    if sys.platform == "win32":
+        c.run(cmd)  
+    else:
+        c.run(cmd, pty=True)
 
 @task
-def test(c):
+def tests(c):
     """Discover every *_test_script.py file, import it, and run its test_* functions."""
     test_files = list(Path("tests").rglob("*_test_script.py"))
 

@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..units import UNIT_CONVERSIONS
+from ..units import POWER_RULES
 from ..units.metric_prefixes import KILO
 from ..units.units import Unit
 
@@ -104,13 +105,16 @@ TON_MILE = M_TON * MILE
 # AREA UNITS
 # ==================================
 
-SQUARE_METER = Unit.from_basics("square meter", "m2", "area")
-SQUARE_FEET = Unit.from_basics("square feet", "ft2", "area")
+SQUARE_METER = Unit.from_basics("square meter", "m²", "area")
+SQUARE_FEET = Unit.from_basics("square feet", "ft²", "area")
 ACRE = Unit.from_basics("acre", "acre", "area")
 HECTARE = Unit.from_basics("hectare", "ha", "area")
 
 UNIT_CONVERSIONS["area"] = {"square meter": 4046.8564224, "square feet": 43560, "acre": 1.0, "hectare": 0.40468564224}
 # REF [1] pp. C-14/15
+
+POWER_RULES[(METER, 2)] = SQUARE_METER
+POWER_RULES[(FEET, 2)] = SQUARE_FEET
 
 # ==================================
 # VOLUME UNITS
@@ -118,8 +122,8 @@ UNIT_CONVERSIONS["area"] = {"square meter": 4046.8564224, "square feet": 43560, 
 
 LITER = Unit.from_basics("liter", "l", "volume")
 US_GALLON = Unit.from_basics("US gallon", "US gal", "volume")
-CUBIC_METER = Unit.from_basics("cubic meter", "m3", "volume")
-CUBIC_FEET = Unit.from_basics("cubic feet", "ft3", "volume")
+CUBIC_METER = Unit.from_basics("cubic meter", "m³", "volume")
+CUBIC_FEET = Unit.from_basics("cubic feet", "ft³", "volume")
 
 UNIT_CONVERSIONS["volume"] = {
     "liter": 28.316846592,
@@ -128,6 +132,9 @@ UNIT_CONVERSIONS["volume"] = {
     "cubic feet": 1.0,
 }
 # REF [1] pp. C-17/18
+
+POWER_RULES[(METER, 3)] = CUBIC_METER
+POWER_RULES[(FEET, 3)] = CUBIC_FEET
 
 # ==================================
 # POWER UNITS
