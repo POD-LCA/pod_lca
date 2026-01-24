@@ -31,10 +31,9 @@ from ..units.units import Unit
 # to add their commonly used units here and import from this central source.
 
 # A method is defined for obtaining the conversion factor for converting a unit to another within the same category.
-# In this note the special case of 'area' and 'volume', when conversion across metric and imperial units are envisaged.
-# Although you can define a new unit of measurement (say) METER * METER this would be categorized as 'length-length'
-# and thus cannot be converted to ACRE, which is categorized as 'area'. Thus, the users are encouraged to use the
-# predeefined unit of SQUARE_METER instead. The similar is applied to 'volume' calculations
+# POWER_RULES are used to convert compound units measuring length-length to area and length-length-length to volume.
+# POWER_RULES are limited to length units of meter and feet as only there powers recognized under the area and volume
+# units respectively.
 
 # REF: [1]  National Institute of Standards and Technology (NIST) Handbook 44 (2024). Specifications, Tolerances, and
 #           Other Technical Requirements for Weighing and Measuring Devices.
@@ -192,9 +191,9 @@ KELVIN = Unit.from_basics("kelvin", "K", "temperature")
 FAHRENHEIT = Unit.from_basics("fahrenheit", "°F", "temperature")
 
 UNIT_CONVERSIONS["temperature"] = {
-    "celsius": 1.,
-    "kelvin": None,
-    "fahrenheit": None,
+    "celsius": 1.0,
+    "kelvin": 1.0,
+    "fahrenheit": 1.8,
 }
 
 
