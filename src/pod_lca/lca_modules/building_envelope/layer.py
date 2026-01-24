@@ -10,6 +10,11 @@ from .material_property import EnvelopeMaterialNoMass
 from .material_property import WindowMaterialGlazing
 from .material_property import WindowMaterialGas
 
+from pod_lca.units import Quantity as Q
+from pod_lca.units import METER, KELVIN, WATT
+
+mKW = (METER * KELVIN) / WATT
+
 
 class Layer(object):
     def __init__(self):
@@ -78,7 +83,8 @@ class Layer(object):
         if mtype == 'Material':
             return mat.conductivity.invert()
         elif mtype == 'MaterialNoMass':
-            return mat.thermal_resistance / thickness
+            resistivity = mat.thermal_resistance / thickness
+            return Q(resistivity.value, mKW)
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 

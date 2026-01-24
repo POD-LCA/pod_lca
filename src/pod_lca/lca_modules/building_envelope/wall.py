@@ -11,8 +11,6 @@ from pod_lca.units import METER, SQUARE_METER, KELVIN, WATT
 m2KW = (SQUARE_METER * KELVIN) / WATT
 mKW = (METER * KELVIN) / WATT
 
-print('hheeeeere', mKW)
-
 
 class Wall(Construction):
     def __init__(self):
@@ -72,12 +70,12 @@ class FramedWall(Construction):
                 # interior_finish_material = material_property
                 interior_finish_thickness = thickness
 
-        # # Add air films
-        # Ra += .2 # ft²·°F·h/Btu
-        # Rb += .7 # ft²·°F·h/Btu
+        # Add air films
+        Ra += Q(.2  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
+        Rb += Q(.7  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
 
-
-        # ratio = ri / rins if rins > 0 else 0
+        ratio = ri / rins if rins > 0 else 0
+        # ds = self.framing.
         # zf = get_zf(ds, ratio)
 
 

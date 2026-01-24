@@ -36,7 +36,7 @@ layers = {
           1: {'classification':'air_gap', 'material': 'Generic Wall Air Gap', 'thickness': Q(1.5, INCH)},
           2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness': Q(1.5, INCH)},
           3: {'classification':'sheathing', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH)},
-          4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness': Q(0.0, INCH)},
+          4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness': Q(2.0, INCH)},
           5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH)}
           }
 
