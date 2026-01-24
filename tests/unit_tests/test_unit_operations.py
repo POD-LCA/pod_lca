@@ -22,8 +22,8 @@ def gram():
     return Unit.from_basics("gram", "g", "mass")
 
 @pytest.fixture
-def gram():
-    return Unit.from_basics("gram", "g", "mass")
+def watt():
+    return Unit.from_basics("watt", "W", "power")
 
 @pytest.fixture
 def sqmeter():
@@ -203,6 +203,13 @@ def test_collapse_single(meter):
 
     assert u == meter
 
+def test_collapse_after_expand(kilo, gram, sqmeter, meter, watt):
+    u = (kilo * gram  *  sqmeter)  / (watt * meter)
+
+    assert len(u.numerator) == 2
+    assert len(u.denominator) == 1
+    assert u.prefix == kilo
+    assert u.denominator[0] == watt
 
 def test_collapse_cubic_meter(meter, cubicmeter):
     u = meter * meter * meter

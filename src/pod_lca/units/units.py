@@ -359,6 +359,8 @@ class Unit:
         :class:`~pod_lca.units.Unit`
             Simplified unit.
         """
+        self.expand_powers()
+        
         if not self.is_compound():
             if return_factor:
                 return 1.0, self
@@ -395,14 +397,8 @@ class Unit:
                 return self
             else:
                 raise ValueError
-
-    def collapse_powers(self, power_rules=POWER_RULES):
-        """Collapse repeated units into squared/cubed forms based on a rules dict.
-        """
-        if not self.is_compound():
-            return self
-        
-        # expand power rules
+            
+    def expand_powers(self, power_rules=POWER_RULES):
         reverse_power_rules = {v: k for k, v in POWER_RULES.items()}
         def expand_units(units):
             """Expand collapsed units into base units for counting."""
@@ -416,11 +412,22 @@ class Unit:
             return expanded
 
         # Expand numerator and denominator
-        numerator_expanded = expand_units(self.numerator)
-        denominator_expanded = expand_units(self.denominator or [])
+        self.numerator = expand_units(self.numerator)
+        self.denominator = expand_units(self.denominator or [])
+
+        return self
+
+    def collapse_powers(self, power_rules=POWER_RULES):
+        """Collapse repeated units into squared/cubed forms based on a rules dict.
+        """
+        if not self.is_compound():
+            return self
+        
+        # expand power rules
+        self.expand_powers()
 
         # Numerator
-        num_counts = Counter(numerator_expanded)
+        num_counts = Counter(self.numerator)
         new_numerator = []
         for unit, count in num_counts.items():
             key = (unit, count)
@@ -432,7 +439,7 @@ class Unit:
 
         # Denominator
         if self.denominator:
-            denom_counts = Counter(denominator_expanded)
+            denom_counts = Counter(self.denominator)
             new_denominator = []
             for unit, count in denom_counts.items():
                 key = (unit, count)

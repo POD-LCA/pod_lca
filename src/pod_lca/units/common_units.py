@@ -189,7 +189,6 @@ CELSIUS = Unit.from_basics("celsius", "°C", "temperature")
 KELVIN = Unit.from_basics("kelvin", "K", "temperature")
 FAHRENHEIT = Unit.from_basics("fahrenheit", "°F", "temperature")
 
-
 UNIT_CONVERSIONS["temperature"] = {
     "celsius": 1.,
     "kelvin": None,
