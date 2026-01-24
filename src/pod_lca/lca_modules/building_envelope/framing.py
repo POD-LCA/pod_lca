@@ -92,7 +92,7 @@ class Framing(object):
         if dI < 0:
             raise ValueError("Metal stud too thick: dI < 0.")
 
-        W = self.L + self.zf * di  
+        W = self.L + (self.zf * di)
 
         debug.update({
             "dI": dI,

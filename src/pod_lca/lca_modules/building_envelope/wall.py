@@ -75,8 +75,9 @@ class FramedWall(Construction):
         Rb += Q(.7  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
 
         ratio = ri / rins if rins > 0 else 0
-        ds = self.framing.ds
-        zf = self.framing.get_zf(ratio)
+        self.framing.get_zf(ratio)
+
+        print(self.framing.zf)
 
         framing_type = self.framing.type
         spacing = self.framing.spacing
