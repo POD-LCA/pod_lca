@@ -4,8 +4,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ..units import UNIT_CONVERSIONS
 from ..units import POWER_RULES
+from ..units import UNIT_CONVERSIONS
+from ..units import UNIT_NAME_OVERRIDES
+from ..units import UNIT_NOTATION_OVERRIDES
 from ..units.metric_prefixes import KILO
 from ..units.units import Unit
 
@@ -194,3 +196,17 @@ UNIT_CONVERSIONS["temperature"] = {
     "kelvin": None,
     "fahrenheit": None,
 }
+
+
+# ==================================
+# NAME OVERRIDES
+# ==================================
+# The compound units created using the above basic units are automatically named based on their composition.
+# {prefix name, if any}({basic units in numerator separated by hyphens}) per ({basic units in denominator separated by hyphens})
+# Some common compound units may not follow this naming structure.
+# Their names can be overriden by adding in the NAME_OVERRIDES directory keyed by the compound name given in the above structure
+# and the replacement common name as the value
+
+UNIT_NAME_OVERRIDES['milijoule per (gram-kelvin)'] = "joule per (kilogram-kelvin)"
+UNIT_NOTATION_OVERRIDES['mJ/(g-K)'] = "J/(kg-K)"
+

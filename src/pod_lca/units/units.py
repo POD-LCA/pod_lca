@@ -7,7 +7,11 @@ __version__ = "0.1.0"
 from collections import Counter
 from math import log10
 
-from ..units import UNIT_CONVERSIONS, ALL_PREFIXES, POWER_RULES
+from ..units import ALL_PREFIXES
+from ..units import POWER_RULES
+from ..units import UNIT_CONVERSIONS
+from ..units import UNIT_NAME_OVERRIDES
+from ..units import UNIT_NOTATION_OVERRIDES
 from ..utilities import ArrayMethods
 
 
@@ -360,7 +364,7 @@ class Unit:
             Simplified unit.
         """
         self.expand_powers()
-        
+
         if not self.is_compound():
             if return_factor:
                 return 1.0, self
@@ -517,6 +521,12 @@ class Unit:
             else:
                 self.name = f"{self.prefix.get_name()}{self.name}" if self.name else self.prefix.get_name()
                 self.standard_notation = f"{self.prefix.get_symbol()}{self.standard_notation}" if self.standard_notation else self.prefix.get_symbol()
+
+        if self.name in UNIT_NAME_OVERRIDES:
+            self.name = UNIT_NAME_OVERRIDES[self.name]
+        if self.standard_notation in UNIT_NOTATION_OVERRIDES:
+            self.standard_notation = UNIT_NOTATION_OVERRIDES[self.standard_notation]
+
 
 class MetricPrefix:
     """Unit object from which units are created.
