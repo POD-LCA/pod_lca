@@ -127,7 +127,6 @@ class Quantity(object):
         else:
             return self.value == val
 
-
     def __ne__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -138,6 +137,11 @@ class Quantity(object):
         else:
             return self.value != val
 
+    def __float__(self):
+        return float(self.value)
+    
+    def __int__(self):
+        return int(self.value)
 
     def invert(self):
         return Quantity(1 / self.value, 1 / self.unit)
