@@ -84,7 +84,8 @@ class Layer(object):
             return mat.conductivity.invert()
         elif mtype == 'MaterialNoMass':
             resistivity = mat.thermal_resistance / thickness
-            return Q(resistivity.value, mKW)
+            # return Q(resistivity.value, mKW)
+            return resistivity
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 
