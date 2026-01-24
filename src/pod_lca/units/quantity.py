@@ -27,6 +27,9 @@ class Quantity(object):
             self.value += val
             return self
 
+    def __radd__(self, other):
+        return self.__add__(other)
+
     def __sub__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -37,6 +40,9 @@ class Quantity(object):
         else:
             self.value -= val
             return self
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
 
     def __mul__(self, val):
         if isinstance(val, Quantity):
@@ -50,6 +56,9 @@ class Quantity(object):
         else:
             return Quantity(self.value * val, self.unit)
 
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     def __truediv__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -61,8 +70,10 @@ class Quantity(object):
             return Quantity(value, unit)
         else:
             return Quantity(self.value / val, self.unit)
-        
-        
+
+    def __rtruediv__(self, other):
+        return self.__truediv__(other)
+
     def __iadd__(self, val):
         return self + val
     
@@ -76,7 +87,6 @@ class Quantity(object):
         else:
             return self.value > val
     
-
     def __ge__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -86,7 +96,6 @@ class Quantity(object):
                 raise TypeError(f"unsupported operand type(s) for >= {self.unit.name} and {val.unit.name}")
         else:
             return self.value >= val
-
 
     def __lt__(self, val):
         if isinstance(val, Quantity):
@@ -107,7 +116,6 @@ class Quantity(object):
                 raise TypeError(f"unsupported operand type(s) for <= {self.unit.name} and {val.unit.name}")
         else:
             return self.value <= val
-
 
     def __eq__(self, val):
         if isinstance(val, Quantity):

@@ -40,7 +40,13 @@ layers = {
           5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH)}
           }
 
-framing = {'name': 'metal_16in', 'type': 'Metal', 'member': '400S125-18', 'spacing': Q(16.0, INCH)}
+framing = {'name': 'metal_16in', 
+           'type': 'Metal', 
+           'member': '400S125-18', 
+           'spacing': Q(16.0, INCH),
+           'L':   Q(1.25, INCH),
+           'ds':  Q(4, INCH),
+           'dII': Q(0.043, INCH)}
 
 layers_ = {}
 for lk in layers:

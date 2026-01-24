@@ -75,15 +75,14 @@ class FramedWall(Construction):
         Rb += Q(.7  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
 
         ratio = ri / rins if rins > 0 else 0
-        # ds = self.framing.
-        # zf = get_zf(ds, ratio)
+        ds = self.framing.ds
+        zf = self.framing.get_zf(ratio)
 
+        framing_type = self.framing.type
+        spacing = self.framing.spacing
 
-        # framing_type = framing['type']
-        # spacing = framing['spacing_in']
-
-        # if framing_type == "Metal":
-        #     results = metal_bridge(s=spacing, ri=ri, rins=rins, ds=ds, dII=dii, di=di, L=l, Ra=Ra, Rb=Rb, zf=zf)
+        if framing_type == "Metal":
+            results = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
 
         # elif framing_type == "Wood":
         #     width = 1.5  # default 2-by construction
