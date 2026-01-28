@@ -150,7 +150,8 @@ class Quantity(object):
         else:
             raise TypeError(f"unsupported conversion from {self.unit.name} to {unit.name}.")
         
-
+    def invert(self):
+        return Quantity(1 / self.value, 1 / self.unit)
 
 if __name__ == '__main__':
 

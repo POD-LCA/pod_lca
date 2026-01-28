@@ -34,7 +34,7 @@ data = find_no_mass_materials(constructions_path, data)
 layers = {
           0: {'classification':'exterior_cladding', 'material': 'Clay brick', 'thickness': Q(0.75, INCH).convert_to(METER)},
           1: {'classification':'air_gap', 'material': 'Generic Wall Air Gap', 'thickness': Q(1.5,  INCH).convert_to(METER)},
-          2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness': Q(1.5, INCH)},
+          2: {'classification':'exterior_insulation', 'material': 'Expanded polystyrene (EPS) Type 1', 'thickness': Q(1.5, INCH).convert_to(METER)},
           3: {'classification':'sheathing', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH).convert_to(METER)},
           4: {'classification':'framing_insulation', 'material': 'Mineral wool blanket baseline', 'thickness': Q(2.0, INCH).convert_to(METER)},
           5: {'classification':'interior_finish', 'material': 'Gypsum board', 'thickness': Q(0.5, INCH).convert_to(METER)}
@@ -45,7 +45,7 @@ framing = {'name': 'metal_16in',
            'member': '400S125-18', 
            'spacing': Q(16.0, INCH).convert_to(METER),
            'L':       Q(1.25, INCH).convert_to(METER),
-           'ds':      Q(2, INCH).convert_to(METER),
+           'ds':      Q(3.5, INCH).convert_to(METER),
            'dII':     Q(0.043, INCH).convert_to(METER)}
 
 layers_ = {}

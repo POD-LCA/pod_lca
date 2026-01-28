@@ -7,6 +7,9 @@ __version__ = "0.1.0"
 import numpy as np
 from bisect import bisect_left
 
+from pod_lca.units import Quantity as Q
+from pod_lca.units import KELVIN, WATT, METER, INCH
+
 
 class Framing(object):
     def __init__(self):
@@ -68,10 +71,10 @@ class Framing(object):
         elif self.ds >= 6.0:
             self.zf = z_60
         elif self.ds <= 4.0:
-            self.zf = z_35 + (z_40 - z_35) * (self.ds - 3.5) / (4.0 - 3.5)
+            self.zf = z_35 + (z_40 - z_35) * (self.ds - 3.5) / Q(4.0 - 3.5, INCH)
         else:
             # Between 4.0 and 6.0:
-            self.zf = z_40 + (z_60 - z_40) * (self.ds - 4.0) / (6.0 - 4.0)
+            self.zf = z_40 + (z_60 - z_40) * (self.ds - 4.0) / Q(6.0 - 4.0, INCH)
 
     def metal_bridge(self, ri, rins, di, Ra, Rb):
 
@@ -80,8 +83,14 @@ class Framing(object):
         # -------------------------------
         # Metal resistivity constant
         # -------------------------------
-        k_m = 26.0  
-        rmet = 1.0 / (k_m * 6.0)  
+        k_m = 26.0
+        rmet = 1.0 / (k_m * 6.0)
+
+        # TOMAS FIX, NEEDS TO BE DISCUSSED WITH TERESA
+        rmet_unit = (METER * KELVIN) / WATT  
+        rmet = Q(rmet, rmet_unit)
+        
+        
         debug["k_m"] = k_m
         debug["rmet"] = rmet
 
@@ -105,20 +114,26 @@ class Framing(object):
 
         # 3. Resistances
 
-        print('rins', rins)
-
         dIxri = rins * dI
         dIIxri = rins * self.dII
         dIxrmet = rmet * dI
         dIIxrmet = rmet * self.dII
 
+        print('rins', rins)
         print('dIxri', dIxri)
         print('dIIxri', dIIxri)
         print('dIxrmet', dIxrmet)
         print('dIIxrmet', dIIxrmet)
 
         # 4. Web & flange resistance
-        RI = dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet)
+
+        a = dIxrmet * dIxri * W 
+        b = dI * (dIIxri - dIIxrmet)
+        c = W * dIxrmet
+        d = b + c
+        RI = Q(dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet), 
+               (METER * METER * KELVIN) / WATT)
+        # RI = dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet)
         RII = dIIxrmet * dIIxri * W / (self.L * (dIIxri - dIIxrmet) + W * dIIxrmet)
 
         # 5. Summations
