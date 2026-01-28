@@ -77,8 +77,6 @@ class FramedWall(Construction):
         ratio = ri / rins if rins > 0 else 0
         self.framing.get_zf(ratio)
 
-        print(self.framing.zf)
-
         framing_type = self.framing.type
         spacing = self.framing.spacing
 

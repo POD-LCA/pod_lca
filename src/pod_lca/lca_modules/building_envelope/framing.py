@@ -104,10 +104,18 @@ class Framing(object):
         })
 
         # 3. Resistances
+
+        print('rins', rins)
+
         dIxri = rins * dI
         dIIxri = rins * self.dII
         dIxrmet = rmet * dI
         dIIxrmet = rmet * self.dII
+
+        print('dIxri', dIxri)
+        print('dIIxri', dIIxri)
+        print('dIxrmet', dIxrmet)
+        print('dIIxrmet', dIIxrmet)
 
         # 4. Web & flange resistance
         RI = dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet)
