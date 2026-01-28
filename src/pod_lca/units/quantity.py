@@ -143,8 +143,13 @@ class Quantity(object):
     def __int__(self):
         return int(self.value)
 
-    def invert(self):
-        return Quantity(1 / self.value, 1 / self.unit)
+    def convert_to(self, unit):
+        if self.unit.qty_measured == unit.qty_measured:
+            value  = self.value * self.unit.convert_to(unit)
+            return Quantity(value, unit)
+        else:
+            raise TypeError(f"unsupported conversion from {self.unit.name} to {unit.name}.")
+        
 
 
 if __name__ == '__main__':
@@ -160,15 +165,7 @@ if __name__ == '__main__':
     b = Quantity(1, INCH)
     c = a + b
 
-    print(a, b, a <= b)
-    # print(c)
-    # print(c.unit.qty_measured)
-
-    # m2KW = (SQUARE_METER * KELVIN) / WATT
-    # mKW = (METER * KELVIN) / WATT
-
-    # print(m2KW)
-    # print('')
-    # print(m2KW  / METER)
+    c = b.convert_to(METER)
+    print(c)
 
     

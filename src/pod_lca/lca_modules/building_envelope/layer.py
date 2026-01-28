@@ -68,7 +68,7 @@ class Layer(object):
     def get_r(self, thickness=None):
         mtype = self.material_property.__type__
         if mtype == 'Material':
-            resistivity =  self.material_property.conductivity.invert()
+            resistivity =  1 / self.material_property.conductivity
             return resistivity * thickness
         elif mtype == 'EnvelopeMaterialAirGap':
             return self.material_property.thermal_resistance
