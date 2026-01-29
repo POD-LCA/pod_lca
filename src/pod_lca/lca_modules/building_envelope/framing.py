@@ -141,26 +141,15 @@ class Framing(object):
 
 
 
-        RAssembly = Q((sum_RW.value * sum_Rcav.value * self.spacing.value) / (W.value * (sum_Rcav.value - sum_RW.value) + self.spacing.value * sum_RW.value), 
+        r = Q((sum_RW.value * sum_Rcav.value * self.spacing.value) / (W.value * (sum_Rcav.value - sum_RW.value) + self.spacing.value * sum_RW.value), 
                       (METER * METER * KELVIN) / WATT)
-        UAssembly = RAssembly.invert()
+        u = r.invert()
 
-        debug["RAssembly"] = RAssembly
-        debug["UAssembly"] = UAssembly
 
         # -------------------------------
         # Return keys matching wall_model.py
         # -------------------------------
-        return {
-            "RAssembly": RAssembly,          
-            "UAssembly": UAssembly,           
-            "RI": RI,
-            "RII": RII,
-            "zf_used": self.zf,
-            "R_insulated_path": RI,
-            "R_stud_path": RII,
-            "debug": debug,
-        }
+        return r, u
 
     # def wood_bridge(s, width, ds, k, Ra, Rb, rins):
     #     """

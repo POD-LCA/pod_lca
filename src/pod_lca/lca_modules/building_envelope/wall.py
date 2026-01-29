@@ -24,6 +24,7 @@ class FramedWall(Construction):
         self.__type__ = 'Wall'
         self.framing = None
         self.r = None
+        self.u = None
 
 
     @classmethod
@@ -82,7 +83,9 @@ class FramedWall(Construction):
         spacing = self.framing.spacing
 
         if framing_type == "Metal":
-            self.r = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
+            r, u = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
+            self.r = r
+            self.u = u
 
         # elif framing_type == "Wood":
         #     width = 1.5  # default 2-by construction
