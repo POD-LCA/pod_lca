@@ -61,9 +61,6 @@ framing = Framing.from_data(framing)
 
 w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 w.compute_wall_r()
-
-
-
-
+print(w.r)
 
 

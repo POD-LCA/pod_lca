@@ -16,6 +16,9 @@ class Quantity(object):
     def __str__(self):
         return '{} ({})'.format(self.value, self.unit.name)
 
+    def __repr__(self):
+        return '{} ({})'.format(self.value, self.unit.name)
+
     def __add__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -41,8 +44,16 @@ class Quantity(object):
             self.value -= val
             return self
 
-    def __rsub__(self, other):
-        return self.__sub__(other)
+    def __rsub__(self, val):
+        if isinstance(val, Quantity):
+            if self.unit.qty_measured == val.unit.qty_measured:
+                val = val.unit.convert_to(self.unit) * val.value
+                return Quantity(val - self.value, self.unit)
+            else:
+                raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
+        else:
+            self.value = val - self.value
+            return self
 
     def __mul__(self, val):
         if isinstance(val, Quantity):
@@ -62,8 +73,8 @@ class Quantity(object):
     def __truediv__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
-                value  = self.value * (val.value * val.unit.convert_to(self.unit))
-                unit = self.unit / self.unit
+                value  = self.value / (val.value * val.unit.convert_to(self.unit))
+                unit = self.unit / val.unit
             else:
                 value = self.value / val.value
                 unit = self.unit / val.unit
@@ -71,8 +82,17 @@ class Quantity(object):
         else:
             return Quantity(self.value / val, self.unit)
 
-    def __rtruediv__(self, other):
-        return self.__truediv__(other)
+    def __rtruediv__(self, val):
+        if isinstance(val, Quantity):
+            if self.unit.qty_measured == val.unit.qty_measured:
+                value  = (val.value * val.unit.convert_to(self.unit)) / self.value
+                unit = val.unit / self.unit
+            else:
+                value = val.value / self.value
+                unit = val.unit / self.unit
+            return Quantity(value, unit)
+        else:
+            return Quantity(val / self.value, 1 / self.unit)
 
     def __iadd__(self, val):
         return self + val
@@ -162,11 +182,9 @@ if __name__ == '__main__':
 
     for i in range(50): print('')
 
-    a = Quantity(0, METER)
-    b = Quantity(1, INCH)
-    c = a + b
+    a = Quantity(5, SQUARE_METER)
+    b = Quantity(2, METER)
 
-    c = b.convert_to(METER)
-    print(c)
+    print(a / b)
+    print(b / a)
 
-    

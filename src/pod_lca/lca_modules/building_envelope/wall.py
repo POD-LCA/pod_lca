@@ -23,6 +23,7 @@ class FramedWall(Construction):
         super().__init__()
         self.__type__ = 'Wall'
         self.framing = None
+        self.r = None
 
 
     @classmethod
@@ -81,15 +82,13 @@ class FramedWall(Construction):
         spacing = self.framing.spacing
 
         if framing_type == "Metal":
-            results = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
+            self.r = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
 
         # elif framing_type == "Wood":
         #     width = 1.5  # default 2-by construction
         #     k_wood = .12  # W/m-K (typical softwood) conductivity
-        #     results = wood_bridge(s=spacing, width=width, ds=ds, k=k_wood, Ra=Ra, Rb=Rb, rins=rins)
+        #     self.r = wood_bridge(s=spacing, width=width, ds=ds, k=k_wood, Ra=Ra, Rb=Rb, rins=rins)
 
         # else:
         #     raise ValueError(f"Unknown framing type: {framing_type}")
-
-        # print(results)
 

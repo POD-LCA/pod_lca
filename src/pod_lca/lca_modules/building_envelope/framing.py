@@ -66,15 +66,15 @@ class Framing(object):
         z_60 = interp_along_ratio(ratios, zf_60, ratio)
 
         # Interpolate between stud depths
-        if self.ds <= 3.5:
+        if self.ds <= Q(3.5, INCH):
             self.zf = z_35
-        elif self.ds >= 6.0:
+        elif self.ds >= Q(6.0, INCH):
             self.zf = z_60
-        elif self.ds <= 4.0:
-            self.zf = z_35 + (z_40 - z_35) * (self.ds - 3.5) / Q(4.0 - 3.5, INCH)
+        elif self.ds <= Q(4.0, INCH):
+            self.zf = z_35 + (z_40 - z_35) * (self.ds - Q(3.5, INCH)) / Q(4.0 - 3.5, INCH)
         else:
             # Between 4.0 and 6.0:
-            self.zf = z_40 + (z_60 - z_40) * (self.ds - 4.0) / Q(6.0 - 4.0, INCH)
+            self.zf = z_40 + (z_60 - z_40) * (self.ds - Q(4.0, INCH)) / Q(6.0 - 4.0, INCH)
 
     def metal_bridge(self, ri, rins, di, Ra, Rb):
 
@@ -119,30 +119,31 @@ class Framing(object):
         dIxrmet = rmet * dI
         dIIxrmet = rmet * self.dII
 
-        print('rins', rins)
-        print('dIxri', dIxri)
-        print('dIIxri', dIIxri)
-        print('dIxrmet', dIxrmet)
-        print('dIIxrmet', dIIxrmet)
-
         # 4. Web & flange resistance
 
-        a = dIxrmet * dIxri * W 
-        b = dI * (dIIxri - dIIxrmet)
-        c = W * dIxrmet
-        d = b + c
-        RI = Q(dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet), 
+        # TODO: This is a hard coded unit, should be addressed with proper resistivity units
+        RI = Q(dIxrmet.value * dIxri.value * W.value / (dI.value * (dIIxri.value - dIIxrmet.value) + W.value * dIxrmet.value), 
                (METER * METER * KELVIN) / WATT)
         # RI = dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet)
-        RII = dIIxrmet * dIIxri * W / (self.L * (dIIxri - dIIxrmet) + W * dIIxrmet)
+
+        # TODO: This is a hard coded unit, should be addressed with proper resistivity units
+        RII = Q(dIIxrmet.value * dIIxri.value * W.value / (self.L.value * (dIIxri.value - dIIxrmet.value) + W.value * dIIxrmet.value), 
+        (METER * METER * KELVIN) / WATT)
+        # RII = dIIxrmet * dIIxri * W / (self.L * (dIIxri - dIIxrmet) + W * dIIxrmet)
 
         # 5. Summations
         sum_Rcav = Ra + Rb + dIxri + 2.0 * dIIxri
         sum_RW = Ra + Rb + RI + 2.0 * RII
 
+
         # 6. Assembly R & U
-        RAssembly = (sum_RW * sum_Rcav * self.spacing) / (W * (sum_Rcav - sum_RW) + self.spacing * sum_RW)
-        UAssembly = 1.0 / RAssembly
+
+
+
+
+        RAssembly = Q((sum_RW.value * sum_Rcav.value * self.spacing.value) / (W.value * (sum_Rcav.value - sum_RW.value) + self.spacing.value * sum_RW.value), 
+                      (METER * METER * KELVIN) / WATT)
+        UAssembly = RAssembly.invert()
 
         debug["RAssembly"] = RAssembly
         debug["UAssembly"] = UAssembly
