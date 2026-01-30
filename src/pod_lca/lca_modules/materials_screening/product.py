@@ -200,7 +200,7 @@ class Product(Master):
         mode_efficiency : str
             Efficiency of the transportation mode.
         """
-        if self.self.get_unit() is None:
+        if self.get_unit() is None:
             return self
         
         if (not self.get_unit().get_qty_measured() == "mass") and (self.get_density() is None):
