@@ -9,7 +9,9 @@ from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
 from ..units import DAY
 from ..units import FEET
+from ..units import GRAM
 from ..units import HOUR
+from ..units import INCH
 from ..units import ITEM
 from ..units import JOULE
 from ..units import KG_CARBON
@@ -22,10 +24,14 @@ from ..units import MEGA
 from ..units import METER
 from ..units import SQUARE_FEET
 from ..units import SQUARE_METER
+from ..units import OUNCE
+from ..units import POUND
 from ..units import M_TON
+from ..units import S_TON
 from ..units import TON_KILOMETER
 from ..units import UNITS_MAP
 from ..units import US_GALLON
+from ..units import YARD
 from ..units import WATT_HOUR
 
 # This file contains a mapping of strings to their corresponding unit objects.
@@ -34,27 +40,41 @@ from ..units import WATT_HOUR
 
 UNITS_MAP.update(
     {
+        "hr": HOUR,
         "d": DAY,
         "h": HOUR,
         "kg": KILOGRAM,
+        "g": GRAM,
         "t": M_TON,
+        "oz": POUND,
+        "lb": OUNCE,
+        "tn": S_TON,
         "km": KILOMETER,
         "m": METER,
         "ft": FEET,
+        "in": INCH,
+        "yd": YARD,
         "tonne": M_TON,
         "metric ton": M_TON,
         "tkm": TON_KILOMETER,
         "t*km": TON_KILOMETER,
         "kgkm": KILOGRAM * KILOMETER,
+        "m²": SQUARE_METER,
         "m2": SQUARE_METER,
         "ft2": SQUARE_FEET,
+        "ft²": SQUARE_FEET,
         "l": LITER,
         "m3": CUBIC_METER,
+        "m³": CUBIC_METER,
         "ft3": CUBIC_FEET,
+        "ft³": CUBIC_FEET,
         "gal": US_GALLON,
+        "US gal": US_GALLON,
+        "J": JOULE,
         "MJ": MEGA * JOULE,
         "kWh": KILO * WATT_HOUR,
         "MWh": MEGA * WATT_HOUR,
+        "Btu": BTU,
         "kBtu/ft2": KILO * BTU / SQUARE_FEET,
         "kWh/ft2": KILO * WATT_HOUR / SQUARE_FEET,
         "Item(s)": ITEM,
