@@ -85,7 +85,7 @@ class Product(Master):
 
         return self
 
-    def set_unit(self, unit):
+    def set_unit(self, unit, force_set=False):
         """Set unit of measurement for the product.
             If the unit of measurement is of mass dimensions, same unit is set as weight unit of the product.
 
@@ -94,7 +94,7 @@ class Product(Master):
         unit : ~pod_lca.units.Unit
             Unit of measurement.
         """
-        super().set_unit(unit)
+        super().set_unit(unit, force_set)
 
         return self
 
