@@ -11,6 +11,11 @@ from pod_lca.utilities import config
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
+from pod_lca.lca_modules.building_envelope import Floor
+from pod_lca.lca_modules.building_envelope import Ceiling
+from pod_lca.lca_modules.building_envelope import Window
+from pod_lca.lca_modules.building_envelope import Envelope
+
 from pod_lca.lca_modules.operational.read_write import find_materials, find_no_mass_materials, find_materials_air_gap
 
 from pod_lca.units import INCH
@@ -28,6 +33,19 @@ data = find_materials(constructions_path, {})
 data = find_materials_air_gap(constructions_path, data)
 data = find_no_mass_materials(constructions_path, data)
 
+# general inputs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+x = Q(20, METER)
+y = Q(10, METER)
+zero = Q(0, METER)
+floor_to_floor = Q(3, METER)
+
+floor_plan = [[zero,zero,zero],
+              [x/2, -y/4,zero],
+              [x,zero,zero],
+              [x,y,zero],
+              [x/2, y+(y/4),zero],
+              [zero,y,zero]] 
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -61,7 +79,17 @@ framing = Framing.from_data(framing)
 
 w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 w.compute_wall_r()
-print(w.r)
-print(w.u)
+
+# make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# window = Window.from_idf(window, b, surfaces, window_service_life)
+
+# make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+e = Envelope.from_components(floor_plan, floor_to_floor, wall=w)
+print(e.surfaces['floor'].construction)
+
+# make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
