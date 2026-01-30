@@ -11,6 +11,8 @@ from pod_lca.utilities import config
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
+from pod_lca.lca_modules.building_envelope import Floor
+from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Envelope
 
