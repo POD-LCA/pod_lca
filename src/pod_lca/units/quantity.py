@@ -163,6 +163,9 @@ class Quantity(object):
     def __int__(self):
         return int(self.value)
 
+    def __neg__(self):
+        return Quantity(-self.value, self.unit)
+
     def convert_to(self, unit):
         if self.unit.qty_measured == unit.qty_measured:
             value  = self.value * self.unit.convert_to(unit)
@@ -182,9 +185,8 @@ if __name__ == '__main__':
 
     for i in range(50): print('')
 
-    a = Quantity(5, SQUARE_METER)
-    b = Quantity(2, METER)
+    a = (METER * METER * METER * METER * METER * KELVIN * KELVIN) / (WATT * WATT)
+    b = (METER * METER * KELVIN) / (WATT)
 
-    print(a / b)
-    print(b / a)
-
+    print(a)
+    print(b)

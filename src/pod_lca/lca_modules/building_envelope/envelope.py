@@ -26,6 +26,8 @@ class Envelope:
         self.name = None
         self.building = None
         self.floor = None
+        self.floor_plan = None
+        self.height = None
         self.surfaces = {}
 
         self.walls = {}
@@ -125,8 +127,33 @@ class Envelope:
         return envelope
 
     @classmethod
-    def from_components(cls, geometry, floors= None, ceilings=None, wall=None, windows=None, shadings=None):
-        pass
+    def from_components(cls, floor_plan, height, floor= None, ceiling=None, wall=None, windows=None, shadings=None):
+        envelope = cls()
+        envelope.floor_plan = floor_plan
+        envelope.height = height
+        envelope.update_envelope_surfaces()
+
+        for sk in envelope.surfaces:
+            s = envelope.surfaces[sk]
+            if s.surface_type == 'Wall':
+                if wall:
+                    s.add_construction(wall)
+            elif s.surface_type == 'Floor':
+                if floor:
+                    s.add_construction(floor)
+            elif s.surface_type == 'Ceiling':
+                if ceiling:
+                    s.add_construction(ceiling)
+
+        if windows:
+            pass
+        if shadings:
+            pass
+
+        return envelope
+
+
+
 
     # ================================
     # Setters
@@ -159,13 +186,6 @@ class Envelope:
         """
         return self.building
         
-    @property
-    def height(self):
-        return self.floor.height
-    
-    @property
-    def floor_plan(self):
-        return self.floor.floor_plan
     
     @property
     def area(self):
@@ -184,8 +204,8 @@ class Envelope:
         fp = self.floor_plan
         h = self.height
         cp = [[p[0], p[1], p[2]+h] for p in fp]
-        self.surfaces['floor'] = Surface.from_polygon('floor', fp)
-        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp)
+        self.surfaces['floor'] = Surface.from_polygon('floor', fp, 'Floor')
+        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp, 'Ceiling')
         for i in range(len(fp)):
             a = fp[i]
             if i == len(fp)-1:
@@ -194,7 +214,7 @@ class Envelope:
                 b = fp[i+1]
             wp = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
             wk = 'wall_{}'.format(i)
-            self.surfaces[wk] = Surface.from_polygon(wk, wp)
+            self.surfaces[wk] = Surface.from_polygon(wk, wp, 'Wall')
             self.wall_surface_keys.append(wk)
 
     def get_constructions(self):

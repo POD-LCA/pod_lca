@@ -23,10 +23,11 @@ class Surface(object):
 
 
     @classmethod
-    def from_polygon(cls, name, polygon):
+    def from_polygon(cls, name, polygon, surface_type):
         srf = cls()
         srf.name = name
         srf.polygon = polygon
+        srf.surface_type = surface_type
         return srf
     
     def add_construction(self, construction):
