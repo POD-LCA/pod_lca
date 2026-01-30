@@ -273,7 +273,7 @@ class Master:
 
         return self
 
-    def set_unit(self, unit):
+    def set_unit(self, unit, force_set=False):
         """Set unit of measurement for the product/process.
 
         Parameters
@@ -286,7 +286,7 @@ class Master:
         ValueError
             Incompatible units.
         """
-        if self.get_unit() is None:
+        if (self.get_unit() is None) or force_set:
             self.unit = unit
         else:
             value_in = self.get_qty()
