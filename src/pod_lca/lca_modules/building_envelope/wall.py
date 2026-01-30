@@ -87,11 +87,11 @@ class FramedWall(Construction):
             self.r = r
             self.u = u
 
-        # elif framing_type == "Wood":
-        #     width = 1.5  # default 2-by construction
-        #     k_wood = .12  # W/m-K (typical softwood) conductivity
-        #     self.r = wood_bridge(s=spacing, width=width, ds=ds, k=k_wood, Ra=Ra, Rb=Rb, rins=rins)
+        elif framing_type == "Wood":
+            width = 1.5  # default 2-by construction
+            k_wood = .12  # W/m-K (typical softwood) conductivity
+            self.r = self.framing.wood_bridge(s=spacing, width=width, ds=ds, k=k_wood, Ra=Ra, Rb=Rb, rins=rins)
 
-        # else:
-        #     raise ValueError(f"Unknown framing type: {framing_type}")
+        else:
+            raise ValueError(f"Unknown framing type: {framing_type}")
 

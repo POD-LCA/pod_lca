@@ -151,54 +151,47 @@ class Framing(object):
         # -------------------------------
         return r, u
 
-    # def wood_bridge(s, width, ds, k, Ra, Rb, rins):
-    #     """
-    #     Compute overall R-value of a wood stud wall using the parallel path method.
-    #     """
-    #     COND_TO_RIMP = 0.144
-    #     # --------------------------
-    #     # 1. Framing fraction
-    #     # --------------------------
-    #     # Fraction of wall area occupied by studs:
-    #     f_stud = width / s
-    #     f_stud = min(max(f_stud, 0.01), 0.30)   # keep reasonable bounds
-    #     f_ins = 1 - f_stud
+    def wood_bridge(self, width, k, Ra, Rb, rins):
+        """
+        Compute overall R-value of a wood stud wall using the parallel path method.
+        """
+        COND_TO_RIMP = 0.144
+        # --------------------------
+        # 1. Framing fraction
+        # --------------------------
+        # Fraction of wall area occupied by studs:
+        f_stud = width / self.spacing
+        f_stud = min(max(f_stud, 0.01), 0.30)   # keep reasonable bounds
+        f_ins = 1 - f_stud
 
-    #     # --------------------------
-    #     # 2. Compute R-values
-    #     # --------------------------
+        # --------------------------
+        # 2. Compute R-values
+        # --------------------------
 
-    #     # Cavity insulation:
-    #     R_cavity = rins * ds
+        # Cavity insulation:
+        R_cavity = rins * self.ds
 
-    #     # Wood stud resistance:
-    #     # R = (1/k)*0.144 × thickness (in)
-    #     R_wood_stud = (1 / k) * COND_TO_RIMP * ds
+        # Wood stud resistance:
+        # R = (1/k)*0.144 × thickness (in)
+        R_wood_stud = (1 / k) * COND_TO_RIMP * self.ds
 
-    #     # --------------------------
-    #     # 3. Framing path
-    #     # --------------------------
-    #     R_stud_path = Ra + R_wood_stud + Rb
+        # --------------------------
+        # 3. Framing path
+        # --------------------------
+        R_stud_path = Ra + R_wood_stud + Rb
 
-    #     # --------------------------
-    #     # 4. Insulated path
-    #     # --------------------------
-    #     R_insulated_path = Ra + R_cavity + Rb
+        # --------------------------
+        # 4. Insulated path
+        # --------------------------
+        R_insulated_path = Ra + R_cavity + Rb
 
-    #     # --------------------------
-    #     # 5. Overall assembly by parallel method
-    #     # --------------------------
-    #     U_total = f_stud * (1 / R_stud_path) + f_ins * (1 / R_insulated_path)
-    #     R_total = 1 / U_total
+        # --------------------------
+        # 5. Overall assembly by parallel method
+        # --------------------------
+        u = f_stud * (1 / R_stud_path) + f_ins * (1 / R_insulated_path)
+        r = 1 / u
 
-    #     return {
-    #         "RAssembly": R_total,
-    #         "UAssembly": U_total,
-    #         "R_framing_path": R_stud_path,
-    #         "R_insulated_path": R_insulated_path,
-    #         "f_stud": f_stud,
-    #         "f_ins": f_ins
-    #     }
+        return r, u
 
 
 
