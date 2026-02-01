@@ -16,7 +16,9 @@ from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Envelope
 
-from pod_lca.lca_modules.operational.read_write import find_materials, find_no_mass_materials, find_materials_air_gap
+from pod_lca.lca_modules.operational.read_write import find_materials
+from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 
 from pod_lca.units import INCH
 from pod_lca.units import METER
@@ -80,14 +82,23 @@ framing = Framing.from_data(framing)
 w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 w.compute_wall_r()
 
+
+# make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+f = Floor.from_idf('Generic Interior Floor', constructions_path)
+
+# make a ceiling - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+c = Floor.from_idf('Generic Interior Ceiling', constructions_path)
+
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # window = Window.from_idf(window, b, surfaces, window_service_life)
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-e = Envelope.from_components(floor_plan, floor_to_floor, wall=w)
-print(e.surfaces['floor'].construction)
+e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c)
+print(e.surfaces['ceiling'].construction)
 
 # make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

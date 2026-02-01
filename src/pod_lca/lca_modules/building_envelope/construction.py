@@ -7,9 +7,15 @@ __version__ = "0.1.0"
 from . import EnvelopeMaterial
 from ..building_envelope import Layer
 from pod_lca.lca_modules.building.assembly import Assembly
-from ...units import CUBIC_METER
+from ...units import CUBIC_METER, METER
+from ...units import Quantity as Q
+
 from ...utilities import DataImporter
 from ...utilities import config
+from pod_lca.lca_modules.operational.read_write import find_constructions
+from pod_lca.lca_modules.operational.read_write import find_materials
+from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 
 
 class Construction(Assembly):
@@ -20,18 +26,36 @@ class Construction(Assembly):
         self.surfaces = []
 
     @classmethod
-    def from_idf(cls, name, building, surfaces, service_life):
-        data = building.idf_constructions_data['constructions'][name]
-        construction = cls.create(data['name'], building)
-        construction.layer_order = data['layers']
-        construction.get_layers(building)
-        construction.surfaces = surfaces
-        construction.set_service_life(35) # TODO: implement reading POD|LCA RSL Category from constructions
-        construction.add_materials(building, service_life)
-        for surface in surfaces:
-            surface.add_construction(construction)
+    def from_idf(cls, name, idf_path):
+
+        cdata = find_constructions(idf_path, {})['constructions'][name]
+        layers = cdata['layers']
+        ldata = find_materials(idf_path, {})
+        ldata = find_no_mass_materials(idf_path, ldata)
+        ldata = find_materials_air_gap(idf_path, ldata)['materials']
+        layers = {}
+        for lk in layers:
+            mdata = ldata[layers[lk]]
+            if 'thickness' in ldata[layers[lk]]:
+                thickness = ldata[layers[lk]]['thickness']
+            else:
+                thickness = Q(0, METER)
+            l = Layer.from_data(mdata, thickness, None)
+            layers[lk] = l
+
+        construction = cls.create('name')
+        construction.from_layers(name, layers)
         return construction
     
+    @classmethod
+    def from_layers(cls, name, layers):
+        construction = cls.create(name)
+        construction = cls.create(name)
+        construction.layer_order = {lk: layers[lk].name for lk in layers}
+        construction.layers = layers
+        return construction
+
+
     def set_building(self):
         """Set data from building level."""
         building = self.get_building()

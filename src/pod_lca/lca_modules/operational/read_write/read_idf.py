@@ -343,6 +343,8 @@ def find_constructions(filepath, data):
                 layer = layer.split(",")[0].strip()
                 layers[str(j)] = layer
         data["constructions"][name] = {"name": name, "layers": layers}
+        
+    return data
 
 
 def find_glazing_material_simple(filepath, data):
