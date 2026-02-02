@@ -382,11 +382,13 @@ class Unit:
                 if n == d:
                     self.numerator.remove(n)
                     self.denominator.remove(d)
+                    break
                 else:
                     if return_factor:
                         factor *= n.convert_to(d)
                         self.numerator.remove(n)
                         self.denominator.remove(d)
+                        break
 
         if return_factor:
             if self.prefix:
