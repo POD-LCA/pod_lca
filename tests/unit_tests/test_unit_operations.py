@@ -235,6 +235,25 @@ def test_collapse_mixed_units_no_change(meter, feet):
     assert feet in u.get_components()
 
 
+def test_simplify_with_multiple_matches_more_in_numerator(meter, watt):
+    u = meter *  watt
+    v = meter *  watt *  watt
+    result = u / v
+
+    assert len(result.get_components()) == 1
+    assert meter not in result.get_components()
+    assert watt in result.get_components()    
+
+def test_simplify_with_multiple_matches_more_in_denomenator(meter, watt):
+    u = meter * meter * meter  * watt
+    v = meter * meter 
+    result = u / v
+
+    assert len(result.get_components()) == 2
+    assert meter in result.get_components()
+    assert watt in result.get_components()    
+
+
 def test_collapse_after_simplify(meter, sqmeter):
     u = (meter / meter) * (meter * meter)
 
