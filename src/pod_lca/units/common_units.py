@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ..units import POWER_RULES
+from ..units import STANDARD_COMPOUNDS
 from ..units import UNIT_CONVERSIONS
 from ..units import UNIT_NAME_OVERRIDES
 from ..units import UNIT_NOTATION_OVERRIDES
@@ -114,8 +114,8 @@ HECTARE = Unit.from_basics("hectare", "ha", "area")
 UNIT_CONVERSIONS["area"] = {"square meter": 4046.8564224, "square feet": 43560, "acre": 1.0, "hectare": 0.40468564224}
 # REF [1] pp. C-14/15
 
-POWER_RULES[(METER, 2)] = SQUARE_METER
-POWER_RULES[(FEET, 2)] = SQUARE_FEET
+STANDARD_COMPOUNDS[SQUARE_METER] = {METER: 2}
+STANDARD_COMPOUNDS[SQUARE_FEET] = {FEET: 2}
 
 # ==================================
 # VOLUME UNITS
@@ -134,8 +134,8 @@ UNIT_CONVERSIONS["volume"] = {
 }
 # REF [1] pp. C-17/18
 
-POWER_RULES[(METER, 3)] = CUBIC_METER
-POWER_RULES[(FEET, 3)] = CUBIC_FEET
+STANDARD_COMPOUNDS[CUBIC_METER] = {METER: 3}
+STANDARD_COMPOUNDS[CUBIC_FEET] = {FEET: 3}
 
 # ==================================
 # POWER UNITS
@@ -162,6 +162,9 @@ UNIT_CONVERSIONS["energy"] = {
 }
 # REF [2] pp.55
 # REF [2] pp.45 - footnote 9 - BTU
+
+STANDARD_COMPOUNDS[WATT_HOUR] = {WATT: 1, HOUR: 1}
+# STANDARD_COMPOUNDS[WATT] = {JOULE: 1, SECOND: -1}
 
 # ==================================
 # DISCRETE COUNTING UNITS

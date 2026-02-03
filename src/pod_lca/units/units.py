@@ -8,7 +8,7 @@ from collections import Counter
 from math import log10
 
 from ..units import ALL_PREFIXES
-from ..units import POWER_RULES
+from ..units import STANDARD_COMPOUNDS
 from ..units import UNIT_CONVERSIONS
 from ..units import UNIT_NAME_OVERRIDES
 from ..units import UNIT_NOTATION_OVERRIDES
@@ -39,9 +39,7 @@ class Unit:
         self.standard_notation = None
         self.qty_measured = None
         self.prefix = None
-        self.numerator = []
-        self.denominator = []
-
+        self.units = BaseUnits()
 
     def __str__(self):
         return f"Unit {self.get_name()} ({self.get_standard_notation()}) measuring {self.get_qty_measured()}."
@@ -68,12 +66,11 @@ class Unit:
             raise TypeError(f"unsupported operand type(s) for *: {type(self)} and {type(other)}")
 
         result = Unit.from_basics("", "", "")
-        result.numerator = self.numerator + other.numerator
-        result.denominator = self.denominator + other.denominator
+        result.units = self.units + other.units
         result.prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
 
-        result = result.simplify()
-        result.collapse_powers()
+        result.expand_standard_compounds()
+        result.collapse_standard_compounds()
         result._rebuild_strings()
 
         return result
@@ -87,12 +84,11 @@ class Unit:
                 new_prefix = other
 
             result = Unit.from_basics("", "", "")
-            result.numerator = self.numerator[:]
-            result.denominator = self.denominator[:]
+            result.units = self.units
             result.prefix = new_prefix
     
-            result = result.simplify()
-            result.collapse_powers()
+            result.expand_standard_compounds()
+            result.collapse_standard_compounds()
             result._rebuild_strings()
 
             return result
@@ -109,12 +105,11 @@ class Unit:
             )
 
         result = Unit.from_basics("","","")
-        result.numerator = self.numerator + other.denominator
-        result.denominator = self.denominator + other.numerator
+        result.units = self.units - other.units
         result.prefix =  MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
 
-        result = result.simplify()
-        result.collapse_powers()
+        result.expand_standard_compounds()
+        result.collapse_standard_compounds()
         result._rebuild_strings()
 
         return result
@@ -124,11 +119,10 @@ class Unit:
         if other == 1:
             result = Unit.from_basics("","","")
             result.prefix = MetricPrefix.safe_combine_prefix(None, self.prefix, 'divide')
-            result.denominator = self.numerator
-            result.numerator = self.denominator
+            result.units = -self.units
 
-            result = result.simplify()
-            result.collapse_powers()
+            result.expand_standard_compounds()
+            result.collapse_standard_compounds()
             result._rebuild_strings()
 
             return result
@@ -136,6 +130,22 @@ class Unit:
             raise TypeError(
                 f"unsupported operand type(s) for /: {self.__class__.__name__} and {other.__class__.__name__}"
             )
+
+    @property
+    def numerator(self):
+        result = []
+        for u, p in self.units.items():
+            if p > 0:
+                result.extend([u] * p)
+        return result
+
+    @property
+    def denominator(self):
+        result = []
+        for u, p in self.units.items():
+            if p < 0:
+                result.extend([u] * (-p))
+        return result
 
     @classmethod
     def from_basics(cls, name, standard_notation, qty_measured):
@@ -155,7 +165,7 @@ class Unit:
         unit.set_standard_notation(standard_notation)
         unit.set_qty_measured(qty_measured)
 
-        unit.numerator = [unit]
+        unit.units = BaseUnits({unit:1})
 
         return unit
 
@@ -235,7 +245,7 @@ class Unit:
         """
         return self.prefix
 
-    def get_components(self):
+    def get_components(self, unique=False):
         """Retrieve components of the unit of measurement, if a compound unit.
 
         Returns
@@ -243,7 +253,13 @@ class Unit:
         list of ~pod_lca.units.Unit
             List of component units, or None if not a compound unit.
         """
-        return self.numerator + self.denominator
+        components = []
+        for u, p in self.units.items():
+            if unique:
+                components.extend([u])
+            else:
+                components.extend([u] * abs(p))
+        return components
 
     def is_compound(self):
         if (self.get_prefix() is None) and (len(self.numerator) <= 1) and (len(self.get_components()) <= 1):
@@ -264,6 +280,10 @@ class Unit:
     def convert_to(self, to_unit):
         """Returns conversion factor.
 
+        Notes
+        -----
+        - Assumes multiple units are not used to measure the same thing (e.g., unit_in has both meters and feet. This is invalid).
+
         Parameters
         ----------
         to_unit : ~pod_lca.units.Unit
@@ -279,41 +299,41 @@ class Unit:
         TypeError
             Incompatible units for conversion.
         """
-        if self.get_qty_measured() == to_unit.get_qty_measured():
-            if (not self.is_compound()) and (not to_unit.is_compound()):
-                if self == to_unit:
-                    return 1.0
-                return Unit.compute_conversion_factor(self, to_unit)
+        # incompatible units
+        if self.get_qty_measured() != to_unit.get_qty_measured():
+            raise TypeError("Incompatible units for conversion.")
+    
+        # simple unit conversion
+        if (not self.is_compound()) and (not to_unit.is_compound()):
+            if self == to_unit:
+                return 1.0
+            return Unit.compute_conversion_factor(self, to_unit)
 
-            factor = 1.0
+        # compound unit conversion
+        factor = 1.0
+        for component_in, power_in in self.units.items():
+            for component_out, power_out in to_unit.units.items():
+                if power_in != power_out:
+                    continue
 
-            # Numerator conversions
-            self_num = self.numerator
-            to_num = to_unit.numerator 
-            for u_in, u_out in zip(self_num, to_num):
-                factor *= u_in.convert_to(u_out)
+                try:
+                    factor *= (component_in.convert_to(component_out)) ** power_in
+                    break
+                except TypeError:
+                    pass
 
-            # Denominator conversions (inverse)
-            self_den = self.denominator
-            to_den = to_unit.denominator
-            for u_in, u_out in zip(self_den, to_den):
-                factor /= u_in.convert_to(u_out)
+            else:
+                raise TypeError("Incompatible units for conversion.")
 
-            # prefix
-            if self.prefix:
-                factor *= 10 ** self.prefix.get_power()
+        # prefix
+        if self.prefix:
+            factor *= 10 ** self.prefix.get_power()
 
-            if to_unit.prefix:
-                factor /= 10 ** to_unit.prefix.get_power()
+        if to_unit.prefix:
+            factor /= 10 ** to_unit.prefix.get_power()
 
-            return factor
+        return factor
 
-        simplification_factor, simplified = self.simplify()
-
-        if simplified.get_qty_measured() == to_unit.get_qty_measured():
-            return simplification_factor * simplified.convert_to(to_unit)
-
-        raise TypeError("Incompatible units for conversion.")
 
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out):
@@ -347,113 +367,57 @@ class Unit:
             factor_out /= 10 ** unit_out.prefix.get_power()
 
         return factor_out / factor_in
-
-    def simplify(self, return_factor=False):
-        """Simplify a compound unit by cancelling common components in numerator and denominator.
-
-        Parameters
-        ----------
-        return_factor: bool
-            If false, no unit conversion operations carried out.
-
-        Returns
-        -------
-        :class:`float`
-            Conversion factor resulting from the simplification.
-        :class:`~pod_lca.units.Unit`
-            Simplified unit.
-        """
-        self.expand_powers()
-
-        if not self.is_compound():
-            if return_factor:
-                return 1.0, self
-            else:
-                return self
-
-        factor = 1.0
-        numerator = self.numerator
-        denominator = self.denominator
-        for n in numerator[:]:
-            for d in denominator[:]:
-                if n.qty_measured != d.qty_measured:
-                    continue
-                
-                if n == d:
-                    self.numerator.remove(n)
-                    self.denominator.remove(d)
-                    break
-                else:
-                    if return_factor:
-                        factor *= n.convert_to(d)
-                        self.numerator.remove(n)
-                        self.denominator.remove(d)
-                        break
-
-        if return_factor:
-            if self.prefix:
-                factor *= 10 ** self.prefix.power
-                self.prefix = None
-                self._rebuild_strings()
-                
-            return factor, self
-        else: 
-            self._rebuild_strings()
-            if factor == 1.0:
-                return self
-            else:
-                raise ValueError
             
-    def expand_powers(self, power_rules=POWER_RULES):
-        reverse_power_rules = {v: k for k, v in POWER_RULES.items()}
-        def expand_units(units):
-            """Expand collapsed units into base units for counting."""
-            expanded = []
-            for u in units:
-                if u in reverse_power_rules:
-                    base, exp = reverse_power_rules[u]
-                    expanded.extend([base] * exp)
-                else:
-                    expanded.append(u)
-            return expanded
+    def expand_standard_compounds(self,):
+        changed = True
+        while changed:
+            changed = False
 
-        # Expand numerator and denominator
-        self.numerator = expand_units(self.numerator)
-        self.denominator = expand_units(self.denominator or [])
+            for u, power in list(self.units.items()):
+                if u in STANDARD_COMPOUNDS and power != 0:
+                    self.units[u] -= power
+                    if self.units[u] == 0:
+                        del self.units[u]
+
+                    for base_u, base_p in STANDARD_COMPOUNDS[u].items():
+                        self.units[base_u] += base_p * power
+
+                    changed = True
+                    break  # restart scan
 
         return self
 
-    def collapse_powers(self, power_rules=POWER_RULES):
+    def collapse_standard_compounds(self):
         """Collapse repeated units into squared/cubed forms based on a rules dict.
         """
-        if not self.is_compound():
-            return self
-        
-        # expand power rules
-        self.expand_powers()
+        compounds_sorted = sorted(
+            STANDARD_COMPOUNDS.keys(),
+            key=lambda u: sum(STANDARD_COMPOUNDS[u].values()),
+            reverse=True
+        ) # sorted largest to smallest based on power
 
-        # Numerator
-        num_counts = Counter(self.numerator)
-        new_numerator = []
-        for unit, count in num_counts.items():
-            key = (unit, count)
-            if key in power_rules:
-                new_numerator.append(power_rules[key])
-            else:
-                new_numerator.extend([unit] * count)
-        self.numerator = new_numerator
+        changed = True
+        while changed:
+            changed = False
 
-        # Denominator
-        if self.denominator:
-            denom_counts = Counter(self.denominator)
-            new_denominator = []
-            for unit, count in denom_counts.items():
-                key = (unit, count)
-                if key in power_rules:
-                    new_denominator.append(power_rules[key])
-                else:
-                    new_denominator.extend([unit] * count)
-            self.denominator = new_denominator
+            for compound in compounds_sorted:
+                def_counter = Counter(STANDARD_COMPOUNDS[compound])
+                num_check = all(self.units.get(u, 0) >= p for u, p in def_counter.items())
+                denom_check = all(self.units.get(u, 0) <= -p for u, p in def_counter.items())
+                if num_check or denom_check:
+                    for u, p in def_counter.items():
+                        if num_check:
+                            self.units[u] -= p
+                        else:
+                            self.units[u] += p
+                        if self.units[u] == 0:
+                            del self.units[u]
+                    if num_check:
+                        self.units[compound] += 1
+                    else:
+                        self.units[compound] -= 1
+                    changed = True
+                    break  # restart scan
 
         return self
 
@@ -707,5 +671,44 @@ class MetricPrefix:
             superscript = str(new_power).translate(str.maketrans("0123456789-", "⁰¹²³⁴⁵⁶⁷⁸⁹⁻"))
             return MetricPrefix("", f"10{superscript}", new_power)
     
+
+class BaseUnits(dict):
+    """Object to keep track of base unit counts.
+    """
+    def __init__(self, data=None):
+        super().__init__()
+        if data:
+            for k, v in data.items():
+                self[k] = v
+
+    def __getitem__(self, key):
+        return super().get(key, 0)
+    
+    def __add__(self, other):
+        result = BaseUnits(self)
+        for k, v in other.items():
+            result[k] = result.get(k, 0) + v
+        return result
+
+    def __sub__(self, other):
+        result = BaseUnits(self)
+        for k, v in other.items():
+            result[k] = result.get(k, 0) - v
+        return result
+
+    def __iadd__(self, other):
+        for k, v in other.items():
+            self[k] = self.get(k, 0) + v
+        return self
+
+    def __isub__(self, other):
+        for k, v in other.items():
+            self[k] = self.get(k, 0) - v
+        return self
+
+    def copy(self):
+        return BaseUnits(self)
+    
+
 if __name__ == "__main__":
     pass

@@ -180,7 +180,6 @@ def test_units_with_prefix_multiply(meter, gram, kilo, mega):
 
 def test_multiple_components(meter, second, gram, kilo):
     u = (kilo * gram * meter / second) * (second * meter)
-    u = u.simplify()
 
     assert u.prefix == kilo
     assert gram in u.get_components()
@@ -191,17 +190,16 @@ def test_multiple_components(meter, second, gram, kilo):
 def test_identity_roundtrip(meter, second):
     u = (meter / second) * second
     v = meter * (second / second)
-    u = u.simplify()
-    v = v.simplify()
 
     assert u == v == meter
 
 
 def test_collapse_single(meter):
-    u = deepcopy(meter)
-    u.collapse_powers()
+    u = Unit.from_basics("meter", "m", "length")
+    u.collapse_standard_compounds()
 
     assert u == meter
+
 
 def test_collapse_after_expand(kilo, gram, sqmeter, meter, watt):
     u = (kilo * gram  *  sqmeter)  / (watt * meter)
@@ -210,6 +208,16 @@ def test_collapse_after_expand(kilo, gram, sqmeter, meter, watt):
     assert len(u.denominator) == 1
     assert u.prefix == kilo
     assert u.denominator[0] == watt
+
+
+def negative_powers_collapse(meter, watt, sqmeter):
+    u = watt / (meter * meter)
+
+    assert len(u.numerator) == 1
+    assert len(u.denominator) == 1
+    assert u.numerator[0] == watt
+    assert u.denominator[0] == sqmeter
+
 
 def test_collapse_cubic_meter(meter, cubicmeter):
     u = meter * meter * meter

@@ -67,16 +67,6 @@ def test_compound_conversion_velocity(s):
     assert mps.convert_to(cmps) == pytest.approx(100)
 
 
-def test_km_over_m():
-    km = KILO * METER
-    u = km / METER
-    factor, simplified = u.simplify(True)
-
-    assert factor == pytest.approx(1000)
-    assert simplified.numerator == []
-    assert simplified.denominator == []
-
-
 def test_cubic_meter_conversion():
     u = METER * METER * METER
     v = Unit.from_basics("cubic meter", "m3", "volume")
