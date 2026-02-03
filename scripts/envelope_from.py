@@ -15,6 +15,7 @@ from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Envelope
+from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
 
 from pod_lca.lca_modules.operational.read_write import find_materials
 from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
@@ -74,7 +75,8 @@ for lk in layers:
     thickness = layers[lk]['thickness']
     classification = layers[lk]['classification']
     mdata = data['materials'][name]
-    l = Layer.from_data(mdata, thickness, classification)
+    material_property = EnvelopeMaterialProperty.from_data(mdata)
+    l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
     layers_[lk] = l
 
 framing = Framing.from_data(framing)
@@ -89,7 +91,7 @@ f = Floor.from_idf('Generic Interior Floor', constructions_path)
 
 # make a ceiling - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-c = Floor.from_idf('Generic Interior Ceiling', constructions_path)
+c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -101,6 +103,3 @@ e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceilin
 print(e.surfaces['ceiling'].construction)
 
 # make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-

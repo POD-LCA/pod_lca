@@ -185,8 +185,8 @@ if __name__ == '__main__':
 
     for i in range(50): print('')
 
-    a = (METER * METER * METER * METER * METER * KELVIN * KELVIN) / (WATT * WATT)
-    b = (METER * METER * KELVIN) / (WATT)
+    # a = (METER * METER * METER * METER * METER * KELVIN * KELVIN) / (WATT * WATT)
+    # b = (METER * METER * METER * KELVIN) / (WATT)
 
-    print(a)
-    print(b)
+    # print(a/b)
+    a = -METER

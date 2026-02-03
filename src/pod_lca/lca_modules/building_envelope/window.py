@@ -18,38 +18,38 @@ class Window(Construction):
         # TODO: Create a function that updates the wall area / quantities the window is attached to. 
         pass
 
-    # @classmethod
-    # def from_wall_wwr_and_idf(cls):
-    #     pass
-        # if wwr > .95:
-        #     wwr = .95
-        # pts = envelope.surfaces[wall_key].polygon
-        # cpt = centroid(pts)
-        # area = envelope.surfaces[wall_key].area * wwr
-        # lx = distance_point_point(pts[0], pts[1]) - .1
-        # ly = area / lx
-        # vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.)
-        # vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.)
-        # vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.)
-        # vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.)
+    @classmethod
+    def from_wall_wwr_and_idf(cls):
+        pass
+        if wwr > .95:
+            wwr = .95
+        pts = envelope.surfaces[wall_key].polygon
+        cpt = centroid(pts)
+        area = envelope.surfaces[wall_key].area * wwr
+        lx = distance_point_point(pts[0], pts[1]) - .1
+        ly = area / lx
+        vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.)
+        vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.)
+        vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.)
+        vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.)
 
-        # p0 = add_vectors(cpt, add_vectors(vx_, vy_))
-        # p1 = add_vectors(cpt, add_vectors(vx, vy_))
-        # p2 = add_vectors(cpt, add_vectors(vx, vy))
-        # p3 = add_vectors(cpt, add_vectors(vx_, vy))
+        p0 = add_vectors(cpt, add_vectors(vx_, vy_))
+        p1 = add_vectors(cpt, add_vectors(vx, vy_))
+        p2 = add_vectors(cpt, add_vectors(vx, vy))
+        p3 = add_vectors(cpt, add_vectors(vx_, vy))
 
-        # sk = 'window_{}'.format(wall_key)
-        # surface = Surface.from_polygon(sk, [p0, p1, p2, p3])
-        # envelope.surfaces[sk] = surface
-        # envelope.window_surface_keys.append(sk)
-        # construction = Construction.from_idf(construction_name, path, building, envelope, 'window', window_service_life)
+        sk = 'window_{}'.format(wall_key)
+        surface = Surface.from_polygon(sk, [p0, p1, p2, p3])
+        envelope.surfaces[sk] = surface
+        envelope.window_surface_keys.append(sk)
+        construction = Construction.from_idf(construction_name, path, building, envelope, 'window', window_service_life)
 
 
-        # window = cls()
-        # window.name = f'win_{envelope.name}_{wall_key}'
-        # window.building_surface = f'{envelope.name}_wall_{wall_key}' 
-        # window.construction = construction
-        # return window
+        window = cls()
+        window.name = f'win_{envelope.name}_{wall_key}'
+        window.building_surface = f'{envelope.name}_wall_{wall_key}' 
+        window.construction = construction
+        return window
     
     # def to_json(self, filepath):
     #     """

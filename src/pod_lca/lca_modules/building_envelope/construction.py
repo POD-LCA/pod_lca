@@ -27,7 +27,6 @@ class Construction(Assembly):
 
     @classmethod
     def from_idf(cls, name, idf_path):
-
         cdata = find_constructions(idf_path, {})['constructions'][name]
         layers = cdata['layers']
         ldata = find_materials(idf_path, {})

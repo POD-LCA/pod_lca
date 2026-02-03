@@ -10,6 +10,23 @@ class EnvelopeMaterialProperty(object):
         self.name               = None
         # Operational Energy attributes
         pass
+    
+    @classmethod
+    def from_data(cls, data):
+        mtype = data['__type__']
+        if mtype == 'Material':
+            material_prop = EnvelopeMaterial.from_data(data)
+        elif mtype == 'MaterialAirGap':
+            material_prop = EnvelopeMaterialAirGap.from_data(data)
+        elif mtype == 'MaterialNoMass':
+            material_prop = EnvelopeMaterialNoMass.from_data(data)
+        elif mtype == 'WindowMaterialGlazing':
+            material_prop = WindowMaterialGlazing.from_data(data)
+        elif mtype == 'WindowMaterialGas':
+            material_prop = WindowMaterialGas.from_data(data)
+        else:
+            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        return material_prop
 
 
 class EnvelopeMaterial(EnvelopeMaterialProperty):
