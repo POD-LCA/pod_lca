@@ -4,7 +4,10 @@ UNITS_MAP = {}
 STANDARD_COMPOUNDS = {}
 UNIT_NAME_OVERRIDES = {}
 UNIT_NOTATION_OVERRIDES = {}
+UNIT_REGISTRY = {}
 
+from .unit_conversion_exceptions import ImperialEnergyException
+from .unit_conversion_exceptions import UnitSide
 from .units import Unit
 from .units import MetricPrefix
 from .metric_prefixes import *

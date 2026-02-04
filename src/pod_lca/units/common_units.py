@@ -152,7 +152,7 @@ UNIT_CONVERSIONS["power"] = {"watt": 1.0}
 WATT_HOUR = Unit.from_basics("watt-hour", "Wh", "energy")
 JOULE = Unit.from_basics("joule", "J", "energy")
 THERM = Unit.from_basics("therm", "thm", "energy")
-BTU = Unit.from_basics("British Thermal Unit", "BTU", "energy")
+BTU = Unit.from_basics("British Thermal Unit", "Btu", "energy")
 
 UNIT_CONVERSIONS["energy"] = {
     "watt-hour": 1.0,
@@ -164,7 +164,7 @@ UNIT_CONVERSIONS["energy"] = {
 # REF [2] pp.45 - footnote 9 - BTU
 
 STANDARD_COMPOUNDS[WATT_HOUR] = {WATT: 1, HOUR: 1}
-# STANDARD_COMPOUNDS[WATT] = {JOULE: 1, SECOND: -1}
+STANDARD_COMPOUNDS[WATT] = {JOULE: 1, SECOND: -1}
 
 # ==================================
 # DISCRETE COUNTING UNITS

@@ -12,6 +12,9 @@ from ..units import STANDARD_COMPOUNDS
 from ..units import UNIT_CONVERSIONS
 from ..units import UNIT_NAME_OVERRIDES
 from ..units import UNIT_NOTATION_OVERRIDES
+from ..units import UNIT_REGISTRY
+from ..units import ImperialEnergyException
+from ..units import UnitSide
 from ..utilities import ArrayMethods
 
 
@@ -33,6 +36,10 @@ class Unit:
     denominator : list of ~pod_lca.units.Unit
         List of components in the denominator of the unit.
     """
+
+    EXCEPTION_RULES = [
+        ImperialEnergyException(),
+    ]
 
     def __init__(self):
         self.name = None
@@ -65,7 +72,7 @@ class Unit:
         if not isinstance(other, Unit):
             raise TypeError(f"unsupported operand type(s) for *: {type(self)} and {type(other)}")
 
-        result = Unit.from_basics("", "", "")
+        result = Unit()
         result.units = self.units + other.units
         result.prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
 
@@ -83,7 +90,7 @@ class Unit:
             else:
                 new_prefix = other
 
-            result = Unit.from_basics("", "", "")
+            result = Unit()
             result.units = self.units
             result.prefix = new_prefix
     
@@ -104,7 +111,7 @@ class Unit:
                 f"unsupported operand type(s) for /: {type(self).__name__} and {type(other).__name__}"
             )
 
-        result = Unit.from_basics("","","")
+        result = Unit()
         result.units = self.units - other.units
         result.prefix =  MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
 
@@ -117,7 +124,7 @@ class Unit:
     def __rtruediv__(self, other):
         """Reflexive division of units by unit value (1)."""
         if other == 1:
-            result = Unit.from_basics("","","")
+            result = Unit()
             result.prefix = MetricPrefix.safe_combine_prefix(None, self.prefix, 'divide')
             result.units = -self.units
 
@@ -160,6 +167,9 @@ class Unit:
         qty_measured : {'time', 'mass', 'length', 'area', 'volume', 'power', 'energy', 'count', 'carbon storage'}
             The quantity measured by the unit.
         """
+        if name in UNIT_REGISTRY:
+            return UNIT_REGISTRY[name]
+        
         unit = cls()
         unit.set_name(name)
         unit.set_standard_notation(standard_notation)
@@ -167,7 +177,30 @@ class Unit:
 
         unit.units = BaseUnits({unit:1})
 
+        UNIT_REGISTRY[name] = unit
+
         return unit
+
+    @classmethod
+    def copy(cls, unit):
+        new_unit = cls()
+        new_unit.set_name(unit.get_name())
+        new_unit.set_standard_notation(unit.get_standard_notation())
+        new_unit.set_qty_measured(unit.get_qty_measured())
+
+        new_unit.units = unit.units.copy()
+
+        return new_unit
+
+    @classmethod
+    def copy_from_components(cls, comps):
+        new_unit = cls()
+        new_unit.units = comps
+
+        new_unit._rebuild_strings()
+
+        return new_unit
+
 
     def set_name(self, name):
         """Set the name of the unit of measurement.
@@ -299,6 +332,13 @@ class Unit:
         TypeError
             Incompatible units for conversion.
         """
+        # pre-process
+        # TODO: add dimensional simplification (see note)
+        self.expand_standard_compounds()
+        to_unit.expand_standard_compounds()
+
+        factor = Unit._handle_exceptions(self, to_unit)
+
         # incompatible units
         if self.get_qty_measured() != to_unit.get_qty_measured():
             raise TypeError("Incompatible units for conversion.")
@@ -310,7 +350,6 @@ class Unit:
             return Unit.compute_conversion_factor(self, to_unit)
 
         # compound unit conversion
-        factor = 1.0
         for component_in, power_in in self.units.items():
             for component_out, power_out in to_unit.units.items():
                 if power_in != power_out:
@@ -334,6 +373,35 @@ class Unit:
 
         return factor
 
+    @staticmethod
+    def _handle_exceptions(unit_in, unit_out):
+        factor = 1
+
+        expr_in = unit_in.units.copy()
+        expr_out = unit_out.units.copy()
+
+        for rule in Unit.EXCEPTION_RULES:
+            if not rule.applies(unit_in, unit_out):
+                continue
+
+            f, ops = rule.apply(unit_in, unit_out)
+            factor *= f
+
+            for op in ops:
+                target_expr  = expr_in if op.side is UnitSide.IN else expr_out
+
+                for u, p in op.remove.items():
+                    target_expr [u] -= p
+                    if target_expr [u] == 0:
+                        del target_expr [u]
+
+                for u, p in op.add.items():
+                    target_expr [u] += p
+
+        new_unit_in = Unit.copy_from_components(expr_in)
+        new_unit_out = Unit.copy_from_components(expr_out)
+
+        return factor, new_unit_in, new_unit_out
 
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out):
@@ -368,7 +436,7 @@ class Unit:
 
         return factor_out / factor_in
             
-    def expand_standard_compounds(self,):
+    def expand_standard_compounds(self):
         changed = True
         while changed:
             changed = False
@@ -492,6 +560,8 @@ class Unit:
             self.name = UNIT_NAME_OVERRIDES[self.name]
         if self.standard_notation in UNIT_NOTATION_OVERRIDES:
             self.standard_notation = UNIT_NOTATION_OVERRIDES[self.standard_notation]
+
+
 
 
 class MetricPrefix:

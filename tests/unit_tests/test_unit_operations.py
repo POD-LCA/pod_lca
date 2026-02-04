@@ -78,6 +78,7 @@ def test_collapse_square_meter(meter, sqmeter):
 def test_multiply_with_denominator(meter, second, cubicmeter):
     speed = meter / second
     area = meter * meter
+
     u = speed * area
 
     assert cubicmeter in u.get_components()
@@ -127,6 +128,7 @@ def test_multiply_unit_with_prefix(meter, kilo):
 def test_prefix_divide(meter, gram, kilo):
     u = kilo * meter
     v = kilo * gram
+
     result = u / v
 
     assert result.prefix is None
@@ -135,6 +137,7 @@ def test_prefix_divide(meter, gram, kilo):
 
 def test_prefix_resulting_non_standard(meter, centi):
     v = centi * meter
+
     result = v * v
 
     assert result.prefix is not None
@@ -145,6 +148,7 @@ def test_prefix_resulting_non_standard(meter, centi):
 def test_prefix_resulting_standard(meter, gram, centi, deka, deci):
     u = deka * gram
     v = centi * meter
+
     result = u * v
 
     assert result.prefix is not None
@@ -170,6 +174,7 @@ def test_same_prefix_multiply(kilo, mega):
 def test_units_with_prefix_multiply(meter, gram, kilo, mega):
     u = kilo * meter
     v = kilo * gram
+
     result = u * v
 
     assert result.prefix == mega
@@ -246,6 +251,7 @@ def test_collapse_mixed_units_no_change(meter, feet):
 def test_simplify_with_multiple_matches_more_in_numerator(meter, watt):
     u = meter *  watt
     v = meter *  watt *  watt
+
     result = u / v
 
     assert len(result.get_components()) == 1
@@ -255,6 +261,7 @@ def test_simplify_with_multiple_matches_more_in_numerator(meter, watt):
 def test_simplify_with_multiple_matches_more_in_denomenator(meter, watt):
     u = meter * meter * meter  * watt
     v = meter * meter 
+
     result = u / v
 
     assert len(result.get_components()) == 2
@@ -272,6 +279,7 @@ def test_collapse_after_simplify(meter, sqmeter):
 def test_cancel_after_collapse(meter, gram, sqmeter):
     density = gram / sqmeter
     area = meter * meter
+    
     result = density * area
 
     assert len(result.get_components()) == 1
