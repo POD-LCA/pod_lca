@@ -19,7 +19,7 @@ mKW = (METER * KELVIN) / WATT
 class Layer(object):
     def __init__(self):
         self.name = None
-        self._material_property = None
+        self.material_property = None
         self.thickness = None
         self.unit = None
         self.classification = None
@@ -33,9 +33,6 @@ class Layer(object):
         layer.classification = classification
         return layer
 
-
-        
-
     @classmethod
     def from_idf(cls, name, building):
         data = building.idf_material_properties['materials'][name]
@@ -46,6 +43,15 @@ class Layer(object):
         layer.name = '{}_{}'.format(name, thickness)
         layer.thickness = thickness
         layer.material_property = layer.add_envelope_material_property(data)
+        return layer
+
+    @classmethod
+    def from_property_and_thickness(cls, name, material_property, thickness, classification=None):
+        layer = cls()
+        layer.name = name
+        layer.thickness = thickness
+        layer.material_property = material_property
+        layer.classification = classification
         return layer
 
     def add_envelope_material_property(self, data):
