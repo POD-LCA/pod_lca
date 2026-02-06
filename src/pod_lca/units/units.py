@@ -684,6 +684,12 @@ class BaseUnits(dict):
     def __getitem__(self, key):
         return super().get(key, 0)
     
+    def __neg__(self):
+        result = BaseUnits(self)
+        for k, v in self.items():
+                    result[k] = -v
+        return result
+    
     def __add__(self, other):
         result = BaseUnits(self)
         for k, v in other.items():

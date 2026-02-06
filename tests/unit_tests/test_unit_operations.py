@@ -83,6 +83,11 @@ def test_multiply_with_denominator(meter, second, cubicmeter):
     assert cubicmeter in u.get_components()
     assert second in u.get_components()
 
+def inverse_unit(meter):
+    u = 1 / meter
+
+    assert u.numerator == []
+    assert meter in u.denominator
 
 def test_cancel_units_with_no_remainder(meter):
     u = meter / meter
