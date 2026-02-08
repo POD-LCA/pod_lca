@@ -17,6 +17,14 @@ from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
 
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterial
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialAirGap
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialNoMass
+from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGlazing
+from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGas
+
+
+
 from pod_lca.lca_modules.operational.read_write import find_materials
 from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
 from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
