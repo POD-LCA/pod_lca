@@ -295,7 +295,7 @@ class ForeignLeg(TransportationLeg):
         if not self.check_mode_origin_compatibility():
             raise ValueError("The transportation origin and transportation mode are inconsistant.")
 
-        conversion_factor = self.get_dist_unit().convert_to(KILOMETER)
+        conversion_factor = KILOMETER.convert_to(self.get_dist_unit())
         datasets_filtered = dataset.filter_datasets(
             self.get_material(),
             self.get_shipping_destination(),
