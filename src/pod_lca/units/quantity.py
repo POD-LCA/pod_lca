@@ -21,13 +21,16 @@ class Quantity(object):
 
     def __add__(self, val):
         if isinstance(val, Quantity):
-            if self.unit.qty_measured == val.unit.qty_measured:
-                val = val.unit.convert_to(self.unit) * val.value
-                return Quantity(self.value + val, self.unit)
+            if self.unit == val.unit:
+                return Quantity(self.value + val.value, self.unit)
             else:
-                raise TypeError(f"unsupported operand type(s) for + {self.unit.name} and {val.unit.name}")
+                try:
+                    val = val.unit.convert_to(self.unit) * val.value
+                    return Quantity(self.value + val, self.unit)
+                except:
+                    raise TypeError(f"unsupported operand type(s) for + {self.unit.name} and {val.unit.name}")
         else:
-            self.value += val
+            self.value += val # TODO: This is mathematically incorrect... do we want this to be allowed...
             return self
 
     def __radd__(self, other):
@@ -35,34 +38,36 @@ class Quantity(object):
 
     def __sub__(self, val):
         if isinstance(val, Quantity):
-            if self.unit.qty_measured == val.unit.qty_measured:
-                val = val.unit.convert_to(self.unit) * val.value
-                return Quantity(self.value - val, self.unit)
+            if self.unit == val.unit:
+                return Quantity(self.value - val.value, self.unit)
             else:
-                raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
+                try:
+                    val = val.unit.convert_to(self.unit) * val.value
+                    return Quantity(self.value - val, self.unit)
+                except:
+                    raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
         else:
-            self.value -= val
+            self.value -= val # TODO: This is mathematically incorrect... do we want this to be allowed...
             return self
 
     def __rsub__(self, val):
         if isinstance(val, Quantity):
-            if self.unit.qty_measured == val.unit.qty_measured:
-                val = val.unit.convert_to(self.unit) * val.value
-                return Quantity(val - self.value, self.unit)
+            if self.unit == val.unit:
+                return Quantity(val.value - self.value, self.unit)
             else:
-                raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
+                try:
+                    val = val.unit.convert_to(self.unit) * val.value
+                    return Quantity(val - self.value, self.unit)
+                except:
+                    raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
         else:
-            self.value = val - self.value
+            self.value = val - self.value # TODO: This is mathematically incorrect... do we want this to be allowed...
             return self
 
     def __mul__(self, val):
         if isinstance(val, Quantity):
-            if self.unit.qty_measured == val.unit.qty_measured:
-                value  = self.value * (val.value * val.unit.convert_to(self.unit))
-                unit = self.unit * self.unit
-            else:
-                value = self.value * val.value
-                unit = self.unit * val.unit
+            value = self.value * val.value
+            unit = self.unit * val.unit
             return Quantity(value, unit)
         else:
             return Quantity(self.value * val, self.unit)
