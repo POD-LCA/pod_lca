@@ -168,7 +168,7 @@ class TransportationLeg:
             raise TypeError("Travel distance must be a number.")
 
         self.dist_unit = KILOMETER if dist_unit is None else dist_unit
-        self.return_trip_factor = return_trip_factor
+        self.return_trip_factor = 1.0 if return_trip_factor is None else return_trip_factor
 
         return self
 
