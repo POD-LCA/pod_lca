@@ -46,11 +46,7 @@ class Unit:
     
     def __eq__(self, other):
         if isinstance(other, Unit):
-            return (
-                self.get_name() == other.get_name() and
-                self.get_standard_notation() == other.get_standard_notation() and
-                self.get_qty_measured() == other.get_qty_measured()
-            )
+            return self.units == other.units
         return NotImplemented
 
     def __hash__(self):
@@ -680,6 +676,22 @@ class BaseUnits(dict):
         if data:
             for k, v in data.items():
                 self[k] = v
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        
+        if not isinstance(other, dict):
+            return False
+
+        def get_primitive_map(d):
+                    return {
+                        (getattr(k, 'name', k)): v 
+                        for k, v in dict.items(d) 
+                        if v != 0
+                    }
+
+        return get_primitive_map(self) == get_primitive_map(other)
 
     def __getitem__(self, key):
         return super().get(key, 0)

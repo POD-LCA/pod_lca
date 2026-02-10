@@ -57,6 +57,14 @@ def deka():
 def deci():
     return MetricPrefix("deci", "d", -1)
 
+def test_equivalence(meter):
+
+    assert meter ==  meter
+
+def test_equivalence_order(meter, second):
+
+    assert (meter * second) == (second * meter)
+
 def test_simple_units_multiply(second, meter):
     u = meter * second
 
