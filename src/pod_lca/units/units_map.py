@@ -22,6 +22,7 @@ from ..units import KILOMETER
 from ..units import LITER
 from ..units import MEGA
 from ..units import METER
+from ..units import MILE
 from ..units import SQUARE_FEET
 from ..units import SQUARE_METER
 from ..units import OUNCE
@@ -50,6 +51,7 @@ UNITS_MAP.update(
         "lb": OUNCE,
         "tn": S_TON,
         "km": KILOMETER,
+        "mile": MILE,
         "m": METER,
         "ft": FEET,
         "in": INCH,
