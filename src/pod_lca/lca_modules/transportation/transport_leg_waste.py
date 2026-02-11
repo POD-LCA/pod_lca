@@ -224,7 +224,7 @@ class WasteTransportLeg(TransportationLeg):
             Return trip factor of the transportation leg (default is None).
         """
         self.dist_unit = KILOMETER if dist_unit is None else dist_unit
-        self.return_trip_factor = 1.0 if return_trip_factor is None else return_trip_factor
+        self.return_trip_factor = 0.0 if return_trip_factor is None else return_trip_factor
         self._invalidate_cache()
         return self
 

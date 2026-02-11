@@ -257,7 +257,7 @@ class ForeignLeg(TransportationLeg):
         float
             The return trip factor of the transportation leg.
         """
-        return 1.0
+        return 0.0
 
     def get_dataset(self):
         """Get the dataset.
@@ -346,7 +346,7 @@ class LinkedDomesticLeg(TransportationLeg):
         dist = self.get_travel_dist()
         convertion_factor = self.get_dist_unit().convert_to(MILE)
 
-        return 1.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 1.0
+        return 0.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 0.0
 
 
 if __name__ == "__main__":
