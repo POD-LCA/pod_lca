@@ -693,11 +693,11 @@ class BaseUnits(dict):
             return False
 
         def get_primitive_map(d):
-                    return {
-                        (getattr(k, 'name', k)): v 
-                        for k, v in dict.items(d) 
-                        if v != 0
-                    }
+            return {
+                (getattr(k, 'name', k)): v 
+                for k, v in dict.items(d) 
+                if v != 0
+            }
 
         return get_primitive_map(self) == get_primitive_map(other)
 
