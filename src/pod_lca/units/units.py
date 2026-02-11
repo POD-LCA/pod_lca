@@ -65,6 +65,10 @@ class Unit:
         result.units = self.units + other.units
         result.prefix = MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'multiply')
 
+        for key in list(result.units.keys()):
+            if result.units[key] == 0:
+                del result.units[key]
+
         result.expand_standard_compounds()
         result.collapse_standard_compounds()
         result._rebuild_strings()
@@ -104,6 +108,10 @@ class Unit:
         result.units = self.units - other.units
         result.prefix =  MetricPrefix.safe_combine_prefix(self.prefix, other.prefix, 'divide')
 
+        for key in list(result.units.keys()):
+            if result.units[key] == 0:
+                del result.units[key]
+                
         result.expand_standard_compounds()
         result.collapse_standard_compounds()
         result._rebuild_strings()
