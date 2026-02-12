@@ -100,29 +100,27 @@ class TransportationManager:
 
         return self
 
-    def set_project_origin(self, origin: str):
+    def set_project_origin(self, origin):
         """Set the origin location of the project.
 
         Parameters
         ----------
-        origin : str
+        origin : ~pod_lca.location.Location
             Origin location of the project.
         """
         for leg in self.get_transportation_legs():
-            leg.set_shipping_org(origin)
-        # TODO consider having a project level variable for origin
+            leg.set_shipping_origin(origin)
 
-    def set_project_destination(self, destination: str):
+    def set_project_destination(self, destination):
         """Set the destination location of the project.
 
         Parameters
         ----------
-        destination : str
+        destination : ~pod_lca.location.Location
             Destination location of the project.
         """
         for leg in self.get_transportation_legs():
-            leg.set_shipping_dest(destination)
-        # TODO consider having a project level variable for origin
+            leg.set_shipping_destination(destination)
 
     def set_scenario(self, transportation_scenario):
         pass  # TODO: set project level scenario

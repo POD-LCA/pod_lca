@@ -237,6 +237,9 @@ class Model:
             if isinstance(product, Electricity):
                 product.set_location(location_obj=location)
 
+        if self.get_transportation_manager() is not None:
+            self.get_transportation_manager().set_project_destination(location)
+
         return self
 
     def set_transportation_manager(self, logistic_type="local"):
