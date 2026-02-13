@@ -143,6 +143,9 @@ class Location:
         location.zipcode = zipcode
         location.regionality = "Local"
 
+        location.set_city(zip_code=zipcode)
+        location.set_state(zip_code=zipcode)
+
         if set_all_location_data:
             try:
                 string = zipcode + ", USA"
@@ -162,8 +165,6 @@ class Location:
                     location.get_cordinates(), addressdetails=True, zoom=15, language="en"
                 )  # zoom level 14 = neighbourhood
 
-                location.set_city(location_data)
-                location.set_state(location_data)
                 location.set_cfs_area()
                 location.set_faf_domestic_region()
                 location.set_us_coast()
@@ -396,36 +397,60 @@ class Location:
 
         return self
 
-    def set_city(self, geopy_location):
+    def set_city(self, geopy_location=None, zip_code=None):
         """Set the city of the location.
 
         Parameters
         ----------
         geopy_location : geopy.location.Location
             Geopy location object.
+        zip_code : str
+            US ZIP code of the location.
         """
-        try:
-            self.city = geopy_location.raw["address"]["city"]
-        except:
-            self.city = None
+        if geopy_location is not None:
+            try:
+                self.city = geopy_location.raw["address"]["city"]
+                return self
+            except:
+                self.city = None
+
+        if zip_code is not None:
+            try:
+                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"])
+                self.city = data.loc[data["USZIP"] == zip_code, "City"].iloc[0]
+            except:
+                self.city = None
 
         return self
 
-    def set_state(self, geopy_location):
+    def set_state(self, geopy_location=None, zip_code=None):
         """Set the state of the location.
 
         Parameters
         ----------
         geopy_location : geopy.location.Location
             Geopy location object.
+        zip_code : str
+            US ZIP code of the location.
         """
-        try:
-            self.state = geopy_location.raw["address"]["state"]
+        if geopy_location is not None:
+            try:
+                self.state = geopy_location.raw["address"]["state"]
 
-            us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])
-            self.state_abbr = us_states[self.state]
-        except:
-            self.state = None
+                us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])
+                self.state_abbr = us_states[self.state]
+            except:
+                self.state = None
+
+        if zip_code is not None:
+            try:
+                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"])
+                self.state = data.loc[data["USZIP"] == zip_code, "State"].iloc[0]
+
+                us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])
+                self.state_abbr = us_states[self.state]
+            except:
+                self.city = None
 
         return self
 
