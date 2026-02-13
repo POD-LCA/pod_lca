@@ -416,7 +416,8 @@ class Location:
 
         if zip_code is not None:
             try:
-                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"])
+                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"],
+                                                  dtype={"USZIP": str})
                 self.city = data.loc[data["USZIP"] == zip_code, "City"].iloc[0]
             except:
                 self.city = None
@@ -444,7 +445,8 @@ class Location:
 
         if zip_code is not None:
             try:
-                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"])
+                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"],
+                                                  dtype={"USZIP": str})
                 self.state = data.loc[data["USZIP"] == zip_code, "State"].iloc[0]
 
                 us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])

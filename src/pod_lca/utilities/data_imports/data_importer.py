@@ -15,7 +15,7 @@ class DataImporter:
     # ========================
     # CSV
     # ========================
-    def csv_to_pandas(file_path, headers=None, multipliers=None):
+    def csv_to_pandas(file_path, headers=None, multipliers=None, dtype=None):
         """Import data to database from a CSV file.
 
         Parameters
@@ -26,6 +26,8 @@ class DataImporter:
             The headers of the CSV file as they would be mapped to the dataset.
         multipliers : list of float
             Values of each column of the CSV will be multiplied by these values.
+        dtype : dict
+            Data type of each column specified with header as key.
         """
         df_headers = read_csv(file_path, nrows=0)
         if headers is None:
@@ -33,7 +35,7 @@ class DataImporter:
         else:
             headers_present = [col for col in headers if col in df_headers.columns.tolist()]
 
-        data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers_present)
+        data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers_present, dtype=dtype)
 
         if multipliers is not None:
             n = len(headers)
