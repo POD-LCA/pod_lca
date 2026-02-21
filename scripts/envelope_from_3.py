@@ -7,6 +7,12 @@ __version__ = "0.1.0"
 
 from pod_lca.utilities import config
 
+from pod_lca.lca_modules.building import Building
+
+from pod_lca.lca_modules.building_structure import BuildingStructure
+
+from pod_lca.lca_modules.location import Location
+
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
@@ -37,6 +43,13 @@ for i in range(100): print('')
 constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
 
 # general inputs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+bname = 'Tomas'
+btype = 'Residential'
+location = Location.from_str("98126, Seattle")
+built_year =  2025
+life_span = 100
+
 
 x = Q(20, METER)
 y = Q(10, METER)
@@ -152,4 +165,15 @@ c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
 e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c)
 
+# make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
+mui_type = 'Low' # 'Mid', 'High'
+
+s = BuildingStructure.from_sample_buildings(btype, stype, mui_type)
+
 # make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# b = Building.from_assemblies(name, btype, location, built_year, life_span, s, e)
+
+# print(b)

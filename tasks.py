@@ -142,5 +142,5 @@ def package(c, version_bump="patch"):
     version_bump : str
         One of 'major', 'minor', or 'patch' to indicate the type of version bump.
     """
-    c.run(f"bump-my-version bump {version_bump} ")
+    # c.run(f"bump-my-version bump {version_bump} ")
     c.run("python -m build --wheel")

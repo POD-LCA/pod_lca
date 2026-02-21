@@ -5,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from . import StructuralElement
 from . import Foundation
 from . import Beam
 from . import Column
@@ -12,7 +13,8 @@ from . import Slab
 from . import Wall
 from . import RoofStructure
 from . import StructuralMaterial
-from ...units import UNITS_MAP
+from ...units import UNITS_MAP, KILOGRAM, SQUARE_METER
+from ...units import Quantity as Q
 from ...utilities import DataImporter
 from ...utilities import config
 from ...utilities import log
@@ -146,6 +148,64 @@ class BuildingStructure:
     @classmethod
     def from_geometry(cls, building):
         pass
+
+    @classmethod
+    def from_sample_buildings(cls, building_type, structure_type, mui_type):
+
+        if structure_type == 'CLT':
+            low, mid, high = 131, 38, 79
+
+        elif building_type == 'Residential':
+            if structure_type == 'Concrete':
+                low, mid, high = 139, 170, 81
+            elif structure_type == 'Light-Frame':
+                low, mid, high = 44, 263, 84
+            else:
+                raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
+
+        elif building_type == 'Commercial':
+            if structure_type == 'Conrete':
+                low, mid, high = 5, 93, 132
+            elif structure_type == 'Steel':
+                low, mid, high = 183, 179, 223
+            else:
+                raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
+        else:
+            raise ValueError('{} building type has not been yet implemented in this model'.format(building_type))
+
+        path = config['file_paths']['building']['SAMPLE_BUILDING_STRUCTURES']
+        sample_buildings = DataImporter.csv_to_pandas(path)
+        low_building = sample_buildings[sample_buildings['project_index'] == low]
+        
+
+        structural_element_obj = StructuralElement.create('generic structural element', None)
+        # default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
+
+        floor_area = 100
+
+        for _, row in low_building.iterrows():
+            omniclass_element = row['omniclass_element']
+            mat_type_podlca = row['mat_type_podlca']
+            print(mat_type_podlca)
+            mat_type = row['mat_type']
+            mui_gfa = Q(row['mui_gfa'], KILOGRAM/SQUARE_METER)
+
+
+            building_material = StructuralMaterial.new(
+                name='{} {}'.format(omniclass_element, mat_type), 
+                qty=floor_area * mui_gfa,
+                unit=KILOGRAM,
+                material_database_entry=mat_type_podlca,
+            )
+
+            structural_element_obj.add_material(building_material)
+
+        structure = cls()
+        structure.add_structural_element(structural_element_obj)
+
+        return structure
+
+
 
     # ================================
     # Setters
