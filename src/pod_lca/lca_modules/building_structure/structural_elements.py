@@ -31,7 +31,7 @@ class StructuralElement(Assembly):
 
     def __init__(self):
         super().__init__()
-        self.element_type = None
+        self.element_type = 'Generic'
         self.floor = None
         self.material = None
         self.geometry = None

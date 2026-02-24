@@ -174,6 +174,6 @@ s = BuildingStructure.from_sample_buildings(btype, stype, mui_type)
 
 # make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# b = Building.from_assemblies(name, btype, location, built_year, life_span, s, e)
+b = Building.from_assemblies(name, btype, location, built_year, life_span, s, e)
 
 # print(b)

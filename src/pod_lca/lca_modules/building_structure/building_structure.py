@@ -159,7 +159,7 @@ class BuildingStructure:
             if structure_type == 'Concrete':
                 low, mid, high = 139, 170, 81
             elif structure_type == 'Light-Frame':
-                low, mid, high = 44, 263, 84
+                low, mid, high = 142, 263, 84
             else:
                 raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
 
