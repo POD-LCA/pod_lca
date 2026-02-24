@@ -173,7 +173,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
                                              construction_electricity_consumption=kwargs.get('construction_energy_use', 0.0),
                                              electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
         
-        # building.set_structure(structure)
+        building.set_structure(structure)
         building.set_envelope(envelope)
 
         return building
