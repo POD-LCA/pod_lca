@@ -100,6 +100,15 @@ class StructuralElement(Assembly):
         return self.element_type
 
 
+class UnclassifiedElement(StructuralElement):
+
+
+    def __init__(self):
+        super().__init__()
+        self.service_life_category = "unclassified`"
+        self.element_type = "unclassified"
+
+
 class Foundation(StructuralElement):
 
 

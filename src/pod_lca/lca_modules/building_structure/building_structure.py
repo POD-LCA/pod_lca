@@ -5,7 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from . import StructuralElement
+from . import UnclassifiedElement
 from . import Foundation
 from . import Beam
 from . import Column
@@ -49,6 +49,7 @@ class BuildingStructure:
         self.building = None
         self.structural_system = None
         self.structural_material = None
+        self.unclassified = [] 
         self.foundations = []
         self.beams = []
         self.columns = []
@@ -178,7 +179,7 @@ class BuildingStructure:
         low_building = sample_buildings[sample_buildings['project_index'] == low]
         
 
-        structural_element_obj = StructuralElement.create('generic structural element', None)
+        structural_element_obj = UnclassifiedElement.create('generic structural element', None)
         # default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
 
         floor_area = 100
@@ -204,8 +205,6 @@ class BuildingStructure:
         structure.add_structural_element(structural_element_obj)
 
         return structure
-
-
 
     # ================================
     # Setters
