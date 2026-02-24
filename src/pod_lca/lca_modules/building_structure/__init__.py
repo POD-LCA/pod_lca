@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 from .structural_material import StructuralMaterial
 from .structural_elements import StructuralElement
 from .structural_elements import Foundation
-from .structural_elements import UnclassifiedElement
+from .structural_elements import GenericElement
 from .structural_elements import Beam
 from .structural_elements import Column
 from .structural_elements import Slab

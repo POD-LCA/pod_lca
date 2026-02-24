@@ -100,12 +100,12 @@ class StructuralElement(Assembly):
         return self.element_type
 
 
-class UnclassifiedElement(StructuralElement):
+class GenericElement(StructuralElement):
 
 
     def __init__(self):
         super().__init__()
-        self.service_life_category = "unclassified`"
+        self.service_life_category = "superstructure"
         self.element_type = "unclassified"
 
 
