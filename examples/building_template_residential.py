@@ -11,11 +11,6 @@ template_model_data ={
     "enclosure-opaque":"Brick, wood framing",
     "enclosure-translucent":"Glazing, operable window",
     "roof":"Asphalt shingle roofing",
-    "no_floors":2,
-    "floor_area":221,
-    "floors_below_grade":0,
-    "geometry_units":"m",
-    "logistic_type":"local"
 }
 
 my_building = Building.from_template_model(name='template building',

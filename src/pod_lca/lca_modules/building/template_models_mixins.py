@@ -10,6 +10,8 @@ from math import sqrt
 from ...units import MEGA
 from ...units import WATT_HOUR
 from ...units import UNITS_MAP
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class TemplateModels:
@@ -136,16 +138,17 @@ class TemplateModels:
             Logistic type for building material transportation.
         """
         # set default geometry
-        no_floors = kwargs.get('no_floors', 1)
-        if 'floor_plan' in kwargs:
-            floor_plan = kwargs['floor_plan']
+        geometry_data = DataImporter.json_to_dict(config["file_paths"]["building"]["TEMPLATE_GEOMETRY"])[kwargs['building_type']]
+        no_floors = geometry_data.get('no_floors', 1)
+        if 'floor_plan' in geometry_data:
+            floor_plan = geometry_data['floor_plan']
         else:
-            if 'floor_area' in kwargs:
-                side_length = sqrt(kwargs['floor_area'] / no_floors)
+            if 'floor_area' in geometry_data:
+                side_length = sqrt(geometry_data['floor_area'] / no_floors)
                 floor_plan = [(0.0 , 0.0), (0.0, side_length), (side_length, side_length), (side_length, 0.0)]
             else:
                 raise ValueError('Either floor plan or floor area must be provided to define the floor geometry.')
-        geometry_units = kwargs.get('geometry_units', 'm')
+        geometry_units = geometry_data.get('geometry_units', 'm')
 
         # set floors
         self.add_floors(no_floors=no_floors, 

@@ -1,0 +1,16 @@
+{
+    "commercial": {
+            "no_floors":6,
+            "f2f_height":3.0,
+            "floor_plan":[[0.0 , 0.0], [0.0, 180.0], [120.0, 180.0], [120.0, 0.0]],
+            "floors_below_grade":1,
+            "wwr":0.7,
+            "geometry_units":"ft"
+    },
+    "residential": {
+            "no_floors":2,
+            "floor_area":221,
+            "floors_below_grade":0,
+            "geometry_units":"m"
+    }
+}

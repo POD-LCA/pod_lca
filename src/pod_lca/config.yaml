@@ -115,6 +115,7 @@ file_paths:
     INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
   building:
     DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
+    TEMPLATE_GEOMETRY: data/buildings_podlca_geometry.json
     TEMPLATE_BOM_STRUCTURE: data/buildings_podlca_template-models-structure.csv
     TEMPLATE_BOM_ENCLOSURE_OPAQUE: data/buildings_podlca_template-models-enclosure-opaque.csv
     TEMPLATE_BOM_ENCLOSURE_TRANSLUCENT: data/buildings_podlca_template-models-enclosure-translucent.csv
