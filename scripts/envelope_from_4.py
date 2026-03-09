@@ -13,13 +13,15 @@ from pod_lca.lca_modules.building_structure import BuildingStructure
 
 from pod_lca.lca_modules.location import Location
 
+
+from pod_lca.lca_modules.building_envelope import BuildingEnvelope
+from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
 from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
-from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
 
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterial
@@ -55,13 +57,15 @@ x = Q(20, METER)
 y = Q(10, METER)
 zero = Q(0, METER)
 floor_to_floor = Q(3, METER)
-
+num_stories = 5
 floor_plan = [[zero,zero,zero],
               [x/2, -y/4,zero],
               [x,zero,zero],
               [x,y,zero],
               [x/2, y+(y/4),zero],
               [zero,y,zero]] 
+
+
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -164,16 +168,22 @@ c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c)
-
+be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
-mui_type = 'Low' # 'Mid', 'High'
+mui_type = 'low' # 'mid', 'hight'
 
-s = BuildingStructure.from_sample_buildings(btype, stype, mui_type)
+s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
 
 # make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-b = Building.from_assemblies(name, btype, location, built_year, life_span, s, e)
+b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
 
-print(b)
+from pod_lca.lca_modules.operational.viewers import BuildingViewer
+
+v = BuildingViewer(b)
+v.show()
+
+#TODO Fix envelope height thing
+#TODO: Continue checking building_envelope implications

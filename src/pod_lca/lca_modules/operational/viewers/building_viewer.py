@@ -90,29 +90,19 @@ class BuildingViewer(object):
 
         """
         self.make_layout()
-        self.add_zones()
-        self.add_windows()
-        self.add_shadings()
-        self.add_north()
+        self.add_envelopes()
+        # self.add_windows()
+        # self.add_shadings()
+        # self.add_north()
 
         self.fig = go.Figure(data=self.data, layout=self.layout)
         self.fig.show()
 
-    def add_zones(self):
-        """
-        Adds zone meshes data to the viewer object.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-        for zk in self.building.zones:
-            self.add_zone_mesh(zk)
+    def add_envelopes(self):
+        be = self.building.building_envelope
+        for ek in be.envelopes:
+            env = be.envelopes[ek]
+            self.add_envelope_mesh(env, ek)
 
     def add_windows(self):
         """
@@ -326,23 +316,17 @@ class BuildingViewer(object):
         self.data.extend(lines)
         self.data.extend(faces)
 
-    def add_zone_mesh(self, key):
-        """
-        Adds zone mesh data to the viewer object.
-
-        Parameters
-        ----------
-        key: int
-            The zone key to be added
-
-        Returns
-        -------
-        None
-
-        """
-        mesh = self.building.zones[key].surfaces
+    def add_envelope_mesh(self, env, key):
+        mesh = Mesh.from_surfaces(env.surfaces)
         vertices, faces = mesh.to_vertices_and_faces()
-        edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u, v in mesh.edges()]
+        vertices = [[v[0].value, v[1].value, v[2].value] for v in vertices]
+        edges = [[mesh.vertex_xyz_unitless(u), mesh.vertex_xyz_unitless(v)] for u, v in mesh.edges()]
+
+        for u, v in edges:
+            print(u)
+            print(v)
+            print('')
+
         line_marker = dict(color="rgb(0,0,0)", width=1.5)
         lines = []
         x, y, z = [], [], []
@@ -351,7 +335,7 @@ class BuildingViewer(object):
             y.extend([u[1], v[1], [None]])
             z.extend([u[2], v[2], [None]])
 
-        zname = self.building.zones[key].name
+        zname = 'envelope {}'.format(key)
         lines = [
             go.Scatter3d(
                 name=f"{zname}",
@@ -384,7 +368,7 @@ class BuildingViewer(object):
         text = []
         intensity = []
         for fk in mesh.faces:
-            faceatts = mesh.face_attributes[fk]
+            # faceatts = mesh.face_attributes[fk]
             ck = mesh.get_face_attribute(fk, "construction")
             if ck:
                 con = self.building.constructions[self.building.construction_key_dict[ck]]
@@ -394,8 +378,8 @@ class BuildingViewer(object):
             else:
                 layers = []
             string = "zone: {}<br>".format(zname)
-            for att in attrs:
-                string += "{}: {}<br>".format(att, faceatts[att])
+            # for att in attrs:
+            #     string += "{}: {}<br>".format(att, faceatts[att])
             for lk, layer in enumerate(layers):
                 string += "layer {}: {}<br>".format(lk, layer)
             text.append(string)
@@ -416,8 +400,8 @@ class BuildingViewer(object):
                 opacity=0.8,
                 colorbar_title="is_rad",
                 colorbar_thickness=10,
-                text=text,
-                hoverinfo="text",
+                # text=text,
+                # hoverinfo="text",
                 legendgroup=f"{zname}",
                 lighting={"ambient": 1.0},
                 intensitymode="cell",

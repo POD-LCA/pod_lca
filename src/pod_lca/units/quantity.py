@@ -5,8 +5,6 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-from pod_lca.units import Unit
-
 
 class Quantity(object):
     def __init__(self, value, unit):
@@ -101,7 +99,13 @@ class Quantity(object):
 
     def __iadd__(self, val):
         return self + val
-    
+
+    def __pow__(self, val):
+        if isinstance(val, float) or isinstance(val, int):
+            return Quantity(self.value**val, self.unit)
+        else:
+            raise TypeError(f"unsupported operand type(s) for __pow__ {self.unit.name} and {type(val)}")
+
     def __gt__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -170,7 +174,7 @@ class Quantity(object):
 
     def __neg__(self):
         return Quantity(-self.value, self.unit)
-
+        
     def convert_to(self, unit):
         if self.unit.qty_measured == unit.qty_measured:
             value  = self.value * self.unit.convert_to(unit)

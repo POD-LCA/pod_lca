@@ -17,7 +17,51 @@ from pod_lca.utilities import centroid
 from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
 from ...units import UNITS_MAP
+from ...units import Quantity as Q
 from ...utilities import log
+
+class BuildingEnvelope:
+    def __init__(self):
+        self.envelopes = {}
+        self.building = None
+
+    @classmethod
+    def from_envelopes(cls, envelopes):
+        be = cls()
+        for i, e in enumerate(envelopes):
+            cls.set_envelope(e, i)
+        return be
+    
+    @classmethod
+    def from_envelope_and_stories(cls, envelope, num_stories):
+        be = cls()
+        data = envelope.to_data()
+        for i in range(num_stories):
+            h = i * envelope.height
+            e = Envelope.from_data(data)
+            # e.set_to_height(h)
+            be.set_envelope(e, i)
+        return be
+
+    def set_envelope(self, envelope, floor_number):
+        self.envelopes[floor_number] = envelope
+
+    def set_building(self, parent):
+        self.building = parent
+
+        for ek in self.envelopes:
+            for construction in self.envelopes[ek].get_constructions():
+                construction.set_building()
+
+    def get_building(self):
+        """ Get the parent building of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.building.Building
+            The building to which the envelope belong.
+        """
+        return self.building
 
 
 class Envelope:
@@ -44,6 +88,38 @@ class Envelope:
         self.wall_surface_keys = []
         self.window_surface_keys = []
         self.origin = [0, 0, 0]
+
+    @classmethod
+    def from_data(cls, data):
+        envelope = cls()
+        envelope.name           = data['name']              
+        envelope.building       = data['building']              
+        envelope.floor          = data['floor']             
+        envelope.floor_plan     = data['floor_plan']            
+        envelope.height         = data['height']            
+        envelope.surfaces       = data['surfaces']          
+        envelope.walls          = data['walls']             
+        envelope.windows        = data['windows']           
+        envelope.shadings       = data['shadings']              
+        envelope.floors         = data['floors']                
+        envelope.ceiling        = data['ceiling']               
+        return envelope
+
+    def to_data(self):
+        data = {}
+        data['name']       = self.name      
+        data['building']   = self.building  
+        data['floor']      = self.floor     
+        data['floor_plan'] = self.floor_plan
+        data['height']     = self.height    
+        data['surfaces']   = self.surfaces  
+        data['walls']      = self.walls     
+        data['windows']    = self.windows   
+        data['shadings']   = self.shadings  
+        data['floors']     = self.floors    
+        data['ceiling']    = self.ceiling   
+        return data
+
 
     @classmethod
     def from_floor(cls, floor):
@@ -138,12 +214,15 @@ class Envelope:
             if s.surface_type == 'Wall':
                 if wall:
                     s.add_construction(wall)
+                    envelope.walls[sk] = wall
             elif s.surface_type == 'Floor':
                 if floor:
                     s.add_construction(floor)
+                    envelope.floors[sk] = floor
             elif s.surface_type == 'Ceiling':
                 if ceiling:
                     s.add_construction(ceiling)
+
 
         if windows:
             pass
@@ -226,6 +305,29 @@ class Envelope:
             All the structural elements in the structure.
         """
         return [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
+
+    def set_to_height(self, height):
+        
+        f2f = self.height
+
+        # for xyz in self.floor_plan:
+        #     xyz[2] = height
+        
+        for k in self.surfaces:
+            srf = self.surfaces[k]
+            if srf.surface_type == 'Floor':
+                for xyz in srf.polygon:
+                    xyz[2] = height
+            elif srf.surface_type == 'Ceiling':
+                for xyz in srf.polygon:
+                    xyz[2] = height + f2f
+            if srf.surface_type == 'Wall':
+                for xyz in srf.polygon:
+                    if xyz[2] == 0:
+                        xyz[2] = height
+                    else:
+                        xyz[2] = height + f2f
+
 
     # ================================
     # Add

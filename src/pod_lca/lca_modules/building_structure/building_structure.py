@@ -13,11 +13,13 @@ from . import Slab
 from . import Wall
 from . import RoofStructure
 from . import StructuralMaterial
+from ... utilities import area_polygon
 from ...units import UNITS_MAP, KILOGRAM, SQUARE_METER
 from ...units import Quantity as Q
 from ...utilities import DataImporter
 from ...utilities import config
 from ...utilities import log
+
 
 
 class BuildingStructure:
@@ -151,7 +153,7 @@ class BuildingStructure:
         pass
 
     @classmethod
-    def from_sample_buildings(cls, building_type, structure_type, mui_type):
+    def from_sample_buildings(cls, building_type, structure_type, mui_type, floor_plan, num_stories):
 
         if structure_type == 'CLT':
             low, mid, high = 131, 38, 79
@@ -174,20 +176,20 @@ class BuildingStructure:
         else:
             raise ValueError('{} building type has not been yet implemented in this model'.format(building_type))
 
+        mui_map = {'low': low, 'high': high, 'mid': mid}
+
         path = config['file_paths']['building']['SAMPLE_BUILDING_STRUCTURES']
         sample_buildings = DataImporter.csv_to_pandas(path)
-        low_building = sample_buildings[sample_buildings['project_index'] == low]
+        sample_building = sample_buildings[sample_buildings['project_index'] == mui_map[mui_type]]
         
 
         structural_element_obj = GenericElement.create('generic structural element', None)
-        # default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
 
-        floor_area = 100
+        floor_area = area_polygon(floor_plan) * num_stories
 
-        for _, row in low_building.iterrows():
+        for _, row in sample_building.iterrows():
             omniclass_element = row['omniclass_element']
             mat_type_podlca = row['mat_type_podlca']
-            print(mat_type_podlca)
             mat_type = row['mat_type']
             mui_gfa = Q(row['mui_gfa'], KILOGRAM/SQUARE_METER)
 

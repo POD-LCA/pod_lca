@@ -1,7 +1,6 @@
 from math import sqrt
 from math import fabs
 
-# from pod_lca.utilities.mesh import Mesh
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -149,7 +148,12 @@ def centroid(points):
 
 
 def geometric_key(xyz, precision=3, sanitize=True):
+    from ..units import Quantity
     x, y, z = xyz
+    if isinstance(x, Quantity):
+        x = x.value
+        y = y.value
+        z = z.value
 
     if precision == 0:
         raise ValueError("Precision cannot be zero.")
@@ -230,8 +234,8 @@ class Mesh(object):
     @classmethod
     def from_surfaces(cls, surfaces):
         all_vertices = []
-        for srf in surfaces:
-            all_vertices.extend(surfaces[srf].polygon)
+        for sk in surfaces:
+            all_vertices.extend(surfaces[sk].polygon)
         gk_dict = {geometric_key(v): v for v in all_vertices}
         vertices = [gk_dict[k] for k in gk_dict]
         gk_dict = {geometric_key(v): i for i, v in enumerate(vertices)}
@@ -316,6 +320,10 @@ class Mesh(object):
 
     def vertex_xyz(self, key):
         return self.vertices[key]["x"], self.vertices[key]["y"], self.vertices[key]["z"]
+
+    def vertex_xyz_unitless(self, key):
+        return self.vertices[key]["x"].value, self.vertices[key]["y"].value, self.vertices[key]["z"].value
+
 
     def face_centroid(self, key):
         points = [self.vertex_xyz(vk) for vk in self.face_vertices(key)]
