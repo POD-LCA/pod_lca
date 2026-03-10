@@ -10,6 +10,7 @@ import plotly
 import plotly.graph_objects as go
 
 from pod_lca.utilities.geometry import Mesh
+from pod_lca.utilities.geometry import centroid
 
 
 class BuildingViewer(object):
@@ -319,13 +320,8 @@ class BuildingViewer(object):
     def add_envelope_mesh(self, env, key):
         mesh = Mesh.from_surfaces(env.surfaces)
         vertices, faces = mesh.to_vertices_and_faces()
-        vertices = [[v[0].value, v[1].value, v[2].value] for v in vertices]
+        # vertices = [[v[0].value, v[1].value, v[2].value] for v in vertices]
         edges = [[mesh.vertex_xyz_unitless(u), mesh.vertex_xyz_unitless(v)] for u, v in mesh.edges()]
-
-        for u, v in edges:
-            print(u)
-            print(v)
-            print('')
 
         line_marker = dict(color="rgb(0,0,0)", width=1.5)
         lines = []
@@ -349,9 +345,18 @@ class BuildingViewer(object):
         ]
         triangles = []
         for face in faces:
-            triangles.append(face[:3])
-            if len(face) == 4:
+            if len(face) == 3:
+                triangles.append(face[:3])
+            elif len(face) == 4:
+                triangles.append(face[:3])
                 triangles.append([face[2], face[3], face[0]])
+            elif len(face) > 4:
+                pts = [vertices[vk] for vk in face]
+                cpt = centroid(pts)
+                cpti = len(vertices)
+                vertices.append(cpt)
+                for i in range(len(face)):
+                    triangles.append([cpti, face[-i], face[-i-1]])
 
         i = [v[0] for v in triangles]
         j = [v[1] for v in triangles]

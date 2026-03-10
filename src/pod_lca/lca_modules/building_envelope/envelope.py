@@ -6,6 +6,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from math import isnan
+from copy import deepcopy
 
 from . import Ceiling
 from . import EnvelopeMaterial
@@ -35,11 +36,11 @@ class BuildingEnvelope:
     @classmethod
     def from_envelope_and_stories(cls, envelope, num_stories):
         be = cls()
-        data = envelope.to_data()
         for i in range(num_stories):
+            data = deepcopy(envelope.to_data())
             h = i * envelope.height
             e = Envelope.from_data(data)
-            # e.set_to_height(h)
+            e.set_to_height(h)
             be.set_envelope(e, i)
         return be
 
@@ -92,34 +93,43 @@ class Envelope:
     @classmethod
     def from_data(cls, data):
         envelope = cls()
-        envelope.name           = data['name']              
-        envelope.building       = data['building']              
-        envelope.floor          = data['floor']             
+        # envelope.name           = data['name']              
+        # envelope.building       = data['building']              
+        # envelope.floor          = data['floor']             
         envelope.floor_plan     = data['floor_plan']            
         envelope.height         = data['height']            
-        envelope.surfaces       = data['surfaces']          
-        envelope.walls          = data['walls']             
-        envelope.windows        = data['windows']           
-        envelope.shadings       = data['shadings']              
-        envelope.floors         = data['floors']                
-        envelope.ceiling        = data['ceiling']               
+
+        # envelope.walls          = data['walls']             
+        # envelope.windows        = data['windows']           
+        # envelope.shadings       = data['shadings']              
+        # envelope.floors         = data['floors']                
+        # envelope.ceiling        = data['ceiling']               
+
+        for sk in data['surfaces']:
+            srf = Surface.from_data(data['surfaces'][sk])
+            envelope.surfaces[sk]= srf          
+
         return envelope
 
     def to_data(self):
         data = {}
-        data['name']       = self.name      
-        data['building']   = self.building  
-        data['floor']      = self.floor     
+        # data['name']       = self.name      
+        # data['building']   = self.building  
+        # data['floor']      = self.floor     
         data['floor_plan'] = self.floor_plan
         data['height']     = self.height    
-        data['surfaces']   = self.surfaces  
-        data['walls']      = self.walls     
-        data['windows']    = self.windows   
-        data['shadings']   = self.shadings  
-        data['floors']     = self.floors    
-        data['ceiling']    = self.ceiling   
-        return data
 
+        # data['walls']      = self.walls     
+        # data['windows']    = self.windows   
+        # data['shadings']   = self.shadings  
+        # data['floors']     = self.floors    
+        # data['ceiling']    = self.ceiling   
+        
+        data['surfaces'] = {}
+        for sk in self.surfaces:
+            data['surfaces'][sk] = self.surfaces[sk].to_data()
+        
+        return data
 
     @classmethod
     def from_floor(cls, floor):
@@ -231,9 +241,6 @@ class Envelope:
 
         return envelope
 
-
-
-
     # ================================
     # Setters
     # ================================
@@ -307,26 +314,10 @@ class Envelope:
         return [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
 
     def set_to_height(self, height):
-        
-        f2f = self.height
+        for xyz in self.floor_plan:
+            xyz[2] = height
+        self.update_envelope_surfaces()
 
-        # for xyz in self.floor_plan:
-        #     xyz[2] = height
-        
-        for k in self.surfaces:
-            srf = self.surfaces[k]
-            if srf.surface_type == 'Floor':
-                for xyz in srf.polygon:
-                    xyz[2] = height
-            elif srf.surface_type == 'Ceiling':
-                for xyz in srf.polygon:
-                    xyz[2] = height + f2f
-            if srf.surface_type == 'Wall':
-                for xyz in srf.polygon:
-                    if xyz[2] == 0:
-                        xyz[2] = height
-                    else:
-                        xyz[2] = height + f2f
 
 
     # ================================

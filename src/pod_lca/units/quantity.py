@@ -11,6 +11,9 @@ class Quantity(object):
         self.value = value
         self.unit = unit
 
+    def __hash__(self):
+        return hash((self.value, self.unit))
+
     def __str__(self):
         return '{} ({})'.format(self.value, self.unit.name)
 

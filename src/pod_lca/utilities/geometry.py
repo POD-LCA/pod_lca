@@ -322,7 +322,11 @@ class Mesh(object):
         return self.vertices[key]["x"], self.vertices[key]["y"], self.vertices[key]["z"]
 
     def vertex_xyz_unitless(self, key):
-        return self.vertices[key]["x"].value, self.vertices[key]["y"].value, self.vertices[key]["z"].value
+        from ..units import Quantity
+        if isinstance(self.vertices[key]['x'], Quantity):
+            return self.vertices[key]["x"].value, self.vertices[key]["y"].value, self.vertices[key]["z"].value
+        else:
+            return self.vertex_xyz(key)
 
 
     def face_centroid(self, key):
