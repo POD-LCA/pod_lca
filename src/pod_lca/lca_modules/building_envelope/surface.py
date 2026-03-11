@@ -41,7 +41,7 @@ class Surface(object):
         srf.surface_type                      = data['surface_type']
         srf.outside_boundary_condition        = data['outside_boundary_condition']
         srf.outside_boundary_condition_object = data['outside_boundary_condition_object']
-        # srf.construction                      = data['construction']
+        srf.construction                      = data['construction']
         return srf
 
     def to_data(self):
@@ -51,7 +51,7 @@ class Surface(object):
         data['surface_type']                      = self.surface_type                     
         data['outside_boundary_condition']        = self.outside_boundary_condition       
         data['outside_boundary_condition_object'] = self.outside_boundary_condition_object
-        # data['construction']                      = self.construction                     
+        data['construction']                      = self.construction                     
 
         return data
 

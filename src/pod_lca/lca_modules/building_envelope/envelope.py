@@ -93,17 +93,17 @@ class Envelope:
     @classmethod
     def from_data(cls, data):
         envelope = cls()
-        # envelope.name           = data['name']              
-        # envelope.building       = data['building']              
-        # envelope.floor          = data['floor']             
+        envelope.name           = data['name']              
+        envelope.building       = data['building']              
+        envelope.floor          = data['floor']             
         envelope.floor_plan     = data['floor_plan']            
         envelope.height         = data['height']            
 
-        # envelope.walls          = data['walls']             
-        # envelope.windows        = data['windows']           
-        # envelope.shadings       = data['shadings']              
-        # envelope.floors         = data['floors']                
-        # envelope.ceiling        = data['ceiling']               
+        envelope.walls          = data['walls']             
+        envelope.windows        = data['windows']           
+        envelope.shadings       = data['shadings']              
+        envelope.floors         = data['floors']                
+        envelope.ceiling        = data['ceiling']               
 
         for sk in data['surfaces']:
             srf = Surface.from_data(data['surfaces'][sk])
@@ -113,17 +113,17 @@ class Envelope:
 
     def to_data(self):
         data = {}
-        # data['name']       = self.name      
-        # data['building']   = self.building  
-        # data['floor']      = self.floor     
+        data['name']       = self.name      
+        data['building']   = self.building  
+        data['floor']      = self.floor     
         data['floor_plan'] = self.floor_plan
         data['height']     = self.height    
 
-        # data['walls']      = self.walls     
-        # data['windows']    = self.windows   
-        # data['shadings']   = self.shadings  
-        # data['floors']     = self.floors    
-        # data['ceiling']    = self.ceiling   
+        data['walls']      = self.walls     
+        data['windows']    = self.windows   
+        data['shadings']   = self.shadings  
+        data['floors']     = self.floors    
+        data['ceiling']    = self.ceiling   
         
         data['surfaces'] = {}
         for sk in self.surfaces:

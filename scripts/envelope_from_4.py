@@ -53,31 +53,17 @@ built_year =  2025
 life_span = 100
 
 
-# x = Q(20, METER)
-# y = Q(10, METER)
-# zero = Q(0, METER)
-# floor_to_floor = Q(3, METER)
-# num_stories = 2
-# floor_plan = [[zero,zero,zero],
-#               [x/2, -y/4,zero],
-#               [x,zero,zero],
-#               [x,y,zero],
-#               [x/2, y+(y/4),zero],
-#               [zero,y,zero]] 
-
-x = 20
-y = 10
-zero =0
-floor_to_floor =3
-num_stories = 5
+x = Q(20, METER)
+y = Q(10, METER)
+zero = Q(0, METER)
+floor_to_floor = Q(3, METER)
+num_stories = 8
 floor_plan = [[zero,zero,zero],
               [x/2, -y/4,zero],
               [x,zero,zero],
               [x,y,zero],
               [x/2, y+(y/4),zero],
               [zero,y,zero]] 
-
-
 
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

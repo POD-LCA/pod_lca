@@ -320,7 +320,7 @@ class BuildingViewer(object):
     def add_envelope_mesh(self, env, key):
         mesh = Mesh.from_surfaces(env.surfaces)
         vertices, faces = mesh.to_vertices_and_faces()
-        # vertices = [[v[0].value, v[1].value, v[2].value] for v in vertices]
+        vertices = [[v[0].value, v[1].value, v[2].value] for v in vertices]
         edges = [[mesh.vertex_xyz_unitless(u), mesh.vertex_xyz_unitless(v)] for u, v in mesh.edges()]
 
         line_marker = dict(color="rgb(0,0,0)", width=1.5)
