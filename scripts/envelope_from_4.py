@@ -16,6 +16,7 @@ from pod_lca.lca_modules.location import Location
 
 from pod_lca.lca_modules.building_envelope import BuildingEnvelope
 from pod_lca.lca_modules.building_envelope import Envelope
+from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
@@ -39,6 +40,9 @@ from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 from pod_lca.units import INCH, METER, SQUARE_METER, CUBIC_METER, WATT, KELVIN, KILOGRAM, JOULE
 from pod_lca.units import Quantity as Q
 
+from pod_lca.visualizer import BarChart
+from pod_lca.visualizer import MatplotlibPlotter
+
 
 for i in range(100): print('')
 
@@ -57,7 +61,7 @@ x = Q(20, METER)
 y = Q(10, METER)
 zero = Q(0, METER)
 floor_to_floor = Q(3, METER)
-num_stories = 8
+num_stories = 1
 floor_plan = [[zero,zero,zero],
               [x/2, -y/4,zero],
               [x,zero,zero],
@@ -162,11 +166,21 @@ c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# window = Window.from_idf(window, b, surfaces, window_service_life)
+window_construction = Construction.from_idf('Generic Double Pane', constructions_path)
+w = Q(3, METER)
+h = Q(2, METER)
+wall_key1 = 'wall_1'
+window1 = Window.from_width_height_construction(w, h, window_construction)
+
+wall_key2 = 'wall_2'
+wwr = .9
+window2 = Window.from_wwr_construction(wwr, window_construction)
+
+windows = {wall_key1: window1, wall_key2: window2}
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c)
+e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -180,9 +194,8 @@ s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, 
 b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
 
 from pod_lca.lca_modules.operational.viewers import BuildingViewer
-
 v = BuildingViewer(b)
 v.show()
 
-#TODO Fix unit hash issue
-#TODO: Continue checking building_envelope implications
+
+

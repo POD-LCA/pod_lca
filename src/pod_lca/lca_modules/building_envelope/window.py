@@ -4,34 +4,59 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-
+from pod_lca.units import Quantity as Q
+from pod_lca.lca_modules.building_envelope import Surface
 from pod_lca.lca_modules.building_envelope.construction import Construction
-
+from pod_lca.utilities.geometry import centroid, distance_point_point, area_polygon
+from pod_lca.utilities.geometry import scale_vector, normalize_vector, subtract_vectors, add_vectors
 
 class Window(Construction):
     def __init__(self):
         super().__init__()
         self.__type__ = 'Window'
         self.wall_key = None # the wall this window is related to
-
-    def update_wall(self, envelope):
-        # TODO: Create a function that updates the wall area / quantities the window is attached to. 
-        pass
+        self.width = None
+        self.height = None
+        self.construction = None
+        self.wwr = None
 
     @classmethod
-    def from_wall_wwr_and_idf(cls):
-        pass
-        if wwr > .95:
-            wwr = .95
-        pts = envelope.surfaces[wall_key].polygon
-        cpt = centroid(pts)
-        area = envelope.surfaces[wall_key].area * wwr
-        lx = distance_point_point(pts[0], pts[1]) - .1
-        ly = area / lx
-        vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.)
-        vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.)
-        vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.)
-        vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.)
+    def from_width_height_construction(cls, width, height, construction):
+        window = cls()
+        window.width = width
+        window.height = height
+        window.construction = construction
+        return window
+
+    @classmethod
+    def from_wwr_construction(cls, wwr, construction):
+        window = cls()
+        window.wwr = wwr
+        window.construction = construction
+        return window
+
+    def create_window_surface_envelope_wall_key(self, envelope, wall_key):
+
+        polygon = envelope.surfaces[wall_key].polygon
+        cpt = centroid(polygon)
+
+        if self.wwr:
+            if self.wwr > .95:
+                wwr = .95
+            else:
+                wwr = self.wwr
+            area =  area_polygon(polygon) * wwr
+            lx = distance_point_point(polygon[0], polygon[1]) - .1
+            ly = area / lx
+
+        elif self.width:
+            lx = self.width
+            ly = self.height
+        
+        vx  = scale_vector(normalize_vector(subtract_vectors(polygon[0], polygon[1]), unitless=True), lx / 2.)
+        vy  = scale_vector(normalize_vector(subtract_vectors(polygon[0], polygon[-1]), unitless=True), ly / 2.)
+        vx_ = scale_vector(normalize_vector(subtract_vectors(polygon[0], polygon[1]), unitless=True), -lx / 2.)
+        vy_ = scale_vector(normalize_vector(subtract_vectors(polygon[0], polygon[-1]), unitless=True), -ly / 2.)
 
         p0 = add_vectors(cpt, add_vectors(vx_, vy_))
         p1 = add_vectors(cpt, add_vectors(vx, vy_))
@@ -39,17 +64,41 @@ class Window(Construction):
         p3 = add_vectors(cpt, add_vectors(vx_, vy))
 
         sk = 'window_{}'.format(wall_key)
-        surface = Surface.from_polygon(sk, [p0, p1, p2, p3])
-        envelope.surfaces[sk] = surface
-        envelope.window_surface_keys.append(sk)
-        construction = Construction.from_idf(construction_name, path, building, envelope, 'window', window_service_life)
+        self.surfaces.append(Surface.from_polygon(sk, [p0, p1, p2, p3], 'Window'))
 
 
-        window = cls()
-        window.name = f'win_{envelope.name}_{wall_key}'
-        window.building_surface = f'{envelope.name}_wall_{wall_key}' 
-        window.construction = construction
-        return window
+
+    # @classmethod
+    # def from_wall_wwr_and_idf(cls, envelope, wwr, wall_key, construction_name, path, building, window_service_life):
+    #     if wwr > .95:
+    #         wwr = .95
+    #     pts = envelope.surfaces[wall_key].polygon
+    #     cpt = centroid(pts)
+    #     area = envelope.surfaces[wall_key].area * wwr
+    #     lx = distance_point_point(pts[0], pts[1]) - .1
+    #     ly = area / lx
+    #     vx = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), lx / 2.)
+    #     vy = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), ly / 2.)
+    #     vx_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[1])), -lx / 2.)
+    #     vy_ = scale_vector(normalize_vector(subtract_vectors(pts[0], pts[-1])), -ly / 2.)
+
+    #     p0 = add_vectors(cpt, add_vectors(vx_, vy_))
+    #     p1 = add_vectors(cpt, add_vectors(vx, vy_))
+    #     p2 = add_vectors(cpt, add_vectors(vx, vy))
+    #     p3 = add_vectors(cpt, add_vectors(vx_, vy))
+
+    #     sk = 'window_{}'.format(wall_key)
+    #     surface = Surface.from_polygon(sk, [p0, p1, p2, p3])
+    #     envelope.surfaces[sk] = surface
+    #     envelope.window_surface_keys.append(sk)
+    #     construction = Construction.from_idf(construction_name, path, building, envelope, 'window', window_service_life)
+
+
+    #     window = cls()
+    #     window.name = f'win_{envelope.name}_{wall_key}'
+    #     window.building_surface = f'{envelope.name}_wall_{wall_key}' 
+    #     window.construction = construction
+    #     return window
     
     # def to_json(self, filepath):
     #     """

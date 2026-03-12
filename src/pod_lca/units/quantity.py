@@ -31,8 +31,9 @@ class Quantity(object):
                 except:
                     raise TypeError(f"unsupported operand type(s) for + {self.unit.name} and {val.unit.name}")
         else:
-            self.value += val # TODO: This is mathematically incorrect... do we want this to be allowed...
-            return self
+            # self.value += val # TODO: This is mathematically incorrect... do we want this to be allowed...
+            # return self
+            return Quantity(self.value + val, self.unit)
 
     def __radd__(self, other):
         return self.__add__(other)
@@ -48,8 +49,9 @@ class Quantity(object):
                 except:
                     raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
         else:
-            self.value -= val # TODO: This is mathematically incorrect... do we want this to be allowed...
-            return self
+            # self.value -= val # TODO: This is mathematically incorrect... do we want this to be allowed...
+            # return self
+            return Quantity(self.value - val, self.unit)
 
     def __rsub__(self, val):
         if isinstance(val, Quantity):
@@ -62,8 +64,9 @@ class Quantity(object):
                 except:
                     raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
         else:
-            self.value = val - self.value # TODO: This is mathematically incorrect... do we want this to be allowed...
-            return self
+            # self.value = val - self.value # TODO: This is mathematically incorrect... do we want this to be allowed...
+            # return self
+            return Quantity(val - self.value, self.unit)
 
     def __mul__(self, val):
         if isinstance(val, Quantity):

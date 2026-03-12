@@ -92,7 +92,7 @@ class BuildingViewer(object):
         """
         self.make_layout()
         self.add_envelopes()
-        # self.add_windows()
+        self.add_windows()
         # self.add_shadings()
         # self.add_north()
 
@@ -118,8 +118,13 @@ class BuildingViewer(object):
         None
 
         """
-        for wk in self.building.windows:
-            self.add_window_mesh(wk)
+        be = self.building.building_envelope
+        for ek in be.envelopes:
+            env = be.envelopes[ek]
+            windows = env.windows
+            for wk in windows:
+                win = windows[wk]
+                self.add_window_mesh(win, wk)
 
     def add_shadings(self):
         """
@@ -217,7 +222,7 @@ class BuildingViewer(object):
         self.data.extend(lines)
         self.data.extend(faces)
 
-    def add_window_mesh(self, key):
+    def add_window_mesh(self, window, wkey):
         """
         Adds window mesh data to the viewer object.
 
@@ -231,10 +236,13 @@ class BuildingViewer(object):
         None
 
         """
-        vertices = self.building.windows[key].nodes
+        vertices = window.surfaces[0].polygon
+        vertices = [[v[0].value, v[1].value, v[2].value] for v in vertices]
+        
         faces = [[0, 1, 2, 3]]
         mesh = Mesh.from_vertices_and_faces(vertices, faces)
         vertices, faces = mesh.to_vertices_and_faces()
+        
         edges = [[mesh.vertex_xyz(u), mesh.vertex_xyz(v)] for u, v in mesh.edges()]
         line_marker = dict(color="rgb(0,0,0)", width=1.5)
         lines = []
@@ -244,7 +252,7 @@ class BuildingViewer(object):
             y.extend([u[1], v[1], [None]])
             z.extend([u[2], v[2], [None]])
 
-        wname = self.building.windows[key].name
+        wname = window.name
         lines = [
             go.Scatter3d(
                 name=f"{wname}",
@@ -273,23 +281,19 @@ class BuildingViewer(object):
         text = []
         intensity = []
         for fk in mesh.faces:
-            ck = self.building.windows[key].construction
-            if ck in self.building.construction_key_dict:
-                con = self.building.constructions[self.building.construction_key_dict[ck]]
-                layers = [con.layers[lk]["name"] for lk in con.layers]
-                # thick = con.layers[lk]['thickness']
-                # layers = ['{} {}mm'.format(lay, round(thick*1000, 1)) for lay in layers]
-            else:
-                layers = []
+            con = window.construction
+            layers = [con.layers[lk]["name"] for lk in con.layers]
+            # thick = con.layers[lk]['thickness']
+            layers = ['{} {}mm'.format(lay, round(1*1000, 1)) for lay in layers]
 
             string = "name: {}<br>".format(wname)
-            string += "construction: {}<br>".format(ck)
+            string += "construction: {}<br>".format(con.name)
             for lk, layer in enumerate(layers):
                 string += "layer {}: {}<br>".format(lk, layer)
             text.append(string)
-            intensity.append(float(key))
+            intensity.append(float(1))
             if len(mesh.face_vertices(fk)) == 4:
-                intensity.append(float(key))
+                intensity.append(float(1))
                 text.append(string)
 
         faces = [

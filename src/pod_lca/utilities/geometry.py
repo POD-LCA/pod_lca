@@ -122,11 +122,14 @@ def length_vector(vector):
     return sqrt(length_vector_sqrd(vector))
 
 
-def normalize_vector(vector):
+def normalize_vector(vector, unitless=False):
     length = length_vector(vector)
     if not length:
         return vector
-    return [vector[0] / length, vector[1] / length, vector[2] / length]
+    if unitless:
+        return [(vector[0] / length).value, (vector[1] / length).value, (vector[2] / length).value]
+    else:
+        return [vector[0] / length, vector[1] / length, vector[2] / length]
 
 
 def scale_vector(vector, factor):

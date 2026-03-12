@@ -233,9 +233,12 @@ class Envelope:
                 if ceiling:
                     s.add_construction(ceiling)
 
-
         if windows:
-            pass
+            for wall_key in windows:
+                win = windows[wall_key]
+                envelope.add_window(win, wall_key)
+
+
         if shadings:
             pass
 
@@ -317,8 +320,14 @@ class Envelope:
         for xyz in self.floor_plan:
             xyz[2] = height
         self.update_envelope_surfaces()
+        self.move_windows_up(height)
 
 
+    def move_windows_up(self, height):
+        for wk in self.windows:
+            win = self.windows[wk]
+            for i, pt in enumerate(win.surfaces[0].polygon):
+                win.surfaces[0].polygon[i] = [pt[0], pt[1], pt[2] + height]
 
     # ================================
     # Add
@@ -352,12 +361,17 @@ class Envelope:
         construction.set_parent(self)
 
     def add_window(self, window, wall_key):
+        
+        if not window.surfaces:
+            window.create_window_surface_envelope_wall_key(self, wall_key)
+
         window.wall_key = wall_key
         key = 'Window_{}'.format(len(self.windows))
         self.windows[key] = window
 
-    # def add_shading(self, shading):
-    #     self.shadings[len(self.shadings)] = shading
+
+    def add_shading(self, shading):
+        self.shadings[len(self.shadings)] = shading
 
 if __name__ == '__main__':
 
