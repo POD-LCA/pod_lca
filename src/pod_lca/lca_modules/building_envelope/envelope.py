@@ -40,6 +40,7 @@ class BuildingEnvelope:
             data = deepcopy(envelope.to_data())
             h = i * envelope.height
             e = Envelope.from_data(data)
+            e.name = i
             e.set_to_height(h)
             be.set_envelope(e, i)
         return be

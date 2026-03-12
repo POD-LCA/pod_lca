@@ -4,6 +4,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+import os
+import pod_lca
 
 from pod_lca.utilities import config
 
@@ -32,10 +34,10 @@ from pod_lca.lca_modules.building_envelope.material_property import WindowMateri
 from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGas
 
 
-
-from pod_lca.lca_modules.operational.read_write import find_materials
-from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
-from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+from pod_lca.lca_modules.operational import OperationalObject
+# from pod_lca.lca_modules.operational.read_write import find_materials
+# from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+# from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 
 from pod_lca.units import INCH, METER, SQUARE_METER, CUBIC_METER, WATT, KELVIN, KILOGRAM, JOULE
 from pod_lca.units import Quantity as Q
@@ -61,7 +63,7 @@ x = Q(20, METER)
 y = Q(10, METER)
 zero = Q(0, METER)
 floor_to_floor = Q(3, METER)
-num_stories = 1
+num_stories = 3
 floor_plan = [[zero,zero,zero],
               [x/2, -y/4,zero],
               [x,zero,zero],
@@ -167,6 +169,7 @@ c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 window_construction = Construction.from_idf('Generic Double Pane', constructions_path)
+
 w = Q(3, METER)
 h = Q(2, METER)
 wall_key1 = 'wall_1'
@@ -189,13 +192,33 @@ mui_type = 'low' # 'mid', 'hight'
 
 s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
 
+
 # make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
 
-from pod_lca.lca_modules.operational.viewers import BuildingViewer
-v = BuildingViewer(b)
-v.show()
+e = b.building_envelope.envelopes[0]
+dict = e.to_data()
+for k in dict:
+    print(k, dict[k])
+    print('')
+# srf = e.surfaces['floor']
+# print(srf.construction)
+
+# # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+# path = config['file_paths']['operational']['SYSTEMS']
+# b.operational_object = OperationalObject.from_idf(path)
+# # b.set_zone_systems()
+
+# b.write_idf()
+# eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+# wea = config['file_paths']['operational']['SEATTLE']
+# b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
+
+# from pod_lca.lca_modules.operational.viewers import BuildingViewer
+# v = BuildingViewer(b)
+# v.show()
 
 
 

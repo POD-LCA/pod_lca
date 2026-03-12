@@ -9,7 +9,7 @@ __version__ = "0.1.0"
 import os
 import pod_lca
 from pod_lca.utilities import config
-
+from pod_lca.units import METER
 
 def write_idf_from_building(building):
     """
@@ -168,8 +168,10 @@ def write_zones(building):
     -------
     None
     """
-    for fkey in building.floors:
-        envelope = building.floors[fkey].envelope
+    for ek in building.building_envelope.envelopes:
+        envelope = building.building_envelope.envelopes[ek]
+        print(ek)
+        print(envelope.name)
         write_zone(envelope)
         write_zone_surfaces(envelope)
     write_all_zone_list(building)
@@ -190,6 +192,10 @@ def write_zone(envelope):
     -------
     None
     """
+
+    eh =envelope.height.convert_to(METER).value
+    ev = envelope.volume.convert_to(METER).value
+
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("Zone,\n")
     fh.write("  {},         !- Name\n".format(envelope.name))
@@ -199,8 +205,8 @@ def write_zone(envelope):
     fh.write("  {},          !- Z Origin (m)\n".format(envelope.origin[2]))
     fh.write("  1,          !- Type\n")
     fh.write("  1,          !- Multiplier\n")
-    fh.write("  {},           !- Ceiling Height (m)\n".format(envelope.height))
-    fh.write("  {},           !- Volume (m3)\n".format(envelope.volume))
+    fh.write("  {},           !- Ceiling Height (m)\n".format(eh))
+    fh.write("  {},           !- Volume (m3)\n".format(ev))
     fh.write("  ,           !- Floor Area (m2)\n")
     fh.write("  ,           !- Zone Inside Convection Algorithm\n")
     fh.write("  ,           !- Zone Outside Convection Algorithm\n")
@@ -226,6 +232,7 @@ def write_zone_surfaces(envelope):
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     sks = envelope.surfaces.keys()
     for sk in sks:
+        print(sk)
         write_building_surface(envelope, sk)
     fh.close()
 
@@ -246,11 +253,13 @@ def write_building_surface(envelope, sk):
     -------
     None
     """
-
-    st = envelope.surfaces[sk].construction.__type__
-    ct = envelope.surfaces[sk].construction.name
-    ob = envelope.surfaces[sk].outside_boundary_condition
-    obo = envelope.surfaces[sk].outside_boundary_condition_object
+    srf = envelope.surfaces[sk]
+    print(srf)
+    st  = srf.construction
+    print(st)
+    ct  = srf.construction.name
+    ob  = srf.outside_boundary_condition
+    obo = srf.outside_boundary_condition_object
 
     if ob == "Adiabatic" or ob == "Surface" or ob == "Ground":
         se = "NoSun"
