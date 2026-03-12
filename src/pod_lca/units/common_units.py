@@ -199,6 +199,18 @@ UNIT_CONVERSIONS["temperature"] = {
     "fahrenheit": 1.8,
 }
 
+# ==================================
+# CURRENCY / MONEY UNITS
+# ==================================
+
+# not used for physical conversions but useful for data containing monetary values
+US_DOLLAR = Unit.from_basics("US dollar", "USD", "currency")
+
+# a single conversion entry is sufficient; if other currencies are added later they can be
+# added to this same dictionary (with factors relative to the short ton or other reference)
+UNIT_CONVERSIONS.setdefault("currency", {})["US dollar"] = 1.0
+
+
 
 # ==================================
 # NAME OVERRIDES

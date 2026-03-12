@@ -28,5 +28,11 @@
         "name":"Photochemical oxidant creation potential",
         "category":"ISO21930-LCIA-US",
         "refUnit":"kg O3 eq"
+    },
+    "NREF": {
+        "@id":"97a2ea98-0135-43ea-90aa-02c5831f1fc7",
+        "name":"Nonrenewable energy, fossil",
+        "category":"ISO21930-LCIA-US",
+        "refUnit":"MJ"
     }
 }
