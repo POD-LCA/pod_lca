@@ -36,11 +36,11 @@ class BuildingEnvelope:
     @classmethod
     def from_envelope_and_stories(cls, envelope, num_stories):
         be = cls()
+        data = deepcopy(envelope.to_data())
         for i in range(num_stories):
-            data = deepcopy(envelope.to_data())
             h = i * envelope.height
             e = Envelope.from_data(data)
-            e.name = i
+            e.name = '{}-{}'.format(data['name'], i)
             e.set_to_height(h)
             be.set_envelope(e, i)
         return be
@@ -214,11 +214,12 @@ class Envelope:
         return envelope
 
     @classmethod
-    def from_components(cls, floor_plan, height, floor= None, ceiling=None, wall=None, windows=None, shadings=None):
+    def from_components(cls, name, floor_plan, height, floor= None, ceiling=None, wall=None, windows=None, shadings=None):
         envelope = cls()
+        envelope.name = name
         envelope.floor_plan = floor_plan
         envelope.height = height
-        envelope.update_envelope_surfaces()
+        envelope.create_envelope_surfaces()
 
         for sk in envelope.surfaces:
             s = envelope.surfaces[sk]
@@ -276,7 +277,6 @@ class Envelope:
         """
         return self.building
         
-    
     @property
     def area(self):
         return area_polygon(self.floor_plan)
@@ -289,13 +289,12 @@ class Envelope:
     def centroid(self):
         return centroid(self.floor_plan)
 
-
-    def update_envelope_surfaces(self):
+    def create_envelope_surfaces(self):
         fp = self.floor_plan
         h = self.height
         cp = [[p[0], p[1], p[2]+h] for p in fp]
-        self.surfaces['floor'] = Surface.from_polygon('floor', fp, 'Floor')
-        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp, 'Ceiling')
+        self.surfaces['floor'] = Surface.from_polygon('floor', fp, surface_type ='Floor',)
+        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp, surface_type ='Ceiling')
         for i in range(len(fp)):
             a = fp[i]
             if i == len(fp)-1:
@@ -304,8 +303,41 @@ class Envelope:
                 b = fp[i+1]
             wp = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
             wk = 'wall_{}'.format(i)
-            self.surfaces[wk] = Surface.from_polygon(wk, wp, 'Wall')
+            self.surfaces[wk] = Surface.from_polygon(wk, wp, surface_type = 'Wall')
             self.wall_surface_keys.append(wk)
+
+
+    def update_envelope_surfaces_floorplan_height(self):
+        fp = self.floor_plan
+        h = self.height
+        cp = [[p[0], p[1], p[2]+h] for p in fp]
+        for sk in self.surfaces:
+            srf = self.surfaces[sk]
+            if 'wall' in sk:
+                for i in range(len(fp)):
+                    a = fp[i]
+                    if i == len(fp)-1:
+                        b = fp[0]
+                    else:
+                        b = fp[i+1]
+                    surface_polygon = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
+                    surface_key = 'wall_{}'.format(i)
+                    self.wall_surface_keys.append(surface_key)
+            elif sk == 'floor':
+                surface_key = 'floor'
+                surface_polygon = fp
+            elif sk == 'ceiling':
+                surface_key = 'ceiling'
+                surface_polygon = cp
+
+            self.surfaces[surface_key] = Surface.from_polygon(surface_key, 
+                                                              surface_polygon, 
+                                                              surface_type = srf.surface_type,
+                                                              construction = srf.construction,
+                                                              outside_boundary_condition = srf.outside_boundary_condition,
+                                                              outside_boundary_condition_object = srf.outside_boundary_condition_object)
+
+
 
     def get_constructions(self):
         """ Get a list of all enbvelope constructions of the building.
@@ -320,9 +352,8 @@ class Envelope:
     def set_to_height(self, height):
         for xyz in self.floor_plan:
             xyz[2] = height
-        self.update_envelope_surfaces()
+        self.update_envelope_surfaces_floorplan_height()
         self.move_windows_up(height)
-
 
     def move_windows_up(self, height):
         for wk in self.windows:

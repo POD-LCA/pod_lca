@@ -154,8 +154,8 @@ for lk in layers:
 
 framing = Framing.from_data(framing)
 
-w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
-w.compute_wall_r()
+framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+framed_wall.compute_wall_r()
 
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -182,9 +182,10 @@ window2 = Window.from_wwr_construction(wwr, window_construction)
 windows = {wall_key1: window1, wall_key2: window2}
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c, windows=windows)
+ename = 'tomas_envelope'
+e = Envelope.from_components(ename, floor_plan, floor_to_floor, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
+
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
@@ -193,32 +194,27 @@ mui_type = 'low' # 'mid', 'hight'
 s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
 
 
-# make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
 
-e = b.building_envelope.envelopes[0]
-dict = e.to_data()
-for k in dict:
-    print(k, dict[k])
-    print('')
-# srf = e.surfaces['floor']
-# print(srf.construction)
+
+# ZONE NAME SHOULD NOT BE JUST FLOOR NUMBER, SHOULD HAVE A STRING TOO
 
 # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-# path = config['file_paths']['operational']['SYSTEMS']
-# b.operational_object = OperationalObject.from_idf(path)
-# # b.set_zone_systems()
+path = config['file_paths']['operational']['SYSTEMS']
+b.operational_object = OperationalObject.from_idf(path)
+# b.set_zone_systems()
 
-# b.write_idf()
-# eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-# wea = config['file_paths']['operational']['SEATTLE']
-# b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
+b.write_idf()
+eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+wea = config['file_paths']['operational']['SEATTLE']
+b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
-# from pod_lca.lca_modules.operational.viewers import BuildingViewer
-# v = BuildingViewer(b)
-# v.show()
+from pod_lca.lca_modules.operational.viewers import BuildingViewer
+v = BuildingViewer(b)
+v.show()
 
 
 

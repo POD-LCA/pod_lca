@@ -64,7 +64,7 @@ class Window(Construction):
         p3 = add_vectors(cpt, add_vectors(vx_, vy))
 
         sk = 'window_{}'.format(wall_key)
-        self.surfaces.append(Surface.from_polygon(sk, [p0, p1, p2, p3], 'Window'))
+        self.surfaces.append(Surface.from_polygon(sk, [p0, p1, p2, p3], surface_type = 'Window'))
 
 
 

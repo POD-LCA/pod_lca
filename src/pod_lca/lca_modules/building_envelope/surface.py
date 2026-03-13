@@ -23,11 +23,12 @@ class Surface(object):
 
 
     @classmethod
-    def from_polygon(cls, name, polygon, surface_type):
+    def from_polygon(cls, name, polygon, **kwargs):
         srf = cls()
         srf.name = name
         srf.polygon = polygon
-        srf.surface_type = surface_type
+        srf.surface_type = kwargs.get('surface_type', None)
+        srf.construction = kwargs.get('construction', None)
         return srf
     
     def add_construction(self, construction):
@@ -55,6 +56,11 @@ class Surface(object):
 
         return data
 
+    def convert_polygon_to_unit(self, unit):
+        for xyz in self.polygon:
+            xyz[0].convert_to(unit)
+            xyz[1].convert_to(unit)
+            xyz[2].convert_to(unit)
 
 
 

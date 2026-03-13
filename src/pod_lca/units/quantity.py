@@ -11,6 +11,10 @@ class Quantity(object):
         self.value = value
         self.unit = unit
 
+    def __format__(self, spec):
+        formatted = format(self.value, spec or ".4f")
+        return f"{formatted}"
+
     def __hash__(self):
         return hash((self.value, self.unit))
 

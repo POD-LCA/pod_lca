@@ -170,8 +170,6 @@ def write_zones(building):
     """
     for ek in building.building_envelope.envelopes:
         envelope = building.building_envelope.envelopes[ek]
-        print(ek)
-        print(envelope.name)
         write_zone(envelope)
         write_zone_surfaces(envelope)
     write_all_zone_list(building)
@@ -232,7 +230,6 @@ def write_zone_surfaces(envelope):
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     sks = envelope.surfaces.keys()
     for sk in sks:
-        print(sk)
         write_building_surface(envelope, sk)
     fh.close()
 
@@ -254,9 +251,7 @@ def write_building_surface(envelope, sk):
     None
     """
     srf = envelope.surfaces[sk]
-    print(srf)
-    st  = srf.construction
-    print(st)
+    st  = srf.surface_type
     ct  = srf.construction.name
     ob  = srf.outside_boundary_condition
     obo = srf.outside_boundary_condition_object
@@ -270,7 +265,8 @@ def write_building_surface(envelope, sk):
 
     if not obo:
         obo == ""
-
+    
+    envelope.surfaces[sk].convert_polygon_to_unit(METER)
     num_vert = len(envelope.surfaces[sk].polygon)
 
     sname = "{}_{}".format(envelope.name, sk)
@@ -405,15 +401,10 @@ def write_layers(building):
         # mat_name = l.material.name
         mat = l.material_property
         thick = l.thickness
-        print(lk)
-        print(l.thickness)
-        print(mat.__type__)
         if thick:
             lay_name = "{} {}mm".format(l.name, round(thick * 1000, 1))
         else:
             lay_name = l.name
-        print(lay_name)
-        print("")
         if mat.__type__ == "Material":
             write_material(mat, thick, lay_name)
         elif mat.__type__ == "MaterialNoMass":
