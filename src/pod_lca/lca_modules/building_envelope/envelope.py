@@ -69,27 +69,32 @@ class BuildingEnvelope:
         return self.building
 
     def make_envelope_connectivity_network(self):
-
+        
+        net = {}
         for ek in self.envelopes:
             env = self.envelopes[ek]
             for sk in env.surfaces:
-                srf_name = '{}-{}'.format(ek, sk)
                 srf = env.surfaces[sk]
                 cpt = centroid(srf.polygon)
-                print(srf_name, cpt)
                 gk = geometric_key(cpt)
-                
-                if gk in self.network:
-                    self.network[gk].append(srf_name)
+                node = {'environment': ek, 'surface': sk}
+                if gk in net:
+                    net[gk][len(net[gk])] = node
                 else:
-                    self.network[gk] = [srf_name]
-        print('')
-        print('')
-        print('')
-        for gk in self.network:
-            print(gk)
-            print(self.network[gk])
-            print('')
+                    net[gk] = {0: node}
+
+        for key in net:
+            edge = net[key]                
+            e1 = edge[0]['environment']
+            s1 = edge[0]['surface']
+            if len(edge) == 2:
+                e2 = edge[1]['environment']
+                s2 = edge[1]['surface']
+            elif len(edge) == 1:
+                e2 = 'outside'
+                s2 = None
+            self.network.setdefault(e1, {}).setdefault(e2, []).append(s1)
+            self.network.setdefault(e2, {}).setdefault(e1, []).append(s2)
 
 
 class Envelope:
