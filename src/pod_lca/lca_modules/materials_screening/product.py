@@ -62,6 +62,8 @@ class Product(Master):
         self.weight_unit = None
         self.density = None
         self.density_unit = None
+        self.mineral_carbon_storage_source = None 
+        self.mineral_carbon_intensity = None 
         self.mineral_carbonation_potential = None
         self.is_material = True
         self.sctg_code = None
@@ -338,6 +340,14 @@ class Product(Master):
                     break
 
         return self
+    
+    def set_mineral_carbon_storage_source(self, source):
+        """Set the source for mineral carbon storage.
+        Parameters
+        ----------
+        source : str
+            Source for mineral carbon storage ('from_database' or 'custom')."""
+        self.mineral_carbon_storage_source = source
 
     def set_mineral_carbonation_potential(self, potential):
         """Set mineral carbonation potential of the product.
@@ -394,6 +404,17 @@ class Product(Master):
                 raise Warning(
                     f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override."
                 )
+            
+            try:
+                self.get_impacts()
+                if self.get_mineral_carbon_storage_source == "custom":
+                    self.mineral_carbon_storage_source["_current"] = "custom"
+                    #self.impacts.update_qty({"GWP": -self.carbon_storage})
+                    self.impacts.get_adjusted_GWP()
+                    self.emissions.update_qty({"CO2": -self.carbon_storage})
+                    self.update_inventory_records()
+            except:
+                log(f"Failed to update impacts after setting mineral carbon intensity for {self.get_name()}.", "Warn")
 
         return self
 
@@ -570,6 +591,25 @@ class Product(Master):
         transportation_manager.remove_good(self)
 
         return self
+    
+    def get_mineral_carbon_storage_source(self):
+        """Get the source for mineral carbon storage.
+        Returns
+        -------
+        str
+            Source for mineral carbon storage ('from_database' or 'custom').
+        """
+        return self.mineral_carbon_storage_source
+
+    def get_mineral_carbon_storage_qty(self):
+        """Get the quantity of mineral carbon storage.
+
+        Returns
+        -------
+        float
+            Quantity of mineral carbon storage.
+        """
+        return self.carbon_storage
 
     def get_mineral_carbonation_potential(self):
         """Set mineral carbonation potential of the product.
@@ -646,6 +686,13 @@ class Product(Master):
                         raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
 
                     self.set_mineral_carbonation_potential(potential)
+  
+                if self.get_mineral_carbon_storage_qty() is not None and self.get_mineral_carbon_storage_qty() != 0:
+                    self.carbon_storage.update_qty(self.get_mineral_carbon_storage_qty())
+                    #self.unit_carbon_storage.update_qty(self.get_mineral_carbon_storage_qty() / self.get_qty())
+                    self.impacts.update_gwp(-self.get_mineral_carbon_storage_qty())
+                    self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
+                    self.update_inventory_records()
 
         return self
 
