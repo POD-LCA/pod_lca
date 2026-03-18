@@ -172,8 +172,7 @@ def write_zones(building):
         envelope = building.building_envelope.envelopes[ek]
         write_zone(envelope)
         write_zone_surfaces(building, envelope)
-    # write_all_zone_list(building)
-    # # write_zone_lists(building)
+    write_all_zone_list(building)
 
 
 def write_zone(envelope):
@@ -306,9 +305,9 @@ def write_all_zone_list(building):
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("ZoneList,\n")
     fh.write("  all_zones_list, !- Name\n")
-    for i, fkey in enumerate(building.floors):
-        env = building.floors[fkey].envelope
-        if i == len(building.floors) - 1:
+    for i, fkey in enumerate(building.building_envelope.envelopes):
+        env = building.building_envelope.envelopes[fkey]
+        if i == len(building.building_envelope.envelopes) - 1:
             divider = ";"
         else:
             divider = ","
