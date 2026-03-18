@@ -30,22 +30,22 @@ def write_idf_from_building(building):
     write_global_vars()
     write_run_period()
     write_zones(building)
-    write_windows(building)
-    write_layers(building)
-    write_constructions(building)
-    write_shadings(building)
+    # write_windows(building)
+    # write_layers(building)
+    # write_constructions(building)
+    # write_shadings(building)
 
-    write_simulation_control(building)
-    write_schedules(building)
-    write_infiltration_rates(building)
-    write_thermostats(building)
-    write_hvac(building)
-    write_node_lists(building)
-    write_outdoor_airs(building)
-    write_daylight(building)
-    write_internal_gains(building)
+    # write_simulation_control(building)
+    # write_schedules(building)
+    # write_infiltration_rates(building)
+    # write_thermostats(building)
+    # write_hvac(building)
+    # write_node_lists(building)
+    # write_outdoor_airs(building)
+    # write_daylight(building)
+    # write_internal_gains(building)
 
-    write_output_items(building)
+    # write_output_items(building)
 
 
 def write_pre():
@@ -172,8 +172,8 @@ def write_zones(building):
         envelope = building.building_envelope.envelopes[ek]
         write_zone(envelope)
         write_zone_surfaces(envelope)
-    write_all_zone_list(building)
-    # write_zone_lists(building)
+    # write_all_zone_list(building)
+    # # write_zone_lists(building)
 
 
 def write_zone(envelope):
@@ -231,6 +231,7 @@ def write_zone_surfaces(envelope):
     sks = envelope.surfaces.keys()
     for sk in sks:
         write_building_surface(envelope, sk)
+        break
     fh.close()
 
 

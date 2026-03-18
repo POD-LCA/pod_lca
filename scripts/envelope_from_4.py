@@ -214,6 +214,7 @@ b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be
 
 b.building_envelope.make_envelope_connectivity_network()
 
+
 path = config['file_paths']['operational']['SYSTEMS']
 b.operational_object = OperationalObject.from_idf(path)
 b.set_zone_systems()
