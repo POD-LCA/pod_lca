@@ -213,7 +213,7 @@ b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be
 # # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 b.building_envelope.make_envelope_connectivity_network()
-
+b.building_envelope.set_outside_boundary_conditions()
 
 path = config['file_paths']['operational']['SYSTEMS']
 b.operational_object = OperationalObject.from_idf(path)
