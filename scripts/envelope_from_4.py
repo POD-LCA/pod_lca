@@ -1,3 +1,15 @@
+import sys
+import importlib
+
+def reload_library():
+    # Wipe the entire library and all submodules from cache
+    to_delete = [key for key in sys.modules if key == "pod_lca" or key.startswith("pod_lca.")]
+    for key in to_delete:
+        del sys.modules[key]
+
+# Call this FIRST, before any library imports
+reload_library()
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
@@ -46,7 +58,7 @@ from pod_lca.visualizer import BarChart
 from pod_lca.visualizer import MatplotlibPlotter
 
 
-for i in range(100): print('')
+# for i in range(100): print('')
 
 constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
 
@@ -63,7 +75,7 @@ x = Q(20, METER)
 y = Q(10, METER)
 zero = Q(0, METER)
 floor_to_floor = Q(3, METER)
-num_stories = 3
+num_stories = 8
 floor_plan = [[zero,zero,zero],
               [x/2, -y/4,zero],
               [x,zero,zero],
@@ -186,6 +198,19 @@ ename = 'tomas_envelope'
 e = Envelope.from_components(ename, floor_plan, floor_to_floor, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
+# from pod_lca.utilities import centroid
+# for ek in be.envelopes:
+#     env = be.envelopes[ek]
+#     for sk in env.surfaces:
+#         srf_name = '{}-{}'.format(ek, sk)
+#         srf = env.surfaces[sk]
+#         cpt = centroid(srf.polygon)
+#         print(srf_name, cpt)
+
+
+#TODO: CHECK WALLS AND PLOTTER, SOMETHING IS FLIPPED
+#TODO: FIX WINDOW HEIGHTS
+
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
@@ -198,23 +223,67 @@ s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, 
 
 b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
 
+# # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-# ZONE NAME SHOULD NOT BE JUST FLOOR NUMBER, SHOULD HAVE A STRING TOO
-
-# # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-path = config['file_paths']['operational']['SYSTEMS']
-b.operational_object = OperationalObject.from_idf(path)
-# b.set_zone_systems()
-
-b.write_idf()
-eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-wea = config['file_paths']['operational']['SEATTLE']
-b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
-
-from pod_lca.lca_modules.operational.viewers import BuildingViewer
-v = BuildingViewer(b)
-v.show()
+# b.building_envelope.make_envelope_connectivity_network()
 
 
 
+# # path = config['file_paths']['operational']['SYSTEMS']
+# # b.operational_object = OperationalObject.from_idf(path)
+# # # b.set_zone_systems()
+
+# # b.write_idf()
+# # eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+# # wea = config['file_paths']['operational']['SEATTLE']
+# # b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
+
+# from pod_lca.lca_modules.operational.viewers import BuildingViewer
+# v = BuildingViewer(b)
+# v.show()
+
+# debug - - - 
+
+#TODO: Why do some surfaces close and other dont?
+
+import rhinoscriptsyntax as rs
+
+rs.CurrentLayer('Default')
+rs.DeleteObjects(rs.ObjectsByLayer('Default'))
+rs.DeleteObjects(rs.ObjectsByLayer('floor'))
+rs.DeleteObjects(rs.ObjectsByLayer('ceiling'))
+rs.DeleteObjects(rs.ObjectsByLayer('wall'))
+rs.DeleteObjects(rs.ObjectsByLayer('window'))
+
+for i in b.building_envelope.envelopes:
+    env = b.building_envelope.envelopes[i]
+
+    floor = env.surfaces['floor'].polygon
+    floor.append(floor[0])
+    rs.CurrentLayer('floor')
+    pl = rs.AddPolyline(floor)
+    srf = rs.AddPlanarSrf(pl)
+
+    rs.CurrentLayer('ceiling')
+    ceiling = env.surfaces['ceiling'].polygon
+    ceiling.append(ceiling[0])
+    pl = rs.AddPolyline(ceiling)
+    srf = rs.AddPlanarSrf(pl)
+
+    rs.CurrentLayer('wall')
+    for i in range(6):
+      wall_1 = env.surfaces['wall_{}'.format(i)].polygon
+      wall_1.append(wall_1[0])
+      pl = rs.AddPolyline(wall_1)
+      srf = rs.AddPlanarSrf(pl)
+
+    rs.CurrentLayer('window')
+    for wk in env.windows:
+        win = env.windows[wk]
+        sk = list(win.surfaces.keys())[0]
+        win = win.surfaces[sk].polygon
+        win.append(win[0])
+        pl = rs.AddPolyline(win)
+        srf = rs.AddPlanarSrf(pl)
+
+rs.CurrentLayer('Default')

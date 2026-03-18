@@ -15,6 +15,7 @@ from . import Wall
 from . import Window
 from pod_lca.utilities import area_polygon
 from pod_lca.utilities import centroid
+from pod_lca.utilities import geometric_key
 from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
 from ...units import UNITS_MAP
@@ -25,6 +26,8 @@ class BuildingEnvelope:
     def __init__(self):
         self.envelopes = {}
         self.building = None
+        self.srf_gk_dict = {}
+        self.network = {}
 
     @classmethod
     def from_envelopes(cls, envelopes):
@@ -36,8 +39,8 @@ class BuildingEnvelope:
     @classmethod
     def from_envelope_and_stories(cls, envelope, num_stories):
         be = cls()
-        data = deepcopy(envelope.to_data())
         for i in range(num_stories):
+            data = deepcopy(envelope.to_data())
             h = i * envelope.height
             e = Envelope.from_data(data)
             e.name = '{}-{}'.format(data['name'], i)
@@ -64,6 +67,29 @@ class BuildingEnvelope:
             The building to which the envelope belong.
         """
         return self.building
+
+    def make_envelope_connectivity_network(self):
+
+        for ek in self.envelopes:
+            env = self.envelopes[ek]
+            for sk in env.surfaces:
+                srf_name = '{}-{}'.format(ek, sk)
+                srf = env.surfaces[sk]
+                cpt = centroid(srf.polygon)
+                print(srf_name, cpt)
+                gk = geometric_key(cpt)
+                
+                if gk in self.network:
+                    self.network[gk].append(srf_name)
+                else:
+                    self.network[gk] = [srf_name]
+        print('')
+        print('')
+        print('')
+        for gk in self.network:
+            print(gk)
+            print(self.network[gk])
+            print('')
 
 
 class Envelope:
@@ -109,6 +135,11 @@ class Envelope:
         for sk in data['surfaces']:
             srf = Surface.from_data(data['surfaces'][sk])
             envelope.surfaces[sk]= srf          
+        
+
+        for wk in data['windows']:
+            win = Window.from_data(data['windows'][wk])
+            envelope.windows[wk] = win
 
         return envelope
 
@@ -129,6 +160,10 @@ class Envelope:
         data['surfaces'] = {}
         for sk in self.surfaces:
             data['surfaces'][sk] = self.surfaces[sk].to_data()
+
+        data['windows'] = {}
+        for wk in self.windows:
+            data['windows'][wk] = self.windows[wk].to_data()
         
         return data
 
@@ -306,38 +341,40 @@ class Envelope:
             self.surfaces[wk] = Surface.from_polygon(wk, wp, surface_type = 'Wall')
             self.wall_surface_keys.append(wk)
 
-
-    def update_envelope_surfaces_floorplan_height(self):
-        fp = self.floor_plan
-        h = self.height
-        cp = [[p[0], p[1], p[2]+h] for p in fp]
+    def update_envelope_surfaces_floorplan_height(self, floor_plan, height):
+        f2f = self.height
         for sk in self.surfaces:
             srf = self.surfaces[sk]
             if 'wall' in sk:
-                for i in range(len(fp)):
-                    a = fp[i]
-                    if i == len(fp)-1:
-                        b = fp[0]
+                for i in range(len(floor_plan)):
+                    a = floor_plan[i]
+                    if i == len(floor_plan)-1:
+                        b = floor_plan[0]
                     else:
-                        b = fp[i+1]
-                    surface_polygon = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
+                        b = floor_plan[i+1]
+                    surface_polygon = [a, b, [b[0], b[1], b[2]+f2f], [a[0], a[1], a[2]+f2f]]
                     surface_key = 'wall_{}'.format(i)
                     self.wall_surface_keys.append(surface_key)
-            elif sk == 'floor':
-                surface_key = 'floor'
-                surface_polygon = fp
-            elif sk == 'ceiling':
-                surface_key = 'ceiling'
-                surface_polygon = cp
+                    self.surfaces[surface_key] = Surface.from_polygon(surface_key, 
+                                                                      surface_polygon, 
+                                                                      surface_type = srf.surface_type,
+                                                                      construction = srf.construction,
+                                                                      outside_boundary_condition = srf.outside_boundary_condition,
+                                                                      outside_boundary_condition_object = srf.outside_boundary_condition_object)
+            else:
+                if sk == 'floor':
+                    surface_key = 'floor'
+                    surface_polygon = floor_plan
+                elif sk == 'ceiling':
+                    surface_key = 'ceiling'
+                    surface_polygon = [[p[0], p[1], p[2] + height] for p in floor_plan]
 
-            self.surfaces[surface_key] = Surface.from_polygon(surface_key, 
-                                                              surface_polygon, 
-                                                              surface_type = srf.surface_type,
-                                                              construction = srf.construction,
-                                                              outside_boundary_condition = srf.outside_boundary_condition,
-                                                              outside_boundary_condition_object = srf.outside_boundary_condition_object)
-
-
+                self.surfaces[surface_key] = Surface.from_polygon(surface_key, 
+                                                                  surface_polygon, 
+                                                                  surface_type = srf.surface_type,
+                                                                  construction = srf.construction,
+                                                                  outside_boundary_condition = srf.outside_boundary_condition,
+                                                                  outside_boundary_condition_object = srf.outside_boundary_condition_object)
 
     def get_constructions(self):
         """ Get a list of all enbvelope constructions of the building.
@@ -350,16 +387,18 @@ class Envelope:
         return [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
 
     def set_to_height(self, height):
+        fp = []
         for xyz in self.floor_plan:
-            xyz[2] = height
-        self.update_envelope_surfaces_floorplan_height()
+            fp.append([xyz[0], xyz[1], xyz[2] + height])
+        self.update_envelope_surfaces_floorplan_height(fp, self.height)
         self.move_windows_up(height)
 
     def move_windows_up(self, height):
         for wk in self.windows:
             win = self.windows[wk]
-            for i, pt in enumerate(win.surfaces[0].polygon):
-                win.surfaces[0].polygon[i] = [pt[0], pt[1], pt[2] + height]
+            sk = list(win.surfaces.keys())[0]
+            for i, pt in enumerate(win.surfaces[sk].polygon):
+                win.surfaces[sk].polygon[i] = [pt[0], pt[1], pt[2] + height]
 
     # ================================
     # Add
@@ -395,12 +434,11 @@ class Envelope:
     def add_window(self, window, wall_key):
         
         if not window.surfaces:
-            window.create_window_surface_envelope_wall_key(self, wall_key)
+            window.create_window_surface_from_envelope_wall_key(self, wall_key)
 
         window.wall_key = wall_key
         key = 'Window_{}'.format(len(self.windows))
         self.windows[key] = window
-
 
     def add_shading(self, shading):
         self.shadings[len(self.shadings)] = shading

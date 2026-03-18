@@ -35,7 +35,32 @@ class Window(Construction):
         window.construction = construction
         return window
 
-    def create_window_surface_envelope_wall_key(self, envelope, wall_key):
+    @classmethod
+    def from_data(cls, data):
+        win = cls()
+        win.wall_key     = data['wall_key']
+        win.width        = data['width']
+        win.height       = data['height']
+        win.construction = data['construction']
+        win.wwr          = data['wwr']
+        win.surfaces     = {}
+        for sk in data['surfaces']:
+            win.surfaces[sk] = Surface.from_data(data['surfaces'][sk])
+        return win
+
+    def to_data(self):
+        data = {}
+        data['wall_key']        = self.wall_key       
+        data['width']           = self.width          
+        data['height']          = self.height        
+        data['construction']    = self.construction 
+        data['wwr']             = self.wwr          
+        data['surfaces'] = {}
+        for sk in self.surfaces:
+            data['surfaces'][sk] = self.surfaces[sk].to_data()
+        return data
+
+    def create_window_surface_from_envelope_wall_key(self, envelope, wall_key):
 
         polygon = envelope.surfaces[wall_key].polygon
         cpt = centroid(polygon)
@@ -64,7 +89,7 @@ class Window(Construction):
         p3 = add_vectors(cpt, add_vectors(vx_, vy))
 
         sk = 'window_{}'.format(wall_key)
-        self.surfaces.append(Surface.from_polygon(sk, [p0, p1, p2, p3], surface_type = 'Window'))
+        self.surfaces[sk] = Surface.from_polygon(sk, [p0, p1, p2, p3], surface_type = 'Window')
 
 
 

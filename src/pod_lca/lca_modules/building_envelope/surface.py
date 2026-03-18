@@ -53,7 +53,6 @@ class Surface(object):
         data['outside_boundary_condition']        = self.outside_boundary_condition       
         data['outside_boundary_condition_object'] = self.outside_boundary_condition_object
         data['construction']                      = self.construction                     
-
         return data
 
     def convert_polygon_to_unit(self, unit):

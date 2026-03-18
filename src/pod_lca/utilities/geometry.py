@@ -151,13 +151,7 @@ def centroid(points):
 
 
 def geometric_key(xyz, precision=3, sanitize=True):
-    from ..units import Quantity
     x, y, z = xyz
-    if isinstance(x, Quantity):
-        x = x.value
-        y = y.value
-        z = z.value
-
     if precision == 0:
         raise ValueError("Precision cannot be zero.")
 

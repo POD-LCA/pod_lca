@@ -23,7 +23,7 @@ class Construction(Assembly):
         super().__init__()
         self.layer_order = {}
         self.layers = {}
-        self.surfaces = []
+        self.surfaces = {}
 
     @classmethod
     def from_idf(cls, name, idf_path):
