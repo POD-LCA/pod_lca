@@ -690,7 +690,8 @@ class Product(Master):
                 if self.get_mineral_carbon_storage_qty() is not None and self.get_mineral_carbon_storage_qty() != 0:
                     self.carbon_storage.update_qty(self.get_mineral_carbon_storage_qty())
                     #self.unit_carbon_storage.update_qty(self.get_mineral_carbon_storage_qty() / self.get_qty())
-                    self.impacts.update_gwp(-self.get_mineral_carbon_storage_qty())
+                    #self.impacts.update_gwp(-self.get_mineral_carbon_storage_qty())
+                    self.impacts.get_adjusted_GWP()
                     self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
                     self.update_inventory_records()
 
