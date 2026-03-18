@@ -30,8 +30,8 @@ def write_idf_from_building(building):
     write_global_vars()
     write_run_period()
     write_zones(building)
-    # write_windows(building)
-    # write_layers(building)
+    write_windows(building)
+    write_layers(building)
     # write_constructions(building)
     # write_shadings(building)
 
@@ -331,15 +331,16 @@ def write_windows(building):
     """
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
 
-    for fk in building.floors:
-        envelope = building.floors[fk].envelope
+    for ek in building.building_envelope.envelopes:
+        envelope = building.building_envelope.envelopes[ek]
         if envelope.windows:
-            for wk in building.floors[fk].envelope.windows:
-                window = building.floors[fk].envelope.windows[wk]
+            for wk in building.building_envelope.envelopes[ek].windows:
+                window = building.building_envelope.envelopes[ek].windows[wk]
 
-                con = window.name
+                con = window.construction.name
                 bsn = "{}_{}".format(envelope.name, window.wall_key)
-                polygon = window.surfaces[0].polygon
+                sk = list(window.surfaces.keys())[0]
+                polygon = window.surfaces[sk].polygon
                 wname = "{}_{}".format(envelope.name, wk)
 
                 fh.write("\n")
@@ -379,8 +380,8 @@ def write_layers(building):
     """
     layers = {}
     constructions = {}
-    for fk in building.floors:
-        env = building.floors[fk].envelope
+    for ek in building.building_envelope.envelopes:
+        env = building.building_envelope.envelopes[ek]
         for ck in env.walls:
             con = env.walls[ck]
             constructions[con.name] = con

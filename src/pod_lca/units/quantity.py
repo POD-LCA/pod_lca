@@ -24,6 +24,9 @@ class Quantity(object):
     def __repr__(self):
         return '{} ({})'.format(self.value, self.unit.name)
 
+    def __round__(self, ndigits=None):
+        return Quantity(round(self.value, ndigits), self.unit)
+
     def __add__(self, val):
         if isinstance(val, Quantity):
             if self.unit == val.unit:
