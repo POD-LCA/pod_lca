@@ -693,29 +693,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Structural or envelope element to be removed from the building."""
         self.get_assemblies().remove(assembly)
 
-    def update_envelope_surfaces(self):
-        for fk in self.floors:
-            floor = self.floors[fk]
-            for sk in floor.envelope.surfaces:
-                srf = floor.envelope.surfaces[sk]
-                if 'wall' in sk:
-                    if floor.is_below_grade:
-                        srf.outside_boundary_condition = 'Ground'
-                    else:
-                        srf.outside_boundary_condition = 'Outdoors'
-                elif sk == 'floor':
-                    if floor.is_on_ground:
-                        srf.outside_boundary_condition = 'Ground'
-                    else:
-                        srf.outside_boundary_condition = 'Adiabatic'
-                elif sk == 'ceiling':
-                    if floor.is_last:
-                        srf.outside_boundary_condition = 'Outdoors'
-                    else:
-                        srf.outside_boundary_condition = 'Adiabatic'
-                cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
-                self.surface_cpt_dict[geometric_key(cpt)] = {}
-
     # ================================
     # LCA Methods
     # ================================ 
