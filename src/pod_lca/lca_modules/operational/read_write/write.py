@@ -32,7 +32,7 @@ def write_idf_from_building(building):
     write_zones(building)
     write_windows(building)
     write_layers(building)
-    # write_constructions(building)
+    write_constructions(building)
     # write_shadings(building)
 
     # write_simulation_control(building)
@@ -378,37 +378,31 @@ def write_layers(building):
     -------
     None
     """
-    layers = {}
+
     constructions = {}
     for ek in building.building_envelope.envelopes:
         env = building.building_envelope.envelopes[ek]
-        for ck in env.walls:
-            con = env.walls[ck]
-            constructions[con.name] = con
-        for ck in env.floors:
-            con = env.floors[ck]
-            constructions[con.name] = con
-        for ck in env.ceiling:
-            con = env.ceiling[ck]
-            constructions[con.name] = con
-        for ck in env.windows:
-            con = env.windows[ck]
+        for sk in env.surfaces:
+            con = env.surfaces[sk].construction
             constructions[con.name] = con
 
+    layers = {}
     for ck in constructions:
-        l = constructions[ck].layers
-        for lk in l:
-            layers[l[lk].name] = l[lk]
+        layers_ = constructions[ck].layers
+        for lk in layers_:
+            layer = layers_[lk]
+            layers[layer.name] = layer
 
     for lk in layers:
-        l = layers[lk]
-        # mat_name = l.material.name
-        mat = l.material_property
-        thick = l.thickness
+        layer = layers[lk]
+        mat_name = layer.material_property.name
+        mat = layer.material_property
+        thick = layer.thickness
+        # print(layer.name)
         if thick:
-            lay_name = "{} {}mm".format(l.name, round(thick * 1000, 1))
+            lay_name = "{} {}mm".format(mat_name, round(thick * 1000, 1))
         else:
-            lay_name = l.name
+            lay_name = mat_name
         if mat.__type__ == "Material":
             write_material(mat, thick, lay_name)
         elif mat.__type__ == "MaterialNoMass":
@@ -421,6 +415,8 @@ def write_layers(building):
             write_material_gas(mat, thick, lay_name)
         # elif mat.__type__ == 'WindowMaterialGlazingSimple':
         #     write_materials_glazing_simple(building, mat)
+        else:
+            raise ValueError('materyal type {} has not been implemented yet'.format(mat.__type__))
 
 
 def write_material(mat, thickness, layer_name):
@@ -595,19 +591,10 @@ def write_constructions(building):
     None
     """
     constructions = {}
-    for fk in building.floors:
-        env = building.floors[fk].envelope
-        for ck in env.walls:
-            con = env.walls[ck]
-            constructions[con.name] = con
-        for ck in env.floors:
-            con = env.floors[ck]
-            constructions[con.name] = con
-        for ck in env.ceiling:
-            con = env.ceiling[ck]
-            constructions[con.name] = con
-        for ck in env.windows:
-            con = env.windows[ck]
+    for ek in building.building_envelope.envelopes:
+        env = building.building_envelope.envelopes[ek]
+        for sk in env.surfaces:
+            con = env.surfaces[sk].construction
             constructions[con.name] = con
 
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
