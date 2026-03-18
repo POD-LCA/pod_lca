@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from collections import Counter
 from math import log10
+from copy import deepcopy
 
 from ..units import ALL_PREFIXES
 from ..units import STANDARD_COMPOUNDS
@@ -40,6 +41,15 @@ class Unit:
         self.qty_measured = None
         self.prefix = None
         self.units = BaseUnits()
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        new_obj = cls.__new__(cls)
+        memo[id(self)] = new_obj
+        for k, v in self.__dict__.items():
+            setattr(new_obj, k, deepcopy(v, memo))
+        return new_obj
+
 
     def __str__(self):
         return f"Unit {self.get_name()} ({self.get_standard_notation()}) measuring {self.get_qty_measured()}."

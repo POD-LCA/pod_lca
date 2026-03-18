@@ -23,6 +23,6 @@ from .ceiling import Ceiling
 from .shading import Shading
 from .framing import Framing
 from .envelope import Envelope
-from .envelope import BuildingEnvelope
+from .building_envelope import BuildingEnvelope
 
 __all__ = ["Envelope", "BuildingEnvelope"]

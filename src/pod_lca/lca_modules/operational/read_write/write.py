@@ -9,7 +9,7 @@ __version__ = "0.1.0"
 import os
 import pod_lca
 from pod_lca.utilities import config
-
+from pod_lca.units import METER
 
 def write_idf_from_building(building):
     """
@@ -32,20 +32,20 @@ def write_idf_from_building(building):
     write_zones(building)
     write_windows(building)
     write_layers(building)
-    write_constructions(building)
-    write_shadings(building)
+    # write_constructions(building)
+    # write_shadings(building)
 
-    write_simulation_control(building)
-    write_schedules(building)
-    write_infiltration_rates(building)
-    write_thermostats(building)
-    write_hvac(building)
-    write_node_lists(building)
-    write_outdoor_airs(building)
-    write_daylight(building)
-    write_internal_gains(building)
+    # write_simulation_control(building)
+    # write_schedules(building)
+    # write_infiltration_rates(building)
+    # write_thermostats(building)
+    # write_hvac(building)
+    # write_node_lists(building)
+    # write_outdoor_airs(building)
+    # write_daylight(building)
+    # write_internal_gains(building)
 
-    write_output_items(building)
+    # write_output_items(building)
 
 
 def write_pre():
@@ -168,12 +168,11 @@ def write_zones(building):
     -------
     None
     """
-    for fkey in building.floors:
-        envelope = building.floors[fkey].envelope
+    for ek in building.building_envelope.envelopes:
+        envelope = building.building_envelope.envelopes[ek]
         write_zone(envelope)
-        write_zone_surfaces(envelope)
+        write_zone_surfaces(building, envelope)
     write_all_zone_list(building)
-    # write_zone_lists(building)
 
 
 def write_zone(envelope):
@@ -190,6 +189,10 @@ def write_zone(envelope):
     -------
     None
     """
+
+    eh =envelope.height.convert_to(METER).value
+    ev = envelope.volume.convert_to(METER).value
+
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("Zone,\n")
     fh.write("  {},         !- Name\n".format(envelope.name))
@@ -199,8 +202,8 @@ def write_zone(envelope):
     fh.write("  {},          !- Z Origin (m)\n".format(envelope.origin[2]))
     fh.write("  1,          !- Type\n")
     fh.write("  1,          !- Multiplier\n")
-    fh.write("  {},           !- Ceiling Height (m)\n".format(envelope.height))
-    fh.write("  {},           !- Volume (m3)\n".format(envelope.volume))
+    fh.write("  {},           !- Ceiling Height (m)\n".format(eh))
+    fh.write("  {},           !- Volume (m3)\n".format(ev))
     fh.write("  ,           !- Floor Area (m2)\n")
     fh.write("  ,           !- Zone Inside Convection Algorithm\n")
     fh.write("  ,           !- Zone Outside Convection Algorithm\n")
@@ -209,7 +212,7 @@ def write_zone(envelope):
     fh.close()
 
 
-def write_zone_surfaces(envelope):
+def write_zone_surfaces(building, envelope):
     """
     Writes all zone surfaces to the .idf file from the building data.
     Parameters
@@ -226,11 +229,11 @@ def write_zone_surfaces(envelope):
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     sks = envelope.surfaces.keys()
     for sk in sks:
-        write_building_surface(envelope, sk)
+        write_building_surface(building, envelope, sk)
     fh.close()
 
 
-def write_building_surface(envelope, sk):
+def write_building_surface(building, envelope, sk):
     """
     Writes a building surface to the .idf file from the building data.
     Parameters
@@ -246,11 +249,12 @@ def write_building_surface(envelope, sk):
     -------
     None
     """
+    srf = envelope.surfaces[sk]
+    st  = srf.surface_type
+    ct  = srf.construction.name
+    ob  = srf.outside_boundary_condition
+    obo = srf.outside_boundary_condition_object
 
-    st = envelope.surfaces[sk].construction.__type__
-    ct = envelope.surfaces[sk].construction.name
-    ob = envelope.surfaces[sk].outside_boundary_condition
-    obo = envelope.surfaces[sk].outside_boundary_condition_object
 
     if ob == "Adiabatic" or ob == "Surface" or ob == "Ground":
         se = "NoSun"
@@ -259,9 +263,13 @@ def write_building_surface(envelope, sk):
         se = "SunExposed"
         we = "WindExposed"
 
-    if not obo:
+    if obo:
+        env_name = building.building_envelope.envelopes[obo['envelope']].name
+        obo = "{}_{}".format(env_name, obo['surface'])
+    else:
         obo == ""
-
+    
+    envelope.surfaces[sk].convert_polygon_to_unit(METER)
     num_vert = len(envelope.surfaces[sk].polygon)
 
     sname = "{}_{}".format(envelope.name, sk)
@@ -297,9 +305,9 @@ def write_all_zone_list(building):
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("ZoneList,\n")
     fh.write("  all_zones_list, !- Name\n")
-    for i, fkey in enumerate(building.floors):
-        env = building.floors[fkey].envelope
-        if i == len(building.floors) - 1:
+    for i, fkey in enumerate(building.building_envelope.envelopes):
+        env = building.building_envelope.envelopes[fkey]
+        if i == len(building.building_envelope.envelopes) - 1:
             divider = ";"
         else:
             divider = ","
@@ -323,15 +331,16 @@ def write_windows(building):
     """
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
 
-    for fk in building.floors:
-        envelope = building.floors[fk].envelope
+    for ek in building.building_envelope.envelopes:
+        envelope = building.building_envelope.envelopes[ek]
         if envelope.windows:
-            for wk in building.floors[fk].envelope.windows:
-                window = building.floors[fk].envelope.windows[wk]
+            for wk in building.building_envelope.envelopes[ek].windows:
+                window = building.building_envelope.envelopes[ek].windows[wk]
 
-                con = window.name
+                con = window.construction.name
                 bsn = "{}_{}".format(envelope.name, window.wall_key)
-                polygon = window.surfaces[0].polygon
+                sk = list(window.surfaces.keys())[0]
+                polygon = window.surfaces[sk].polygon
                 wname = "{}_{}".format(envelope.name, wk)
 
                 fh.write("\n")
@@ -371,8 +380,8 @@ def write_layers(building):
     """
     layers = {}
     constructions = {}
-    for fk in building.floors:
-        env = building.floors[fk].envelope
+    for ek in building.building_envelope.envelopes:
+        env = building.building_envelope.envelopes[ek]
         for ck in env.walls:
             con = env.walls[ck]
             constructions[con.name] = con
@@ -396,15 +405,10 @@ def write_layers(building):
         # mat_name = l.material.name
         mat = l.material_property
         thick = l.thickness
-        print(lk)
-        print(l.thickness)
-        print(mat.__type__)
         if thick:
             lay_name = "{} {}mm".format(l.name, round(thick * 1000, 1))
         else:
             lay_name = l.name
-        print(lay_name)
-        print("")
         if mat.__type__ == "Material":
             write_material(mat, thick, lay_name)
         elif mat.__type__ == "MaterialNoMass":

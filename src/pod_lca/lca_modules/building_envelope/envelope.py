@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from math import isnan
 
+
 from . import Ceiling
 from . import EnvelopeMaterial
 from . import Surface
@@ -14,54 +15,12 @@ from . import Wall
 from . import Window
 from pod_lca.utilities import area_polygon
 from pod_lca.utilities import centroid
+
 from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
 from ...units import UNITS_MAP
 from ...units import Quantity as Q
 from ...utilities import log
-
-class BuildingEnvelope:
-    def __init__(self):
-        self.envelopes = {}
-        self.building = None
-
-    @classmethod
-    def from_envelopes(cls, envelopes):
-        be = cls()
-        for i, e in enumerate(envelopes):
-            cls.set_envelope(e, i)
-        return be
-    
-    @classmethod
-    def from_envelope_and_stories(cls, envelope, num_stories):
-        be = cls()
-        data = envelope.to_data()
-        for i in range(num_stories):
-            h = i * envelope.height
-            e = Envelope.from_data(data)
-            # e.set_to_height(h)
-            be.set_envelope(e, i)
-        return be
-
-    def set_envelope(self, envelope, floor_number):
-        self.envelopes[floor_number] = envelope
-
-    def set_building(self, parent):
-        self.building = parent
-
-        for ek in self.envelopes:
-            for construction in self.envelopes[ek].get_constructions():
-                construction.set_building()
-
-    def get_building(self):
-        """ Get the parent building of the envelope.
-        
-        Returns
-        -------
-        ~pod_lca.building.Building
-            The building to which the envelope belong.
-        """
-        return self.building
 
 
 class Envelope:
@@ -97,12 +56,22 @@ class Envelope:
         envelope.floor          = data['floor']             
         envelope.floor_plan     = data['floor_plan']            
         envelope.height         = data['height']            
-        envelope.surfaces       = data['surfaces']          
+
         envelope.walls          = data['walls']             
         envelope.windows        = data['windows']           
         envelope.shadings       = data['shadings']              
         envelope.floors         = data['floors']                
         envelope.ceiling        = data['ceiling']               
+
+        for sk in data['surfaces']:
+            srf = Surface.from_data(data['surfaces'][sk])
+            envelope.surfaces[sk]= srf          
+        
+
+        for wk in data['windows']:
+            win = Window.from_data(data['windows'][wk])
+            envelope.windows[wk] = win
+
         return envelope
 
     def to_data(self):
@@ -112,14 +81,22 @@ class Envelope:
         data['floor']      = self.floor     
         data['floor_plan'] = self.floor_plan
         data['height']     = self.height    
-        data['surfaces']   = self.surfaces  
+
         data['walls']      = self.walls     
         data['windows']    = self.windows   
         data['shadings']   = self.shadings  
         data['floors']     = self.floors    
         data['ceiling']    = self.ceiling   
-        return data
+        
+        data['surfaces'] = {}
+        for sk in self.surfaces:
+            data['surfaces'][sk] = self.surfaces[sk].to_data()
 
+        data['windows'] = {}
+        for wk in self.windows:
+            data['windows'][wk] = self.windows[wk].to_data()
+        
+        return data
 
     @classmethod
     def from_floor(cls, floor):
@@ -203,11 +180,12 @@ class Envelope:
         return envelope
 
     @classmethod
-    def from_components(cls, floor_plan, height, floor= None, ceiling=None, wall=None, windows=None, shadings=None):
+    def from_components(cls, name, floor_plan, height, floor= None, ceiling=None, wall=None, windows=None, shadings=None):
         envelope = cls()
+        envelope.name = name
         envelope.floor_plan = floor_plan
         envelope.height = height
-        envelope.update_envelope_surfaces()
+        envelope.create_envelope_surfaces()
 
         for sk in envelope.surfaces:
             s = envelope.surfaces[sk]
@@ -223,16 +201,16 @@ class Envelope:
                 if ceiling:
                     s.add_construction(ceiling)
 
-
         if windows:
-            pass
+            for wall_key in windows:
+                win = windows[wall_key]
+                envelope.add_window(win, wall_key)
+
+
         if shadings:
             pass
 
         return envelope
-
-
-
 
     # ================================
     # Setters
@@ -265,7 +243,6 @@ class Envelope:
         """
         return self.building
         
-    
     @property
     def area(self):
         return area_polygon(self.floor_plan)
@@ -278,13 +255,12 @@ class Envelope:
     def centroid(self):
         return centroid(self.floor_plan)
 
-
-    def update_envelope_surfaces(self):
+    def create_envelope_surfaces(self):
         fp = self.floor_plan
         h = self.height
         cp = [[p[0], p[1], p[2]+h] for p in fp]
-        self.surfaces['floor'] = Surface.from_polygon('floor', fp, 'Floor')
-        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp, 'Ceiling')
+        self.surfaces['floor'] = Surface.from_polygon('floor', fp, surface_type ='Floor',)
+        self.surfaces['ceiling'] = Surface.from_polygon('ceiling', cp, surface_type ='Ceiling')
         for i in range(len(fp)):
             a = fp[i]
             if i == len(fp)-1:
@@ -293,8 +269,43 @@ class Envelope:
                 b = fp[i+1]
             wp = [a, b, [b[0], b[1], b[2]+h], [a[0], a[1], a[2]+h]]
             wk = 'wall_{}'.format(i)
-            self.surfaces[wk] = Surface.from_polygon(wk, wp, 'Wall')
+            self.surfaces[wk] = Surface.from_polygon(wk, wp, surface_type = 'Wall')
             self.wall_surface_keys.append(wk)
+
+    def update_envelope_surfaces_floorplan_height(self, floor_plan, height):
+        f2f = self.height
+        for sk in self.surfaces:
+            srf = self.surfaces[sk]
+            if 'wall' in sk:
+                for i in range(len(floor_plan)):
+                    a = floor_plan[i]
+                    if i == len(floor_plan)-1:
+                        b = floor_plan[0]
+                    else:
+                        b = floor_plan[i+1]
+                    surface_polygon = [a, b, [b[0], b[1], b[2]+f2f], [a[0], a[1], a[2]+f2f]]
+                    surface_key = 'wall_{}'.format(i)
+                    self.wall_surface_keys.append(surface_key)
+                    self.surfaces[surface_key] = Surface.from_polygon(surface_key, 
+                                                                      surface_polygon, 
+                                                                      surface_type = srf.surface_type,
+                                                                      construction = srf.construction,
+                                                                      outside_boundary_condition = srf.outside_boundary_condition,
+                                                                      outside_boundary_condition_object = srf.outside_boundary_condition_object)
+            else:
+                if sk == 'floor':
+                    surface_key = 'floor'
+                    surface_polygon = floor_plan
+                elif sk == 'ceiling':
+                    surface_key = 'ceiling'
+                    surface_polygon = [[p[0], p[1], p[2] + height] for p in floor_plan]
+
+                self.surfaces[surface_key] = Surface.from_polygon(surface_key, 
+                                                                  surface_polygon, 
+                                                                  surface_type = srf.surface_type,
+                                                                  construction = srf.construction,
+                                                                  outside_boundary_condition = srf.outside_boundary_condition,
+                                                                  outside_boundary_condition_object = srf.outside_boundary_condition_object)
 
     def get_constructions(self):
         """ Get a list of all enbvelope constructions of the building.
@@ -307,27 +318,18 @@ class Envelope:
         return [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
 
     def set_to_height(self, height):
-        
-        f2f = self.height
+        fp = []
+        for xyz in self.floor_plan:
+            fp.append([xyz[0], xyz[1], xyz[2] + height])
+        self.update_envelope_surfaces_floorplan_height(fp, self.height)
+        self.move_windows_up(height)
 
-        # for xyz in self.floor_plan:
-        #     xyz[2] = height
-        
-        for k in self.surfaces:
-            srf = self.surfaces[k]
-            if srf.surface_type == 'Floor':
-                for xyz in srf.polygon:
-                    xyz[2] = height
-            elif srf.surface_type == 'Ceiling':
-                for xyz in srf.polygon:
-                    xyz[2] = height + f2f
-            if srf.surface_type == 'Wall':
-                for xyz in srf.polygon:
-                    if xyz[2] == 0:
-                        xyz[2] = height
-                    else:
-                        xyz[2] = height + f2f
-
+    def move_windows_up(self, height):
+        for wk in self.windows:
+            win = self.windows[wk]
+            sk = list(win.surfaces.keys())[0]
+            for i, pt in enumerate(win.surfaces[sk].polygon):
+                win.surfaces[sk].polygon[i] = [pt[0], pt[1], pt[2] + height]
 
     # ================================
     # Add
@@ -361,12 +363,16 @@ class Envelope:
         construction.set_parent(self)
 
     def add_window(self, window, wall_key):
+        
+        if not window.surfaces:
+            window.create_window_surface_from_envelope_wall_key(self, wall_key)
+
         window.wall_key = wall_key
         key = 'Window_{}'.format(len(self.windows))
         self.windows[key] = window
 
-    # def add_shading(self, shading):
-    #     self.shadings[len(self.shadings)] = shading
+    def add_shading(self, shading):
+        self.shadings[len(self.shadings)] = shading
 
 if __name__ == '__main__':
 

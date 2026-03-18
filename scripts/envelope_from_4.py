@@ -1,9 +1,23 @@
+import sys
+import importlib
+
+def reload_library():
+    # Wipe the entire library and all submodules from cache
+    to_delete = [key for key in sys.modules if key == "pod_lca" or key.startswith("pod_lca.")]
+    for key in to_delete:
+        del sys.modules[key]
+
+# Call this FIRST, before any library imports
+reload_library()
+
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+import os
+import pod_lca
 
 from pod_lca.utilities import config
 
@@ -16,6 +30,7 @@ from pod_lca.lca_modules.location import Location
 
 from pod_lca.lca_modules.building_envelope import BuildingEnvelope
 from pod_lca.lca_modules.building_envelope import Envelope
+from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import Framing
 from pod_lca.lca_modules.building_envelope import FramedWall
@@ -31,13 +46,16 @@ from pod_lca.lca_modules.building_envelope.material_property import WindowMateri
 from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGas
 
 
-
-from pod_lca.lca_modules.operational.read_write import find_materials
-from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
-from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+from pod_lca.lca_modules.operational import OperationalObject
+# from pod_lca.lca_modules.operational.read_write import find_materials
+# from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+# from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 
 from pod_lca.units import INCH, METER, SQUARE_METER, CUBIC_METER, WATT, KELVIN, KILOGRAM, JOULE
 from pod_lca.units import Quantity as Q
+
+from pod_lca.visualizer import BarChart
+from pod_lca.visualizer import MatplotlibPlotter
 
 
 for i in range(100): print('')
@@ -57,14 +75,13 @@ x = Q(20, METER)
 y = Q(10, METER)
 zero = Q(0, METER)
 floor_to_floor = Q(3, METER)
-num_stories = 5
+num_stories = 8
 floor_plan = [[zero,zero,zero],
               [x/2, -y/4,zero],
               [x,zero,zero],
               [x,y,zero],
               [x/2, y+(y/4),zero],
               [zero,y,zero]] 
-
 
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -149,8 +166,8 @@ for lk in layers:
 
 framing = Framing.from_data(framing)
 
-w = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
-w.compute_wall_r()
+framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+framed_wall.compute_wall_r()
 
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -163,12 +180,24 @@ c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# window = Window.from_idf(window, b, surfaces, window_service_life)
+window_construction = Construction.from_idf('Generic Double Pane', constructions_path)
+
+w = Q(3, METER)
+h = Q(2, METER)
+wall_key1 = 'wall_1'
+window1 = Window.from_width_height_construction(w, h, window_construction)
+
+wall_key2 = 'wall_2'
+wwr = .9
+window2 = Window.from_wwr_construction(wwr, window_construction)
+
+windows = {wall_key1: window1, wall_key2: window2}
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-e = Envelope.from_components(floor_plan, floor_to_floor, wall=w, floor=f, ceiling=c)
+ename = 'tomas_envelope'
+e = Envelope.from_components(ename, floor_plan, floor_to_floor, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
+
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
@@ -176,14 +205,26 @@ mui_type = 'low' # 'mid', 'hight'
 
 s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
 
-# make an building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
 
-from pod_lca.lca_modules.operational.viewers import BuildingViewer
+# # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-v = BuildingViewer(b)
-v.show()
+b.building_envelope.make_envelope_connectivity_network()
+b.building_envelope.set_outside_boundary_conditions()
 
-#TODO Fix envelope height thing
-#TODO: Continue checking building_envelope implications
+path = config['file_paths']['operational']['SYSTEMS']
+b.operational_object = OperationalObject.from_idf(path)
+b.set_zone_systems()
+
+b.write_idf()
+# # eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+# # wea = config['file_paths']['operational']['SEATTLE']
+# # b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
+
+# from pod_lca.lca_modules.operational.viewers import BuildingViewer
+# v = BuildingViewer(b)
+# v.show()
+
