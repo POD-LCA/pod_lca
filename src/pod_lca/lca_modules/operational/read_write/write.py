@@ -171,7 +171,7 @@ def write_zones(building):
     for ek in building.building_envelope.envelopes:
         envelope = building.building_envelope.envelopes[ek]
         write_zone(envelope)
-        write_zone_surfaces(envelope)
+        write_zone_surfaces(building, envelope)
     # write_all_zone_list(building)
     # # write_zone_lists(building)
 
@@ -213,7 +213,7 @@ def write_zone(envelope):
     fh.close()
 
 
-def write_zone_surfaces(envelope):
+def write_zone_surfaces(building, envelope):
     """
     Writes all zone surfaces to the .idf file from the building data.
     Parameters
@@ -230,12 +230,11 @@ def write_zone_surfaces(envelope):
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     sks = envelope.surfaces.keys()
     for sk in sks:
-        write_building_surface(envelope, sk)
-        break
+        write_building_surface(building, envelope, sk)
     fh.close()
 
 
-def write_building_surface(envelope, sk):
+def write_building_surface(building, envelope, sk):
     """
     Writes a building surface to the .idf file from the building data.
     Parameters
@@ -257,6 +256,7 @@ def write_building_surface(envelope, sk):
     ob  = srf.outside_boundary_condition
     obo = srf.outside_boundary_condition_object
 
+
     if ob == "Adiabatic" or ob == "Surface" or ob == "Ground":
         se = "NoSun"
         we = "NoWind"
@@ -264,7 +264,10 @@ def write_building_surface(envelope, sk):
         se = "SunExposed"
         we = "WindExposed"
 
-    if not obo:
+    if obo:
+        env_name = building.building_envelope.envelopes[obo['envelope']].name
+        obo = "{}_{}".format(env_name, obo['surface'])
+    else:
         obo == ""
     
     envelope.surfaces[sk].convert_polygon_to_unit(METER)

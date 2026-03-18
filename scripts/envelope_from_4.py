@@ -227,3 +227,4 @@ b.write_idf()
 # from pod_lca.lca_modules.operational.viewers import BuildingViewer
 # v = BuildingViewer(b)
 # v.show()
+

@@ -84,8 +84,29 @@ class BuildingEnvelope:
             elif len(edge) == 1:
                 e2 = 'outside'
                 s2 = None
-            self.network.setdefault(e1, {}).setdefault(e2, []).append(s1)
-            self.network.setdefault(e2, {}).setdefault(e1, []).append(s2)
+            # self.network.setdefault(e1, {}).setdefault(e2, []).append(s1)
+            # self.network.setdefault(e2, {}).setdefault(e1, []).append(s2)
+            self.network.setdefault(e1, {})[s1] = {'envelope':e2, 'surface': s2}
+            self.network.setdefault(e2, {})[s2] = {'envelope':e1, 'surface': s1}
 
     def set_outside_boundary_conditions(self):
-        pass
+        if not self.network:
+            self.make_envelope_connectivity_network()
+        
+        for ek in self.envelopes:
+            for sk in self.envelopes[ek].surfaces:
+                srf = self.envelopes[ek].surfaces[sk]
+                connected_env = self.network[ek][sk]['envelope']
+                # connected_srf = self.network[ek][sk]['surface']
+                if connected_env == 'outside':
+                    if sk == 'floor':
+                        obc = 'Ground'
+                    elif 'wall' in sk or sk == 'ceiling':
+                        obc = 'Outdoors'
+                    obco = None
+                else:
+                    obc = 'Surface'
+                    obco = self.network[ek][sk]
+
+                srf.outside_boundary_condition = obc
+                srf.outside_boundary_condition_object = obco
