@@ -9,7 +9,7 @@ __version__ = "0.1.0"
 import os
 import pod_lca
 from pod_lca.utilities import config
-from pod_lca.units import METER
+from pod_lca.units import METER, CUBIC_METER
 
 def write_idf_from_building(building):
     """
@@ -33,19 +33,19 @@ def write_idf_from_building(building):
     write_windows(building)
     write_layers(building)
     write_constructions(building)
-    # write_shadings(building)
+    write_shadings(building)
 
-    # write_simulation_control(building)
-    # write_schedules(building)
-    # write_infiltration_rates(building)
-    # write_thermostats(building)
-    # write_hvac(building)
-    # write_node_lists(building)
-    # write_outdoor_airs(building)
-    # write_daylight(building)
-    # write_internal_gains(building)
+    write_simulation_control(building)
+    write_schedules(building)
+    write_infiltration_rates(building)
+    write_thermostats(building)
+    write_hvac(building)
+    write_node_lists(building)
+    write_outdoor_airs(building)
+    write_daylight(building)
+    write_internal_gains(building)
 
-    # write_output_items(building)
+    write_output_items(building)
 
 
 def write_pre():
@@ -191,7 +191,7 @@ def write_zone(envelope):
     """
 
     eh =envelope.height.convert_to(METER).value
-    ev = envelope.volume.convert_to(METER).value
+    ev = envelope.volume.convert_to(CUBIC_METER).value
 
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("Zone,\n")
@@ -340,7 +340,9 @@ def write_windows(building):
                 con = window.construction.name
                 bsn = "{}_{}".format(envelope.name, window.wall_key)
                 sk = list(window.surfaces.keys())[0]
-                polygon = window.surfaces[sk].polygon
+                srf = window.surfaces[sk]
+                srf.convert_polygon_to_unit(METER)
+                polygon = srf.polygon
                 wname = "{}_{}".format(envelope.name, wk)
 
                 fh.write("\n")
@@ -397,10 +399,10 @@ def write_layers(building):
         layer = layers[lk]
         mat_name = layer.material_property.name
         mat = layer.material_property
-        thick = layer.thickness
+        thick = layer.thickness.convert_to(METER)
         # print(layer.name)
         if thick:
-            lay_name = "{} {}mm".format(mat_name, round(thick * 1000, 1))
+            lay_name = "{} {}mm".format(mat_name, round(thick.value * 1000, 1))
         else:
             lay_name = mat_name
         if mat.__type__ == "Material":
@@ -437,6 +439,7 @@ def write_material(mat, thickness, layer_name):
     -------
     None
     """
+
     if thickness:
         fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
         fh.write("\n")

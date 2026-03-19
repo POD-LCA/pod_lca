@@ -72,6 +72,8 @@ def cross_vectors(u, v):
 
 
 def area_polygon(polygon):
+    from ..units import Quantity
+
     o = centroid(polygon)
     a = polygon[-1]
     b = polygon[0]
@@ -88,7 +90,12 @@ def area_polygon(polygon):
             area += 0.5 * length_vector(n)
         else:
             area -= 0.5 * length_vector(n)
-    return abs(area)
+    area = abs(area)
+    x = polygon[0][0]
+    if isinstance(x, Quantity):
+        return Quantity(area, x.unit * x.unit)
+    else:
+        return area
 
 
 def dot_vectors(u, v):
