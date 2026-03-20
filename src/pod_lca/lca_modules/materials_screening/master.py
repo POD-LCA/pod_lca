@@ -599,14 +599,14 @@ class Master:
                     model_carbon_storages[stage].remove(carbon_storage_obj)
                     break
         else:
-            if impact_obj in model_impacts:
-                model_impacts.remove(impact_obj)
+            if impact_obj in model_impacts[stage]:
+                model_impacts[stage].remove(impact_obj)
 
-            if emission_obj in model_emissions:
-                model_emissions.remove(emission_obj)
+            if emission_obj in model_emissions[stage]:
+                model_emissions[stage].remove(emission_obj)
 
-            if carbon_storage_obj in model_carbon_storages:
-                model_carbon_storages.remove(carbon_storage_obj)
+            if carbon_storage_obj in model_carbon_storages[stage]:
+                model_carbon_storages[stage].remove(carbon_storage_obj)
 
         return self
 
