@@ -16,6 +16,8 @@ from pod_lca.lca_modules.operational.read_write import find_constructions
 from pod_lca.lca_modules.operational.read_write import find_materials
 from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
 from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+from pod_lca.lca_modules.operational.read_write import find_glazing_materials
+from pod_lca.lca_modules.operational.read_write import find_gas_materials
 
 
 class Construction(Assembly):
@@ -23,7 +25,7 @@ class Construction(Assembly):
         super().__init__()
         self.layer_order = {}
         self.layers = {}
-        self.surfaces = []
+        self.surfaces = {}
 
     @classmethod
     def from_idf(cls, name, idf_path):
@@ -31,8 +33,12 @@ class Construction(Assembly):
         layers = cdata['layers']
         ldata = find_materials(idf_path, {})
         ldata = find_no_mass_materials(idf_path, ldata)
-        ldata = find_materials_air_gap(idf_path, ldata)['materials']
-        layers = {}
+        ldata = find_materials_air_gap(idf_path, ldata)
+        ldata = find_glazing_materials(idf_path, ldata)
+        ldata = find_gas_materials(idf_path, ldata)
+        ldata = ldata['materials']
+
+        layers_ = {}
         for lk in layers:
             mdata = ldata[layers[lk]]
             if 'thickness' in ldata[layers[lk]]:
@@ -40,10 +46,10 @@ class Construction(Assembly):
             else:
                 thickness = Q(0, METER)
             l = Layer.from_data(mdata, thickness, None)
-            layers[lk] = l
+            layers_[lk] = l
 
-        construction = cls.create('name')
-        construction.from_layers(name, layers)
+        construction = cls.create(name)
+        construction.from_layers(name, layers_)
         return construction
     
     @classmethod

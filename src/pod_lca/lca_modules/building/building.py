@@ -72,7 +72,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         self.floors = {}
         self.structure = None
-        self.envelope = None
+        self.building_envelope = None
         self.operational_object = None
         self.assemblies = []
         self.surface_cpt_dict = {}
@@ -132,7 +132,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         return building
     
     @classmethod
-    def from_assemblies(cls, name, type, location, built_year, life_span, structure, envelope, **kwargs):
+    def from_assemblies(cls, name, type, location, built_year, life_span, structure, building_envelope, **kwargs):
         """ Build a building.
         
         Parameters
@@ -149,7 +149,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Life span of the building in years.
         structure : ~pod_lca.building_structure.BuildingStructure
             Structure of the building.
-        envelope : ~pod_lca.building_envelope.Envelope
+        building_envelope : ~pod_lca.building_envelope.BuildingEnvelope
             Envelope of the building.
 
         Other Parameters
@@ -174,7 +174,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
                                              electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
         
         building.set_structure(structure)
-        building.set_envelope(envelope)
+        building.set_building_envelope(building_envelope)
 
         return building
      
@@ -422,10 +422,10 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.structure = structure
         structure.set_building(self)
 
-    def set_envelope(self, envelope):
+    def set_building_envelope(self, building_envelope):
 
-        self.envelope = envelope
-        envelope.set_building(self)
+        self.building_envelope = building_envelope
+        building_envelope.set_building(self)
 
     # ================================
     # Getters
@@ -692,29 +692,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         assembly : ~pod_lca.building.Assembly
             Structural or envelope element to be removed from the building."""
         self.get_assemblies().remove(assembly)
-
-    def update_envelope_surfaces(self):
-        for fk in self.floors:
-            floor = self.floors[fk]
-            for sk in floor.envelope.surfaces:
-                srf = floor.envelope.surfaces[sk]
-                if 'wall' in sk:
-                    if floor.is_below_grade:
-                        srf.outside_boundary_condition = 'Ground'
-                    else:
-                        srf.outside_boundary_condition = 'Outdoors'
-                elif sk == 'floor':
-                    if floor.is_on_ground:
-                        srf.outside_boundary_condition = 'Ground'
-                    else:
-                        srf.outside_boundary_condition = 'Adiabatic'
-                elif sk == 'ceiling':
-                    if floor.is_last:
-                        srf.outside_boundary_condition = 'Outdoors'
-                    else:
-                        srf.outside_boundary_condition = 'Adiabatic'
-                cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
-                self.surface_cpt_dict[geometric_key(cpt)] = {}
 
     # ================================
     # LCA Methods

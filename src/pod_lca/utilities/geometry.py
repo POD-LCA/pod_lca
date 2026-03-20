@@ -1,7 +1,6 @@
 from math import sqrt
 from math import fabs
 
-# from pod_lca.utilities.mesh import Mesh
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
@@ -73,6 +72,8 @@ def cross_vectors(u, v):
 
 
 def area_polygon(polygon):
+    from ..units import Quantity
+
     o = centroid(polygon)
     a = polygon[-1]
     b = polygon[0]
@@ -89,7 +90,12 @@ def area_polygon(polygon):
             area += 0.5 * length_vector(n)
         else:
             area -= 0.5 * length_vector(n)
-    return abs(area)
+    area = abs(area)
+    x = polygon[0][0]
+    if isinstance(x, Quantity):
+        return Quantity(area, x.unit * x.unit)
+    else:
+        return area
 
 
 def dot_vectors(u, v):
@@ -123,11 +129,14 @@ def length_vector(vector):
     return sqrt(length_vector_sqrd(vector))
 
 
-def normalize_vector(vector):
+def normalize_vector(vector, unitless=False):
     length = length_vector(vector)
     if not length:
         return vector
-    return [vector[0] / length, vector[1] / length, vector[2] / length]
+    if unitless:
+        return [(vector[0] / length).value, (vector[1] / length).value, (vector[2] / length).value]
+    else:
+        return [vector[0] / length, vector[1] / length, vector[2] / length]
 
 
 def scale_vector(vector, factor):
@@ -150,7 +159,6 @@ def centroid(points):
 
 def geometric_key(xyz, precision=3, sanitize=True):
     x, y, z = xyz
-
     if precision == 0:
         raise ValueError("Precision cannot be zero.")
 
@@ -230,8 +238,8 @@ class Mesh(object):
     @classmethod
     def from_surfaces(cls, surfaces):
         all_vertices = []
-        for srf in surfaces:
-            all_vertices.extend(surfaces[srf].polygon)
+        for sk in surfaces:
+            all_vertices.extend(surfaces[sk].polygon)
         gk_dict = {geometric_key(v): v for v in all_vertices}
         vertices = [gk_dict[k] for k in gk_dict]
         gk_dict = {geometric_key(v): i for i, v in enumerate(vertices)}
@@ -316,6 +324,14 @@ class Mesh(object):
 
     def vertex_xyz(self, key):
         return self.vertices[key]["x"], self.vertices[key]["y"], self.vertices[key]["z"]
+
+    def vertex_xyz_unitless(self, key):
+        from ..units import Quantity
+        if isinstance(self.vertices[key]['x'], Quantity):
+            return self.vertices[key]["x"].value, self.vertices[key]["y"].value, self.vertices[key]["z"].value
+        else:
+            return self.vertex_xyz(key)
+
 
     def face_centroid(self, key):
         points = [self.vertex_xyz(vk) for vk in self.face_vertices(key)]

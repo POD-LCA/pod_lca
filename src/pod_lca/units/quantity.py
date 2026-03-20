@@ -5,19 +5,27 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-from pod_lca.units import Unit
-
 
 class Quantity(object):
     def __init__(self, value, unit):
         self.value = value
         self.unit = unit
 
+    def __format__(self, spec):
+        formatted = format(self.value, spec or ".4f")
+        return f"{formatted}"
+
+    def __hash__(self):
+        return hash((self.value, self.unit))
+
     def __str__(self):
         return '{} ({})'.format(self.value, self.unit.name)
 
     def __repr__(self):
         return '{} ({})'.format(self.value, self.unit.name)
+
+    def __round__(self, ndigits=None):
+        return Quantity(round(self.value, ndigits), self.unit)
 
     def __add__(self, val):
         if isinstance(val, Quantity):
@@ -30,8 +38,9 @@ class Quantity(object):
                 except:
                     raise TypeError(f"unsupported operand type(s) for + {self.unit.name} and {val.unit.name}")
         else:
-            self.value += val # TODO: This is mathematically incorrect... do we want this to be allowed...
-            return self
+            # self.value += val # TODO: This is mathematically incorrect... do we want this to be allowed...
+            # return self
+            return Quantity(self.value + val, self.unit)
 
     def __radd__(self, other):
         return self.__add__(other)
@@ -47,8 +56,9 @@ class Quantity(object):
                 except:
                     raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
         else:
-            self.value -= val # TODO: This is mathematically incorrect... do we want this to be allowed...
-            return self
+            # self.value -= val # TODO: This is mathematically incorrect... do we want this to be allowed...
+            # return self
+            return Quantity(self.value - val, self.unit)
 
     def __rsub__(self, val):
         if isinstance(val, Quantity):
@@ -61,8 +71,9 @@ class Quantity(object):
                 except:
                     raise TypeError(f"unsupported operand type(s) for - {self.unit.name} and {val.unit.name}")
         else:
-            self.value = val - self.value # TODO: This is mathematically incorrect... do we want this to be allowed...
-            return self
+            # self.value = val - self.value # TODO: This is mathematically incorrect... do we want this to be allowed...
+            # return self
+            return Quantity(val - self.value, self.unit)
 
     def __mul__(self, val):
         if isinstance(val, Quantity):
@@ -101,7 +112,13 @@ class Quantity(object):
 
     def __iadd__(self, val):
         return self + val
-    
+
+    def __pow__(self, val):
+        if isinstance(val, float) or isinstance(val, int):
+            return Quantity(self.value**val, self.unit)
+        else:
+            raise TypeError(f"unsupported operand type(s) for __pow__ {self.unit.name} and {type(val)}")
+
     def __gt__(self, val):
         if isinstance(val, Quantity):
             if self.unit.qty_measured == val.unit.qty_measured:
@@ -170,7 +187,7 @@ class Quantity(object):
 
     def __neg__(self):
         return Quantity(-self.value, self.unit)
-
+        
     def convert_to(self, unit):
         if self.unit.qty_measured == unit.qty_measured:
             value  = self.value * self.unit.convert_to(unit)
