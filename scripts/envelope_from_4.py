@@ -208,8 +208,7 @@ s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, 
 
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-b = Building.from_assemblies(name, btype, location, built_year, life_span, s, be)
-
+b = Building.from_assemblies(bname, btype, location, built_year, life_span, s, be)
 # # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 b.building_envelope.make_envelope_connectivity_network()
@@ -219,12 +218,13 @@ path = config['file_paths']['operational']['SYSTEMS']
 b.operational_object = OperationalObject.from_idf(path)
 b.set_zone_systems()
 
-b.write_idf()
-# # eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-# # wea = config['file_paths']['operational']['SEATTLE']
-# # b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea)
 
-# from pod_lca.lca_modules.operational.viewers import BuildingViewer
-# v = BuildingViewer(b)
-# v.show()
+#TODO: Ensure unit conversion to E+ (metric). Materials!!!!
+
+b.write_idf()
+eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+wea = config['file_paths']['operational']['SEATTLE']
+
+b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=False)
+
 
