@@ -70,7 +70,7 @@ class Window(Construction):
                 wwr = .95
             else:
                 wwr = self.wwr
-            area =  area_polygon(polygon) * wwr
+            area =  area_polygon(polygon).value * wwr
             lx = distance_point_point(polygon[0], polygon[1]) - .1
             ly = area / lx
 

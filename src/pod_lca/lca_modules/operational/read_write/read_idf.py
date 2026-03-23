@@ -267,6 +267,7 @@ def find_gas_materials(filepath, data):
             "gas_type": gtype,
             "thickness": thick,
         }
+    return data
 
 
 def find_glazing_materials(filepath, data):
@@ -315,7 +316,8 @@ def find_glazing_materials(filepath, data):
             "dirt_correction_factor": dirt,
             "solar_diffusing": soldif,
         }
-
+    
+    return data
 
 def find_constructions(filepath, data):
     fh = open(filepath, "r")
