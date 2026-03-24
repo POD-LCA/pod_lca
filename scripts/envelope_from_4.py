@@ -76,13 +76,19 @@ y = Q(10, METER)
 zero = Q(0, METER)
 floor_to_floor = Q(3, METER)
 num_stories = 8
-floor_plan = [[zero,zero,zero],
-              [x/2, -y/4,zero],
-              [x,zero,zero],
-              [x,y,zero],
-              [x/2, y+(y/4),zero],
-              [zero,y,zero]] 
+# floor_plan = [[zero,zero,zero],
+#               [x/2, -y/4,zero],
+#               [x,zero,zero],
+#               [x,y,zero],
+#               [x/2, y+(y/4),zero],
+#               [zero,y,zero]] 
 
+floor_plan = [[zero,zero,zero],
+              [zero,y,zero], 
+              [x/2, y+(y/4),zero],
+              [x,y,zero],
+              [x,zero,zero],
+              [x/2, -y/4,zero]]
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 

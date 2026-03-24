@@ -49,6 +49,11 @@ class BuildingEnvelope:
             for construction in self.envelopes[ek].get_constructions():
                 construction.set_building()
 
+    def set_cycle_directions(self):
+        for ek in self.envelopes:
+            self.envelopes[ek].set_cycle_directions()
+
+
     def get_building(self):
         """ Get the parent building of the envelope.
         

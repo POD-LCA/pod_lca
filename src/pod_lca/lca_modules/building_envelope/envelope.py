@@ -230,6 +230,9 @@ class Envelope:
 
         return self
 
+    def set_cycle_directions(self):
+        pass
+
     # ================================
     # Getters
     # ================================

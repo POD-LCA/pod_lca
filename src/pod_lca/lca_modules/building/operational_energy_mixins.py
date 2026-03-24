@@ -133,6 +133,7 @@ class OperationalMixins:
         """
         self.make_constructions_dict()
         self.make_layers_dict()
+        self.building_envelope.set_cycle_directions()
         write_idf_from_building(self)
 
     def run_operational_energy_model(self, eplus_path, idf_path, weather, delete=True):
