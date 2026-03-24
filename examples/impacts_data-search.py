@@ -11,7 +11,7 @@ impact_database.set_data(databse_path, additional_headers=["Taxanomy", "Category
 #                      shortlist=True)
 
 impact_database.find(
-    "resin", additional_headers=["Taxanomy", "Category", "Sub-category", "Description"], shortlist=False
+    "resin", additional_headers=["Taxanomy", "Category", "Sub-category", "Description"], shortlist=True
 )
 
 # concrete, glue, resin, wood, cement, timber, glass, truck tranport, steel, I-beam, insulation, mushroom, steel I-beam, chemical
