@@ -218,11 +218,18 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
         }
     )
 
-    # order by similarity
-    cluster_mean_score = df.groupby("cluster")["similarity"].max().to_dict()
-    df["cluster_mean"] = df["cluster"].map(cluster_mean_score)
-    df_sorted = df.sort_values(["cluster_mean", "similarity"], ascending=[False, False]).reset_index(drop=True)
-    df_sorted = df_sorted.drop(columns=["cluster", "cluster_mean"])
+    # order by similarity / set cluster rank by mean impact
+    cluster_score = df.groupby("cluster")["similarity"].max().to_dict()
+    df["cluster_score"] = df["cluster"].map(cluster_score)
+    df_sorted = df.sort_values(["cluster_score", "similarity"], ascending=[False, False]).reset_index(drop=True)
+    df_sorted = df_sorted.drop(columns=["cluster_score"])
+
+    cluster_means = df.groupby('cluster')['impact'].mean()
+    sorted_clusters = cluster_means.sort_values().index
+    cluster_map = {old: new for new, old in enumerate(sorted_clusters)}
+    df_sorted['cluster_impact_rank'] = df_sorted['cluster'].map(cluster_map)
+
+    df_sorted = df_sorted.drop(columns=["cluster"])
 
     return df_sorted
 
