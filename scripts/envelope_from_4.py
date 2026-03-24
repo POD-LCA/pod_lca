@@ -222,8 +222,6 @@ b.building_envelope.set_outside_boundary_conditions()
 
 path = config['file_paths']['operational']['SYSTEMS']
 b.operational_object = OperationalObject.from_idf(path)
-b.set_zone_systems()
-
 
 #TODO: Ensure unit conversion to E+ (metric). Materials!!!!
 
