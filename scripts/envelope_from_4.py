@@ -157,7 +157,7 @@ framing = {'name': 'metal_16in',
 
 layers_ = {}
 for lk in layers:
-    name = layers[lk]['material']
+    name = layers[lk]['material'].name
     thickness = layers[lk]['thickness']
     classification = layers[lk]['classification']
     material_property = layers[lk]['material']
@@ -169,7 +169,6 @@ framing = Framing.from_data(framing)
 framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 framed_wall.compute_wall_r()
 
-
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 f = Floor.from_idf('Generic Interior Floor', constructions_path)
@@ -177,6 +176,7 @@ f = Floor.from_idf('Generic Interior Floor', constructions_path)
 # make a ceiling - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
+
 
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -220,11 +220,14 @@ b.set_zone_systems()
 
 
 #TODO: Ensure unit conversion to E+ (metric). Materials!!!!
+#TODO: Surface cycle directions matter
+#TODO: Check construction layer order issue. 
+
+
 
 b.write_idf()
 eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
 wea = config['file_paths']['operational']['SEATTLE']
 
 b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=False)
-
 

@@ -131,6 +131,7 @@ class OperationalMixins:
     def write_idf(self):
         """ Write idf file.
         """
+        self.make_constructions_dict()
         self.make_layers_dict()
         write_idf_from_building(self)
 
@@ -152,7 +153,23 @@ class OperationalMixins:
         self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self   
-       
+    
+    def make_constructions_dict(self):
+        self.constructions = {}
+        for ek in self.building_envelope.envelopes:
+            env = self.building_envelope.envelopes[ek]
+
+            for sk in env.surfaces:
+                con = env.surfaces[sk].construction
+                self.constructions[con.name] = con
+
+        windows = self.building_envelope.envelopes[ek].windows
+        for wk in windows:
+            win = windows[wk]
+            con = win.construction
+            self.constructions[con.name] = con
+
+
     def make_layers_dict(self):
         """ Makes a dictionary containing all unique layers, with names, materials and
         thicknesses.
@@ -163,15 +180,16 @@ class OperationalMixins:
         None
         
         """
+        self.layers = {}
         for ck in self.constructions:
             lkeys = self.constructions[ck].layers.keys()
             for lk in lkeys:
-                name = self.constructions[ck].layers[lk]['name']
-                thick = self.constructions[ck].layers[lk]['thickness']
+                layer = self.constructions[ck].layers[lk]
+                name = self.constructions[ck].layers[lk].name
+                thick = self.constructions[ck].layers[lk].thickness
                 lname = '{} {}mm'.format(name, round(thick*1000, 1))
-                self.layers[lname] = {'layer_name': lname,
-                                                 'material_name': name,
-                                                 'thickness': thick}
+                self.layers[lname] = {'layer': layer}
+                layer.name = lname
 
     def set_zone_systems(self):
 
