@@ -62,9 +62,16 @@ class Product(Master):
         self.weight_unit = None
         self.density = None
         self.density_unit = None
+        self.carbon_storage = None
         self.mineral_carbon_storage_source = None 
         self.mineral_carbon_intensity = None 
         self.mineral_carbonation_potential = None
+        self.moisture_content = None
+        self.dry_density = None
+        self.dry_mass = None
+        self.carbon_percentage = None
+        self.biogenic_carbon_storage_potential = None
+        self.biogenic_carbon_storage_source = None
         self.is_material = True
         self.sctg_code = None
         self.transport_legs = None
@@ -441,7 +448,7 @@ class Product(Master):
 
         return self
 
-    def set_dry_density(self, dry_density):
+    def set_dry_density(self, dry_density=None):
         """Set dry density of the product. This is used to calculate dry mass for biogenic carbon storage calculation.
 
         Parameters
@@ -456,7 +463,7 @@ class Product(Master):
 
         return self
     
-    def set_dry_mass(self, dry_mass):
+    def set_dry_mass(self, dry_mass=None):
         """Set dry mass of the product. This is used for biogenic carbon storage calculation.
 
         Parameters
@@ -504,6 +511,9 @@ class Product(Master):
             self.carbon_percentage = None
         elif isinstance(percent, (float, int)):
             self.carbon_percentage = percent
+        elif isinstance(percent, str):
+            percent_str = percent.replace('%', '')
+            self.carbon_percentage = float(percent_str) / 100.0
         else:
             raise TypeError("Carbon percentage must be numerical.")
 
@@ -795,13 +805,17 @@ class Product(Master):
         float
             Dry density of the product (mass per unit measurement of product).
         """
+        if self.dry_density is not None:
+            return self.dry_density
+        
         moisture_content = self.get_moisture_content()
         density = self.get_density()
         if moisture_content is not None:
-            return density * (1 - moisture_content) if density is not None else None
+            self.dry_density = density * (1 - moisture_content) if density is not None else None
         else:
-            return density if density is not None else None
+            self.dry_density = density if density is not None else None
         #return self.carbon_storage.get_dry_density()
+        return self.dry_density
     
     def get_dry_mass(self):
         """Get dry mass of the product. This is used for biogenic carbon storage calculation.
@@ -811,22 +825,25 @@ class Product(Master):
         float
             Dry mass of the product.
         """
+        if self.dry_mass is not None:
+            return self.dry_mass
+        
         moisture_content = self.get_moisture_content()
         if self.get_unit().get_qty_measured() == "mass":
             if moisture_content is not None:
-                return self.get_qty() * (1 - moisture_content)
+                self.dry_mass = self.get_qty() * (1 - moisture_content)
             else:
-                return self.get_qty()
+                self.dry_mass = self.get_qty()
         else:
             actual_mass = self.get_weight()
             if (actual_mass is not None) and (moisture_content is not None):
-                return actual_mass * (1 - moisture_content)
+                self.dry_mass = actual_mass * (1 - moisture_content)
             elif actual_mass is not None:
-                return actual_mass
+                self.dry_mass = actual_mass
             else:
                 return "Error: Unable to calculate dry mass."
         #return self.carbon_storage.get_dry_mass()
-        #return self.dry_mass
+        return self.dry_mass
     
     def get_biogenic_carbon_composition(self):
         """Get biogenic carbon composition of the product. This is used for biogenic carbon storage calculation.
