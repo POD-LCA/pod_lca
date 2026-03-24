@@ -225,7 +225,7 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     df_sorted = df_sorted.drop(columns=["cluster_score"])
 
     cluster_means = df.groupby('cluster')['impact'].mean()
-    sorted_clusters = cluster_means.sort_values().index
+    sorted_clusters = cluster_means.sort_values(ascending=False).index
     cluster_map = {old: new for new, old in enumerate(sorted_clusters)}
     df_sorted['cluster_impact_rank'] = df_sorted['cluster'].map(cluster_map)
 
