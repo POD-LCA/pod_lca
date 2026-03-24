@@ -21,6 +21,8 @@ from pod_lca.utilities import DataImporter
 from ...units import UNITS_MAP
 from ...units import Quantity as Q
 from ...utilities import log
+from ...utilities import subtract_vectors
+from ...utilities import dot_vectors
 
 
 class Envelope:
@@ -231,7 +233,26 @@ class Envelope:
         return self
 
     def set_cycle_directions(self):
-        pass
+        cpt = self.centroid
+        for sk in self.surfaces:
+            srf = self.surfaces[sk]
+            sn = srf.normal
+            sc = srf.centroid
+            to_inside = subtract_vectors(cpt, sc)
+
+            if dot_vectors(sn, to_inside) > 0:
+                srf.reverse_normal()
+        
+        for wk in self.windows:
+            win = self.windows[wk]
+            sk = list(win.surfaces.keys())[0]
+            srf = win.surfaces[sk]
+            sn = srf.normal
+            sc = srf.centroid
+            to_inside = subtract_vectors(cpt, sc)
+
+            if dot_vectors(sn, to_inside) > 0:
+                srf.reverse_normal()
 
     # ================================
     # Getters
@@ -276,6 +297,7 @@ class Envelope:
             self.wall_surface_keys.append(wk)
 
     def update_envelope_surfaces_floorplan_height(self, floor_plan, height):
+        self.floor_plan = floor_plan
         f2f = self.height
         for sk in self.surfaces:
             srf = self.surfaces[sk]
