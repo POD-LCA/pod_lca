@@ -220,14 +220,41 @@ b = Building.from_assemblies(bname, btype, location, built_year, life_span, s, b
 b.building_envelope.make_envelope_connectivity_network()
 b.building_envelope.set_outside_boundary_conditions()
 
+# set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 path = config['file_paths']['operational']['SYSTEMS']
 b.operational_object = OperationalObject.from_idf(path)
 
+# run operational energy simulation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 #TODO: Ensure unit conversion to E+ (metric). Materials!!!!
+#TODO: Fix read results issues!
 
 b.write_idf()
 eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
 wea = config['file_paths']['operational']['SEATTLE']
 
-b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=False)
+b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=True)
+print(b.get_operational_impacts()) # default is 'total'
 
+for i in range(50): print('')
+
+results = b.energy_plus_results
+units = b.energy_plus_units
+
+for rk in results:
+    print(rk)
+    print(results[rk])
+    print('')
+
+# # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# print(b.get_impacts(scope='all', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product', lc_stage=None))
+
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
+
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()

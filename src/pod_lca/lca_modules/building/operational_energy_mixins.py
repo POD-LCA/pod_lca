@@ -154,7 +154,7 @@ class OperationalMixins:
 
         self.get_operational_electricity_product()._inventories_uptodate = False
 
-        return self   
+        return self
     
     def make_constructions_dict(self):
         self.constructions = {}
@@ -170,7 +170,6 @@ class OperationalMixins:
             win = windows[wk]
             con = win.construction
             self.constructions[con.name] = con
-
 
     def make_layers_dict(self):
         """ Makes a dictionary containing all unique layers, with names, materials and
@@ -196,8 +195,6 @@ class OperationalMixins:
     def set_zone_systems(self):
 
         from copy import deepcopy
-
-        print('tomas')
 
         eqc_key = list(self.operational_object.equipment_connections.keys())[0]
         eql_key = list(self.operational_object.equipment_lists.keys())[0]
