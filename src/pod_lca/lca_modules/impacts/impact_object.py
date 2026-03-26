@@ -100,6 +100,10 @@ class Impacts(Records):
             Impact category not recognied.
         """
         key = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
+        parent = self.get_parent()
+        stage = parent.get_life_cycle_stage()
+        biogenic_CO2 = 0
+        mineral_CO2 = 0
 
         # check key
         if key in self.get_categories():
@@ -122,12 +126,43 @@ class Impacts(Records):
 
                     qty = carbon_storage_record.get_record(record)
 
-                    if isinstance(qty, (float, int)):
+                    '''if isinstance(qty, (float, int)):
                         if not isnan(qty):
-                            gwp_qty = gwp_qty - (qty * conversion_factor)
+                            gwp_qty = gwp_qty - (qty * conversion_factor)'''
+                    
+                                        # EE added 3/25 ----------------
+                    CO2_stored_qty = qty * conversion_factor
+                    
+                    if "Mineral" in record:
+                        mineral_CO2 += CO2_stored_qty
 
-            return gwp_qty
+                    if "Biogenic" in record:
+                        biogenic_CO2 += CO2_stored_qty
+                    
+                    # Apply stage-specific adjustment logic
+                    if stage == "A1":
+                        # A1 credit for stored carbon
+                        return gwp_qty - (mineral_CO2 + biogenic_CO2)
 
+                    elif stage == "A3":
+                        # No adjustment for A3 GWP from biogenic co2 in fuels
+                        return gwp_qty - mineral_CO2
+
+                    else:
+                        return gwp_qty
+                    
+            #return gwp_qty
+
+    def get_adjusted_a3_gwp_for_bioC_neutrality(self, bio_co2):
+            
+        #base_A3 = self.get_record("GWP") or 0.0
+
+        #self.update_qty({"GWP": base_A3 + bio_co2})
+        self.update_qty({"GWP": bio_co2})
+
+        #return base_A3 + bio_co2
+        return bio_co2
+        # -------------
 
 if __name__ == "__main__":
     pass

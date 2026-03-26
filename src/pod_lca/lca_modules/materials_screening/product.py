@@ -456,11 +456,7 @@ class Product(Master):
         dry_density : float
             Dry density of the product (mass per unit measurement of product).
         """
-        if isinstance(dry_density, (float, int)):
-            self.dry_density = dry_density
-        else:
-            raise TypeError("Dry density should be a numerical value.")
-
+        self.dry_density = dry_density
         return self
     
     def set_dry_mass(self, dry_mass=None):
@@ -471,11 +467,7 @@ class Product(Master):
         dry_mass : float
             Dry mass of the product.
         """
-        if isinstance(dry_mass, (float, int)):
-            self.dry_mass = dry_mass
-        else:
-            raise TypeError("Dry mass should be a numerical value.")
-
+        self.dry_mass = dry_mass
         return self
 
     def set_biogenic_carbon_storage_source(self, source):
@@ -532,7 +524,8 @@ class Product(Master):
             If Unit object only, the quantity is taken as 1.0;
             If None, taken as per unit of parent objects declared unit.
         """
-        key = config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"]["Biogenic C"]
+        #key = config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"]["Biogenic C"]
+        key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
         if key in self.unit_carbon_storage.record_attr_dict:
             if self.get_biogenic_carbon_storage_source() == "custom":
                 biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
@@ -973,7 +966,15 @@ class Product(Master):
                     self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
                     self.update_inventory_records()
 
-            #TODO update inventory records for biogenic carbon storage
+                #TODO update inventory records for biogenic carbon storage
+                if self.get_biogenic_carbon_storage_qty() is not None:
+                    biogenic_carbon_storage_qty = self.get_biogenic_carbon_storage_qty()
+                    self.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty)
+                    self.impacts.get_adjusted_GWP()
+                    self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty)
+                    self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty)
+                    self.update_inventory_records()
+
 
         return self
 
