@@ -58,7 +58,7 @@ from pod_lca.visualizer import BarChart
 from pod_lca.visualizer import MatplotlibPlotter
 
 
-for i in range(100): print('')
+# for i in range(100): print('')
 
 constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
 
@@ -204,57 +204,36 @@ ename = 'tomas_envelope'
 e = Envelope.from_components(ename, floor_plan, floor_to_floor, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
-# make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+import rhinoscriptsyntax as rs
 
-stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
-mui_type = 'low' # 'mid', 'hight'
+rs.DeleteObjects(rs.ObjectsByLayer('Default'))
 
-s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
+env = be.envelopes[3]
+
+env.set_cycle_directions()
 
 
-# make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+srfs = list(env.surfaces.keys())
+for sk in srfs:
+  # sk = srfs[2]
+  srf = env.surfaces[sk]
+  rs.AddPolyline(srf.polygon)
+  cpt = srf.centroid
+  n = srf.normal
+  ept = rs.VectorAdd(cpt, n)
+  l = rs.AddLine(cpt, ept)
+  rs.CurveArrows(l, 2)
 
-b = Building.from_assemblies(bname, btype, location, built_year, life_span, s, be)
-# # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-b.building_envelope.make_envelope_connectivity_network()
-b.building_envelope.set_outside_boundary_conditions()
-
-# set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-path = config['file_paths']['operational']['SYSTEMS']
-b.operational_object = OperationalObject.from_idf(path)
-
-# run operational energy simulation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#TODO: Ensure unit conversion to E+ (metric). Materials!!!!
-#TODO: Fix read results issues!
-
-b.write_idf()
-eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-wea = config['file_paths']['operational']['SEATTLE']
-
-b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=True)
-print(b.get_operational_impacts()) # default is 'total'
-
-for i in range(50): print('')
-
-results = b.energy_plus_results
-units = b.energy_plus_units
-
-for rk in results:
-    print(rk)
-    print(results[rk])
-    print('')
-
-# # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# print(b.get_impacts(scope='all', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product', lc_stage=None))
-
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
-
-# graph = BarChart.from_plotter(MatplotlibPlotter)
-# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# graph.show()
+for wk in env.windows:
+    win = env.windows[wk]
+    sk = list(win.surfaces.keys())[0]
+    srf = win.surfaces[sk]
+    pl = rs.AddPolyline(srf.polygon)
+    cpt = srf.centroid
+    n = srf.normal
+    ept = rs.VectorAdd(cpt, n)
+    
+    l = rs.AddLine(cpt, ept)
+    rs.CurveArrows(l, 2)
+    rs.ObjectColor(l, (0,0,255))
+    rs.ObjectColor(pl, (0,0,255))

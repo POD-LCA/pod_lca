@@ -381,30 +381,12 @@ def write_layers(building):
     None
     """
 
-    constructions = {}
-    for ek in building.building_envelope.envelopes:
-        env = building.building_envelope.envelopes[ek]
-        for sk in env.surfaces:
-            con = env.surfaces[sk].construction
-            constructions[con.name] = con
-
-    layers = {}
-    for ck in constructions:
-        layers_ = constructions[ck].layers
-        for lk in layers_:
-            layer = layers_[lk]
-            layers[layer.name] = layer
-
-    for lk in layers:
-        layer = layers[lk]
-        mat_name = layer.material_property.name
+    for lk in building.layers:
+        layer = building.layers[lk]['layer']
         mat = layer.material_property
         thick = layer.thickness.convert_to(METER)
-        # print(layer.name)
-        if thick:
-            lay_name = "{} {}mm".format(mat_name, round(thick.value * 1000, 1))
-        else:
-            lay_name = mat_name
+        lay_name = lk
+
         if mat.__type__ == "Material":
             write_material(mat, thick, lay_name)
         elif mat.__type__ == "MaterialNoMass":
@@ -491,7 +473,7 @@ def write_material_air_gap(mat, layer_name):
     fh.write("\n")
     fh.write("Material:AirGap,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
-    fh.write("  {};     !- Resistance (M**2K/W)\n".format(mat.resistance))
+    fh.write("  {};     !- Resistance (M**2K/W)\n".format(mat.thermal_resistance))
     fh.write("\n")
     fh.write("\n")
     fh.close()
@@ -593,20 +575,14 @@ def write_constructions(building):
     -------
     None
     """
-    constructions = {}
-    for ek in building.building_envelope.envelopes:
-        env = building.building_envelope.envelopes[ek]
-        for sk in env.surfaces:
-            con = env.surfaces[sk].construction
-            constructions[con.name] = con
 
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("\n")
-    for ck in constructions:
-        name = constructions[ck].name
-        layers = [constructions[ck].layers[lk] for lk in constructions[ck].layers]
-        types = [layer.material_property.__type__ for layer in layers]
-        thicks = [layer.thickness for layer in layers]
+    for ck in building.constructions:
+        name = building.constructions[ck].name
+        layers = [building.constructions[ck].layers[lk] for lk in building.constructions[ck].layers]
+        # types = [layer.material_property.__type__ for layer in layers]
+        # thicks = [layer.thickness for layer in layers]
         lnames = [layer.name for layer in layers]
         fh.write("Construction,\n")
         fh.write("  {},\t\t\t\t\t!- Name\n".format(name))
@@ -615,15 +591,18 @@ def write_constructions(building):
                 sep = ";"
             else:
                 sep = ","
-            if thicks[i] == None:
-                lname = layer
-            elif thicks[i] > 0:
-                lname = "{} {}mm".format(layer, round(thicks[i] * 1000, 1))
-            elif thicks[i] <= 0 and types[i] == "Material":
-                continue
-            else:
-                lname = "{}".format(layer)
-            fh.write("  {}{}\t\t\t\t\t!- Layer {}\n".format(lname, sep, i))
+            # if thicks[i] == None:
+            #     lname = layer
+            # elif thicks[i] > 0:
+            #     print(layer)
+            #     lname = "{} {}mm".format(layer, round(thicks[i] * 1000, 1))
+            #     print(lname)
+            #     print('')
+            # elif thicks[i] <= 0 and types[i] == "Material":
+            #     continue
+            # else:
+            #     lname = "{}".format(layer)
+            fh.write("  {}{}\t\t\t\t\t!- Layer {}\n".format(layer, sep, i))
         fh.write("\n")
     fh.write("\n")
     fh.close()

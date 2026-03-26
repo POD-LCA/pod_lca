@@ -48,13 +48,11 @@ class Construction(Assembly):
             l = Layer.from_data(mdata, thickness, None)
             layers_[lk] = l
 
-        construction = cls.create(name)
-        construction.from_layers(name, layers_)
+        construction = cls.from_layers(name, layers_)
         return construction
     
     @classmethod
     def from_layers(cls, name, layers):
-        construction = cls.create(name)
         construction = cls.create(name)
         construction.layer_order = {lk: layers[lk].name for lk in layers}
         construction.layers = layers

@@ -27,7 +27,7 @@ class Layer(object):
     @classmethod
     def from_data(cls, data, thickness, classification=None):
         layer = cls()
-        layer.name = '{}_{}'.format(data['name'], thickness)
+        layer.name = data['name']
         layer.thickness = thickness
         layer.material_property = layer.add_envelope_material_property(data)
         layer.classification = classification
@@ -40,7 +40,7 @@ class Layer(object):
         thickness = data.get('thickness')
 
         layer = cls()
-        layer.name = '{}_{}'.format(name, thickness)
+        layer.name = name
         layer.thickness = thickness
         layer.material_property = layer.add_envelope_material_property(data)
         return layer
