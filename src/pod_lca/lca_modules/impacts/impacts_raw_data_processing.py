@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "etel5501@uw.edu;kiun@uw.edu"
 __version__ = "0.1.0"
 
-from pod_lca.lca_modules.impacts import openLCA
+from pod_lca.impacts import openLCA
 from pod_lca.units import JOULE
 from pod_lca.units import MEGA
 from pod_lca.utilities import config
