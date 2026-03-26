@@ -25,7 +25,7 @@ def read_eso(building, filepath, pre_dict):
     fh = open(filepath, "r")
     lines = fh.readlines()
     fh.close()
-    zones = [building.floors[zk].envelope.name.lower() for zk in building.floors]
+    zones = [building.building_envelope.envelopes[ek].name.lower() for ek in building.building_envelope.envelopes]
 
     del lines[: 9 + pre_dict["len_preamble"]]
     del lines[-2:]
@@ -69,7 +69,7 @@ def read_eso_preamble(building, filepath):
     del lines[:7]
     del lines[-2:]
 
-    zones = [building.floors[zk].envelope.name.lower() for zk in building.floors]
+    zones = [building.building_envelope.envelopes[ek].name.lower() for ek in building.building_envelope.envelopes]
 
     data = {}
     len_preamble = 0

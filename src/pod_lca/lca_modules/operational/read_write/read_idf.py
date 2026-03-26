@@ -11,6 +11,7 @@ from pod_lca.units import METER, WATT, KELVIN, KILOGRAM, CUBIC_METER, JOULE, SQU
 from pod_lca.units import Quantity as Q
 
 WmK = WATT / (METER * KELVIN)
+Wm2K = WATT / (SQUARE_METER * KELVIN)
 kgm3 = KILOGRAM / CUBIC_METER
 JkK = JOULE / (KILOGRAM * KELVIN)
 m2KW = (SQUARE_METER * KELVIN) / WATT
@@ -226,7 +227,7 @@ def find_no_mass_materials(filepath, data):
         slra = float(lines[i + 5].split(",")[0])
         if ";" not in lines[i + 6]:
             visa = float(lines[i + 6].split(",")[0])
-            thic = float(lines[i + 7].split(";")[0])
+            thic = Q(float(lines[i + 7].split(";")[0]), METER)
         else:
             visa = float(lines[i + 6].split(";")[0])
             thic = None
@@ -259,7 +260,7 @@ def find_gas_materials(filepath, data):
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         gtype = lines[i + 2].split(",")[0].strip()
-        thick = float(lines[i + 3].split(";")[0])
+        thick = Q(float(lines[i + 3].split(";")[0]), METER)
 
         data["materials"][name] = {
             "__type__": "WindowMaterialGas",
@@ -284,7 +285,7 @@ def find_glazing_materials(filepath, data):
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         odtype = lines[i + 2].split(",")[0].strip()
-        thick = float(lines[i + 4].split(",")[0])
+        thick = Q(float(lines[i + 4].split(",")[0]), METER)
         soltr = float(lines[i + 5].split(",")[0])
         fref = float(lines[i + 6].split(",")[0])
         bref = float(lines[i + 7].split(",")[0])
@@ -294,7 +295,7 @@ def find_glazing_materials(filepath, data):
         inftr = float(lines[i + 11].split(",")[0])
         finfhem = float(lines[i + 12].split(",")[0])
         binfhem = float(lines[i + 13].split(",")[0])
-        cond = float(lines[i + 14].split(",")[0])
+        cond = Q(float(lines[i + 14].split(",")[0]), WmK)
         dirt = float(lines[i + 15].split(",")[0])
         soldif = lines[i + 16].split(";")[0].strip()
 
@@ -362,7 +363,7 @@ def find_glazing_material_simple(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        ufac = float(lines[i + 2].split(",")[0])
+        ufac = Q(float(lines[i + 2].split(",")[0]), Wm2K)
         solh = float(lines[i + 3].split(",")[0])
         vist = lines[i + 4].split(";")[0]
 

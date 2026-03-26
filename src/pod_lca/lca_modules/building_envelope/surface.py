@@ -6,7 +6,8 @@ __version__ = "0.1.0"
 
 
 from pod_lca.utilities.geometry import area_polygon
-
+from pod_lca.utilities.geometry import normal_polygon
+from pod_lca.utilities.geometry import centroid
 
 class Surface(object):
     def __init__(self):
@@ -60,6 +61,17 @@ class Surface(object):
             xyz[0].convert_to(unit)
             xyz[1].convert_to(unit)
             xyz[2].convert_to(unit)
+    
+    @property
+    def normal(self):
+        return normal_polygon(self.polygon)
+    
+    @property
+    def centroid(self):
+        return centroid(self.polygon)
+    
+    def reverse_normal(self):
+        self.polygon = list(reversed(self.polygon))
 
 
 
