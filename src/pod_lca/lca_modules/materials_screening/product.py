@@ -13,7 +13,7 @@ from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
-from ...units import KG_CARBON_DIOXIDE
+from ...units import KG_CARBON_DIOXIDE, KG_CARBON
 from ...units import KILOMETER
 from ...units import KILOGRAM
 from ...units import Unit
@@ -476,6 +476,9 @@ class Product(Master):
         ----------
         source : str
             Source for biogenic carbon storage ('from_database' or 'custom')."""
+        if source == None:
+            source = "from_database"
+            
         self.biogenic_carbon_storage_source = source
 
     def set_biogenic_carbon_storage_potential(self, potential):
@@ -753,7 +756,7 @@ class Product(Master):
         float
             Quantity of mineral carbon storage.
         """
-        return self.carbon_storage
+        return self.carbon_storage.get_record('Mineral C')
 
     def get_mineral_carbonation_potential(self):
         """Set mineral carbonation potential of the product.
@@ -959,7 +962,9 @@ class Product(Master):
                     self.set_mineral_carbonation_potential(potential)
   
                 if self.get_mineral_carbon_storage_qty() is not None and self.get_mineral_carbon_storage_qty() != 0:
-                    self.carbon_storage.update_qty(self.get_mineral_carbon_storage_qty())
+                    mineral_carbon_storage_qty = self.get_mineral_carbon_storage_qty() 
+                    self.carbon_storage.update_qty(mineral_carbon_storage_qty)  
+                    self.set_mineral_carbon_intensity(mineral_carbon_storage_qty)
                     #self.unit_carbon_storage.update_qty(self.get_mineral_carbon_storage_qty() / self.get_qty())
                     #self.impacts.update_gwp(-self.get_mineral_carbon_storage_qty())
                     self.impacts.get_adjusted_GWP()
@@ -969,7 +974,7 @@ class Product(Master):
                 #TODO update inventory records for biogenic carbon storage
                 if self.get_biogenic_carbon_storage_qty() is not None:
                     biogenic_carbon_storage_qty = self.get_biogenic_carbon_storage_qty()
-                    self.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty)
+                    self.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty, unit=KG_CARBON)
                     self.impacts.get_adjusted_GWP()
                     self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty)
                     self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty)

@@ -130,7 +130,6 @@ class Impacts(Records):
                         if not isnan(qty):
                             gwp_qty = gwp_qty - (qty * conversion_factor)'''
                     
-                                        # EE added 3/25 ----------------
                     CO2_stored_qty = qty * conversion_factor
                     
                     if "Mineral" in record:
@@ -162,7 +161,6 @@ class Impacts(Records):
 
         #return base_A3 + bio_co2
         return bio_co2
-        # -------------
 
 if __name__ == "__main__":
     pass
