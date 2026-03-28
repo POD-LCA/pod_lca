@@ -470,7 +470,7 @@ class Product(Master):
         self.dry_mass = dry_mass
         return self
 
-    def set_biogenic_carbon_storage_source(self, source):
+    def set_biogenic_carbon_storage_source(self, source=None):
         """Set the source for biogenic carbon storage.
         Parameters
         ----------
@@ -478,7 +478,7 @@ class Product(Master):
             Source for biogenic carbon storage ('from_database' or 'custom')."""
         if source == None:
             source = "from_database"
-            
+
         self.biogenic_carbon_storage_source = source
 
     def set_biogenic_carbon_storage_potential(self, potential):
@@ -530,27 +530,26 @@ class Product(Master):
         #key = config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"]["Biogenic C"]
         key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
         if key in self.unit_carbon_storage.record_attr_dict:
-            if self.get_biogenic_carbon_storage_source() == "custom":
-                biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
-                input_unit = unit
-                conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
+            biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
+            input_unit = unit
+            conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
 
-                if per is None:
-                    conversion_factor_2 = 1.0 * self.inventories_declared_qty
-                elif isinstance(per, Unit):
-                    conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
-                elif isinstance(per, dict):
-                    conversion_factor_2 = (
-                        per["unit"].convert_to(self.inventories_declared_unit)
-                        * self.inventories_declared_qty
-                        / per["qty"]
-                    )
-                else:
-                    raise TypeError
+            if per is None:
+                conversion_factor_2 = 1.0 * self.inventories_declared_qty
+            elif isinstance(per, Unit):
+                conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
+            elif isinstance(per, dict):
+                conversion_factor_2 = (
+                    per["unit"].convert_to(self.inventories_declared_unit)
+                    * self.inventories_declared_qty
+                    / per["qty"]
+                )
+            else:
+                raise TypeError
 
-                setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
-            
-            if self.get_life_cycle_stage() == "A1":
+            setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
+        
+            '''if self.get_life_cycle_stage() == "A1":
                 try:
                     if self.get_biogenic_carbon_storage_source() == "custom":
                         self.biogenic_carbon_storage_source["_current"] = "custom"
@@ -562,7 +561,7 @@ class Product(Master):
                         #TODO: update A3 GWP inventory with +1 * biogenic_co2_stored
                 except:
                     log(f"Failed to update impacts after setting biogenic carbon storage for {self.get_name()}.", "Warn")
-
+                '''
         return self
 
     def set_sctg_code(self, code=None):
