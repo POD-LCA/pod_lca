@@ -127,7 +127,7 @@ Construction,
 
 Construction,
   Generic Interior Ceiling,               !- Name
-  Normalweight concrete 6000 psi,                    !- Layer 1
+  Normalweight concrete 6000 psi,         !- Layer 1
   Generic Ceiling Air Gap,                !- Layer 2
   Generic Acoustic Tile;                  !- Layer 3
 
@@ -139,7 +139,7 @@ Construction,
   Generic Interior Floor,                 !- Name
   Generic Acoustic Tile,                  !- Layer 1
   Generic Ceiling Air Gap,                !- Layer 2
-  Generic LW Concrete;                    !- Layer 3
+  Normalweight concrete 6000 psi;         !- Layer 3
 
 Construction,
   Generic Interior Wall,                  !- Name
