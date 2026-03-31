@@ -131,26 +131,14 @@ class Impacts(Records):
                             gwp_qty = gwp_qty - (qty * conversion_factor)'''
                     
                     CO2_stored_qty = qty * conversion_factor
-                    
+
                     if "Mineral" in record:
-                        mineral_CO2 += CO2_stored_qty
+                        gwp_qty -= CO2_stored_qty
 
-                    if "Biogenic" in record:
-                        biogenic_CO2 += CO2_stored_qty
+                    if "Biogenic" in record and stage == "A1":
+                        gwp_qty -= CO2_stored_qty
                     
-                    # Apply stage-specific adjustment logic
-                    if stage == "A1":
-                        # A1 credit for stored carbon
-                        return gwp_qty - (mineral_CO2 + biogenic_CO2)
-
-                    elif stage == "A3":
-                        # No adjustment for A3 GWP from biogenic co2 in fuels
-                        return gwp_qty - mineral_CO2
-
-                    else:
-                        return gwp_qty
-                    
-            #return gwp_qty
+            return gwp_qty
 
     def get_adjusted_a3_gwp_for_bioC_neutrality(self, bio_co2):
             
