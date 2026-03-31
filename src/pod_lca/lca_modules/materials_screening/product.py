@@ -355,15 +355,15 @@ class Product(Master):
             Year for the electricity by location data.
         """
         current_source = self.get_electricity_source()
-        if current_source == "from_database":
-            self.set_electricity_source("by_location")
 
-        if year is not None:
-            self.electricity["by_location"].set_year(year)
-        else:
+        if year is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
-
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            self.electricity["by_location"].set_year(year)
+        
         return self
     
     def set_electricity_location(self, location):
