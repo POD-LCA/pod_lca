@@ -535,13 +535,13 @@ class Product(Master):
             conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
 
             if per is None:
-                conversion_factor_2 = 1.0 * self.inventories_declared_qty
+                conversion_factor_2 = 1.0 / self.qty
             elif isinstance(per, Unit):
-                conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
+                conversion_factor_2 = per.convert_to(self.inventories_declared_unit) / self.qty
             elif isinstance(per, dict):
                 conversion_factor_2 = (
                     per["unit"].convert_to(self.inventories_declared_unit)
-                    * self.inventories_declared_qty
+                    / self.qty
                     / per["qty"]
                 )
             else:
