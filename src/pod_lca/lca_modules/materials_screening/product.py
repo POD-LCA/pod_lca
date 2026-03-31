@@ -334,15 +334,15 @@ class Product(Master):
             Electricity scenario for the electricity by location data.
         """
         current_source = self.get_electricity_source()
-        if current_source == "from_database":
-            self.set_electricity_source("by_location")
 
-        if scenario is not None:
-            self.electricity["by_location"].set_scenario(scenario)
-        else:
+        if scenario is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
-
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            self.electricity["by_location"].set_scenario(scenario)
+        
         return self
     
     def set_electricity_year(self, year):
