@@ -394,7 +394,7 @@ class Product(Master):
                 conversion_factor_1 = input_unit.convert_to(mineral_carbon_unit)
 
                 if per is None:
-                    conversion_factor_2 = 1.0 * self.inventories_declared_qty
+                    conversion_factor_2 = 1.0 / (self.qty*(self.unit.convert_to(self.inventories_declared_unit)))
                 elif isinstance(per, Unit):
                     conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
                 elif isinstance(per, dict):
@@ -412,7 +412,7 @@ class Product(Master):
                     f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override."
                 )
             
-            try:
+            '''try:
                 self.get_impacts()
                 if self.get_mineral_carbon_storage_source == "custom":
                     self.mineral_carbon_storage_source["_current"] = "custom"
@@ -422,7 +422,8 @@ class Product(Master):
                     self.update_inventory_records()
             except:
                 log(f"Failed to update impacts after setting mineral carbon intensity for {self.get_name()}.", "Warn")
-
+            '''
+                
         return self
     
     def set_moisture_content(self, moisture_content):
@@ -527,7 +528,6 @@ class Product(Master):
             If Unit object only, the quantity is taken as 1.0;
             If None, taken as per unit of parent objects declared unit.
         """
-        #key = config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"]["Biogenic C"]
         key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
         if key in self.unit_carbon_storage.record_attr_dict:
             biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
@@ -535,7 +535,7 @@ class Product(Master):
             conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
 
             if per is None:
-                conversion_factor_2 = 1.0 / self.qty
+                conversion_factor_2 = 1.0 / (self.qty*(self.unit.convert_to(self.inventories_declared_unit)))
             elif isinstance(per, Unit):
                 conversion_factor_2 = per.convert_to(self.inventories_declared_unit) / self.qty
             elif isinstance(per, dict):
