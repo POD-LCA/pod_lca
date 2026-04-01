@@ -571,7 +571,7 @@ class Product(Master):
         else:
             return None
         
-    def get_electricity_location(self):
+    def get_electricity_location_regional(self):
         """Get the location for the electricity by location data.
 
         Returns
@@ -582,7 +582,22 @@ class Product(Master):
         current_source = self.get_electricity_source()
 
         if current_source == "by_location":
-            return self.electricity["by_location"].get_location()
+            return self.electricity["by_location"].get_location().get_state()
+        else:
+            return None
+
+    def get_electricity_location_local(self):
+        """Get the location for the electricity by location data.
+
+        Returns
+        -------
+        str
+            Location for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if current_source == "by_location":
+            return self.electricity["by_location"].get_location().get_zip()
         else:
             return None
 
