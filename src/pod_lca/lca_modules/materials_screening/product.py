@@ -366,8 +366,8 @@ class Product(Master):
         
         return self
     
-    def set_electricity_location(self, location):
-        """Set the location for the electricity.
+    def set_electricity_location_regional(self, state):
+        """Set the location for the electricity, at the regional level.
         This forced the electricity source to be "by_location" if location is provided, and revet to "from_database" if location is None.
 
         Parameters
@@ -376,17 +376,42 @@ class Product(Master):
             Location for the electricity by location data.
         """
         current_source = self.get_electricity_source()
-        if current_source == "from_database":
-            self.set_electricity_source("by_location")
 
-        if location is not None:
-            self.electricity["by_location"].set_location(location)
-        else:
+        if state is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
-
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            
+            self.electricity["by_location"].set_geographical_scope("Regional")
+            self.electricity["by_location"].set_location(state=state)
+        
         return self
 
+    def set_electricity_location_local(self, zip_code):
+        """Set the location for the electricity, at local level.
+        This forced the electricity source to be "by_location" if location is provided, and revet to "from_database" if location is None.
+
+        Parameters
+        ----------
+        location : str
+            Location for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if zip_code is None:
+            if current_source == "by_location":
+                self.set_electricity_source("from_database")
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            
+            self.electricity["by_location"].set_geographical_scope("Local")
+            self.electricity["by_location"].set_location(zip_code=zip_code)
+        
+        return self
+    
     def set_electricity_database_tag(self):
         """Find the tag used to identify electricity data in the database."""
         if self.get_impact_database_entry() is not None:
