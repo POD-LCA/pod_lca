@@ -413,18 +413,6 @@ class Product(Master):
                 raise Warning(
                     f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override."
                 )
-            
-            '''try:
-                self.get_impacts()
-                if self.get_mineral_carbon_storage_source == "custom":
-                    self.mineral_carbon_storage_source["_current"] = "custom"
-                    #self.impacts.update_qty({"GWP": -self.carbon_storage})
-                    self.impacts.get_adjusted_GWP()
-                    self.emissions.update_qty({"CO2": -self.carbon_storage})
-                    self.update_inventory_records()
-            except:
-                log(f"Failed to update impacts after setting mineral carbon intensity for {self.get_name()}.", "Warn")
-            '''
                 
         return self
     
@@ -532,38 +520,30 @@ class Product(Master):
         """
         key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
         if key in self.unit_carbon_storage.record_attr_dict:
-            biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
-            input_unit = unit
-            conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
+            if self.get_biogenic_carbon_storage_potential():
+                biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
+                input_unit = unit
+                conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
 
-            if per is None:
-                conversion_factor_2 = 1.0 / (self.qty*(self.unit.convert_to(self.inventories_declared_unit)))
-            elif isinstance(per, Unit):
-                conversion_factor_2 = per.convert_to(self.inventories_declared_unit) / self.qty
-            elif isinstance(per, dict):
-                conversion_factor_2 = (
-                    per["unit"].convert_to(self.inventories_declared_unit)
-                    / self.qty
-                    / per["qty"]
-                )
+                if per is None:
+                    conversion_factor_2 = 1.0 / (self.qty*(self.unit.convert_to(self.inventories_declared_unit)))
+                elif isinstance(per, Unit):
+                    conversion_factor_2 = per.convert_to(self.inventories_declared_unit) / self.qty
+                elif isinstance(per, dict):
+                    conversion_factor_2 = (
+                        per["unit"].convert_to(self.inventories_declared_unit)
+                        / self.qty
+                        / per["qty"]
+                    )
+                else:
+                    raise TypeError
+
+                setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
             else:
-                raise TypeError
-
-            setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
-        
-            '''if self.get_life_cycle_stage() == "A1":
-                try:
-                    if self.get_biogenic_carbon_storage_source() == "custom":
-                        self.biogenic_carbon_storage_source["_current"] = "custom"
-                        #self.impacts.update_qty({"GWP": -self.carbon_storage})
-                        self.impacts.get_adjusted_GWP()
-                        self.impacts.update_qty({"GWP_biogenic": -self.carbon_storage})
-                        self.emissions.update_qty({"CO2": -self.carbon_storage})
-                        self.update_inventory_records()
-                        #TODO: update A3 GWP inventory with +1 * biogenic_co2_stored
-                except:
-                    log(f"Failed to update impacts after setting biogenic carbon storage for {self.get_name()}.", "Warn")
-                '''
+                raise Warning(
+                    f"Product {self.get_name()} does not have biogenic carbon storage potential. Product.set_biogenic_carbon_storage_potential(True) to override."
+                )
+            
         return self
 
     def set_sctg_code(self, code=None):
@@ -813,7 +793,6 @@ class Product(Master):
             self.dry_density = density * (1 - moisture_content) if density is not None else None
         else:
             self.dry_density = density if density is not None else None
-        #return self.carbon_storage.get_dry_density()
         return self.dry_density
     
     def get_dry_mass(self):
@@ -841,7 +820,6 @@ class Product(Master):
                 self.dry_mass = actual_mass
             else:
                 return "Error: Unable to calculate dry mass."
-        #return self.carbon_storage.get_dry_mass()
         return self.dry_mass
     
     def get_biogenic_carbon_composition(self):
@@ -852,14 +830,9 @@ class Product(Master):
         float
             Biogenic carbon composition of the product (between 0 and 1).
         """
-        #return self.carbon_storage.get_carbon_percentage()
-        #return self.carbon_percentage
-        #return self.get_record("%C (dry mass basis)"
-        # If user or database has already set it, use it
         if self.carbon_percentage is not None:
             return self.carbon_percentage
 
-        # Otherwise pull from the database entry
         entry_name = self.get_impact_database_entry()
         if entry_name is None:
             return None
@@ -968,13 +941,28 @@ class Product(Master):
                     mineral_carbon_storage_qty = self.get_mineral_carbon_storage_qty() 
                     self.carbon_storage.update_qty(mineral_carbon_storage_qty)  
                     self.set_mineral_carbon_intensity(mineral_carbon_storage_qty)
-                    #self.unit_carbon_storage.update_qty(self.get_mineral_carbon_storage_qty() / self.get_qty())
-                    #self.impacts.update_gwp(-self.get_mineral_carbon_storage_qty())
                     self.impacts.get_adjusted_GWP()
                     self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
                     self.update_inventory_records()
 
-                #TODO update inventory records for biogenic carbon storage
+            if self.get_biogenic_carbon_storage_potential() is None:
+                data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
+                key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
+                if key in data_entry.index:
+                    if isinstance(data_entry[key], (bool, np_bool)):
+                        potential = data_entry[key]
+                    elif isinstance(data_entry[key], str):
+                        if data_entry[key].lower() in ["yes", "true"]:
+                            potential = True
+                        elif data_entry[key].lower() in ["no", "false"]:
+                            potential = False
+                        else:
+                            raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+                    else:
+                        raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+
+                    self.set_biogenic_carbon_storage_potential(potential)
+                
                 if self.get_biogenic_carbon_storage_qty() is not None:
                     biogenic_carbon_storage_qty = self.get_biogenic_carbon_storage_qty()
                     self.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty, unit=KG_CARBON)
