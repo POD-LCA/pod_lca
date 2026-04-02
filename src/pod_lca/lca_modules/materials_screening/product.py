@@ -333,6 +333,94 @@ class Product(Master):
 
         return self
 
+    def set_electricity_scenario(self, scenario=None):
+        """Set the electricity scenario for the electricity.
+        This forced the electricity source to be "by_location" if scenario is provided, and revet to "from_database" if scenario is None.
+
+        Parameters
+        ----------
+        scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
+            Electricity scenario for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if scenario is None:
+            if current_source == "by_location":
+                self.set_electricity_source("from_database")
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            self.electricity["by_location"].set_scenario(scenario)
+        
+        return self
+    
+    def set_electricity_year(self, year):
+        """Set the year for the electricity.
+        This forced the electricity source to be "by_location" if year is provided, and revet to "from_database" if year is None.
+
+        Parameters
+        ----------
+        year : int
+            Year for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if year is None:
+            if current_source == "by_location":
+                self.set_electricity_source("from_database")
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            self.electricity["by_location"].set_year(year)
+        
+        return self
+    
+    def set_electricity_location_regional(self, state):
+        """Set the location for the electricity, at the regional level.
+        This forced the electricity source to be "by_location" if location is provided, and revet to "from_database" if location is None.
+
+        Parameters
+        ----------
+        location : str
+            Location for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if state is None:
+            if current_source == "by_location":
+                self.set_electricity_source("from_database")
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            
+            self.electricity["by_location"].set_geographical_scope("Regional")
+            self.electricity["by_location"].set_location(state=state)
+        
+        return self
+
+    def set_electricity_location_local(self, zip_code):
+        """Set the location for the electricity, at local level.
+        This forced the electricity source to be "by_location" if location is provided, and revet to "from_database" if location is None.
+
+        Parameters
+        ----------
+        location : str
+            Location for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if zip_code is None:
+            if current_source == "by_location":
+                self.set_electricity_source("from_database")
+        else:
+            if current_source == "from_database":
+                self.set_electricity_source("by_location")
+            
+            self.electricity["by_location"].set_geographical_scope("Local")
+            self.electricity["by_location"].set_location(zip_code=zip_code)
+        
+        return self
+    
     def set_electricity_database_tag(self):
         """Find the tag used to identify electricity data in the database."""
         if self.get_impact_database_entry() is not None:
@@ -601,6 +689,66 @@ class Product(Master):
             Source of electricity inventories data.
         """
         return self.electricity["_current"]
+
+    def get_electricity_scenario(self):
+        """Get the electricity scenario for the electricity by location data.
+
+        Returns
+        -------
+        str
+            Electricity scenario for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if current_source == "by_location":
+            return self.electricity["by_location"].get_scenario()
+        else:
+            return None
+        
+    def get_electricity_year(self):
+        """Get the year for the electricity by location data.
+
+        Returns
+        -------
+        int
+            Year for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if current_source == "by_location":
+            return self.electricity["by_location"].get_year()
+        else:
+            return None
+        
+    def get_electricity_location_regional(self):
+        """Get the location for the electricity by location data.
+
+        Returns
+        -------
+        str
+            Location for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if current_source == "by_location":
+            return self.electricity["by_location"].get_location().get_state()
+        else:
+            return None
+
+    def get_electricity_location_local(self):
+        """Get the location for the electricity by location data.
+
+        Returns
+        -------
+        str
+            Location for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if current_source == "by_location":
+            return self.electricity["by_location"].get_location().get_zip()
+        else:
+            return None
 
     def get_electricity_database_tag(self):
         """Find the tag used to identify electricity data in the database.
