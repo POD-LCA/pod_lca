@@ -348,12 +348,14 @@ class Product(Master):
 
         return self
     
-    def set_mineral_carbon_storage_source(self, source):
+    def set_mineral_carbon_storage_source(self, source=None):
         """Set the source for mineral carbon storage.
         Parameters
         ----------
         source : str
             Source for mineral carbon storage ('from_database' or 'custom')."""
+        if source == None:
+            source = "from_database" 
         self.mineral_carbon_storage_source = source
 
     def set_mineral_carbonation_potential(self, potential):
@@ -663,7 +665,9 @@ class Product(Master):
             if self.get_density() is None:
                 return None
             else:
-                return self.get_qty() * self.get_density()
+                declared_unit = self.inventories_declared_unit
+                conversion_factor = self.get_unit().convert_to(declared_unit)
+                return self.get_qty() * conversion_factor * self.get_density()
 
     def get_weight_unit(self):
         """Retrieve the unit of measurement of mass of the product.
@@ -677,7 +681,7 @@ class Product(Master):
         if self.get_unit().get_qty_measured() == "mass":
             return self.get_unit()
         else:
-            return self.get_unit() * self.get_density_unit()
+            return self.inventories_declared_unit * self.get_density_unit()
 
     def get_density(self):
         """Retrieve density of the product.
