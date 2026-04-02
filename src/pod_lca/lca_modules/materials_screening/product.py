@@ -938,8 +938,7 @@ class Product(Master):
                     self.set_mineral_carbonation_potential(potential)
   
                 if self.get_mineral_carbon_storage_qty() is not None and self.get_mineral_carbon_storage_qty() != 0:
-                    mineral_carbon_storage_qty = self.get_mineral_carbon_storage_qty() 
-                    self.carbon_storage.update_qty(mineral_carbon_storage_qty)  
+                    mineral_carbon_storage_qty = self.get_mineral_carbon_storage_qty()   
                     self.set_mineral_carbon_intensity(mineral_carbon_storage_qty)
                     self.impacts.get_adjusted_GWP()
                     self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
