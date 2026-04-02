@@ -125,10 +125,6 @@ class Impacts(Records):
                     conversion_factor = input_unit.convert_to(KG_CARBON_DIOXIDE)
 
                     qty = carbon_storage_record.get_record(record)
-
-                    '''if isinstance(qty, (float, int)):
-                        if not isnan(qty):
-                            gwp_qty = gwp_qty - (qty * conversion_factor)'''
                     
                     CO2_stored_qty = qty * conversion_factor
 
@@ -141,13 +137,14 @@ class Impacts(Records):
             return gwp_qty
 
     def get_adjusted_a3_gwp_for_bioC_neutrality(self, bio_co2):
-            
-        #base_A3 = self.get_record("GWP") or 0.0
+        """Get A3 GWP values adjusted for stored biogenic CO2 (-1/+1 bioCO2 accounting, A1-A3 scope).
 
-        #self.update_qty({"GWP": base_A3 + bio_co2})
+        Returns
+        -------
+        float
+            Adjusted A3 GWP value (all stored biogenic CO2 is counted as a CO2 emission when the product exits the product system in stage A3)
+        """    
         self.update_qty({"GWP": bio_co2})
-
-        #return base_A3 + bio_co2
         return bio_co2
 
 if __name__ == "__main__":
