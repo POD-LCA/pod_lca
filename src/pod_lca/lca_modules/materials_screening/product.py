@@ -338,6 +338,7 @@ class Product(Master):
         if scenario is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
+                self.electricity["by_location"].set_scenario(config["setup"]["electricity"]["DEFAULT_SCENARIO"])
         else:
             if current_source == "from_database":
                 self.set_electricity_source("by_location")
@@ -359,6 +360,7 @@ class Product(Master):
         if year is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
+                self.electricity["by_location"].set_year(self.get_production_year())
         else:
             if current_source == "from_database":
                 self.set_electricity_source("by_location")
@@ -380,6 +382,8 @@ class Product(Master):
         if state is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
+                self.electricity["by_location"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
+                self.electricity["by_location"].set_location(location_obj=self.get_model().get_location())
         else:
             if current_source == "from_database":
                 self.set_electricity_source("by_location")
@@ -403,6 +407,8 @@ class Product(Master):
         if zip_code is None:
             if current_source == "by_location":
                 self.set_electricity_source("from_database")
+                self.electricity["by_location"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
+                self.electricity["by_location"].set_location(location_obj=self.get_model().get_location())
         else:
             if current_source == "from_database":
                 self.set_electricity_source("by_location")
