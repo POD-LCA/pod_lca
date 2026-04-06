@@ -217,8 +217,6 @@ s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, 
 b = Building.from_assemblies(bname, btype, location, built_year, life_span, s, be)
 # # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-b.building_envelope.make_envelope_connectivity_network()
-b.building_envelope.set_outside_boundary_conditions()
 
 # set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -230,22 +228,12 @@ b.operational_object = OperationalObject.from_idf(path)
 #TODO: Ensure unit conversion to E+ (metric). Materials!!!!
 #TODO: Fix read results issues!
 
-b.write_idf()
-eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-wea = config['file_paths']['operational']['SEATTLE']
+# b.write_idf()
+# eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
+# wea = config['file_paths']['operational']['SEATTLE']
 
-b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=True)
-print(b.get_operational_impacts()) # default is 'total'
-
-for i in range(50): print('')
-
-results = b.energy_plus_results
-units = b.energy_plus_units
-
-for rk in results:
-    print(rk)
-    print(results[rk])
-    print('')
+# b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=True)
+print(b.get_operational_impacts(method='eplus')) # default is 'total'
 
 # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

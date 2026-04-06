@@ -454,6 +454,7 @@ def write_materials_nomass(mat, layer_name):
     -------
     None
     """
+
     fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
     fh.write("\n")
     fh.write("Material:NoMass,\n")

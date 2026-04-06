@@ -88,7 +88,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.construction_energy_product = None
         self.operational_energy_product = None
 
-        self.run_eplus = False
+        # self.run_eplus = False  #TODO: this flag should be deleted. 
         self.idf_constructions_data = {}
         self.idf_material_properties = {}
         self.energy_plus_results = None

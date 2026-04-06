@@ -131,6 +131,10 @@ class OperationalMixins:
     def write_idf(self):
         """ Write idf file.
         """
+
+        self.building_envelope.make_envelope_connectivity_network()
+        self.building_envelope.set_outside_boundary_conditions()
+
         self.make_constructions_dict()
         self.make_layers_dict()
         self.building_envelope.set_cycle_directions()
@@ -285,11 +289,13 @@ class OperationalMixins:
     # ================================
     # Inventory Records Methods
     # ================================ 
-    def get_operational_impacts(self, category='total', objs=False):
+    def get_operational_impacts(self, method='EUIs', category='total', objs=False):
         """ Get B6 impacts of the building.
 
         Parameters
         ----------
+        method : {'eplus', 'EUIs'} 
+            How operation electricity to be computed.
         category : {'heating', 'lighting', 'cooling', 'total'}
             Category of operational energy.
         objs : bool, optional
@@ -301,6 +307,12 @@ class OperationalMixins:
         ~pod_lca.impacts.Impacts
             B6 impacts of the building.
         """
+        if method == 'eplus':
+            self.write_idf()
+            self.run_operational_energy_model()
+        elif method == 'EUIs':
+            pass
+        
         if not self.get_operational_electricity_product()._inventories_uptodate:
             self.get_operational_electricity_product().update_inventory_records()
 
