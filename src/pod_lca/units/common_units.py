@@ -199,6 +199,17 @@ UNIT_CONVERSIONS["temperature"] = {
     "fahrenheit": 1.8,
 }
 
+# ==================================
+# CURRENCY / MONEY UNITS
+# ==================================
+
+US_DOLLAR = Unit.from_basics("US dollar", "USD", "currency")
+
+UNIT_CONVERSIONS["currency"] = {
+    "US dollar":1.0,
+}
+
+
 
 # ==================================
 # NAME OVERRIDES
