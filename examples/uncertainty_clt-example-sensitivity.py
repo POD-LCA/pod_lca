@@ -22,15 +22,8 @@ factory = Location.from_str("Seattle, Washington")
 project.set_location(factory)
 project.set_year(2025)
 
-pod_lca_impact_database = ImpactsDatabase.new("pod_lca_impact_database")
-pod_lca_impact_database.set_data(
-    r"src/pod_lca/data/impacts_podlca_data.csv",
-    grouped_data="Electricity",
-    density_headers=["Density (dry basis)", "Density unit"],
-)
-project.set_impact_database(pod_lca_impact_database)
-
-project.set_transportation_mode_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
+project.set_material_database("src/pod_lca/data/impacts_podlca_data.csv")
+project.set_transportation_mode_impact_database("src/pod_lca/data/transportation_podlca_emission.csv")
 
 CLT_model = project.add_model("CLT_01")
 
@@ -110,3 +103,5 @@ result_range = SensitivityAnalysis.compute_sensitivity_of_params(
     ],
     impact_cat="GWP",
 )
+
+result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber, "electricity_scenario", impact_cat="GWP", options=['MidCase', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050'])
