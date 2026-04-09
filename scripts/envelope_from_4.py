@@ -46,7 +46,7 @@ from pod_lca.lca_modules.building_envelope.material_property import WindowMateri
 from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGas
 
 
-from pod_lca.lca_modules.operational import OperationalObject
+from pod_lca.lca_modules.operational import OperationalEnergyObject
 # from pod_lca.lca_modules.operational.read_write import find_materials
 # from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
 # from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
@@ -211,29 +211,23 @@ mui_type = 'low' # 'mid', 'hight'
 
 s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
 
-
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(bname, btype, location, built_year, life_span, s, be)
-# # # run operational analysis - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
 
 # set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 path = config['file_paths']['operational']['SYSTEMS']
-b.operational_object = OperationalObject.from_idf(path)
+b.set_operational_energy_object(OperationalEnergyObject.from_idf(path))
 
-# run operational energy simulation - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-#TODO: Ensure unit conversion to E+ (metric). Materials!!!!
-#TODO: Fix read results issues!
+b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
+b.operational_energy_method = 'eplus' # {'epluus', 'EUIs'}, default is 'eplus'
 
-# b.write_idf()
-# eplus_path = os.path.join(pod_lca.TEMP, 'EnergyPlus-25-1-0')
-# wea = config['file_paths']['operational']['SEATTLE']
+# get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# b.run_operational_energy_model(eplus_path, pod_lca.TEMP, wea, delete=True)
-print(b.get_operational_impacts(method='eplus')) # default is 'total'
+print(b.get_operational_impacts()) # default is 'total'
 
 # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

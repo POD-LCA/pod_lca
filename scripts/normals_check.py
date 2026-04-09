@@ -46,7 +46,7 @@ from pod_lca.lca_modules.building_envelope.material_property import WindowMateri
 from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGas
 
 
-from pod_lca.lca_modules.operational import OperationalObject
+from pod_lca.lca_modules.operational import OperationalEnergyObject
 # from pod_lca.lca_modules.operational.read_write import find_materials
 # from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
 # from pod_lca.lca_modules.operational.read_write import find_materials_air_gap

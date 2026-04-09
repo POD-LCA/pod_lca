@@ -219,11 +219,11 @@ class OperationalElectricityProduct:
         """
         building = self.get_building()
 
-        method = 'EUIs'
-        if building.run_eplus:
-            if building.energy_plus_results == None:
-                building.run_operational_energy_model()
-            method = 'eplus'
+        method = building.operational_energy_method
+        if method == 'eplus':
+            building.write_idf()
+            building.run_operational_energy_model(delete=True)
+            building.get_operational_energy_object().set_dirty(False)
 
         annual_electricity_usage = building.get_operational_electricity_usasge(method,
                                                                                summed_at='year', 
@@ -233,7 +233,7 @@ class OperationalElectricityProduct:
 
         electricity_declared_unit = self.electricity_supplier.get_declared_unit()
         conversion_factor = electricity_declared_unit.convert_to(self.get_unit())
-        for year in range(building.get_built_year(), building.get_built_year() + building.get_life_span() + 1):
+        for year in range(building.get_built_year(), building.get_built_year() + building.get_life_span() + 1): #TODO slow loop
             self.electricity_supplier.set_year(year)
             unit_impacts = self.electricity_supplier.get_unit_impacts()
             unit_emissions = self.electricity_supplier.get_unit_emissions()

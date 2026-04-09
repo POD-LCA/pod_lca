@@ -7,4 +7,4 @@ __version__ = "0.1.0"
 # from .operational_building import * FIXME: Conflicts with building module
 
 from .read_write import *
-from .operational_object import OperationalObject
+from .operational_object import OperationalEnergyObject

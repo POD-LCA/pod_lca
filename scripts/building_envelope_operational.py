@@ -19,7 +19,7 @@ from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import Shading
 
-from pod_lca.lca_modules.operational.operational_object import OperationalObject
+from pod_lca.lca_modules.operational.operational_object import OperationalEnergyObject
 
 from pod_lca.lca_modules.geometry.building_geometry import window_surfaces_from_wwr
 from pod_lca.lca_modules.geometry.building_geometry import shading_surfaces_from_window
@@ -151,7 +151,7 @@ b.update_envelope_surfaces()
 # TODO: No Mass materials need to get their thickness from somewhere else, not the IDF...
 
 path = config['file_paths']['operational']['SYSTEMS']
-b.operational_object = OperationalObject.from_idf(path)
+b.operational_object = OperationalEnergyObject.from_idf(path)
 b.set_zone_systems()
 
 
