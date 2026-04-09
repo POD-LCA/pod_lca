@@ -9,6 +9,7 @@ setup:
       EP: kg N eq
       ODP: kg CFC-11 eq
       POCP: kg O3 eq
+      NREF: MJ
     EMISSION_INVENTORIES:
       CO2: kg
       CH4: kg

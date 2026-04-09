@@ -232,7 +232,10 @@ class openLCA:
             unit = impact_dict[impact]["refUnit"]
             impact_category_ref = client.get_descriptor(schema.ImpactCategory, uid)
 
-            impact_qty = result.get_total_impact_value_of(impact_category_ref).amount
+            if impact_category_ref:
+                impact_qty = result.get_total_impact_value_of(impact_category_ref).amount
+            else:
+                log(f"Impact category {impact} with UUID {uid} not found in the openLCA server.", "Warn")
 
             results_dict[impact + " [" + unit + "]"] = impact_qty
 
@@ -818,7 +821,12 @@ class openLCA:
                         ids = [ids]
 
                     for impact_cat in impact_dict:
-                        root = utree.of(result, impact_dict[impact_cat]["@ref"])
+                        impact_cat_ref = impact_dict[impact_cat]["@ref"]
+                        if impact_cat_ref is None:
+                            log(f"Impact category {impact_cat} with UUID {impact_cat_ref} not found in the openLCA server.", "Warn")
+                            continue
+
+                        root = utree.of(result, impact_cat_ref)
                         if group["is_uuid"]:
                             group_impact, ref_qty, ref_unit = openLCA.get_process_in_process(
                                 ids, root, 0, impact=0, qty=0, unit=unit, conversion_map=conversion_map, max_levels=1

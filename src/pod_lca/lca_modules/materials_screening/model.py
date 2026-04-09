@@ -335,8 +335,13 @@ class Model:
         """
         return self.transportation_manager
 
-    def get_impacts(self):
+    def get_impacts(self, transportation_grouping="not_grouped"):
         """Retrieve all the impacts in the model categorized by life cycle stage.
+
+        Parameters
+        ----------
+        transportation_grouping : {'not_grouped', 'with_material', 'all_transportation'}, optional
+            Method for grouping transportation impacts. Default is 'not_grouped'.
 
         Returns
         -------
@@ -346,7 +351,22 @@ class Model:
         for item in self.get_all_items():
             item.update_inventory_records()
 
-        self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
+        match transportation_grouping:
+
+            case "not_grouped":
+                self.impacts["A2"] = self.get_transportation_manager().get_impacts_list()
+
+            case "with_material":
+                transportation_manager = self.get_transportation_manager()
+                for impact in self.impacts["A1"]:
+                    product = impact.get_parent()
+                    if product.get_transportation() is not None:
+                        impact += transportation_manager.get_impacts(product)
+                
+                self.impacts["A2"] = []
+
+            case "all_transportation":
+                self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
 
         return self.impacts
 

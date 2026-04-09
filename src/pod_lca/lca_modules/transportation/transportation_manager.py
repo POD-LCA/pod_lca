@@ -219,6 +219,19 @@ class TransportationManager:
 
             return impact
 
+    def get_impacts_list(self):
+        """Retrieve the impacts of the project as a list.
+
+        Returns
+        -------
+        list of ~pod_lca.impacts.Impact
+            List of impacts of the project.
+        """
+        impacts_lst = []
+        for leg in self.get_transportation_legs():
+            impacts_lst.append(leg.get_impacts())
+        return impacts_lst
+
     def get_emissions(self, product=None):
         """Retrieve the emissions of the product.
 
@@ -254,6 +267,18 @@ class TransportationManager:
 
             return impact
 
+    def get_emissions_list(self):
+        """Retrieve the emissions of the project as a list.
+
+        Returns
+        -------
+        list of ~pod_lca.impacts.Emission
+            List of emissions of the project.
+        """
+        emissions_lst = []
+        for leg in self.get_transportation_legs():
+            emissions_lst.append(leg.get_emissions())
+        return emissions_lst
     # ================================
     # Model Methods
     # ================================

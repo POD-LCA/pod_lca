@@ -1,15 +1,15 @@
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "etel5501@uw.edu;kiun@uw.edu"
 __version__ = "0.1.0"
 
-from . import openLCA
-from ...units import JOULE
-from ...units import MEGA
-from ...utilities import config
-from ...utilities import DataExporter
-from ...utilities import DataImporter
+from pod_lca.impacts import openLCA
+from pod_lca.units import JOULE
+from pod_lca.units import MEGA
+from pod_lca.utilities import config
+from pod_lca.utilities import DataExporter
+from pod_lca.utilities import DataImporter
 
 
 # ================================================
@@ -64,7 +64,7 @@ elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 
 # inventories (impacts and emissions)
-impact_categories = DataImporter.json_to_dict("./data/impacts_" + IMPACT_SOURCE_DATABASE + "_categories.json")
+impact_categories = DataImporter.json_to_dict("src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_categories.json")
 for impact_category in impact_categories.keys():
     if impact_category not in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]:
         raise ValueError(
@@ -80,7 +80,7 @@ for impact_category in impact_categories.keys():
             )
 
 emission_inventories = DataImporter.json_to_dict(
-    "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_emission-inventories.json"
+    "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_emission-inventories.json"
 )
 for emission in emission_inventories.keys():
     if emission not in config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"]:
@@ -104,12 +104,12 @@ elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
 
 # impact groupings
 renewable_fuels_process_list = DataImporter.csv_to_list(
-    "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_renewable-fuels-group.csv", column_header="UUID"
+    "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_renewable-fuels-group.csv", column_header="UUID"
 )
 nonrenewable_fuels_process_list = DataImporter.csv_to_list(
-    "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_nonrenewable-fuels-group.csv", column_header="UUID"
+    "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_nonrenewable-fuels-group.csv", column_header="UUID"
 )
-heating_values = DataImporter.csv_to_dict("./data/impacts_" + IMPACT_SOURCE_DATABASE + "_heating-values.csv", "UUID")
+heating_values = DataImporter.csv_to_dict("src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_heating-values.csv", "UUID")
 
 if IMPACT_SOURCE_DATABASE == "FLCAC":
     group_by = [
@@ -130,7 +130,7 @@ if IMPACT_SOURCE_DATABASE == "FLCAC":
 
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     electricity_process_list = DataImporter.csv_to_list(
-        "./data/impacts_ecoinvent391_electricity-group.csv", column_header="UUID"
+        "src/pod_lca/data/impacts_ecoinvent391_electricity-group.csv", column_header="UUID"
     )
     group_by = [
         {
@@ -162,12 +162,12 @@ results = openLCA.generate_impacts_dir(
 # wood chips: (uuids: d47a4435-3089-4263-af99-8611eed2698c, 7fe99768-d571-4bc2-a272-7df585bd0d48)
 if IMPACT_SOURCE_DATABASE == "ecoinvent391":
     uuid_list_with_wood_chips = DataImporter.csv_to_list(
-        "./data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv", column_header="UUID"
+        "src/pod_lca/data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv", column_header="UUID"
     )
     process_list = openLCA.get_process_list(openLCA_client, uuid_list_with_wood_chips)
 
     renewable_fuels_process_list = DataImporter.csv_to_list(
-        "./data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv", column_header="UUID"
+        "src/pod_lca/data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv", column_header="UUID"
     )
 
     group_by = [
@@ -191,5 +191,5 @@ if IMPACT_SOURCE_DATABASE == "ecoinvent391":
                 ]
 
 # save results
-save_path = "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_categorized-data.csv"
+save_path = "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE + "_categorized-data.csv"
 DataExporter.dict_to_csv(results, save_path)
