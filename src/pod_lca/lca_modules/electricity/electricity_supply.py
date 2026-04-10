@@ -506,10 +506,14 @@ class ElectricitySupply:
         Returns
         -------
         ~pandas.DataFrame
-            DataFrame of inventories by year.      
+            DataFrame of impacts by year.      
+        ~pandas.DataFrame
+            DataFrame of emissions by year.  
         """
         technologies = DataImporter.csv_to_list(config["file_paths"]["electricity"]["ELECTRICITY_TECHNOLOGIES"], "electricity technology")
-        inventory_headers = list(config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys()) + list(config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"].keys())
+        impact_headers = list(config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys())
+        emission_headers = list(config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"].keys())
+        inventory_headers = impact_headers + emission_headers
 
         geographical_scope = self.get_geographical_scope()
         location = self.get_location()
@@ -525,7 +529,7 @@ class ElectricitySupply:
         # get impacts by production technology
         if  geographical_scope == "National":
             impact_data_df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["ELECTRICITY_IMPACT_NATIONAL_DATA"])
-        elif geographical_scope == "Regional":
+        elif (geographical_scope == "Regional") or (geographical_scope == "Local"):
             impact_data_df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["ELECTRICITY_IMPACT_REGIONAL_DATA"])
 
             region = location.get_ferc_region()
@@ -548,10 +552,11 @@ class ElectricitySupply:
         # make impact matrix
         impact_data_df.set_index('Technology Type', inplace=True)
         inventories_df = impact_data_df.reindex(columns=inventory_headers, fill_value=0.0)
-        impact_matrix = inventories_df.loc[technologies, inventory_headers]
-        impact_matrix = impact_matrix.mul(impact_data_df['Conversion factor'], axis=0)
 
-        return energy_mix.dot(impact_matrix)
+        impact_matrix = inventories_df.loc[technologies, impact_headers].mul(impact_data_df['Conversion factor'], axis=0)
+        emission_matrix = inventories_df.loc[technologies, emission_headers].mul(impact_data_df['Conversion factor'], axis=0)
+
+        return energy_mix.dot(impact_matrix), energy_mix.dot(emission_matrix)
 
     def get_impact_distribution(self):
         """Get the distribution of the electricity supply authority.
