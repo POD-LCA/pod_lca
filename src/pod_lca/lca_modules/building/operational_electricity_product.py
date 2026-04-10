@@ -7,6 +7,8 @@ __version__ = "0.1.0"
 
 from ..electricity import ElectricitySupply
 from ..impacts import UniformEmissionProfile
+from ..impacts import Impacts
+from ..impacts import Emissions
 from ...units import KILO
 from ...units import WATT
 
@@ -245,13 +247,11 @@ class OperationalElectricityProduct:
 
         start_year = building.get_built_year()
         end_year = start_year + building.get_life_span() + 1
+        electricity_impacts, electricity_emissions = elec_supp.get_inventories_in_bulk_for_years(list(range(start_year, end_year)))
         for year in range(start_year, end_year):
 
-            ########### FIXME: Inefficient block - create method to get electricity unit impacts for a range of years
-            elec_supp.set_year(year)
-            unit_impacts = elec_supp.get_unit_impacts()
-            unit_emissions = elec_supp.get_unit_emissions()
-            ###########
+            unit_impacts = Impacts.from_dict(electricity_impacts.loc[year].to_dict())
+            unit_emissions = Emissions.from_dict(electricity_emissions.loc[year].to_dict())
 
             # set impacts
             heating_impacts = unit_impacts * h_usage
