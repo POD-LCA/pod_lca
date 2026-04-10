@@ -146,7 +146,8 @@ class OperationalMixins:
 
     def get_weather_file_path(self):
         if self.weather_file_path is None:
-            pass # TODO retrieve weather file based on climate zone of project location
+            climate_zone = self.get_location().get_climate_zone()
+            return config["file_paths"]["weather_files"][climate_zone]
         else:
             return self.weather_file_path
 

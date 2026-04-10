@@ -104,12 +104,30 @@ file_paths:
     FERC_BA_ZIPCODE_MAP_PATH: data/location_doe_ba-zip-mapping.csv
     GEA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
     REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
+    CLIMATE_ZONE_ZIPCODE_MAP_PATH: data/location_olsonkundig_climate-zones.csv
   operational:
     CONSTRUCTIONS: data/operational_constructions.idf
     SYSTEMS: data/operational_systems.idf
     TEMP: ../../temp/pod_lca_operational.idf
     OUTPUT: ../../temp/test_eplus_out
     EPLUS: ../../temp/EnergyPlus-25-1-0/energyplus
+  weather_files:
+    1A: data/USA_FL_Miami.Intl.AP.722020_TMY3.epw
+    2A: data/USA_FL_Tampa-MacDill.AFB.747880_TMY3.epw
+    2B: data/USA_AZ_Tucson-Davis-Monthan.AFB.722745_TMY3.epw
+    3A: data/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw
+    3B: data/USA_TX_El.Paso.Intl.AP.722700_TMY3.epw
+    3C: data/USA_CA_San.Deigo-Brown.Field.Muni.AP.722904_TMY3.epw
+    4A: data/USA_NY_New.York-John.F.Kennedy.Intl.AP.744860_TMY3.epw
+    4B: data/USA_NM_Albuquerque.Intl.Sunport.723650_TMY3.epw
+    4C: data/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw
+    5A: data/USA_NY_Buffalo.Niagara.Intl.AP.725280_TMY3.epw
+    5B: data/USA_CO_Denver-Aurora-Buckley.AFB.724695_TMY3.epw
+    5C: data/USA_WA_Port.Angeles-William.R.Fairchild.Intl.AP.727885_TMY3.epw
+    6A: data/USA_MN_Rochester.Intl.AP.726440_TMY3.epw
+    6B: data/USA_MT_Great.Falls.Intl.AP.727750_TMY3.epw
+    7: data/USA_MN_International.Falls.Intl.AP.727470_TMY3.epw
+    8: data/USA_AK_Fairbanks.Intl.AP.702610_TMY3.epw
   drf:
     PERTUBATION_LIFETIMES: data/drf_ipcc_pertubation-lifetimes.json
     RADIATIVE_EFFICIENCY: data/drf_ipcc_radiative-efficiency.json

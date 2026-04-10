@@ -222,7 +222,7 @@ b.set_operational_energy_object(OperationalEnergyObject.from_idf(path))
 
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
+# b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
 b.operational_energy_method = 'eplus' # {'epluus', 'EUIs'}, default is 'eplus'
 
 # get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -225,7 +225,6 @@ class OperationalElectricityProduct:
             building.run_operational_energy_model(delete=True)
             building.get_operational_energy_object().set_dirty(False)
 
-        start = time.time()
         annual_electricity_usage = building.get_operational_electricity_usasge(method,
                                                                                summed_at='year', 
                                                                                group_by_category=True,
