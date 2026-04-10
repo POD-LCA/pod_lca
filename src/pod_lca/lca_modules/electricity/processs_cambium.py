@@ -227,7 +227,7 @@ class CambiumData:
         else:
             raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")     
         
-        mapped_df = DataFrame(index=years, columns=technologies).fillna(0.0)
+        mapped_df = DataFrame(index=years, columns=technologies).fillna(0.0).astype(float)
         for cambium_header, tech_name in tech_map.items():
             if cambium_header in header_map.keys():
                 mapped_df[tech_name] += mix_values[header_map[cambium_header]]
