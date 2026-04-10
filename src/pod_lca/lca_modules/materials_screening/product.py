@@ -718,7 +718,7 @@ class Product(Master):
             super().update_inventory_records()
             self.update_electricity_records()
 
-            if self.get_mineral_carbonation_potential() is None:
+            if self.carbon_storage.get_mineral_carbonation_potential() is None:
                 data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
                 key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
                 if key in data_entry.index:
@@ -734,16 +734,16 @@ class Product(Master):
                     else:
                         raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
 
-                    self.set_mineral_carbonation_potential(potential)
+                    self.carbon_storage.set_mineral_carbonation_potential(potential)
   
-                if self.get_mineral_carbon_storage_qty() is not None and self.get_mineral_carbon_storage_qty() != 0:
-                    mineral_carbon_storage_qty = self.get_mineral_carbon_storage_qty()   
-                    self.set_mineral_carbon_intensity(mineral_carbon_storage_qty)
+                if self.carbon_storage.get_mineral_carbon_storage_qty() is not None and self.carbon_storage.get_mineral_carbon_storage_qty() != 0:
+                    mineral_carbon_storage_qty = self.carbon_storage.get_mineral_carbon_storage_qty()   
+                    self.carbon_storage.set_mineral_carbon_storage_qty(mineral_carbon_storage_qty)
                     self.impacts.get_adjusted_GWP()
-                    self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
+                    self.emissions.update_CO2_emissions(-self.carbon_storage.get_mineral_carbon_storage_qty())
                     self.update_inventory_records()
 
-            if self.get_biogenic_carbon_storage_potential() is None:
+            if self.carbon_storage.get_biogenic_carbon_storage_potential() is None:
                 data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
                 key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
                 if key in data_entry.index:
@@ -759,16 +759,15 @@ class Product(Master):
                     else:
                         raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
 
-                    self.set_biogenic_carbon_storage_potential(potential)
+                    self.carbon_storage.set_biogenic_carbon_storage_potential(potential)
                 
-                if self.get_biogenic_carbon_storage_qty() is not None:
-                    biogenic_carbon_storage_qty = self.get_biogenic_carbon_storage_qty()
-                    self.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty, unit=KG_CARBON)
+                if self.carbon_storage.get_biogenic_carbon_storage_qty() is not None:
+                    biogenic_carbon_storage_qty = self.carbon_storage.get_biogenic_carbon_storage_qty()
+                    self.carbon_storage.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty, unit=KG_CARBON)
                     self.impacts.get_adjusted_GWP()
                     self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty)
                     self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty)
                     self.update_inventory_records()
-
 
         return self
 

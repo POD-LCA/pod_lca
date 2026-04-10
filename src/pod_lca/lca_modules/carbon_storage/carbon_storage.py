@@ -31,7 +31,7 @@ class CarbonStorage(Records):
     def __init__(self):
         super().__init__()
         self.mineral_carbon_storage_source = None 
-        self.mineral_carbon_intensity = None 
+        self.mineral_carbon_storage_qty = None 
         self.mineral_carbonation_potential = None
         self.dry_density = None
         self.dry_mass = None
@@ -78,7 +78,7 @@ class CarbonStorage(Records):
         unit : ~pod_lca.units.Unit
             Unit of accelerated carbonation uptake.
         per : dict or ~pod_lca.units.Unit
-            Parent quantity for which the mineral carbon intensity is declared.
+            Parent quantity for which the mineral carbon storage qty is declared.
             If dict, {'per': {'qty': (:class:`int` or :class:`float`), 'unit': (:class:`~pod_lca.units.Unit`)}}
             If Unit object only, the quantity is taken as 1.0;
             If None, taken as per unit of parent objects declared unit.
