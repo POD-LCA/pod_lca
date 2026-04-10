@@ -274,7 +274,17 @@ class CarbonStorage(Records):
         bool
             Mineral carbonation potential of the product.
         """
-        return self.mineral_carbonation_potential
+        if self.mineral_carbonation_potential is not None:
+            return self.mineral_carbonation_potential
+
+        entry_name = self.parent.get_impact_database_entry()
+        if entry_name is None:
+            return None
+
+        db = self.parent.get_impact_database()
+        entry = db.get_data_entry(entry_name)
+        header = config["setup"]["impacts"]["ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER"]
+        return entry[header]
     
     def get_moisture_content(self):
         """Get moisture content of the product. This is used to calculate dry density and dry mass for biogenic carbon storage calculation.
@@ -373,7 +383,17 @@ class CarbonStorage(Records):
         bool
             Biogenic carbon storage potential of the product.
         """
-        return self.biogenic_carbon_storage_potential
+        if self.biogenic_carbon_storage_potential is not None:
+            return self.biogenic_carbon_storage_potential
+
+        entry_name = self.parent.get_impact_database_entry()
+        if entry_name is None:
+            return None
+
+        db = self.parent.get_impact_database()
+        entry = db.get_data_entry(entry_name)
+        header = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
+        return entry[header]
     
     def get_biogenic_carbon_storage_source(self):
         """Get the source for biogenic carbon storage.
