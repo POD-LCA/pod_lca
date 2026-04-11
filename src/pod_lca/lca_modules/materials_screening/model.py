@@ -255,12 +255,13 @@ class Model:
         ValueError
             Logistic type not recognized.
         """
+        name = self.get_name()
         if self.get_project().get_location() is None:
-            self.transportation_manager = TransportationManager.new("transportation")
+            self.transportation_manager = TransportationManager.new(name)
         elif self.get_project().get_location().get_country_code() == "US":
-            self.transportation_manager = USTransportationManager.new("transportation")
+            self.transportation_manager = USTransportationManager.new(name)
         else:
-            self.transportation_manager = TransportationManager.new("transportation")
+            self.transportation_manager = TransportationManager.new(name)
 
         return self
 
