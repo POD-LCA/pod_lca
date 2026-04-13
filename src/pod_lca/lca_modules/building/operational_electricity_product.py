@@ -224,6 +224,7 @@ class OperationalElectricityProduct:
         method = building.operational_energy_method
         if method == 'eplus':
             building.write_idf()
+            print('tomas')
             building.run_operational_energy_model(delete=True)
             building.get_operational_energy_object().set_dirty(False)
 

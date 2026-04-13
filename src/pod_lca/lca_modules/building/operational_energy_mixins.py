@@ -9,6 +9,7 @@ import os
 import subprocess
 import shutil
 from collections import defaultdict
+from pathlib import Path
 
 from . import OperationalElectricityProduct
 from ..impacts import Emissions
@@ -159,6 +160,8 @@ class OperationalMixins:
         out = config['file_paths']['operational']['OUTPUT']
 
         weather = self.get_weather_file_path()
+
+        Path(out).mkdir(exist_ok=True)
 
         if delete:
             self.delete_result_files(out)
