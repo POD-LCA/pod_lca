@@ -408,7 +408,8 @@ class CarbonStorage(Records):
         db = self.parent.get_impact_database()
         entry = db.get_data_entry(entry_name)
         header = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
-        return entry[header]
+        self.biogenic_carbon_storage_potential = entry[header] 
+        return self.biogenic_carbon_storage_potential
     
     def get_biogenic_carbon_storage_source(self):
         """Get the source for biogenic carbon storage.
@@ -432,7 +433,7 @@ class CarbonStorage(Records):
         float
             Quantity of biogenic carbon storage.
         """
-        if self.get_biogenic_carbon_storage_potential() is not True: 
+        if not self.get_biogenic_carbon_storage_potential(): 
             return None
         
         parent = self.get_parent()
