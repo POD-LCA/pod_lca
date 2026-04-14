@@ -425,13 +425,12 @@ class CarbonStorage(Records):
         float
             Quantity of biogenic carbon storage.
         """
+        parent = self.get_parent()
+        conversion_factor = parent.unit.convert_to(parent.inventories_declared_unit)
         if self.get_biogenic_carbon_storage_source() == "from_database":
-            parent = self.get_parent()
             database_entry = parent.get_impact_database_entry()
             database = parent.get_impact_database()
             default_unit_C_storage = database.get_data_entry(database_entry, 'Biogenic C')
-            
-            conversion_factor = parent.unit.convert_to(parent.inventories_declared_unit)
             default_C_storage = default_unit_C_storage * conversion_factor 
             if unit == KG_CARBON:
                 return default_C_storage 
@@ -442,10 +441,10 @@ class CarbonStorage(Records):
         else:
             carbon_storage_C = self.get_record('Biogenic C') 
             if unit == KG_CARBON:
-                return carbon_storage_C   
+                return carbon_storage_C * conversion_factor  
             elif unit == KG_CARBON_DIOXIDE:
                 carbon_storage_CO2 = get_biogenic_carbon_dioxide_content(carbon_storage_C)
-                return carbon_storage_CO2
+                return carbon_storage_CO2 * conversion_factor
 
 
 if __name__ == "__main__":
