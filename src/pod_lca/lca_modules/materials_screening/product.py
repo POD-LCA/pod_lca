@@ -62,16 +62,6 @@ class Product(Master):
         self.weight_unit = None
         self.density = None
         self.density_unit = None
-        self.carbon_storage = None
-        self.mineral_carbon_storage_source = None 
-        self.mineral_carbon_intensity = None 
-        self.mineral_carbonation_potential = None
-        self.moisture_content = None
-        self.dry_density = None
-        self.dry_mass = None
-        self.carbon_percentage = None
-        self.biogenic_carbon_storage_potential = None
-        self.biogenic_carbon_storage_source = None
         self.is_material = True
         self.sctg_code = None
         self.transport_legs = None
@@ -442,204 +432,7 @@ class Product(Master):
 
         return self
     
-    def set_mineral_carbon_storage_source(self, source=None):
-        """Set the source for mineral carbon storage.
-        Parameters
-        ----------
-        source : str
-            Source for mineral carbon storage ('from_database' or 'custom')."""
-        if source == None:
-            source = "from_database" 
-        self.mineral_carbon_storage_source = source
-
-    def set_mineral_carbonation_potential(self, potential):
-        """Set mineral carbonation potential of the product.
-
-        Parameters
-        ----------
-        potential : bool
-            Mineral carbonation potential of the product.
-        """
-        if isinstance(potential, (bool, np_bool)):
-            self.mineral_carbonation_potential = potential
-        else:
-            raise ValueError("Mineral carbonation potential needs to be a boolean.")
-
-        return self
-
-    def set_mineral_carbon_intensity(self, qty, unit=KG_CARBON_DIOXIDE, per=None):
-        """Set accelerated carbonation uptake to the 'Mineral C' entry.
-
-        Parameters
-        ----------
-        qty : float
-            Quantity of accelerated carbonation uptake.
-        unit : ~pod_lca.units.Unit
-            Unit of accelerated carbonation uptake.
-        per : dict or ~pod_lca.units.Unit
-            Parent quantity for which the mineral carbon intensity is declared.
-            If dict, {'per': {'qty': (:class:`int` or :class:`float`), 'unit': (:class:`~pod_lca.units.Unit`)}}
-            If Unit object only, the quantity is taken as 1.0;
-            If None, taken as per unit of parent objects declared unit.
-        """
-        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
-        if key in self.unit_carbon_storage.record_attr_dict:
-            if self.get_mineral_carbonation_potential():
-                mineral_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
-                input_unit = unit
-                conversion_factor_1 = input_unit.convert_to(mineral_carbon_unit)
-
-                if per is None:
-                    conversion_factor_2 = 1.0 / (self.qty*(self.unit.convert_to(self.inventories_declared_unit)))
-                elif isinstance(per, Unit):
-                    conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
-                elif isinstance(per, dict):
-                    conversion_factor_2 = (
-                        per["unit"].convert_to(self.inventories_declared_unit)
-                        * self.inventories_declared_qty
-                        / per["qty"]
-                    )
-                else:
-                    raise TypeError
-
-                setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
-            else:
-                raise Warning(
-                    f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override."
-                )
-                
-        return self
-    
-    def set_moisture_content(self, moisture_content):
-        """Set moisture content of the product. This is used to calculate dry density and dry mass for biogenic carbon storage calculation.
-
-        Parameters
-        ----------
-        moisture_content : float
-            Moisture content of the product (between 0 and 1).
-
-        Raises
-        ------
-        ValueError
-            Moisture content should be between 0 and 1.
-        """
-        if isinstance(moisture_content, (float, int)):
-            if 0 <= moisture_content <= 1:
-                self.moisture_content = moisture_content
-            else:
-                raise ValueError("Moisture content should be between 0 and 1.")
-        else:
-            raise TypeError("Moisture content should be a numerical value.")
-
-        return self
-
-    def set_dry_density(self, dry_density=None):
-        """Set dry density of the product. This is used to calculate dry mass for biogenic carbon storage calculation.
-
-        Parameters
-        ----------
-        dry_density : float
-            Dry density of the product (mass per unit measurement of product).
-        """
-        self.dry_density = dry_density
-        return self
-    
-    def set_dry_mass(self, dry_mass=None):
-        """Set dry mass of the product. This is used for biogenic carbon storage calculation.
-
-        Parameters
-        ----------
-        dry_mass : float
-            Dry mass of the product.
-        """
-        self.dry_mass = dry_mass
-        return self
-
-    def set_biogenic_carbon_storage_source(self, source=None):
-        """Set the source for biogenic carbon storage.
-        Parameters
-        ----------
-        source : str
-            Source for biogenic carbon storage ('from_database' or 'custom')."""
-        if source == None:
-            source = "from_database"
-
-        self.biogenic_carbon_storage_source = source
-
-    def set_biogenic_carbon_storage_potential(self, potential):
-        """Set biogenic carbon storage potential of the product.
-
-        Parameters
-        ----------
-        potential : bool
-            Biogenic carbon storage potential of the product. (Boolean indicating whether product contains biogenic carbon)
-        """
-        if isinstance(potential, (bool, np_bool)):
-            self.biogenic_carbon_storage_potential = potential
-        else:
-            raise ValueError("Biogenic carbon storage potential needs to be a boolean.")
-
-        return self
-    
-    
-    def set_biogenic_carbon_composition(self, percent):
-        """
-        Set the percent carbon (%C dry mass basis) for biogenic carbon composition.
-        pct should be a float (e.g., 52.3 means 52.3%).
-        """
-        if percent is None:
-            self.carbon_percentage = None
-        elif isinstance(percent, (float, int)):
-            self.carbon_percentage = percent
-        elif isinstance(percent, str):
-            percent_str = percent.replace('%', '')
-            self.carbon_percentage = float(percent_str) / 100.0
-        else:
-            raise TypeError("Carbon percentage must be numerical.")
-
-
-    def set_biogenic_carbon_storage_qty(self, qty, unit=KG_CARBON_DIOXIDE, per=None):
-        """Set the quantity of biogenic carbon storage.
-        Parameters
-        ----------
-        qty : float
-            Quantity of biogenic carbon storage.
-        unit : ~pod_lca.units.Unit
-            Unit of biogenic carbon storage.
-        per : dict or ~pod_lca.units.Unit
-            Parent quantity for which the biogenic carbon storage is declared.
-            If dict, {'per': {'qty': (:class:`int` or :class:`float`), 'unit': (:class:`~pod_lca.units.Unit`)}}
-            If Unit object only, the quantity is taken as 1.0;
-            If None, taken as per unit of parent objects declared unit.
-        """
-        key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
-        if key in self.unit_carbon_storage.record_attr_dict:
-            if self.get_biogenic_carbon_storage_potential():
-                biogenic_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
-                input_unit = unit
-                conversion_factor_1 = input_unit.convert_to(biogenic_carbon_unit)
-
-                if per is None:
-                    conversion_factor_2 = 1.0 / (self.qty*(self.unit.convert_to(self.inventories_declared_unit)))
-                elif isinstance(per, Unit):
-                    conversion_factor_2 = per.convert_to(self.inventories_declared_unit) / self.qty
-                elif isinstance(per, dict):
-                    conversion_factor_2 = (
-                        per["unit"].convert_to(self.inventories_declared_unit)
-                        / self.qty
-                        / per["qty"]
-                    )
-                else:
-                    raise TypeError
-
-                setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
-            else:
-                raise Warning(
-                    f"Product {self.get_name()} does not have biogenic carbon storage potential. Product.set_biogenic_carbon_storage_potential(True) to override."
-                )
-            
-        return self
-
+   
     def set_sctg_code(self, code=None):
         """Set the Standard Classification of Transported Goods (SCTG) code for the material.
 
@@ -876,159 +669,11 @@ class Product(Master):
 
         return self
     
-    def get_mineral_carbon_storage_source(self):
-        """Get the source for mineral carbon storage.
-        Returns
-        -------
-        str
-            Source for mineral carbon storage ('from_database' or 'custom').
-        """
-        return self.mineral_carbon_storage_source
-
-    def get_mineral_carbon_storage_qty(self):
-        """Get the quantity of mineral carbon storage.
-
-        Returns
-        -------
-        float
-            Quantity of mineral carbon storage.
-        """
-        return self.carbon_storage.get_record('Mineral C')
-
     def get_transportation_impacts(self):
         transportation_manager = self.get_transportation_manager()
         return transportation_manager.get_impacts(self)
 
-    def get_mineral_carbonation_potential(self):
-        """Set mineral carbonation potential of the product.
-
-        Returns
-        -------
-        bool
-            Mineral carbonation potential of the product.
-        """
-        return self.mineral_carbonation_potential
     
-    def get_moisture_content(self):
-        """Get moisture content of the product. This is used to calculate dry density and dry mass for biogenic carbon storage calculation.
-
-        Returns
-        -------
-        float
-            Moisture content of the product (between 0 and 1).
-        """
-        return self.moisture_content
-        
-        # After FLCACv0.3 update, get moisture content from impact database:
-        '''# If user or database has already set it, use it
-        if self.moisture_content is not None:
-            return self.moisture_content
-
-        # Otherwise pull from the database entry
-        entry_name = self.get_impact_database_entry()
-        if entry_name is None:
-            return None
-
-        db = self.get_impact_database()
-        entry = db.get_data_entry(entry_name)
-        pct = entry["%H2O (mass % moisture)"]
-        return pct'''
-    
-    def get_dry_density(self):
-        """Get dry density of the product. This is used to calculate dry mass for biogenic carbon storage calculation.
-
-        Returns
-        -------
-        float
-            Dry density of the product (mass per unit measurement of product).
-        """
-        if self.dry_density is not None:
-            return self.dry_density
-        
-        moisture_content = self.get_moisture_content()
-        density = self.get_density()
-        if moisture_content is not None:
-            self.dry_density = density * (1 - moisture_content) if density is not None else None
-        else:
-            self.dry_density = density if density is not None else None
-        return self.dry_density
-    
-    def get_dry_mass(self):
-        """Get dry mass of the product. This is used for biogenic carbon storage calculation.
-
-        Returns
-        -------
-        float
-            Dry mass of the product.
-        """
-        if self.dry_mass is not None:
-            return self.dry_mass
-        
-        moisture_content = self.get_moisture_content()
-        if self.get_unit().get_qty_measured() == "mass":
-            if moisture_content is not None:
-                self.dry_mass = self.get_qty() * (1 - moisture_content)
-            else:
-                self.dry_mass = self.get_qty()
-        else:
-            actual_mass = self.get_weight()
-            if (actual_mass is not None) and (moisture_content is not None):
-                self.dry_mass = actual_mass * (1 - moisture_content)
-            elif actual_mass is not None:
-                self.dry_mass = actual_mass
-            else:
-                return "Error: Unable to calculate dry mass."
-        return self.dry_mass
-    
-    def get_biogenic_carbon_composition(self):
-        """Get biogenic carbon composition of the product. This is used for biogenic carbon storage calculation.
-
-        Returns
-        -------
-        float
-            Biogenic carbon composition of the product (between 0 and 1).
-        """
-        if self.carbon_percentage is not None:
-            return self.carbon_percentage
-
-        entry_name = self.get_impact_database_entry()
-        if entry_name is None:
-            return None
-
-        db = self.get_impact_database()
-        entry = db.get_data_entry(entry_name)
-        pct = entry["%C (dry mass basis)"]
-        return pct
-
-    def get_biogenic_carbon_storage_potential(self):
-        """Set biogenic carbon storage potential of the product.
-
-        Returns
-        -------
-        bool
-            Biogenic carbon storage potential of the product.
-        """
-        return self.biogenic_carbon_storage_potential
-    
-    def get_biogenic_carbon_storage_source(self):
-        """Get the source for biogenic carbon storage.
-        Returns
-        -------
-        str
-            Source for biogenic carbon storage ('from_database' or 'custom').
-        """
-        return self.biogenic_carbon_storage_source
-    
-    def get_biogenic_carbon_storage_qty(self):
-        """Get the quantity of biogenic carbon storage.
-
-        Returns
-        -------
-        float
-            Quantity of biogenic carbon storage.
-        """
-        return self.carbon_storage.get_record('Biogenic C')
-
     def get_sctg_code(self, digits=2):
         """Get the Standard Classification of Transported Goods (SCTG) code for the material.
 
@@ -1076,58 +721,7 @@ class Product(Master):
         if self.get_impact_database_entry() is not None:
             super().update_inventory_records()
             self.update_electricity_records()
-
-            if self.get_mineral_carbonation_potential() is None:
-                data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
-                key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
-                if key in data_entry.index:
-                    if isinstance(data_entry[key], (bool, np_bool)):
-                        potential = data_entry[key]
-                    elif isinstance(data_entry[key], str):
-                        if data_entry[key].lower() in ["yes", "true"]:
-                            potential = True
-                        elif data_entry[key].lower() in ["no", "false"]:
-                            potential = False
-                        else:
-                            raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-                    else:
-                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-
-                    self.set_mineral_carbonation_potential(potential)
-  
-                if self.get_mineral_carbon_storage_qty() is not None and self.get_mineral_carbon_storage_qty() != 0:
-                    mineral_carbon_storage_qty = self.get_mineral_carbon_storage_qty()   
-                    self.set_mineral_carbon_intensity(mineral_carbon_storage_qty)
-                    self.impacts.get_adjusted_GWP()
-                    self.emissions.update_CO2_emissions(-self.get_mineral_carbon_storage_qty())
-                    self.update_inventory_records()
-
-            if self.get_biogenic_carbon_storage_potential() is None:
-                data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
-                key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
-                if key in data_entry.index:
-                    if isinstance(data_entry[key], (bool, np_bool)):
-                        potential = data_entry[key]
-                    elif isinstance(data_entry[key], str):
-                        if data_entry[key].lower() in ["yes", "true"]:
-                            potential = True
-                        elif data_entry[key].lower() in ["no", "false"]:
-                            potential = False
-                        else:
-                            raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
-                    else:
-                        raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
-
-                    self.set_biogenic_carbon_storage_potential(potential)
-                
-                if self.get_biogenic_carbon_storage_qty() is not None:
-                    biogenic_carbon_storage_qty = self.get_biogenic_carbon_storage_qty()
-                    self.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty, unit=KG_CARBON)
-                    self.impacts.get_adjusted_GWP()
-                    self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty)
-                    self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty)
-                    self.update_inventory_records()
-
+            self.update_carbon_storage_records()
 
         return self
 
@@ -1162,6 +756,60 @@ class Product(Master):
                     product_record = getattr(self, record_type)
                     product_record -= getattr(self.electricity["from_database"], method_name)()
                     product_record += getattr(self.electricity["by_location"], method_name)()
+
+        return self
+    
+    def update_carbon_storage_records(self): 
+        if self.carbon_storage.get_mineral_carbonation_potential() is None:
+            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
+            key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
+            if key in data_entry.index:
+                if isinstance(data_entry[key], (bool, np_bool)):
+                    potential = data_entry[key]
+                elif isinstance(data_entry[key], str):
+                    if data_entry[key].lower() in ["yes", "true"]:
+                        potential = True
+                    elif data_entry[key].lower() in ["no", "false"]:
+                        potential = False
+                    else:
+                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+                else:
+                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+
+                self.carbon_storage.set_mineral_carbonation_potential(potential)
+
+            if self.carbon_storage.get_mineral_carbon_storage_qty() is not None and self.carbon_storage.get_mineral_carbon_storage_qty() != 0:
+                mineral_carbon_storage_qty = self.carbon_storage.get_mineral_carbon_storage_qty()   
+                self.carbon_storage.set_mineral_carbon_storage_qty(mineral_carbon_storage_qty)
+                self.impacts.get_adjusted_GWP()
+                self.emissions.update_CO2_emissions(-self.carbon_storage.get_mineral_carbon_storage_qty())
+                self.update_inventory_records()
+
+        if self.carbon_storage.get_biogenic_carbon_storage_potential() is None:
+            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
+            key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
+            if key in data_entry.index:
+                if isinstance(data_entry[key], (bool, np_bool)):
+                    potential = data_entry[key]
+                elif isinstance(data_entry[key], str):
+                    if data_entry[key].lower() in ["yes", "true"]:
+                        potential = True
+                    elif data_entry[key].lower() in ["no", "false"]:
+                        potential = False
+                    else:
+                        raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+                else:
+                    raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+
+                self.carbon_storage.set_biogenic_carbon_storage_potential(potential)
+            
+            if self.carbon_storage.get_biogenic_carbon_storage_qty() is not None:
+                biogenic_carbon_storage_qty = self.carbon_storage.get_biogenic_carbon_storage_qty()
+                self.carbon_storage.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty)
+                self.impacts.get_adjusted_GWP()
+                self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty)
+                self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty)
+                self.update_inventory_records()
 
         return self
 

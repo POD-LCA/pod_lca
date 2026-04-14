@@ -528,7 +528,7 @@ class Master:
             else:
                 if self.inventories_declared_unit.get_qty_measured() == "mass":
                     conversion_factor = self.get_weight_unit().convert_to(self.inventories_declared_unit)
-                    qty = self.get_weight_qty()
+                    qty = self.get_qty()
                 elif self.get_density_unit() is not None:
                     if (
                         self.get_unit().get_qty_measured()

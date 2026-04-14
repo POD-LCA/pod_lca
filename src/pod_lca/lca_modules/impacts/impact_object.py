@@ -102,8 +102,7 @@ class Impacts(Records):
         key = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
         parent = self.get_parent()
         stage = parent.get_life_cycle_stage()
-        biogenic_CO2 = 0
-        mineral_CO2 = 0
+        CO2_stored_qty = 0
 
         # check key
         if key in self.get_categories():
@@ -118,15 +117,18 @@ class Impacts(Records):
         # adjust GWP
         if key in self.record_attr_dict:
             gwp_qty = self.get_record(key)
-            carbon_storage_record = self.get_parent().get_carbon_storage()
-            if carbon_storage_record is not None:
-                for record, unit in carbon_storage_record.record_attr_dict.items():
+            unit_carbon_storage_record = self.get_parent().unit_carbon_storage
+            product_qty = self.get_parent().get_qty()
+            if unit_carbon_storage_record is not None: 
+                for record, unit in unit_carbon_storage_record.record_attr_dict.items():
                     input_unit = UNITS_MAP[unit]
-                    conversion_factor = input_unit.convert_to(KG_CARBON_DIOXIDE)
-
-                    qty = carbon_storage_record.get_record(record)
+                    conversion_factor_1 = input_unit.convert_to(KG_CARBON_DIOXIDE) 
                     
-                    CO2_stored_qty = qty * conversion_factor
+                    conversion_factor_2 = parent.unit.convert_to(parent.inventories_declared_unit) 
+
+                    unit_storage_qty = unit_carbon_storage_record.get_record(record)
+
+                    CO2_stored_qty = unit_storage_qty * product_qty * conversion_factor_1 * conversion_factor_2 
 
                     if "Mineral" in record:
                         gwp_qty -= CO2_stored_qty
