@@ -6,7 +6,7 @@ __version__ = "0.1.0"
 
 from ..impacts import Records
 from ...utilities import config
-from ...units import Unit, UNITS_MAP, KG_CARBON_DIOXIDE
+from ...units import Unit, UNITS_MAP, KG_CARBON_DIOXIDE, KG_CARBON
 from numpy import bool_ as np_bool
 from ..carbon_storage import get_dry_mass, get_biogenic_carbon_content, get_biogenic_carbon_dioxide_content
 
@@ -254,7 +254,11 @@ class CarbonStorage(Records):
         str
             Source for mineral carbon storage ('from_database' or 'custom').
         """
-        return self.mineral_carbon_storage_source
+        if self.mineral_carbon_storage_source is not None:
+            return self.mineral_carbon_storage_source
+        else:
+            self.mineral_carbon_storage_source = "from_database"
+            return self.mineral_carbon_storage_source
 
     def get_mineral_carbon_storage_qty(self):
         """Get the quantity of mineral carbon storage.
@@ -338,9 +342,13 @@ class CarbonStorage(Records):
         if self.dry_mass is not None:
             return self.dry_mass
 
-        parent = self.get_parent()        
+        parent = self.get_parent()
+
+        if parent.unit is None:
+            return None   
+              
         moisture_content = self.get_moisture_content()
-        if parent.get_unit().get_qty_measured() == "mass":
+        if parent.unit.get_qty_measured() == "mass":
             if moisture_content is not None:
                 self.dry_mass = parent.get_qty() * (1 - moisture_content)
             else:
@@ -402,9 +410,14 @@ class CarbonStorage(Records):
         str
             Source for biogenic carbon storage ('from_database' or 'custom').
         """
-        return self.biogenic_carbon_storage_source
+        if self.biogenic_carbon_storage_source is not None:
+            return self.biogenic_carbon_storage_source
+        
+        else:
+            self.biogenic_carbon_storage_source = "from_database"
+            return self.biogenic_carbon_storage_source
     
-    def get_biogenic_carbon_storage_qty(self):
+    def get_biogenic_carbon_storage_qty(self, unit=KG_CARBON):
         """Get the quantity of biogenic carbon storage.
 
         Returns
@@ -412,7 +425,27 @@ class CarbonStorage(Records):
         float
             Quantity of biogenic carbon storage.
         """
-        return self.get_record('Biogenic C')
+        if self.get_biogenic_carbon_storage_source() == "from_database":
+            parent = self.get_parent()
+            database_entry = parent.get_impact_database_entry()
+            database = parent.get_impact_database()
+            default_unit_C_storage = database.get_data_entry(database_entry, 'Biogenic C')
+            
+            conversion_factor = parent.unit.convert_to(parent.inventories_declared_unit)
+            default_C_storage = default_unit_C_storage * conversion_factor 
+            if unit == KG_CARBON:
+                return default_C_storage 
+            elif unit == KG_CARBON_DIOXIDE:   
+               default_CO2_storage = get_biogenic_carbon_dioxide_content(default_C_storage) 
+               return default_CO2_storage
+
+        else:
+            carbon_storage_C = self.get_record('Biogenic C') 
+            if unit == KG_CARBON:
+                return carbon_storage_C   
+            elif unit == KG_CARBON_DIOXIDE:
+                carbon_storage_CO2 = get_biogenic_carbon_dioxide_content(carbon_storage_C)
+                return carbon_storage_CO2
 
 
 if __name__ == "__main__":
