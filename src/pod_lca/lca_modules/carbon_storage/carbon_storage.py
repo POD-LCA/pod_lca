@@ -8,6 +8,7 @@ from ..impacts import Records
 from ...utilities import config
 from ...units import Unit, UNITS_MAP, KG_CARBON_DIOXIDE, KG_CARBON
 from numpy import bool_ as np_bool
+from numpy import isnan
 from ..carbon_storage import get_dry_mass, get_biogenic_carbon_content, get_biogenic_carbon_dioxide_content
 
 
@@ -339,7 +340,7 @@ class CarbonStorage(Records):
         float
             Dry mass of the product.
         """
-        if self.dry_mass is not None:
+        if self.dry_mass is not None and not isnan(self.dry_mass):
             return self.dry_mass
 
         parent = self.get_parent()
@@ -347,7 +348,13 @@ class CarbonStorage(Records):
         if parent.unit is None:
             return None   
               
-        moisture_content = self.get_moisture_content()
+        try:     
+            moisture_content = self.get_moisture_content()
+            if isnan(moisture_content):
+                moisture_content = None
+        except:
+            moisture_content = None 
+
         if parent.unit.get_qty_measured() == "mass":
             if moisture_content is not None:
                 self.dry_mass = parent.get_qty() * (1 - moisture_content)
@@ -425,6 +432,9 @@ class CarbonStorage(Records):
         float
             Quantity of biogenic carbon storage.
         """
+        if self.get_biogenic_carbon_storage_potential() is not True: 
+            return None
+        
         parent = self.get_parent()
         conversion_factor = parent.unit.convert_to(parent.inventories_declared_unit)
         if self.get_biogenic_carbon_storage_source() == "from_database":
