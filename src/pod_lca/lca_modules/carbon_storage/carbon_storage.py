@@ -289,7 +289,8 @@ class CarbonStorage(Records):
         db = self.parent.get_impact_database()
         entry = db.get_data_entry(entry_name)
         header = config["setup"]["impacts"]["ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER"]
-        return entry[header]
+        self.mineral_carbonation_potential = entry[header] 
+        return self.mineral_carbonation_potential 
     
     def get_moisture_content(self):
         """Get moisture content of the product. This is used to calculate dry density and dry mass for biogenic carbon storage calculation.
