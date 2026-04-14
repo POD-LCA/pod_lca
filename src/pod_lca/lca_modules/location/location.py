@@ -75,6 +75,7 @@ class Location:
         self.balancing_authority = None
         self.cambium_gea_region = None
         self.reeds_balancing_area = None
+        self.climate_zone = None
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -620,6 +621,10 @@ class Location:
 
         return self
 
+    def set_climate_zone(self):
+        map = DataImporter.csv_to_dict(config["file_paths"]["location"]["CLIMATE_ZONE_ZIPCODE_MAP_PATH"], "ZIP")
+        self.climate_zone = map[self.get_zip()]["Climate Zone"]
+        
     # ================================
     # Getters
     # ================================
@@ -810,6 +815,11 @@ class Location:
         """
         return self.reeds_balancing_area
 
+    def get_climate_zone(self):
+        if self.climate_zone == None:
+            self.set_climate_zone()
+        return self.climate_zone
+    
     # ================================
     # Methods
     # ================================

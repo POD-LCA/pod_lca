@@ -494,6 +494,69 @@ class ElectricitySupply:
                     )
 
         return self
+    
+    def get_inventories_in_bulk_for_years(self, years):
+        """ Get inventories for a range of years.
+
+        Parameters
+        ----------
+        years : list of int
+            Years of electricity consumption.
+
+        Returns
+        -------
+        ~pandas.DataFrame
+            DataFrame of impacts by year.      
+        ~pandas.DataFrame
+            DataFrame of emissions by year.  
+        """
+        technologies = DataImporter.csv_to_list(config["file_paths"]["electricity"]["ELECTRICITY_TECHNOLOGIES"], "electricity technology")
+        impact_headers = list(config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys())
+        emission_headers = list(config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"].keys())
+        inventory_headers = impact_headers + emission_headers
+
+        geographical_scope = self.get_geographical_scope()
+        location = self.get_location()
+
+        # get energy production mix
+        temporal_data = CambiumData.from_geographical_scope(geographical_scope, location)
+        energy_mix = temporal_data.get_mix_in_bulk_years(
+            years,
+            technologies,
+            self.get_scenario(),
+        )
+
+        # get impacts by production technology
+        if  geographical_scope == "National":
+            impact_data_df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["ELECTRICITY_IMPACT_NATIONAL_DATA"])
+        elif (geographical_scope == "Regional") or (geographical_scope == "Local"):
+            impact_data_df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["ELECTRICITY_IMPACT_REGIONAL_DATA"])
+
+            region = location.get_ferc_region()
+            if len(region) == 0:
+                raise KeyError(f"FERC region not found for location: {location.get_zip()}.")
+            elif len(region) == 1:
+                region = region[0]
+            else:
+                region = self.pick_region(region, self.impact_database_regional)
+
+            impact_data_df = impact_data_df[impact_data_df['Region'] == region].drop("Region", axis=1)
+
+        # unit conversions
+        impact_data_df['Conversion factor'] = 0.0
+        supply_unit = self.get_declared_unit()
+        for index, row in impact_data_df.iterrows():
+            production_unit = UNITS_MAP[row["Unit"]]
+            impact_data_df.at[index, 'Conversion factor'] = production_unit.convert_to(supply_unit) / row["Qty"]
+        
+        # make impact matrix
+        impact_data_df.set_index('Technology Type', inplace=True)
+        inventories_df = impact_data_df.reindex(columns=inventory_headers, fill_value=0.0)
+
+        impact_matrix = inventories_df.loc[technologies, impact_headers].mul(impact_data_df['Conversion factor'], axis=0)
+        emission_matrix = inventories_df.loc[technologies, emission_headers].mul(impact_data_df['Conversion factor'], axis=0)
+
+        return energy_mix.dot(impact_matrix), energy_mix.dot(emission_matrix)
 
     def get_impact_distribution(self):
         """Get the distribution of the electricity supply authority.

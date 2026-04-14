@@ -7,6 +7,8 @@ __version__ = "0.1.0"
 
 from ..electricity import ElectricitySupply
 from ..impacts import UniformEmissionProfile
+from ..impacts import Impacts
+from ..impacts import Emissions
 from ...units import KILO
 from ...units import WATT
 
@@ -219,11 +221,12 @@ class OperationalElectricityProduct:
         """
         building = self.get_building()
 
-        method = 'EUIs'
-        if building.run_eplus:
-            if building.energy_plus_results == None:
-                building.run_operational_energy_model()
-            method = 'eplus'
+        method = building.operational_energy_method
+        if method == 'eplus':
+            building.write_idf()
+            print('tomas')
+            building.run_operational_energy_model(delete=True)
+            building.get_operational_energy_object().set_dirty(False)
 
         annual_electricity_usage = building.get_operational_electricity_usasge(method,
                                                                                summed_at='year', 
@@ -231,37 +234,49 @@ class OperationalElectricityProduct:
                                                                                group_by_zone=False,
                                                                                unit=self.get_unit())
 
-        electricity_declared_unit = self.electricity_supplier.get_declared_unit()
+        elec_supp = self.electricity_supplier
+        electricity_declared_unit = elec_supp.get_declared_unit()
         conversion_factor = electricity_declared_unit.convert_to(self.get_unit())
-        for year in range(building.get_built_year(), building.get_built_year() + building.get_life_span() + 1):
-            self.electricity_supplier.set_year(year)
-            unit_impacts = self.electricity_supplier.get_unit_impacts()
-            unit_emissions = self.electricity_supplier.get_unit_emissions()
+
+        imp_h, imp_l, imp_c, imp_t = self.impacts['heating'], self.impacts['lighting'], self.impacts['cooling'], self.impacts['total']
+        em_h, em_l, em_c, em_t = self.emissions['heating'], self.emissions['lighting'], self.emissions['cooling'], self.emissions['total']
+
+        usage = annual_electricity_usage['year']
+        h_usage = usage['heating'] * conversion_factor
+        l_usage = usage['lighting'] * conversion_factor
+        c_usage = usage['cooling'] * conversion_factor
+
+        start_year = building.get_built_year()
+        end_year = start_year + building.get_life_span() + 1
+        electricity_impacts, electricity_emissions = elec_supp.get_inventories_in_bulk_for_years(list(range(start_year, end_year)))
+        for year in range(start_year, end_year):
+
+            unit_impacts = Impacts.from_dict(electricity_impacts.loc[year].to_dict())
+            unit_emissions = Emissions.from_dict(electricity_emissions.loc[year].to_dict())
 
             # set impacts
-            heating_impacts = unit_impacts * conversion_factor * annual_electricity_usage['year']['heating']
-            lighting_impacts = unit_impacts * conversion_factor * annual_electricity_usage['year']['lighting']
-            cooling_impacts = unit_impacts * conversion_factor * annual_electricity_usage['year']['cooling']
+            heating_impacts = unit_impacts * h_usage
+            lighting_impacts = unit_impacts * l_usage
+            cooling_impacts = unit_impacts * c_usage
 
             total_impacts = heating_impacts + lighting_impacts + cooling_impacts
 
-            self.impacts['heating'].append(heating_impacts)
-            self.impacts['lighting'].append(lighting_impacts)
-            self.impacts['cooling'].append(cooling_impacts)
-            self.impacts['total'].append(total_impacts)    
+            imp_h.append(heating_impacts)
+            imp_l.append(lighting_impacts)
+            imp_c.append(cooling_impacts)
+            imp_t.append(total_impacts)    
 
             # set emissions
-            heating_emissions = unit_emissions * conversion_factor * annual_electricity_usage['year']['heating']
-            lighting_emissions = unit_emissions * conversion_factor * annual_electricity_usage['year']['lighting']
-            cooling_emissions = unit_emissions * conversion_factor * annual_electricity_usage['year']['cooling']
+            heating_emissions = unit_emissions * h_usage
+            lighting_emissions = unit_emissions * l_usage
+            cooling_emissions = unit_emissions * c_usage
 
             total_emissions = heating_emissions + lighting_emissions + cooling_emissions
 
-            self.emissions['heating'].append(heating_emissions)
-            self.emissions['lighting'].append(lighting_emissions)
-            self.emissions['cooling'].append(cooling_emissions)
-
-            self.emissions['total'].append(total_emissions)
+            em_h.append(heating_emissions)
+            em_l.append(lighting_emissions)
+            em_c.append(cooling_emissions)
+            em_t.append(total_emissions)
 
             pulse = UniformEmissionProfile.unit_pulse(at=year)
             heating_emissions.set_temporal_emission_profile(pulse)

@@ -669,6 +669,10 @@ class Product(Master):
 
         return self
     
+    def get_transportation_impacts(self):
+        transportation_manager = self.get_transportation_manager()
+        return transportation_manager.get_impacts(self)
+
     
     def get_sctg_code(self, digits=2):
         """Get the Standard Classification of Transported Goods (SCTG) code for the material.
