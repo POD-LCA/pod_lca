@@ -255,12 +255,13 @@ class Model:
         ValueError
             Logistic type not recognized.
         """
+        name = self.get_name()
         if self.get_project().get_location() is None:
-            self.transportation_manager = TransportationManager.new("transportation")
+            self.transportation_manager = TransportationManager.new(name)
         elif self.get_project().get_location().get_country_code() == "US":
-            self.transportation_manager = USTransportationManager.new("transportation")
+            self.transportation_manager = USTransportationManager.new(name)
         else:
-            self.transportation_manager = TransportationManager.new("transportation")
+            self.transportation_manager = TransportationManager.new(name)
 
         return self
 
@@ -582,6 +583,8 @@ class Model:
             self.get_products().remove(obj)
         elif isinstance(obj, Process):
             self.get_processes().remove(obj)
+
+        self.get_transportation_manager().remove_good(obj)
 
         obj.remove_inventory_records_from_model(obj.get_life_cycle_stage())
 

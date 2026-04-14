@@ -9,6 +9,7 @@ import os
 import subprocess
 import shutil
 from collections import defaultdict
+from pathlib import Path
 
 from . import OperationalElectricityProduct
 from ..impacts import Emissions
@@ -141,12 +142,26 @@ class OperationalMixins:
         self.set_zone_systems()
         write_idf_from_building(self)
 
-    def run_operational_energy_model(self, eplus_path, idf_path, weather, delete=True):
+    def set_weather_file_path(self, file_path):
+        self.weather_file_path = file_path
+
+    def get_weather_file_path(self):
+        if self.weather_file_path is None:
+            climate_zone = self.get_location().get_climate_zone()
+            return config["file_paths"]["weather_files"][climate_zone]
+        else:
+            return self.weather_file_path
+
+    def run_operational_energy_model(self, delete=True):
         """ Run operational energy model to get operational energy use and emissions.
         """
-        idf = os.path.join(idf_path, 'pod_lca_operational.idf')
-        exe = os.path.join(eplus_path, 'energyplus')
-        out = os.path.join(idf_path, '{}_eplus_out'.format(self.name))
+        idf = config['file_paths']['operational']['TEMP']
+        exe = config['file_paths']['operational']['EPLUS']
+        out = config['file_paths']['operational']['OUTPUT']
+
+        weather = self.get_weather_file_path()
+
+        Path(out).mkdir(exist_ok=True)
 
         if delete:
             self.delete_result_files(out)
@@ -289,13 +304,11 @@ class OperationalMixins:
     # ================================
     # Inventory Records Methods
     # ================================ 
-    def get_operational_impacts(self, method='EUIs', category='total', objs=False):
+    def get_operational_impacts(self, category='total', objs=False):
         """ Get B6 impacts of the building.
 
         Parameters
         ----------
-        method : {'eplus', 'EUIs'} 
-            How operation electricity to be computed.
         category : {'heating', 'lighting', 'cooling', 'total'}
             Category of operational energy.
         objs : bool, optional
@@ -307,13 +320,10 @@ class OperationalMixins:
         ~pod_lca.impacts.Impacts
             B6 impacts of the building.
         """
-        if method == 'eplus':
-            self.write_idf()
-            self.run_operational_energy_model()
-        elif method == 'EUIs':
-            pass
-        
         if not self.get_operational_electricity_product()._inventories_uptodate:
+            self.get_operational_electricity_product().update_inventory_records()
+
+        if (self.operational_energy_method == 'eplus' and self.get_operational_energy_object().is_dirty):
             self.get_operational_electricity_product().update_inventory_records()
 
         if objs:
@@ -342,6 +352,9 @@ class OperationalMixins:
             B6 emissions of the building.
         """
         if not self.get_operational_electricity_product()._inventories_uptodate:
+            self.get_operational_electricity_product().update_inventory_records()
+
+        if (self.operational_energy_method == 'eplus' and self.get_operational_energy_object().is_dirty):
             self.get_operational_electricity_product().update_inventory_records()
 
         if objs:

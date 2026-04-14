@@ -59,7 +59,8 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
     building_data_standard: {'RICS', 'ASHRAE'}
         building strnadard used for 
-
+    operational_energy_method: {'eplus', 'EUIs'}
+        method fro computing operational energy
     """
 
     def __init__(self):
@@ -86,9 +87,10 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.building_data_standard = None
 
         self.construction_energy_product = None
-        self.operational_energy_product = None
+        self.operational_electricity_product = None
 
-        # self.run_eplus = False  #TODO: this flag should be deleted. 
+        self.operational_energy_method = 'eplus'
+        self.weather_file_path = None
         self.idf_constructions_data = {}
         self.idf_material_properties = {}
         self.energy_plus_results = None
@@ -427,6 +429,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.building_envelope = building_envelope
         building_envelope.set_building(self)
 
+    def set_operational_energy_object(self, operational_energy_object):
+        
+        self.operational_object = operational_energy_object
+        operational_energy_object.set_building(self)
+
     # ================================
     # Getters
     # ================================
@@ -524,6 +531,10 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return self.envelope
 
+    def get_operational_energy_object(self):
+
+        return self.operational_object
+    
     def get_assemblies(self):
         """ Get a list of building assemblies.
 

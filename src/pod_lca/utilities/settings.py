@@ -23,9 +23,19 @@ def update_filepaths(config):
     """Update file paths to absolute file path."""
     for group, paths_dict in config["file_paths"].items():
         for key, relative_path in paths_dict.items():
-            package_root = resources.files("pod_lca")
-            file_path = package_root.joinpath(relative_path)
-            paths_dict[key] = file_path
+            target_node = resources.files("pod_lca")
+            
+            parts = relative_path.split('/')
+            
+            for part in parts:
+                if part == "..":
+                    target_node = target_node.parent
+                elif part == "." or not part:
+                    continue
+                else:
+                    target_node = target_node.joinpath(part)
+            
+            paths_dict[key] = target_node
 
 
 config = load_config()

@@ -895,6 +895,10 @@ class Product(Master):
         """
         return self.carbon_storage.get_record('Mineral C')
 
+    def get_transportation_impacts(self):
+        transportation_manager = self.get_transportation_manager()
+        return transportation_manager.get_impacts(self)
+
     def get_mineral_carbonation_potential(self):
         """Set mineral carbonation potential of the product.
 

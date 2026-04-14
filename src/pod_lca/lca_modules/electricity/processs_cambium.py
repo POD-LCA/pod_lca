@@ -186,6 +186,62 @@ class CambiumData:
         else:
             raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")
 
+    def get_mix_in_bulk_years(self, years, technologies, scenario="MidCase", interpolate="values"):
+        """ Get technology mix of the electricity consumption for a list of years.
+        
+        Parameters
+        ----------
+        years : list of int
+            Years of electricity consumption.
+        technologies : list
+            List of electricity generation technoclogies to be classified by.
+        scenario : {'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'}
+            Electricity consmuption scenario considered. Default is 'MidCase'
+        interpolate : {'values', 'percentages'}
+            Linear interpolation of electricity consumption between two years. \n
+            - `'values'`: interpolate values
+            - `'percentages'`: interpolate percentages
+            Default is by 'values'.        
+    
+        Returns
+        -------
+        ~pandas.DataFrame
+            DataFrame of electricity generation technology in percentages, by year.
+        """
+        years = [years] if isinstance(years, int) else years
+        
+        header_map = DataImporter.json_to_dict(config["file_paths"]["electricity"]["CAMBIUM_HEADER_MAP"])
+        tech_map = DataImporter.json_to_dict(config["file_paths"]["electricity"]["CAMBIUM_TECHNOLOGY_MAP"])
+        mix_names = list(header_map.values())
+        
+        df_scen = self.data[self.data["scenario"] == scenario]
+        df_pivot = df_scen.groupby("t")[mix_names].sum()
+        
+        all_index = sorted(set(df_pivot.index) | set(years))
+
+        if interpolate == "percentages":
+            mix_values = df_pivot.div(df_pivot.sum(axis=1), axis=0)
+        elif interpolate == "values":
+            df_interp = df_pivot.reindex(all_index).sort_index().interpolate(method='linear')
+            mix_values = df_interp.loc[years] 
+        else:
+            raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")     
+        
+        mapped_df = DataFrame(index=years, columns=technologies).fillna(0.0).astype(float)
+        for cambium_header, tech_name in tech_map.items():
+            if cambium_header in header_map.keys():
+                mapped_df[tech_name] += mix_values[header_map[cambium_header]]
+
+        if interpolate == "percentages":
+            result_df = mapped_df.reindex(all_index).interpolate(method='linear')
+        elif interpolate == "values":
+            row_totals = mapped_df.sum(axis=1)
+            result_df = mapped_df.div(row_totals, axis=0).fillna(0.0)
+        else:
+            raise KeyError(f"Interpolation method {interpolate} not recognized. Should be 'values' or 'percentages'.")     
+        
+        return result_df
+
     def get_load(self, year, scenario="MidCase"):
         """Get electricity load of the electricity consumption by year.
 

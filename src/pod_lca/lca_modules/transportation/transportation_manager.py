@@ -213,7 +213,7 @@ class TransportationManager:
             if product not in self.transport_legs:
                 raise ValueError(f"Product '{product}' not found in the project.")
 
-            impact = Impacts.from_parent(self)
+            impact = Impacts.from_parent(product)
             for leg in self.transport_legs[product]:
                 impact += leg.get_impacts()
 
