@@ -584,6 +584,8 @@ class Model:
         elif isinstance(obj, Process):
             self.get_processes().remove(obj)
 
+        self.get_transportation_manager().remove_good(obj)
+
         obj.remove_inventory_records_from_model(obj.get_life_cycle_stage())
 
         del obj
