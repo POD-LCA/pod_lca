@@ -652,11 +652,15 @@ class Model:
             raise AttributeError(f"{impact_cat} does not exist in the current project.")
         else:
             data = {}
+            carbon_category = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
             for stage in impacts_dict.keys():
                 impact_lst = impacts_dict[stage]
                 data[stage] = 0.0
                 for impact in impact_lst:
-                    data[stage] += impact.get_record(impact_cat)
+                    if impact_cat == carbon_category and stage == "A1" and hasattr(impact, "get_adjusted_GWP"):
+                        data[stage] += impact.get_adjusted_GWP()
+                    else:
+                        data[stage] += impact.get_record(impact_cat)
 
             sorted_data = sorted(data.items())
             sorted_dict = dict(sorted_data)
