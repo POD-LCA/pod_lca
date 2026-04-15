@@ -8,7 +8,7 @@ from numpy import bool_ as np_bool
 
 from . import Master
 from . import Electricity
-from ..impacts import CarbonStorage
+from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile

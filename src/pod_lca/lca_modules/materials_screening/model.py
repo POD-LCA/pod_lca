@@ -657,7 +657,7 @@ class Model:
                 impact_lst = impacts_dict[stage]
                 data[stage] = 0.0
                 for impact in impact_lst:
-                    if impact_cat == carbon_category and stage == "A1" and hasattr(impact, "get_adjusted_GWP"):
+                    if (impact_cat == carbon_category) and (stage == "A1"):
                         data[stage] += impact.get_adjusted_GWP()
                     else:
                         data[stage] += impact.get_record(impact_cat)

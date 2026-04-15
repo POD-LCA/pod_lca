@@ -8,8 +8,8 @@ __version__ = "0.1.0"
 import gc
 from math import isnan
 
+from ..carbon_storage import CarbonStorage
 from ..eol.waste import Waste
-from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile

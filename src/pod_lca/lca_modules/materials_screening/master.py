@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ..impacts import CarbonStorage
+from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..analysis import PedigreeScore
@@ -527,7 +527,7 @@ class Master:
                 qty = self.qty
             else:
                 if self.inventories_declared_unit.get_qty_measured() == "mass":
-                    conversion_factor = self.get_weight_unit().convert_to(self.inventories_declared_unit)
+                    conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit)
                     qty = self.get_qty()
                 elif self.get_density_unit() is not None:
                     if (
