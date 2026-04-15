@@ -32,8 +32,8 @@ class Product(Master):
         The year the product was produced.
     electricity : dict
         Dictionary containing A3 electricity impacts of the production of the material. Keys as follows; \n
-        - `'from_database'`: contains unit electricity impacts retrieved from the database;
-        - `'by_location'`: contains corresponding electricity impacts by location, retrieved from electricity sub-package.
+        - `'default'`: contains unit electricity impacts retrieved from the database;
+        - `'custom'`: contains custom electricity impacts retrieved from electricity sub-package.
         - `'_current'`: indicates which of the above is in use for impacts.
         - `'_tag'`: prefix used in the database to identify grouped impacts of electricity.
     weight : float
@@ -57,7 +57,7 @@ class Product(Master):
     def __init__(self):
         super().__init__()
         self.production_year = None
-        self.electricity = {"from_database": None, "by_location": None, "_current": None, "_tag": None}
+        self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
         self.weight = 0.0
         self.weight_unit = None
         self.density = None
@@ -119,8 +119,8 @@ class Product(Master):
             for leg in self.get_transportation():
                 leg.get_emissions().set_temporal_emission_profile(pulse)
 
-        if self.electricity["by_location"] is not None:
-            self.electricity["by_location"].set_year(year)
+        if self.electricity["custom"] is not None:
+            self.electricity["custom"].set_year(year)
 
         return self
 
@@ -254,7 +254,7 @@ class Product(Master):
                     electricity_unit = UNITS_MAP[config["setup"]["electricity"]["DEFAULT_DECLARED_UNIT"]]
 
                 # electricity by location
-                electricity_by_location = Electricity.new(
+                electricity_from_parameters = Electricity.new(
                     id=None,
                     name=self.get_name() + "_electricity",
                     model=self.get_model(),
@@ -263,7 +263,7 @@ class Product(Master):
                     unit=electricity_unit,
                     year=self.get_production_year()
                 )
-                self.electricity["by_location"] = electricity_by_location
+                self.electricity["custom"] = electricity_from_parameters
 
                 # electricity from database
                 database_electricity_qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
@@ -292,23 +292,23 @@ class Product(Master):
                     emissions=emissons,
                     carbon_storage=carbon_storage,
                 )
-                self.electricity["from_database"] = electiricity_from_data
+                self.electricity["default"] = electiricity_from_data
 
             # set default electricity source
             self.set_electricity_source()
 
         return self
 
-    def set_electricity_source(self, source="from_database"):
+    def set_electricity_source(self, source="default"):
         """Set the source of electricity inventories.
 
         Parameters
         ----------
-        source : {'from_database', 'by_location'}
-            Source of electricity inventories data. Default 'from_database'.
+        source : {'default', 'custom'}
+            Source of electricity inventories data. Default 'default'.
         """
         if source in [key for key in self.electricity if not key.startswith("_")]:
-            if self.electricity["from_database"] is not None:
+            if self.electricity["default"] is not None:
                 original_source = self.electricity["_current"]
                 try:
                     self.electricity["_current"] = source
@@ -326,7 +326,7 @@ class Product(Master):
 
     def set_electricity_scenario(self, scenario=None):
         """Set the electricity scenario for the electricity.
-        This forced the electricity source to be "by_location" if scenario is provided, and revet to "from_database" if scenario is None.
+        This forced the electricity source to be "custom" if scenario is provided, and revet to "default" if scenario is None.
 
         Parameters
         ----------
@@ -336,19 +336,19 @@ class Product(Master):
         current_source = self.get_electricity_source()
 
         if scenario is None:
-            if current_source == "by_location":
-                self.set_electricity_source("from_database")
-                self.electricity["by_location"].set_scenario(config["setup"]["electricity"]["DEFAULT_SCENARIO"])
+            if current_source == "custom":
+                self.set_electricity_source("default")
+                self.electricity["custom"].set_scenario(config["setup"]["electricity"]["DEFAULT_SCENARIO"])
         else:
-            if current_source == "from_database":
-                self.set_electricity_source("by_location")
-            self.electricity["by_location"].set_scenario(scenario)
+            if current_source == "default":
+                self.set_electricity_source("custom")
+            self.electricity["custom"].set_scenario(scenario)
         
         return self
     
     def set_electricity_year(self, year):
         """Set the year for the electricity.
-        This forced the electricity source to be "by_location" if year is provided, and revet to "from_database" if year is None.
+        This forced the electricity source to be "custom" if year is provided, and revert to "default" if year is None.
 
         Parameters
         ----------
@@ -358,19 +358,19 @@ class Product(Master):
         current_source = self.get_electricity_source()
 
         if year is None:
-            if current_source == "by_location":
-                self.set_electricity_source("from_database")
-                self.electricity["by_location"].set_year(self.get_production_year())
+            if current_source == "custom":
+                self.set_electricity_source("default")
+                self.electricity["custom"].set_year(self.get_production_year())
         else:
-            if current_source == "from_database":
-                self.set_electricity_source("by_location")
-            self.electricity["by_location"].set_year(year)
+            if current_source == "default":
+                self.set_electricity_source("custom")
+            self.electricity["custom"].set_year(year)
         
         return self
     
     def set_electricity_location_regional(self, state):
         """Set the location for the electricity, at the regional level.
-        This forced the electricity source to be "by_location" if location is provided, and revet to "from_database" if location is None.
+        This forced the electricity source to be "custom" if location is provided, and revet to "default" if location is None.
 
         Parameters
         ----------
@@ -380,22 +380,22 @@ class Product(Master):
         current_source = self.get_electricity_source()
 
         if state is None:
-            if current_source == "by_location":
-                self.set_electricity_source("from_database")
-                self.electricity["by_location"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
-                self.electricity["by_location"].set_location(location_obj=self.get_model().get_location())
+            if current_source == "custom":
+                self.set_electricity_source("default")
+                self.electricity["custom"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
+                self.electricity["custom"].set_location(location_obj=self.get_model().get_location())
         else:
-            if current_source == "from_database":
-                self.set_electricity_source("by_location")
+            if current_source == "default":
+                self.set_electricity_source("custom")
             
-            self.electricity["by_location"].set_geographical_scope("Regional")
-            self.electricity["by_location"].set_location(state=state)
+            self.electricity["custom"].set_geographical_scope("Regional")
+            self.electricity["custom"].set_location(state=state)
         
         return self
 
     def set_electricity_location_local(self, zip_code):
         """Set the location for the electricity, at local level.
-        This forced the electricity source to be "by_location" if location is provided, and revet to "from_database" if location is None.
+        This forced the electricity source to be "custom" if location is provided, and revet to "default" if location is None.
 
         Parameters
         ----------
@@ -405,16 +405,16 @@ class Product(Master):
         current_source = self.get_electricity_source()
 
         if zip_code is None:
-            if current_source == "by_location":
-                self.set_electricity_source("from_database")
-                self.electricity["by_location"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
-                self.electricity["by_location"].set_location(location_obj=self.get_model().get_location())
+            if current_source == "custom":
+                self.set_electricity_source("default")
+                self.electricity["custom"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
+                self.electricity["custom"].set_location(location_obj=self.get_model().get_location())
         else:
-            if current_source == "from_database":
-                self.set_electricity_source("by_location")
+            if current_source == "default":
+                self.set_electricity_source("custom")
             
-            self.electricity["by_location"].set_geographical_scope("Local")
-            self.electricity["by_location"].set_location(zip_code=zip_code)
+            self.electricity["custom"].set_geographical_scope("Local")
+            self.electricity["custom"].set_location(zip_code=zip_code)
         
         return self
     
@@ -557,8 +557,8 @@ class Product(Master):
         """
         current_source = self.get_electricity_source()
 
-        if current_source == "by_location":
-            return self.electricity["by_location"].get_scenario()
+        if current_source == "custom":
+            return self.electricity["custom"].get_scenario()
         else:
             return None
         
@@ -572,8 +572,8 @@ class Product(Master):
         """
         current_source = self.get_electricity_source()
 
-        if current_source == "by_location":
-            return self.electricity["by_location"].get_year()
+        if current_source == "custom":
+            return self.electricity["custom"].get_year()
         else:
             return None
         
@@ -587,8 +587,8 @@ class Product(Master):
         """
         current_source = self.get_electricity_source()
 
-        if current_source == "by_location":
-            return self.electricity["by_location"].get_location().get_state()
+        if current_source == "custom":
+            return self.electricity["custom"].get_location().get_state()
         else:
             return None
 
@@ -602,8 +602,8 @@ class Product(Master):
         """
         current_source = self.get_electricity_source()
 
-        if current_source == "by_location":
-            return self.electricity["by_location"].get_location().get_zip()
+        if current_source == "custom":
+            return self.electricity["custom"].get_location().get_zip()
         else:
             return None
 
@@ -815,7 +815,7 @@ class Product(Master):
         KeyError
             Inventory type not recognized.
         """
-        if self.electricity["from_database"] is None:
+        if self.electricity["default"] is None:
             self.set_electricity_product()
         
         if self.get_impact_database_entry() is not None:
@@ -827,17 +827,17 @@ class Product(Master):
 
             if electricity_tag is not None:
                 electricity_qty = self.get_electricity_qty()
-                self.electricity["by_location"].set_qty(electricity_qty)
-                self.electricity["from_database"].set_qty(electricity_qty)
+                self.electricity["custom"].set_qty(electricity_qty)
+                self.electricity["default"].set_qty(electricity_qty)
 
             if self.get_electricity_source() is None:
-                self.electricity["_current"] = "from_database"
-            elif self.get_electricity_source() == "by_location":
+                self.electricity["_current"] = "default"
+            elif self.get_electricity_source() == "custom":
                 for record_type in database.__class__.DATA_IMPORTS:
                     method_name = "get_" + str(record_type)
                     product_record = getattr(self, record_type)
-                    product_record -= getattr(self.electricity["from_database"], method_name)()
-                    product_record += getattr(self.electricity["by_location"], method_name)()
+                    product_record -= getattr(self.electricity["default"], method_name)()
+                    product_record += getattr(self.electricity["custom"], method_name)()
 
         return self
 

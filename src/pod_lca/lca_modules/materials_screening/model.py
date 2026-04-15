@@ -718,8 +718,8 @@ class Model:
 
         Parameters
         ----------
-        source : {'from_database', 'by_location'}
-            Source of electricity inventories data. Default 'from_database'
+        source : {'default', 'custom'}
+            Source of electricity inventories data. Default 'default'
         """
         for product in self.get_products():
             if not isinstance(product, Electricity):

@@ -55,9 +55,9 @@ def test_electricity_swap():
         # my_manufacturing_project.set_year(year)
         product.set_production_year(year)
         product.set_electricity_source(source=test_dict[test]["electricity_source"])
-        if product.electricity["by_location"] is not None:
-            product.electricity["by_location"].get_supplier().set_scenario(test_dict[test]["cambium scenario"])
-            product.electricity["by_location"].get_supplier().set_geographical_scope(test_dict[test]["regionality"])
+        if product.electricity["custom"] is not None:
+            product.electricity["custom"].get_supplier().set_scenario(test_dict[test]["cambium scenario"])
+            product.electricity["custom"].get_supplier().set_geographical_scope(test_dict[test]["regionality"])
 
         output_dict[test] = {
             "test name": test,
