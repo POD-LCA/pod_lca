@@ -170,7 +170,7 @@ def find_materials(filepath, data):
         vsba = float(lines[i + 9].split(";")[0])
 
         data["materials"][name] = {
-            "__type__": "Material",
+            "__type__": "MaterialPropertyMass",
             "name": name,
             "roughness": rough,
             "thickness": thick,
@@ -200,7 +200,7 @@ def find_materials_air_gap(filepath, data):
         resi = Q(float(lines[i + 2].split(";")[0].strip()), m2KW)
 
         data["materials"][name] = {
-            "__type__": "MaterialAirGap",
+            "__type__": "MaterialPropertyAirGap",
             "name": name,
             "thermal_resistance": resi,
         }
@@ -233,7 +233,7 @@ def find_no_mass_materials(filepath, data):
             thic = None
 
         data["materials"][name] = {
-            "__type__": "MaterialNoMass",
+            "__type__": "MaterialPropertyNoMass",
             "name": name,
             "roughness": rough,
             "thermal_resistance": thres,
@@ -263,7 +263,7 @@ def find_gas_materials(filepath, data):
         thick = Q(float(lines[i + 3].split(";")[0]), METER)
 
         data["materials"][name] = {
-            "__type__": "WindowMaterialGas",
+            "__type__": "WindowMaterialPropertyGas",
             "name": name,
             "gas_type": gtype,
             "thickness": thick,
@@ -300,7 +300,7 @@ def find_glazing_materials(filepath, data):
         soldif = lines[i + 16].split(";")[0].strip()
 
         data["materials"][name] = {
-            "__type__": "WindowMaterialGlazing",
+            "__type__": "WindowMaterialPropertyGlazing",
             "name": name,
             "optical_data_type": odtype,
             "thickness": thick,

@@ -39,7 +39,7 @@ from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
 
-from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialProperty
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyMass
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyAirGap
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
 from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialPropertyGlazing
@@ -102,7 +102,7 @@ mdata['specific_heat']       = Q(720, (JOULE / (KILOGRAM * KELVIN)))
 mdata['thermal_absorptance'] = 0.9        
 mdata['solar_absorptance']   = 0.7        
 mdata['visible_absorptance'] = 0.7        
-m0 = EnvelopeMaterialProperty.from_data(mdata)
+m0 = EnvelopeMaterialPropertyMass.from_data(mdata)
 
 
 mdata = {}
@@ -131,7 +131,7 @@ mdata['specific_heat']       = Q(1089.29718545594, (JOULE / (KILOGRAM * KELVIN))
 mdata['thermal_absorptance'] = 0.9        
 mdata['solar_absorptance']   = 0.7        
 mdata['visible_absorptance'] = 0.7        
-m3 = EnvelopeMaterialProperty.from_data(mdata)
+m3 = EnvelopeMaterialPropertyMass.from_data(mdata)
 
 
 mdata = {}
@@ -229,18 +229,18 @@ b.operational_energy_method = 'eplus' # {'epluus', 'EUIs'}, default is 'eplus'
 
 print(b.get_operational_impacts()) # default is 'total'
 
-# run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-print(b.get_impacts(scope='all', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product', lc_stage=None))
+# print(b.get_impacts(scope='all', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product', lc_stage=None))
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()
 
 
-#TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
-#TODO: name clash / Envelope Material
+# #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
+# #TODO: name clash / Envelope Material

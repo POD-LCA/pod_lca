@@ -14,15 +14,15 @@ class EnvelopeMaterialProperty(object):
     @classmethod
     def from_data(cls, data):
         mtype = data['__type__']
-        if mtype == 'Material':
+        if mtype == 'MaterialPropertyMass':
             material_prop = EnvelopeMaterialPropertyMass.from_data(data)
-        elif mtype == 'MaterialAirGap':
+        elif mtype == 'MaterialPropertyAirGap':
             material_prop = EnvelopeMaterialPropertyAirGap.from_data(data)
-        elif mtype == 'MaterialNoMass':
+        elif mtype == 'MaterialPropertyNoMass':
             material_prop = EnvelopeMaterialPropertyNoMass.from_data(data)
-        elif mtype == 'WindowMaterialGlazing':
+        elif mtype == 'WindowMaterialPropertyGlazing':
             material_prop = WindowMaterialPropertyGlazing.from_data(data)
-        elif mtype == 'WindowMaterialGas':
+        elif mtype == 'WindowMaterialPropertyGas':
             material_prop = WindowMaterialPropertyGas.from_data(data)
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
@@ -44,7 +44,7 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
     @classmethod
     def from_data(cls, data):
         material = cls()
-        material.__type__            = 'Material'
+        material.__type__            = 'MaterialPropertyMass'
         material.name                = data['name']
         material.roughness           = data['roughness']
         material.thickness           = data['thickness']

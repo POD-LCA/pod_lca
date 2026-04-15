@@ -4,7 +4,7 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from .material_property import EnvelopeMaterialProperty
+from .material_property import EnvelopeMaterialPropertyMass
 from .material_property import EnvelopeMaterialPropertyAirGap
 from .material_property import EnvelopeMaterialPropertyNoMass
 from .material_property import WindowMaterialPropertyGlazing
@@ -56,16 +56,16 @@ class Layer(object):
 
     def add_envelope_material_property(self, data):
         mtype = data['__type__']
-        if mtype == 'Material':
-            material_prop = EnvelopeMaterial.from_data(data)
-        elif mtype == 'MaterialAirGap':
-            material_prop = EnvelopeMaterialAirGap.from_data(data)
-        elif mtype == 'MaterialNoMass':
-            material_prop = EnvelopeMaterialNoMass.from_data(data)
-        elif mtype == 'WindowMaterialGlazing':
-            material_prop = WindowMaterialGlazing.from_data(data)
-        elif mtype == 'WindowMaterialGas':
-            material_prop = WindowMaterialGas.from_data(data)
+        if mtype == 'MaterialPropertyMass':
+            material_prop = EnvelopeMaterialPropertyMass.from_data(data)
+        elif mtype == 'MaterialPropertyAirGap':
+            material_prop = EnvelopeMaterialPropertyAirGap.from_data(data)
+        elif mtype == 'MaterialPropertyNoMass':
+            material_prop = EnvelopeMaterialPropertyNoMass.from_data(data)
+        elif mtype == 'WindowMaterialPropertyGlazing':
+            material_prop = WindowMaterialPropertyGlazing.from_data(data)
+        elif mtype == 'WindowMaterialPropertyGas':
+            material_prop = WindowMaterialPropertyGas.from_data(data)
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 
@@ -73,12 +73,12 @@ class Layer(object):
     
     def get_r(self, thickness=None):
         mtype = self.material_property.__type__
-        if mtype == 'Material':
+        if mtype == 'MaterialPropertyMass':
             resistivity =  self.material_property.conductivity.invert()
             return resistivity * thickness
-        elif mtype == 'EnvelopeMaterialAirGap':
+        elif mtype == 'EnvelopeMaterialPropertyAirGap':
             return self.material_property.thermal_resistance
-        elif mtype == 'MaterialNoMass':
+        elif mtype == 'MaterialPropertyNoMass':
             return self.material_property.thermal_resistance
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
@@ -86,9 +86,9 @@ class Layer(object):
     def get_resistivity(self, thickness=None):
         mat = self.material_property
         mtype = mat.__type__
-        if mtype == 'Material':
+        if mtype == 'MaterialPropertyMass':
             return mat.conductivity.invert()
-        elif mtype == 'MaterialNoMass':
+        elif mtype == 'MaterialPropertyNoMass':
             resistivity = mat.thermal_resistance / thickness
             # return Q(resistivity.value, mKW)
             return resistivity
