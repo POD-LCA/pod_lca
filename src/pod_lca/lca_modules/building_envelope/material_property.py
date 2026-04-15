@@ -14,26 +14,26 @@ class EnvelopeMaterialProperty(object):
     @classmethod
     def from_data(cls, data):
         mtype = data['__type__']
-        if mtype == 'Material':
-            material_prop = EnvelopeMaterial.from_data(data)
-        elif mtype == 'MaterialAirGap':
-            material_prop = EnvelopeMaterialAirGap.from_data(data)
-        elif mtype == 'MaterialNoMass':
-            material_prop = EnvelopeMaterialNoMass.from_data(data)
-        elif mtype == 'WindowMaterialGlazing':
-            material_prop = WindowMaterialGlazing.from_data(data)
-        elif mtype == 'WindowMaterialGas':
-            material_prop = WindowMaterialGas.from_data(data)
+        if mtype == 'MaterialPropertyMass':
+            material_prop = EnvelopeMaterialPropertyMass.from_data(data)
+        elif mtype == 'MaterialPropertyAirGap':
+            material_prop = EnvelopeMaterialPropertyAirGap.from_data(data)
+        elif mtype == 'MaterialPropertyNoMass':
+            material_prop = EnvelopeMaterialPropertyNoMass.from_data(data)
+        elif mtype == 'WindowMaterialPropertyGlazing':
+            material_prop = WindowMaterialPropertyGlazing.from_data(data)
+        elif mtype == 'WindowMaterialPropertyGas':
+            material_prop = WindowMaterialPropertyGas.from_data(data)
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
         return material_prop
 
 
-class EnvelopeMaterial(EnvelopeMaterialProperty):
+class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
-        self.__type__ = 'EnvelopeMaterial'
+        self.__type__ = 'EnvelopeMaterialPropertyMass'
         self.roughness = None
         self.conductivity = None
         self.specific_heat = None
@@ -44,7 +44,7 @@ class EnvelopeMaterial(EnvelopeMaterialProperty):
     @classmethod
     def from_data(cls, data):
         material = cls()
-        material.__type__            = 'Material'
+        material.__type__            = 'MaterialPropertyMass'
         material.name                = data['name']
         material.roughness           = data['roughness']
         material.thickness           = data['thickness']
@@ -56,27 +56,27 @@ class EnvelopeMaterial(EnvelopeMaterialProperty):
         material.visible_absorptance = data['visible_absorptance']
         return material
 
-class EnvelopeMaterialAirGap(EnvelopeMaterialProperty):
+class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
-        self.__type__ = 'EnvelopeMaterialAirGap'
+        self.__type__ = 'EnvelopeMaterialPropertyAirGap'
         self.resistance = None
 
     @classmethod
     def from_data(cls, data):
         material = cls()
-        material.__type__            = 'EnvelopeMaterialAirGap'
+        material.__type__            = 'EnvelopeMaterialPropertyAirGap'
         material.name                = data['name']
         material.thermal_resistance  = data['thermal_resistance']
         return material
 
 
-class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
+class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
     def __init__(self):
         super().__init__()  
         self.name                = None
-        self.__type__            = 'MaterialNoMass'
+        self.__type__            = 'MaterialPropertyNoMass'
         self.roughness           = None
         self.thermal_resistance  = None
         self.thermal_absorptance = None
@@ -87,7 +87,7 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
     @classmethod
     def from_data(cls, data):
         material = cls()
-        material.__type__            = 'MaterialNoMass'
+        material.__type__            = 'MaterialPropertyNoMass'
         material.name                = data['name']
         material.roughness           = data['roughness']
         material.thermal_resistance  = data['thermal_resistance'] 
@@ -98,12 +98,12 @@ class EnvelopeMaterialNoMass(EnvelopeMaterialProperty):
         return material
     
 
-class WindowMaterialGlazing(EnvelopeMaterialProperty):
+class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
 
     def __init__(self):
         super().__init__()  
-        self.__type__                                   = 'WindowMaterialGlazing'
-        self.name                                       = 'WindowMaterialGlazing'
+        self.__type__                                   = 'WindowMaterialPropertyGlazing'
+        self.name                                       = 'WindowMaterialPropertyGlazing'
         self.optical_data_type                          = None
         self.win_glass_spectral_data_name               = None
         self.solar_transmittance                        = None
@@ -141,7 +141,7 @@ class WindowMaterialGlazing(EnvelopeMaterialProperty):
         return material
     
 
-class WindowMaterialGas(EnvelopeMaterialProperty):
+class WindowMaterialPropertyGas(EnvelopeMaterialProperty):
     """
     Datastructure containing a WindowMaterialGass for Energy+ analysis
 
@@ -156,8 +156,8 @@ class WindowMaterialGas(EnvelopeMaterialProperty):
 
     """
     def __init__(self):
-        self.__type__          = 'WindowMaterialGas'
-        self.name              = 'WindowMaterialGas'                   
+        self.__type__          = 'WindowMaterialPropertyGas'
+        self.name              = 'WindowMaterialPropertyGas'                   
         self.gas_type          = None
     
     @classmethod

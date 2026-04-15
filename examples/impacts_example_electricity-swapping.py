@@ -27,7 +27,7 @@ epoxy = CLT_model.add_product(
 
 print(epoxy.get_impacts())
 
-epoxy.set_electricity_source(source="by_location")
+epoxy.set_electricity_source(source="custom")
 print(epoxy.get_impacts())
 
 epoxy.set_qty(200)
@@ -43,5 +43,5 @@ print(epoxy.get_impacts())
 epoxy.get_electricity().set_location(state="Texas")
 print(epoxy.get_impacts())
 
-epoxy.set_electricity_source(source="from_database")
+epoxy.set_electricity_source(source="default")
 print(epoxy.get_impacts())
