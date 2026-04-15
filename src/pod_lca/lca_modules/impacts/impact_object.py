@@ -101,6 +101,11 @@ class Impacts(Records):
         """
         key = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
         parent = self.get_parent()
+        
+        # Only adjust for products/processes with life cycle stage A1 or A3
+        if not hasattr(parent, 'get_life_cycle_stage'):
+            return self.get_record(key)
+        
         stage = parent.get_life_cycle_stage()
         CO2_stored_qty = 0
 
@@ -135,7 +140,8 @@ class Impacts(Records):
 
                     if "Biogenic" in record and stage == "A1":
                         gwp_qty -= CO2_stored_qty
-                    
+
+            self.update_qty({key: gwp_qty})
             return gwp_qty
 
     def get_adjusted_a3_gwp_for_bioC_neutrality(self, bio_co2):
