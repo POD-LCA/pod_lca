@@ -24,8 +24,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins):
         The year the product was produced.
     electricity : dict
         Dictionary containing A3 electricity impacts of the production of the material. Keys as follows; \n
-        - `'from_database'`: contains unit electricity impacts retrieved from the database;
-        - `'by_location'`: contains corresponding electricity impacts by location, retrieved from electricity sub-package.
+        - `'default'`: contains unit electricity impacts retrieved from the database;
+        - `'custom'`: contains custom electricity impacts retrieved from electricity sub-package.
         - `'_current'`: indicates which of the above is in use for impacts.
         - `'_tag'`: prefix used in the database to identify grouped impacts of electricity.
     weight : float
@@ -114,8 +114,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins):
             for leg in self.get_transportation():
                 leg.get_emissions().set_temporal_emission_profile(pulse)
 
-        if self.electricity["by_location"] is not None:
-            self.electricity["by_location"].set_year(year)
+        if self.electricity["custom"] is not None:
+            self.electricity["custom"].set_year(year)
 
         return self
 

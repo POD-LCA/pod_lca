@@ -104,7 +104,7 @@ print(concrete_model)
 print(project)
 print(electricity)
 
-concrete_model.set_products_electricity_source("by_location")
+concrete_model.set_products_electricity_source("custom")
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)
