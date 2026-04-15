@@ -56,7 +56,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins):
         self.density_unit = None
         
         # electricity mixin
-        self.electricity = {"from_database": None, "by_location": None, "_current": None, "_tag": None}
+        self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
 
         # transportation mixin
         self.sctg_code = None
