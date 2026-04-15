@@ -149,6 +149,7 @@ file_paths:
     DRF_CATEGORIES: data/buildings_podlca_drf-categoris.csv
     EUI: data/building_podlca_eui.csv
     SAMPLE_BUILDING_STRUCTURES: data/buildings_podlca_sample-structures.csv
+    IDF_IMPACT_DATA_PRODUCT_MAP: data/building_podlca_idf-to-database-material-mapping.csv
   carbon:
     BIO_MATERIAL_DATA: data\\carbon_podlca_bio-material-data.csv
 Keys and Credentials:
