@@ -4,11 +4,11 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from .material_property import EnvelopeMaterial
-from .material_property import EnvelopeMaterialAirGap
-from .material_property import EnvelopeMaterialNoMass
-from .material_property import WindowMaterialGlazing
-from .material_property import WindowMaterialGas
+from .material_property import EnvelopeMaterialProperty
+from .material_property import EnvelopeMaterialPropertyAirGap
+from .material_property import EnvelopeMaterialPropertyNoMass
+from .material_property import WindowMaterialPropertyGlazing
+from .material_property import WindowMaterialPropertyGas
 
 from pod_lca.units import Quantity as Q
 from pod_lca.units import METER, KELVIN, WATT

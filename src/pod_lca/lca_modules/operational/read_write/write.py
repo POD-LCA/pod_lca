@@ -387,15 +387,15 @@ def write_layers(building):
         thick = layer.thickness.convert_to(METER)
         lay_name = lk
 
-        if mat.__type__ == "Material":
+        if mat.__type__ == "MaterialPropertyMass":
             write_material(mat, thick, lay_name)
-        elif mat.__type__ == "MaterialNoMass":
+        elif mat.__type__ == "MaterialPropertyNoMass":
             write_materials_nomass(mat, lay_name)
-        elif mat.__type__ == "EnvelopeMaterialAirGap":
+        elif mat.__type__ == "EnvelopeMaterialPropertyAirGap":
             write_material_air_gap(mat, lay_name)
-        elif mat.__type__ == "WindowMaterialGlazing":
+        elif mat.__type__ == "WindowMaterialPropertyGlazing":
             write_material_glazing(mat, thick, lay_name)
-        elif mat.__type__ == "WindowMaterialGas":
+        elif mat.__type__ == "WindowMaterialPropertyGas":
             write_material_gas(mat, thick, lay_name)
         # elif mat.__type__ == 'WindowMaterialGlazingSimple':
         #     write_materials_glazing_simple(building, mat)

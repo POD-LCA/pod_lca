@@ -39,11 +39,11 @@ from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
 
-from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterial
-from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialAirGap
-from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialNoMass
-from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGlazing
-from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialGas
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialProperty
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyAirGap
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
+from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialPropertyGlazing
+from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialPropertyGas
 
 
 from pod_lca.lca_modules.operational import OperationalEnergyObject
@@ -102,13 +102,13 @@ mdata['specific_heat']       = Q(720, (JOULE / (KILOGRAM * KELVIN)))
 mdata['thermal_absorptance'] = 0.9        
 mdata['solar_absorptance']   = 0.7        
 mdata['visible_absorptance'] = 0.7        
-m0 = EnvelopeMaterial.from_data(mdata)
+m0 = EnvelopeMaterialProperty.from_data(mdata)
 
 
 mdata = {}
 mdata['name']               = 'Generic Wall Air Gap'
 mdata['thermal_resistance'] = Q(0.1603675, (SQUARE_METER * KELVIN) / WATT)
-m1 = EnvelopeMaterialAirGap.from_data(mdata)
+m1 = EnvelopeMaterialPropertyAirGap.from_data(mdata)
 
 mdata = {}
 mdata['name']                = 'Expanded polystyrene (EPS) Type 1'       
@@ -118,7 +118,7 @@ mdata['thermal_absorptance'] = 0.9000000
 mdata['solar_absorptance']   = 0.7500000      
 mdata['visible_absorptance'] = 0.7500000
 mdata['thickness']           = None
-m2 = EnvelopeMaterialNoMass.from_data(mdata)
+m2 = EnvelopeMaterialPropertyNoMass.from_data(mdata)
 
 
 mdata = {}
@@ -131,7 +131,7 @@ mdata['specific_heat']       = Q(1089.29718545594, (JOULE / (KILOGRAM * KELVIN))
 mdata['thermal_absorptance'] = 0.9        
 mdata['solar_absorptance']   = 0.7        
 mdata['visible_absorptance'] = 0.7        
-m3 = EnvelopeMaterial.from_data(mdata)
+m3 = EnvelopeMaterialProperty.from_data(mdata)
 
 
 mdata = {}
@@ -142,7 +142,7 @@ mdata['thermal_absorptance'] = 0.9000000
 mdata['solar_absorptance']   = 0.7500000      
 mdata['visible_absorptance'] = 0.7500000          
 mdata['thickness']           = None
-m4 = EnvelopeMaterialNoMass.from_data(mdata)
+m4 = EnvelopeMaterialPropertyNoMass.from_data(mdata)
 
 layers = {
           0: {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH).convert_to(METER)},
@@ -240,3 +240,7 @@ drf_record.plot('cumulative radiative forcing')
 graph = BarChart.from_plotter(MatplotlibPlotter)
 graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 graph.show()
+
+
+#TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
+#TODO: name clash / Envelope Material
