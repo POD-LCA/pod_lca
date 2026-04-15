@@ -13,21 +13,18 @@ from .material_property import WindowMaterialPropertyGas
 from .material_property import EnvelopeMaterialProperty
 
 from .layer import Layer
-
+from .envelope_material import EnvelopeMaterial
 from .surface import Surface
 from .window import Window
+from .construction import Construction
 from .wall import Wall
 from .wall import FramedWall
 from .floor import Floor
 from .ceiling import Ceiling
 from .shading import Shading
 from .framing import Framing
-from .envelope_material import EnvelopeMaterial
 from .envelope import Envelope
 from .building_envelope import BuildingEnvelope
 
-
-
-from .construction import Construction
 
 __all__ = ["Envelope", "BuildingEnvelope"]
