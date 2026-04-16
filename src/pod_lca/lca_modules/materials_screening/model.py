@@ -21,6 +21,7 @@ from ...units import KILO
 from ...units import WATT_HOUR
 from ...utilities import config
 from ...utilities import DataImporter
+from ..carbon_storage import get_biogenic_carbon_dioxide_content
 
 
 class Model:
@@ -662,9 +663,10 @@ class Model:
                     if (impact_cat == carbon_category) and (stage == "A1"):
                         adjusted_gwp = impact.get_adjusted_GWP()
                         data[stage] += adjusted_gwp
-                        bio_co2_storage_potential = impact.get_parent().unit_carbon_storage.get_biogenic_carbon_storage_potential()
-                        if bio_co2_storage_potential:
-                            balance += (raw_impact - adjusted_gwp)
+                        bio_c_storage_qty = impact.get_parent().carbon_storage.get_record('Biogenic C')
+                        bio_co2_storage_qty = get_biogenic_carbon_dioxide_content(bio_c_storage_qty)
+                        if bio_co2_storage_qty is not None and bio_co2_storage_qty != 0:
+                            balance += bio_co2_storage_qty # in case a material has both biogenic and mineral carbon storage, only the biogenic co2 stored should be added to the A3 balance
                     else:
                         data[stage] += raw_impact
 
