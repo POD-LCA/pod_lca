@@ -237,9 +237,6 @@ class Product(Master):
     def set_electricity_product(self):
         """Set electricity product for the item from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of **'Electricity_'**, **'electricity_'**, **'elec_'**, or **'Elec_'**."""
         if self.get_impact_database_entry() is not None:
-            if self.get_electricity_database_tag() is None:
-                self.set_electricity_database_tag()
-
             database = self.get_impact_database()
             data_set = database.get_data_entry(self.get_impact_database_entry())
 
@@ -615,6 +612,9 @@ class Product(Master):
         str
             Tag used to identify electricity data in the database.
         """
+        if self.electricity["_tag"] is None:
+            self.set_electricity_database_tag()
+
         return self.electricity["_tag"]
 
     def get_electricity_qty(self):
@@ -819,9 +819,6 @@ class Product(Master):
             self.set_electricity_product()
         
         if self.get_impact_database_entry() is not None:
-            if self.get_electricity_database_tag() is None:
-                self.set_electricity_database_tag()
-
             database = self.get_impact_database()
             electricity_tag = self.get_electricity_database_tag()
 
