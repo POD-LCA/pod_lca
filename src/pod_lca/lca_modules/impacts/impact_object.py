@@ -145,18 +145,5 @@ class Impacts(Records):
 
             return gwp_qty
 
-    # FIXME Delete - this method does not affect A3
-    def get_adjusted_a3_gwp_for_bioC_neutrality(self, bio_co2):
-        """Get A3 GWP values adjusted for stored biogenic CO2 (-1/+1 bioCO2 accounting, A1-A3 scope).
-
-        Returns
-        -------
-        float
-            Adjusted A3 GWP value (all stored biogenic CO2 is counted as a CO2 emission when the product exits the product system in stage A3)
-        """    
-        self.update_qty({"GWP": bio_co2})
-
-        return bio_co2
-
 if __name__ == "__main__":
     pass

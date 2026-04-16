@@ -264,30 +264,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         if self.get_impact_database_entry() is not None:
             super().update_inventory_records()
             self.update_electricity_records()
-            self.update_carbon_storage_records()
-
-        return self
-
-    # FIXME: delete - this method seems to be redundant now
-    def update_carbon_storage_records(self): 
-        if self.carbon_storage.get_mineral_carbonation_potential():
-            if self.carbon_storage.get_mineral_carbon_storage_qty() is not None and self.carbon_storage.get_mineral_carbon_storage_qty() != 0:
-                mineral_carbon_storage_qty = self.carbon_storage.get_mineral_carbon_storage_qty()   
-                self.carbon_storage.set_mineral_carbon_storage_qty(mineral_carbon_storage_qty)
-                self.impacts.get_adjusted_GWP()
-                # self.emissions.update_CO2_emissions(-self.carbon_storage.get_mineral_carbon_storage_qty()) # FIXME method not implemented in Emission class
-                # self.update_inventory_records() # FIXME recursive call
-
-        if self.carbon_storage.get_biogenic_carbon_storage_potential():
-            if self.carbon_storage.get_biogenic_carbon_storage_qty() is not None:
-                biogenic_carbon_storage_qty = self.carbon_storage.get_biogenic_carbon_storage_qty()
-                self.carbon_storage.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty)
-
-                self.impacts.get_adjusted_GWP()
-                self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty) # FIXME the value returned from this method is not set anywhere
-                # self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty) # FIXME method not implemented in Emission class
-                # self.update_inventory_records() # FIXME recursive call
-
+            
         return self
 
 
