@@ -1,17 +1,19 @@
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
 __license__ = "MIT License"
-__email__ = "kiun@uw.edu"
+__email__ = "etel5501@uw.edu, kiun@uw.edu"
 __version__ = "0.1.0"
+
+from numpy import bool_ as np_bool
+from numpy import isnan
 
 from ..impacts import Records
 from ...utilities import config
-from ...units import Unit, UNITS_MAP, KG_CARBON_DIOXIDE, KG_CARBON
-from numpy import bool_ as np_bool
-from numpy import isnan
-from ..carbon_storage import get_dry_mass, get_biogenic_carbon_content, get_biogenic_carbon_dioxide_content
-
-
+from ...units import KG_CARBON
+from ...units import KG_CARBON_DIOXIDE
+from ...units import Unit
+from ...units import UNITS_MAP
+from ..carbon_storage import get_biogenic_carbon_dioxide_content
 
 
 class CarbonStorage(Records):
@@ -31,25 +33,30 @@ class CarbonStorage(Records):
 
     def __init__(self):
         super().__init__()
+        # TODO: potentially remove; getters are never used
         self.mineral_carbon_storage_source = None 
-        self.mineral_carbon_storage_qty = None 
+        self.biogenic_carbon_storage_source = None
+        
         self.mineral_carbonation_potential = None
+        self.biogenic_carbon_storage_potential = None
+        self.mineral_carbon_storage_qty = None # TODO: how is this different from Mineral_C
+        self.biogenic_carbon_percentage = None
+        
+        # TODO: moved as ProducBiopropertiesMixin - remove corresponding setter/getters and usage
         self.dry_density = None
         self.dry_mass = None
         self.moisture_content = None
-        self.biogenic_carbon_percentage = None
-        self.biogenic_carbon_storage_potential = None
-        self.biogenic_carbon_storage_source = None
 
-    
-    # ====== Setters ======
-
+    # ========================
+    # Setters
+    # ========================
     def set_mineral_carbon_storage_source(self, source=None):
         """Set the source for mineral carbon storage.
         Parameters
         ----------
         source : str
-            Source for mineral carbon storage ('from_database' or 'custom')."""
+            Source for mineral carbon storage ('from_database' or 'custom').
+        """
         if source == None:
             source = "from_database" 
         self.mineral_carbon_storage_source = source
@@ -185,7 +192,6 @@ class CarbonStorage(Records):
 
         return self
     
-    
     def set_biogenic_carbon_composition(self, percent):
         """
         Set the percent carbon (%C dry mass basis) for biogenic carbon composition.
@@ -200,7 +206,6 @@ class CarbonStorage(Records):
             self.biogenic_carbon_percentage = float(percent_str) / 100.0
         else:
             raise TypeError("Carbon percentage must be numerical.")
-
 
     def set_biogenic_carbon_storage_qty(self, qty, unit=KG_CARBON_DIOXIDE, per=None):
         """Set the quantity of biogenic carbon storage.
@@ -246,8 +251,9 @@ class CarbonStorage(Records):
             
         return self
     
-    # ====== Getters ======
-    
+    # ========================
+    # Getters
+    # ========================
     def get_mineral_carbon_storage_source(self):
         """Get the source for mineral carbon storage.
         Returns
@@ -300,7 +306,7 @@ class CarbonStorage(Records):
         float
             Moisture content of the product (between 0 and 1).
         """
-      # If user or database has already set it, use it
+        # If user or database has already set it, use it
         if self.moisture_content is not None:
             return self.moisture_content
 
@@ -312,6 +318,7 @@ class CarbonStorage(Records):
         db = self.parent.get_impact_database()
         entry = db.get_data_entry(entry_name)
         pct = entry["%H2O (mass % moisture)"]
+
         return pct
     
     def get_dry_density(self):

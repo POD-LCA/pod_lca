@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 from numpy import bool_ as np_bool
 
 from . import Master
+from . import ProductBioPropertiesMixin
 from . import ProductElectricityMixins
 from . import ProductTransportationMixins
 from ..impacts import UniformEmissionProfile
@@ -15,7 +16,7 @@ from ...units import KILOGRAM
 from ...utilities import config
 
 
-class Product(Master, ProductElectricityMixins, ProductTransportationMixins):
+class Product(Master, ProductElectricityMixins, ProductTransportationMixins, ProductBioPropertiesMixin):
     """Product object, inheriting from the Master object, represent a product.
 
     Attributes
@@ -61,6 +62,11 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins):
         # transportation mixin
         self.sctg_code = None
         self.transport_legs = None
+
+        # bio properties mixin
+        self.dry_density = None
+        self.dry_mass = None
+        self.moisture_content = None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -262,57 +268,25 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins):
 
         return self
 
+    # FIXME: delete - this method seems to be redundant now
     def update_carbon_storage_records(self): 
-        if self.carbon_storage.get_mineral_carbonation_potential() is None:
-            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
-            key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
-            if key in data_entry.index:
-                if isinstance(data_entry[key], (bool, np_bool)):
-                    potential = data_entry[key]
-                elif isinstance(data_entry[key], str):
-                    if data_entry[key].lower() in ["yes", "true"]:
-                        potential = True
-                    elif data_entry[key].lower() in ["no", "false"]:
-                        potential = False
-                    else:
-                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-                else:
-                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-
-                self.carbon_storage.set_mineral_carbonation_potential(potential)
-
+        if self.carbon_storage.get_mineral_carbonation_potential():
             if self.carbon_storage.get_mineral_carbon_storage_qty() is not None and self.carbon_storage.get_mineral_carbon_storage_qty() != 0:
                 mineral_carbon_storage_qty = self.carbon_storage.get_mineral_carbon_storage_qty()   
                 self.carbon_storage.set_mineral_carbon_storage_qty(mineral_carbon_storage_qty)
                 self.impacts.get_adjusted_GWP()
-                self.emissions.update_CO2_emissions(-self.carbon_storage.get_mineral_carbon_storage_qty())
-                self.update_inventory_records()
+                # self.emissions.update_CO2_emissions(-self.carbon_storage.get_mineral_carbon_storage_qty()) # FIXME method not implemented in Emission class
+                # self.update_inventory_records() # FIXME recursive call
 
-        if self.carbon_storage.get_biogenic_carbon_storage_potential() is None:
-            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
-            key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
-            if key in data_entry.index:
-                if isinstance(data_entry[key], (bool, np_bool)):
-                    potential = data_entry[key]
-                elif isinstance(data_entry[key], str):
-                    if data_entry[key].lower() in ["yes", "true"]:
-                        potential = True
-                    elif data_entry[key].lower() in ["no", "false"]:
-                        potential = False
-                    else:
-                        raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
-                else:
-                    raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
-
-                self.carbon_storage.set_biogenic_carbon_storage_potential(potential)
-            
+        if self.carbon_storage.get_biogenic_carbon_storage_potential():
             if self.carbon_storage.get_biogenic_carbon_storage_qty() is not None:
                 biogenic_carbon_storage_qty = self.carbon_storage.get_biogenic_carbon_storage_qty()
                 self.carbon_storage.set_biogenic_carbon_storage_qty(biogenic_carbon_storage_qty)
+
                 self.impacts.get_adjusted_GWP()
-                self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty)
-                self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty)
-                self.update_inventory_records()
+                self.impacts.get_adjusted_a3_gwp_for_bioC_neutrality(biogenic_carbon_storage_qty) # FIXME the value returned from this method is not set anywhere
+                # self.emissions.update_CO2_emissions(-biogenic_carbon_storage_qty) # FIXME method not implemented in Emission class
+                # self.update_inventory_records() # FIXME recursive call
 
         return self
 

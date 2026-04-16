@@ -4,11 +4,14 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import bool_ as np_bool
+
 from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..analysis import PedigreeScore
 from ...utilities import log
+from ...utilities import config
 
 
 class Master:
@@ -225,6 +228,7 @@ class Master:
             emissions = {key: 0.0 for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
+            self.update_carbon_storage_potential(database_item)
             carbon_storage = {key: 0.0 for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)
 
@@ -242,6 +246,7 @@ class Master:
             emissions = {key: unit_inventories[key] for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
+            self.update_carbon_storage_potential(database_item)
             carbon_storage = {key: unit_inventories[key] for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)
 
@@ -632,6 +637,57 @@ class Master:
                 f"Product {self.get_name()} does not have a life cycle stage. Cannot add inventory records to the model.",
                 "Warn",
             )
+
+        return self
+
+    def update_carbon_storage_potential(self, database_item):
+        if database_item:
+            data_entry = self.get_impact_database().get_data_entry(database_item)
+        else:
+            self.carbon_storage.set_mineral_carbonation_potential(False)
+            self.carbon_storage.set_biogenic_carbon_storage_potential(False)
+
+            return self
+
+        # mineral carbonation potential
+        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER"]
+        if key in data_entry.index:
+            if isinstance(data_entry[key], (bool, np_bool)):
+                potential = data_entry[key]
+            elif isinstance(data_entry[key], str):
+                if data_entry[key].lower() in ["yes", "true"]:
+                    potential = True
+                elif data_entry[key].lower() in ["no", "false"]:
+                    potential = False
+                else:
+                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+            else:
+                raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+        
+        else:
+            potential = False
+
+        self.unit_carbon_storage.set_mineral_carbonation_potential(potential)
+
+        # bio carbon potential
+
+        key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
+        if key in data_entry.index:
+            if isinstance(data_entry[key], (bool, np_bool)):
+                potential = data_entry[key]
+            elif isinstance(data_entry[key], str):
+                if data_entry[key].lower() in ["yes", "true"]:
+                    potential = True
+                elif data_entry[key].lower() in ["no", "false"]:
+                    potential = False
+                else:
+                    raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+            else:
+                raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+        else:
+            potential = False
+
+        self.unit_carbon_storage.set_biogenic_carbon_storage_potential(potential)
 
         return self
 
