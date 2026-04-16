@@ -653,14 +653,22 @@ class Model:
         else:
             data = {}
             carbon_category = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
+            balance = 0
             for stage in impacts_dict.keys():
                 impact_lst = impacts_dict[stage]
                 data[stage] = 0.0
                 for impact in impact_lst:
+                    raw_impact = impact.get_record(impact_cat)
                     if (impact_cat == carbon_category) and (stage == "A1"):
-                        data[stage] += impact.get_adjusted_GWP()
+                        adjusted_gwp = impact.get_adjusted_GWP()
+                        data[stage] += adjusted_gwp
+
+                        balance += (raw_impact - adjusted_gwp)
                     else:
-                        data[stage] += impact.get_record(impact_cat)
+                        data[stage] += raw_impact
+
+            # Adjust A3 GWP values for stored biogenic CO2 (-1/+1 bioCO2 accounting, A1-A3 scope)
+            data["A3"] += balance
 
             sorted_data = sorted(data.items())
             sorted_dict = dict(sorted_data)
