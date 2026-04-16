@@ -662,8 +662,9 @@ class Model:
                     if (impact_cat == carbon_category) and (stage == "A1"):
                         adjusted_gwp = impact.get_adjusted_GWP()
                         data[stage] += adjusted_gwp
-
-                        balance += (raw_impact - adjusted_gwp)
+                        bio_co2_storage_potential = impact.get_parent().unit_carbon_storage.get_biogenic_carbon_storage_potential()
+                        if bio_co2_storage_potential:
+                            balance += (raw_impact - adjusted_gwp)
                     else:
                         data[stage] += raw_impact
 
