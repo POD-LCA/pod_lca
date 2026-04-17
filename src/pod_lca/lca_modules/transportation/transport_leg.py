@@ -5,6 +5,7 @@ __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 from . import ElectricTransportMode
+from ..analysis import PedigreeScore
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..location import Location
@@ -58,7 +59,7 @@ class TransportationLeg:
         self.mode = None
         self.impacts = None
         self.emissions = None
-        self.pedigree_score = None
+        self.pedigree_score = PedigreeScore.from_parent(self)
         self.next = None
         self.previous = None
 
@@ -260,10 +261,13 @@ class TransportationLeg:
         self.next = next
         next.previous = self
 
+        next.set_pedigree_score(self.get_pedigree_score())
+
         return self
 
     def set_pedigree_score(self, pedigree_score):
-        """Set a pedigree score (data quality score) to the transportation leg.
+        """Set a pedigree score (data quality score) to the transportation leg. 
+        All the following transportation legs for the material also assigned the same pedigree score.    
 
         Parameters
         ----------
@@ -271,6 +275,9 @@ class TransportationLeg:
             Data quality indicator for the transportation leg.
         """
         self.pedigree_score = pedigree_score
+
+        if self.get_next():
+            self.get_next().set_pedigree_score(pedigree_score)
 
         return self
     # ================================

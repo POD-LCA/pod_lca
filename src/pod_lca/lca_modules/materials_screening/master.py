@@ -4,10 +4,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..analysis import PedigreeScore
 from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
-from ..analysis import PedigreeScore
 from ...utilities import log
 
 

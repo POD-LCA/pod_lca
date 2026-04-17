@@ -359,7 +359,6 @@ class ImpactsDatabase:
         ImportError
             Multiple matching entries.
         """
-        # print(flow_name)
         if self.data is not None:
             row_id = self.data.index[self.data[self.get_primary_key()] == flow_name]
             if len(row_id) == 1:
