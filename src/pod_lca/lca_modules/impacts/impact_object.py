@@ -86,64 +86,6 @@ class Impacts(Records):
 
         return weighted_impact
 
-    def get_adjusted_GWP(self):
-        """Get GWP values adjusted for biogenic and accelerated carbonation effects.
-
-        Returns
-        -------
-        float
-            Adjusted GWP value
-
-        Raises
-        ------
-        KeyError
-            Impact category not recognied.
-        """
-        key = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
-        parent = self.get_parent()
-        
-        # Only adjust for products/processes with life cycle stage A1 or A3
-        if not hasattr(parent, 'get_life_cycle_stage'):
-            return self.get_record(key)
-        
-        stage = parent.get_life_cycle_stage()
-        CO2_stored_qty = 0
-
-        # check key
-        if key in self.get_categories():
-            if (
-                not UNITS_MAP[self.get_categories(units=True)[1][key]].get_qty_measured()
-                == KG_CARBON_DIOXIDE.get_qty_measured()
-            ):
-                raise KeyError(f"Impact category {key} incompatible to account for carbonation effects.")
-        else:
-            raise KeyError(f"{key} not in impact categories of config.")
-
-        # adjust GWP
-        if key in self.record_attr_dict:
-            gwp_qty = self.get_record(key)
-            unit_carbon_storage_record = self.get_parent().unit_carbon_storage
-            product_qty = self.get_parent().get_qty()
-            if unit_carbon_storage_record is not None: 
-                for record, unit in unit_carbon_storage_record.record_attr_dict.items():
-                    input_unit = UNITS_MAP[unit]
-                    conversion_factor_1 = input_unit.convert_to(KG_CARBON_DIOXIDE) 
-                    
-                    conversion_factor_2 = parent.unit.convert_to(parent.inventories_declared_unit) 
-
-                    unit_storage_qty = unit_carbon_storage_record.get_record(record)
-
-                    CO2_stored_qty = unit_storage_qty * product_qty * conversion_factor_1 * conversion_factor_2 
-
-                    if "Mineral" in record:
-                        gwp_qty -= CO2_stored_qty
-
-                    if "Biogenic" in record and stage == "A1":
-                        gwp_qty -= CO2_stored_qty
-
-            self.update_qty({key: gwp_qty}) # FIXME: Do we want to update this record here
-
-            return gwp_qty
 
 if __name__ == "__main__":
     pass
