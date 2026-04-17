@@ -50,18 +50,23 @@ class TransportationLeg:
     def __init__(self):
         self.manager = None
         self.name = None
+
         self.material = None
-        self.travel_dist = None
-        self.dist_unit = None
-        self.return_trip_factor = None
         self.shipping_destination = None
         self.shipping_origin = None
         self.mode = None
+
+        self.travel_dist = None
+        self.dist_unit = None
+        self.return_trip_factor = None
+
         self.impacts = None
         self.emissions = None
-        self.pedigree_score = PedigreeScore.from_parent(self)
+        
         self.next = None
         self.previous = None
+
+        self.pedigree_score = PedigreeScore.from_parent(self)
 
     def __str__(self):
         str = (
