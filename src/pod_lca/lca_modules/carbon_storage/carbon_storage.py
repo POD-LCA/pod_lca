@@ -39,7 +39,6 @@ class CarbonStorage(Records):
         
         self.mineral_carbonation_potential = None
         self.biogenic_carbon_storage_potential = None
-        self.mineral_carbon_storage_qty = None # TODO: how is this different from Mineral_C
         self.biogenic_carbon_percentage = None
         
         # TODO: moved as ProducBiopropertiesMixin - remove corresponding setter/getters and usage
