@@ -5,43 +5,65 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from copy import deepcopy
-
+from . import GenericElement
 from . import Foundation
 from . import Beam
 from . import Column
 from . import Slab
 from . import Wall
 from . import RoofStructure
-from . import Structure
 from . import StructuralMaterial
-from ...units import UNITS_MAP
+from ... utilities import area_polygon
+from ...units import UNITS_MAP, KILOGRAM, SQUARE_METER
+from ...units import Quantity as Q
 from ...utilities import DataImporter
 from ...utilities import config
 from ...utilities import log
 
 
 
-class BuildingStructure:
+class Structure:
     """ The structural assemblies of the building.
     
     Attributes
     ----------
     building : ~pod_lca.building.Building
         The building to which the structure belong.
-    structures : dict
-        A dictionary of structures belonging to the building structure keyed by floor number.
+    structural_system :
+        Major vertical gravity system of the structure.
+    structural_material : {'Concrete', 'Steel', 'CLT'}
+        Primary structural material of the building.
+    foundations : list of ~pod_lca.building_structure.Foundation
+        Structural foundation elements.
+    beams : list of ~pod_lca.building_structure.Beam
+        Beam and other framing elements in the structure.
+    columns : list of ~pod_lca.building_structure.Column
+        Column elements in the structure.
+    slabs : list of ~pod_lca.building_structure.Slab
+        Floor slabs in the structure.
+    structural_walls : list of ~pod_lca.building_structure.Wall
+        Structural walls in the structure.
+    roof_structure : list of ~pod_lca.building_structure.RoofStructure
+        Roof structure of the building.
     """
 
     def __init__(self):
         self.building = None
-        self.structures = {}
+        self.structural_system = None 
+        self.structural_material = None
+        self.unclassified = [] 
+        self.foundations = []
+        self.beams = []
+        self.columns = []
+        self.slabs = []
+        self.structural_walls = []
+        self.roof_structure = []
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def from_template(cls, building_type, structure_type): # FIXME to refactor
+    def from_template(cls, building_type, structure_type):
         """ Create a structure from a template model.
         
         Parameters
@@ -127,18 +149,64 @@ class BuildingStructure:
         return structure
 
     @classmethod
-    def from_structures(cls, structures):
-        bs = cls()
-        for i, s in enumerate(structures):
-            cls.set_structure(s, i)
-        return bs
-    
+    def from_geometry(cls, building):
+        pass
+
     @classmethod
-    def from_structure_and_stories(cls, structure, num_stories):
-        bs = cls()
-        for i in range(num_stories):
-            bs.set_structure(deepcopy(structure), i)
-        return bs
+    def from_sample_buildings(cls, building_type, structure_type, mui_type, floor_plan):
+
+        if structure_type == 'CLT':
+            low, mid, high = 131, 38, 79
+
+        elif building_type == 'Residential':
+            if structure_type == 'Concrete':
+                low, mid, high = 139, 170, 81
+            elif structure_type == 'Light-Frame':
+                low, mid, high = 142, 263, 84
+            else:
+                raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
+
+        elif building_type == 'Commercial':
+            if structure_type == 'Conrete':
+                low, mid, high = 5, 93, 132
+            elif structure_type == 'Steel':
+                low, mid, high = 183, 179, 223
+            else:
+                raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
+        else:
+            raise ValueError('{} building type has not been yet implemented in this model'.format(building_type))
+
+        mui_map = {'low': low, 'high': high, 'mid': mid}
+
+        path = config['file_paths']['building']['SAMPLE_BUILDING_STRUCTURES']
+        sample_buildings = DataImporter.csv_to_pandas(path)
+        sample_building = sample_buildings[sample_buildings['project_index'] == mui_map[mui_type]]
+        
+
+        structural_element_obj = GenericElement.create('generic structural element', None)
+
+        floor_area = area_polygon(floor_plan)
+
+        for _, row in sample_building.iterrows():
+            omniclass_element = row['omniclass_element']
+            mat_type_podlca = row['mat_type_podlca']
+            mat_type = row['mat_type']
+            mui_gfa = Q(row['mui_gfa'], KILOGRAM/SQUARE_METER)
+
+
+            building_material = StructuralMaterial.new(
+                name='{} {}'.format(omniclass_element, mat_type), 
+                qty=floor_area * mui_gfa,
+                unit=KILOGRAM,
+                material_database_entry=mat_type_podlca,
+            )
+
+            structural_element_obj.add_material(building_material)
+
+        structure = cls()
+        structure.add_structural_element(structural_element_obj)
+
+        return structure
 
     # ================================
     # Setters
@@ -153,14 +221,10 @@ class BuildingStructure:
         """
         self.building = building
 
-        for structure in self.structures.values():
-            for structural_element in structure.get_structural_elements():     
-                structural_element.set_building()
+        for structural_element in self.get_structural_elements():     
+            structural_element.set_building()
 
         return self
-
-    def set_structure(self, structure, floor_number):
-        self.structures[floor_number] = structure
 
     # ================================
     # Getters
@@ -183,17 +247,34 @@ class BuildingStructure:
         list of ~pod_lca.building_structure.StructuralElement
             All the structural elements in the structure.
         """
-        elems = []
+        return  self.foundations + self.beams + self.columns + self.slabs + self.structural_walls + self.roof_structure
+
+    # ================================
+    # Add
+    # ================================
+    def add_structural_elements(self, structural_elements):
+        """Add assemblies to the building structure.
         
-        for structure in self.structures.values():
-            elems.extend(structure.foundations + 
-                         structure.beams +
-                         structure.columns + 
-                         structure.slabs + 
-                         structure.structural_walls + 
-                         structure.roof_structure)
+        Parameters
+        ----------
+        structural_elements : list of ~pod_lca.buildings.StructuralElement
+            Structural elements to be added to the building structure.
+        """
+        for structural_element in structural_elements:
+            self.add_structural_element(structural_element)
+
+    def add_structural_element(self, structural_element):
+        """Add structural element to the building structure.
         
-        return elems 
+        Parameters
+        ----------
+        structural_element : ~pod_lca.buildings.StructuralElement
+            Assembly to be added to the building structure.        
+        """
+        getattr(self, structural_element.get_element_type()).append(structural_element)
+        structural_element.set_parent(self)
+
+        return self
 
 
 if __name__ == '__main__':

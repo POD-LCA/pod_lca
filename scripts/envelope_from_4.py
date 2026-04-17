@@ -24,7 +24,7 @@ from pod_lca.utilities import config
 from pod_lca.lca_modules.building import Building
 
 from pod_lca.lca_modules.building_structure import BuildingStructure
-
+from pod_lca.lca_modules.building_structure import Structure
 from pod_lca.lca_modules.location import Location
 
 
@@ -209,7 +209,8 @@ be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
 mui_type = 'low' # 'mid', 'hight'
 
-s = BuildingStructure.from_sample_buildings(btype, stype, mui_type, floor_plan, num_stories)
+s_floor = Structure.from_sample_buildings(btype, stype, mui_type, floor_plan)
+s = BuildingStructure.from_structure_and_stories(s_floor, num_stories)
 
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

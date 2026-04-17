@@ -13,6 +13,7 @@ from .structural_elements import Column
 from .structural_elements import Slab
 from .structural_elements import Wall
 from .structural_elements import RoofStructure
+from .structure import Structure
 from .building_structure import BuildingStructure
 from .concrete_building_structure import ConcreteStructure
 from .clt_building_structure import CLTStructure
