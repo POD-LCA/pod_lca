@@ -267,7 +267,7 @@ class CarbonStorage(Records):
             self.mineral_carbon_storage_source = "from_database"
             return self.mineral_carbon_storage_source
 
-    def get_mineral_carbon_storage_qty(self):
+    def get_mineral_carbon_storage_qty(self, unit=KG_CARBON_DIOXIDE):
         """Get the quantity of mineral carbon storage.
 
         Returns
@@ -275,7 +275,12 @@ class CarbonStorage(Records):
         float
             Quantity of mineral carbon storage.
         """
-        return self.get_record('Mineral C')
+        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
+        mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+
+        conversion_factor = mineral_carbon_unit.convert_to(unit)
+
+        return self.get_record(key) * conversion_factor
 
     def get_mineral_carbonation_potential(self):
         """Set mineral carbonation potential of the product.
@@ -442,7 +447,7 @@ class CarbonStorage(Records):
             Quantity of biogenic carbon storage.
         """
         if not self.get_biogenic_carbon_storage_potential(): 
-            return None
+            return 0.0
         
         parent = self.get_parent()
         conversion_factor = parent.unit.convert_to(parent.inventories_declared_unit)

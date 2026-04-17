@@ -10,6 +10,7 @@ from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..analysis import PedigreeScore
+from ...units import KG_CARBON_DIOXIDE
 from ...utilities import log
 from ...utilities import config
 
@@ -421,6 +422,13 @@ class Master:
             Impacts of the product/process.
         """
         self.update_inventory_records()
+
+        carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
+        mineral_carbonation_effect = self.get_carbon_storage().get_mineral_carbon_storage_qty(KG_CARBON_DIOXIDE)
+
+        adjusted_impact = self.impacts.get_record(carbonation_effects_impact_cat) - mineral_carbonation_effect
+
+        self.impacts.update_qty({carbonation_effects_impact_cat: adjusted_impact})
 
         return self.impacts
 

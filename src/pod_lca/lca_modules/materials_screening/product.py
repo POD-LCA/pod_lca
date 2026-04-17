@@ -12,6 +12,7 @@ from . import ProductElectricityMixins
 from . import ProductTransportationMixins
 from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
+from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOGRAM
 from ...utilities import config
 
@@ -250,6 +251,43 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         """
         return self.get_project()
 
+    def get_impacts(self, lc_stage=None):
+        """Retrieve the impacts of the product.
+
+        Parameters
+        ----------
+        lc_stage : {None, 'A1', 'A3'}
+            Life cycle stage for which the impact value is requested. Default, None.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            Impacts of the product/process.
+        """
+        if lc_stage is None:
+            return super().get_impacts()
+        else:
+            impacts = super().get_impacts()
+            self.update_inventory_records()
+
+            carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
+            biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE)
+
+            base_impact = impacts.get_record(carbonation_effects_impact_cat)
+            
+            if (self.get_life_cycle_stage() == "A1"):
+                if (lc_stage == "A1"):
+                    adjusted_impact = base_impact - biogenic_carbon_effect
+                elif (lc_stage == "A3") and (self.get_model()):
+                    adjusted_impact = biogenic_carbon_effect
+            elif (self.get_life_cycle_stage() == lc_stage):
+                adjusted_impact = base_impact
+            else:
+                return None
+
+            impacts.update_qty({carbonation_effects_impact_cat: adjusted_impact})
+
+            return impacts
     # ================================
     # Methods
     # ================================
