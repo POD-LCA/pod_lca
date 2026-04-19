@@ -5,96 +5,87 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from numpy import abs
 from numpy import array
-from numpy import dot
 from numpy import roll
 
-from ...units import FEET
-from ...units import METER
-from ...units import CUBIC_FEET
-from ...units import CUBIC_METER
+from ...units import Quantity as Q
 
 
-class Floor:
+class BuildingFloor:
     """ A floor of a building.
     
     Attributes
     ----------
-    floor_no : int
-        Floor number.
-    height : float
+    height : ~pod_lca.units.Quantity
         Floor height.   
-    floor_plan : list of tuples of float
+    floor_plan : list of tuples of ~pod_lca.units.Quantity
         A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].    
-    geometry_unit : ~pod_lca.units.Unit
-        Unit of measurement
     is_below_grade : bool
         True, if the floor is above grade.
     is_on_ground : bool
         True, if the floor is on the ground.
+    envelope : ~pod_lca.building_envelope.Envelope
+        Envelope of the floor.
+    structure : ~pod_lca.units.Unit
+        Structure of the floor.
+    usage : {'Residential', 'Commercial'}
+        The usage of the floor.
     """
 
     def __init__(self):
-        self.floor_no = None
         self.height = None
         self.floor_plan = None
-        self.geometry_unit = METER
+        self.usage = None
         self.is_below_grade = False
         self.is_on_ground = False
-        self.envelope = None
         self.is_last = False
+        self.envelope = None
+        self.structure = None
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def from_floor_plan(cls, floor_no, floor_plan, floor_height, geometry_unit):
+    def from_floor_plan(cls, floor_plan, floor_height, usage):
         """ Create a floor from the floor plan.
         
         Parameters
         ----------        
-        floor_no : int
-            Floor number. 
         floor_plan : list of tuples of float
             A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].  
         height : float
             Floor height.   
-        geometry_unit : ~pod_lca.units.Unit
-            Unit of measurement        
+        usage : {'Residential', 'Commercial'}
+            The usage of the floor.     
         """
         floor = cls()
 
-        floor.set_floor_no(floor_no)
-        floor.set_geometry_unit(geometry_unit)
         floor.set_floor_plan(floor_plan)
         floor.set_height(floor_height)
+        floor.set_usage(usage)
         
         return floor
 
     @classmethod
-    def from_rectangular_floor(cls, floor_no, length, width, floor_height, geometry_unit):
+    def from_rectangular_floor(cls, length, width, floor_height):
         """ Create a floor with a rectangular floor plan.
         
         Parameters
         ----------        
-        floor_no : int
-            Floor number. 
-        length : float
+        length : ~pod_lca.units.Quantity
             Longer dimension of the rectangular floor plan.
-        width : float
+        width : ~pod_lca.units.Quantity
             Shorter dimension of the rectangular floor plan.  
-        height : float
-            Floor height.   
-        geometry_unit : ~pod_lca.units.Unit
-            Unit of measurement        
+        height : ~pod_lca.units.Quantity
+            Floor height.         
         """
         floor = cls()
 
-        floor.set_floor_no(floor_no)
-        floor.set_geometry_unit(geometry_unit)
-
-        floor_plan = [(0, 0), (width, 0), (width, length), (0, length)]
+        zero = Q(0, width.unit)
+        floor_plan = [(zero, zero), 
+                      (width, zero), 
+                      (width, length), 
+                      (zero, length)]
 
         floor.set_floor_plan(floor_plan)
         floor.set_height(floor_height)
@@ -104,24 +95,12 @@ class Floor:
     # ================================
     # Setters
     # ================================
-    def set_floor_no(self, floor_no):
-        """ Set the floor number.
-        
-        Parameters
-        ----------
-        floor_no : int
-            Floor number.
-        """
-        self.floor_no = floor_no
-
-        return self
-    
     def set_height(self, height):
         """ Set the height of the floor.
         
         Parameters
         ----------
-        height : float
+        height : ~pod_lca.units.Quantity
             Floor height.       
         """
         self.height = height
@@ -133,33 +112,11 @@ class Floor:
          
         Parameters
         ----------
-        floor_plan : list of tuples of float
+        floor_plan : list of tuples of ~pod_lca.units.Quantity
             A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].        
         """
         self.floor_plan = floor_plan
 
-        return self
-    
-    def set_geometry_unit(self, geometry_unit):
-        """ Set the unit of measeurement of geometry.
-        
-        Parameters
-        ----------
-        geometry_unit : ~pod_lca.units.Unit
-            Unit of measurement           
-        """ 
-        old_unit = self.get_geometry_unit()
-
-        conversion_factor = old_unit.convert_to(geometry_unit)
-        if self.get_height() is not None:
-            self.height *= conversion_factor
-        if self.get_floor_plan() is not None:
-            points = array(self.get_floor_plan(), dtype=float)
-            scaled_points = points * conversion_factor
-            self.set_floor_plan([tuple(p) for p in scaled_points])
-
-        self.geometry_unit = geometry_unit
-        
         return self
     
     def set_floor_on_ground(self):
@@ -176,25 +133,25 @@ class Floor:
 
         return self
     
+    def set_usage(self, usage):
+        """ Set the usage of the building floor.
+        
+        Parameters
+        ----------
+        usage : {'Residential', 'Commercial'}
+            The usage of the floor.  
+        """
+        self.usage = usage
+
     # ================================
     # Getters
     # ================================
-    def get_floor_no(self):
-        """ Get the floor number.
-        
-        Returns
-        -------
-        int
-            Floor number.
-        """
-        return self.floor_no
-    
     def get_height(self):
         """ Get the height of the floor.
         
         Returns
         -------
-        height : float
+        ~pod_lca.units.Quantity
             Floor height.       
         """
         return self.height
@@ -204,20 +161,10 @@ class Floor:
          
         Returns
         -------
-        list of tuples of float
+        list of tuples of ~pod_lca.units.Quantity
             A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].           
         """
         return self.floor_plan
-    
-    def get_geometry_unit(self):
-        """ Get the unit of measeurement of geometry.
-        
-        Returns
-        -------
-        ~pod_lca.units.Unit
-            Unit of measurement           
-        """ 
-        return self.geometry_unit
     
     def get_area(self):
         """ Get the floor area.
@@ -227,41 +174,51 @@ class Floor:
         float
             Area of the floor.           
         """ 
-        points = array(self.get_floor_plan(), dtype=float)
+        points = array(self.get_floor_plan())
         x = points[:, 0]
         y = points[:, 1]
         
         x_next = roll(x, -1)
         y_next = roll(y, -1)
+
+        sum = 0
+        for xi, yi, xni, yni in zip(x,y, x_next, y_next):
+            sum += ((xi * yni) - (yi * xni)) * 0.5
+
+        if sum.value < 0.0:
+            sum *= -1
         
-        return 0.5 * abs(dot(x, y_next) - dot(y, x_next))
+        return sum
 
     def get_volume(self):
         """ Get the volume of the floor.
         
         Returns
         -------
-        :class:`float`
-            Volume of the floor.
-        :class:`~pod_lca.units.Unit`
+        ~pod_lca.units.Quantity
             Unit of measurement of volume.       
         """
-        volume = self.get_height() * self.get_area()
-
-        if self.get_geometry_unit() is METER:
-            vol_unit = CUBIC_METER
-        elif self.get_geometry_unit() is FEET:
-            vol_unit = CUBIC_FEET
-        else:
-            raise TypeError("Building Geometry to be in meters or feet.")
-        
-        return volume, vol_unit
+        return self.get_height() * self.get_area()
     
+    def get_usage(self):
+        """ Set the usage of the building floor.
+        
+        Returns
+        ----------
+        str
+            The usage of the floor.  
+        """
+        return self.usage
+
     # ================================
     # Add
     # ================================
-    def add_envelope(self, envelope):
+    def set_envelope(self, envelope):
         self.envelope = envelope
+
+    def set_structure(self, structure):
+        self.structure = structure
+
 
 if __name__ == '__main__':
     pass  

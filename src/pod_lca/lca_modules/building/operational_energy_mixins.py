@@ -22,10 +22,6 @@ from ..operational.light import  DaylightingReferencePoint
 from ..operational.node_list import  NodeList
 from ..operational.read_write import read_results_file
 from ..operational.read_write import write_idf_from_building
-from ...units import FEET
-from ...units import METER
-from ...units import SQUARE_FEET
-from ...units import SQUARE_METER
 from ...units import UNITS_MAP
 from ...units import WATT_HOUR
 from ...utilities import config
@@ -77,15 +73,7 @@ class OperationalMixins:
             for floor_no in range(1, self.get_no_floors() + 1):
                 total_area += self.get_floor(floor_no).get_area()
 
-                if floor_no == self.get_no_floors():
-                    floor_geom_unit = self.get_floor(floor_no).get_geometry_unit()
-                    if  floor_geom_unit is METER:
-                        area_unit = SQUARE_METER
-                    elif floor_geom_unit is FEET:
-                        area_unit = SQUARE_FEET
-                    else:
-                        raise TypeError("Building Geometry to be in meters or feet.")
-                
+            area_unit = total_area.unit        
             eui_unit = UNITS_MAP[eui_data['unit']]
             energy_unit = eui_unit * area_unit
             conversion_factor = energy_unit.convert_to(unit)

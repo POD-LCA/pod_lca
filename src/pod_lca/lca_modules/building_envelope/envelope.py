@@ -28,9 +28,7 @@ class Envelope:
     def __init__(self):
         self.name = None
         self.building = None
-        self.floor = None
-        self.floor_plan = None
-        self.height = None
+        self.floor_plan_obj = None
         self.surfaces = {}
 
         self.walls = {}
@@ -52,10 +50,8 @@ class Envelope:
     def from_data(cls, data):
         envelope = cls()
         envelope.name           = data['name']              
-        envelope.building       = data['building']              
-        envelope.floor          = data['floor']             
-        envelope.floor_plan     = data['floor_plan']            
-        envelope.height         = data['height']            
+        envelope.building       = data['building']                        
+        envelope.floor_plan_obj     = data['floor_plan_obj']                   
 
         envelope.walls          = data['walls']             
         envelope.windows        = data['windows']           
@@ -85,10 +81,8 @@ class Envelope:
     def to_data(self):
         data = {}
         data['name']       = self.name      
-        data['building']   = self.building  
-        data['floor']      = self.floor     
-        data['floor_plan'] = self.floor_plan
-        data['height']     = self.height    
+        data['building']   = self.building       
+        data['floor_plan_obj'] = self.floor_plan_obj   
 
         data['walls']      = self.walls     
         data['windows']    = self.windows   
@@ -105,13 +99,20 @@ class Envelope:
             data['windows'][wk] = self.windows[wk].to_data()
         
         return data
+    
+    @property
+    def height(self):
+        return self.floor_plan_obj.height
+
+    @property
+    def floor_plan(self):
+        return self.floor_plan_obj.floor_plan
 
     @classmethod
-    def from_floor(cls, floor):
+    def from_floor(cls, floor_plan):
         envelope = cls()
-        envelope.floor = floor
+        envelope.floor = floor_plan
         envelope.update_envelope_surfaces()
-        envelope.name = 'Envelope_floor_{}'.format(floor.floor_no)
         return envelope
     
     @classmethod
@@ -188,11 +189,10 @@ class Envelope:
         return envelope
 
     @classmethod
-    def from_components(cls, name, floor_plan, height, floor=None, ceiling=None, wall=None, windows=None, shadings=None):
+    def from_components(cls, name, floor_plan, floor=None, ceiling=None, wall=None, windows=None, shadings=None):
         envelope = cls()
         envelope.name = name
-        envelope.floor_plan = floor_plan
-        envelope.height = height
+        envelope.floor_plan_obj = floor_plan
         envelope.create_envelope_surfaces()
 
         for sk in envelope.surfaces:
@@ -309,7 +309,7 @@ class Envelope:
             self.wall_surface_keys.append(wk)
 
     def update_envelope_surfaces_floorplan_height(self, floor_plan, height):
-        self.floor_plan = floor_plan
+        self.floor_plan_obj.floor_plan = floor_plan
         f2f = self.height
         for sk in self.surfaces:
             srf = self.surfaces[sk]

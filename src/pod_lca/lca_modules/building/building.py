@@ -9,7 +9,7 @@ from . import ConstructionMixins
 from . import DataMixins
 from . import EndOfLifeMixins
 from . import EnvelopeMixins
-from . import Floor
+from . import BuildingFloor
 from . import OperationalMixins
 from . import ProductScopeMixins
 from . import Scenario
@@ -23,8 +23,7 @@ from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ...units import MEGA
 from ...units import METER
 from ...units import WATT_HOUR
-from ...utilities import centroid
-from ...utilities import geometric_key
+from ...units import Quantity as Q
 from ...utilities import config
 
 
@@ -572,30 +571,40 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         floor_plan : list of tuples of float
             A polygon defining the floor plan geometry [(x1, y1), (x2, y2), ... , (xn, yn)].
         geometry_units : ~pod_lca.units.Unit
-            Unit of measurement used in geometry definitions.        
+            Unit of measurement used in geometry definitions.
+        usage : {'Residential', 'Commercial'}
+            The usage of the floor.        
         """ 
         for num in range(no_floors):
             z = (f2f_height * num) - (floors_below_grade * f2f_height)
-            floor_plan_poly = [(coords[0], coords[1], z) for coords in floor_plan]
-
+            floor_plan_poly = [(Q(coords[0], geometry_units),
+                                Q(coords[1], geometry_units), 
+                                Q(z, geometry_units)) for coords in floor_plan]
             floor_no = num +1
             below_grade = True if floor_no <= floors_below_grade else False
             on_ground = True if floor_no == floors_below_grade + 1 else False
             is_last = True if floor_no == no_floors else False
-            self.add_floor(floor_no, floor_plan_poly, f2f_height, geometry_units, below_grade, on_ground, is_last)
+            floor = self.add_floor(floor_plan_poly, 
+                           Q(f2f_height, geometry_units), 
+                           below_grade, 
+                           on_ground, 
+                           is_last,
+                           self.get_building_type())
+            
+            self.floors[str(floor_no)] = floor
 
         return self
 
-    def add_floor(self, floor_no, floor_plan, floor_height, geometry_unit, below_grade, on_ground, is_last):
+    def add_floor(self, floor_plan, floor_height, below_grade, on_ground, is_last, usage):
         """ Add a floor to the building.
 
         Parameters
         ----------      
         floor_no : int
             Floor number. 
-        floor_plan : list of tuples of float
+        floor_plan : list of tuples of ~pod_lca.units.Quantity
             A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].  
-        floor_height : float
+        floor_height : ~pod_lca.units.Quantity
             Floor height.   
         geometry_unit : ~pod_lca.units.Unit
             Unit of measurement     
@@ -605,18 +614,18 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             True, if the floor is on the ground.
         is_last : bool
 
+        usage : {'Residential', 'Commercial'}
+            The usage of the floor.   
         """
-        floor = Floor.from_floor_plan(floor_no, floor_plan, floor_height, geometry_unit)
+        floor = BuildingFloor.from_floor_plan(floor_plan, floor_height, usage)
         floor.is_last = is_last
 
         if below_grade:
             floor.set_floor_below_grade()
         if on_ground:
             floor.set_floor_on_ground()
-
-        self.floors[str(floor_no)] = floor
         
-        return self
+        return floor
 
     def make_structure(self, method, building_type, structure_type):
         """ Create the structure of the building.

@@ -17,7 +17,7 @@ from .operational_energy_mixins import OperationalMixins
 from .envelope_mixins import EnvelopeMixins
 from .data_mixins import DataMixins
 from .template_models_mixins import TemplateModels
-from .floor import Floor
+from .floor_plans import BuildingFloor
 
 from .building import Building
 

@@ -46,7 +46,7 @@ class EnvelopeMixins():
         for fk in self.floors:
             floor = self.floors[fk]
             e = Envelope.from_floor(floor)
-            floor.add_envelope(e)
+            floor.set_envelope(e)
 
             # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
