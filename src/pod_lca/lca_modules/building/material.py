@@ -5,7 +5,6 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-import gc
 from math import isnan
 
 from ..eol.waste import Waste
@@ -192,49 +191,53 @@ class Material(Product):
             if data_entry['Density unit'] in [None, '', 'N/A', 'Null']:
                 log(f"Density unit not specified for {self.get_name()}. Skipping density setting.", level='Warn')
             else:
-                if isinstance(data_entry['Density'], (int, float, str)) and isinstance(data_entry['Density'], str):
-                    self.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
+                density = data_entry['Density']
+                if isinstance(density, str):
+                    density_unit = UNITS_MAP[data_entry['Density unit']]
+                    self.set_density(density, density_unit)
                     for replacement_product in replacement_materials:
-                        replacement_product.set_density(data_entry['Density'], UNITS_MAP[data_entry['Density unit']])
+                        replacement_product.set_density(density, density_unit)
                 else:
                     ValueError(f"Density value/unit not recognized for {self.get_name()}.")
 
             # set transportation process
-            if isnan(data_entry['sctg code']) or data_entry['sctg code'] in [999, '999', None, '', 'N/A', 'Null']:
+            sctg_code = data_entry['sctg code']
+            if isnan(sctg_code) or (sctg_code in [999, '999', None, '', 'N/A', 'Null']):
                 log(f"SCTG code not specified for {self.get_name()}. Skipping SCTG setting.", level='Warn')
             else:
-                self.set_sctg_code(data_entry['sctg code'])
+                self.set_sctg_code(sctg_code)
                 self.set_transportation()
                 for replacement_product in replacement_materials:
-                    replacement_product.set_sctg_code(data_entry['sctg code'])
+                    replacement_product.set_sctg_code(sctg_code)
                     replacement_product.set_transportation()    
 
             # set eol material
-            if data_entry['eol material'] in [None, '', 'N/A', 'Null']:
+            eol_material = data_entry['eol material']
+            if eol_material in [None, '', 'N/A', 'Null']:
                 log(f"EOL material not specified for {self.get_name()}. Skipping EOL material setting.", level='Warn')
             else:
-                if isinstance(data_entry['eol material'], str):
-                    self.set_eol_material(data_entry['eol material'], 
-                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
+                if isinstance(eol_material, str):
+                    bio_based_tag = data_entry['bio-based'] if 'bio-based' in data_entry else None
+                    self.set_eol_material(eol_material, bio_based_tag)
                     self.set_waste_product()
                     for replacement_product in replacement_materials:
-                        replacement_product.set_eol_material(data_entry['eol material'], 
-                                            data_entry['bio-based'] if 'bio-based' in data_entry else None)
+                        replacement_product.set_eol_material(eol_material, bio_based_tag)
                         replacement_product.set_waste_product()
                 else:
                     ValueError(f"EOL material value not recognized for {self.get_name()}.")
 
             # set waste rate
-            if data_entry['waste_rate_category'] in [None, '', 'N/A', 'Null'] :
+            waste_rate_cat = data_entry['waste_rate_category']
+            if waste_rate_cat in [None, '', 'N/A', 'Null'] :
                 self.set_waste_rate(waste_rate_category='DEFAULT')
                 for replacement_product in replacement_materials:
                     replacement_product.set_waste_rate(waste_rate_category='DEFAULT')
                 log(f"Waste rate category not specified for {self.get_name()}. 'DEFAULT' category set.", level='Warn')
             else:
-                if isinstance(data_entry['waste_rate_category'], str):
-                    self.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+                if isinstance(waste_rate_cat, str):
+                    self.set_waste_rate(waste_rate_category=waste_rate_cat)
                     for replacement_product in replacement_materials:
-                        replacement_product.set_waste_rate(waste_rate_category=data_entry['waste_rate_category'])
+                        replacement_product.set_waste_rate(waste_rate_category=waste_rate_cat)
                 else:
                     ValueError(f"Waste rate value not recognized for {self.get_name()}.")
 
@@ -365,17 +368,19 @@ class Material(Product):
             
         eol_material = self.get_eol_material()
         waste_qty = self.get_weight()
-        waste_unit = self.get_weight_unit()
-
         if waste_qty is None:
             waste_qty = 0.0
             waste_unit = KILOGRAM
             log(" Cannot determine waste quantity in mass.", level='Warn')
+        else:
+            waste_unit = self.get_weight_unit()
 
-        if eol_mix_data['Material'].isin([eol_material]).any():
-            eol_mix = eol_mix_data[eol_mix_data['Material']== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
-        elif  eol_mix_data['Material'].isin([config['setup']['eol']['EOL_DEFAULT_KEY']]).any():
-            eol_mix = eol_mix_data[eol_mix_data['Material']== config['setup']['eol']['EOL_DEFAULT_KEY']].drop(labels='Material', axis=1).to_dict(orient='records')[0]
+        eol_mix_data_mat = eol_mix_data['Material']
+        eol_default_mat = config['setup']['eol']['EOL_DEFAULT_KEY']
+        if eol_mix_data_mat.isin([eol_material]).any():
+            eol_mix = eol_mix_data[eol_mix_data_mat== eol_material].drop(labels='Material', axis=1).to_dict(orient='records')[0] 
+        elif  eol_mix_data_mat.isin([eol_default_mat]).any():
+            eol_mix = eol_mix_data[eol_mix_data_mat==eol_default_mat].drop(labels='Material', axis=1).to_dict(orient='records')[0]
         else:
             log("A mix doesnt exist", 0)
 
@@ -400,7 +405,6 @@ class Material(Product):
         self.waste_obj.set_production_year(waste_produced_year)
 
         del eol_mix_data
-        gc.collect()
 
         return self
 
@@ -423,9 +427,9 @@ class Material(Product):
         if building is not None:
             if self.get_production_year() is None:
                 self.set_production_year(building.get_built_year())
+
             self.set_service_life()
             self.set_properties_from_database()
-
     # ================================
     # Getters
     # ================================
