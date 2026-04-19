@@ -1,49 +1,49 @@
-﻿IDF Material Name,LCI database Product Name
-Clay brick,Clay brick
-Galvanized Steel Support System (air gap),Cold-formed steel framing
-Gypsum board 1/2 in,"Gypsum board, 1/2 in"
-Expanded polystyrene (EPS) Type 1,Expanded polystyrene (EPS) Type I
-Expanded polystyrene (EPS) Type I - 1.5in,Expanded polystyrene (EPS) Type I
-Expanded polystyrene (EPS) Type I - 5in,Expanded polystyrene (EPS) Type I
-Mineral wool blanket baseline,Heavy density mineral wool board
-25mm Stucco,
-Gypsum board,"Gypsum board, 5/8 in"
-5/8 in. Gypsum Board,"Gypsum board, 5/8 in"
-8 in. Concrete Block Basement Wall,"CMU, USA, medium weight, manufactured aggregate"
-Normalweight concrete 6000 psi,"Ready-mixed concrete, USA, National, 6000 psi"
-F08 Metal surface,
-Generic 25mm Insulation,
-Generic 25mm Wood,
-R13LAYER,
-R31LAYER,
-variable_insulation,
-Generic 50mm Insulation,
-Generic Acoustic Tile,"ACT, NRC < 0.75"
-Generic Brick,Clay brick
-Gypsum Wall Board,"Gypsum board, 1/2 in"
-Generic HW Concrete,
-Generic LW Concrete,
-Generic Painted Metal,
-Aluminum extrusion mill-finished Kawneer - EPD,
-Generic Roof Membrane,
-Generic Wall Air Gap,
-Generic Ceiling Air Gap,
-Material 1,
-Material 2,
-Metal Roof Surface,
-Roof Membrane,
-Typical Carpet Pad,
-Typical Insulation-R15,
-Typical Insulation-R24,
-Typical Insulation-R31,
-Typical Insulation-R4,
-Typical Insulation-R7,
-AIR 13MM,
-Generic Window Air Gap,
-Generic Window Argon Gap,
-CLEAR 6MM,
-Generic Clear Glass,Processed glass panes
-Generic Low-e Glass,Insulated glazing unit (IGU)
-REF B CLEAR HI 6MM,
-U 0.36 SHGC 0.36 Simple Glazing,
-U 0.5 SHGC 0.4 Simple Glazing,
+﻿IDF Material Name,LCI Database Product Name,LCI Database Declared Unit,POD|LCA RSL Category
+Clay brick,Clay brick,m3,encl_rs_thinbrick
+Galvanized Steel Support System (air gap),Cold-formed steel framing,metric ton,encl_rs_steelpanel
+Gypsum board 1/2 in,"Gypsum board, 1/2 in",m2,encl_rs_eifs
+Expanded polystyrene (EPS) Type 1,Expanded polystyrene (EPS) Type I,m3,encl_rs_eifs
+Expanded polystyrene (EPS) Type I - 1.5in,Expanded polystyrene (EPS) Type I,m3,encl_rs_eifs
+Expanded polystyrene (EPS) Type I - 5in,Expanded polystyrene (EPS) Type I,m3,encl_rs_eifs
+Mineral wool blanket baseline,Heavy density mineral wool board,m3,encl_rs_gfrc
+25mm Stucco,,,
+Gypsum board,"Gypsum board, 5/8 in",m2,encl_rs_eifs
+5/8 in. Gypsum Board,"Gypsum board, 5/8 in",m2,encl_rs_eifs
+8 in. Concrete Block Basement Wall,"CMU, USA, medium weight, manufactured aggregate",m3,encl_brickconc_panels
+Normalweight concrete 6000 psi,"Ready-mixed concrete, USA, National, 6000 psi",m3,encl_brickconc_panels
+F08 Metal surface,,,
+Generic 25mm Insulation,,,
+Generic 25mm Wood,,,
+R13LAYER,,,
+R31LAYER,,,
+variable_insulation,,,
+Generic 50mm Insulation,,,
+Generic Acoustic Tile,"ACT, NRC < 0.75",ft2,
+Generic Brick,Clay brick,m3,encl_rs_thinbrick
+Gypsum Wall Board,"Gypsum board, 1/2 in",m2,
+Generic HW Concrete,,,
+Generic LW Concrete,,,
+Generic Painted Metal,,,
+Aluminum extrusion mill-finished Kawneer - EPD,,,
+Generic Roof Membrane,,,
+Generic Wall Air Gap,,m3,
+Generic Ceiling Air Gap,,m3,
+Material 1,,,
+Material 2,,,
+Metal Roof Surface,,,
+Roof Membrane,,,
+Typical Carpet Pad,,,
+Typical Insulation-R15,,,
+Typical Insulation-R24,,,
+Typical Insulation-R31,,,
+Typical Insulation-R4,,,
+Typical Insulation-R7,,,
+AIR 13MM,,,
+Generic Window Air Gap,,m3,
+Generic Window Argon Gap,,m3,
+CLEAR 6MM,,,
+Generic Clear Glass,Flat glass ,metric ton,glazing
+Generic Low-e Glass,Insulated glazing unit (IGU),m2,glazing
+REF B CLEAR HI 6MM,,,
+U 0.36 SHGC 0.36 Simple Glazing,,,
+U 0.5 SHGC 0.4 Simple Glazing,,,

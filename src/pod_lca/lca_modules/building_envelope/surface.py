@@ -34,6 +34,7 @@ class Surface(object):
     
     def add_construction(self, construction):
         self.construction = construction
+        construction.surface = self
 
     @classmethod
     def from_data(cls, data):

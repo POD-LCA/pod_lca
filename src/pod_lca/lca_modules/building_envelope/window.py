@@ -4,6 +4,7 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from pod_lca.units import SQUARE_METER
 from pod_lca.units import Quantity as Q
 from pod_lca.lca_modules.building_envelope import Surface
 from pod_lca.lca_modules.building_envelope.construction import Construction
@@ -13,6 +14,7 @@ from pod_lca.utilities.geometry import scale_vector, normalize_vector, subtract_
 class Window(Construction):
     def __init__(self):
         super().__init__()
+        self.surfaces = {}
         self.__type__ = 'Window'
         self.wall_key = None # the wall this window is related to
         self.width = None
@@ -60,6 +62,13 @@ class Window(Construction):
             data['surfaces'][sk] = self.surfaces[sk].to_data()
         return data
 
+    @property
+    def area(self):
+        area = Q(0, SQUARE_METER)
+        for s in self.surfaces:
+            area += s.area
+        return area
+    
     def create_window_surface_from_envelope_wall_key(self, envelope, wall_key):
 
         polygon = envelope.surfaces[wall_key].polygon

@@ -7,7 +7,9 @@ __version__ = "0.1.0"
 from . import EnvelopeMaterial
 from ..building_envelope import Layer
 from pod_lca.lca_modules.building.assembly import Assembly
-from ...units import CUBIC_METER, METER
+from ...units import METER
+from ...units import SQUARE_METER
+from ...units import UNITS_MAP
 from ...units import Quantity as Q
 
 from ...utilities import DataImporter
@@ -25,8 +27,8 @@ class Construction(Assembly):
         super().__init__()
         self.layer_order = {}
         self.layers = {}
-        self.surfaces = {}
-
+        self.surface = None
+        
     @classmethod
     def from_idf(cls, name, idf_path):
         cdata = find_constructions(idf_path, {})['constructions'][name]
@@ -56,8 +58,8 @@ class Construction(Assembly):
         construction = cls.create(name)
         construction.layer_order = {lk: layers[lk].name for lk in layers}
         construction.layers = layers
-        return construction
 
+        return construction
 
     def set_building(self):
         """Set data from building level."""
@@ -65,41 +67,60 @@ class Construction(Assembly):
         if building is not None:
             building.add_assembly(self)
 
-            for material in self.get_materials():
+            materials = self.get_materials()
+            for material in materials:
                 material.set_building()
 
+    def set_materials(self):
+        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['IDF_IMPACT_DATA_PRODUCT_MAP'], 'IDF Material Name')
 
-    def add_materials(self, building, service_life):
-        
-        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
-
-        area = self.area
         for lk in self.layers:
             mat_type = self.layers[lk].material_property.__type__
             if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
                 mat_name = self.layers[lk].material_property.name
-                quantity = area * self.layers[lk].thickness #FIXME: not all impacts are declared per volume... 
-                material = EnvelopeMaterial.new(parent=self,
-                                                name=mat_name,
-                                                qty=quantity,
-                                                unit=CUBIC_METER,
-                                                material_database_entry=default_database_entry_map[mat_name]['impact database entry'],
-                                                product_year=building.get_built_year())
-                                                            
+
+                database_declared_qty_in = UNITS_MAP[default_database_entry_map[mat_name]["LCI Database Declared Unit"]].get_qty_measured()
+                quantity = self.get_quantity(lk, database_declared_qty_in)
+
+                material = EnvelopeMaterial.new(name=mat_name,
+                                                qty=quantity.value,
+                                                unit=quantity.unit,
+                                                material_database_entry=default_database_entry_map[mat_name]['LCI Database Product Name'],)
+                material.set_service_life_category(default_database_entry_map[mat_name]["POD|LCA RSL Category"])
+
+
                 self.add_material(material)
 
     @property
     def area(self):
-        area = 0
-        for s in self.surfaces:
-            area += s.area
-        return area
+        if self.surface:
+            return self.surface.area
+        else:
+            return Q(0, SQUARE_METER)
 
     def get_layers(self, building):
         for mk in self.layer_order:
             name = self.layer_order[mk]
             layer = Layer.from_idf(name, building)
             self.layers[mk] = layer
+
+    def get_quantity(self, layer, qty_in):
+        """ Returns the quantity of the specified layer.
+        
+        Parameters
+        ----------
+        layer : int
+            ID of the layer.
+        qty_in : {'volume', 'area', 'mass'}
+            Requested quantity measured in?
+        """
+        if qty_in in ['volume', 'mass']:
+            return self.area * self.layers[layer].thickness
+        elif qty_in in ["area"]:
+            return self.area
+        else:
+            raise ValueError("Quantity request not recognized.")
+    
 
 if __name__ == '__main__':
     pass
