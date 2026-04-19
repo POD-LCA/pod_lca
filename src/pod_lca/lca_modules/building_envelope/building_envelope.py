@@ -8,9 +8,9 @@ __version__ = "0.1.0"
 from copy import deepcopy
 
 from . import Envelope
-
-from pod_lca.utilities import geometric_key
-from pod_lca.utilities import centroid
+from ...utilities import geometric_key
+from ...utilities import centroid
+from ...utilities import log
 
 
 class BuildingEnvelope:
@@ -42,12 +42,19 @@ class BuildingEnvelope:
     def set_envelope(self, envelope, floor_number):
         self.envelopes[floor_number] = envelope
 
+    def get_envelope(self, floor_number):
+        return self.envelopes[floor_number]
+    
+    def get_envelopes(self):
+        return list(self.envelopes.values())
+
     def set_building(self, parent):
         self.building = parent
 
-        for ek in self.envelopes:
-            for construction in self.envelopes[ek].get_constructions():
-                construction.set_building()
+        envelopes = self.get_envelopes()
+        for envelope in envelopes:
+            envelope.set_building(parent)
+            log(f"{envelope.name} added to the building", "Info")
 
     def set_cycle_directions(self):
         for ek in self.envelopes:

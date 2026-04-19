@@ -7,7 +7,6 @@ __version__ = "0.1.0"
 
 from math import isnan
 
-
 from . import Ceiling
 from . import EnvelopeMaterial
 from . import Surface
@@ -19,7 +18,6 @@ from pod_lca.utilities import centroid
 from pod_lca.utilities import config
 from pod_lca.utilities import DataImporter
 from ...units import UNITS_MAP
-from ...units import Quantity as Q
 from ...utilities import log
 from ...utilities import subtract_vectors
 from ...utilities import dot_vectors
@@ -73,6 +71,14 @@ class Envelope:
         for wk in data['windows']:
             win = Window.from_data(data['windows'][wk])
             envelope.windows[wk] = win
+
+        envelope.construction_map = {
+            'Floor': envelope.floors,
+            'Ceiling': envelope.ceiling,
+            'Wall': envelope.walls,
+            'Window': envelope.windows,
+            'Shading': envelope.shadings
+        }
 
         return envelope
 
@@ -182,7 +188,7 @@ class Envelope:
         return envelope
 
     @classmethod
-    def from_components(cls, name, floor_plan, height, floor= None, ceiling=None, wall=None, windows=None, shadings=None):
+    def from_components(cls, name, floor_plan, height, floor=None, ceiling=None, wall=None, windows=None, shadings=None):
         envelope = cls()
         envelope.name = name
         envelope.floor_plan = floor_plan
@@ -208,9 +214,10 @@ class Envelope:
                 win = windows[wall_key]
                 envelope.add_window(win, wall_key)
 
-
         if shadings:
             pass
+
+        envelope.set_materials_in_conmponents()
 
         return envelope
 
@@ -227,9 +234,11 @@ class Envelope:
         """
         self.building = parent
 
-        for construction in self.get_constructions():     
-            construction.set_building()
-
+        constructions = self.get_constructions()
+        for construction in constructions:  
+            construction.set_parent(self)
+            log(f"{construction.name} added to the building", "Info")
+        
         return self
 
     def set_cycle_directions(self):
@@ -254,6 +263,9 @@ class Envelope:
             if dot_vectors(sn, to_inside) > 0:
                 srf.reverse_normal()
 
+    def set_materials_in_conmponents(self):
+        for construction in self.get_constructions():
+            construction.set_materials()
     # ================================
     # Getters
     # ================================

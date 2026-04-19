@@ -76,8 +76,10 @@ class ProductScopeMixins:
             A1-A3 impacts of the building. List of impacts if Objs is True.
         """
         impacts = [] if objs else Impacts.from_parent(self)
-        for assembly in self.get_assemblies():
-            for material in assembly.get_materials():
+        assemblies = self.get_assemblies()
+        for assembly in assemblies:
+            materials = assembly.get_materials()
+            for material in materials:
                 if objs:
                     impacts.append(material.get_impacts())
                 else:
