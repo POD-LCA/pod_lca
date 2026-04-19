@@ -2,7 +2,7 @@ Construction,
   Curtain Wall-aluminium spandrel,          ! Name # Teresa's construction for com template
   Expanded polystyrene (EPS) Type I - 5in,  !- Layer 1    DONE!!!!
   Mineral wool blanket baseline,            !- Layer 2    DONE!!!!
-  Gypsum board, 1/2 in;                     !- Layer 3    DONE!!!!
+  Gypsum board 1/2 in;                     !- Layer 3    DONE!!!!
 
 Construction,
   Rainscreen-Thinbrick,                             ! Name # Teresa's construction for res template

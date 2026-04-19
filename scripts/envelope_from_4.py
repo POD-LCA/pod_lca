@@ -22,6 +22,7 @@ import pod_lca
 from pod_lca.utilities import config
 
 from pod_lca.lca_modules.building import Building
+from pod_lca.lca_modules.building import BuildingFloor
 
 from pod_lca.lca_modules.building_structure import BuildingStructure
 from pod_lca.lca_modules.building_structure import Structure
@@ -89,6 +90,7 @@ floor_plan = [[zero,zero,zero],
               [x,y,zero],
               [x,zero,zero],
               [x/2, -y/4,zero]]
+flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
@@ -201,16 +203,16 @@ windows = {wall_key1: window1, wall_key2: window2}
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
-e = Envelope.from_components(ename, floor_plan, floor_to_floor, wall=framed_wall, floor=f, ceiling=c, windows=windows)
+e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
-mui_type = 'low' # 'mid', 'hight'
+mui_type = 'low' # 'mid', 'high'
 
-s_floor = Structure.from_sample_buildings(btype, stype, mui_type, floor_plan)
-s = BuildingStructure.from_structure_and_stories(s_floor, num_stories)
+s_floor = Structure.create(stype, flr)
+s = BuildingStructure.from_sample_buildings(s_floor, num_stories, mui_type)
 
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -232,16 +234,15 @@ print(b.get_operational_impacts()) # default is 'total'
 
 # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_impacts(scope='all', lc_stage='C2')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product', lc_stage=None))
+print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product'))
 
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
+drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('cumulative radiative forcing')
 
-# graph = BarChart.from_plotter(MatplotlibPlotter)
-# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# graph.show()
-
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+graph.show()
 
 # #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
 # #TODO: name clash / Envelope Material
