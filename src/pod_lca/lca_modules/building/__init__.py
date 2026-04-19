@@ -4,6 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from .floor_plans import BuildingFloor
 from .scenario import Scenario
 from .material import Material
 from .assembly import Assembly
@@ -17,8 +18,6 @@ from .operational_energy_mixins import OperationalMixins
 from .envelope_mixins import EnvelopeMixins
 from .data_mixins import DataMixins
 from .template_models_mixins import TemplateModels
-from .floor_plans import BuildingFloor
-
 from .building import Building
 
 

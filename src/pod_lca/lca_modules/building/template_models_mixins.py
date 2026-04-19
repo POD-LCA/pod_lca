@@ -7,7 +7,12 @@ __version__ = "0.1.0"
 
 from math import sqrt
 
+from . import BuildingFloor
+from ..building_envelope import Envelope
+from ..building_structure import Structure
+from ..building_structure import TemplateStructure
 from ...units import MEGA
+from ...units import Quantity as Q
 from ...units import WATT_HOUR
 from ...units import UNITS_MAP
 from ...utilities import config
@@ -82,7 +87,6 @@ class TemplateModels:
             Building built.
         """
         building = cls.new(name,
-                           type=kwargs['building_type'],
                            location=location, 
                            built_year=built_year, 
                            life_span=life_span)
@@ -151,12 +155,17 @@ class TemplateModels:
         geometry_units = geometry_data.get('geometry_units', 'm')
 
         # set floors
-        self.add_floors(no_floors=no_floors, 
-                        floors_below_grade=kwargs.get('floors_below_grade', 0),
-                        f2f_height=kwargs.get('f2f_height', 3.0 if geometry_units == 'm' else 10.0), 
-                        floor_plan=floor_plan,
-                        geometry_units=UNITS_MAP[geometry_units])
+        f2f_height = kwargs.get('f2f_height', 3.0 if geometry_units == 'm' else 10.0)
+        floor_plan_poly = [(Q(coords[0], UNITS_MAP[geometry_units]),
+                            Q(coords[1], UNITS_MAP[geometry_units])) for coords in floor_plan]
+        floor = BuildingFloor.from_floor_plan(floor_plan=floor_plan_poly,
+                                              floor_height=Q(f2f_height, UNITS_MAP[geometry_units]),
+                                              usage=kwargs['building_type'])
         
+        # TODO: to remove once floors are set in envelope side
+        for num in range(no_floors):
+            self.floors[str(num + 1)] = floor
+
         # set building level products
         construction_energy_use = kwargs["construction_energy_use"] if "construction_energy_use" in kwargs else 0.0
         energy_units = UNITS_MAP[kwargs["construction_energy_use_unit"]] if "construction_energy_use" in kwargs else MEGA * WATT_HOUR
@@ -165,13 +174,68 @@ class TemplateModels:
                                          electricity_unit=energy_units)
 
         # make structure and envelope
-        self.make_structure('from template', kwargs['building_type'], kwargs['structure_type'])
+        self.make_template_structure(floor, no_floors, kwargs['structure_type'])
         
         envelope_method = 'from geometry' if kwargs.get('run_eplus', False) else 'from template'
         self.make_envelope(envelope_method, kwargs['building_type'],kwargs['enclosure-opaque'], kwargs['enclosure-translucent'], kwargs['roof']) 
 
         return self
+    
+    def make_template_structure(self, floor, no_floors, structure_type):
+        """ Make structure in a template model.
+        
+        Parameters
+        ----------
+        floor : ~pod_lca.building.BuildingFloor
 
+        no_floors : int
+            No of floors
+        
+        """
+        structure = Structure.create(structure_type, floor)
+        building_structure = TemplateStructure.create(structure, no_floors)
+        
+        building_structure.build()
+        
+        self.set_structure(building_structure)
 
+    def make_envelope(self, method, building_type, envelope_opaque, envelope_translucent, roofing, **kwargs):
+        """ Create the envelope of the building.
+        
+        Parameters
+        ----------
+        method : {'from geometry', 'from template'}
+            Method of structure generation.
+        building_type : {'Commercial', 'Residential'}
+            Type of building.
+        envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
+                            'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 'Rainscreen, Formed Steel Panel', 'Brick, wood framing'}
+            Template used for building opaque enclosure.
+        envelope_translucent : {'Glazing, double pane IGU', 'Glazing, triple pane IGU', 'Operable window', 'Glazing, operable window'}
+            Template used for building translucent enclosure.
+        roofing : {'EPDM roofing', 'Asphalt shingle roofing'}
+            Template used for building roofing.
+
+        Other Parameters
+        ----------------
+        operational_sys_path: str
+            File path to operational systems IDF file.         
+        """
+        # FIXME: consolidate the different thinkings in envelope by geometry and from template
+        if method == 'from geometry':
+            self.read_constructions_data()
+            self.read_material_properties_data()
+            operational_sys_path = config['file_paths']['operational']['SYSTEMS']
+            envelope = self.create_envelopes_from_template(operational_sys_path)
+        elif method == 'from template':
+            envelope = Envelope.from_template(building_type, envelope_opaque, envelope_translucent, roofing)
+            envelope.building_type = building_type 
+        else:
+            raise ValueError('Method of creating envelope is not recognized.')
+        
+        self.set_building_envelope(envelope)
+
+        return self
+    
 if __name__ == '__main__':
     pass

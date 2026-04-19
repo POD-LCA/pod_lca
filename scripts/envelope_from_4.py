@@ -24,7 +24,7 @@ from pod_lca.utilities import config
 from pod_lca.lca_modules.building import Building
 from pod_lca.lca_modules.building import BuildingFloor
 
-from pod_lca.lca_modules.building_structure import BuildingStructure
+from pod_lca.lca_modules.building_structure import StatisticalStructure
 from pod_lca.lca_modules.building_structure import Structure
 from pod_lca.lca_modules.location import Location
 
@@ -212,11 +212,12 @@ stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
 mui_type = 'low' # 'mid', 'high'
 
 s_floor = Structure.create(stype, flr)
-s = BuildingStructure.from_sample_buildings(s_floor, num_stories, mui_type)
+s = StatisticalStructure.create(s_floor, num_stories)
+s.build(mui_type)
 
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-b = Building.from_assemblies(bname, btype, location, built_year, life_span, s, be)
+b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 
 # set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

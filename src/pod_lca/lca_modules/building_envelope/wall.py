@@ -29,7 +29,7 @@ class FramedWall(Construction):
 
     @classmethod
     def from_layers_framing(cls, name, layers, framing):
-        fwall = cls.create(name)
+        fwall = cls.from_materials(name)
         fwall.layer_order = {lk: layers[lk].name for lk in layers}
         fwall.layers = layers
         fwall.framing = framing

@@ -17,8 +17,6 @@ class StructuralElement(Assembly):
     ----------
     element_type : str
         Element type.
-    floor :
-        Floor to which the element belong.
     material : list of ~pod_lca.building.BuildingMaterial
         List of materials the building assembly made up of.
     geometry :
@@ -32,32 +30,29 @@ class StructuralElement(Assembly):
     def __init__(self):
         super().__init__()
         self.element_type = 'Generic'
-        self.floor = None
         self.material = None
         self.geometry = None
         self.supports = None
         self.loading = None
 
     @classmethod
-    def from_template(cls, service_life, volume, materials):
-        pass
+    def from_materials(cls, name, materials):
+        """Create a structural element.
 
-    @classmethod
-    def from_geometry(cls, geometry):
-        pass
-
-    @classmethod
-    def create(cls, name, materials):
-        """Create a structural element."""
-        structural_element = super().create(name, materials)
+        Parameters
+        ----------
+        name : str
+            Name of the structural element.
+        materials : list of ~pod_lca.building_structure.StructuralMaterial
+            Materials that make up the structural element.
+        """
+        structural_element = super().from_materials(name, materials)
 
         return structural_element
-    
-    def set_floor(self):
-        pass
 
     def set_building(self):
-        """Set data from building level."""
+        """Set data from building level.
+        """
         building = self.get_building()
         if building is not None:
             building.add_assembly(self)
@@ -97,11 +92,17 @@ class StructuralElement(Assembly):
         pass
 
     def get_element_type(self):
+        """ Get the type of element.
+
+        Returns
+        -------
+        str
+            Type identifier of the structural element.
+        """
         return self.element_type
 
 
 class GenericElement(StructuralElement):
-
 
     def __init__(self):
         super().__init__()
@@ -110,7 +111,6 @@ class GenericElement(StructuralElement):
 
 
 class Foundation(StructuralElement):
-
 
     def __init__(self):
         super().__init__()

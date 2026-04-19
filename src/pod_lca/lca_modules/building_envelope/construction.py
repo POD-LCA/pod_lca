@@ -55,7 +55,7 @@ class Construction(Assembly):
     
     @classmethod
     def from_layers(cls, name, layers):
-        construction = cls.create(name)
+        construction = cls.from_materials(name)
         construction.layer_order = {lk: layers[lk].name for lk in layers}
         construction.layers = layers
 

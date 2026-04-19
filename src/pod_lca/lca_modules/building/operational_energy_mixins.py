@@ -66,7 +66,8 @@ class OperationalMixins:
         electricity_usage = defaultdict(lambda: defaultdict(float))
 
         if method == 'EUIs': 
-            eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[self.get_building_type()]
+            building_type = self.building_envelope.building_type # TODO: to refactor with template envelop refactor
+            eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
             eui = float(eui_data['eui'])
             
             total_area = 0.0

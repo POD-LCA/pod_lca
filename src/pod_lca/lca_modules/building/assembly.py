@@ -34,7 +34,7 @@ class Assembly:
     # Constructors
     # ================================        
     @classmethod
-    def create(cls, name, materials=None):
+    def from_materials(cls, name, materials=None):
         """ Create a building assembly from its constituent materials.
         
         Parameters
