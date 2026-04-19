@@ -18,6 +18,7 @@ my_building = Building.from_template_model(name='template building',
                                            built_year=2025,
                                            life_span=60,
                                            **template_model_data)
+my_building.operational_energy_method = 'EUIs' 
 
 print(my_building.get_impacts(scope='product',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 

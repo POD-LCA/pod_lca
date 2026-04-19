@@ -20,8 +20,9 @@ my_building = Building.from_template_model(name='buildings_podlca',
                                            built_year=2025,
                                            life_span=60,
                                            **template_model_data)
+my_building.operational_energy_method = 'EUIs' 
 
-print(my_building.get_impacts(scope='product',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(my_building.get_impacts(scope='all',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 
 drf_record = my_building.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('cumulative radiative forcing')
