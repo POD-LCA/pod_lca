@@ -37,6 +37,7 @@ class Window(Construction):
         win.height       = data['height']
         win.wwr          = data['wwr']
         win.materials    = data['materials']
+        win.layers       = data['layers']
         win.surfaces     = {}
         for sk in data['surfaces']:
             win.surfaces[sk] = Surface.from_data(data['surfaces'][sk])
@@ -51,6 +52,7 @@ class Window(Construction):
         data['height']          = self.height        
         data['wwr']             = self.wwr          
         data['materials']       = self.materials
+        data['layers']          = self.layers
         data['surfaces'] = {}
         for sk in self.surfaces:
             data['surfaces'][sk] = self.surfaces[sk].to_data()

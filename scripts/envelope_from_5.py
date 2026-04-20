@@ -203,14 +203,12 @@ window2.set_wwr(wwr)
 
 windows = {wall_key1: window1, wall_key2: window2}
 
+
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
 e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
-print(e.windows['Window_0'].materials[0])
-
-print(be.envelopes[0].windows['Window_0'].materials[0])
 
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

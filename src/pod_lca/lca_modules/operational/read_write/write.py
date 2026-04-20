@@ -592,17 +592,6 @@ def write_constructions(building):
                 sep = ";"
             else:
                 sep = ","
-            # if thicks[i] == None:
-            #     lname = layer
-            # elif thicks[i] > 0:
-            #     print(layer)
-            #     lname = "{} {}mm".format(layer, round(thicks[i] * 1000, 1))
-            #     print(lname)
-            #     print('')
-            # elif thicks[i] <= 0 and types[i] == "Material":
-            #     continue
-            # else:
-            #     lname = "{}".format(layer)
             fh.write("  {}{}\t\t\t\t\t!- Layer {}\n".format(layer, sep, i))
         fh.write("\n")
     fh.write("\n")
