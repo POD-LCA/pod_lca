@@ -173,8 +173,7 @@ class OperationalMixins:
 
         windows = self.building_envelope.envelopes[ek].windows
         for wk in windows:
-            win = windows[wk]
-            con = win.construction
+            con = windows[wk]
             self.constructions[con.name] = con
 
     def make_layers_dict(self):

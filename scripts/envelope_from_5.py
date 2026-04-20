@@ -188,16 +188,18 @@ c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-window_construction = Construction.from_idf('Generic Double Pane', constructions_path)
+window1 = Window.from_idf('Generic Double Pane', constructions_path)
 
 w = Q(3, METER)
 h = Q(2, METER)
 wall_key1 = 'wall_1'
-window1 = Window.from_width_height_construction(w, h, window_construction)
+window1.set_width_height(w, h)
+
 
 wall_key2 = 'wall_2'
 wwr = .9
-window2 = Window.from_wwr_construction(wwr, window_construction)
+window2 = Window.from_idf('Generic Double Pane', constructions_path)
+window2.set_wwr(wwr)
 
 windows = {wall_key1: window1, wall_key2: window2}
 
@@ -219,34 +221,31 @@ s.build(mui_type)
 
 b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 
-# # set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# path = config['file_paths']['operational']['SYSTEMS']
-# b.set_operational_energy_object(OperationalEnergyObject.from_idf(path))
+path = config['file_paths']['operational']['SYSTEMS']
+b.set_operational_energy_object(OperationalEnergyObject.from_idf(path))
 
-# # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
-# b.operational_energy_method = 'eplus' # {'epluus', 'EUIs'}, default is 'eplus'
+# b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
+b.operational_energy_method = 'eplus' # {'epluus', 'EUIs'}, default is 'eplus'
 
-# # get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_operational_impacts()) # default is 'total'
+print(b.get_operational_impacts()) # default is 'total'
 
-# # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product'))
+print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product'))
 
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
+drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('cumulative radiative forcing')
 
-# graph = BarChart.from_plotter(MatplotlibPlotter)
-# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# graph.show()
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+graph.show()
 
-# # #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
-# # #TODO: name clash / Envelope Material
+# #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
 
-
-# # WINDOWS SHOULD NOT HAVE CONSTRUCTIONS BUT BE CONSTRUCTIONS

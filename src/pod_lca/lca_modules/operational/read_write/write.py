@@ -337,7 +337,7 @@ def write_windows(building):
             for wk in building.building_envelope.envelopes[ek].windows:
                 window = building.building_envelope.envelopes[ek].windows[wk]
 
-                con = window.construction.name
+                con = window.name
                 bsn = "{}_{}".format(envelope.name, window.wall_key)
                 sk = list(window.surfaces.keys())[0]
                 srf = window.surfaces[sk]
