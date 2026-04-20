@@ -17,10 +17,7 @@ from . import TransportationMixins
 from . import UseMixins
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ...units import MEGA
-from ...units import METER
 from ...units import WATT_HOUR
-from ...units import Quantity as Q
-from ...utilities import config
 
 
 class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
@@ -30,14 +27,20 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
     ----------
     name : str
         Name of the building.
-    building_type : {'Commercial', 'Residential'}
-        Type of building.
     structure_type : {'Concrete', 'Steel', 'CLT'}
         Major vertical gravity system of the structure.
     built_year: int
         Built year of the building.
+    life_span : int
+        Useful life of the building.
     location : ~pod_lca.location.Location
         Location of the building site.
+    structure : ~pod_lca.building_structure.BuildingStructure
+        Structural assemblies of the building.
+    building_envelope : ~pod_lca.building_envelope.BuildingEnvelope
+        Envelope assemblies of the building
+    operational_object : ~pod_lca.operational.OperationalEnergyObject
+        Operational energy object to handle operational energy simulations
     assemblies : list of ~pod_lca.building.Assembly 
         Structural and Fascade elements that make up the building.
     material_impact_database: ~pod_lca.impacts.ImpactsDatabase
@@ -50,13 +53,21 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         End-of-life transportation dataset.
     transportation_manager: ~pod_lca.transportation.TransportationManager
         Manager of inward transportation of material for the construction of the building.
-    construction_energy_product : 
-
     building_data_standard: {'RICS', 'ASHRAE'}
         building strnadard used for 
-    operational_energy_method: {'eplus', 'EUIs'}
-        method fro computing operational energy
-    """
+    construction_energy_product : ~pod_lca.electricity.Electricity
+        Electricity consumption during the building construction.
+    operational_electricity_product : ~pod_lca.building.OperationalElectricityProduct
+        Electricity consumption during the building operations.
+    operational_energy_method : {'eplus', 'EUIs'}
+        method fro computing operational energy.
+    weather_file_path : str
+        File path to the weather file to be used in operational energy simulations.
+    energy_plus_results : dict
+        Energy plus results output from the operational energy simulations.
+    energy_plus_units : dict
+        Units of the energy plus results.
+    """     
 
     def __init__(self):
         self.name = None
@@ -65,13 +76,12 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.life_span = None
         self.location = None
 
-        self.floors = {}
+        self.floors = {} # FIXME: used in operational and plotters...
+
         self.structure = None
         self.building_envelope = None
         self.operational_object = None
         self.assemblies = []
-        self.surface_cpt_dict = {}
-        self.constructions = {}
 
         self.material_impact_database = None
         self.transport_impact_database = None
@@ -85,8 +95,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         self.operational_energy_method = 'eplus'
         self.weather_file_path = None
-        self.idf_constructions_data = {}
-        self.idf_material_properties = {}
         self.energy_plus_results = None
         self.energy_plus_units = None
 
@@ -294,17 +302,35 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         return self
     
     def set_structure(self, structure):
-
+        """ Set the building structure object.
+        
+        Parameters
+        ----------
+        structure : ~pod_lca.building_structure.BuildingStructure
+            Structural assemblies of the building.
+        """
         self.structure = structure
         structure.set_building(self)
 
     def set_building_envelope(self, building_envelope):
-
+        """ Set the building envelope object.
+        
+        Parameters
+        ----------
+        building_envelope : ~pod_lca.building_envelope.BuildingEnvelope
+            Envelope assemblies of the building
+        """
         self.building_envelope = building_envelope
         building_envelope.set_building(self)
 
     def set_operational_energy_object(self, operational_energy_object):
+        """ Set the operational energy object used in energy plus simulations.
         
+        Parameters
+        ----------
+        operational_object : ~pod_lca.operational.OperationalEnergyObject
+            Operational energy object to handle operational energy simulations
+        """
         self.operational_object = operational_energy_object
         operational_energy_object.set_building(self)
 
@@ -372,31 +398,34 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         return self.building_data_standard
 
-    def get_floor(self, floor_no):
-        """ Get the floor specified.
-
-        Parameters
-        ----------
-        floor_no : int
-            Floor id
-        """
-        return self.floors[str(floor_no)]
-    
-    def get_no_floors(self):
-        """ Get number of floors in the building.
-        """
-        return len(self.floors)
-
     def get_structure(self):
-
+        """ Get the building structure object.
+        
+        Returns
+        -------
+        ~pod_lca.building_structure.BuildingStructure
+            Structural assemblies of the building.
+        """
         return self.structure
     
     def get_envelope(self):
-
+        """ Get the building envelope object.
+        
+        Returns
+        -------
+        ~pod_lca.building_envelope.BuildingEnvelope
+            Envelope assemblies of the building
+        """
         return self.envelope
 
     def get_operational_energy_object(self):
-
+        """ Get the operational energy object used in energy plus simulations.
+        
+        Returns
+        -------
+        ~pod_lca.operational.OperationalEnergyObject
+            Operational energy object to handle operational energy simulations
+        """
         return self.operational_object
     
     def get_assemblies(self):

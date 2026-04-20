@@ -12,12 +12,10 @@ from . import EnvelopeMaterial
 from . import Surface
 from . import Wall
 from . import Window
-from pod_lca.utilities import area_polygon
-from pod_lca.utilities import centroid
-
-from pod_lca.utilities import config
-from pod_lca.utilities import DataImporter
 from ...units import UNITS_MAP
+from ...utilities import centroid
+from ...utilities import config
+from ...utilities import DataImporter
 from ...utilities import log
 from ...utilities import subtract_vectors
 from ...utilities import dot_vectors
@@ -99,15 +97,27 @@ class Envelope:
             data['windows'][wk] = self.windows[wk].to_data()
         
         return data
+
+    @property
+    def floor_plan(self):
+        return self.floor_plan_obj.floor_plan
     
     @property
     def height(self):
         return self.floor_plan_obj.height
 
     @property
-    def floor_plan(self):
-        return self.floor_plan_obj.floor_plan
+    def area(self):
+        return self.floor_plan_obj.get_area()
 
+    @property
+    def volume(self):
+        return self.height * self.area
+    
+    @property
+    def centroid(self):
+        return centroid(self.floor_plan)
+    
     @classmethod
     def from_floor(cls, floor_plan):
         envelope = cls()
@@ -116,13 +126,13 @@ class Envelope:
         return envelope
     
     @classmethod
-    def from_template(cls, building_type, envelope_opaque, envelope_translucent, roofing):
+    def from_template(cls, floor_plan, envelope_opaque, envelope_translucent, roofing):
         """ Create a structure from a template model.
         
         Parameters
         ----------
-        building_type : {'Commercial', 'Residential'}
-            Type of building.
+        floor_plan : ~pod_lca.building.BuildingFloor
+            Building floor configuration.
         envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
                             'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 
                             'Rainscreen, Formed Steel Panel', 'Brick, wood framing'}
@@ -134,34 +144,36 @@ class Envelope:
 
         Returns
         -------
-        ~pod_lca.building_structure.BuildingStructure
-            Structure created.
+        ~pod_lca.building_envelope.Envelope
+            Envelope created.
         """
+        building_usage_type = floor_plan.get_usage()
+
         envelope = cls()
+        envelope.floor_plan_obj = floor_plan
 
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
         
         bill_of_materials_walls_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_ENCLOSURE_OPAQUE'])
-        bill_of_materials_walls = bill_of_materials_walls_all[(bill_of_materials_walls_all['building_type'].str.lower() == building_type.lower()) & 
+        bill_of_materials_walls = bill_of_materials_walls_all[(bill_of_materials_walls_all['building_type'].str.lower() == building_usage_type.lower()) & 
                                                               (bill_of_materials_walls_all['assembly'].str.lower() == envelope_opaque.lower())].drop(['building_type'], axis=1).to_dict('index')
         if not bill_of_materials_walls:
             log("The opaque enclosure is empty.", 'warn')
 
         bill_of_materials_windows_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_ENCLOSURE_TRANSLUCENT'])
-        bill_of_materials_windows = bill_of_materials_windows_all[(bill_of_materials_windows_all['building_type'].str.lower() == building_type.lower()) & 
+        bill_of_materials_windows = bill_of_materials_windows_all[(bill_of_materials_windows_all['building_type'].str.lower() == building_usage_type.lower()) & 
                                                                   (bill_of_materials_windows_all['assembly'].str.lower() == envelope_translucent.lower())].drop(['building_type'], axis=1).to_dict('index')
         if not bill_of_materials_windows:
             log("The translucent enclosure is empty.", 'warn')
 
         bill_of_materials_roof_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_ROOFING'])
-        bill_of_materials_roof = bill_of_materials_roof_all[(bill_of_materials_roof_all['building_type'].str.lower() == building_type.lower()) & 
+        bill_of_materials_roof = bill_of_materials_roof_all[(bill_of_materials_roof_all['building_type'].str.lower() == building_usage_type.lower()) & 
                                                             (bill_of_materials_roof_all['assembly'].str.lower() == roofing.lower())].drop(['building_type'], axis=1).to_dict('index')
         if not bill_of_materials_roof:
             log("The roof is empty.", 'warn')
 
         boms = [bill_of_materials_walls, bill_of_materials_windows, bill_of_materials_roof]
 
-        # FIXME: if the wwr to be calculated from these
         enclosure_walls = Wall.from_materials('walls', None)
         enclosure_windows = Window.from_materials('windows', None)
         enclosure_roof = Ceiling.from_materials('roof', None)
@@ -278,18 +290,6 @@ class Envelope:
             The building to which the envelope belong.
         """
         return self.building
-        
-    @property
-    def area(self):
-        return area_polygon(self.floor_plan)
-
-    @property
-    def volume(self):
-        return self.height * self.area
-    
-    @property
-    def centroid(self):
-        return centroid(self.floor_plan)
 
     def create_envelope_surfaces(self):
         fp = self.floor_plan

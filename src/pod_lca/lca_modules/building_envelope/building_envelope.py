@@ -38,6 +38,31 @@ class BuildingEnvelope:
             e.set_to_height(h)
             be.set_envelope(e, i)
         return be
+    
+    @classmethod
+    def from_template_envelope(cls, envelope, num_stories):
+        """ Create building envelope from template models.
+        
+        Parameters
+        ----------
+        envelope : (list of) ~pod_lca.building_envelope.Envelope
+            Representative envelope(s).
+        num_stories : (list of) int
+            Number of stories (for each representative envelope).
+        """
+        if not isinstance(envelope, list):
+            envelope = [envelope]
+        if not isinstance(num_stories, list):
+            num_stories = [num_stories]
+
+        be = cls()
+        start_floor = 0
+        for env, num in zip(envelope, num_stories):
+            for i in range(start_floor, start_floor + num):
+                be.set_envelope(env, i)
+            start_floor += num
+
+        return be
 
     def set_envelope(self, envelope, floor_number):
         self.envelopes[floor_number] = envelope
@@ -59,7 +84,6 @@ class BuildingEnvelope:
     def set_cycle_directions(self):
         for ek in self.envelopes:
             self.envelopes[ek].set_cycle_directions()
-
 
     def get_building(self):
         """ Get the parent building of the envelope.

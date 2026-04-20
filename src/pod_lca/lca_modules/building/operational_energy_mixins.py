@@ -22,6 +22,7 @@ from ..operational.light import  DaylightingReferencePoint
 from ..operational.node_list import  NodeList
 from ..operational.read_write import read_results_file
 from ..operational.read_write import write_idf_from_building
+from ...units import Quantity as Q
 from ...units import UNITS_MAP
 from ...units import WATT_HOUR
 from ...utilities import config
@@ -66,24 +67,21 @@ class OperationalMixins:
         electricity_usage = defaultdict(lambda: defaultdict(float))
 
         if method == 'EUIs': 
-            building_type = self.building_envelope.building_type # TODO: to refactor with template envelop refactor
-            eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
-            eui = float(eui_data['eui'])
-            
-            total_area = 0.0
-            for floor_no in range(1, self.get_no_floors() + 1):
-                total_area += self.get_floor(floor_no).get_area()
-
-            area_unit = total_area.unit        
-            eui_unit = UNITS_MAP[eui_data['unit']]
-            energy_unit = eui_unit * area_unit
-            conversion_factor = energy_unit.convert_to(unit)
+            electricity_usage_quantity = 0
+            for envelope in self.building_envelope.get_envelopes():
+                building_type = envelope.floor_plan_obj.get_usage()
+                eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
+   
+                floor_area = envelope.floor_plan_obj.get_area()
+                eui = Q(float(eui_data['eui']), UNITS_MAP[eui_data['unit']])
+                
+                electricity_usage_quantity = floor_area * eui
 
             if summed_at == 'year':
-                electricity_usage['year']['total'] = eui * total_area * conversion_factor
+                electricity_usage['year']['total'] = electricity_usage_quantity.value
             elif summed_at == 'month':
                 for month in range(12):  
-                    electricity_usage[str(month + 1).zfill(2)]['total'] = eui * total_area * conversion_factor / 12
+                    electricity_usage[str(month + 1).zfill(2)]['total'] = electricity_usage_quantity.value / 12
             else:
                 raise ValueError('Summed at time not recognized.')
 
