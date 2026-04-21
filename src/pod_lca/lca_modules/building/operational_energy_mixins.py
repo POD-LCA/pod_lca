@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import os
+import platform
 import subprocess
 import shutil
 import tempfile
@@ -28,6 +29,7 @@ from ...units import UNITS_MAP
 from ...units import WATT_HOUR
 from ...utilities import config
 from ...utilities import DataImporter
+from ...utilities import log
 
     
 class OperationalMixins:
@@ -117,13 +119,13 @@ class OperationalMixins:
 
         return electricity_usage
 
-    def run_operational_energy_model(self, delete=True):
+    def run_operational_energy_model(self):
         """ Run operational energy model to get operational energy use and emissions.
         """
-        idf = self.get_idf_file_path()
-        exe = config['file_paths']['operational']['EPLUS']
-        out = self.get_eplus_out_folder()
         weather = self.get_weather_file_path()
+        idf = self.get_idf_file_path()
+        exe = self.get_energyplus_path()
+        out = self.get_eplus_out_folder()
 
         print(exe, '-w', weather,'--output-directory', out, idf)
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
@@ -156,6 +158,16 @@ class OperationalMixins:
             File path.
         """
         self.idf_file_path = file_path
+
+    def set_eplus_path(self, folder_path):
+        """ Set folder (or file) path to Eplus executable file. 
+        
+        Parameters
+        ----------
+        folder_path : str
+            Folder path.
+        """
+        self.eplus_folder_path = folder_path
 
     def set_eplus_out_folder(self, folder_path):
         """ Set folder path to save the raw Eplus results 
@@ -203,6 +215,47 @@ class OperationalMixins:
             self.idf_file_path = temp_file.name
             
         return self.idf_file_path
+    
+    def get_energyplus_path(self):
+        """ Get the file path to the EnergyPlus executable file.
+        Works for both Windows and macOS.
+        
+        Args:
+            version (str): The version string in 'X-Y-Z' format.
+            user_path (str): Optional manual override path.
+        """
+        ep_version = config["setup"]["operational"]["EPLUS_VERSION"]
+        v_dash = ep_version.replace(".", "-")
+        
+        exe_name = "energyplus.exe" if platform.system() == "Windows" else "energyplus"
+
+        # check user set path
+        if self.eplus_folder_path:
+            p = Path(self.eplus_folder_path)
+            full_path = p / exe_name if p.is_dir() else p
+            if full_path.exists():
+                return str(full_path)
+
+        # Look in Standard Installation Folders (Version Specific)
+        standard_dirs = []
+        if platform.system() == "Windows":
+            standard_dirs.append(Path(f"C:/EnergyPlusV{v_dash}"))
+        elif platform.system() == "Darwin":
+            standard_dirs.append(Path(f"/Applications/EnergyPlus-{v_dash}"))
+
+        for folder in standard_dirs:
+            candidate = folder / exe_name
+            if candidate.exists():
+                return str(candidate)
+
+        # Check System PATH (Fallback)
+        system_match = shutil.which(exe_name)
+        if system_match:
+            return system_match
+        
+        log("Energyplus executable not found", "Fatal")
+
+        return None
 
     def get_eplus_out_folder(self):
         """ Returns the folder path to save eplus output files. 
@@ -217,7 +270,7 @@ class OperationalMixins:
             temp_folder = tempfile.TemporaryDirectory()
             self.eplus_out_folder = temp_folder.name
             
-        return self.eplus_out_folder  
+        return self.eplus_out_folder
               
     # ================================
     # Operational Energy Methods

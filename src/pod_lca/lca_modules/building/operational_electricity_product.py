@@ -224,7 +224,7 @@ class OperationalElectricityProduct:
         method = building.operational_energy_method
         if method == 'eplus':
             building.write_idf()
-            building.run_operational_energy_model(delete=True)
+            building.run_operational_energy_model()
             building.get_operational_energy_object().set_dirty(False)
 
         annual_electricity_usage = building.get_operational_electricity_usasge(method,

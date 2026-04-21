@@ -226,10 +226,11 @@ b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 # set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 path = config['file_paths']['operational']['SYSTEMS']
-b.set_operational_energy_object(OperationalEnergyObject.from_idf(path))
+b.set_operational_energy_object(OperationalEnergyObject.from_idf(path)) #TODO: should this also move to OperationalElectricityProduct Line 226
 
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+# b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
 # b.set_eplus_out_folder("temp/out") # default writes to a temp folder
 # b.set_idf_file_path("temp/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
