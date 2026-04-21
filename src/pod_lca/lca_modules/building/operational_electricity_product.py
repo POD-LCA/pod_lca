@@ -9,8 +9,10 @@ from ..electricity import ElectricitySupply
 from ..impacts import UniformEmissionProfile
 from ..impacts import Impacts
 from ..impacts import Emissions
+from ..operational import OperationalEnergyObject
 from ...units import KILO
 from ...units import WATT
+from ...utilities import config
 
 
 class OperationalElectricityProduct:
@@ -223,6 +225,8 @@ class OperationalElectricityProduct:
 
         method = building.operational_energy_method
         if method == 'eplus':
+            opp_obj = OperationalEnergyObject.from_idf(config['file_paths']['operational']['SYSTEMS'])
+            building.set_operational_energy_object(opp_obj)
             building.write_idf()
             building.run_operational_energy_model()
             building.get_operational_energy_object().set_dirty(False)

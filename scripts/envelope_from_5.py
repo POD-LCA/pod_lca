@@ -71,7 +71,6 @@ location = Location.from_str("98126, Seattle")
 built_year =  2025
 life_span = 100
 
-
 x = Q(20, METER)
 y = Q(10, METER)
 zero = Q(0, METER)
@@ -185,7 +184,6 @@ f = Floor.from_idf('Generic Interior Floor', constructions_path)
 
 c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
-
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 window1 = Window.from_idf('Generic Double Pane', constructions_path)
@@ -195,7 +193,6 @@ h = Q(2, METER)
 wall_key1 = 'wall_1'
 window1.set_width_height(w, h)
 
-
 wall_key2 = 'wall_2'
 wwr = .9
 window2 = Window.from_idf('Generic Double Pane', constructions_path)
@@ -203,12 +200,10 @@ window2.set_wwr(wwr)
 
 windows = {wall_key1: window1, wall_key2: window2}
 
-
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
 e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
-
 
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -222,11 +217,6 @@ s.build(mui_type)
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
-
-# set operational object - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-path = config['file_paths']['operational']['SYSTEMS']
-b.set_operational_energy_object(OperationalEnergyObject.from_idf(path)) #TODO: should this also move to OperationalElectricityProduct Line 226
 
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
