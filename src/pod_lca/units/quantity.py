@@ -5,7 +5,6 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
-
 class Quantity(object):
     def __init__(self, value, unit):
         self.value = value
@@ -79,7 +78,8 @@ class Quantity(object):
         if isinstance(val, Quantity):
             value = self.value * val.value
             unit = self.unit * val.unit
-            return Quantity(value, unit)
+            unit, factor = unit.simplify()
+            return Quantity(value * factor, unit)
         else:
             return Quantity(self.value * val, self.unit)
 
@@ -88,13 +88,10 @@ class Quantity(object):
 
     def __truediv__(self, val):
         if isinstance(val, Quantity):
-            if self.unit.qty_measured == val.unit.qty_measured:
-                value  = self.value / (val.value * val.unit.convert_to(self.unit))
-                unit = self.unit / val.unit
-            else:
-                value = self.value / val.value
-                unit = self.unit / val.unit
-            return Quantity(value, unit)
+            value = self.value / val.value
+            unit = self.unit / val.unit
+            unit, factor = unit.simplify()
+            return Quantity(value * factor, unit)
         else:
             return Quantity(self.value / val, self.unit)
 
@@ -199,26 +196,4 @@ class Quantity(object):
         return Quantity(1 / self.value, 1 / self.unit)
 
 if __name__ == '__main__':
-
-
-    from pod_lca.units import METER, INCH, MILE, M_TON, CUBIC_METER
-    from pod_lca.units import KILOGRAM, GRAM, SQUARE_METER, KELVIN, WATT
-
-
-    for i in range(50): print('')
-
-    a = (METER * METER * METER * METER * METER * KELVIN * KELVIN) / (WATT * WATT)
-    b = (METER * METER * METER * KELVIN) / (WATT)
-
-    print(a / b)
-
-
-    a = Quantity(1, (METER * KELVIN) / WATT)
-    b = Quantity(1, (KELVIN * METER) / WATT)
-
-    print(a + b)
-
-    a = Quantity(1, METER)
-    b = Quantity(1, INCH)
-
-    print(a + b)
+    pass

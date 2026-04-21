@@ -29,10 +29,8 @@ class Unit:
         The quantity measured by the unit.
     prefix : ~pod_lca.units.MetricPrefix
         Metric prefix. None if a base unit or non-metric.
-    numerator : list of ~pod_lca.units.Unit
-        List of components in the numerator of the unit.
-    denominator : list of ~pod_lca.units.Unit
-        List of components in the denominator of the unit.
+    units : dict
+        Dictionary of base units and their powers.
     """
 
     def __init__(self):
@@ -49,7 +47,6 @@ class Unit:
         for k, v in self.__dict__.items():
             setattr(new_obj, k, deepcopy(v, memo))
         return new_obj
-
 
     def __str__(self):
         return f"Unit {self.get_name()} ({self.get_standard_notation()}) measuring {self.get_qty_measured()}."
@@ -348,7 +345,6 @@ class Unit:
 
         return factor
 
-
     @staticmethod
     def compute_conversion_factor(unit_in, unit_out):
         """Computes conversion factor from unit_in to unit_out, given (a) They both measure same quantities, and
@@ -507,6 +503,34 @@ class Unit:
         if self.standard_notation in UNIT_NOTATION_OVERRIDES:
             self.standard_notation = UNIT_NOTATION_OVERRIDES[self.standard_notation]
 
+    def simplify(self):
+        self.expand_standard_compounds()
+        
+        units = list(self.units.items())
+        n = len(units)
+
+        conversion_factor = 1 
+        for i in range(n):
+            current_unit, current_pow = units[i]
+            
+            for j in range(i + 1, n):
+                next_unit, next_pow = units[j]
+                
+                try:
+                    factor = next_unit.convert_to(current_unit)
+                    conversion_factor *= factor ** (next_pow)
+
+                    self.units[current_unit] =  current_pow +  next_pow
+                    self.units[next_unit] = 0
+                except TypeError:
+                    self.units[current_unit] = current_pow
+                    self.units[next_unit] = next_pow
+
+        self.collapse_standard_compounds()
+        self._rebuild_strings()        
+
+        return self, conversion_factor
+        
 
 class MetricPrefix:
     """Unit object from which units are created.
