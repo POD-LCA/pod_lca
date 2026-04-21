@@ -6,8 +6,6 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-import os
-import pod_lca
 from pod_lca.utilities import config
 from pod_lca.units import METER, CUBIC_METER
 
@@ -23,32 +21,34 @@ def write_idf_from_building(building):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "w")  # TODO: if temp folder not existing
+    file_path = building.get_idf_file_path()
+
+    fh = open(file_path, "w")
     fh.close()
-    write_pre()
-    write_building()
-    write_global_vars()
-    write_run_period()
-    write_zones(building)
-    write_windows(building)
-    write_layers(building)
-    write_constructions(building)
-    write_shadings(building)
+    write_pre(file_path)
+    write_building(file_path)
+    write_global_vars(file_path)
+    write_run_period(file_path)
+    write_zones(building, file_path)
+    write_windows(building, file_path)
+    write_layers(building, file_path)
+    write_constructions(building, file_path)
+    write_shadings(building, file_path)
 
-    write_simulation_control(building)
-    write_schedules(building)
-    write_infiltration_rates(building)
-    write_thermostats(building)
-    write_hvac(building)
-    write_node_lists(building)
-    write_outdoor_airs(building)
-    write_daylight(building)
-    write_internal_gains(building)
+    write_simulation_control(building, file_path)
+    write_schedules(building, file_path)
+    write_infiltration_rates(building, file_path)
+    write_thermostats(building, file_path)
+    write_hvac(building, file_path)
+    write_node_lists(building, file_path)
+    write_outdoor_airs(building, file_path)
+    write_daylight(building, file_path)
+    write_internal_gains(building, file_path)
 
-    write_output_items(building)
+    write_output_items(building, file_path)
 
 
-def write_pre():
+def write_pre(file_path):
     """
     Writes the preamble to the .idf file from the building data.
     Parameters
@@ -63,7 +63,7 @@ def write_pre():
     ep_version = config["setup"]["operational"]["EPLUS_VERSION"]
     num_timesteps = config["setup"]["operational"]["NUM_TIMESTEPS"]
 
-    fh = open(config['file_paths']['operational']['TEMP'], "w")
+    fh = open(file_path, "w")
     fh.write("\n")
     fh.write("Version,\n")
     fh.write("  {};\t\t\t\t\t!- Version Identifier\n".format(ep_version))
@@ -74,7 +74,7 @@ def write_pre():
     fh.close()
 
 
-def write_building():
+def write_building(file_path):
     """
     Writes the building basic data to the .idf file from the building datastructure.
     Parameters
@@ -89,7 +89,7 @@ def write_building():
     terrain = config["setup"]["operational"]["TERRAIN"]
     solar_distribution = config["setup"]["operational"]["SOLAR_DISTRIBUTION"]
 
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("Building,\n")
     fh.write("  {},\t\t\t\t\t!- Name\n".format("pod_lca_building"))
     fh.write("  0,\t\t\t\t\t !- North Axis (deg)\n")
@@ -103,7 +103,7 @@ def write_building():
     fh.close()
 
 
-def write_global_vars():
+def write_global_vars(file_path):
     """
     Writes the global variables to the .idf file from the building data.
     Parameters
@@ -115,7 +115,7 @@ def write_global_vars():
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("GlobalGeometryRules,\n")
     fh.write("  UpperLeftCorner,\t\t\t\t\t!- Starting Vertex Position\n")
@@ -125,7 +125,7 @@ def write_global_vars():
     fh.close()
 
 
-def write_run_period():
+def write_run_period(file_path):
     """
     Writes the run period  to the .idf file from the building data.
     Parameters
@@ -137,7 +137,7 @@ def write_run_period():
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("  RunPeriod,\n")
     fh.write("    Run Period 1,            !- Name\n")
     fh.write("    1,                       !- Begin Month\n")
@@ -156,7 +156,7 @@ def write_run_period():
     fh.close()
 
 
-def write_zones(building):
+def write_zones(building, file_path):
     """
     Writes all zones to the .idf file from the building data.
     Parameters
@@ -170,12 +170,12 @@ def write_zones(building):
     """
     for ek in building.building_envelope.envelopes:
         envelope = building.building_envelope.envelopes[ek]
-        write_zone(envelope)
-        write_zone_surfaces(building, envelope)
-    write_all_zone_list(building)
+        write_zone(envelope, file_path)
+        write_zone_surfaces(building, envelope, file_path)
+    write_all_zone_list(building, file_path)
 
 
-def write_zone(envelope):
+def write_zone(envelope, file_path):
     """
     Writes a single zone to the .idf file from the building data.
     Parameters
@@ -193,7 +193,7 @@ def write_zone(envelope):
     eh =envelope.height.convert_to(METER).value
     ev = envelope.volume.convert_to(CUBIC_METER).value
 
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("Zone,\n")
     fh.write("  {},         !- Name\n".format(envelope.name))
     fh.write("  0,          !- Direction of Relative North (deg)\n")
@@ -212,7 +212,7 @@ def write_zone(envelope):
     fh.close()
 
 
-def write_zone_surfaces(building, envelope):
+def write_zone_surfaces(building, envelope, file_path):
     """
     Writes all zone surfaces to the .idf file from the building data.
     Parameters
@@ -226,14 +226,14 @@ def write_zone_surfaces(building, envelope):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     sks = envelope.surfaces.keys()
     for sk in sks:
-        write_building_surface(building, envelope, sk)
+        write_building_surface(building, envelope, sk, file_path)
     fh.close()
 
 
-def write_building_surface(building, envelope, sk):
+def write_building_surface(building, envelope, sk, file_path):
     """
     Writes a building surface to the .idf file from the building data.
     Parameters
@@ -274,7 +274,7 @@ def write_building_surface(building, envelope, sk):
 
     sname = "{}_{}".format(envelope.name, sk)
 
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("BuildingSurface:Detailed,\n")
     fh.write("  {},                    !- Name\n".format(sname))
@@ -301,8 +301,8 @@ def write_building_surface(building, envelope, sk):
     fh.close()
 
 
-def write_all_zone_list(building):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_all_zone_list(building, file_path):
+    fh = open(file_path, "a")
     fh.write("ZoneList,\n")
     fh.write("  all_zones_list, !- Name\n")
     for i, fkey in enumerate(building.building_envelope.envelopes):
@@ -317,7 +317,7 @@ def write_all_zone_list(building):
     fh.close()
 
 
-def write_windows(building):
+def write_windows(building, file_path):
     """
     Writes all windows  to the .idf file from the building data.
     Parameters
@@ -329,7 +329,7 @@ def write_windows(building):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
 
     for ek in building.building_envelope.envelopes:
         envelope = building.building_envelope.envelopes[ek]
@@ -368,7 +368,7 @@ def write_windows(building):
     fh.close()
 
 
-def write_layers(building):
+def write_layers(building, file_path):
     """
     Writes all layers to the .idf file from the building data.
     Parameters
@@ -388,22 +388,22 @@ def write_layers(building):
         lay_name = lk
 
         if mat.__type__ == "MaterialPropertyMass":
-            write_material(mat, thick, lay_name)
+            write_material(mat, thick, lay_name, file_path)
         elif mat.__type__ == "MaterialPropertyNoMass":
-            write_materials_nomass(mat, lay_name)
+            write_materials_nomass(mat, lay_name, file_path)
         elif mat.__type__ == "EnvelopeMaterialPropertyAirGap":
-            write_material_air_gap(mat, lay_name)
+            write_material_air_gap(mat, lay_name, file_path)
         elif mat.__type__ == "WindowMaterialPropertyGlazing":
-            write_material_glazing(mat, thick, lay_name)
+            write_material_glazing(mat, thick, lay_name, file_path)
         elif mat.__type__ == "WindowMaterialPropertyGas":
-            write_material_gas(mat, thick, lay_name)
+            write_material_gas(mat, thick, lay_name, file_path)
         # elif mat.__type__ == 'WindowMaterialGlazingSimple':
         #     write_materials_glazing_simple(building, mat)
         else:
             raise ValueError('materyal type {} has not been implemented yet'.format(mat.__type__))
 
 
-def write_material(mat, thickness, layer_name):
+def write_material(mat, thickness, layer_name, file_path):
     """
     Writes a material to the .idf file from the building data.
     Parameters
@@ -423,7 +423,7 @@ def write_material(mat, thickness, layer_name):
     """
 
     if thickness:
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("\n")
         fh.write("Material,\n")
         fh.write("  {},     !- Name\n".format(layer_name))
@@ -440,7 +440,7 @@ def write_material(mat, thickness, layer_name):
         fh.close()
 
 
-def write_materials_nomass(mat, layer_name):
+def write_materials_nomass(mat, layer_name, file_path):
     """
     Writes a no mass material to the .idf file from the building data.
     Parameters
@@ -455,7 +455,7 @@ def write_materials_nomass(mat, layer_name):
     None
     """
 
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("Material:NoMass,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
@@ -469,8 +469,8 @@ def write_materials_nomass(mat, layer_name):
     fh.close()
 
 
-def write_material_air_gap(mat, layer_name):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_material_air_gap(mat, layer_name, file_path):
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("Material:AirGap,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
@@ -480,7 +480,7 @@ def write_material_air_gap(mat, layer_name):
     fh.close()
 
 
-def write_material_glazing(mat, thickness, layer_name):
+def write_material_glazing(mat, thickness, layer_name, file_path):
     """
     Writes a glazing material to the .idf file from the building data.
     Parameters
@@ -498,7 +498,7 @@ def write_material_glazing(mat, thickness, layer_name):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("WindowMaterial:Glazing,\n")
     fh.write("  {},         !- Name\n".format(layer_name))
@@ -537,7 +537,7 @@ def write_material_glazing(mat, thickness, layer_name):
     fh.close()
 
 
-def write_material_gas(mat, thickness, layer_name):
+def write_material_gas(mat, thickness, layer_name, file_path):
     """
     Writes a gas material to the .idf file from the building data.
     Parameters
@@ -554,7 +554,7 @@ def write_material_gas(mat, thickness, layer_name):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("WindowMaterial:Gas,\n")
     fh.write("  {},         !- Name\n".format(layer_name))
@@ -564,7 +564,7 @@ def write_material_gas(mat, thickness, layer_name):
     fh.close()
 
 
-def write_constructions(building):
+def write_constructions(building, file_path):
     """
     Writes all constructions to the .idf file from the building data.
     Parameters
@@ -577,7 +577,7 @@ def write_constructions(building):
     None
     """
 
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     for ck in building.constructions:
         name = building.constructions[ck].name
@@ -598,7 +598,7 @@ def write_constructions(building):
     fh.close()
 
 
-def write_shadings(building):
+def write_shadings(building, file_path):
     """
     Writes all shading devices to the .idf file from the building data.
     Parameters
@@ -619,10 +619,10 @@ def write_shadings(building):
     for i in range(len(shadings)):
         env = shadings[i][0]
         shading = shadings[i][1]
-        write_shading(env, shading, i)
+        write_shading(env, shading, i, file_path)
 
 
-def write_shading(envelope, shading, key):
+def write_shading(envelope, shading, key, file_path):
     """
     Writes a single shading device to the .idf file from the building data.
     Parameters
@@ -636,7 +636,7 @@ def write_shading(envelope, shading, key):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     sname = "{}_{}".format(envelope.name, shading.name)
     surfaces = shading.surfaces
@@ -658,8 +658,8 @@ def write_shading(envelope, shading, key):
     fh.close()
 
 
-def write_spaces(building):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_spaces(building, file_path):
+    fh = open(file_path, "a")
     fh.write("\n")
     for fk in building.floors:
         floor = building.floors[fk]
@@ -676,9 +676,9 @@ def write_spaces(building):
     fh.close()
 
 
-def write_simulation_control(building):
+def write_simulation_control(building, file_path):
 
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("SimulationControl,\n")
     fh.write("  No,       !- Do Zone Sizing Calculation\n")
@@ -693,26 +693,26 @@ def write_simulation_control(building):
     fh.close()
 
 
-def write_schedules(building):
+def write_schedules(building, file_path):
     # building.find_set_schedules()
     # for sk in building.set_schedules:
     for sk in building.operational_object.schedules:
         schedule = building.operational_object.schedules[sk]
         stype = schedule.type
         if stype == "compact":
-            write_schedule_compact(building, schedule)
+            write_schedule_compact(building, schedule, file_path)
         elif stype == "day_interval":
-            write_schedule_day_interval(building, schedule)
+            write_schedule_day_interval(building, schedule, file_path)
         elif stype == "week_daily":
-            write_schedule_week_daily(building, schedule)
+            write_schedule_week_daily(building, schedule, file_path)
         elif stype == "year":
-            write_schedule_year(building, schedule)
+            write_schedule_year(building, schedule, file_path)
         elif stype == "schedule_type_limits":
-            write_schedule_type_limits(building, schedule)
+            write_schedule_type_limits(building, schedule, file_path)
 
 
-def write_schedule_compact(building, schedule):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_schedule_compact(building, schedule, file_path):
+    fh = open(file_path, "a")
     fh.write("Schedule:Compact,\n")
     fh.write("  {},  !- Name\n".format(schedule.name))
     fh.write("  {}, !- Schedule Type Limits Name\n".format(schedule.type_limits))
@@ -724,11 +724,11 @@ def write_schedule_compact(building, schedule):
     fh.close()
 
 
-def write_schedule_day_interval(building, schedule):
+def write_schedule_day_interval(building, schedule, file_path):
 
     time_values = schedule.time_values
     sep = ","
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("Schedule:Day:Interval,\n")
     fh.write("  {},   !- Name\n".format(schedule.name))
     fh.write("  {},   !- Schedule Type Limits Name\n".format(schedule.type_limits))
@@ -742,8 +742,8 @@ def write_schedule_day_interval(building, schedule):
     fh.close()
 
 
-def write_schedule_week_daily(building, schedule):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_schedule_week_daily(building, schedule, file_path):
+    fh = open(file_path, "a")
     fh.write("Schedule:Week:Daily,\n")
 
     fh.write("  {},         !- Name\n".format(schedule.name))
@@ -763,8 +763,8 @@ def write_schedule_week_daily(building, schedule):
     fh.close()
 
 
-def write_schedule_year(building, schedule):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_schedule_year(building, schedule, file_path):
+    fh = open(file_path, "a")
 
     fh.write("Schedule:Year,\n")
     fh.write("  {},     !- Name\n".format(schedule.name))
@@ -779,8 +779,8 @@ def write_schedule_year(building, schedule):
     fh.close()
 
 
-def write_schedule_type_limits(building, schedule):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_schedule_type_limits(building, schedule, file_path):
+    fh = open(file_path, "a")
     fh.write("ScheduleTypeLimits,\n")
     fh.write("  {},     !- Name\n".format(schedule.name))
     fh.write("  {},     !- Lower Limit Value\n".format(schedule.lower_limit))
@@ -820,11 +820,11 @@ def write_schedule_type_limits(building, schedule):
     fh.close()
 
 
-def write_infiltration_rates(building):
+def write_infiltration_rates(building, file_path):
     for ik in building.operational_object.infiltrations:
         i = building.operational_object.infiltrations[ik]
 
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("  ZoneInfiltration:DesignFlowRate,\n")
         fh.write("    {},       !- Name\n".format(i.name))
         fh.write("    {},       !- Zone or ZoneList Name\n".format(i.zone_name))
@@ -843,12 +843,12 @@ def write_infiltration_rates(building):
         fh.close()
 
 
-def write_thermostats(building):
+def write_thermostats(building, file_path):
 
     for tk in building.operational_object.zone_control_thermostats:
         t = building.operational_object.zone_control_thermostats[tk]
 
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("ZoneControl:Thermostat,\n")
         fh.write("  {},    !- Name\n".format(t.name))
         fh.write("  {},    !- Zone or ZoneList Name\n".format("all_zones_list"))
@@ -878,11 +878,11 @@ def write_thermostats(building):
     fh.close()
 
 
-def write_hvac(building):
+def write_hvac(building, file_path):
 
     for ik in building.operational_object.ideal_air_loads:
         i = building.operational_object.ideal_air_loads[ik]
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("ZoneHVAC:IdealLoadsAirSystem,\n")
         fh.write("  {},     !- Name\n".format(i.name))
         fh.write("  {},     !- Availability Schedule Name\n".format(i.availability_schedule_name))
@@ -952,7 +952,7 @@ def write_hvac(building):
 
     for ek in building.operational_object.equipment_lists:
         el = building.operational_object.equipment_lists[ek]
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("ZoneHVAC:EquipmentList,\n")
         fh.write("  {},     !- Name\n".format(el.name))
         fh.write("  {},     !- Load Distribution Scheme\n".format(el.load_distribution_scheme))
@@ -978,7 +978,7 @@ def write_hvac(building):
 
     for ek in building.operational_object.equipment_connections:
         ec = building.operational_object.equipment_connections[ek]
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("ZoneHVAC:EquipmentConnections,\n")
         fh.write("  {},     !- Zone Name\n".format(ec.name))
         fh.write("  {},     !- Zone Conditioning Equipment List Name\n".format(ec.zone_conditioning_equipment_list))
@@ -990,8 +990,8 @@ def write_hvac(building):
         fh.close()
 
 
-def write_node_lists(building):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_node_lists(building, file_path):
+    fh = open(file_path, "a")
 
     for nlk in building.operational_object.node_lists:
         nl = building.operational_object.node_lists[nlk]
@@ -1008,8 +1008,8 @@ def write_node_lists(building):
     fh.close()
 
 
-def write_outdoor_airs(building):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_outdoor_airs(building, file_path):
+    fh = open(file_path, "a")
     for oak in building.operational_object.outdoor_airs:
         oa = building.operational_object.outdoor_airs[oak]
         fh.write("DesignSpecification:OutdoorAir,\n")
@@ -1029,8 +1029,8 @@ def write_outdoor_airs(building):
     fh.close()
 
 
-def write_daylight(building):
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+def write_daylight(building, file_path):
+    fh = open(file_path, "a")
     for dck in building.operational_object.daylighting_controls:
         dc = building.operational_object.daylighting_controls[dck]
         fh.write("Daylighting:Controls,\n")
@@ -1089,11 +1089,11 @@ def write_daylight(building):
     fh.close()
 
 
-def write_internal_gains(building):
+def write_internal_gains(building, file_path):
 
     for pk in building.operational_object.peoples:
         p = building.operational_object.peoples[pk]
-        fh = open(config['file_paths']['operational']['TEMP'], "a")
+        fh = open(file_path, "a")
         fh.write("People,\n")
         fh.write("  {},     !- Name\n".format(p.name))
         fh.write("  {},     !- Zone or ZoneList Name\n".format(p.zone_name))
@@ -1143,7 +1143,7 @@ def write_internal_gains(building):
     fh.close()
 
 
-def write_output_items(building):
+def write_output_items(building, file_path):
     """
     Writes the output items to the .idf file from the building data.
     Parameters
@@ -1155,7 +1155,7 @@ def write_output_items(building):
     -------
     None
     """
-    fh = open(config['file_paths']['operational']['TEMP'], "a")
+    fh = open(file_path, "a")
     fh.write("Output:Variable,*,Zone Mean Air Temperature,timestep;\n")
     fh.write("\n")
 

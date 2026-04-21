@@ -108,8 +108,6 @@ file_paths:
   operational:
     CONSTRUCTIONS: data/operational_constructions.idf
     SYSTEMS: data/operational_systems.idf
-    TEMP:   ../../temp/pod_lca_operational.idf
-    OUTPUT: ../../temp/test_eplus_out
     EPLUS:  ../../temp/EnergyPlus-25-1-0/energyplus
   weather_files:
     1A: data/USA_FL_Miami.Intl.AP.722020_TMY3.epw

@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 import os
 import subprocess
 import shutil
+import tempfile
 from collections import defaultdict
 from pathlib import Path
 
@@ -116,6 +117,111 @@ class OperationalMixins:
 
         return electricity_usage
 
+    def run_operational_energy_model(self, delete=True):
+        """ Run operational energy model to get operational energy use and emissions.
+        """
+        idf = self.get_idf_file_path()
+        exe = config['file_paths']['operational']['EPLUS']
+        out = self.get_eplus_out_folder()
+        weather = self.get_weather_file_path()
+
+        print(exe, '-w', weather,'--output-directory', out, idf)
+        subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
+
+        self.energy_plus_results, self.energy_plus_units = read_results_file(self, os.path.join(out, 'eplusout.eso'))
+
+        self.get_operational_electricity_product()._inventories_uptodate = False
+
+        return self
+    
+    # ================================
+    # File Path Methods
+    # ================================ 
+    def set_weather_file_path(self, file_path):
+        """ Set file path to the weather file to be used in operational energy simulations.
+
+        Parameters
+        ----------
+        file_path : str
+            File path.
+        """        
+        self.weather_file_path = file_path
+
+    def set_idf_file_path(self, file_path):
+        """ Set file path to save the intemediary idf file from Python library to Eplus.
+        
+        Parameters
+        ----------
+        file_path : str
+            File path.
+        """
+        self.idf_file_path = file_path
+
+    def set_eplus_out_folder(self, folder_path):
+        """ Set folder path to save the raw Eplus results 
+        
+        Parameters
+        ----------
+        folder_path : str
+            Folder path.
+        """
+        Path(folder_path).mkdir(exist_ok=True)
+        shutil.rmtree(folder_path)
+
+        self.eplus_out_folder = folder_path
+
+    def get_weather_file_path(self):
+        """ Get file path to the weather file to be used in operational energy simulations.
+
+        Returns
+        -------
+        str
+            File path.
+        """
+        if self.weather_file_path is None:
+            climate_zone = self.get_location().get_climate_zone()
+            return config["file_paths"]["weather_files"][climate_zone]
+        else:
+            return self.weather_file_path
+        
+    def get_idf_file_path(self):
+        """ Returns the intemediary idf file from Python library to build the eplus model. 
+            If the user has not set a file path, a temporary file is created.
+
+        Returns
+        -------
+        str
+            File path.
+        """
+        if self.idf_file_path is None:
+            temp_file = tempfile.NamedTemporaryFile(
+                suffix=".idf",
+                delete=False
+            )
+            temp_file.close()
+
+            self.idf_file_path = temp_file.name
+            
+        return self.idf_file_path
+
+    def get_eplus_out_folder(self):
+        """ Returns the folder path to save eplus output files. 
+            If the user has not set a file path, a temporary file is created.
+    
+        Returns
+        -------
+        str
+            Folder path.
+        """
+        if self.eplus_out_folder is None:
+            temp_folder = tempfile.TemporaryDirectory()
+            self.eplus_out_folder = temp_folder.name
+            
+        return self.eplus_out_folder  
+              
+    # ================================
+    # Operational Energy Methods
+    # ================================ 
     def write_idf(self):
         """ Write idf file.
         """
@@ -129,39 +235,6 @@ class OperationalMixins:
         self.set_zone_systems()
         write_idf_from_building(self)
 
-    def set_weather_file_path(self, file_path):
-        self.weather_file_path = file_path
-
-    def get_weather_file_path(self):
-        if self.weather_file_path is None:
-            climate_zone = self.get_location().get_climate_zone()
-            return config["file_paths"]["weather_files"][climate_zone]
-        else:
-            return self.weather_file_path
-
-    def run_operational_energy_model(self, delete=True):
-        """ Run operational energy model to get operational energy use and emissions.
-        """
-        idf = config['file_paths']['operational']['TEMP']
-        exe = config['file_paths']['operational']['EPLUS']
-        out = config['file_paths']['operational']['OUTPUT']
-
-        weather = self.get_weather_file_path()
-
-        Path(out).mkdir(exist_ok=True)
-
-        if delete:
-            self.delete_result_files(out)
-
-        print(exe, '-w', weather,'--output-directory', out, idf)
-        subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
-
-        self.energy_plus_results, self.energy_plus_units = read_results_file(self, os.path.join(out, 'eplusout.eso'))
-
-        self.get_operational_electricity_product()._inventories_uptodate = False
-
-        return self
-    
     def make_constructions_dict(self):
         self.constructions = {}
         for ek in self.building_envelope.envelopes:
@@ -275,17 +348,6 @@ class OperationalMixins:
         del self.operational_object.ideal_air_loads[ial_key]
         del self.operational_object.daylighting_controls[dlc_key]
         del self.operational_object.daylighting_reference_points[dlr_key]
-
-    def delete_result_files(self, out_path):
-        """ Deletes energy+ result files.
-
-        Parameters:
-            out_path (str): Path to the energy+ output folder.
-
-        Returns:
-            None
-        """
-        shutil.rmtree(out_path)
 
     # ================================
     # Inventory Records Methods

@@ -63,6 +63,10 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         method fro computing operational energy.
     weather_file_path : str
         File path to the weather file to be used in operational energy simulations.
+    idf_file_path : str
+        File path to save the intemediary idf file from Python library to Eplus.
+    eplus_out_folder :str
+        Folder path to save the raw Eplus results.
     energy_plus_results : dict
         Energy plus results output from the operational energy simulations.
     energy_plus_units : dict
@@ -95,6 +99,8 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         self.operational_energy_method = 'eplus'
         self.weather_file_path = None
+        self.idf_file_path = None
+        self.eplus_out_folder = None
         self.energy_plus_results = None
         self.energy_plus_units = None
 
