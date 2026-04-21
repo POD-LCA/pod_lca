@@ -41,6 +41,8 @@ class Window(Construction):
         win.surfaces     = {}
         for sk in data['surfaces']:
             win.surfaces[sk] = Surface.from_data(data['surfaces'][sk])
+        for mat in data['materials']:
+            mat.set_parent(win)
 
         return win
 
