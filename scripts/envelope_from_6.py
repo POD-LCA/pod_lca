@@ -93,57 +93,12 @@ flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
 
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-mdata = {}
-mdata['name']                = 'Clay brick'
-mdata['roughness']           = 'MediumRough'
-mdata['thickness']           = Q(0.01905, METER)    
-mdata['conductivity']        = Q(0.78, (WATT / (METER * KELVIN)))       
-mdata['density']             = Q(1920, (KILOGRAM / CUBIC_METER))       
-mdata['specific_heat']       = Q(720, (JOULE / (KILOGRAM * KELVIN)))        
-mdata['thermal_absorptance'] = 0.9        
-mdata['solar_absorptance']   = 0.7        
-mdata['visible_absorptance'] = 0.7        
-m0 = EnvelopeMaterialPropertyMass.from_data(mdata)
 
-
-mdata = {}
-mdata['name']               = 'Generic Wall Air Gap'
-mdata['thermal_resistance'] = Q(0.1603675, (SQUARE_METER * KELVIN) / WATT)
-m1 = EnvelopeMaterialPropertyAirGap.from_data(mdata)
-
-mdata = {}
-mdata['name']                = 'Expanded polystyrene (EPS) Type 1'       
-mdata['roughness']           = 'Rough'           
-mdata['thermal_resistance']  = Q(3.17, (SQUARE_METER * KELVIN) / WATT)          
-mdata['thermal_absorptance'] = 0.9000000      
-mdata['solar_absorptance']   = 0.7500000      
-mdata['visible_absorptance'] = 0.7500000
-mdata['thickness']           = None
-m2 = EnvelopeMaterialPropertyNoMass.from_data(mdata)
-
-
-mdata = {}
-mdata['name']                = 'Gypsum board'
-mdata['roughness']           = 'MediumSmooth'
-mdata['thickness']           = Q(0.0159, METER)    
-mdata['conductivity']        = Q(0.159892999094055, (WATT / (METER * KELVIN)))       
-mdata['density']             = Q(800.001829191177, (KILOGRAM / CUBIC_METER))       
-mdata['specific_heat']       = Q(1089.29718545594, (JOULE / (KILOGRAM * KELVIN)))        
-mdata['thermal_absorptance'] = 0.9        
-mdata['solar_absorptance']   = 0.7        
-mdata['visible_absorptance'] = 0.7        
-m3 = EnvelopeMaterialPropertyMass.from_data(mdata)
-
-
-mdata = {}
-mdata['name']                = 'Mineral wool blanket baseline'       
-mdata['roughness']           = 'Rough'           
-mdata['thermal_resistance']  = Q(3.91, (SQUARE_METER * KELVIN) / WATT)          
-mdata['thermal_absorptance'] = 0.9000000      
-mdata['solar_absorptance']   = 0.7500000      
-mdata['visible_absorptance'] = 0.7500000          
-mdata['thickness']           = None
-m4 = EnvelopeMaterialPropertyNoMass.from_data(mdata)
+m0 = EnvelopeMaterialPropertyMass.from_idf('Clay brick', constructions_path)
+m1 = EnvelopeMaterialPropertyAirGap.from_idf('Generic Wall Air Gap', constructions_path)
+m2 = EnvelopeMaterialPropertyNoMass.from_idf('Expanded polystyrene (EPS) Type 1', constructions_path)
+m3 = EnvelopeMaterialPropertyMass.from_idf('Gypsum board', constructions_path)
+m4 = EnvelopeMaterialPropertyNoMass.from_idf('Mineral wool blanket baseline', constructions_path)
 
 layers = {
           0: {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH).convert_to(METER)},

@@ -146,6 +146,53 @@ def find_windows(filepath, data):
         }
 
 
+def find_material_by_name(filepath, name):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+
+    for i, line in enumerate(lines):
+        mtype = line.split(",")[0].lower()
+        if "material" in mtype:
+            mat_name = lines[i + 1].split(",")[0].lower().strip()
+            if mat_name == name.lower():
+                if mtype == 'material':
+                    data = read_material(filepath, i)
+                elif mtype == 'material:airgap':
+                    data  = read_material_air_gap(filepath, i)
+                elif mtype == 'material:nomass':
+                    data = read_material_no_mass(filepath, i)
+                else:
+                    raise NameError('Material \'{}\' not found in {} IDF file'.format(name, filepath))
+                return data
+            
+
+def read_material(filepath, i):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+    name = lines[i + 1].split(",")[0].strip()
+    rough = lines[i + 2].split(",")[0].strip()
+    thick = Q(float(lines[i + 3].split(",")[0]), METER)
+    cond = Q(float(lines[i + 4].split(",")[0]), WmK)
+    dens = Q(float(lines[i + 5].split(",")[0]), kgm3)
+    sphe = Q(float(lines[i + 6].split(",")[0]), JkK)
+    thra = float(lines[i + 7].split(",")[0])
+    slea = float(lines[i + 8].split(",")[0])
+    vsba = float(lines[i + 9].split(";")[0])
+
+    return {"__type__": "MaterialPropertyMass",
+            "name": name,
+            "roughness": rough,
+            "thickness": thick,
+            "conductivity": cond,
+            "density": dens,
+            "specific_heat": sphe,
+            "thermal_absorptance": thra,
+            "solar_absorptance": slea,
+            "visible_absorptance": vsba}
+
+
 def find_materials(filepath, data):
     fh = open(filepath, "r")
     lines = fh.readlines()
@@ -160,28 +207,21 @@ def find_materials(filepath, data):
     data["materials"] = {}
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        rough = lines[i + 2].split(",")[0].strip()
-        thick = Q(float(lines[i + 3].split(",")[0]), METER)
-        cond = Q(float(lines[i + 4].split(",")[0]), WmK)
-        dens = Q(float(lines[i + 5].split(",")[0]), kgm3)
-        sphe = Q(float(lines[i + 6].split(",")[0]), JkK)
-        thra = float(lines[i + 7].split(",")[0])
-        slea = float(lines[i + 8].split(",")[0])
-        vsba = float(lines[i + 9].split(";")[0])
-
-        data["materials"][name] = {
-            "__type__": "MaterialPropertyMass",
-            "name": name,
-            "roughness": rough,
-            "thickness": thick,
-            "conductivity": cond,
-            "density": dens,
-            "specific_heat": sphe,
-            "thermal_absorptance": thra,
-            "solar_absorptance": slea,
-            "visible_absorptance": vsba,
-        }
+        data["materials"][name] = read_material(filepath, i)
     return data
+
+
+def read_material_air_gap(filepath, i):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+
+    name = lines[i + 1].split(",")[0].strip()
+    resi = Q(float(lines[i + 2].split(";")[0].strip()), m2KW)
+
+    return {"__type__": "MaterialPropertyAirGap",
+            "name": name,
+            "thermal_resistance": resi,}
 
 
 def find_materials_air_gap(filepath, data):
@@ -197,14 +237,35 @@ def find_materials_air_gap(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        resi = Q(float(lines[i + 2].split(";")[0].strip()), m2KW)
-
-        data["materials"][name] = {
-            "__type__": "MaterialPropertyAirGap",
-            "name": name,
-            "thermal_resistance": resi,
-        }
+        data["materials"][name] = read_material_air_gap(filepath, i)
     return data
+
+
+def read_material_no_mass(filepath, i):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+
+    name = lines[i + 1].split(",")[0].strip()
+    rough = lines[i + 2].split(",")[0].strip()
+    thres = Q(float(lines[i + 3].split(",")[0]), m2KW)
+    thabs = float(lines[i + 4].split(",")[0])
+    slra = float(lines[i + 5].split(",")[0])
+    if ";" not in lines[i + 6]:
+        visa = float(lines[i + 6].split(",")[0])
+        thic = Q(float(lines[i + 7].split(";")[0]), METER)
+    else:
+        visa = float(lines[i + 6].split(";")[0])
+        thic = None
+
+    return {"__type__": "MaterialPropertyNoMass",
+            "name": name,
+            "roughness": rough,
+            "thermal_resistance": thres,
+            "thermal_absorptance": thabs,
+            "solar_absorptance": slra,
+            "visible_absorptance": visa,
+            "thickness": thic}
 
 
 def find_no_mass_materials(filepath, data):
@@ -218,30 +279,9 @@ def find_no_mass_materials(filepath, data):
         if line[0].lower() == "material:nomass":
             i_lines.append(i)
 
-    # data['materials_no_mass'] = {}
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        rough = lines[i + 2].split(",")[0].strip()
-        thres = Q(float(lines[i + 3].split(",")[0]), m2KW)
-        thabs = float(lines[i + 4].split(",")[0])
-        slra = float(lines[i + 5].split(",")[0])
-        if ";" not in lines[i + 6]:
-            visa = float(lines[i + 6].split(",")[0])
-            thic = Q(float(lines[i + 7].split(";")[0]), METER)
-        else:
-            visa = float(lines[i + 6].split(";")[0])
-            thic = None
-
-        data["materials"][name] = {
-            "__type__": "MaterialPropertyNoMass",
-            "name": name,
-            "roughness": rough,
-            "thermal_resistance": thres,
-            "thermal_absorptance": thabs,
-            "solar_absorptance": slra,
-            "visible_absorptance": visa,
-            "thickness": thic,
-        }
+        data["materials"][name] = read_material_no_mass(filepath, i)
     return data
 
 

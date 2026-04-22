@@ -5,6 +5,11 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 
+from pod_lca.lca_modules.operational.read_write import find_material_by_name
+from pod_lca.lca_modules.operational.read_write import find_materials
+from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+
 class EnvelopeMaterialProperty(object):
     def __init__(self):
         self.name               = None
@@ -27,6 +32,12 @@ class EnvelopeMaterialProperty(object):
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
         return material_prop
+
+
+    @classmethod
+    def from_idf(cls, name, filepath):
+        data = find_material_by_name(filepath, name)
+        return cls.from_data(data)
 
 
 class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
