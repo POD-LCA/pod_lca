@@ -120,9 +120,10 @@ class Project:
                                      additional_headers=["Biomaterial Species",
                                                          "Region",
                                                          "Biomaterial Form", 
-                                                         "Stored Biogenic Carbon", 
-                                                         "%C (dry mass basis)",
-                                                         "Mineral Carbonation Potential"])
+                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER'], 
+                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER'],
+                                                         config['setup']['impacts']['BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER'],
+                                                         config['setup']['impacts']['ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER'],])
             self.impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")

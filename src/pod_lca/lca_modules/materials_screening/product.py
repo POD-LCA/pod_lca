@@ -4,6 +4,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import math
 from numpy import bool_ as np_bool
 
 from . import Master
@@ -161,6 +162,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             except:
                 raise TypeError(f"Density of {self.get_name()} should be a numerical value.")
         elif isinstance(density, (float, int)):
+            if math.isnan(density):
+                density = None
             self.density = density
             self.density_unit = density_unit
         elif density is None:
@@ -168,10 +171,12 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             if self.get_impact_database_entry() is not None:
                 unit_inventories = database.get_data_entry(self.get_impact_database_entry())
                 if database.get_density_unit_key() is not None:
-                    self.density_unit = unit_inventories[database.get_density_unit_key()]
-                    self.density = unit_inventories[database.get_density_key()]
+                    self.set_density(density=unit_inventories[database.get_density_key()],
+                                     density_unit=unit_inventories[database.get_density_unit_key()])
         else:
             raise ValueError("Density input not recognized.")
+        
+        self.unit_carbon_storage.update_biogenic_carbon_content()
 
         return self
 

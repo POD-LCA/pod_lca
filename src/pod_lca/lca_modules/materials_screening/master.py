@@ -229,7 +229,6 @@ class Master:
             emissions = {key: 0.0 for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
-            self.update_carbon_storage_potential(database_item)
             carbon_storage = {key: 0.0 for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)
 
@@ -247,9 +246,10 @@ class Master:
             emissions = {key: unit_inventories[key] for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
-            self.update_carbon_storage_potential(database_item)
             carbon_storage = {key: unit_inventories[key] for key in self.unit_carbon_storage.get_categories()}
             self.unit_carbon_storage.update_qty(carbon_storage)
+            self.update_mineral_carbon_storage(database_item)
+            self.update_bio_carbon_storage(database_item)
 
             del unit_inventories
 
@@ -648,12 +648,19 @@ class Master:
 
         return self
 
-    def update_carbon_storage_potential(self, database_item):
+    def update_mineral_carbon_storage(self, database_item):
+        """ Update mineral carbon storage record of the item.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
         if database_item:
-            data_entry = self.get_impact_database().get_data_entry(database_item)
+            data_entry = self.get_impact_database().get_data_entry(database_item).fillna(0.0)
         else:
             self.carbon_storage.set_mineral_carbonation_potential(False)
-            self.carbon_storage.set_biogenic_carbon_storage_potential(False)
+            self.unit_carbon_storage.set_mineral_carbonation_potential(False)
 
             return self
 
@@ -661,41 +668,96 @@ class Master:
         key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER"]
         if key in data_entry.index:
             if isinstance(data_entry[key], (bool, np_bool)):
-                potential = data_entry[key]
+                mnrl_potential = data_entry[key]
             elif isinstance(data_entry[key], str):
                 if data_entry[key].lower() in ["yes", "true"]:
-                    potential = True
+                    mnrl_potential = True
                 elif data_entry[key].lower() in ["no", "false"]:
-                    potential = False
+                    mnrl_potential = False
                 else:
                     raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
             else:
                 raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
         
         else:
-            potential = False
+            mnrl_potential = False
 
-        self.unit_carbon_storage.set_mineral_carbonation_potential(potential)
+        self.unit_carbon_storage.set_mineral_carbonation_potential(mnrl_potential)
+        self.carbon_storage.set_mineral_carbonation_potential(mnrl_potential)
 
+        # mineral carbonation content
+        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
+        val = data_entry[key]
+
+        self.unit_carbon_storage.update_qty({key: val})
+
+        return self
+    
+    def update_bio_carbon_storage(self, database_item):
+        """ Update the biogenic carbon storage parameters of the item.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
+        if database_item:
+            data_entry = self.get_impact_database().get_data_entry(database_item).fillna(0.0)
+        else:
+            self.unit_carbon_storage.set_biogenic_carbon_storage_potential(False)
+
+            return self
+        
         # bio carbon potential
-
         key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
         if key in data_entry.index:
-            if isinstance(data_entry[key], (bool, np_bool)):
-                potential = data_entry[key]
-            elif isinstance(data_entry[key], str):
-                if data_entry[key].lower() in ["yes", "true"]:
-                    potential = True
-                elif data_entry[key].lower() in ["no", "false"]:
-                    potential = False
+            val = data_entry[key]
+            if isinstance(val, (bool, np_bool)):
+                bio_potential = data_entry[key]
+            elif isinstance(val, str):
+                if val.lower() in ["yes", "true"]:
+                    bio_potential = True
+                elif val.lower() in ["no", "false"]:
+                    bio_potential = False
                 else:
                     raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
             else:
                 raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
         else:
-            potential = False
+            bio_potential = False
 
-        self.unit_carbon_storage.set_biogenic_carbon_storage_potential(potential)
+        self.unit_carbon_storage.set_biogenic_carbon_storage_potential(bio_potential)
+        self.carbon_storage.set_biogenic_carbon_storage_potential(bio_potential)
+        
+        if bio_potential:
+            # bio carbon percentage
+            key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER"]
+            if key in data_entry.index:
+                val = data_entry[key]
+                if isinstance(val, (float, int)):
+                    pct = val
+                else:
+                    pct = 0.0
+            else:
+                raise ValueError(f"Biogenic carbon percentage {data_entry[key]} not recognized")
+
+            self.unit_carbon_storage.set_biogenic_carbon_composition(pct)
+
+            # moisture content
+            key = config["setup"]["impacts"]["BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER"]
+            if key in data_entry.index:
+                val = data_entry[key]
+                if isinstance(val, (float, int)):
+                    mc = val
+                else:
+                    mc = 0.0
+            else:
+                raise ValueError(f"Biogenic material moisture content {data_entry[key]} not recognized")
+
+            self.set_moisture_content(mc)
+
+            # update carbon content from parameters
+            self.unit_carbon_storage.update_biogenic_carbon_content()
 
         return self
 
