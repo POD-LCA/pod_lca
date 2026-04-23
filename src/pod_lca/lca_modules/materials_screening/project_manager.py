@@ -299,6 +299,17 @@ class Project:
             model = Model.from_CSV(file_path, self, model_name)
 
         return model
+    
+    def remove_model(self, model_name):
+        """Remove a model from the project.
+        
+        Parameters
+        ----------
+        model_name : str
+            Name of the model to be deleted.
+        """
+        if model_name in self.models:
+            del self.models[model_name]
 
     def get_model(self, model_name):
         """Retrieve a model.
@@ -569,7 +580,6 @@ class Project:
                 name = "Model_1"
         
         return name
-
 
     def _find_name_model_name_match(values, search_name):
         """ Look for matches in the list of names.
