@@ -100,6 +100,8 @@ m2 = EnvelopeMaterialPropertyNoMass.from_idf('Expanded polystyrene (EPS) Type 1'
 m3 = EnvelopeMaterialPropertyMass.from_idf('Gypsum board', constructions_path)
 m4 = EnvelopeMaterialPropertyNoMass.from_idf('Mineral wool blanket baseline', constructions_path)
 
+
+
 layers = {
           0: {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH).convert_to(METER)},
           1: {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH).convert_to(METER)},
@@ -185,17 +187,26 @@ b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 
 print(b.get_operational_impacts()) # default is 'total'
 
-# # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product'))
+# print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# print(b.get_emissions(scope='product'))
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# graph = BarChart.from_plotter(MatplotlibPlotter)
+# graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# graph.show()
 
-# #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
+# # #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
 
+# FIXME: The wall quantity calculation problem
+# # # TODO: Constructions should have many surfaces but only one instance per construction (similar to windows)
+# # # TODO: Windows need to reference surfaces / not constructions
+# # # TODO: Implement get quantity_method, using surfaces/layers
+
+# FIXME
+# # # TODO: Set a layer property to identify "structural" layer in constructions
+# # # TODO: Ignore stuctural layers in envelope embodied 
+# # # TODO: Set (reminder) in first princinples module (Set layer as structural)
