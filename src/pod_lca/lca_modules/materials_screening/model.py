@@ -97,10 +97,7 @@ class Model:
         model = cls()
 
         model.set_project(project)
-        if name is not None:
-            model.set_name(name)
-        else:
-            model.set_name(f"Model_{len(project.models)}")
+        model.set_name(project.check_model_names(name))
 
         model.set_location(project.get_location())
         model.set_transportation_manager(transport_scope)
@@ -133,12 +130,13 @@ class Model:
         model = cls()
 
         model.set_project(project)
-        project.models[name] = model
-
+        
         if name is not None:
-            model.set_name(name)
+            model.set_name(project.check_model_names(name))
         else:
             model.set_name(os.path.splitext(os.path.basename(file_path))[0])
+
+        project.models[model.get_name()] = model
 
         tmp_transportation_map = {}
         with open(file_path, mode="r", encoding="utf-8-sig") as file:
@@ -593,7 +591,7 @@ class Model:
         gc.collect()
 
     # ================================
-    # Clculator Methods
+    # Calculator Methods
     # ================================
     def get_total_impact(self, impact_cat):
         """Calculate the total impact of the products and processes in the model.

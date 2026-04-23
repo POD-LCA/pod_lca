@@ -4,8 +4,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-import pickle
 from pathlib import Path
+import pickle
+import re
 
 from . import Model
 from ..impacts import EOLImpactsDatabase
@@ -293,7 +294,7 @@ class Project:
         """
         if file_path is None:
             model = Model.in_project(self, model_name)
-            self.models[model_name] = model
+            self.models[model.get_name()] = model
         else:
             model = Model.from_CSV(file_path, self, model_name)
 
@@ -536,6 +537,79 @@ class Project:
 
         return data
 
+    # ================================
+    # Helper Methods
+    # ================================
+    def check_model_names(self, name):
+        """ Check a if a model name already exist in a model and returns a recomended name.
+        
+        Parameters
+        ----------
+        name : str
+            Name checked.
+
+        Returns
+        -------
+        str
+            Recommended name.
+        """
+        if name is not None:
+            exact_match, has_numbered, largest_suffix_no = Project._find_name_model_name_match(self.get_model_names(), name)
+            if exact_match:
+                if has_numbered:
+                    name = name + '_' + str(largest_suffix_no + 1)
+                else:
+                    name = name + '_2'
+                log(f"Model of similar name exist. Model renamed as {name}.", "Info")
+        else:
+            _, has_numbered, largest_suffix_no = Project._find_name_model_name_match(self.get_model_names(), "Model")
+            if has_numbered:
+                name = "Model_" + str(largest_suffix_no + 1)
+            else:
+                name = "Model_1"
+        
+        return name
+
+
+    def _find_name_model_name_match(values, search_name):
+        """ Look for matches in the list of names.
+        
+        Parameters
+        ----------
+        values : list of str
+            List of names to where matches are searched for.
+        search_name : str
+            Name to match
+
+        Returns
+        -------
+        bool
+            True if exact match is found.
+        bool
+            True if a numbered version of the search_name is found (e.g., search_name_01).
+        str
+            Of the numbered matches, the largest match.
+        """
+
+        exact_match = False
+        numbered_matches = []
+
+        pattern = re.compile(rf"^{re.escape(search_name)}_(\d+)$")
+
+        for v in values:
+            if v == search_name:
+                exact_match = True
+                continue
+
+            m = pattern.match(v)
+            if m:
+                numbered_matches.append(int(m.group(1)))
+
+        has_numbered = len(numbered_matches) > 0
+        largest_suffix_no = max(numbered_matches) if has_numbered else None
+
+        return exact_match, has_numbered, largest_suffix_no
+    
 
 if __name__ == "__main__":
     pass
