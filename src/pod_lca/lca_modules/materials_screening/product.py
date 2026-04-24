@@ -176,7 +176,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         else:
             raise ValueError("Density input not recognized.")
         
-        self.unit_carbon_storage.update_biogenic_carbon_content()
+        if self.get_impact_database_entry() is not None: 
+            self.unit_carbon_storage.update_biogenic_carbon_content()
 
         return self
 
@@ -276,21 +277,29 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             self.update_inventory_records()
 
             carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
-            biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE)
+            biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
+            if biogenic_carbon_effect is None:
+                biogenic_carbon_effect = 0.0
+            mineral_carbonation_effect = self.get_carbon_storage().get_mineral_carbon_storage_qty(KG_CARBON_DIOXIDE)
+            if mineral_carbonation_effect is None:
+                mineral_carbonation_effect = 0.0 
 
             base_impact = impacts.get_record(carbonation_effects_impact_cat)
             
             if (self.get_life_cycle_stage() == "A1"):
                 if (lc_stage == "A1"):
-                    adjusted_impact = base_impact - biogenic_carbon_effect
+                    adjusted_GWP = base_impact - biogenic_carbon_effect - mineral_carbonation_effect 
+                    adjusted_GWP_biogenic = -biogenic_carbon_effect 
                 elif (lc_stage == "A3") and (self.get_model()):
-                    adjusted_impact = biogenic_carbon_effect
+                    adjusted_GWP = biogenic_carbon_effect 
+                    adjusted_GWP_biogenic = biogenic_carbon_effect 
             elif (self.get_life_cycle_stage() == lc_stage):
-                adjusted_impact = base_impact
+                adjusted_GWP = base_impact - mineral_carbonation_effect
             else:
                 return None
 
-            impacts.update_qty({carbonation_effects_impact_cat: adjusted_impact})
+            impacts.update_qty({carbonation_effects_impact_cat: adjusted_GWP}) 
+            impacts.update_qty({"GWP_biogenic": adjusted_GWP_biogenic}) 
 
             return impacts
     # ================================

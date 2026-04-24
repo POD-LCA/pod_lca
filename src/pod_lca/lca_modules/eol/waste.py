@@ -56,7 +56,7 @@ class Waste(Product):
             if not process.get_linked_process(to=False):
                 mix_percent = self.get_process_mix()[process.get_process_name()]
                 if isinstance(mix_percent, (float, int)):
-                    mix_percent = f"{mix_percent * 100:.2%f}\%"
+                    mix_percent = f"{mix_percent * 100:.2%f}%"
                 str += f"\t {process.get_process_name()} : {process.get_qty()} {process.get_unit().get_standard_notation()} ({mix_percent})\n"
 
         return str

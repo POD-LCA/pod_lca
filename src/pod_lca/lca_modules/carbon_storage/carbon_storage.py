@@ -71,6 +71,29 @@ class CarbonStorage(Records):
 
         return self
     
+    def set_mineral_carbon_storage_source(self, source=None): 
+        """Set the source for mineral carbon storage.
+        Parameters
+        ----------
+        source : str
+            Source for mineral carbon storage ('from_database' or 'custom').
+        """
+        if source == None:
+            source = "from_database" 
+        self.mineral_carbon_storage_source = source
+
+    def set_biogenic_carbon_storage_source(self, source=None): 
+        """Set the source for biogenic carbon storage.
+        Parameters
+        ----------
+        source : str
+            Source for biogenic carbon storage ('from_database' or 'custom').
+        """
+        if source == None:
+            source = "from_database"
+
+        self.biogenic_carbon_storage_source = source
+    
     def set_biogenic_carbon_composition(self, percent):
         """
         Set the percent carbon (%C dry mass basis) for biogenic carbon composition.
@@ -100,6 +123,19 @@ class CarbonStorage(Records):
             Mineral carbonation potential of the product.
         """
         return self.mineral_carbonation_potential 
+    
+    def get_mineral_carbon_storage_source(self): 
+        """Get the source for mineral carbon storage.
+        Returns
+        -------
+        str
+            Source for mineral carbon storage ('from_database' or 'custom').
+        """
+        if self.mineral_carbon_storage_source is not None:
+            return self.mineral_carbon_storage_source
+        else:
+            self.mineral_carbon_storage_source = "from_database"
+            return self.mineral_carbon_storage_source 
 
     def get_biogenic_carbon_storage_potential(self):
         """Get biogenic carbon storage potential of the product.
@@ -110,6 +146,20 @@ class CarbonStorage(Records):
             Biogenic carbon storage potential of the product.
         """
         return self.biogenic_carbon_storage_potential
+    
+    def get_biogenic_carbon_storage_source(self): 
+        """Get the source for biogenic carbon storage.
+        Returns
+        -------
+        str
+            Source for biogenic carbon storage ('from_database' or 'custom').
+        """
+        if self.biogenic_carbon_storage_source is not None:
+            return self.biogenic_carbon_storage_source
+        
+        else:
+            self.biogenic_carbon_storage_source = "from_database"
+            return self.biogenic_carbon_storage_source
 
     def get_biogenic_carbon_composition(self):
         """Get biogenic carbon composition of the product.
@@ -145,9 +195,9 @@ class CarbonStorage(Records):
             Quantity of biogenic carbon storage.
         """
         key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
-        mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+        biogenic_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
 
-        conversion_factor = mineral_carbon_unit.convert_to(unit)
+        conversion_factor = biogenic_carbon_unit.convert_to(unit)
 
         return self.get_record(key) * conversion_factor
 
