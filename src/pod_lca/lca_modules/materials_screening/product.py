@@ -783,27 +783,8 @@ class Product(Master):
         ValueError
             Mineral carbonation potential not recognized.
         """
-        if self.get_impact_database_entry() is not None:
-            super().update_inventory_records()
-            self.update_electricity_records()
-
-            if self.get_mineral_carbonation_potential() is None:
-                data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
-                key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
-                if key in data_entry.index:
-                    if isinstance(data_entry[key], (bool, np_bool)):
-                        potential = data_entry[key]
-                    elif isinstance(data_entry[key], str):
-                        if data_entry[key].lower() in ["yes", "true"]:
-                            potential = True
-                        elif data_entry[key].lower() in ["no", "false"]:
-                            potential = False
-                        else:
-                            raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-                    else:
-                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-
-                    self.set_mineral_carbonation_potential(potential)
+        super().update_inventory_records()
+        self.update_electricity_records()
 
         return self
 
