@@ -145,9 +145,9 @@ class CarbonStorage(Records):
             Quantity of biogenic carbon storage.
         """
         key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
-        mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+        biogenic_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
 
-        conversion_factor = mineral_carbon_unit.convert_to(unit)
+        conversion_factor = biogenic_carbon_unit.convert_to(unit)
 
         return self.get_record(key) * conversion_factor
 
