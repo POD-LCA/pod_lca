@@ -129,12 +129,16 @@ class CarbonStorage(Records):
         float
             Quantity of mineral carbon storage.
         """
-        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
-        mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+        if self.get_mineral_carbonation_potential():
+            key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
+            mineral_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
 
-        conversion_factor = mineral_carbon_unit.convert_to(unit)
+            conversion_factor = mineral_carbon_unit.convert_to(unit)
 
-        return self.get_record(key) * conversion_factor
+            return self.get_record(key) * conversion_factor
+        
+        else:
+            return 0.0
 
     def get_biogenic_carbon_storage_qty(self, unit=KG_CARBON):
         """Get the quantity of biogenic carbon storage.
@@ -144,12 +148,16 @@ class CarbonStorage(Records):
         float
             Quantity of biogenic carbon storage.
         """
-        key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
-        biogenic_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+        if self.get_biogenic_carbon_storage_potential():
+            key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
+            biogenic_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
 
-        conversion_factor = biogenic_carbon_unit.convert_to(unit)
+            conversion_factor = biogenic_carbon_unit.convert_to(unit)
 
-        return self.get_record(key) * conversion_factor
+            return self.get_record(key) * conversion_factor
+        
+        else:
+            return 0.0
 
     # ========================
     # Methods
@@ -158,20 +166,21 @@ class CarbonStorage(Records):
         """ Update the biogenic carbon content in the record.
             Bigoenic carbon content recalculated based on dry mass and carbon composition.
         """
-        parent = self.get_parent()
+        if self.get_biogenic_carbon_storage_potential():
+            parent = self.get_parent()
 
-        unit_dry_mass = parent.get_dry_density() * Q(1, parent.inventories_declared_unit)
-        carbon_content = get_biogenic_carbon_content(
-            carbon_composition=self.get_biogenic_carbon_composition(),
-            dry_mass=unit_dry_mass)
-        
-        key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
-        bio_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
+            unit_dry_mass = parent.get_dry_density() * Q(1, parent.inventories_declared_unit)
+            carbon_content = get_biogenic_carbon_content(
+                carbon_composition=self.get_biogenic_carbon_composition(),
+                dry_mass=unit_dry_mass)
+            
+            key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_INVENTORY"]
+            bio_carbon_unit = UNITS_MAP[self.record_attr_dict[key]]
 
-        if bio_carbon_unit == KG_CARBON:
-            self.update_qty({key:  carbon_content.convert_to(KILOGRAM).value})
-        else:
-            raise ValueError("Carbon content unit not recognized")
+            if bio_carbon_unit == KG_CARBON:
+                self.update_qty({key:  carbon_content.convert_to(KILOGRAM).value})
+            else:
+                raise ValueError("Carbon content unit not recognized")
 
 
 if __name__ == "__main__":
