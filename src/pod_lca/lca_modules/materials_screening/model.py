@@ -7,9 +7,11 @@ __version__ = "0.1.0"
 import csv
 import gc
 import os
+from copy import copy
 
 from . import Electricity
 from . import Fuel
+from . import Master
 from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
@@ -21,6 +23,7 @@ from ...units import KILO
 from ...units import WATT_HOUR
 from ...utilities import config
 from ...utilities import DataImporter
+from ..carbon_storage import get_biogenic_carbon_dioxide_content
 
 
 class Model:
@@ -313,7 +316,7 @@ class Model:
         """
         return self.products
 
-    def get_all_items(self):
+    def get_all_items(self, products=True, processes=True, transportation=True):
         """Retrieve all the products and processes in the model.
 
         Returns
@@ -322,7 +325,15 @@ class Model:
             All products and processess in the model.
 
         """
-        return self.get_products() + self.get_processes() + self.get_transportation_manager().get_transportation_legs()
+        items = []
+        if products:
+            items.extend(self.get_products())
+        if processes:
+            items.extend(self.get_processes())
+        if transportation:
+            items.extend(self.get_transportation_manager().get_transportation_legs())
+
+        return items
 
     def get_transportation_manager(self):
         """Retrieve the logistics manager of the model.
@@ -347,7 +358,24 @@ class Model:
         dict
             Impacts of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Impacts`}
         """
-        for item in self.get_all_items():
+        # A1 and A3 impacts
+        self.impacts["A1"] = []
+        self.impacts["A3"] = []
+        for item in self.get_all_items(transportation=False):
+            item.update_inventory_records()
+
+            if isinstance(item, Product):
+                A1_impacts = copy(item.get_impacts("A1"))
+                if A1_impacts:
+                    self.impacts["A1"].append(A1_impacts)
+                A3_impacts = copy(item.get_impacts("A3"))
+                if A3_impacts:
+                    self.impacts["A3"].append(A3_impacts)
+            else:
+                self.impacts[item.get_life_cycle_stage()].append(item.get_impacts())
+
+        # A2 impacts
+        for item in self.get_all_items(products=False, processes=False, transportation=True):
             item.update_inventory_records()
 
         match transportation_grouping:
@@ -644,11 +672,11 @@ class Model:
         AttributeError
             impact category doe not exist in the current project
         """
-        impacts_dict = self.get_impacts()
-
         if impact_cat not in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys():
             raise AttributeError(f"{impact_cat} does not exist in the current project.")
         else:
+            impacts_dict = self.get_impacts()
+
             data = {}
             for stage in impacts_dict.keys():
                 impact_lst = impacts_dict[stage]
@@ -658,6 +686,8 @@ class Model:
 
             sorted_data = sorted(data.items())
             sorted_dict = dict(sorted_data)
+
+            del impacts_dict
 
             return sorted_dict
 

@@ -5,8 +5,8 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from . import Master
+from ..carbon_storage import CarbonStorage
 from ..electricity import ElectricitySupply
-from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..location import Location

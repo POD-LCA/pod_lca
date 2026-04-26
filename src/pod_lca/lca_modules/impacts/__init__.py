@@ -1,7 +1,6 @@
 from .records import Records
 from .impact_object import Impacts
 from .emission_inventories import Emissions
-from .carbon_storage import CarbonStorage
 from .search_mixins import expand_search_terms
 from .search_mixins import rank_entries
 from .search_mixins import adaptive_kmeans_cutoff
@@ -17,7 +16,6 @@ from .temporal_emission_profiles import LogNormEmissionProfile
 from .temporal_emission_profiles import ExponentDecayEmissionProfile
 
 __all__ = [
-    "CarbonStorage",
     "ElectricityImpactsDatabase",
     "Emissions",
     "Impacts",

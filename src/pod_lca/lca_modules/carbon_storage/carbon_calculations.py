@@ -4,10 +4,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from ...units import CUBIC_METER
 from ...units import KILOGRAM
-from ...units import METER
-from ...units import SQUARE_METER
+from ...units import Quantity as Q
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
@@ -18,7 +16,7 @@ def get_dry_mass(wet_mass, moisture_content):
 
     Parameters
     ----------
-    wet_mass : float
+    wet_mass : ~pod_lca.units.Quantity
         Wet mass.
     moisture_content : float
         Moisture content at wet condition.
@@ -36,74 +34,54 @@ def get_biogenic_carbon_content(**kwargs):
 
     Other Parameters
     ----------------
-    wet_mass : float
+    carbon_composition : float
+        Carbon content as a percentage of dry mass.
+    wet_mass : ~pod_lca.units.Quantity
         Wet mass of the product.
-    wet_mass_unit : ~pod_lca.units.Unit
-        Unit corresponding to the wet mass of the product.
-    dry mass : float
+    dry mass : ~pod_lca.units.Quantity
         Dry mass of the product.
-    dry dry_mass_unit : ~pod_lca.units.Unit
-        Unit corresponding to the dry mass of the product.
-    dry_density : float
+    dry_density : ~pod_lca.units.Quantity
         Dry density of the product.
-    dry_desnity_unit : ~pod_lca.units.Unit
-        Unit corresponding to the dry density of the product.
     moisture_content : float
         Moisture content of the wet product.
-    volume : float
+    volume : ~pod_lca.units.Quantity
         Volume of the product.
-    volume_unit : ~pod_lca.units.Unit
-        Unit corresponding to the volume of the product.
-    area : float
+    area : ~pod_lca.units.Quantity
         Area of the product.
-    area_unit : ~pod_lca.units.Unit
-        Unit corresponding to the area of the prouct.
-    thickness : float
+    thickness : ~pod_lca.units.Quantity
         Thickness of the product.
-    thickness_unit : ~pod_lca.units.Unit
-        Unit corresponding to the thickness of the product.
 
     Returns
     -------
-    :class:`float`
+    ~pod_lca.units.Quantity
         Biogenic carbon content of the product.
-    :class:`~pod_lca.units.Unit`
-        Corresponding unit of the biogenic carbon content.
     """
-    carbon_percentage_dry = kwargs.get("%C dry", 0.0)
+    carbon_percentage_dry = kwargs.get("carbon_composition", 0.0)
 
     dry_mass = kwargs.get("dry_mass", None)
-    dry_mass_unit = kwargs.get("dry_mass_unit", KILOGRAM)
     wet_mass = kwargs.get("wet_mass", None)
-    wet_mass_unit = kwargs.get("wet_mass_unit", KILOGRAM)
     moisture_content = kwargs.get("moisture_content", None)
     if (dry_mass is None) and (wet_mass is not None) and (moisture_content is not None):
         dry_mass = get_dry_mass(wet_mass, moisture_content)
-        dry_mass_unit = wet_mass_unit
 
     if dry_mass is not None:
-        return dry_mass * carbon_percentage_dry, dry_mass_unit
+        return dry_mass * carbon_percentage_dry
 
     volume = kwargs.get("volume", None)
-    volume_unit = kwargs.get("volume_unit", CUBIC_METER)
     dry_density = kwargs.get("dry_density", None)
-    dry_density_unit = kwargs.get("dry_desnity_unit", KILOGRAM / CUBIC_METER)
 
     if (volume is not None) and (dry_density is not None):
-        return volume * dry_density * carbon_percentage_dry, volume_unit * dry_density_unit
+        return volume * dry_density * carbon_percentage_dry
 
     area = kwargs.get("area", None)
-    area_unit = kwargs.get("area_unit", SQUARE_METER)
     thickness = kwargs.get("thickness", None)
-    thickness_unit = kwargs.get("thickness_unit", METER)
 
     if (area is not None) and (thickness is not None) and (dry_density is not None):
-        return area * thickness * dry_density * carbon_percentage_dry, area_unit * thickness_unit * dry_density_unit
+        return area * thickness * dry_density * carbon_percentage_dry
 
     log("Data insuficient to determine carbon content.", "Warn")
 
-    return 0, KILOGRAM
-
+    return Q(0, KILOGRAM)
 
 def get_biogenic_carbon_dioxide_content(biogenic_carbon_content):
     """Get the biigenic carbon dioxide content from the biogenic carbon content.

@@ -56,7 +56,7 @@ class Waste(Product):
             if not process.get_linked_process(to=False):
                 mix_percent = self.get_process_mix()[process.get_process_name()]
                 if isinstance(mix_percent, (float, int)):
-                    mix_percent = f"{mix_percent * 100:.2%f}\%"
+                    mix_percent = f"{mix_percent * 100:.2%f}%"
                 str += f"\t {process.get_process_name()} : {process.get_qty()} {process.get_unit().get_standard_notation()} ({mix_percent})\n"
 
         return str
@@ -396,6 +396,32 @@ class Waste(Product):
 
         return self.get_parent().get_eol_demolition_database()
 
+    def get_impacts(self, lc_stage=None):
+        """Get the impacts of the waste product.
+
+        Parameters
+        ----------
+        lc_stage : {'C1', 'C2', 'C3', 'C4', 'D'}
+            Life cycle stage: \n
+            - `'C1'`: Demolition.
+            - `'C2'`: Transportation.
+            - `'C3'`: Processing.
+            - `'C4'`: Disposal.
+            - `'D'`: Benefits from reuse, recovery, recycling.
+
+        Returns
+        -------
+        dict or ~pod_lca.impacts.Impacts
+            If lc_stage is None, returns a dictionary of impacts categorized by life cycle stage {**life cycle stage** (:class:`str`): list of :class:`~pod_lca.impacts.Impacts`}.
+            If lc_stage is specified, returns the impacts corresponding to the life cycle stage as a :class:`~pod_lca.impacts.Impacts` object.
+        """
+        self.update_inventory_records()
+        
+        if lc_stage is None:
+            return self.impacts.values()
+        else:
+            return self.impacts[lc_stage]
+        
     # ================================
     # Methods
     # ================================

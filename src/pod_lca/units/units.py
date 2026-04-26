@@ -594,8 +594,10 @@ class MetricPrefix:
         if isinstance(other, MetricPrefix):
 
             new_power = self.get_power() - other.get_power()
-            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
+            if new_power == 0:
+                return None
 
+            all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
             try:
                 index = all_powers.index(new_power)
                 newPrefix = ALL_PREFIXES[index]
@@ -620,8 +622,10 @@ class MetricPrefix:
                 raise TypeError("Reflexive division of prefixes constrained to values that are integer powers of 10.")
 
             new_power = log10(other) - self.get_power()
+            if new_power == 0:
+                return None
+            
             all_powers = ArrayMethods.get_attribute_as_list(ALL_PREFIXES, "power")
-
             try:
                 index = all_powers.index(new_power)
                 newPrefix = ALL_PREFIXES[index]

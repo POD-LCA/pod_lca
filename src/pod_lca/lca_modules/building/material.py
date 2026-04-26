@@ -7,8 +7,8 @@ __version__ = "0.1.0"
 
 from math import isnan
 
+from ..carbon_storage import CarbonStorage
 from ..eol.waste import Waste
-from ..impacts import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
@@ -701,7 +701,7 @@ class Material(Product):
 
         if lc_stage is None:
             if self.get_waste_product() is not None:
-                for impact_lst in self.get_waste_product().get_impacts().values():
+                for impact_lst in self.get_waste_product().get_impacts():
                     if isinstance(impact_lst, Impacts):
                         if objs:
                             impacts.append(impact_lst)
@@ -715,7 +715,7 @@ class Material(Product):
                                 impacts += impact
         else:
             if self.get_waste_product() is not None:
-                impact_lst = self.get_waste_product().get_impacts()[lc_stage]
+                impact_lst = self.get_waste_product().get_impacts(lc_stage)
                 if isinstance(impact_lst, Impacts):
                     if objs:
                         impacts.append(impact_lst)

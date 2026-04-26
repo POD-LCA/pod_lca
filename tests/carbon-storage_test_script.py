@@ -79,7 +79,7 @@ def test_carbon_storage():
         output_dict[test]["GWP_Excel tool_" + GWP_unit_tag] = GWP_Excel_tool
         output_dict[test]["GWP_difference (%)"] = dif_GWP * 100
 
-        GWP_adjusted_Python = product.get_impacts().get_adjusted_GWP()
+        GWP_adjusted_Python = product.get_impacts("A1")
         GWP_adjusted_Excel_tool = float(test_dict[test]["GWP_adjusted"])
         dif_adjusted_GWP = (
             2 * abs(GWP_adjusted_Python - GWP_adjusted_Excel_tool) / abs(GWP_adjusted_Python + GWP_adjusted_Excel_tool)
