@@ -79,10 +79,15 @@ class CarbonStorage(Records):
         if percent is None:
             self.biogenic_carbon_percentage = None
         elif isinstance(percent, (float, int)):
+            if percent < 0 or percent > 1:
+                raise ValueError("Biogenic carbon percentage should be between 0 and 1.")
             self.biogenic_carbon_percentage = percent
         elif isinstance(percent, str):
             percent_str = percent.replace('%', '')
-            self.biogenic_carbon_percentage = float(percent_str) / 100.0
+            percent_value = float(percent_str)
+            if percent_value < 0 or percent_value > 100:
+                raise ValueError("Biogenic carbon percentage should be between 0 and 100.")
+            self.biogenic_carbon_percentage = percent_value / 100.0
         else:
             raise TypeError("Carbon percentage must be numerical.")
         

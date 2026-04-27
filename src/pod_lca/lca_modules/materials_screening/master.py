@@ -705,6 +705,7 @@ class Master:
             data_entry = self.get_impact_database().get_data_entry(database_item).fillna(0.0)
         else:
             self.unit_carbon_storage.set_biogenic_carbon_storage_potential(False)
+            self.carbon_storage.set_biogenic_carbon_storage_potential(False)
 
             return self
         

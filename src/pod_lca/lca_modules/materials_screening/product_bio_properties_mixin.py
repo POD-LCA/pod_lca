@@ -20,7 +20,7 @@ class ProductBioPropertiesMixin:
         Parameters
         ----------
         moisture_content : float
-            Moisture content of the product (between 0 and 1).
+            Moisture content of the product.
 
         Raises
         ------
@@ -28,10 +28,7 @@ class ProductBioPropertiesMixin:
             Moisture content should be between 0 and 1.
         """
         if isinstance(moisture_content, (float, int)):
-            if 0 <= moisture_content <= 1:
-                self.moisture_content = moisture_content
-            else:
-                raise ValueError("Moisture content should be between 0 and 1.")
+            self.moisture_content = moisture_content
         else:
             log("Moisture content should be a numerical value.", "Warn")
 
