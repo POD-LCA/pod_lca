@@ -207,6 +207,4 @@ print(b.get_operational_impacts()) # default is 'total'
 # # # TODO: Implement get quantity_method, using surfaces/layers
 
 # FIXME
-# # # TODO: Set a layer property to identify "structural" layer in constructions
-# # # TODO: Ignore stuctural layers in envelope embodied 
 # # # TODO: Set (reminder) in first princinples module (Set layer as structural)

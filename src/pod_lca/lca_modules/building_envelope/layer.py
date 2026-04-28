@@ -23,6 +23,7 @@ class Layer(object):
         self.thickness = None
         self.unit = None
         self.classification = None
+        self.is_structural = False
 
     @classmethod
     def from_data(cls, data, thickness, classification=None):
@@ -94,6 +95,11 @@ class Layer(object):
             return resistivity
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        
+    def set_structural(self, is_structural):
+        self.is_structural = is_structural
+
+        
 
 if __name__ == '__main__':
     pass
