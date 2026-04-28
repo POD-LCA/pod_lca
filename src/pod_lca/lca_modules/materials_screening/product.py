@@ -285,6 +285,9 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
                 elif (lc_stage == "A3") and (self.get_model()):
                     adjusted_gwp = biogenic_carbon_effect
                     adjusted_gwp_biogenic = biogenic_carbon_effect
+                    for impact in impacts.get_categories(): 
+                        if impact not in [carbonation_effects_impact_cat, "GWP_biogenic"]:
+                            impacts.update_qty({impact: 0.0})
             elif (self.get_life_cycle_stage() == lc_stage):
                 adjusted_gwp = base_impact
                 adjusted_gwp_biogenic = 0.0
