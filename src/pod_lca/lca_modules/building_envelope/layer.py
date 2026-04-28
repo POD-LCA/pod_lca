@@ -19,10 +19,25 @@ mKW = (METER * KELVIN) / WATT
 class Layer(object):
     def __init__(self):
         self.name = None
+        self.parent_construction = None
         self.material_property = None
-        self.thickness = None
+        self._thickness = None
         self.unit = None
         self.classification = None
+
+        self.is_structural = False
+        self.structural_element = None # {"Slab", "Wall", "Roof"}
+
+    @property
+    def thickness(self):
+        return self._thickness
+
+    @thickness.setter
+    def thickness(self, quantity):
+        self._thickness = quantity
+
+        if self.parent_construction is not None:
+            self.parent_construction.get_building().get_structure().update_structure(self.structural_element, self._thickness)
 
     @classmethod
     def from_data(cls, data, thickness, classification=None):
@@ -94,6 +109,11 @@ class Layer(object):
             return resistivity
         else:
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        
+    def set_structural(self, is_structural):
+        self.is_structural = is_structural
+
+
 
 if __name__ == '__main__':
     pass

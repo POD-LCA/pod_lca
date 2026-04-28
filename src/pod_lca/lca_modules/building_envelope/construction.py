@@ -59,6 +59,9 @@ class Construction(Assembly):
         construction.layer_order = {lk: layers[lk].name for lk in layers}
         construction.layers = layers
 
+        for lk in construction.layers:
+            construction.layers[lk].parent_construction = construction
+
         return construction
 
     def set_building(self):
@@ -76,7 +79,7 @@ class Construction(Assembly):
 
         for lk in self.layers:
             mat_type = self.layers[lk].material_property.__type__
-            if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
+            if (not self.layers[lk].is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
                 mat_name = self.layers[lk].material_property.name
 
                 database_declared_qty_in = UNITS_MAP[default_database_entry_map[mat_name]["LCI Database Declared Unit"]].get_qty_measured()
