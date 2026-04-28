@@ -187,7 +187,7 @@ b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 
 # get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 layers_[0].thickness = Q(0.5, METER) # FIXME  
-# NOTE: The above line does not work as envelope from_envelope_and_stories make deep copies of the envelopes and therefore loose the reference to the original layers.
+# NOTE: The above line does not work as BuildingEnvelope.from_envelope_and_stories() make deep copies of the envelopes and therefore loose the reference to the original layers.
 # be.envelopes[k].walls['wall_0'].layers[0] != layers_[0]
 # Therefore, changes to the layer in the original layers_ dictionary are not be reflected in the envelopes.
 # This will still be fine in the grasshopper environment, as the changes rerun all components.
