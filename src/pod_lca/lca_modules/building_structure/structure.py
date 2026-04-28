@@ -93,6 +93,29 @@ class Structure:
         """
         return self.structural_material
 
+    # ================================
+    # Methods
+    # ================================
+    def update_structure(self, structural_element, **kwargs):
+        """ Update the structure with the given structural element and its properties.
+
+        Parameters
+        ----------
+        structural_element : str
+            The type of structural element to update.
+        **kwargs : dict
+            Additional keyword arguments for the structural element.
+        """
+        if structural_element == "Slab":
+            # Update slab properties
+            pass
+        elif structural_element == "Wall":
+            # Update wall properties
+            pass
+        elif structural_element == "Roof":
+            # Update roof properties
+            pass
+
 
 if __name__ == '__main__':
     pass    

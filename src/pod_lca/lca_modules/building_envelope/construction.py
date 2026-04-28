@@ -59,6 +59,9 @@ class Construction(Assembly):
         construction.layer_order = {lk: layers[lk].name for lk in layers}
         construction.layers = layers
 
+        for lk in construction.layers:
+            construction.layers[lk].parent_construction = construction
+
         return construction
 
     def set_building(self):

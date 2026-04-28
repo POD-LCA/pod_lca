@@ -33,6 +33,10 @@ class FramedWall(Construction):
         fwall.layer_order = {lk: layers[lk].name for lk in layers}
         fwall.layers = layers
         fwall.framing = framing
+
+        for lk in fwall.layers:
+            fwall.layers[lk].parent_construction = fwall
+            
         return fwall
     
     def compute_wall_r(self):
