@@ -271,12 +271,11 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         if lc_stage is None:
             return super().get_impacts()
         else:
-            carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
-            biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) # Get biogenic carbon effect BEFORE calling super().get_impacts() to avoid resetting impacts
-            
             impacts = super().get_impacts()
-
+            
+            carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
             base_impact = impacts.get_record(carbonation_effects_impact_cat)
+            biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
 
             if (self.get_life_cycle_stage() == "A1"):
                 if (lc_stage == "A1"):
