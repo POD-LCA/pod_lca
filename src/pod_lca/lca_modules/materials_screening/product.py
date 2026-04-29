@@ -272,30 +272,36 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             return super().get_impacts()
         else:
             impacts = super().get_impacts()
-            
-            carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
-            base_impact = impacts.get_record(carbonation_effects_impact_cat)
+
+            all_carbon_storage_effects_impact_cat = config["setup"]["impacts"]["ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
+            bio_carbon_storage_effects_impact_cat = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
+
+            base_impact = impacts.get_record(all_carbon_storage_effects_impact_cat)
+
             biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
 
             if (self.get_life_cycle_stage() == "A1"):
                 if (lc_stage == "A1"):
-                    adjusted_gwp = base_impact - biogenic_carbon_effect
-                    adjusted_gwp_biogenic = -biogenic_carbon_effect
+                    adjusted_impact = base_impact - biogenic_carbon_effect
+                    adjusted_impact_biogenic = -biogenic_carbon_effect
+
                 elif (lc_stage == "A3") and (self.get_model()):
-                    adjusted_gwp = biogenic_carbon_effect
-                    adjusted_gwp_biogenic = biogenic_carbon_effect
+                    adjusted_impact = biogenic_carbon_effect
+                    adjusted_impact_biogenic = biogenic_carbon_effect
+
                     for impact in impacts.get_categories(): 
-                        if impact not in [carbonation_effects_impact_cat, "GWP_biogenic"]:
+                        if impact not in [all_carbon_storage_effects_impact_cat, bio_carbon_storage_effects_impact_cat]:
                             impacts.update_qty({impact: 0.0})
+
             elif (self.get_life_cycle_stage() == lc_stage):
-                adjusted_gwp = base_impact
-                adjusted_gwp_biogenic = 0.0
+                adjusted_impact = base_impact
+                adjusted_impact_biogenic = 0.0
+
             else:
                 return None
 
-            impacts.update_qty({carbonation_effects_impact_cat: adjusted_gwp}) 
-            impacts.update_qty({"GWP_biogenic": adjusted_gwp_biogenic}) # TODO set config key for GWP_biogenic?
-
+            impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
+            impacts.update_qty({bio_carbon_storage_effects_impact_cat: adjusted_impact_biogenic})
 
             return impacts
     # ================================
