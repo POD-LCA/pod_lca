@@ -27,7 +27,7 @@ class Construction(Assembly):
         super().__init__()
         self.layer_order = {}
         self.layers = {}
-        self.surface = None
+        self.surfaces = {}
         
     @classmethod
     def from_idf(cls, name, idf_path):
@@ -76,14 +76,16 @@ class Construction(Assembly):
 
     def set_materials(self):
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['IDF_IMPACT_DATA_PRODUCT_MAP'], 'IDF Material Name')
-
+        
+        area = self.area
         for lk in self.layers:
             mat_type = self.layers[lk].material_property.__type__
             if (not self.layers[lk].is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
                 mat_name = self.layers[lk].material_property.name
 
                 database_declared_qty_in = UNITS_MAP[default_database_entry_map[mat_name]["LCI Database Declared Unit"]].get_qty_measured()
-                quantity = self.get_quantity(lk, database_declared_qty_in)
+                # quantity = self.get_quantity(lk, database_declared_qty_in)
+                quantity = self.layers[lk].get_quantity(area, database_declared_qty_in)
 
                 material = EnvelopeMaterial.new(name=mat_name,
                                                 qty=quantity.value,
@@ -96,8 +98,12 @@ class Construction(Assembly):
 
     @property
     def area(self):
-        if self.surface:
-            return self.surface.area
+        #TODO: Substract windows
+        if self.surfaces:
+            area = 0
+            for sk in self.surfaces:
+                area += self.surfaces[sk].area
+            return area
         else:
             return Q(0, SQUARE_METER)
 
@@ -106,23 +112,6 @@ class Construction(Assembly):
             name = self.layer_order[mk]
             layer = Layer.from_idf(name, building)
             self.layers[mk] = layer
-
-    def get_quantity(self, layer, qty_in):
-        """ Returns the quantity of the specified layer.
-        
-        Parameters
-        ----------
-        layer : int
-            ID of the layer.
-        qty_in : {'volume', 'area', 'mass'}
-            Requested quantity measured in?
-        """
-        if qty_in in ['volume', 'mass']:
-            return self.area * self.layers[layer].thickness
-        elif qty_in in ["area"]:
-            return self.area
-        else:
-            raise ValueError("Quantity request not recognized.")
     
 
 if __name__ == '__main__':

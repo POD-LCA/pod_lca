@@ -406,6 +406,8 @@ class Envelope:
 
         window.wall_key = wall_key
         key = 'Window_{}'.format(len(self.windows))
+        
+        self.surfaces[wall_key].window = window
         self.windows[key] = window
 
     def add_shading(self, shading):

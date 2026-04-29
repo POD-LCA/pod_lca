@@ -17,10 +17,14 @@ class Surface(object):
         self.outside_boundary_condition         = None
         self.outside_boundary_condition_object  = None
         self.construction                       = None
+        self.window                             = None
 
     @property
     def area(self):
-        return area_polygon(self.polygon)
+        area = area_polygon(self.polygon)
+        if self.window:
+            area -= self.window.area
+        return area
 
 
     @classmethod
@@ -34,7 +38,7 @@ class Surface(object):
     
     def add_construction(self, construction):
         self.construction = construction
-        construction.surface = self
+        construction.surfaces[self.name] = self
 
     @classmethod
     def from_data(cls, data):

@@ -28,6 +28,25 @@ class Layer(object):
         self.is_structural = False
         self.structural_element = None # {"Slab", "Wall", "Roof"}
 
+
+    def get_quantity(self, area=None, qty_in=None):
+        """ Returns the quantity of the layer.
+        
+        Parameters
+        ----------
+        area : float
+            The surface area of the layer
+        qty_in : {'volume', 'area', 'mass'}
+            Requested quantity measured in?
+        """
+        if qty_in in ['volume', 'mass']:
+            return area * self.thickness
+        elif qty_in in ["area"]:
+            return area
+        else:
+            raise ValueError("Quantity request not recognized.")
+
+
     @property
     def thickness(self):
         return self._thickness
