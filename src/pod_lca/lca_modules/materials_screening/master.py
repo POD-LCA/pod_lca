@@ -423,7 +423,7 @@ class Master:
         """
         self.update_inventory_records()
 
-        carbonation_effects_impact_cat = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
+        carbonation_effects_impact_cat = config["setup"]["impacts"]["ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
         mineral_carbonation_effect = self.get_carbon_storage().get_mineral_carbon_storage_qty(KG_CARBON_DIOXIDE)
 
         adjusted_impact = self.impacts.get_record(carbonation_effects_impact_cat) - mineral_carbonation_effect
