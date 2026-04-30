@@ -18,12 +18,12 @@ from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ..impacts import UniformEmissionProfile
 from ..transportation import TransportationManager
 from ..transportation import USTransportationManager
+from ...units import KG_CARBON_DIOXIDE
 from ...units import UNITS_MAP
 from ...units import KILO
 from ...units import WATT_HOUR
 from ...utilities import config
 from ...utilities import DataImporter
-from ..carbon_storage import get_biogenic_carbon_dioxide_content
 
 
 class Model:
@@ -424,6 +424,40 @@ class Model:
             item.update_inventory_records()
 
         return self.carbon_storage
+    
+    def get_total_carbon_storage_effects(self, _type="total", unit=KG_CARBON_DIOXIDE):
+        """Retrieve the total carbon storage effects in the model.
+
+        Parameters
+        ----------
+        _type : {"total", "biogenic", "mineral"}
+            Type of carbon storage effect to retrieve. Default is "total".
+
+        Returns
+        -------
+        float
+            Total carbon storage effect.
+        """
+        carbon_storage_records = self.get_carbon_storage()
+
+        bio_total = 0
+        all_records = carbon_storage_records["A1"]
+        for record in all_records:
+            bio_total += record.get_biogenic_carbon_storage_qty(unit)
+
+        if _type == "biogenic":
+            return bio_total
+
+        mnrl_total = 0
+        all_records = [item for sublist in carbon_storage_records.values() for item in sublist]
+        for record in carbon_storage_records["A1"]:
+            mnrl_total += record.get_mineral_carbon_storage_qty(unit)
+
+        if _type == "mineral":
+            return mnrl_total
+
+        total = bio_total + mnrl_total
+        return total
 
     # ================================
     # Methods to add items to the model
