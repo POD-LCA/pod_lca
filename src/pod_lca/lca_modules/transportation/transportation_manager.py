@@ -24,12 +24,16 @@ class TransportationManager:
         Dictionary mapping products to their corresponding transportation legs: {**product** (:class:`~pod_lca.materials_screening.Product`) : **transport leg** (:class:`~pod_lca.transportation.TransportationLeg`)}.
     mode_impact_database : ~pod_lca.impacts.TranportationModeImpactsDatabase
         Database containing unit impacts for transportation modes.
+    is_hotspot : bool
+        Flag indicating if the transportation manager is a hotspot, where transportation manager is part of another project.
     """
 
     def __init__(self):
         self.name = None
         self.transport_legs = {}
         self.mode_impact_database = None
+
+        self.is_hotspot = False
 
     def __str__(self):
         str = "=" * 75 + "\n" + f"Project: {self.get_name()}\n" + "=" * 75 + "\n"
