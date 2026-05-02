@@ -345,13 +345,15 @@ class Model:
         """
         return self.transportation_manager
 
-    def get_impacts(self, transportation_grouping="not_grouped"):
+    def get_impacts(self, transportation_grouping="not_grouped", plus_minus_accounting=True):
         """Retrieve all the impacts in the model categorized by life cycle stage.
 
         Parameters
         ----------
         transportation_grouping : {'not_grouped', 'with_material', 'all_transportation'}, optional
             Method for grouping transportation impacts. Default is 'not_grouped'.
+        plus_minus_accounting : bool
+            If true, carbon storage and release are accounted for as negative and positive impacts, respectively, at corresponding life cycle stages. Default is True.
 
         Returns
         -------
@@ -365,12 +367,15 @@ class Model:
             item.update_inventory_records()
 
             if isinstance(item, Product):
-                A1_impacts = copy(item.get_impacts("A1"))
-                if A1_impacts:
-                    self.impacts["A1"].append(A1_impacts)
-                A3_impacts = copy(item.get_impacts("A3"))
-                if A3_impacts:
-                    self.impacts["A3"].append(A3_impacts)
+                if plus_minus_accounting:
+                    A1_impacts = copy(item.get_impacts("A1"))
+                    if A1_impacts:
+                        self.impacts["A1"].append(A1_impacts)
+                    A3_impacts = copy(item.get_impacts("A3"))
+                    if A3_impacts:
+                        self.impacts["A3"].append(A3_impacts)
+                else:
+                    self.impacts[item.get_life_cycle_stage()].append(item.get_impacts())
             else:
                 self.impacts[item.get_life_cycle_stage()].append(item.get_impacts())
 
@@ -673,7 +678,11 @@ class Model:
         AttributeError
             Impact category not recognized.
         """
-        impacts_dict = self.get_impacts()
+        impacts_dict = self.get_impacts(
+            transportation_grouping="not_grouped",
+            plus_minus_accounting=False,
+        )
+        
         impacts_lst = []
         for key, lst in impacts_dict.items():
             impacts_lst.extend(lst)

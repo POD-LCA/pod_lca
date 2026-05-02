@@ -158,7 +158,8 @@ class HotSpotAnalysis:
             Hotspot objects.
         """
         if isinstance(self.model, Model):
-            impacts = self.model.get_impacts(self.transportation_grouping)
+            impacts = self.model.get_impacts(transportation_grouping=self.transportation_grouping, 
+                                             plus_minus_accounting=False)
         else:
             impacts = self.model.get_impacts()
 
