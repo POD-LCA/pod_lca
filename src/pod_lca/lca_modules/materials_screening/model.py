@@ -11,7 +11,6 @@ from copy import copy
 
 from . import Electricity
 from . import Fuel
-from . import Master
 from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
@@ -726,6 +725,47 @@ class Model:
                 data[stage] = 0.0
                 for impact in impact_lst:
                     data[stage] += impact.get_record(impact_cat)
+
+            sorted_data = sorted(data.items())
+            sorted_dict = dict(sorted_data)
+
+            del impacts_dict
+
+            return sorted_dict
+
+    def get_impacts_by_LCstages_with_hotspots(self, impact_cat):
+        """Returns impact data by life cycle stage for given model and impact category, with hotspot impacts separated.
+
+        Parameters
+        ----------
+        impact_cat : str
+            Name of impact category.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {**Life Cycle stage** (:class:`str`) : **quantity of impact** (:class:`float`)}.
+
+        Raises
+        ------
+        AttributeError
+            impact category doe not exist in the current project
+        """
+        if impact_cat not in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys():
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            impacts_dict = self.get_impacts()
+
+            data = {}
+            for stage in impacts_dict.keys():
+                impact_lst = impacts_dict[stage]
+                data[stage] = {"other": 0.0}
+                for impact in impact_lst:
+                    parent_product = impact.get_parent()
+                    if parent_product.is_hotspot:
+                        data[stage][parent_product.get_name()] = impact.get_record(impact_cat)
+                    else:
+                        data[stage]["other"] += impact.get_record(impact_cat)
 
             sorted_data = sorted(data.items())
             sorted_dict = dict(sorted_data)
