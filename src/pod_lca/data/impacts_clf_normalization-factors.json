@@ -7,10 +7,12 @@
     "EP": 21.62,
     "ODP": 0.16,
     "POCP": 1392.05,
+    "NREF": 50000, 
     "_source": {
-        "title": "Life Cycle ASssesment of Buildings: A Practice Guide",
+        "title": "Life Cycle Assesment of Buildings: A Practice Guide",
         "author": "The Carbon Leadership Forum",
         "year": 2018,
         "doi": "http://hdl.handle.net/1773/41885"
-    }
+    },
+    "_Notes": "NREF value is a dummy value."
 }

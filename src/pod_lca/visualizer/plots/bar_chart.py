@@ -52,6 +52,7 @@ class BarChart(AbstractPlot):
         gap = 0.2
         x = arange(len(categories))
 
+        color_lst = BarChart.get_color_list()
         for i, (category, category_data) in enumerate(data.items()):
             if isinstance(category_data, float) or isinstance(category_data, int):
                 width = 1.0 - gap
@@ -61,7 +62,7 @@ class BarChart(AbstractPlot):
                     height,
                     width,
                     label=f"{category}",
-                    color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE],
+                    color=color_lst[i],
                     label_pos="center",
                 )
             else:
@@ -75,7 +76,7 @@ class BarChart(AbstractPlot):
                             height,
                             width,
                             label=None,
-                            color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE],
+                            color=color_lst[i],
                             label_pos="center",
                         )
                     else:
@@ -102,7 +103,7 @@ class BarChart(AbstractPlot):
         else:
             if isinstance(group_data, float) or isinstance(group_data, int):
                 self.get_plot().set_xticks(range(len(groups)), groups)
-                colors = [COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][COLOUR_BASE] for i in arange(len(categories))]
+                colors = [color_lst[i] for i in arange(len(categories))]
                 labels = categories
                 self.get_plot().set_legend(colors, labels)
             else:
@@ -113,6 +114,28 @@ class BarChart(AbstractPlot):
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
 
+
+    @staticmethod
+    def get_color_list():
+        COLOUR_BASE = config["Preferences"]["COLOUR_BASE"]
+        COLOUR_PALETTES = config["Preferences"]["COLOUR_PALETTES"]
+        COLOUR_ORDER_LIST = config["Preferences"]["COLOUR_ORDER_LIST"]
+    
+        flat_list = []
+        
+        # First Pass: base colors
+        for key in COLOUR_ORDER_LIST:
+            flat_list.append(COLOUR_PALETTES[key][COLOUR_BASE])
+        
+        # Second Pass: all other colors
+        for key in COLOUR_ORDER_LIST:
+            current_group = COLOUR_PALETTES[key]
+            for i, hex_code in enumerate(current_group):
+                if i != COLOUR_BASE:
+                    flat_list.append(hex_code)
+                    
+        return flat_list
+    
 
 if __name__ == "__main__":
     pass

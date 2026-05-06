@@ -766,7 +766,7 @@ class Model:
         KeyError
             Impact category not recognized.
         """
-        IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
+        IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_NORMALIZATION_FACTORS"])
         for impact_cat in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys():
             if impact_cat not in IMPACT_NORMALIZATION_FACTOR:
                 raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
