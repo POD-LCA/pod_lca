@@ -246,7 +246,7 @@ class Envelope:
         """
         self.building = parent
 
-        constructions = self.get_constructions()
+        constructions = self.get_constructions(unique=True)
         for construction in constructions:  
             construction.set_parent(self)
             log(f"{construction.name} added to the building", "Info")
@@ -276,7 +276,7 @@ class Envelope:
                 srf.reverse_normal()
 
     def set_materials_in_conmponents(self):
-        for construction in self.get_constructions():
+        for construction in self.get_constructions(unique=True):
             construction.set_materials()
     # ================================
     # Getters
@@ -344,15 +344,24 @@ class Envelope:
                                                                   outside_boundary_condition = srf.outside_boundary_condition,
                                                                   outside_boundary_condition_object = srf.outside_boundary_condition_object)
 
-    def get_constructions(self):
-        """ Get a list of all enbvelope constructions of the building.
+    def get_constructions(self, unique=False):
+        """ Get a list of all envelope constructions of the building.
+
+        Parameters
+        ----------
+        unique : bool
+            If true, retrun a list of unique constructions. Default is False
         
         Returns
         -------
         list of ~pod_lca.building_structure.Construction
             All the structural elements in the structure.
         """
-        return [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
+        constructions_lst = [value for inner_dict in self.construction_map.values() for value in inner_dict.values()]
+        if unique:
+            return set(constructions_lst)
+        else:
+            return self.construction_lst
 
     def set_to_height(self, height):
         fp = []

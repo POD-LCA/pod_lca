@@ -84,7 +84,7 @@ class Construction(Assembly):
                 mat_name = self.layers[lk].material_property.name
 
                 database_declared_qty_in = UNITS_MAP[default_database_entry_map[mat_name]["LCI Database Declared Unit"]].get_qty_measured()
-                # quantity = self.get_quantity(lk, database_declared_qty_in)
+
                 quantity = self.layers[lk].get_quantity(area, database_declared_qty_in)
 
                 material = EnvelopeMaterial.new(name=mat_name,
