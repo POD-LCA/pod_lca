@@ -630,10 +630,10 @@ class Model:
         """
         items = [item for item in self.get_products() + self.get_processes() if item.get_name() == name]
 
-        if len(items) == 0:
-            return None
+        if items:
+            return items[0]
         else:
-            return items
+            None
 
     def delete_item(self, obj):
         """Removes products or processes, along with the impact objects, from the model.
