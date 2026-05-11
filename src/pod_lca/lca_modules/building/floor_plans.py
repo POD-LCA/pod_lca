@@ -60,6 +60,9 @@ class BuildingFloor:
         """
         floor = cls()
 
+        if floor_plan[0] == floor_plan[-1]:
+            del floor_plan[-1]
+
         floor.set_floor_plan(floor_plan)
         floor.set_height(floor_height)
         floor.set_usage(usage)

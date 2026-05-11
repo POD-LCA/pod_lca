@@ -204,4 +204,4 @@ graph.show()
 
 # # #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
 
-# FIXME: Grashopper example geometry issue
+# FIXME: Grashopper example geometry issue, have check on polygon open/closed. 
