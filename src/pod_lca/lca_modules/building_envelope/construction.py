@@ -98,7 +98,6 @@ class Construction(Assembly):
 
     @property
     def area(self):
-        #TODO: Substract windows
         if self.surfaces:
             area = 0
             for sk in self.surfaces:
