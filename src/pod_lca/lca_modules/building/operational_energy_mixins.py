@@ -177,9 +177,10 @@ class OperationalMixins:
         folder_path : str
             Folder path.
         """
+        if folder_path:
+            shutil.rmtree(folder_path)
         Path(folder_path).mkdir(exist_ok=True)
-        shutil.rmtree(folder_path)
-
+        
         self.eplus_out_folder = folder_path
 
     def get_weather_file_path(self):
