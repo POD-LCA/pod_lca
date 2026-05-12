@@ -217,7 +217,6 @@ class ProductElectricityMixins:
     # ================================
     # Getters
     # ================================
-
     def get_electricity(self):
         """Get the electricity product of the item.
 
@@ -242,12 +241,12 @@ class ProductElectricityMixins:
         return self.electricity["_current"]
 
     def get_electricity_scenario(self):
-        """Get the electricity scenario for the electricity by location data.
+        """Get the electricity scenario of custom electricity.
 
         Returns
         -------
         str
-            Electricity scenario for the electricity by location data.
+            Electricity scenario of custom electricity.
         """
         current_source = self.get_electricity_source()
 
@@ -257,12 +256,12 @@ class ProductElectricityMixins:
             return None
         
     def get_electricity_year(self):
-        """Get the year for the electricity by location data.
+        """Get the year of custom electricity.
 
         Returns
         -------
         int
-            Year for the electricity by location data.
+            Year of custom electricity.
         """
         current_source = self.get_electricity_source()
 
@@ -271,13 +270,28 @@ class ProductElectricityMixins:
         else:
             return None
         
-    def get_electricity_location_regional(self):
-        """Get the location for the electricity by location data.
+    def get_electricity_geographical_scope(self):
+        """Get the geographic scope of custom electricity.
 
         Returns
         -------
         str
-            Location for the electricity by location data.
+            Geographic scope of custom electricity.
+        """
+        current_source = self.get_electricity_source()
+
+        if current_source == "custom":
+            return self.electricity["custom"].get_geographical_scope()
+        else:
+            return None        
+        
+    def get_electricity_location_regional(self):
+        """Get the location of custom electricity.
+
+        Returns
+        -------
+        str
+            Location of custom electricity.
         """
         current_source = self.get_electricity_source()
 
@@ -287,12 +301,12 @@ class ProductElectricityMixins:
             return None
 
     def get_electricity_location_local(self):
-        """Get the location for the electricity by location data.
+        """Get the location of custom electricity.
 
         Returns
         -------
         str
-            Location for the electricity by location data.
+            Location of custom electricity.
         """
         current_source = self.get_electricity_source()
 
