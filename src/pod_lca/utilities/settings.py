@@ -11,7 +11,8 @@ import yaml
 
 def load_config():
     """Load the configuration file."""
-    with resources.open_text("pod_lca", "config.yaml") as f:
+    ref = resources.files("pod_lca") / "config.yaml"
+    with ref.open("r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     update_filepaths(config)
