@@ -1,0 +1,87 @@
+﻿NAICS Category,NAICS Sub-category,SCTG Category,Notes
+"11: Agriculture, Forestry, Fishing and Hunting",1111: Oilseed and Grain Farming,"03,""agricultural products (excludes animal feed, cereal grains, and forage products)""",
+"11: Agriculture, Forestry, Fishing and Hunting",1112: Vegetable and Melon Farming,"03,""agricultural products (excludes animal feed, cereal grains, and forage products)""",
+"11: Agriculture, Forestry, Fishing and Hunting",1119: Other Crop Farming,"03,""agricultural products (excludes animal feed, cereal grains, and forage products)""",
+"11: Agriculture, Forestry, Fishing and Hunting",1132: Forest Nurseries and Gathering of Forest Products,"26,wood products",
+"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"25,logs and other wood in the rough",
+"11: Agriculture, Forestry, Fishing and Hunting",1151: Support Activities for Crop Production,"03,""agricultural products (excludes animal feed, cereal grains, and forage products)""",
+"11: Agriculture, Forestry, Fishing and Hunting",1153: Support Activities for Forestry,"26,wood products",
+"21: Mining, Quarrying, and Oil and Gas Extraction",2111: Oil and Gas Extraction,"18,""fuel oils (includes diesel, bunker c, and biodiesel)""",
+"21: Mining, Quarrying, and Oil and Gas Extraction",2121: Coal Mining,"15,coal",
+"21: Mining, Quarrying, and Oil and Gas Extraction",2122: Metal Ore Mining,"14,metallic ores and concentrates",
+"21: Mining, Quarrying, and Oil and Gas Extraction",2123: Nonmetallic Mineral Mining and Quarrying,"31,non-metallic mineral products",
+"21: Mining, Quarrying, and Oil and Gas Extraction",2131: Support Activities for Mining,"34,machinery",
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/BIOMASS",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/COAL",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/GAS",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/GEOTHERMAL",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/HYDRO",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/MIXED",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/NUCLEAR",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/OIL",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/SOLAR",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/SOLARTHERMAL",N/A,Not transported
+22: Utilities,"2211: Electric Power Generation, Transmission and Distribution/WIND",N/A,Not transported
+22: Utilities,2212: Natural Gas Distribution,"19,""other coal and petroleum products, not elsewhere classified""",
+22: Utilities,"2213: Water, Sewage and Other Systems","41,waste and scrap (excludes of agriculture or food)",
+23: Construction,2362: Nonresidential Building Construction,"40,miscellaneous manufactured products",
+23: Construction,2371: Utility System Construction,"40,miscellaneous manufactured products",
+23: Construction,2379: Other Heavy and Civil Engineering Construction,"34,machinery",
+23: Construction,2382: Building Equipment Contractors,"34,machinery",
+23: Construction,2389: Other Specialty Trade Contractors,"34,machinery",
+31-33: Manufacturing,3112: Grain and Oilseed Milling,"06,""milled grain products and preparations, and bakery products""",
+31-33: Manufacturing,3211: Sawmills and Wood Preservation,"25,logs and other wood in the rough",
+31-33: Manufacturing,"3212: Veneer, Plywood, and Engineered Wood Product Manufacturing","25,logs and other wood in the rough",
+31-33: Manufacturing,3219: Other Wood Product Manufacturing,"26,wood products",
+31-33: Manufacturing,"3221: Pulp, Paper, and Paperboard Mills","27,""pulp, newsprint, paper, and paperboard""",
+31-33: Manufacturing,3222: Converted Paper Product Manufacturing,"28,paper or paperboard articles",
+31-33: Manufacturing,3241: Petroleum and Coal Products Manufacturing,"19,""other coal and petroleum products, not elsewhere classified""",
+31-33: Manufacturing,3251: Basic Chemical Manufacturing,"20,basic chemicals",
+31-33: Manufacturing,"3252: Resin, Synthetic Rubber, and Artificial and Synthetic Fibers and Filaments Manufacturing","23,other chemical products and preparations",
+31-33: Manufacturing,"3253: Pesticide, Fertilizer, and Other Agricultural Chemical Manufacturing","22,fertilizers",
+31-33: Manufacturing,"3256: Soap, Cleaning Compound, and Toilet Preparation Manufacturing","23,other chemical products and preparations",
+31-33: Manufacturing,3259: Other Chemical Product and Preparation Manufacturing,"23,other chemical products and preparations",
+31-33: Manufacturing,3261: Plastics Product Manufacturing,"24,plastics and rubber",
+31-33: Manufacturing,3272: Glass and Glass Product Manufacturing,"31,non-metallic mineral products",
+31-33: Manufacturing,3273: Cement and Concrete Product Manufacturing,"31,non-metallic mineral products",
+31-33: Manufacturing,3274: Lime and Gypsum Product Manufacturing,"31,non-metallic mineral products",
+31-33: Manufacturing,3279: Other Nonmetallic Mineral Product Manufacturing,"31,non-metallic mineral products",
+31-33: Manufacturing,3311: Iron and Steel Mills and Ferroalloy Manufacturing,"32,base metal in primary or semi-finished forms and in finished basic shapes",
+31-33: Manufacturing,3312: Steel Product Manufacturing from Purchased Steel,"33,articles of base metal",
+31-33: Manufacturing,3313: Alumina and Aluminum Production and Processing,"33,articles of base metal",
+31-33: Manufacturing,3314: Nonferrous Metal (except Aluminum) Production and Processing,"33,articles of base metal",
+31-33: Manufacturing,3315: Foundries,"33,articles of base metal",
+31-33: Manufacturing,3321: Forging and Stamping,"33,articles of base metal",
+31-33: Manufacturing,3323: Architectural and Structural Metals Manufacturing,"33,articles of base metal",
+31-33: Manufacturing,"3323: Boiler, Tank, and Shipping Container Manufacturing","33,articles of base metal",
+31-33: Manufacturing,"3328: Coating, Engraving, Heat Treating, and Allied Activities","33,articles of base metal",
+31-33: Manufacturing,3329: Other Fabricated Metal Product Manufacturing,"33,articles of base metal",
+31-33: Manufacturing,"3331: Agriculture, Construction, and Mining Machinery Manufacturing","34,machinery",
+31-33: Manufacturing,3341: Computer and Peripheral Equipment Manufacturing,"35,""electronic and other electrical equipment and components, and office equipment""",
+31-33: Manufacturing,3344: Semiconductor and Other Electronic Component Manufacturing,"35,""electronic and other electrical equipment and components, and office equipment""",
+31-33: Manufacturing,"3345: Navigational, Measuring, Electromedical, and Control Instruments Manufacturing","35,""electronic and other electrical equipment and components, and office equipment""",
+31-33: Manufacturing,3353: Electric Equipment Manufacturing,"35,""electronic and other electrical equipment and components, and office equipment""",
+31-33: Manufacturing,3359: Other Electrical Equipment and Component Manufacturing,"35,""electronic and other electrical equipment and components, and office equipment""",
+31-33: Manufacturing,3362: Motor Vehicle Body and Trailer Manufacturing,"36,motorized and other vehicles (includes parts)",
+42: Wholesale Trade,4236: Household Appliances and Electrical and Electronic Goods Merchant Wholesalers,"43,mixed freight",
+42: Wholesale Trade,4239: Miscellaneous Durable Goods Merchant Wholesalers,"43,mixed freight",
+42: Wholesale Trade,4247: Petroleum and Petroleum Products Merchant Wholesalers,"17,""gasoline, aviation turbine fuel, and ethanol (includes kerosene, and fuel alcohols)""",
+44-45: Retail Trade,4471: Gasoline Stations,,
+48-49: Transportation and Warehousing,4811: Scheduled Air Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4821: Rail Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,"4831: Deep Sea, Coastal, and Great Lakes Water Transportation",N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4832: Inland Water Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4841: General Freight Trucking,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4842: Specialized Freight Trucking,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4851: Urban Transit Systems,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4852: Interurban and Rural Bus Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4854: School and Employee Bus Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4859: Other Transit and Ground Passenger Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4862: Pipeline Transportation of Natural Gas,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,4869: Other Pipeline Transportation,N/A,transportation processes themselves
+48-49: Transportation and Warehousing,Commodity Transport,N/A,transportation processes themselves
+56: Administrative and Support and Waste Management and Remediation Services,5621: Waste Collection,"41,waste and scrap (excludes of agriculture or food)",
+56: Administrative and Support and Waste Management and Remediation Services,5622: Waste Treatment and Disposal,"41,waste and scrap (excludes of agriculture or food)",
+56: Administrative and Support and Waste Management and Remediation Services,5629: Remediation and Other Waste Management Services,"41,waste and scrap (excludes of agriculture or food)",
+,,"40,miscellaneous manufactured products",

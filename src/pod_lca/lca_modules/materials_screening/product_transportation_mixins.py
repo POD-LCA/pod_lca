@@ -168,5 +168,35 @@ class ProductTransportationMixins:
         transportation_manager = self.get_transportation_manager()
         return transportation_manager.get_impacts(self)
 
+    def get_default_sctg_code(self):
+        """ Find a default Standard Classification of Transported Goods (SCTG) code for the product.
+        
+        Returns
+        -------
+        str
+            Standard Classification of Transported Goods (SCTG) code for the material.
+        """
+        database_entry = self.get_impact_database_entry()
+
+        if database_entry:
+            mapping = DataImporter.csv_to_pandas(config['file_paths']['transportation']['NAICS_SCTG_MAP'])
+
+            database = self.get_project().get_impact_database()
+            data = database.get_data_entry(database_entry)
+            if "NAICS Sub-category" in data:
+                naics_sub_cat = data["NAICS Sub-category"]
+                mapped = mapping[mapping["NAICS Sub-category"] == naics_sub_cat].iloc[0:1]
+
+                return mapped["SCTG Category"].iloc[0][0:2]
+
+            elif "NAICS Category" in data:
+                naics_cat = data["NAICS Category"]
+                mapped = mapping[mapping["NAICS Category"] == naics_cat].iloc[0:1]
+
+                return mapped["SCTG Category"].iloc[0][0:2]
+        
+        return config['setup']['transportation']['DEFAULT_SCTG_CODE']
+
+
 if __name__ == "__main__":
     pass

@@ -18,6 +18,8 @@ setup:
     CARBON_STORAGE:
       Biogenic C: kg C
       Mineral C: kg CO2 # accelerated carbonation uptake
+  transportation:
+    DEFAULT_SCTG_CODE: "40" # miscellaneous manufactured products
   electricity:
     DEFAULT_REIGIONAL_RESOLUTION: National # Options: National, Regional, Local
     DEFAULT_COUNTRY: USA
@@ -77,6 +79,7 @@ file_paths:
     ELECTRIC_VEHICLES: data/transportation_podlca_electric-vehicles.csv
     WASTE_TRANSPORT: data/transportation_podlca_waste-transport.csv
     MODE_IMPACTS: data/transportation_podlca_emission.csv
+    NAICS_SCTG_MAP: data/transportation_podlca_naics-to-sctg-map.csv
   electricity:
     CAMBIUM_NATIONAL_DATA: data/electricity_cambium_consumption-national.csv
     CAMBIUM_REGIONAL_DATA: data/electricity_cambium_consumption-regional.csv
