@@ -4,6 +4,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from math import isnan
+
 from ..impacts import UniformEmissionProfile
 from ...units import KILOMETER
 from ...utilities import config
@@ -187,13 +189,19 @@ class ProductTransportationMixins:
                 naics_sub_cat = data["NAICS Sub-category"]
                 mapped = mapping[mapping["NAICS Sub-category"] == naics_sub_cat].iloc[0:1]
 
-                return mapped["SCTG Category"].iloc[0][0:2]
+                if isnan(mapped["SCTG Category"].iloc[0]):
+                    return config['setup']['transportation']['DEFAULT_SCTG_CODE']
+                else:
+                    return mapped["SCTG Category"].iloc[0][0:2]
 
             elif "NAICS Category" in data:
                 naics_cat = data["NAICS Category"]
                 mapped = mapping[mapping["NAICS Category"] == naics_cat].iloc[0:1]
 
-                return mapped["SCTG Category"].iloc[0][0:2]
+                if isnan(mapped["SCTG Category"].iloc[0]):
+                    return config['setup']['transportation']['DEFAULT_SCTG_CODE']
+                else:
+                    return mapped["SCTG Category"].iloc[0][0:2]
         
         return config['setup']['transportation']['DEFAULT_SCTG_CODE']
 
