@@ -489,6 +489,17 @@ class ImpactsDatabase:
 
             return ranked
 
+    def add_new_entry(self, data):
+        """ Add new custom data entry.
+        
+        Parameters
+        ----------
+        data : dict
+            Data dictionary keyed by corresponding headers in the databse
+        """
+        new_row_df = DataFrame([data])
+        self.data = concat([self.data, new_row_df], ignore_index=True)
+
 
 if __name__ == "__main__":
     pass
