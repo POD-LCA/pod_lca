@@ -83,7 +83,6 @@ class Envelope:
         data['floor_plan_obj'] = self.floor_plan_obj   
 
         data['walls']      = self.walls     
-        data['windows']    = self.windows   
         data['shadings']   = self.shadings  
         data['floors']     = self.floors    
         data['ceiling']    = self.ceiling   

@@ -25,7 +25,7 @@ from pod_lca.lca_modules.operational.read_write import find_gas_materials
 class Construction(Assembly):
     def __init__(self):
         super().__init__()
-        self.layer_order = {}
+        self.layer_order = []
         self.layers = {}
         self.surfaces = {}
         
@@ -41,14 +41,14 @@ class Construction(Assembly):
         ldata = ldata['materials']
 
         layers_ = {}
-        for lk in layers:
-            mdata = ldata[layers[lk]]
-            if 'thickness' in ldata[layers[lk]]:
-                thickness = ldata[layers[lk]]['thickness']
+        for i in range(len(layers)):
+            mdata = ldata[layers[i]]
+            if 'thickness' in ldata[layers[i]]:
+                thickness = ldata[layers[i]]['thickness']
             else:
                 thickness = Q(0, METER)
             l = Layer.from_data(mdata, thickness, None)
-            layers_[lk] = l
+            layers_[i] = l
 
         construction = cls.from_layers(name, layers_)
         return construction
@@ -56,7 +56,7 @@ class Construction(Assembly):
     @classmethod
     def from_layers(cls, name, layers):
         construction = cls.from_materials(name)
-        construction.layer_order = {lk: layers[lk].name for lk in layers}
+        construction.layer_order = [lk for lk in layers]
         construction.layers = layers
 
         for lk in construction.layers:

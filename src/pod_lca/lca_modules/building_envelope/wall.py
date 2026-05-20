@@ -28,18 +28,18 @@ class FramedWall(Construction):
         self.r = None
         self.u = None
         self.virtual_layers = {}
-        self.virtual_layers_order = {}
+        self.virtual_layer_order = []
 
 
     @classmethod
     def from_layers_framing(cls, name, layers, framing):
         fwall = cls.from_materials(name)
-        fwall.layer_order = {lk: layers[lk].name for lk in layers}
+        fwall.layer_order = [lk for lk in layers]
         fwall.layers = layers
         fwall.framing = framing
 
-        for lk in fwall.layers:
-            fwall.layers[lk].parent_construction = fwall
+        for i in range(len(fwall.layers)):
+            fwall.layers[i].parent_construction = fwall
         
         fwall.compute_wall_r()
 
@@ -58,8 +58,12 @@ class FramedWall(Construction):
         vlayer.classification = 'virtual_layer'
         vlayer.is_structural = False
 
+        last_layer = fwall.layer_order[-1]
+
         fwall.virtual_layers['interior'] = vlayer
-        fwall.virtual_layers_order[0] = 'interior' 
+        fwall.virtual_layers[last_layer] = fwall.layers[last_layer]
+        fwall.virtual_layer_order.append(last_layer)
+        fwall.virtual_layer_order.append('interior') 
 
 
         return fwall

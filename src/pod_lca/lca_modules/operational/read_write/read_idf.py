@@ -375,16 +375,16 @@ def find_constructions(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        layers = {}
+        layers = []
         for j in range(100):
             layer = lines[i + 2 + j]
             if ";" in layer:
                 layer = layer.split(";")[0].strip()
-                layers[str(j)] = layer
+                layers.append(layer)
                 break
             else:
                 layer = layer.split(",")[0].strip()
-                layers[str(j)] = layer
+                layers.append(layer)
         data["constructions"][name] = {"name": name, "layers": layers}
         
     return data

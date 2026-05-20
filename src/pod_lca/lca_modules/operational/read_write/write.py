@@ -583,11 +583,10 @@ def write_constructions(building, file_path):
         con = building.constructions[ck]
         name = con.name
         if con.__type__ == 'FramedWall':
-            layers = [con.virtual_layers[lk] for lk in con.virtual_layers]
+            layers = [con.virtual_layers[lk] for lk in con.virtual_layer_order]
         else:
-            layers = [con.layers[lk] for lk in con.layers]
-        # types = [layer.material_property.__type__ for layer in layers]
-        # thicks = [layer.thickness for layer in layers]
+            layers = [con.layers[lk] for lk in con.layer_order]
+
         lnames = [layer.name for layer in layers]
         fh.write("Construction,\n")
         fh.write("  {},\t\t\t\t\t!- Name\n".format(name))

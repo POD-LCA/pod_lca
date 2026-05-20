@@ -102,14 +102,14 @@ m4 = EnvelopeMaterialPropertyNoMass.from_idf('Mineral wool blanket baseline', co
 
 
 
-layers = {
-          0: {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH).convert_to(METER)},
-          1: {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH).convert_to(METER)},
-          2: {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH).convert_to(METER)},
-          3: {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH).convert_to(METER)},
-          4: {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH).convert_to(METER)},
-          5: {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH).convert_to(METER)}
-          }
+layers = [
+          {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH).convert_to(METER)},
+          {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH).convert_to(METER)},
+          {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH).convert_to(METER)},
+          {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH).convert_to(METER)},
+          {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH).convert_to(METER)},
+          {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH).convert_to(METER)}
+            ]
 
 framing = {'name': 'metal_16in', 
            'type': 'Metal', 
@@ -120,13 +120,13 @@ framing = {'name': 'metal_16in',
            'dII':     Q(0.043, INCH).convert_to(METER)}
 
 layers_ = {}
-for lk in layers:
-    name = layers[lk]['material'].name
-    thickness = layers[lk]['thickness']
-    classification = layers[lk]['classification']
-    material_property = layers[lk]['material']
+for i in range(len(layers)):
+    name = layers[i]['material'].name
+    thickness = layers[i]['thickness']
+    classification = layers[i]['classification']
+    material_property = layers[i]['material']
     l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
-    layers_[lk] = l
+    layers_[i] = l
 
 layers_[0].set_structural(True)
 
@@ -143,6 +143,7 @@ f = Floor.from_idf('Generic Interior Floor', constructions_path)
 
 c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
 
+
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 window1 = Window.from_idf('Generic Double Pane', constructions_path)
@@ -157,13 +158,16 @@ wwr = .9
 window2 = Window.from_idf('Generic Double Pane', constructions_path)
 window2.set_wwr(wwr)
 
+
 windows = {wall_key1: window1, wall_key2: window2}
+
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
 e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
+
 
 # make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -207,4 +211,3 @@ print(b.get_operational_impacts()) # default is 'total'
 # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # graph.show()
 
-# # # # TODO: Make sure the framing is being computed in embodied. 
