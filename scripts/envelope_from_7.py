@@ -133,7 +133,7 @@ layers_[0].set_structural(True)
 framing = Framing.from_data(framing)
 
 framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
-framed_wall.compute_wall_r()
+
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -181,27 +181,30 @@ b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
-# b.set_eplus_out_folder("temp/out") # default writes to a temp folder
-# b.set_idf_file_path("temp/temp_operational.idf") # default writes to a temp file
+b.set_eplus_out_folder("temp/out") # default writes to a temp folder
+b.set_idf_file_path("temp/out/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 
 # get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_operational_impacts()) # default is 'total'
+# from pod_lca.lca_modules.operational import OperationalEnergyObject
+# opp_obj = OperationalEnergyObject.from_idf(config['file_paths']['operational']['SYSTEMS'])
+# b.set_operational_energy_object(opp_obj)
+# b.write_idf()
+
+print(b.get_operational_impacts()) # default is 'total'
 
 # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product'))
+# print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+# # print(b.get_emissions(scope='product'))
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# # drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# # drf_record.plot('cumulative radiative forcing')
 
-graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-graph.show()
+# # graph = BarChart.from_plotter(MatplotlibPlotter)
+# # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# # graph.show()
 
-# # #TODO: Implement no mass material with Framed Wall properties (not usual layaered wall)
-
-# FIXME: Grashopper example geometry issue, have check on polygon open/closed. 
+# # # # TODO: Make sure the framing is being computed in embodied. 

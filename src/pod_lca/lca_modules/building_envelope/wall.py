@@ -5,7 +5,9 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.lca_modules.building_envelope.construction import Construction
+from pod_lca.lca_modules.building_envelope.layer import Layer
 from pod_lca.units import Quantity as Q
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
 from pod_lca.units import METER, SQUARE_METER, KELVIN, WATT
 
 m2KW = (SQUARE_METER * KELVIN) / WATT
@@ -21,10 +23,12 @@ class Wall(Construction):
 class FramedWall(Construction):
     def __init__(self):
         super().__init__()
-        self.__type__ = 'Wall'
+        self.__type__ = 'FramedWall'
         self.framing = None
         self.r = None
         self.u = None
+        self.virtual_layers = {}
+        self.virtual_layers_order = {}
 
 
     @classmethod
@@ -36,7 +40,28 @@ class FramedWall(Construction):
 
         for lk in fwall.layers:
             fwall.layers[lk].parent_construction = fwall
-            
+        
+        fwall.compute_wall_r()
+
+        vmat = EnvelopeMaterialPropertyNoMass()
+        vmat.thermal_resistance = fwall.r
+        vmat.roughness           = 'MediumRough'
+        vmat.thermal_absorptance = 0.9
+        vmat.solar_absorptance   = 0.7
+        vmat.visible_absorptance = 0.7
+        vlayer = Layer()
+        vlayer.name = '{}_virtual_layer'.format(name)
+        vlayer.parent_construction = fwall
+        vlayer.material_property = vmat
+        vlayer._thickness = Q(0, METER)
+        vlayer.unit = None
+        vlayer.classification = 'virtual_layer'
+        vlayer.is_structural = False
+
+        fwall.virtual_layers['interior'] = vlayer
+        fwall.virtual_layers_order[0] = 'interior' 
+
+
         return fwall
     
     def compute_wall_r(self):

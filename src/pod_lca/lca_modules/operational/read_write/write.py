@@ -580,8 +580,12 @@ def write_constructions(building, file_path):
     fh = open(file_path, "a")
     fh.write("\n")
     for ck in building.constructions:
-        name = building.constructions[ck].name
-        layers = [building.constructions[ck].layers[lk] for lk in building.constructions[ck].layers]
+        con = building.constructions[ck]
+        name = con.name
+        if con.__type__ == 'FramedWall':
+            layers = [con.virtual_layers[lk] for lk in con.virtual_layers]
+        else:
+            layers = [con.layers[lk] for lk in con.layers]
         # types = [layer.material_property.__type__ for layer in layers]
         # thicks = [layer.thickness for layer in layers]
         lnames = [layer.name for layer in layers]

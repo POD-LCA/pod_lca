@@ -72,7 +72,7 @@ class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
         super().__init__()  
         # Operational Energy attributes
         self.__type__ = 'EnvelopeMaterialPropertyAirGap'
-        self.resistance = None
+        self.thermal_resistance = None
 
     @classmethod
     def from_data(cls, data):

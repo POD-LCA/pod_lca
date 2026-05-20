@@ -315,11 +315,13 @@ class OperationalMixins:
         """
         self.layers = {}
         for ck in self.constructions:
-            lkeys = self.constructions[ck].layers.keys()
-            for lk in lkeys:
-                layer = self.constructions[ck].layers[lk]
-                name = self.constructions[ck].layers[lk].name
-                thick = self.constructions[ck].layers[lk].thickness
+            if self.constructions[ck].__type__ == 'FramedWall':
+                layers = [self.constructions[ck].virtual_layers[lk] for lk in self.constructions[ck].virtual_layers]
+            else:
+                layers = [self.constructions[ck].layers[lk] for lk in self.constructions[ck].layers]
+            for layer in layers:
+                name = layer.name
+                thick = layer.thickness
                 lname = '{} {}mm'.format(name, round(thick*1000, 1))
                 self.layers[lname] = {'layer': layer}
                 layer.name = lname
