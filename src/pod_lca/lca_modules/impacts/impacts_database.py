@@ -500,6 +500,17 @@ class ImpactsDatabase:
         new_row_df = DataFrame([data])
         self.data = concat([self.data, new_row_df], ignore_index=True)
 
+    def delete_entry(self, flow_name):
+        """ Delete an entry from the database.
+        
+        Parameters
+        ----------
+        flow_name : str
+            Primary identifier name.
+        """
+        idx = self.data[self.data[self.get_primary_key()] == flow_name].index[0]
+        self.data = self.data.drop(idx)
+
 
 if __name__ == "__main__":
     pass
