@@ -181,18 +181,28 @@ class ProductTransportationMixins:
         database_entry = self.get_impact_database_entry()
 
         if database_entry:
-            mapping = DataImporter.csv_to_pandas(config['file_paths']['transportation']['NAICS_SCTG_MAP'])
-
             database = self.get_project().get_impact_database()
             data = database.get_data_entry(database_entry)
+
+            if ("SCTG code" in data):
+                if isinstance(data["SCTG code"], (int, float)) and not isnan(data["SCTG code"]):
+                    return str(int(data["SCTG code"]))
+                elif isinstance(data["SCTG code"], str):
+                    return data["SCTG code"]
+
+            mapping = DataImporter.csv_to_pandas(config['file_paths']['transportation']['NAICS_SCTG_MAP'])
             if "NAICS Sub-category" in data:
                 naics_sub_cat = data["NAICS Sub-category"]
                 mapped = mapping[mapping["NAICS Sub-category"] == naics_sub_cat].iloc[0:1]
 
-                if isnan(mapped["SCTG Category"].iloc[0]):
-                    return config['setup']['transportation']['DEFAULT_SCTG_CODE']
-                else:
-                    return mapped["SCTG Category"].iloc[0][0:2]
+                mapped_sctg = mapped["SCTG Category"].iloc[0]
+                if isinstance(mapped_sctg, (int, float)):
+                    if isnan(mapped_sctg):
+                        return config['setup']['transportation']['DEFAULT_SCTG_CODE']
+                    else:
+                        return str(int(mapped_sctg))[0:2]
+                elif isinstance(mapped_sctg, str):
+                    return mapped_sctg[0:2]
 
             elif "NAICS Category" in data:
                 naics_cat = data["NAICS Category"]
