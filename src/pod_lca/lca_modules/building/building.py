@@ -144,7 +144,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         return building
     
     @classmethod
-    def from_assemblies(cls, name, location, built_year, life_span, structure, building_envelope, **kwargs):
+    def from_assemblies(cls, name, location, built_year, life_span, structure, building_envelope=None, **kwargs):
         """ Build a building.
         
         Parameters
@@ -184,7 +184,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
                                              electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
         
         building.set_structure(structure)
-        building.set_building_envelope(building_envelope)
+        if building_envelope:
+            building.set_building_envelope(building_envelope)
+            building.operational_energy_method = 'eplus'
+        else:
+            building.operational_energy_method = 'EUIs'
 
         return building
      
