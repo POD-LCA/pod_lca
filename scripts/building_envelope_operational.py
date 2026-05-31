@@ -66,7 +66,7 @@ window_service_life = 20
 for fk in b.floors:
     floor = b.floors[fk]
     e = Envelope.from_floor(floor)
-    floor.add_envelope(e)
+    floor.set_envelope(e)
 
 
     # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -

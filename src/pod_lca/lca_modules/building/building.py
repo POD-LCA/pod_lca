@@ -5,10 +5,15 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from math import sqrt
+
+from . import Assembly
+from . import BuildingFloor
 from . import ConstructionMixins
 from . import DataMixins
 from . import EndOfLifeMixins
 from . import EnvelopeMixins
+from . import Material
 from . import OperationalMixins
 from . import ProductScopeMixins
 from . import Scenario
@@ -17,7 +22,10 @@ from . import TransportationMixins
 from . import UseMixins
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ...units import MEGA
+from ...units import Quantity as Q
 from ...units import WATT_HOUR
+from ...units import UNITS_MAP
+from ...utilities import DataImporter
 
 
 class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
@@ -83,6 +91,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.location = None
 
         self.floors = {} # FIXME: used in operational and plotters...
+        self.floor_obj = None
 
         self.structure = None
         self.building_envelope = None
@@ -192,6 +201,120 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         return building
      
+    @classmethod
+    def from_csv(cls, name, location, built_year, life_span, csv_path, **kwargs):
+        """ Build a building from a csv file.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the building.
+        location : ~pod_lca.location.Location
+            Location of the building site.
+        built_year: int
+            Built year of the building.
+        life_span: int
+            Life span of the building in years.
+        csv_path : str
+            File path to the csv file containing the building data.
+
+        Other Parameters
+        ----------------
+        building_type: {'residential', 'commercial'}
+            Type of building.
+        building_standard: {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates.
+        no_floors: int
+            Number of floors in the building.
+        floor_plan: list of tuple of float
+            List of (x, y) coordinates defining the floor plan of the building
+        floor_area: float
+            Total floor area of the building. If floor_plan is not provided, a square floor plan will be created based on the provided floor_area.
+        f2f_height: float
+            Floor to floor height of each story in the building.
+        geometry_units: {'m', 'ft'}
+            Units used for building geometry.
+        construction_energy_use: float
+            Construction energy use for the building.
+        construction_energy_use_unit: str
+            Unit for construction energy use. E.g., 'MWh', 'kWh', etc
+        building_standard : {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates. Default is 'ASHRAE'.
+        logistic_type: {'Local', 'Global'}
+            Logistic type for building material transportation. 
+        
+        Returns
+        -------
+        ~pod_lca.buildings.Building
+            Building built.
+        """    
+        building = cls.new(name,
+                           location=location, 
+                           built_year=built_year, 
+                           life_span=life_span)
+        building.set_databases(kwargs.get('building_standard', 'ASHRAE'))
+
+        # set default geometry
+        no_floors = kwargs.get('no_floors', 1)
+        if 'floor_plan' in kwargs:
+            floor_plan = kwargs['floor_plan']
+        else:
+            if 'floor_area' in kwargs:
+                side_length = sqrt(kwargs['floor_area'] / no_floors)
+                floor_plan = [(0.0 , 0.0), (0.0, side_length), (side_length, side_length), (side_length, 0.0)]
+            else:
+                raise ValueError('Either floor plan or floor area must be provided to define the floor geometry.')
+        geometry_units = kwargs.get('geometry_units', 'm')
+
+        # set floors
+        f2f_height = kwargs.get('f2f_height', 3.0 if geometry_units == 'm' else 10.0)
+        floor_plan_poly = [(Q(coords[0], UNITS_MAP[geometry_units]),
+                            Q(coords[1], UNITS_MAP[geometry_units])) for coords in floor_plan]
+        floor = BuildingFloor.from_floor_plan(floor_plan=floor_plan_poly,
+                                              floor_height=Q(f2f_height, UNITS_MAP[geometry_units]),
+                                              usage=kwargs['building_type'])
+        building.floor_obj = floor
+        
+        building.operational_energy_method = 'EUIs' 
+
+        # set building level products
+        construction_energy_use = kwargs["construction_energy_use"] if "construction_energy_use" in kwargs else 0.0
+        energy_units = UNITS_MAP[kwargs["construction_energy_use_unit"]] if "construction_energy_use" in kwargs else MEGA * WATT_HOUR
+        building.set_building_level_products(
+            logistic_type=kwargs.get('logistic_type', 'local'), 
+            construction_electricity_consumption=construction_energy_use, 
+            electricity_unit=energy_units)
+        
+        # set BOM
+        bill_of_materials = DataImporter.csv_to_pandas(csv_path)
+        bill_of_materials['impact_database_entry'] = bill_of_materials['impact_database_entry'].astype(object).where(bill_of_materials['impact_database_entry'].notnull(), None)
+
+        assemblies = {}
+        for item in bill_of_materials.itertuples():
+            building_assembly = item.assembly.lower().replace(" ", "_")
+
+            if building_assembly not in assemblies:
+                assembly_obj = Assembly.from_materials(building_assembly)
+                building.add_assembly(assembly_obj)
+                assembly_obj.set_parent(building)
+
+                assemblies[building_assembly] = assembly_obj
+            else:
+                assembly_obj = assemblies[building_assembly]
+
+            building_material = Material.new(
+                name=item.material + '_in_' + building_assembly, 
+                qty=float(item.qty),
+                unit=UNITS_MAP[item.unit],
+                material_database_entry=item.impact_database_entry,
+            )
+            building_material.set_service_life_category(item.PODLCA_RSL_category)
+            building_material.set_building()
+
+            assembly_obj.add_material(building_material)
+
+        return building
+
     # ================================
     # Setters
     # ================================     

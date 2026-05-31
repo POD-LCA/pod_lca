@@ -1,0 +1,34 @@
+﻿assembly,material,qty,unit,impact_database_entry,PODLCA_RSL_category
+Column foundation,"Normalweight concrete, 4000 psi",1044839,kg,"Ready-mixed concrete, USA, National, 4000 psi",substructure
+Column foundation,"Steel, reinforcing rod",117020,kg,"Rebar, fabricated",substructure
+Wall foundation,"Normalweight concrete, 4000 psi",1905120,kg,"Ready-mixed concrete, USA, National, 4000 psi",substructure
+Wall foundation,"Steel, reinforcing rod",213370,kg,"Rebar, fabricated",substructure
+Slab on grade,"Normalweight concrete, 4000 psi",535815,kg,"Ready-mixed concrete, USA, National, 4000 psi",superstructure
+Slab on grade,"Steel, welded wire mesh",3601,kg,"Rebar, fabricated",superstructure
+Elevated slabs,"Normalweight concrete, 5000 psi",6429780,kg,"Ready-mixed concrete, USA, National, 5000 psi",superstructure
+Elevated slabs,"Steel, reinforcing rod",43207,kg,"Rebar, fabricated",superstructure
+Structural columns,"Normalweight concrete, 5000 psi",534398,kg,"Ready-mixed concrete, USA, National, 5000 psi",superstructure
+Structural columns,"Steel, reinforcing rod",39901,kg,"Rebar, fabricated",superstructure
+Structural walls,"Normalweight concrete, 6000 psi",1092652,kg,"Ready-mixed concrete, USA, National, 6000 psi",superstructure
+Structural walls,"Steel, reinforcing rod",142771,kg,"Rebar, fabricated",superstructure
+Curtain wall: steel spandrel,Double glazing,75920,kg,Insulated glazing unit (IGU),encl_curtainwall
+Curtain wall: steel spandrel,IGU spacer,415,kg,Insulated glazing unit (IGU),encl_curtainwall
+Curtain wall: steel spandrel,Low-e coating,349,kg,,encl_curtainwall
+Curtain wall: steel spandrel,Steel Curtain Wall System,31445,kg,Curtain wall,encl_curtainwall
+Curtain wall: steel spandrel,"Fluoropolymer coating, metal stock",479,kg,,encl_curtainwall
+Curtain wall: steel spandrel,"5"" mineral wool insulation",10981,kg,Mineral wool blanket,encl_curtainwall
+Curtain wall: steel spandrel,"6"" Galvanized Steel Stud Framing",14975,kg,Cold-formed steel framing,encl_curtainwall
+Curtain wall: steel spandrel,Gypsum Wall Board,30644,kg,"Gypsum board, 1/2 in",encl_curtainwall
+Curtain wall: steel spandrel,Acrylic latex paint,509,kg,,encl_curtainwall
+Curtain wall: aluminum spandrel,Aluminum Curtain Wall System,10917,kg,"Aluminum extrusions, mill finish",encl_curtainwall
+Curtain wall: aluminum spandrel,"5"" mineral wool insulation",10806,kg,Mineral wool blanket,encl_curtainwall
+Curtain wall: aluminum spandrel,"6"" Galvanized Steel Stud Framing",14975,kg,Cold-formed steel framing,encl_curtainwall
+Curtain wall: aluminum spandrel,Gypsum Wall Board,30644,kg,"Gypsum board, 1/2 in",encl_curtainwall
+Curtain wall: aluminum spandrel,Acrylic latex paint,509,kg,,encl_curtainwall
+"Glazing, double pane IGU",Double pane IGU,862.2,m2,Insulated glazing unit (IGU),ecl_windows_openings
+"Glazing, triple pane IGU",Triple pane IGU,54275,kg,Insulated glazing unit (IGU),ecl_windows_openings
+Operable window,Casement Window (glass + frame),45277,kg,Insulated glazing unit (IGU),ecl_windows_openings
+"Glazing, operable window","Glazing, double pane IGU",33.1,m2,Insulated glazing unit (IGU),ecl_windows_openings
+"Glazing, operable window","Window frame, vinyl, fixed",33.1,m2,Curtain wall,ecl_windows_openings
+EPDM roofing,EPDM membrane,10829,kg,"EPDM membrane roofing, non-reinforced, 45 mil",roofing_EPDM
+EPDM roofing,Polyisocyanurate board,9755,kg,,roofing_EPDM

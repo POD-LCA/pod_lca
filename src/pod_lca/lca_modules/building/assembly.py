@@ -159,11 +159,16 @@ class Assembly:
         ~pod_lca.building.Building
             Building to which the assembly belong.
         """
+        from .building import Building
+        
         if self.parent is not None:
-            return self.parent.get_building()
+            if isinstance(self.parent, Building):
+                return self.parent
+            else:
+                return self.parent.get_building()
         else:
-            None
-    
+            return None
+
     def get_materials(self):
         """ Get the materials constituiting the building assembly.
         

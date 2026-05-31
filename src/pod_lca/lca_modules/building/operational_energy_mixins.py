@@ -71,14 +71,24 @@ class OperationalMixins:
 
         if method == 'EUIs': 
             electricity_usage_quantity = 0
-            for envelope in self.building_envelope.get_envelopes():
-                building_type = envelope.floor_plan_obj.get_usage()
+            if self.building_envelope:
+                for envelope in self.building_envelope.get_envelopes():
+                    building_type = envelope.floor_plan_obj.get_usage()
+                    eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
+    
+                    floor_area = envelope.floor_plan_obj.get_area()
+                    eui = Q(float(eui_data['eui']), UNITS_MAP[eui_data['unit']])
+                
+                electricity_usage_quantity += floor_area * eui
+                
+            elif self.floor_obj:
+                building_type = self.floor_obj.get_usage()
                 eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
-   
-                floor_area = envelope.floor_plan_obj.get_area()
+
+                floor_area = self.floor_obj.get_area()
                 eui = Q(float(eui_data['eui']), UNITS_MAP[eui_data['unit']])
                 
-                electricity_usage_quantity = floor_area * eui
+                electricity_usage_quantity += floor_area * eui
 
             if summed_at == 'year':
                 electricity_usage['year']['total'] = electricity_usage_quantity.value
