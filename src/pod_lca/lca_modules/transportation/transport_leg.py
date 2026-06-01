@@ -452,6 +452,8 @@ class TransportationLeg:
             Incompatible units.
         """
         if self.get_material().get_weight() is None:
+            self.impacts.clear_qty()
+            self.emissions.clear_qty()
             log("No material weight to set transportation impacts.")
         else:
             inventories_declared_unit = self.get_mode().get_declared_unit() 
