@@ -174,7 +174,7 @@ class TransportationLeg:
             raise TypeError("Travel distance must be a number.")
 
         self.dist_unit = KILOMETER if dist_unit is None else dist_unit
-        self.return_trip_factor = 0.0 if return_trip_factor is None else return_trip_factor
+        self.return_trip_factor = 1.0 if return_trip_factor is None else return_trip_factor
 
         return self
 
@@ -474,7 +474,7 @@ class TransportationLeg:
                 * conversion_factor
                 * transport_material_qty
                 * travel_dist
-                * (1 + return_trip_factor)
+                * return_trip_factor
                 for key in self.impacts.record_attr_dict
             }
             self.impacts.update_qty(impacts)
@@ -484,7 +484,7 @@ class TransportationLeg:
                 * conversion_factor
                 * transport_material_qty
                 * travel_dist
-                * (1 + return_trip_factor)
+                * return_trip_factor
                 for key in self.emissions.record_attr_dict
             }
             self.emissions.update_qty(emissions)
