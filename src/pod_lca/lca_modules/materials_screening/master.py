@@ -295,17 +295,16 @@ class Master:
         if (self.get_unit() is None) or force_set:
             self.unit = unit
         else:
-            value_in = self.get_qty()
             unit_in = self.get_unit()
 
-            conversion_factor = unit_in.convert_to(unit)
+            try:
+                new_qty = self.get_qty(unit)
 
-            if conversion_factor is not None:
                 self.unit = unit
-                self.set_qty(value_in * conversion_factor)
-            else:
-                self.unit = unit
+                self.set_qty(new_qty)
+            except:
                 log(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}). New unit set without resetting quantity.", "Warn")
+                raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 
         return self
 
