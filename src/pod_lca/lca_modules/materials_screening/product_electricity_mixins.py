@@ -343,9 +343,8 @@ class ProductElectricityMixins:
 
         declared_unit = database.get_data_entry(self.get_impact_database_entry())[database.get_unit_key()]
         declared_qty = database.get_data_entry(self.get_impact_database_entry())[database.get_qty_key()]
-        conversion_factor = self.get_unit().convert_to(declared_unit)
 
-        return qty * (self.get_qty() * conversion_factor / declared_qty)
+        return qty * (self.get_qty(declared_unit) / declared_qty)
 
     # ================================
     # Methods
