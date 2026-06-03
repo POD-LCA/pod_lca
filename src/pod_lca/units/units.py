@@ -519,46 +519,55 @@ class Unit:
             self.standard_notation = UNIT_NOTATION_OVERRIDES[self.standard_notation]
 
     def simplify(self):
-        self.expand_standard_compounds()
         
-        conversion_factor = 1.0
+        def _simplify(self):
+            conversion_factor = 1.0
 
-        changed = True
-        while changed:
-            changed = False
-            units = list(self.units.items())
+            changed = True
+            while changed:
+                changed = False
+                units = list(self.units.items())
 
-            for i, (u1, p1) in enumerate(units):
-                for u2, p2 in units[i + 1:]:
+                for i, (u1, p1) in enumerate(units):
+                    for u2, p2 in units[i + 1:]:
 
-                    if u1 not in self.units or u2 not in self.units:
-                        continue
+                        if u1 not in self.units or u2 not in self.units:
+                            continue
 
-                    try:
-                        factor = u2.convert_to(u1)
+                        try:
+                            factor = u2.convert_to(u1)
 
-                        conversion_factor *= factor ** p2
-                        self.units[u1] += p2
+                            conversion_factor *= factor ** p2
+                            self.units[u1] += p2
 
-                        if self.units[u1] == 0:
-                            del self.units[u1]
+                            if self.units[u1] == 0:
+                                del self.units[u1]
 
-                        del self.units[u2]
+                            del self.units[u2]
 
-                        changed = True
+                            changed = True
+                            break
+
+                        except TypeError:
+                            pass
+
+                    if changed:
                         break
+            
+            return self, conversion_factor
 
-                    except TypeError:
-                        pass
+        # simplify with expanded compounds
+        self.expand_standard_compounds()
+        self, conversion_factor_1 = _simplify(self)
 
-                if changed:
-                    break
-
+        # simplify with collapsed compounds
         self.collapse_standard_compounds()
-        self._rebuild_strings()        
+        self, conversion_factor_2 = _simplify(self)
 
-        return self, conversion_factor
-        
+        self._rebuild_strings()
+
+        return self, conversion_factor_1 * conversion_factor_2
+
 
 class MetricPrefix:
     """Unit object from which units are created.

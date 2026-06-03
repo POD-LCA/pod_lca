@@ -168,3 +168,10 @@ def test_complex_conversion():
     density_metric = KILO * GRAM / CUBIC_METER
 
     assert (mass_imperial / density_metric).convert_to(vol_imperial) == pytest.approx(119.826427, rel=1e-6)
+
+def test_complex_conversion_reverse():
+    mass_imperial = POUND
+    vol_imperial = US_GALLON
+    density_metric = KILO * GRAM / CUBIC_METER
+
+    assert (mass_imperial).convert_to(vol_imperial * density_metric) == pytest.approx(119.826427, rel=1e-6)
