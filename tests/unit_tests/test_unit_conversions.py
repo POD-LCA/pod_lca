@@ -12,7 +12,11 @@ from pod_lca.units import MILE
 from pod_lca.units import JOULE 
 from pod_lca.units import FEET
 from pod_lca.units import YARD
-from pod_lca.units import NAUTICAL_MILE   
+from pod_lca.units import NAUTICAL_MILE
+from pod_lca.units import CUBIC_METER
+from pod_lca.units import GRAM
+from pod_lca.units import US_GALLON
+from pod_lca.units import POUND   
 
 # -------------------------
 # Fixtures
@@ -144,7 +148,6 @@ def test_therm_to_wh():
 # -------------------------
 # Compound conversions
 # -------------------------
-
 def test_speed_conversion():
     mph = MILE / Unit.from_basics("hour", "h", "time")
     mps = METER / Unit.from_basics("second", "s", "time")
@@ -158,3 +161,10 @@ def test_energy_density_conversion():
     j_m2 = JOULE / (METER * METER)
 
     assert wh_m2.convert_to(j_m2) == pytest.approx(3600)
+
+def test_complex_conversion():
+    mass_imperial = POUND
+    vol_imperial = US_GALLON
+    density_metric = KILO * GRAM / CUBIC_METER
+
+    assert (mass_imperial / density_metric).convert_to(vol_imperial) == pytest.approx(119.826427, rel=1e-6)

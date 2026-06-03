@@ -310,6 +310,21 @@ class Unit:
         TypeError
             Incompatible units for conversion.
         """
+        # simplify denominator`` and numerator
+        starting_factor = 1.0
+
+        if self.is_compound():
+            self, factor_num = self.simplify()
+        else:
+            factor_num = 1.0
+
+        if to_unit.is_compound():
+            to_unit, factor_denom = to_unit.simplify()
+        else:
+            factor_denom = 1.0
+
+        starting_factor *= factor_num / factor_denom
+
         # incompatible units
         if self.get_qty_measured() != to_unit.get_qty_measured():
             raise TypeError("Incompatible units for conversion.")
@@ -317,11 +332,11 @@ class Unit:
         # simple unit conversion
         if (not self.is_compound()) and (not to_unit.is_compound()):
             if self == to_unit:
-                return 1.0
+                return starting_factor
             return Unit.compute_conversion_factor(self, to_unit)
 
         # compound unit conversion
-        factor = 1.0
+        factor = starting_factor
         for component_in, power_in in self.units.items():
             for component_out, power_out in to_unit.units.items():
                 if power_in != power_out:
@@ -506,25 +521,38 @@ class Unit:
     def simplify(self):
         self.expand_standard_compounds()
         
-        units = list(self.units.items())
-        n = len(units)
+        conversion_factor = 1.0
 
-        conversion_factor = 1 
-        for i in range(n):
-            current_unit, current_pow = units[i]
-            
-            for j in range(i + 1, n):
-                next_unit, next_pow = units[j]
-                
-                try:
-                    factor = next_unit.convert_to(current_unit)
-                    conversion_factor *= factor ** (next_pow)
+        changed = True
+        while changed:
+            changed = False
+            units = list(self.units.items())
 
-                    self.units[current_unit] =  current_pow +  next_pow
-                    self.units[next_unit] = 0
-                except TypeError:
-                    self.units[current_unit] = current_pow
-                    self.units[next_unit] = next_pow
+            for i, (u1, p1) in enumerate(units):
+                for u2, p2 in units[i + 1:]:
+
+                    if u1 not in self.units or u2 not in self.units:
+                        continue
+
+                    try:
+                        factor = u2.convert_to(u1)
+
+                        conversion_factor *= factor ** p2
+                        self.units[u1] += p2
+
+                        if self.units[u1] == 0:
+                            del self.units[u1]
+
+                        del self.units[u2]
+
+                        changed = True
+                        break
+
+                    except TypeError:
+                        pass
+
+                if changed:
+                    break
 
         self.collapse_standard_compounds()
         self._rebuild_strings()        
