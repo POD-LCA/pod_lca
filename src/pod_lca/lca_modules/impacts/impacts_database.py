@@ -497,6 +497,9 @@ class ImpactsDatabase:
         data : dict
             Data dictionary keyed by corresponding headers in the databse
         """
+        if isinstance(data[self.get_unit_key()], str):
+            data["Unit"] = UNITS_MAP[data["Unit"]]
+
         new_row_df = DataFrame([data])
         self.data = concat([self.data, new_row_df], ignore_index=True)
 
