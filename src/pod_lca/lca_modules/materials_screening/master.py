@@ -407,28 +407,37 @@ class Master:
         """
         if not unit:
             return self.qty
-        else:
-            if self.get_unit().get_qty_measured() == unit.get_qty_measured():
-                conversion_factor = self.get_unit().convert_to(unit)
-                qty = self.qty
-            else:
-                if unit.get_qty_measured() == "mass":
-                    conversion_factor = self.get_unit().convert_to(unit)
-                    qty = self.get_qty()
-                elif self.get_density_unit() is not None:
-                    if (self.get_unit().get_qty_measured() == (unit * self.get_density_unit()).get_qty_measured()):
-                        conversion_factor = self.get_unit().convert_to(unit * self.get_density_unit())
-                        qty = (self.qty / self.get_density())
-                    else:
-                        raise ImportError(
-                            f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit}) are of incompatible units."
-                        )
-                else:
-                    raise ImportError(
-                        f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit}) are of incompatible units."
-                    )
-                
+
+        defined_unit = self.get_unit()
+
+        # try direct conversion
+        try:
+            conversion_factor = defined_unit.convert_to(unit)
+            qty = self.get_qty()
             return qty * conversion_factor
+        except:
+            pass        
+
+        # try conversion through density unit, if defined
+        density_unit = self.get_density_unit()
+        if density_unit is not None:
+            try:
+                conversion_factor = defined_unit.convert_to(unit * self.get_density_unit())
+                qty = (self.qty / self.get_density())
+                return qty * conversion_factor
+            except:
+                pass
+
+            try:
+                conversion_factor = (defined_unit * self.get_density_unit()).convert_to(unit)
+                qty = (self.qty * self.get_density())
+                return qty * conversion_factor
+            except:
+                pass
+
+        raise ImportError(
+            f"{self.get_name()} (of units {defined_unit}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit}) are of incompatible units."
+        )
 
     def get_unit(self):
         """Retrieve the unit of measurement of the product/process.

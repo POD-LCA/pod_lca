@@ -310,7 +310,7 @@ class Unit:
         TypeError
             Incompatible units for conversion.
         """
-        # simplify denominator`` and numerator
+        # simplify denominator and numerator
         starting_factor = 1.0
 
         if self.is_compound():
