@@ -497,11 +497,14 @@ class ImpactsDatabase:
         data : dict
             Data dictionary keyed by corresponding headers in the databse
         """
-        if isinstance(data[self.get_unit_key()], str):
-            data["Unit"] = UNITS_MAP[data["Unit"]]
+        local_data_copy = data.copy()
+        if isinstance(local_data_copy[self.get_unit_key()], str):
+            local_data_copy["Unit"] = UNITS_MAP[local_data_copy["Unit"]]
 
-        new_row_df = DataFrame([data])
+        new_row_df = DataFrame([local_data_copy])
         self.data = concat([self.data, new_row_df], ignore_index=True)
+
+        del local_data_copy
 
     def delete_entry(self, flow_name):
         """ Delete an entry from the database.
