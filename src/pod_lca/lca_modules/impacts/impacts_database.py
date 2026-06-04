@@ -496,7 +496,17 @@ class ImpactsDatabase:
         ----------
         data : dict
             Data dictionary keyed by corresponding headers in the databse
+
+        Returns
+        -------
+        bool
+            True if new entry added, False otherwise.
         """
+        primary_key = self.get_primary_key()
+        if data[primary_key] in self.data[primary_key].values:
+            log("Primary key already exist. New entry not added.")
+            return False
+
         local_data_copy = data.copy()
         if isinstance(local_data_copy[self.get_unit_key()], str):
             local_data_copy["Unit"] = UNITS_MAP[local_data_copy["Unit"]]
@@ -505,6 +515,21 @@ class ImpactsDatabase:
         self.data = concat([self.data, new_row_df], ignore_index=True)
 
         del local_data_copy
+
+        return True
+
+    def update_entry(self, data):
+        """ Update an existing entry in the database.
+        
+        Parameters
+        ----------
+        data : dict
+            Data dictionary keyed by corresponding headers in the databse        
+        """
+        primary_key = self.get_primary_key()
+        if data[primary_key] in self.data[primary_key].values:
+            row = self.data[primary_key] == data[primary_key]
+            self.data.loc[row, list(data.keys())] = list(data.values())
 
     def delete_entry(self, flow_name):
         """ Delete an entry from the database.
