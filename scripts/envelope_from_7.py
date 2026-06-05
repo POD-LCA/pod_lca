@@ -180,15 +180,15 @@ s.build(mui_type)
 
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
+b = Building.from_assemblies(bname, location, built_year, life_span, s, None)
 
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
-b.set_eplus_out_folder("temp/out") # default writes to a temp folder
-b.set_idf_file_path("temp/out/temp_operational.idf") # default writes to a temp file
+# b.set_eplus_out_folder("temp/out") # default writes to a temp folder
+# b.set_idf_file_path("temp/out/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
-b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
+# b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 
 # get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -201,8 +201,11 @@ print(b.get_operational_impacts()) # default is 'total'
 
 # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# # print(b.get_emissions(scope='product'))
+print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product'))
+
+print(b.get_material_quantities_of_assembly("generic structural element"))
+print(b.get_material_impacts_of_assembly_lcstage("generic structural element", impact_cat="GWP", lc_stage="A1-A3"))
 
 # # drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
 # # drf_record.plot('cumulative radiative forcing')
