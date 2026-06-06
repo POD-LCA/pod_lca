@@ -70,7 +70,7 @@ class OperationalMixins:
         electricity_usage = defaultdict(lambda: defaultdict(float))
 
         if method == 'EUIs': 
-            electricity_usage_quantity = 0
+            electricity_usage_quantity = Q(0, unit)
             if self.building_envelope:
                 for envelope in self.building_envelope.get_envelopes():
                     building_type = envelope.floor_plan_obj.get_usage()
