@@ -195,8 +195,8 @@ class ProductTransportationMixins:
                 naics_sub_cat = data["NAICS Sub-category"]
                 mapped = mapping[mapping["NAICS Sub-category"] == naics_sub_cat].iloc[0:1]
 
-                if mapped["SCTG Category"].iloc[0] is None:
-                    return config['setup']['transportation']['DEFAULT_SCTG_CODE']
+                if mapped["SCTG Category"].empty:
+                    return "N/A"
                 mapped_sctg = mapped["SCTG Category"].iloc[0]
                 if isinstance(mapped_sctg, (int, float)):
                     if isnan(mapped_sctg):
