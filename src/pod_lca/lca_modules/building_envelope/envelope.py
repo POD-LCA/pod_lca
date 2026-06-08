@@ -22,7 +22,37 @@ from ...utilities import dot_vectors
 
 
 class Envelope:
-
+    """ The envelope of each floor of the building.
+    
+    Attributes
+    ----------
+    name : str
+        The name of the envelope.
+    building : ~pod_lca.building.Building
+        The building to which the building envelope belongs to.
+    floor_plan_obj : ~pod_lca.building.BuildingFloor
+        The geometry floor plan object for that envelope. 
+    surfaces : (dict of ) ~pod_lca.building_envelope.Surface
+        The geometry surface objects of the surfaces surrounding the envelope. 
+    walls : (dict of ) ~pod_lca.building_envelope.Wall
+        The wall constructions of the envelope. 
+    windows : (dict of ) ~pod_lca.building_envelope.Windows
+        The window constructions of the envelope. 
+    shadings : (dict of ) ~pod_lca.building_envelope.Shadings
+        The shading constructions of the envelope. 
+    floors : (dict of ) ~pod_lca.building_envelope.Floor
+        The floor constructions of the envelope. 
+    ceilings : (dict of) ~pod_lca.building_envelope.Ceiling
+        The ceiling constructions of the envelope. 
+    construction_map : (dict)
+        Type to constructions map. 
+    wall_surface_keys : (list)
+        List of keys for all wall constructions. 
+    window_surface_keys : (list)
+        List of all window construction keys. 
+    origin : (list)
+        X, Y, Z coordinates of the global geometric origin for this envelope. 
+    """
     def __init__(self):
         self.name = None
         self.building = None
@@ -46,6 +76,19 @@ class Envelope:
 
     @classmethod
     def from_data(cls, data):
+        """ Create an envelope from a data dictionary. The data dictionary 
+        is usually made with the to_data method. 
+        
+        Parameters
+        ----------
+        data : (dict)
+            Container of all the data required to create an envelope.
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Envelope
+            The envelope of the floor created.
+        """
         envelope = cls()
         envelope.name           = data['name']              
         envelope.building       = data['building']                        
@@ -77,6 +120,13 @@ class Envelope:
         return envelope
 
     def to_data(self):
+        """ Generates a data dictionary containing all properties of the envelope.
+
+        Returns
+        -------
+        (dict)
+            The data dictionary with all envelope properties. 
+        """
         data = {}
         data['name']       = self.name      
         data['building']   = self.building       
@@ -99,22 +149,57 @@ class Envelope:
 
     @property
     def floor_plan(self):
+        """ Returns the envelope floor plan.
+        
+        Returns
+        -------
+        ~pod_lca.building.BuildingFloor
+            The envelope's floor plan object'
+        """
         return self.floor_plan_obj.floor_plan
     
     @property
     def height(self):
+        """ Returns the height of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The height of the envelope
+        """
         return self.floor_plan_obj.height
 
     @property
     def area(self):
+        """ Returns the area of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The area of the envelope
+        """
         return self.floor_plan_obj.get_area()
 
     @property
     def volume(self):
+        """ Returns the volume of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The volume of the envelope
+        """
         return self.height * self.area
     
     @property
     def centroid(self):
+        """ Returns the area centroid of the envelope floor plan.
+        
+        Returns
+        -------
+        (list of) ~pod_lca.units.Quantity
+            The X, Y, Z coordinates of the envelope centroid
+        """
         return centroid(self.floor_plan)
     
     @classmethod

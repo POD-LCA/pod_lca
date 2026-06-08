@@ -14,7 +14,7 @@ from ...utilities import log
 
 
 class BuildingEnvelope:
-    """ The structural assemblies of the building.
+    """ The envelopes of the building.
     
     Attributes
     ----------
