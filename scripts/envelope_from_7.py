@@ -214,3 +214,4 @@ print(b.get_material_impacts_of_assembly_lcstage("generic structural element", i
 # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # graph.show()
 
+#TODO: check if the last layer or first layer was used in the ASHRAE model. 
