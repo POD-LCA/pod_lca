@@ -215,3 +215,4 @@ print(b.get_material_impacts_of_assembly_lcstage("generic structural element", i
 # # graph.show()
 
 #TODO: check if the last layer or first layer was used in the ASHRAE model. 
+#TODO: look at all the todos in the framing file, related to units

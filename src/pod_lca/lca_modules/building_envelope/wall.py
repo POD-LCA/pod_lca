@@ -15,6 +15,9 @@ mKW = (METER * KELVIN) / WATT
 
 
 class Wall(Construction):
+    """Wall construction object based on the 
+    ~pod_lca.building_envelope.Construction class. 
+    """
     def __init__(self):
         super().__init__()
         self.__type__ = 'Wall'
