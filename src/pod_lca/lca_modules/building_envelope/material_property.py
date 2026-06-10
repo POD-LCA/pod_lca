@@ -11,6 +11,13 @@ from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
 from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 
 class EnvelopeMaterialProperty(object):
+    """ The envelope material properties base class.
+    
+    Attributes
+    ----------
+    name : str
+        The name of the material propperty instance. 
+    """
     def __init__(self):
         self.name               = None
         # Operational Energy attributes
@@ -18,6 +25,14 @@ class EnvelopeMaterialProperty(object):
     
     @classmethod
     def from_data(cls, data):
+        """Creates an instance of the material properties class from a data
+        dictionary. The dictionary should be made using the to_data method. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary with all required properties. 
+        """
         mtype = data['__type__']
         if mtype == 'MaterialPropertyMass':
             material_prop = EnvelopeMaterialPropertyMass.from_data(data)
@@ -36,11 +51,49 @@ class EnvelopeMaterialProperty(object):
 
     @classmethod
     def from_idf(cls, name, filepath):
+        """Creates an instance of the material properties class from an
+        IDF file. 
+
+        Parameters
+        ----------
+        name : str
+            Name of the material property to be read in the IDF file. 
+
+        filepath : str
+            Path to the IDF file. 
+        """
         data = find_material_by_name(filepath, name)
         return cls.from_data(data)
 
 
 class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
+    """ Defines an envelope MASS material properties class. To be used
+    with materials with thermal mass properties, such as interior facing 
+    surfaces. 
+    
+    Attributes
+    ----------
+    __type__ : str
+        Contains the specific material property type. 
+
+    roughness :  str
+        Energy plus material roughness setting 
+
+    conductivity :  ~pod_lca.units.Quantity
+        Thermal conductivity
+    
+    speficic_heat :  ~pod_lca.units.Quantity
+        Material specific_heat
+
+    thermal_absorptance :  ~pod_lca.units.Quantity
+        Material thermal absorptance
+
+    solar_absorptance :  ~pod_lca.units.Quantity
+        Material solar absorptance
+    
+    visible_absorptance :  ~pod_lca.units.Quantity
+        Material visible absorptance
+    """
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
@@ -54,6 +107,14 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
 
     @classmethod
     def from_data(cls, data):
+        """Creates an instance of the MASS material properties class from a data
+        dictionary. The dictionary should be made using the to_data method. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary with all required properties. 
+        """
         material = cls()
         material.__type__            = 'MaterialPropertyMass'
         material.name                = data['name']
@@ -68,6 +129,16 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
         return material
 
 class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
+    """ Defines an envelope Air Gap material properties class. 
+    
+    Attributes
+    ----------
+    __type__ : str
+        Contains the specific material property type. 
+
+    conductivity :  ~pod_lca.units.Quantity
+        Thermal resistance of air
+    """
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
@@ -76,6 +147,14 @@ class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
 
     @classmethod
     def from_data(cls, data):
+        """Creates an instance of the Air Gap material properties class from a data
+        dictionary. The dictionary should be made using the to_data method. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary with all required properties. 
+        """
         material = cls()
         material.__type__            = 'EnvelopeMaterialPropertyAirGap'
         material.name                = data['name']
@@ -84,9 +163,33 @@ class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
 
 
 class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
+    """ Defines an envelope No MASS material properties class. 
+    
+    Attributes
+    ----------
+    __type__ : str
+        Contains the specific material property type. 
+
+    roughness :  str
+        Energy plus material roughness setting 
+
+    thermal_resistance :  ~pod_lca.units.Quantity
+        Material thermal resistance
+
+    thermal_absorptance :  ~pod_lca.units.Quantity
+        Material thermal absorptance
+
+    solar_absorptance :  ~pod_lca.units.Quantity
+        Material solar absorptance
+    
+    visible_absorptance :  ~pod_lca.units.Quantity
+        Material visible absorptance
+
+    thickness : ~pod_lca.units.Quantity
+        Material thickness. Will be overwritten by layer thickness. 
+    """
     def __init__(self):
         super().__init__()  
-        self.name                = None
         self.__type__            = 'MaterialPropertyNoMass'
         self.roughness           = None
         self.thermal_resistance  = None
@@ -97,6 +200,14 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
 
     @classmethod
     def from_data(cls, data):
+        """Creates an instance of the No MASS material properties class from a data
+        dictionary. The dictionary should be made using the to_data method. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary with all required properties. 
+        """
         material = cls()
         material.__type__            = 'MaterialPropertyNoMass'
         material.name                = data['name']
@@ -110,11 +221,58 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
     
 
 class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
+    """ Defines an envelope Glazing material properties class. 
+    
+    Attributes
+    ----------
+    __type__ : str
+        Contains the specific material property type. 
 
+    optical_data_type : str
+        Material optical data type
+
+    win_glass_spectral_data_name : str
+        Material Window Glass Spectral Data Set Name           
+
+    solar_transmittance : ~pod_lca.units.Quantity
+        Material Solar Transmittance at Normal Incidence                    
+
+    front_solar_reflectance : ~pod_lca.units.Quantity
+        Material Front Side Solar Reflectance at Normal Incidence                
+
+    back_solar_reflectance : ~pod_lca.units.Quantity
+        Material Back Side Solar Reflectance at Normal Incidence                 
+
+    visible_transmittance : ~pod_lca.units.Quantity
+        Material Visible Transmittance at Normal Incidence                  
+
+    front_visible_reflectance : ~pod_lca.units.Quantity
+        Material Front Side Visible Reflectance at Normal Incidence              
+
+    back_visible_reflectance : ~pod_lca.units.Quantity
+        Material Back Side Visible Reflectance at Normal Incidence               
+
+    infrared_transmittance : ~pod_lca.units.Quantity
+        Material Infrared Transmittance at Normal Incidence                 
+
+    front_infrared_hemispherical_emissivity : ~pod_lca.units.Quantity
+        Material Front Side Infrared Hemispherical Emissivity
+
+    back_infrared_hemispherical_emissivity : ~pod_lca.units.Quantity
+        Material Back Side Infrared Hemispherical Emissivity 
+
+    conductivity : ~pod_lca.units.Quantity
+        Material Conductivity                           
+
+    dirt_correction_factor : ~pod_lca.units.Quantity
+        Material Dirt Correction Factor for Solar and Visible Transmittance                 
+
+    solar_diffusing  : str
+        Does the material diffuse sun yes or no.                         
+    """
     def __init__(self):
         super().__init__()  
         self.__type__                                   = 'WindowMaterialPropertyGlazing'
-        self.name                                       = 'WindowMaterialPropertyGlazing'
         self.optical_data_type                          = None
         self.win_glass_spectral_data_name               = None
         self.solar_transmittance                        = None
@@ -132,6 +290,14 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
 
     @classmethod
     def from_data(cls, data):
+        """Creates an instance of the Glazing material properties class from a data
+        dictionary. The dictionary should be made using the to_data method. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary with all required properties. 
+        """
         material = cls()
         material.name                                    = data.get('name') or {}
         material.optical_data_type                       = data.get('optical_data_type') or {}
@@ -173,6 +339,14 @@ class WindowMaterialPropertyGas(EnvelopeMaterialProperty):
     
     @classmethod
     def from_data(cls, data):
+        """Creates an instance of the Gas material properties class from a data
+        dictionary. The dictionary should be made using the to_data method. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary with all required properties. 
+        """
         material = cls()
         material.__type__           = data.get('__type__') or {}
         material.name               = data.get('name') or {}
