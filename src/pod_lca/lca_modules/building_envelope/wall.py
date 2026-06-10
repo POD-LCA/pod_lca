@@ -24,6 +24,30 @@ class Wall(Construction):
 
 
 class FramedWall(Construction):
+    """Framed Wall construction object based on the 
+    ~pod_lca.building_envelope.Construction class.
+    
+    Attributes
+    ----------
+    __type__ : str
+        The type of construction "FramedWall"
+
+    framing :  ~pod_lca.building_envelope.Framing
+        The framing object used by the wall
+    
+    r : ~pod_lca.units.Quantity
+        The thermal resistance of the framed wall
+
+    u : ~pod_lca.units.Quantity
+        The thermal conductance of the framed wall
+
+    virtual_layers : (dict of) ~pod_lca.building_envelope.Layer
+        The layers created for the e+ siumulation, not real layers,
+        ignored for embodied impact calculations. 
+
+    virtual_layer_order : list
+        The order of the virtual layers from outside to inside. 
+    """
     def __init__(self):
         super().__init__()
         self.__type__ = 'FramedWall'
@@ -36,6 +60,25 @@ class FramedWall(Construction):
 
     @classmethod
     def from_layers_framing(cls, name, layers, framing):
+        """Create a framed wall instance from layers and framing. 
+
+        Parameters
+        ----------
+        name : str
+            The name of the framed wall instance. 
+
+        layers : (dict of) ~pod_lca.building_envelope.Layer
+            The layers of the framed wall. 
+        
+        framing : ~pod_lca.building_envelope.Framing
+            The framing object used by the wall. 
+
+        Returns
+        -------
+        fwall :  ~pod_lca.building_envelope.FramedWall
+            The framed wall instance. 
+
+        """
         fwall = cls.from_materials(name)
         fwall.layer_order = [lk for lk in layers]
         fwall.layers = layers
@@ -72,7 +115,9 @@ class FramedWall(Construction):
         return fwall
     
     def compute_wall_r(self):
-
+        """Computes the R value and U value of the framed wall,
+        including the thermal bridges caused by the framing. 
+        """
         Ra   = Q(0., m2KW)
         Rb   = Q(0., m2KW)
         ri   = Q(0., mKW)
