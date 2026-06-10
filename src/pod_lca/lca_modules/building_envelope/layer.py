@@ -17,6 +17,33 @@ mKW = (METER * KELVIN) / WATT
 
 
 class Layer(object):
+    """ Base object to define layers in the building envelope.
+    
+    Attributes
+    ----------
+    name :  str
+        The name of the layer instance
+    
+    parent_construction : ~pod_lca.building_envelope.Construction
+        The construction to which the layer is assigned. 
+
+    material_property :  ~pod_lca.building_envelope.MaterialProperty
+        The material property of the material the layer is made of. 
+
+    _thickness :  ~pod_lca.units.Quantity
+        The thickness of the layer
+
+    classification :  str
+        The classification of the layer in the envelope ( exterior_cladding, air_gap,
+        exterior_insulation, etc.). 
+
+    is_structural : bool
+        True of the layer is part of the building structure (slabs for example),
+        false if the layer does not have structural properties. 
+
+    structural_element: None or str
+        What type of structrural element the layer is ("Slab", "Wall", "Roof")
+    """
     def __init__(self):
         self.name = None
         self.parent_construction = None
@@ -49,38 +76,47 @@ class Layer(object):
 
     @property
     def thickness(self):
+        """Returns the thickness of the layer
+        """
         return self._thickness
 
     @thickness.setter
     def thickness(self, quantity):
+        """Sets the thickness of the layer. 
+
+        Parameters
+        ----------
+        quantity : ~pod_lca.units.Quantity
+            The new thickness of the layer
+        """
         self._thickness = quantity
 
         if self.parent_construction is not None:
             self.parent_construction.get_building().get_structure().update_structure(self.structural_element, self._thickness)
 
-    @classmethod
-    def from_data(cls, data, thickness, classification=None):
-        layer = cls()
-        layer.name = data['name']
-        layer.thickness = thickness
-        layer.material_property = layer.add_envelope_material_property(data)
-        layer.classification = classification
-        return layer
-
-    @classmethod
-    def from_idf(cls, name, building):
-        data = building.idf_material_properties['materials'][name]
-        name = data['name']
-        thickness = data.get('thickness')
-
-        layer = cls()
-        layer.name = name
-        layer.thickness = thickness
-        layer.material_property = layer.add_envelope_material_property(data)
-        return layer
 
     @classmethod
     def from_property_and_thickness(cls, name, material_property, thickness, classification=None):
+        """Creates an instance of the Layer class from material property, thickness 
+        and classification. 
+
+        Parameters
+        ----------
+        material_property :  ~pod_lca.building_envelope.MaterialProperty
+            The material property of the material the layer is made of. 
+        
+        thickness :  ~pod_lca.units.Quantity
+            The thickness of the layer
+
+        classification :  str
+            The classification of the layer in the envelope ( exterior_cladding, air_gap,
+            exterior_insulation, etc.). 
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Layer
+            The Layer instance
+        """
         layer = cls()
         layer.name = name
         layer.thickness = thickness
@@ -89,6 +125,19 @@ class Layer(object):
         return layer
 
     def add_envelope_material_property(self, data):
+        """Adds a material properrty to the layer
+
+        Parameters
+        ----------
+        data :  dict
+            Material property data dictionary. 
+
+        Returns
+        -------
+        material_prop : ~pod_lca.building_envelope.MaterialProperty
+            The material property object
+        
+        """
         mtype = data['__type__']
         if mtype == 'MaterialPropertyMass':
             material_prop = EnvelopeMaterialPropertyMass.from_data(data)
@@ -106,6 +155,19 @@ class Layer(object):
         return material_prop
     
     def get_r(self, thickness=None):
+        """Returns the thermal resistance of the layer
+
+        Parameters
+        ----------
+        thickness : ~pod_lca.units.Quantity
+            (optional) The thickness of the layer if the R value should be computed 
+            for a different thickness than currently assigned to the layer. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal resistance of the layer. 
+        """
         mtype = self.material_property.__type__
         if mtype == 'MaterialPropertyMass':
             resistivity =  self.material_property.conductivity.invert()
@@ -118,6 +180,19 @@ class Layer(object):
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
 
     def get_resistivity(self, thickness=None):
+        """Returns the thermal resistivity of the layer
+
+        Parameters
+        ----------
+        thickness : ~pod_lca.units.Quantity
+            (optional) The thickness of the layer if the resistivity should be computed 
+            for a different thickness than currently assigned to the layer. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal resistivity of the layer. 
+        """
         mat = self.material_property
         mtype = mat.__type__
         if mtype == 'MaterialPropertyMass':
@@ -130,6 +205,8 @@ class Layer(object):
             raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
         
     def set_structural(self, is_structural):
+        """Sets the layer as structural. 
+        """
         self.is_structural = is_structural
 
 
