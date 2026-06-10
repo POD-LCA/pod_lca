@@ -132,21 +132,28 @@ class Framing(object):
 
         Parameters
         ----------
-        ri : 
+        ri : ~pod_lca.units.Quantity
+            Assembly resistivity
 
-        rins : 
+        rins : ~pod_lca.units.Quantity
+            Framing insulation resistivity
 
-        di : 
+        di : ~pod_lca.units.Quantity
+            Sheathing thickness
 
-        Ra : 
+        Ra : ~pod_lca.units.Quantity
+            Assembly thermal resistance (exluding interior finish)
 
-        Rb : 
+        Rb : ~pod_lca.units.Quantity
+            Interior finish thermal resistance
 
         Returns
         -------
-        r : 
+        r : ~pod_lca.units.Quantity
+            Thermal resiastance of the assembly including the thermal bridge. 
 
-        u :  
+        u : ~pod_lca.units.Quantity
+            Thermal conductance of the assembly including the thermal bridge.  
 
         """
         debug = {}
@@ -223,8 +230,25 @@ class Framing(object):
         return r, u
 
     def wood_bridge(self, width, k, Ra, Rb, rins):
-        """
-        Compute overall R-value of a wood stud wall using the parallel path method.
+        """Computes the updated R and U given the thermal bridging
+        caused by wooden framing, using the parallel path method. 
+
+        Parameters
+        ----------
+        width : ~pod_lca.units.Quantity
+            Width of the stud
+        
+        k : ~pod_lca.units.Quantity
+            Wood conductivity. 
+
+        Ra : ~pod_lca.units.Quantity
+            Assembly thermal resistance (exluding interior finish)
+
+        Rb : ~pod_lca.units.Quantity
+            Interior finish thermal resistance
+
+        rins : ~pod_lca.units.Quantity
+            Framing insulation resistivity
         """
         COND_TO_RIMP = 0.144
         # --------------------------
@@ -267,6 +291,8 @@ class Framing(object):
 
 
 def interp_along_ratio(ratios, values, x):
+    """Interpolation function used in the R value calculation
+    """
     if x <= ratios[0]:
         return values[0]
     if x >= ratios[-1]:
