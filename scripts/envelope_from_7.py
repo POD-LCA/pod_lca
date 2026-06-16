@@ -224,3 +224,4 @@ print(b.get_operational_impacts()) # default is 'total'
 # TODO: Make Framing a Layer and test additional carbon
 # TODO: Make framing object work with layer properties / or inherit from layer 
 # TODO: Make framed wall get_embodied_layers (similar to construction) to include framing
+# TODO: Make no mass materiasls parametric, conductivity instead of resistance. 
