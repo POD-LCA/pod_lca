@@ -234,6 +234,16 @@ class Layer(object):
         self.is_structural = is_structural
 
 
+class Ancillary(object):
+    def __init__(self):
+        pass
+
+    def get_quantity(self):
+        pass
+
+class BrickLayer(Layer):
+    def get_quantity(self):
+        pass
 
 if __name__ == '__main__':
     pass

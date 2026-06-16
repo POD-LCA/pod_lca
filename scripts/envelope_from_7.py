@@ -216,5 +216,11 @@ print(b.get_operational_impacts()) # default is 'total'
 # # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # # graph.show()
 
-# #TODO: check if the last layer or first layer was used in the ASHRAE model. 
-# #TODO: look at all the todos in the framing file, related to units
+# TODO: Brick layer / Ancillary, BOM special object stuff (Isuru)
+# TODO: Make a get_embodied_layers() method for Construction material loop (Isuru)
+
+
+# TODO: check if the last layer or first layer was used in the ASHRAE model. 
+# TODO: Make Framing a Layer and test additional carbon
+# TODO: Make framing object work with layer properties / or inherit from layer 
+# TODO: Make framed wall get_embodied_layers (similar to construction) to include framing
