@@ -10,7 +10,6 @@ from .material_property import EnvelopeMaterialPropertyNoMass
 from .material_property import WindowMaterialPropertyGlazing
 from .material_property import WindowMaterialPropertyGas
 
-from pod_lca.units import Quantity as Q
 from pod_lca.units import METER, KELVIN, WATT
 
 mKW = (METER * KELVIN) / WATT
@@ -55,6 +54,7 @@ class Layer(object):
         self.is_structural = False
         self.structural_element = None # {"Slab", "Wall", "Roof"}
 
+        self.anciallary_materials = []
 
     def get_quantity(self, area=None, qty_in=None):
         """ Returns the quantity of the layer.
@@ -233,17 +233,22 @@ class Layer(object):
         """
         self.is_structural = is_structural
 
+    def add_ancillary_material(self, ancillary_mat):
+        """Add an ancillary material to the layer.
+        """
+        self.anciallary_materials.append(ancillary_mat)
+        ancillary_mat.parent = self
 
-class Ancillary(object):
-    def __init__(self):
-        pass
+
+class AncillaryMaterial(object):
+
+    def __init__(self, mat_name):
+        self.parent = None
+        self.material = mat_name
 
     def get_quantity(self):
         pass
 
-class BrickLayer(Layer):
-    def get_quantity(self):
-        pass
 
 if __name__ == '__main__':
     pass
