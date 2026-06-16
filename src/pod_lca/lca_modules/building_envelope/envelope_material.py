@@ -10,11 +10,7 @@ from ..building import Material
 
 class EnvelopeMaterial(Material):
     """ Envelope material (contextual) that makes up assemblies in the building.
-    
-    Attributes
-    ----------
-    xxx : xxx
-        xxx
+    Based on the ~pod_lca.building.Material class. 
     """
     def __init__(self):
         super().__init__()

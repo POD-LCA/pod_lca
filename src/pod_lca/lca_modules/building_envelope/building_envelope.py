@@ -14,14 +14,38 @@ from ...utilities import log
 
 
 class BuildingEnvelope:
+    """ The envelopes of the building.
+    
+    Attributes
+    ----------
+    envelopes : dict of ~pod_lca.building_envelope.Envelope
+        The envelopes contained in the Building.
+    building : ~pod_lca.building.Building
+        The building to which the building envelope belongs to.
+    network : dict 
+        The connectivity network of the envelope surfaces contained in the
+        building. 
+
+    """
     def __init__(self):
         self.envelopes = {}
         self.building = None
-        self.srf_gk_dict = {}
         self.network = {}
 
     @classmethod
     def from_envelopes(cls, envelopes):
+        """ Create building envelope from a list of envelopes.
+        
+        Parameters
+        ----------
+        envelopes : (list of) ~pod_la.building_envelope.Envelope 
+            Definition  of the envelopes at each floor level.
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.BuildingEnvelope
+            The envelope of the building
+        """
         be = cls()
         for i, e in enumerate(envelopes):
             cls.set_envelope(e, i)
@@ -29,6 +53,19 @@ class BuildingEnvelope:
     
     @classmethod
     def from_envelope_and_stories(cls, envelope, num_stories):
+        """ Create building envelope from a single envelope.
+        
+        Parameters
+        ----------
+        envelope : ~pod_la.building_envelope.Envelope 
+            Definition  of the envelope to be repeated at each
+            floor level. 
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.BuildingEnvelope
+            The envelope of the building
+        """
         be = cls()
         for i in range(num_stories):
             data = deepcopy(envelope.to_data())
@@ -46,9 +83,14 @@ class BuildingEnvelope:
         Parameters
         ----------
         envelope : (list of) ~pod_lca.building_envelope.Envelope
-            Representative envelope(s).
-        num_stories : (list of) int
+            Representative envelope.
+        num_stories : (int)
             Number of stories (for each representative envelope).
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.BuildingEnvelope
+            The envelope of the building
         """
         if not isinstance(envelope, list):
             envelope = [envelope]
@@ -65,15 +107,50 @@ class BuildingEnvelope:
         return be
 
     def set_envelope(self, envelope, floor_number):
+        """ Set the envelope for a given floor number.
+        
+        Parameters
+        ----------
+        envelope : ~pod_lca.building_envelope.Envelope
+            Envelope to set.
+        num_stories : (int)
+            Story to set the envelope to.
+        """
         self.envelopes[floor_number] = envelope
 
     def get_envelope(self, floor_number):
+        """ Get the envelope for a given floor number.
+        
+        Parameters
+        ----------
+        floor_number : (int)
+            Story to get the envelope from.
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Envelope
+            The envelope for the given floor
+        """
         return self.envelopes[floor_number]
     
     def get_envelopes(self):
+        """ Get the envelopes for all floors.
+        
+        Returns
+        -------
+        (list of)  ~pod_lca.building_envelope.Envelope
+            The envelope for all floors
+        """
         return list(self.envelopes.values())
 
     def set_building(self, parent):
+        """ Set the parent building of the envelope.
+        
+        Parameters
+        ----------
+        building : ~pod_lca.building.Building
+            The building to which the structure belong.
+        """
         self.building = parent
 
         envelopes = self.get_envelopes()
@@ -82,6 +159,9 @@ class BuildingEnvelope:
             log(f"{envelope.name} added to the building", "Info")
 
     def set_cycle_directions(self):
+        """ Corrects the cycle directions for all envelope surfaces.
+        All normals will be pointing outwards. 
+        """
         for ek in self.envelopes:
             self.envelopes[ek].set_cycle_directions()
 
@@ -96,7 +176,9 @@ class BuildingEnvelope:
         return self.building
 
     def make_envelope_connectivity_network(self):
-        
+        """ Creates the network of envelope surfaces connections.
+        The network is saved in BuildingEnvelope.network 
+        """
         net = {}
         for ek in self.envelopes:
             env = self.envelopes[ek]
@@ -126,6 +208,9 @@ class BuildingEnvelope:
             self.network.setdefault(e2, {})[s2] = {'envelope':e1, 'surface': s1}
 
     def set_outside_boundary_conditions(self):
+        """Sets the envelopes outside boundary conditions depening
+        on the surface types. 
+        """
         if not self.network:
             self.make_envelope_connectivity_network()
         

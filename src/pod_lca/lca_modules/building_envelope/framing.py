@@ -12,6 +12,30 @@ from pod_lca.units import KELVIN, WATT, METER, INCH
 
 
 class Framing(object):
+    """ Framing object representing the structural elements in envelope
+    walls. Designed to compute thermal bridges (not structural properties). 
+    
+    Attributes
+    ----------
+    name : str
+        The name of the framing instance. 
+    type : str
+        Type of framing (Metal, Timber.)
+    member : str
+        Framing member name. 
+    spacing : ~pod_lca.units.Quantity
+        The spacing between framing members. 
+    L : ~pod_lca.units.Quantity
+        Framing member width
+    ds : ~pod_lca.units.Quantity
+        Framing member length
+    dII : ~pod_lca.units.Quantity
+        TBC
+    zf : ~pod_lca.units.Quantity
+        Modified zone factor. Measures the portion of the 
+        cavity affected by thermal bridging.  
+    """
+
     def __init__(self):
         self.name = None
         self.type = None
@@ -24,6 +48,19 @@ class Framing(object):
 
     @classmethod
     def from_data(cls, data):
+        """ Create a framing object from a data dictionary. The data dictionary 
+        is usually made with the to_data method. 
+        
+        Parameters
+        ----------
+        data : (dict)
+            Container of all the data required to create a framing.
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Framing
+            The framing of the floor created.
+        """
         framing = cls()
         framing.name        = data['name']
         framing.type        = data['type']
@@ -35,6 +72,19 @@ class Framing(object):
         return framing
 
     def get_zf(self, ratio):
+        """Computes the modified zone factor given a resistivity ratio
+        between insulation and sheathing. 
+
+        Parameters
+        ----------
+        ratio : float
+            (ri / rins) ratio. 
+
+        Returns
+        -------
+        zf : float
+            The modified zone factor. 
+        """
         ratios = np.array([
             0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8,
             2.0, 2.2, 2.4, 2.6, 2.8, 3.0
@@ -77,7 +127,35 @@ class Framing(object):
             self.zf = z_40 + (z_60 - z_40) * (self.ds - Q(4.0, INCH)) / Q(6.0 - 4.0, INCH)
 
     def metal_bridge(self, ri, rins, di, Ra, Rb):
+        """Computes the updated R and U given the thermal bridging
+        caused by metal framing. 
 
+        Parameters
+        ----------
+        ri : ~pod_lca.units.Quantity
+            Assembly resistivity
+
+        rins : ~pod_lca.units.Quantity
+            Framing insulation resistivity
+
+        di : ~pod_lca.units.Quantity
+            Sheathing thickness
+
+        Ra : ~pod_lca.units.Quantity
+            Assembly thermal resistance (exluding interior finish)
+
+        Rb : ~pod_lca.units.Quantity
+            Interior finish thermal resistance
+
+        Returns
+        -------
+        r : ~pod_lca.units.Quantity
+            Thermal resiastance of the assembly including the thermal bridge. 
+
+        u : ~pod_lca.units.Quantity
+            Thermal conductance of the assembly including the thermal bridge.  
+
+        """
         debug = {}
 
         # -------------------------------
@@ -86,7 +164,7 @@ class Framing(object):
         k_m = 26.0
         rmet = 1.0 / (k_m * 6.0)
 
-        # TOMAS FIX, NEEDS TO BE DISCUSSED WITH TERESA
+        # FIXME TOMAS FIX, NEEDS TO BE DISCUSSED WITH TERESA
         rmet_unit = (METER * KELVIN) / WATT  
         rmet = Q(rmet, rmet_unit)
         
@@ -144,8 +222,25 @@ class Framing(object):
         return r, u
 
     def wood_bridge(self, width, k, Ra, Rb, rins):
-        """
-        Compute overall R-value of a wood stud wall using the parallel path method.
+        """Computes the updated R and U given the thermal bridging
+        caused by wooden framing, using the parallel path method. 
+
+        Parameters
+        ----------
+        width : ~pod_lca.units.Quantity
+            Width of the stud
+        
+        k : ~pod_lca.units.Quantity
+            Wood conductivity. 
+
+        Ra : ~pod_lca.units.Quantity
+            Assembly thermal resistance (exluding interior finish)
+
+        Rb : ~pod_lca.units.Quantity
+            Interior finish thermal resistance
+
+        rins : ~pod_lca.units.Quantity
+            Framing insulation resistivity
         """
         COND_TO_RIMP = 0.144
         # --------------------------
@@ -188,6 +283,8 @@ class Framing(object):
 
 
 def interp_along_ratio(ratios, values, x):
+    """Interpolation function used in the R value calculation
+    """
     if x <= ratios[0]:
         return values[0]
     if x >= ratios[-1]:

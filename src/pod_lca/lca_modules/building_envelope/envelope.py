@@ -22,7 +22,37 @@ from ...utilities import dot_vectors
 
 
 class Envelope:
-
+    """ The envelope of each floor of the building.
+    
+    Attributes
+    ----------
+    name : str
+        The name of the envelope.
+    building : ~pod_lca.building.Building
+        The building to which the building envelope belongs to.
+    floor_plan_obj : ~pod_lca.building.BuildingFloor
+        The geometry floor plan object for that envelope. 
+    surfaces : (dict of ) ~pod_lca.building_envelope.Surface
+        The geometry surface objects of the surfaces surrounding the envelope. 
+    walls : (dict of ) ~pod_lca.building_envelope.Wall
+        The wall constructions of the envelope. 
+    windows : (dict of ) ~pod_lca.building_envelope.Windows
+        The window constructions of the envelope. 
+    shadings : (dict of ) ~pod_lca.building_envelope.Shadings
+        The shading constructions of the envelope. 
+    floors : (dict of ) ~pod_lca.building_envelope.Floor
+        The floor constructions of the envelope. 
+    ceilings : (dict of) ~pod_lca.building_envelope.Ceiling
+        The ceiling constructions of the envelope. 
+    construction_map : (dict)
+        Type to constructions map. 
+    wall_surface_keys : (list)
+        List of keys for all wall constructions. 
+    window_surface_keys : (list)
+        List of all window construction keys. 
+    origin : (list)
+        X, Y, Z coordinates of the global geometric origin for this envelope. 
+    """
     def __init__(self):
         self.name = None
         self.building = None
@@ -46,6 +76,19 @@ class Envelope:
 
     @classmethod
     def from_data(cls, data):
+        """ Create an envelope from a data dictionary. The data dictionary 
+        is usually made with the to_data method. 
+        
+        Parameters
+        ----------
+        data : (dict)
+            Container of all the data required to create an envelope.
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Envelope
+            The envelope of the floor created.
+        """
         envelope = cls()
         envelope.name           = data['name']              
         envelope.building       = data['building']                        
@@ -77,6 +120,13 @@ class Envelope:
         return envelope
 
     def to_data(self):
+        """ Generates a data dictionary containing all properties of the envelope.
+
+        Returns
+        -------
+        (dict)
+            The data dictionary with all envelope properties. 
+        """
         data = {}
         data['name']       = self.name      
         data['building']   = self.building       
@@ -99,26 +149,73 @@ class Envelope:
 
     @property
     def floor_plan(self):
+        """ Returns the envelope floor plan.
+        
+        Returns
+        -------
+        ~pod_lca.building.BuildingFloor
+            The envelope's floor plan object'
+        """
         return self.floor_plan_obj.floor_plan
     
     @property
     def height(self):
+        """ Returns the height of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The height of the envelope
+        """
         return self.floor_plan_obj.height
 
     @property
     def area(self):
+        """ Returns the area of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The area of the envelope
+        """
         return self.floor_plan_obj.get_area()
 
     @property
     def volume(self):
+        """ Returns the volume of the envelope.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The volume of the envelope
+        """
         return self.height * self.area
     
     @property
     def centroid(self):
+        """ Returns the area centroid of the envelope floor plan.
+        
+        Returns
+        -------
+        (list of) ~pod_lca.units.Quantity
+            The X, Y, Z coordinates of the envelope centroid
+        """
         return centroid(self.floor_plan)
     
     @classmethod
     def from_floor(cls, floor_plan):
+        """ Creates an envelope from a floor plan object.
+        
+        Parameters
+        ----------
+        floor_plan : ~pod_lca.building.BuildingFloor
+            Building floor geometry.
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Envelope
+            The envelope of the floor created.
+        """
         envelope = cls()
         envelope.floor = floor_plan
         envelope.update_envelope_surfaces()
@@ -131,7 +228,7 @@ class Envelope:
         Parameters
         ----------
         floor_plan : ~pod_lca.building.BuildingFloor
-            Building floor configuration.
+            Building floor geometry.
         envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
                             'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 
                             'Rainscreen, Formed Steel Panel', 'Brick, wood framing'}
@@ -201,6 +298,30 @@ class Envelope:
 
     @classmethod
     def from_components(cls, name, floor_plan, floor=None, ceiling=None, wall=None, windows=None, shadings=None):
+        """ Creates an envelope from all surface constructions.
+        
+        Parameters
+        ----------
+        name : str
+            The name of the envelope
+        floor_plan : ~pod_lca.building.BuildingFloor
+            Building floor geometry.
+        floor : ~pod_lca.building_envelope.Floor
+            The floor construction. 
+        ceiling : ~pod_lca.building_envelope.Ceiling
+            The ceiling construction. 
+        wall : ~pod_lca.building_envelope.Wall
+            The wall construction
+        windows : (list of) ~pod_lca.building_envelope.Window
+            The window constructions. 
+        shading : (list of) ~pod_lca.building_envelope.Shading
+            The shading constructions. 
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Envelope
+            The envelope of the floor created.
+        """
         envelope = cls()
         envelope.name = name
         envelope.floor_plan_obj = floor_plan
@@ -253,6 +374,9 @@ class Envelope:
         return self
 
     def set_cycle_directions(self):
+        """ Corrects the cycle directions for all envelope surfaces.
+        All normals will be pointing outwards. 
+        """
         cpt = self.centroid
         for sk in self.surfaces:
             srf = self.surfaces[sk]
@@ -275,8 +399,11 @@ class Envelope:
                 srf.reverse_normal()
 
     def set_materials_in_conmponents(self):
+        """ Sets all the materials for all constructions in the envelope. 
+        """
         for construction in self.get_constructions(unique=True):
             construction.set_materials()
+
     # ================================
     # Getters
     # ================================
@@ -291,6 +418,8 @@ class Envelope:
         return self.building
 
     def create_envelope_surfaces(self):
+        """ Creates all the surfaces on an envelope from the floor plan. 
+        """
         fp = self.floor_plan
         h = self.height
         cp = [[p[0], p[1], p[2]+h] for p in fp]
@@ -308,6 +437,15 @@ class Envelope:
             self.wall_surface_keys.append(wk)
 
     def update_envelope_surfaces_floorplan_height(self, floor_plan, height):
+        """ Updates the envelope floor plan and height 
+
+        Parameters
+        ----------
+        floor_plan : ~pod_lca.building.BuildingFloor
+            The floor plan geometry to update to. 
+        height : ~pod_lca.units.Quantity
+            The height of the new envelope. 
+        """
         self.floor_plan_obj.floor_plan = floor_plan
         f2f = self.height
         for sk in self.surfaces:
@@ -363,6 +501,13 @@ class Envelope:
             return self.construction_lst
 
     def set_to_height(self, height):
+        """ Moves the envelope to a given height.  
+
+        Parameters
+        ----------
+        height : ~pod_lca.units.Quantity
+            The height of the new envelope. 
+        """
         fp = []
         for xyz in self.floor_plan:
             fp.append([xyz[0], xyz[1], xyz[2] + height])
@@ -370,6 +515,13 @@ class Envelope:
         self.move_windows_up(height)
 
     def move_windows_up(self, height):
+        """ Moves the envelope windows to a given height.  
+
+        Parameters
+        ----------
+        height : ~pod_lca.units.Quantity
+            The height of the new windows. 
+        """
         for wk in self.windows:
             win = self.windows[wk]
             sk = list(win.surfaces.keys())[0]
@@ -408,7 +560,15 @@ class Envelope:
         construction.set_parent(self)
 
     def add_window(self, window, wall_key):
-        
+        """ Adds a window to the envelope.  
+
+        Parameters
+        ----------
+        window : ~pod_lca.building_envelope.Window
+            The window construction to add.
+        wall_key : str
+            The key of the wall the window will be attached to.  
+        """
         if not window.surfaces:
             window.create_window_surface_from_envelope_wall_key(self, wall_key)
 
@@ -419,6 +579,13 @@ class Envelope:
         self.windows[key] = window
 
     def add_shading(self, shading):
+        """ Adds a shading device to the envelope.  
+
+        Parameters
+        ----------
+        shading : ~pod_lca.building_envelope.Shading
+            The shading construction to add.
+        """
         self.shadings[len(self.shadings)] = shading
 
 if __name__ == '__main__':

@@ -23,6 +23,18 @@ from pod_lca.lca_modules.operational.read_write import find_gas_materials
 
 
 class Construction(Assembly):
+    """ The structural assemblies of the building.
+    
+    Attributes
+    ----------
+    layer_order : list
+        List of layer keys ordered from the outside to the inside.
+    layers : (dict of) ~pod_lca.building_envelope.Layer
+        Dictionary of all the layers in the construction. 
+    surfaces : (dict of) ~pod_lca.building_envelope.Surface
+        Surfaces objects for the consrtruction. 
+
+    """
     def __init__(self):
         super().__init__()
         self.layer_order = []
@@ -31,6 +43,20 @@ class Construction(Assembly):
         
     @classmethod
     def from_idf(cls, name, idf_path):
+        """ Create an envelope construction from IDF data.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the construction to be imported from the IDF, as written in the file.
+        idf_path : str
+            Path to the IDF file.  
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Construction
+            The created construction. 
+        """
         cdata = find_constructions(idf_path, {})['constructions'][name]
         layers = cdata['layers']
         ldata = find_materials(idf_path, {})
@@ -55,6 +81,20 @@ class Construction(Assembly):
     
     @classmethod
     def from_layers(cls, name, layers):
+        """ Create an envelope construction from a list of layers.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the construction to be created.
+        layers : (list of) ~pod_lca.building_envelope.Layer
+            The layers to be included in the construction.  
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Construction
+            The created construction. 
+        """
         construction = cls.from_materials(name)
         construction.layer_order = [lk for lk in layers]
         construction.layers = layers
@@ -75,6 +115,8 @@ class Construction(Assembly):
                 material.set_building()
 
     def set_materials(self):
+        """Set the materials for the construction. 
+        """
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['IDF_IMPACT_DATA_PRODUCT_MAP'], 'IDF Material Name')
         
         area = self.area
@@ -98,6 +140,13 @@ class Construction(Assembly):
 
     @property
     def area(self):
+        """ Returns the surface area of the construction.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The surface area of the construction. 
+        """
         if self.surfaces:
             area = 0
             for sk in self.surfaces:
@@ -106,11 +155,18 @@ class Construction(Assembly):
         else:
             return Q(0, SQUARE_METER)
 
-    def get_layers(self, building):
-        for mk in self.layer_order:
-            name = self.layer_order[mk]
-            layer = Layer.from_idf(name, building)
-            self.layers[mk] = layer
+    # def get_layers(self, building):
+    #     """ Returns the layers of the construction.
+        
+    #     Returns
+    #     -------
+    #     ~pod_lca.units.Quantity
+    #         The area of the envelope
+    #     """
+    #     for mk in self.layer_order:
+    #         name = self.layer_order[mk]
+    #         layer = Layer.from_idf(name, building)
+    #         self.layers[mk] = layer
     
 
 if __name__ == '__main__':
