@@ -94,6 +94,30 @@ class Layer(object):
         if self.parent_construction is not None:
             self.parent_construction.get_building().get_structure().update_structure(self.structural_element, self._thickness)
 
+    @classmethod
+    def from_data(cls, data, thickness, classification=None):
+        """Creates a Layer instance from a data dictionary. 
+
+        Parameters
+        ----------
+        data :  dict
+            Dictionary containing all required inputs. 
+        thickness : ~pod_lca.Quantity
+            The thickness of the layer. 
+        classiification : str
+            The layer classification (exterior_cladding, air gap, etc.)
+
+        Returns
+        -------
+        layer : ~pod_lca.building_envelope.Layer
+            The layer instance. 
+        """
+        layer = cls()
+        layer.name = data['name']
+        layer.thickness = thickness
+        layer.material_property = layer.add_envelope_material_property(data)
+        layer.classification = classification
+        return layer
 
     @classmethod
     def from_property_and_thickness(cls, name, material_property, thickness, classification=None):
