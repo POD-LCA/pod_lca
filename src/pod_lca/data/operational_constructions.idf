@@ -16,10 +16,10 @@ Construction,
 Material,
   Gypsum board 1/2 in,                    !- Name
   MediumRough,                            !- Roughness                     NO VALUE FROM TERESA
-  0.0127,                                 !- Thickness {m}
-  0.16,                                   !- Conductivity {W/m-K}
-  800,                                    !- Density {kg/m3}
-  1090,                                   !- Specific Heat {J/kg-K}
+  0.0127,                                 !- Thickness {m}              
+  0.16,                                   !- Conductivity {W/m-K}           
+  800,                                    !- Density {kg/m3}                
+  1090,                                   !- Specific Heat {J/kg-K}                 
   0.9,                                    !- Thermal Absorptance           NO VALUE FROM TERESA
   0.7,                                    !- Solar Absorptance             NO VALUE FROM TERESA
   0.7;                                    !- Visible Absorptance           NO VALUE FROM TERESA
@@ -602,21 +602,21 @@ WindowMaterial:Glazing,
 
 WindowMaterial:Glazing,
   Generic Clear Glass,                    !- Name
-  SpectralAverage,                        !- Optical Data Type
-  ,                                       !- Window Glass Spectral Data Set Name
-  0.006,                                  !- Thickness {m}
-  0.77,                                   !- Solar Transmittance at Normal Incidence
-  0.07,                                   !- Front Side Solar Reflectance at Normal Incidence
-  0.07,                                   !- Back Side Solar Reflectance at Normal Incidence
-  0.88,                                   !- Visible Transmittance at Normal Incidence
-  0.08,                                   !- Front Side Visible Reflectance at Normal Incidence
-  0.08,                                   !- Back Side Visible Reflectance at Normal Incidence
-  0,                                      !- Infrared Transmittance at Normal Incidence
-  0.84,                                   !- Front Side Infrared Hemispherical Emissivity
-  0.84,                                   !- Back Side Infrared Hemispherical Emissivity
-  1,                                      !- Conductivity {W/m-K}
-  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance
-  No;                                     !- Solar Diffusing
+  SpectralAverage,                        !- Optical Data Type                                                        
+  ,                                       !- Window Glass Spectral Data Set Name                                
+  0.006,                                  !- Thickness {m}                                                
+  0.77,                                   !- Solar Transmittance at Normal Incidence                  
+  0.07,                                   !- Front Side Solar Reflectance at Normal Incidence                 
+  0.07,                                   !- Back Side Solar Reflectance at Normal Incidence                              
+  0.88,                                   !- Visible Transmittance at Normal Incidence                        
+  0.08,                                   !- Front Side Visible Reflectance at Normal Incidence               
+  0.08,                                   !- Back Side Visible Reflectance at Normal Incidence                        
+  0,                                      !- Infrared Transmittance at Normal Incidence                             
+  0.84,                                   !- Front Side Infrared Hemispherical Emissivity                             
+  0.84,                                   !- Back Side Infrared Hemispherical Emissivity                                
+  1,                                      !- Conductivity {W/m-K}                                                             
+  1,                                      !- Dirt Correction Factor for Solar and Visible Transmittance                             
+  No;                                     !- Solar Diffusing                                                                
 
 WindowMaterial:Glazing,
   Generic Low-e Glass,                    !- Name
