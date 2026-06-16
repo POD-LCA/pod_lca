@@ -64,7 +64,17 @@ class Window(Construction):
 
     @classmethod
     def from_data(cls, data):
-        """
+        """Creates an instance of the window from a data dictionary. 
+
+        Parameters
+        ----------
+        data : dict
+            The data dictionary. 
+
+        Returns
+        -------
+        win : ~pod_lca.building_envelope.Window
+            The window instance. 
         """
         win = cls()
         win.name         = data['name']
@@ -84,6 +94,13 @@ class Window(Construction):
         return win
 
     def to_data(self):
+        """Returns a dictionary containing all of the Window data. 
+
+        Returns
+        -------
+        data : dict
+            The dictionary containing all window data.  
+        """
         data = {}
         data['name']            = self.name
         data['wall_key']        = self.wall_key       
@@ -100,13 +117,29 @@ class Window(Construction):
 
     @property
     def area(self):
+        """Returns the surface area of the window. 
+
+        Returns
+        -------
+        area : ~pod_lca.units.Quantity
+            The window wurface area. 
+        """
         area = Q(0, SQUARE_METER)
         for s in self.surfaces:
             area += self.surfaces[s].area
         return area
     
     def create_window_surface_from_envelope_wall_key(self, envelope, wall_key):
+        """Generates the windo surface given an envelope wall. The geometry is
+        generated using the window objects wwr. 
 
+        Parameter
+        ---------
+        envelope : ~pod_lca.building_envelope.Envelope
+            The envelope where the wall is located. 
+        wall_key : str
+            The key / name of the wall where the window is to be made. 
+        """
         polygon = envelope.surfaces[wall_key].polygon
         cpt = centroid(polygon)
 
