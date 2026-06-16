@@ -120,14 +120,14 @@ class Construction(Assembly):
         default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['IDF_IMPACT_DATA_PRODUCT_MAP'], 'IDF Material Name')
         
         area = self.area
-        for lk in self.layers:
-            mat_type = self.layers[lk].material_property.__type__
-            if (not self.layers[lk].is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
-                mat_name = self.layers[lk].material_property.name
+        for layer in self.get_constituent_materials():
+            mat_type = layer.material_property.__type__
+            if (not layer.is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
+                mat_name = layer.material_property.name
 
                 database_declared_qty_in = UNITS_MAP[default_database_entry_map[mat_name]["LCI Database Declared Unit"]].get_qty_measured()
 
-                quantity = self.layers[lk].get_quantity(area, database_declared_qty_in)
+                quantity = layer.get_quantity(area, database_declared_qty_in)
 
                 material = EnvelopeMaterial.new(name=mat_name,
                                                 qty=quantity.value,
@@ -154,6 +154,16 @@ class Construction(Assembly):
             return area
         else:
             return Q(0, SQUARE_METER)
+
+
+    def get_constituent_materials(self):
+        constituent_materials = []
+        for layer in self.layers.values():
+            constituent_materials.append(layer)
+            if layer.anciallary_materials:
+                constituent_materials.extend(layer.anciallary_materials)
+
+        return constituent_materials
 
     # def get_layers(self, building):
     #     """ Returns the layers of the construction.

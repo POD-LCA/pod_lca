@@ -103,12 +103,12 @@ m4 = EnvelopeMaterialPropertyNoMass.from_idf('Mineral wool blanket baseline', co
 
 
 layers = [
-          {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH).convert_to(METER)},
-          {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH).convert_to(METER)},
-          {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH).convert_to(METER)},
-          {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH).convert_to(METER)},
-          {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH).convert_to(METER)},
-          {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH).convert_to(METER)}
+          {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH)},
+          {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH)},
+          {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH)},
+          {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH)},
+          {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH)},
+          {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH)}
             ]
 
 framing = {'name': 'metal_16in', 
@@ -215,10 +215,6 @@ print(b.get_operational_impacts()) # default is 'total'
 # # # graph = BarChart.from_plotter(MatplotlibPlotter)
 # # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # # graph.show()
-
-# TODO: Brick layer / Ancillary, BOM special object stuff (Isuru)
-# TODO: Make a get_embodied_layers() method for Construction material loop (Isuru)
-
 
 # TODO: check if the last layer or first layer was used in the ASHRAE model. 
 # TODO: Make Framing a Layer and test additional carbon
