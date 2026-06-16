@@ -12,6 +12,24 @@ from pod_lca.utilities.geometry import centroid, distance_point_point, area_poly
 from pod_lca.utilities.geometry import scale_vector, normalize_vector, subtract_vectors, add_vectors
 
 class Window(Construction):
+    """Window object based on the ~pod_lca.building_envelope.Construction
+    class. 
+
+    Attributes
+    ----------
+    surfaces :  (dict of) ~pod_lca.building_envelope.Surface
+        The surfaces assigned to this construction.
+    __type__ : str
+        Fixed varialble specifying window type. 
+    wall_key : str
+        The key or name of the wall the window is assigned to. 
+    width :  ~pod_lca.units.Quantity
+        The width of the window
+    length :  ~pod_lca.units.Quantity
+        The length of the window
+    wwr :  ~pod_lca.units.Quantity
+        The window-to-wall ratio of the window
+    """
     def __init__(self):
         super().__init__()
         self.surfaces = {}
@@ -22,14 +40,32 @@ class Window(Construction):
         self.wwr = None
 
     def set_width_height(self, width, height):
+        """Sets the width and height of the window
+
+        Parameters
+        ----------
+        width :  ~pod_lca.units.Quantity
+            The width of the window.
+        length :  ~pod_lca.units.Quantity
+            The length of the window.
+        """
         self.width = width
         self.height = height
 
     def set_wwr(self, wwr):
+        """Sets the window-to-wall ratio of the window.
+
+        Parameters
+        ----------
+        wwr :  ~pod_lca.units.Quantity
+            The window-to-wall ratio of the window
+        """
         self.wwr = wwr
 
     @classmethod
     def from_data(cls, data):
+        """
+        """
         win = cls()
         win.name         = data['name']
         win.wall_key     = data['wall_key']
