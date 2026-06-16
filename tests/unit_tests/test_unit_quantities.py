@@ -13,6 +13,10 @@ def feet():
     return Unit.from_basics("feet", "ft", "length")
 
 @pytest.fixture
+def inch():
+    return Unit.from_basics("inch", "in", "length")
+
+@pytest.fixture
 def sqmeter():
     return Unit.from_basics("square meter", "m²", "area")
 
@@ -36,6 +40,14 @@ def test_quantity_add(meter, feet):
 
     assert q_new.unit == meter
     assert q_new.value ==  pytest.approx(1.6096)
+
+def test_quantity_add_compound(meter, inch, sqmeter):
+    q1 = Quantity(1, meter * meter)
+    q2 = Quantity(2, inch * inch)
+
+    q_new = q1 + q2
+
+    assert q_new.value ==  pytest.approx(1.00129032)
 
 def test_quantity_multiply(meter, feet, sqmeter):
     q1 = Quantity(1, meter)

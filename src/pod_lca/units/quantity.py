@@ -186,11 +186,8 @@ class Quantity(object):
         return Quantity(-self.value, self.unit)
         
     def convert_to(self, unit):
-        if self.unit.qty_measured == unit.qty_measured:
-            value  = self.value * self.unit.convert_to(unit)
-            return Quantity(value, unit)
-        else:
-            raise TypeError(f"unsupported conversion from {self.unit.name} to {unit.name}.")
+        value  = self.value * self.unit.convert_to(unit)
+        return Quantity(value, unit)
         
     def invert(self):
         return Quantity(1 / self.value, 1 / self.unit)

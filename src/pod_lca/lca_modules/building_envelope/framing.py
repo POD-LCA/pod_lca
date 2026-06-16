@@ -120,16 +120,8 @@ class Framing(object):
         dIIxrmet = rmet * self.dII
 
         # 4. Web & flange resistance
-
-        # TODO: This is a hard coded unit, should be addressed with proper resistivity units
-        RI = Q(dIxrmet.value * dIxri.value * W.value / (dI.value * (dIIxri.value - dIIxrmet.value) + W.value * dIxrmet.value), 
-               (METER * METER * KELVIN) / WATT)
-        # RI = dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet)
-
-        # TODO: This is a hard coded unit, should be addressed with proper resistivity units
-        RII = Q(dIIxrmet.value * dIIxri.value * W.value / (self.L.value * (dIIxri.value - dIIxrmet.value) + W.value * dIIxrmet.value), 
-        (METER * METER * KELVIN) / WATT)
-        # RII = dIIxrmet * dIIxri * W / (self.L * (dIIxri - dIIxrmet) + W * dIIxrmet)
+        RI = (dIxrmet * dIxri * W / (dI * (dIIxri - dIIxrmet) + W * dIxrmet)).convert_to((METER * METER * KELVIN) / WATT)
+        RII = (dIIxrmet * dIIxri * W / (self.L * (dIIxri - dIIxrmet) + W * dIIxrmet)).convert_to((METER * METER * KELVIN) / WATT)
 
         # 5. Summations
         sum_Rcav = Ra + Rb + dIxri + 2.0 * dIIxri
