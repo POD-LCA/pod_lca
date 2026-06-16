@@ -324,6 +324,8 @@ class Material(Product):
         service_life : float
             Service life of the material in years.
         """
+        if (service_life is None) and (self.get_service_life() is not None):
+            return self
         if (service_life is None) and (self.get_service_life_category() is None) and (self.get_service_life() is None):
             self.service_life = self.get_parent().get_service_life()
         elif isinstance(service_life, str) or (self.get_service_life_category() is not None):
