@@ -33,7 +33,8 @@ from pod_lca.lca_modules.building_envelope import BuildingEnvelope
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Layer
-from pod_lca.lca_modules.building_envelope import Framing
+from pod_lca.lca_modules.building_envelope import WoodFraming
+from pod_lca.lca_modules.building_envelope import MetalFraming
 from pod_lca.lca_modules.building_envelope import FramedWall
 from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
@@ -111,14 +112,6 @@ layers = [
           {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH)}
             ]
 
-framing = {'name': 'metal_16in', 
-           'type': 'Metal', 
-           'member': '400S125-18', 
-           'spacing': Q(16.0, INCH),
-           'L':       Q(1.25, INCH),
-           'ds':      Q(3.5, INCH),
-           'dII':     Q(0.043, INCH)}
-
 layers_ = {}
 for i in range(len(layers)):
     name = layers[i]['material'].name
@@ -130,9 +123,30 @@ for i in range(len(layers)):
 
 layers_[0].set_structural(True)
 
-framing = Framing.from_data(framing)
 
+framing_name                  = 'tomas_wooden_framing'
+framing_material_property     = EnvelopeMaterialPropertyMass.from_idf('Softwood Lumber', constructions_path)
+framing_spacing               = Q(12, INCH)
+framing_width                 = Q(1.5, INCH)
+framing_length                = Q(3.5, INCH)
+framing = WoodFraming.from_parameters(framing_name, framing_material_property, framing_spacing, framing_width, framing_length)
 framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+
+
+
+# framing_name                = 'tomas_metal_framing'
+# framing_material_property   = EnvelopeMaterialPropertyMass.from_idf('Cold-formed steel framing', constructions_path)
+# framing_spacing             = Q(12, INCH)
+# framing_metal_thickness     = Q(.043, INCH)
+# framing_width               = Q(1.5, INCH)
+# framing_length              = Q(3.5, INCH)
+# framing = MetalFraming.from_parameters(framing_name,
+#                                        framing_material_property,
+#                                        framing_spacing,
+#                                        framing_metal_thickness,
+#                                        framing_width,
+#                                        framing_length)
+# framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,8 +217,8 @@ print(b.get_operational_impacts()) # default is 'total'
 
 # # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product'))
+print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product'))
 
 # print(b.get_material_quantities_of_assembly("generic structural element"))
 # print(b.get_material_impacts_of_assembly_lcstage("generic structural element", impact_cat="GWP", lc_stage="A1-A3"))
@@ -216,6 +230,11 @@ print(b.get_operational_impacts()) # default is 'total'
 # # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # # graph.show()
 
+
+
 # TODO: check if the last layer or first layer was used in the ASHRAE model. 
-# TODO: Make framed wall get_embodied_layers (similar to construction) to include framing
+
 # TODO: Make no mass materiasls parametric, conductivity instead of resistance. 
+# TODO: Email Kate to include framing material requirements
+# TODO: Ask kate for actuall wood stud equation (is 10 the height?)
+# TODO: lets do a non framed wall example too

@@ -344,10 +344,17 @@ class Envelope:
         if windows:
             for wall_key in windows:
                 win = windows[wall_key]
+                win.set_parent(envelope)
                 envelope.add_window(win, wall_key)
 
         if shadings:
             pass
+        
+        wall.set_parent(envelope)
+        floor.set_parent(envelope)
+        ceiling.set_parent(envelope)
+
+
 
         envelope.set_materials_in_conmponents()
 

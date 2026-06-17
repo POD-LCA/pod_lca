@@ -23,6 +23,8 @@ from .floor import Floor
 from .ceiling import Ceiling
 from .shading import Shading
 from .framing import Framing
+from .framing import WoodFraming
+from .framing import MetalFraming
 from .envelope import Envelope
 from .building_envelope import BuildingEnvelope
 

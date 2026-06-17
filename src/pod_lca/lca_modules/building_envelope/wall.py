@@ -5,7 +5,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.lca_modules.building_envelope.construction import Construction
-from pod_lca.lca_modules.building_envelope.layer import Layer
+from pod_lca.lca_modules.building_envelope.layer import Layer, AncillaryMaterial
 from pod_lca.units import Quantity as Q
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
 from pod_lca.units import METER, SQUARE_METER, KELVIN, WATT
@@ -111,7 +111,7 @@ class FramedWall(Construction):
         fwall.virtual_layer_order.append(last_layer)
         fwall.virtual_layer_order.append('interior') 
 
-
+        framing.set_parent(fwall)
         return fwall
     
     def compute_wall_r(self):
@@ -157,22 +157,15 @@ class FramedWall(Construction):
         Ra += Q(.2  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
         Rb += Q(.7  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
 
+
         ratio = ri / rins if rins > 0 else 0
-        self.framing.get_zf(ratio)
 
-        framing_type = self.framing.type
-        spacing = self.framing.spacing
+        self.r, self.u = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
 
-        if framing_type == "Metal":
-            r, u = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
-            self.r = r
-            self.u = u
 
-        elif framing_type == "Wood":
-            width = 1.5  # default 2-by construction
-            k_wood = .12  # W/m-K (typical softwood) conductivity
-            self.r = self.framing.wood_bridge(s=spacing, width=width, ds=ds, k=k_wood, Ra=Ra, Rb=Rb, rins=rins)
-
-        else:
-            raise ValueError(f"Unknown framing type: {framing_type}")
-
+    def get_constituent_materials(self):
+        constituent_materials = super().get_constituent_materials()
+        
+        framing_ancillary = self.framing.get_ancillary_materials()
+        constituent_materials.extend(framing_ancillary)
+        return constituent_materials

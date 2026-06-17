@@ -42,6 +42,9 @@ class Layer(object):
 
     structural_element: None or str
         What type of structrural element the layer is ("Slab", "Wall", "Roof")
+
+    anciallary_materials : (list of) ~pod_lca.building_envelope.AncillaryMaterial
+        List of materials not accounted in operational model, but in embodied. 
     """
     def __init__(self):
         self.name = None
@@ -64,7 +67,7 @@ class Layer(object):
         area : float
             The surface area of the layer
         qty_in : {'volume', 'area', 'mass'}
-            Requested quantity measured in?
+            Requested quantity measured in. 
         """
         if qty_in in ['volume', 'mass']:
             return area * self.thickness
@@ -242,9 +245,10 @@ class Layer(object):
 
 class AncillaryMaterial(object):
 
-    def __init__(self, mat_name):
-        self.parent = None
-        self.material = mat_name
+    def __init__(self, material_property):
+        self.parent             = None
+        self.material_property  = material_property
+        self.is_structural      = False
 
     def get_quantity(self):
         pass

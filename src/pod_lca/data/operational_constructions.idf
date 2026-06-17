@@ -299,6 +299,19 @@ Material,
   0.7,                                    !- Solar Absorptance
   0.7;                                    !- Visible Absorptance
 
+
+Material,
+  Cold-formed steel framing,                      !- Name
+  Smooth,                                 !- Roughness
+  0.0008,                                 !- Thickness {m}
+  45.2497187436178,                       !- Conductivity {W/m-K}
+  7824.01788948971,                       !- Density {kg/m3}
+  499.677608007314,                       !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.7,                                    !- Solar Absorptance
+  0.7;                                    !- Visible Absorptance
+
+
 Material,
   F08 Metal surface,                      !- Name
   Smooth,                                 !- Roughness
@@ -320,6 +333,18 @@ Material,
   0.9,                                    !- Thermal Absorptance
   0.7,                                    !- Solar Absorptance
   0.7;                                    !- Visible Absorptance
+
+Material,
+  Softwood Lumber,                        !- Name
+  MediumSmooth,                           !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.15,                                   !- Conductivity {W/m-K}
+  608,                                    !- Density {kg/m3}
+  1630,                                   !- Specific Heat {J/kg-K}
+  0.9,                                    !- Thermal Absorptance
+  0.5,                                    !- Solar Absorptance
+  0.5;                                    !- Visible Absorptance
+
 
 Material,
   Generic 25mm Wood,                      !- Name
