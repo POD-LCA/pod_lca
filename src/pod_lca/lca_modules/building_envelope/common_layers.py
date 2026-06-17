@@ -19,14 +19,13 @@ class BrickLayer(Layer):
         self.add_ancillary_material(Mortar("Type S Mortar"))
 
     def get_quantity(self, area=None, qty_in=None):
-        return 0.75 * super().get_quantity()
+        if qty_in in ['volume', 'mass']:
+            return 0.75 * super().get_quantity(area, qty_in)
+        elif qty_in in ["area"]:
+            return ValueError("Brick quantity cannot be computed in area.")
+        else:
+            raise ValueError("Quantity request not recognized.")
 
-
-class Mortar(AncillaryMaterial):
-
-    def get_quantity(self, area=None, qty_in=None):
-        return 0.25 * self.parent.get_quantity(area, qty_in)
-    
 
 class SheathingLayer(Layer):
 
@@ -36,10 +35,22 @@ class SheathingLayer(Layer):
         self.add_ancillary_material(Fastners("Fastners"))
 
 
+class Mortar(AncillaryMaterial):
+
+    def get_quantity(self, area=None, qty_in=None):
+        if qty_in in ['volume', 'mass']:
+            return (0.25 * self.parent.get_quantity(area, qty_in) + Quantity(0.75, INCH) * area) * 0.25 #  TODO Confirm the equation is correct
+        elif qty_in in ["area"]:
+            return ValueError("Brick quantity cannot be computed in area.")
+        else:
+            raise ValueError("Quantity request not recognized.")
+
+
 class Fastners(AncillaryMaterial):
 
     def get_quantity(self, area=None, qty_in=None):
         return area * Quantity(1.18e-3, KILOGRAM)
+
 
 class WoodStuds(AncillaryMaterial):
 
