@@ -109,9 +109,9 @@ class FramedWall(Construction):
 
         fwall.virtual_layers['interior'] = vlayer
         fwall.virtual_layers[last_layer] = fwall.layers[last_layer]
-        fwall.virtual_layer_order.append(last_layer)
         fwall.virtual_layer_order.append('interior') 
-
+        fwall.virtual_layer_order.append(last_layer)
+        
         framing.set_parent(fwall)
         return fwall
     

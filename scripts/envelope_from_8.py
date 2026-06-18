@@ -243,8 +243,5 @@ print(b.get_emissions(scope='product'))
 
 
 
-# TODO: check if the last layer or first layer was used in the ASHRAE model. 
 
-# TODO: Email Kate to include framing material requirements
-# TODO: Ask kate for actuall wood stud equation (is 10 the height?)
 # TODO: lets do a non framed wall example too
