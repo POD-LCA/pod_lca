@@ -52,8 +52,8 @@ class FramedWall(Construction):
         super().__init__()
         self.__type__ = 'FramedWall'
         self.framing = None
-        self.r = None
-        self.u = None
+        self.resistance = None
+        self.conductance = None
         self.virtual_layers = {}
         self.virtual_layer_order = []
 
@@ -90,7 +90,8 @@ class FramedWall(Construction):
         fwall.compute_wall_r()
 
         vmat = EnvelopeMaterialPropertyNoMass()
-        vmat.thermal_resistance = fwall.r
+        vmat.thickness           = Q(1, METER)
+        vmat.conductivity        = vmat.thickness / fwall.resistance
         vmat.roughness           = 'MediumRough'
         vmat.thermal_absorptance = 0.9
         vmat.solar_absorptance   = 0.7
@@ -99,7 +100,7 @@ class FramedWall(Construction):
         vlayer.name = '{}_virtual_layer'.format(name)
         vlayer.parent_construction = fwall
         vlayer.material_property = vmat
-        vlayer._thickness = Q(0, METER)
+        vlayer._thickness = vmat.thickness
         vlayer.unit = None
         vlayer.classification = 'virtual_layer'
         vlayer.is_structural = False
@@ -160,7 +161,7 @@ class FramedWall(Construction):
 
         ratio = ri / rins if rins > 0 else 0
 
-        self.r, self.u = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
+        self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
 
 
     def get_constituent_materials(self):

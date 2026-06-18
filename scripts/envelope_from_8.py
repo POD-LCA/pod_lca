@@ -97,9 +97,18 @@ flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
 
 m0 = EnvelopeMaterialPropertyMass.from_idf('Clay brick', constructions_path)
 m1 = EnvelopeMaterialPropertyAirGap.from_idf('Generic Wall Air Gap', constructions_path)
-m2 = EnvelopeMaterialPropertyNoMass.from_idf('Expanded polystyrene (EPS) Type 1', constructions_path)
+# m2 = EnvelopeMaterialPropertyMass.from_idf('Expanded polystyrene (EPS) Type 1', constructions_path)
 m3 = EnvelopeMaterialPropertyMass.from_idf('Gypsum board', constructions_path)
-m4 = EnvelopeMaterialPropertyNoMass.from_idf('Mineral wool blanket baseline', constructions_path)
+m4 = EnvelopeMaterialPropertyMass.from_idf('Mineral wool blanket baseline', constructions_path)
+
+m2 = EnvelopeMaterialPropertyNoMass()
+m2.name                = 'Expanded polystyrene (EPS) Type 1'
+m2.conductivity        = Q(.1, WATT/(METER*KELVIN))
+m2.thickness           = Q(.05, METER)
+m2.roughness           = 'MediumRough'
+m2.thermal_absorptance = 0.9
+m2.solar_absorptance   = 0.7
+m2.visible_absorptance = 0.7
 
 
 
@@ -150,7 +159,6 @@ framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framin
 #                                        section_id="400S137-43")
 
 framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
-
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -203,8 +211,8 @@ b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
-# b.set_eplus_out_folder("temp/out") # default writes to a temp folder
-# b.set_idf_file_path("temp/out/temp_operational.idf") # default writes to a temp file
+b.set_eplus_out_folder("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out") # default writes to a temp folder
+b.set_idf_file_path("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
@@ -237,7 +245,6 @@ print(b.get_emissions(scope='product'))
 
 # TODO: check if the last layer or first layer was used in the ASHRAE model. 
 
-# TODO: Make no mass materiasls parametric, conductivity instead of resistance. 
 # TODO: Email Kate to include framing material requirements
 # TODO: Ask kate for actuall wood stud equation (is 10 the height?)
 # TODO: lets do a non framed wall example too
