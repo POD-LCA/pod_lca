@@ -35,7 +35,7 @@ from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import WoodFraming
 from pod_lca.lca_modules.building_envelope import MetalFraming
-from pod_lca.lca_modules.building_envelope import FramedWall
+from pod_lca.lca_modules.building_envelope import Wall
 from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
@@ -133,32 +133,8 @@ for i in range(len(layers)):
 layers_[0].set_structural(True)
 
 
-framing_name                  = 'tomas_wooden_framing'
-framing_material_property     = EnvelopeMaterialPropertyMass.from_idf('Softwood Lumber', constructions_path)
-framing_spacing               = Q(12, INCH)
-framing_width                 = Q(1.5, INCH)
-framing_length                = Q(3.5, INCH)
-framing = WoodFraming.from_parameters(framing_name, framing_material_property, framing_spacing, framing_width, framing_length)
-framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 
-# framing_name                = 'tomas_metal_framing'
-# framing_material_property   = EnvelopeMaterialPropertyMass.from_idf('Cold-formed steel framing', constructions_path)
-# framing_spacing             = Q(12, INCH)
-# # framing_metal_thickness     = Q(.043, INCH)
-# # framing_width               = Q(1.5, INCH)
-# # framing_length              = Q(3.5, INCH)
-# # framing = MetalFraming.from_parameters(framing_name,
-# #                                        framing_material_property,
-# #                                        framing_spacing,
-# #                                        framing_metal_thickness,
-# #                                        framing_width,
-# #                                        framing_length)
-# framing = MetalFraming.from_parameters(framing_name,
-#                                        framing_material_property,
-#                                        framing_spacing,
-#                                        section_id="400S137-43")
-
-framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+wall = Wall.from_layers('solid_wall_test', layers_)
 
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,7 +166,7 @@ windows = {wall_key1: window1, wall_key2: window2}
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
-e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
+e = Envelope.from_components(ename, flr, wall=wall, floor=f, ceiling=c, windows=windows)
 
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
@@ -242,7 +218,3 @@ print(b.get_emissions(scope='product'))
 # # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # # graph.show()
 
-
-
-
-# TODO: lets do a non framed wall example too

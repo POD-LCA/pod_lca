@@ -164,32 +164,3 @@ class Construction(Assembly):
                 constituent_materials.extend(layer.anciallary_materials)
 
         return constituent_materials
-
-    # def get_layers(self, building):
-    #     """ Returns the layers of the construction.
-        
-    #     Returns
-    #     -------
-    #     ~pod_lca.units.Quantity
-    #         The area of the envelope
-    #     """
-    #     for mk in self.layer_order:
-    #         name = self.layer_order[mk]
-    #         layer = Layer.from_idf(name, building)
-    #         self.layers[mk] = layer
-    
-
-if __name__ == '__main__':
-    pass
-
-    # from pod_lca.utilities import config
-
-
-    # for i in range(50): print('')
-
-
-    # name = 'Typical Insulated Steel Framed Exterior Wall-R16'
-    # path = config['file_paths']['operational']['CONSTRUCTIONS']
-    # c = Construction.from_idf(name, path)
-
-    # print(c.layers['3'].material.name)
