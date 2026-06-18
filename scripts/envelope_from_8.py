@@ -212,8 +212,8 @@ b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
-b.set_eplus_out_folder("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out") # default writes to a temp folder
-b.set_idf_file_path("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out/temp_operational.idf") # default writes to a temp file
+# b.set_eplus_out_folder("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out") # default writes to a temp folder
+# b.set_idf_file_path("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
