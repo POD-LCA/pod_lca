@@ -17,10 +17,15 @@ from ...utilities import DataImporter
 
 class BrickLayer(Layer):
 
-    def __init__(self):
+    def __init__(self, mortar_properties=None):
         super().__init__()
-        #FIXME: material property needed here instead of material name
-        self.add_ancillary_material(Mortar("Type S Mortar"))
+        self.add_ancillary_material(Mortar(mortar_properties))
+
+    @classmethod
+    def from_brick_and_mortar_properties(cls, name, brick_property, mortar_property, thickness, classification=None):
+        brick_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
+        brick_layer.add_ancillary_material(Mortar(mortar_property))
+        return brick_layer
 
     def get_quantity(self, area=None, qty_in=None):
         if qty_in in ['volume', 'mass']:
@@ -40,6 +45,12 @@ class SheathingLayer(Layer):
 
 
 class Mortar(AncillaryMaterial):
+    def __init__(self, material_property=None):
+        if material_property is None:
+            material_property = EnvelopeMaterialPropertyMass()
+            material_property.name = "Type S Mortar"
+        super().__init__(material_property)
+
 
     def get_quantity(self, area=None, qty_in=None):
         if qty_in in ['volume', 'mass']:

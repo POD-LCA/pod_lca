@@ -40,6 +40,7 @@ from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
+from pod_lca.lca_modules.building_envelope import BrickLayer
 
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyMass
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyAirGap
@@ -110,6 +111,8 @@ m2.thermal_absorptance = 0.9
 m2.solar_absorptance   = 0.7
 m2.visible_absorptance = 0.7
 
+mortar_property      = EnvelopeMaterialPropertyNoMass()
+mortar_property.name = 'Type S Mortar'
 
 
 layers = [
@@ -127,7 +130,10 @@ for i in range(len(layers)):
     thickness = layers[i]['thickness']
     classification = layers[i]['classification']
     material_property = layers[i]['material']
-    l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
+    if name == 'Clay brick':
+        l = BrickLayer.from_brick_and_mortar_properties(name, material_property, mortar_property, thickness, classification)
+    else:
+        l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
     layers_[i] = l
 
 layers_[0].set_structural(True)

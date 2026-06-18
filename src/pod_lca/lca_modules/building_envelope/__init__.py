@@ -27,6 +27,11 @@ from .framing import WoodFraming
 from .framing import MetalFraming
 from .envelope import Envelope
 from .building_envelope import BuildingEnvelope
-
+from .common_layers import BrickLayer
+from .common_layers import SheathingLayer
+from .common_layers import Mortar
+from .common_layers import Fastners
+from .common_layers import WoodStuds
+from .common_layers import MetalStuds
 
 __all__ = ["Envelope", "BuildingEnvelope"]
