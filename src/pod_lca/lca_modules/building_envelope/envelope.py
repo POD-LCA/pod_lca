@@ -354,8 +354,6 @@ class Envelope:
         floor.set_parent(envelope)
         ceiling.set_parent(envelope)
 
-
-
         envelope.set_materials_in_conmponents()
 
         return envelope

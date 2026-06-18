@@ -7,7 +7,6 @@ __version__ = "0.1.0"
 import numpy as np
 from bisect import bisect_left
 
-from .common_layers import WoodStuds
 from ...units import Quantity as Q
 from ...units import INCH
 from ...units import KELVIN
@@ -61,6 +60,9 @@ class WoodFraming(Framing):
 
     @classmethod
     def from_parameters(cls, name, material_property, spacing, width, length):
+        from .common_layers import WoodStuds
+        from .common_layers import Fastners
+
         framing = cls()
         framing.name                = name
         framing.material_property   = material_property
@@ -68,7 +70,7 @@ class WoodFraming(Framing):
         framing.width               = width
         framing.length              = length
         framing.add_ancillary_material(WoodStuds(material_property))
-        #TODO: add nails, etc...
+        framing.add_ancillary_material(Fastners())
         return framing
 
     def compute_bridge(self, Ra, Rb, rins, **kwargs):
@@ -140,6 +142,9 @@ class MetalFraming(Framing):
 
     @classmethod
     def from_parameters(cls, name, material_property, spacing, metal_thickness=None, width=None, length=None, section_id=None): # TODO: Keep both defined width/length/thickness or defined section options or only the latter...?
+        from .common_layers import MetalStuds
+        from .common_layers import Fastners
+    
         framing = cls()
         framing.name                = name
         framing.material_property   = material_property
@@ -153,6 +158,8 @@ class MetalFraming(Framing):
             framing.width           = Q(stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'width (in)'].values[0], INCH)
             framing.length          = Q(stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'depth (in)'].values[0], INCH)
             framing.metal_thickness = Q(stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'thickness (mm)'].values[0], MILI * METER)
+        framing.add_ancillary_material(MetalStuds(material_property))
+        framing.add_ancillary_material(Fastners())
 
         return framing
 

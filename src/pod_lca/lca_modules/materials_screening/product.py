@@ -14,6 +14,7 @@ from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOGRAM
+from ...units import Quantity
 from ...utilities import config
 
 
@@ -201,28 +202,23 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             Mass of the product.
         """
         if self.get_unit().get_qty_measured() == "mass":
-            return self.get_qty()
+            return Quantity(self.get_qty(), self.get_unit())
         else:
             if self.get_density() is None:
                 return None
             else:
-                declared_unit = self.inventories_declared_unit
-                conversion_factor = self.get_unit().convert_to(declared_unit)
-                return self.get_qty() * conversion_factor * self.get_density()
-
-    def get_weight_unit(self):
-        """Retrieve the unit of measurement of mass of the product.
-            This is used for the definition of density of the product.
-
-        Returns
-        -------
-        ~pod_lca.units.Unit
-            Unit of measurement of mass of the product.
-        """
-        if self.get_unit().get_qty_measured() == "mass":
-            return self.get_unit()
-        else:
-            return self.inventories_declared_unit * self.get_density_unit()
+                test_unit_mult, factor = (self.unit * self.get_density_unit()).simplify()
+                test_unit_div, factor = (self.unit / self.get_density_unit()).simplify()
+                if (test_unit_mult).get_qty_measured() == "mass":
+                    val = self.get_qty() * self.get_density() * factor
+                    unit = test_unit_mult
+                    return Quantity(val, unit)
+                elif (test_unit_div).get_qty_measured() == "mass":
+                    val = (self.get_qty() / self.get_density()) * factor
+                    unit = test_unit_div * factor
+                    return Quantity(val, unit)
+                else:
+                    return None
 
     def get_density(self):
         """Retrieve density of the product.

@@ -132,21 +132,24 @@ framing_length                = Q(3.5, INCH)
 framing = WoodFraming.from_parameters(framing_name, framing_material_property, framing_spacing, framing_width, framing_length)
 framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 
-
-
 # framing_name                = 'tomas_metal_framing'
 # framing_material_property   = EnvelopeMaterialPropertyMass.from_idf('Cold-formed steel framing', constructions_path)
 # framing_spacing             = Q(12, INCH)
-# framing_metal_thickness     = Q(.043, INCH)
-# framing_width               = Q(1.5, INCH)
-# framing_length              = Q(3.5, INCH)
+# # framing_metal_thickness     = Q(.043, INCH)
+# # framing_width               = Q(1.5, INCH)
+# # framing_length              = Q(3.5, INCH)
+# # framing = MetalFraming.from_parameters(framing_name,
+# #                                        framing_material_property,
+# #                                        framing_spacing,
+# #                                        framing_metal_thickness,
+# #                                        framing_width,
+# #                                        framing_length)
 # framing = MetalFraming.from_parameters(framing_name,
 #                                        framing_material_property,
 #                                        framing_spacing,
-#                                        framing_metal_thickness,
-#                                        framing_width,
-#                                        framing_length)
-# framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+#                                        section_id="400S137-43")
+
+framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
 
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

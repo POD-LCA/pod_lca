@@ -289,7 +289,7 @@ class Unit:
             not self.qty_measured
         )
     
-    def convert_to(self, to_unit_copy):
+    def convert_to(self, to_unit):
         """Returns conversion factor.
 
         Notes
@@ -311,7 +311,7 @@ class Unit:
         TypeError
             Incompatible units for conversion.
         """
-        to_unit_copy = copy(to_unit_copy)
+        to_unit_copy = copy(to_unit)
 
         # simplify units
         starting_factor = 1.0
