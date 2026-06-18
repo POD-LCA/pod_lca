@@ -7,10 +7,16 @@ __version__ = "0.1.0"
 import numpy as np
 from bisect import bisect_left
 
-from pod_lca.units import Quantity as Q
-from pod_lca.units import KELVIN, WATT, METER, INCH, FEET, SQUARE_FEET
-
 from .common_layers import WoodStuds
+from ...units import Quantity as Q
+from ...units import INCH
+from ...units import KELVIN
+from ...units import METER
+from ...units import MILI
+from ...units import WATT
+from ...utilities import config
+from ...utilities import DataImporter
+
 
 class Framing(object):
     """ Framing object representing the structural elements in envelope
@@ -133,14 +139,21 @@ class MetalFraming(Framing):
         self.metal_thickness    = None
 
     @classmethod
-    def from_parameters(cls, name, material_property, spacing, metal_thickness, width, length): 
+    def from_parameters(cls, name, material_property, spacing, metal_thickness=None, width=None, length=None, section_id=None): # TODO: Keep both defined width/length/thickness or defined section options or only the latter...?
         framing = cls()
         framing.name                = name
         framing.material_property   = material_property
         framing.spacing             = spacing
         framing.metal_thickness     = metal_thickness
-        framing.width                = width
+        framing.width               = width
         framing.length              = length
+        framing.section_id          = section_id
+        if section_id:
+            stud_design_table = DataImporter.csv_to_pandas(config['file_paths']['building']['STEEL_STUD_DESIGN_TABLE'])
+            framing.width           = Q(stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'width (in)'].values[0], INCH)
+            framing.length          = Q(stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'depth (in)'].values[0], INCH)
+            framing.metal_thickness = Q(stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'thickness (mm)'].values[0], MILI * METER)
+
         return framing
 
     def compute_bridge(self, Ra, Rb, rins, **kwargs):

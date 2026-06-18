@@ -9,6 +9,8 @@ from .layer import Layer
 from .layer import AncillaryMaterial
 from ...units import Quantity
 from ...units import KILOGRAM, INCH, SQUARE_FEET, FEET
+from ...utilities import config
+from ...utilities import DataImporter
 
 
 class BrickLayer(Layer):
@@ -56,15 +58,18 @@ class WoodStuds(AncillaryMaterial):
 
     def get_quantity(self, area=None, qty_in=None):
         if qty_in in ['volume', 'mass']:
-            wall_area  = area.convert_to(SQUARE_FEET)
             framing = self.parent
             envelope = framing.parent.parent
+
+            wall_area  = area.convert_to(SQUARE_FEET)
             wall_height = envelope.floor_plan_obj.get_height().convert_to(FEET)
             spacing  = framing.spacing.convert_to(INCH)
             stud_width = framing.width.convert_to(INCH)
             stud_length= framing.length.convert_to(INCH)
-            volume_per_ft2 = ((spacing*stud_width*stud_length*3+(10*12-3*stud_width)*stud_width*stud_length)/((spacing/12)*wall_height))/61023.7
+
+            volume_per_ft2 = ((spacing * stud_width * stud_length * 3+(10 * 12 - 3 * stud_width) * stud_width * stud_length) / ((spacing / 12) * wall_height)) / 61023.7
             volume = volume_per_ft2 * wall_area
+
             return volume
         elif qty_in in ["area"]:
             raise ValueError('This material cant be measured in area')
@@ -74,5 +79,26 @@ class WoodStuds(AncillaryMaterial):
 
 class MetalStuds(AncillaryMaterial):
 
+    def __init__(self, material_property):
+        super().__init__(self, material_property)
+
     def get_quantity(self, area=None, qty_in=None):
-        raise ValueError('This studs type is not yet quantifiable')
+        if qty_in in ['volume', 'mass']:
+            wall_area  = area.convert_to(SQUARE_FEET)
+            framing = self.parent
+            envelope = framing.parent.parent
+
+            wall_height = envelope.floor_plan_obj.get_height().convert_to(FEET)
+            spacing  = framing.spacing.convert_to(INCH)
+            
+            stud_design_table = DataImporter.csv_to_pandas(config['file_paths']['building']['STEEL_STUD_DESIGN_TABLE'])
+            A_stud = stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'Stud_Area'].values[0]
+            A_track = stud_design_table.loc[stud_design_table['Section'] == framing.section_id, 'Track_Area'].values[0]
+
+            volume_per_ft2 = (spacing * A_stud * 3 + (wall_height * 12 * A_track)) / ((spacing / 12) * wall_height) / 61023.7
+            volume = volume_per_ft2 * wall_area
+            return volume
+        elif qty_in in ["area"]:
+            raise ValueError('This material cant be measured in area')
+        else:
+            raise ValueError('This qty_in value is not supported')
