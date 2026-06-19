@@ -17,9 +17,11 @@ from ...utilities import DataImporter
 
 class BrickLayer(Layer):
 
-    def __init__(self, mortar_properties=None):
-        super().__init__()
-        self.add_ancillary_material(Mortar(mortar_properties))
+    @classmethod
+    def from_property_and_thickness(cls, name, brick_property, thickness, classification=None):
+        brick_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
+        brick_layer.add_ancillary_material(Mortar())
+        return brick_layer
 
     @classmethod
     def from_brick_and_mortar_properties(cls, name, brick_property, mortar_property, thickness, classification=None):
@@ -38,10 +40,11 @@ class BrickLayer(Layer):
 
 class SheathingLayer(Layer):
 
-    def __init__(self):
-        super().__init__()
-        #FIXME: material property needed here instead of material name
-        self.add_ancillary_material(Fastners("Fastners"))
+    @classmethod
+    def from_property_and_thickness(cls, name, brick_property, thickness, classification=None):
+        sheathing_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
+        sheathing_layer.add_ancillary_material(Fastners())
+        return sheathing_layer
 
 
 class Mortar(AncillaryMaterial):
