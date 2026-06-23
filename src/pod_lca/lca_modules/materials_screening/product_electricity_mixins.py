@@ -8,6 +8,7 @@ from . import Electricity
 from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ...units import Unit
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import log
@@ -30,7 +31,14 @@ class ProductElectricityMixins:
                 # electricity quantity and unit
                 electricity_qty = self.get_electricity_qty()
                 if electricity_qty > 0.0:
-                    electricity_unit = UNITS_MAP[data_set[electricity_tag + database.get_unit_key()]]
+                    electricity_unit_data = data_set[electricity_tag + database.get_unit_key()]
+                    if isinstance(electricity_unit_data, Unit):
+                        electricity_unit = electricity_unit_data
+                    elif isinstance(electricity_unit_data, str):
+                        electricity_unit = UNITS_MAP[electricity_unit_data]
+                    else:
+                        raise TypeError("Electricity unit data type not recognized.")
+
                 else:
                     electricity_unit = UNITS_MAP[config["setup"]["electricity"]["DEFAULT_DECLARED_UNIT"]]
 
