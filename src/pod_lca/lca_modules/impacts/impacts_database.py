@@ -529,8 +529,21 @@ class ImpactsDatabase:
         primary_key = self.get_primary_key()
         if data[primary_key] in self.data[primary_key].values:
             row = self.data[primary_key] == data[primary_key]
-            self.data.loc[row, list(data.keys())] = list(data.values())
 
+            local_data_copy = data.copy()
+            if isinstance(local_data_copy[self.get_unit_key()], str):
+                local_data_copy[self.get_unit_key()] = UNITS_MAP[local_data_copy[self.get_unit_key()]]
+            for key in local_data_copy.keys():
+                if isinstance(local_data_copy[key], str):
+                    if key.endswith("_" + self.get_unit_key()):
+                        local_data_copy[key] = UNITS_MAP[local_data_copy[key]]
+
+            self.data.loc[row, list(local_data_copy.keys())] = list(local_data_copy.values())
+
+            del local_data_copy
+
+            return True
+        
     def delete_entry(self, flow_name):
         """ Delete an entry from the database.
         
