@@ -130,7 +130,7 @@ for i in range(len(layers)):
     thickness = layers[i]['thickness']
     classification = layers[i]['classification']
     material_property = layers[i]['material']
-    if name == 'Clay brick':
+    if name == 'Clay brickssss':
         l = BrickLayer.from_brick_and_mortar_properties(name, material_property, mortar_property, thickness, classification)
     else:
         l = Layer.from_property_and_thickness(name, material_property, thickness, classification)

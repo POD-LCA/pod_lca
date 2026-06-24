@@ -245,4 +245,3 @@ print(b.get_emissions(scope='product'))
 
 
 
-# TODO: lets do a non framed wall example too
