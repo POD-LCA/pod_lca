@@ -78,13 +78,31 @@ class CambiumData:
 
         # get cambium data
         if geographical_scope == "National":
-            df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["CAMBIUM_NATIONAL_DATA"])
+            df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["CAMBIUM_NATIONAL_DATA"],
+                                            dtype_map={
+                                                "scenario": 'category',
+                                                "country_code": 'category',
+                                                "t": int
+                                            })
             cambium_data.data = df[df["country_code"] == country_code]
         elif geographical_scope == "Regional":
-            df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["CAMBIUM_REGIONAL_DATA"])
+            df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["CAMBIUM_REGIONAL_DATA"],
+                                            dtype_map={
+                                                "scenario": 'category',
+                                                "gea": 'category',
+                                                "t": int
+                                            })
             cambium_data.data = df[df["gea"] == region]
         elif geographical_scope == "Local":
-            df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["CAMBIUM_LOCAL_DATA"])
+            df = DataImporter.csv_to_pandas(config["file_paths"]["electricity"]["CAMBIUM_LOCAL_DATA"],
+                                            dtype_map={
+                                                "scenario": 'category',
+                                                "r": 'category',
+                                                "state": 'category',
+                                                "gea": 'category',
+                                                "interconnect": 'category',
+                                                "t": int
+                                            })
             cambium_data.data = df[df["r"] == region]
         else:
             raise KeyError(
