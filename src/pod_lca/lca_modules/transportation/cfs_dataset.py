@@ -36,7 +36,26 @@ class CFSDataset(TransportDataset):
         self.force_default_mode = True
         self.force_default_mode_value = "Truck"
         
-        self.cfs_dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH']) 
+        self.cfs_dataset = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFS_DATA_PATH'],
+                                                      headers=['ORIG_STATE', 
+                                                               'DEST_STATE', 
+                                                               'NAICS', 
+                                                               'SCTG', 
+                                                               'MODE', 
+                                                               'SHIPMT_WGHT', 
+                                                               'SHIPMT_DIST_GC', 
+                                                               'SHIPMT_DIST_ROUTED', 
+                                                               'EXPORT_YN'],
+                                                      dtype_map={
+                                                          'ORIG_STATE': int,
+                                                          'DEST_STATE': int,
+                                                          'NAICS': int,
+                                                          'SCTG': int,
+                                                          'MODE': int, 
+                                                          'SHIPMT_WGHT': int,
+                                                          'SHIPMT_DIST_GC': int,
+                                                          'SHIPMT_DIST_ROUTED': float,
+                                                          'EXPORT_YN': 'category'})
         self.cfs_modes_mapping = DataImporter.json_to_dict(config['file_paths']['transportation']['CFS_MODE_CODE'])
 
     def filter_datasets(self, material=None, destination=None, origin=None, mode=None):
