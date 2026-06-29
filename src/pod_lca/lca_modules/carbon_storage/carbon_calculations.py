@@ -28,7 +28,6 @@ def get_dry_mass(wet_mass, moisture_content):
     """
     return wet_mass / (1 + moisture_content)
 
-
 def get_biogenic_carbon_content(**kwargs):
     """Determine biogenic carbon content.
 
