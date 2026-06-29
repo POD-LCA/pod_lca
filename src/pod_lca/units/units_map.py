@@ -35,6 +35,8 @@ from ..units import US_GALLON
 from ..units import YARD
 from ..units import WATT_HOUR
 from ..units import US_DOLLAR
+from ..units import WATT
+from ..units import KELVIN
 
 # This file contains a mapping of strings to their corresponding unit objects.
 # This is to be used for conversions strings in import files (CSV, JSON, etc.) to their corresponding unit objects in the code.
@@ -90,5 +92,6 @@ UNITS_MAP.update(
         "kg/m3": KILOGRAM / CUBIC_METER,
         "kg/item": KILOGRAM / ITEM,
         "USD": US_DOLLAR,
+        "W/m*K": WATT/(METER*KELVIN),
     }
 )
