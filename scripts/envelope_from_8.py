@@ -207,7 +207,7 @@ s.build(mui_type)
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
-b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
+# b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
