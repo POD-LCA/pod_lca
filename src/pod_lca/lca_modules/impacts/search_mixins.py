@@ -6,7 +6,7 @@ __version__ = "0.1.0"
 
 from functools import lru_cache
 from numpy import abs
-from numpy import array
+from numpy import concatenate
 from numpy import int8
 from numpy import zeros
 from numpy import asarray
@@ -18,7 +18,6 @@ from ...utilities import config
 try:
     from sklearn.cluster import KMeans
     from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
 
     SKLEARN_IMPORTED = True
 except ImportError:
@@ -128,7 +127,6 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
 
     return list(expanded)
 
-
 def rank_entries(products, search_terms, support_data_set=None, support_data_weight=0.25, max_returns=25):
     """Rank products based on TF-IDF similarity to search terms.
 
@@ -153,42 +151,49 @@ def rank_entries(products, search_terms, support_data_set=None, support_data_wei
     if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
         raise ImportError("Please install the 'nltk'  and 'sklearn' packages to use the search methods.")
 
-    docs = products.astype(str).tolist()
+    docs = products.astype(str).values
+    query = " ".join(search_terms)
+
+    corpus = concatenate([docs, [query]])
+
     vectorizer = TfidfVectorizer(stop_words="english")
-    tfidf_matrix = vectorizer.fit_transform(docs + [" ".join(search_terms)])
+    tfidf_matrix = vectorizer.fit_transform(corpus)
 
     search_vec = tfidf_matrix[-1]
     doc_vecs = tfidf_matrix[:-1]
-    scores = cosine_similarity(search_vec, doc_vecs)[0]
+
+    scores = (doc_vecs @ search_vec.T).toarray().ravel()
 
     if support_data_set is not None:
-        support_docs = support_data_set.astype(str).tolist()
-        vectorizer = TfidfVectorizer(stop_words="english")
-        tfidf_matrix = vectorizer.fit_transform(support_docs + [" ".join(search_terms)])
+        support_docs = support_data_set.astype(str).values
+        
+        corpus = concatenate([support_docs, [query]])
+        tfidf_matrix = vectorizer.fit_transform(corpus)
 
         search_vec = tfidf_matrix[-1]
         doc_vecs = tfidf_matrix[:-1]
-        support_scores = cosine_similarity(search_vec, doc_vecs)[0]
+        support_scores = (doc_vecs @ search_vec.T).toarray().ravel()
+
+        similarity = (scores * (1 - support_data_weight)) + (support_scores * support_data_weight)
+    else:
+        similarity = scores
+
+    mask = similarity > 0
 
     ranked = (
         DataFrame(
             {
-                "item": docs,
-                "similarity": (
-                    scores
-                    if support_data_set is None
-                    else (scores * (1 - support_data_weight)) + (support_scores * support_data_weight)
-                ),
+                "item": docs[mask],
+                "similarity": similarity[mask]
             }
         )
-        .loc[lambda df: df["similarity"] > 0]
-        .sort_values(by="similarity", ascending=False)
+        .sort_values(by="similarity", 
+                     ascending=False,
+                     ignore_index=True)
         .head(max_returns)
-        .reset_index(drop=True)
     )
 
     return ranked
-
 
 def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_max=3, move_thresh=0.1):
     """Dynamically find cutoff in ranked scores using adaptive k-means clustering.
