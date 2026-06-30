@@ -10,6 +10,8 @@ from numpy import array
 from numpy import sort
 from pandas import DataFrame
 
+from ...utilities import config
+
 try:
     from sklearn.cluster import KMeans
     from sklearn.feature_extraction.text import TfidfVectorizer
@@ -19,6 +21,26 @@ try:
 except ImportError:
     SKLEARN_IMPORTED = False
 
+REQUIRED_PACKAGES = {
+    "corpora/wordnet": "wordnet",
+    "corpora/omw-1.4": "omw-1.4",
+}
+
+def ensure_nltk_data():
+    NLTK_DATA_DIR = config["file_paths"]["impacts"]["NLTK_DATA_DIR"]
+    
+    NLTK_DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    for resource_path, package_name in REQUIRED_PACKAGES.items():
+        try:
+            nltk.data.find(resource_path)
+        except LookupError:
+            nltk.download(
+                package_name,
+                download_dir=str(NLTK_DATA_DIR),
+                quiet=True,
+            )
+
 try:
     import nltk
     from nltk.corpus import wordnet
@@ -26,20 +48,18 @@ try:
     from nltk.stem import PorterStemmer
     from nltk.stem import WordNetLemmatizer
 
-    nltk.download("wordnet", quiet=True)
-    nltk.download("omw-1.4", quiet=True)
-    nltk.download("punkt", quiet=True)
-    nltk.download("punkt_tab", quiet=True)
+    ensure_nltk_data()
 
     NLTK_IMPORTED = True
 except ImportError:
     NLTK_IMPORTED = False
 
+LEMMATIZER = WordNetLemmatizer()
+STEMMER = PorterStemmer()
 
 @lru_cache(maxsize=50000)
 def _cached_synsets(word, pos=None):
     return wordnet.synsets(word, pos=pos)
-
 
 def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False):
     """Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
@@ -65,32 +85,43 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
     if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
         raise ImportError("Please install the 'nltk' and 'sklearn' packages to use the search methods.")
 
-    lemmatizer = WordNetLemmatizer()
-    stemmer = PorterStemmer()
+    lemmatizer = LEMMATIZER
+    stemmer = STEMMER
 
-    tokens = nltk.word_tokenize(search_term.lower())
+    tokens = search_term.lower().split()
     expanded = set(tokens)
     add = expanded.add
 
     # Correct spelling
     for word in tokens:
-        closest = min(data_set, key=lambda w: edit_distance(word, w))
-        if edit_distance(word, closest) <= max_edit_distance:
-            add(closest)
+        best_word = None
+        best_dist = max_edit_distance + 1
+
+        for candidate in data_set:
+            dist = edit_distance(word, candidate)
+
+            if dist < best_dist:
+                best_dist = dist
+                best_word = candidate
+
+                if dist == 0:
+                    break
+
+        if best_dist <= max_edit_distance:
+            add(best_word)
 
     # Check synonyms
     for word in tokens:
-        synsets = _cached_synsets(word, "n")[:max_senses] if limit_to_noun else _cached_synsets(word)[:max_senses]
-        for syn in synsets:
-            lemmas = syn.lemmas()
-            for lemma in lemmas:
-                name = lemma._name
+        synsets = _cached_synsets(word, "n") if limit_to_noun else _cached_synsets(word)
+        for syn in synsets[:max_senses]:
+            for lemma in syn.lemmas():
+                name = lemma.name()
                 add(name.replace("_", " "))
 
     # Stemming and lemmatization
-    stems = {stemmer.stem(w) for w in expanded}
-    lemmas = {lemmatizer.lemmatize(w) for w in expanded}
-    expanded |= stems | lemmas
+    for w in tuple(expanded):
+        add(stemmer.stem(w))
+        add(lemmatizer.lemmatize(w))
 
     return list(expanded)
 

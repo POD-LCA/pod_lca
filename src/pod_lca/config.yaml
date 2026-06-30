@@ -97,6 +97,7 @@ file_paths:
     IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.json
     IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.json
     IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.json
+    NLTK_DATA_DIR: .nltk_data
   location:
     US_STATES: data/location_faa_us-states.json
     US_STATE_COORDS: data/location_podlca_us-state-coords.csv
