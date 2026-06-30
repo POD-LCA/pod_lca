@@ -62,10 +62,9 @@ def import_nltk_dependencies(use_wordnet=False):
         NLTK_IMPORTED = True
 
     if use_wordnet and not WORDNET_IMPORTED:
-        from nltk.corpus import wordnet as wn
+        from nltk.corpus import wordnet
         from nltk.stem import WordNetLemmatizer
 
-        wordnet = wn
         LEMMATIZER = WordNetLemmatizer()
 
         WORDNET_IMPORTED = True
