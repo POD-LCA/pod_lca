@@ -23,17 +23,69 @@ try:
 except ImportError:
     SKLEARN_IMPORTED = False
 
-REQUIRED_PACKAGES = {
-    "corpora/wordnet": "wordnet",
-    "corpora/omw-1.4": "omw-1.4",
+NLTK_IMPORTED = False
+WORDNET_IMPORTED = False
+STEMMER = None
+LEMMATIZER = None
+wordnet = None
+
+MATERIAL_SYNONYMS = {
+    "timber": ["timber", "lumber"],
+    "lumber": ["timber", "lumber"],
+    "chemical": ["chemical", "chemical_substance"],
+    "clt": ["cross laminated timber"],
+    "lvl": ["laminated veneer lumber"],
+    "glt": ["glulam", "glued laminated timber"],
+    "drywall": ["gypsum board", "plasterboard"],
+    "gypsum": ["plasterboard", "drywall"],
+    "rebar": ["reinforcing steel"],
 }
 
-def ensure_nltk_data():
+
+def import_nltk_dependencies(use_wordnet=False):
+    """Import NLTK dependencies on demand."""
+
+    global NLTK_IMPORTED
+    global WORDNET_IMPORTED
+    global STEMMER
+    global LEMMATIZER
+    global wordnet
+
+    if not NLTK_IMPORTED:
+        import nltk
+        from nltk.metrics import edit_distance
+        from nltk.stem import PorterStemmer
+
+        globals()["edit_distance"] = edit_distance
+
+        STEMMER = PorterStemmer()
+        NLTK_IMPORTED = True
+
+    if use_wordnet and not WORDNET_IMPORTED:
+        from nltk.corpus import wordnet as wn
+        from nltk.stem import WordNetLemmatizer
+
+        wordnet = wn
+        LEMMATIZER = WordNetLemmatizer()
+
+        WORDNET_IMPORTED = True
+
+    ensure_nltk_data()
+
+def ensure_nltk_data(use_wordnet=False):
     NLTK_DATA_DIR = config["file_paths"]["impacts"]["NLTK_DATA_DIR"]
     
     NLTK_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    for resource_path, package_name in REQUIRED_PACKAGES.items():
+    packages = {}
+
+    if use_wordnet:
+        packages = {
+            "corpora/wordnet": "wordnet",
+            "corpora/omw-1.4": "omw-1.4",
+        }
+
+    for resource_path, package_name in packages.items():
         try:
             nltk.data.find(resource_path)
         except LookupError:
@@ -43,27 +95,11 @@ def ensure_nltk_data():
                 quiet=True,
             )
 
-try:
-    import nltk
-    from nltk.corpus import wordnet
-    from nltk.metrics import edit_distance
-    from nltk.stem import PorterStemmer
-    from nltk.stem import WordNetLemmatizer
-
-    ensure_nltk_data()
-
-    NLTK_IMPORTED = True
-except ImportError:
-    NLTK_IMPORTED = False
-
-LEMMATIZER = WordNetLemmatizer()
-STEMMER = PorterStemmer()
-
 @lru_cache(maxsize=50000)
 def _cached_synsets(word, pos=None):
     return wordnet.synsets(word, pos=pos)
 
-def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False):
+def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False, use_wordnet=True):
     """Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
 
     Parameters
@@ -84,11 +120,7 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
     list of str
         Expanded list of search terms.
     """
-    if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
-        raise ImportError("Please install the 'nltk' and 'sklearn' packages to use the search methods.")
-
-    lemmatizer = LEMMATIZER
-    stemmer = STEMMER
+    import_nltk_dependencies(use_wordnet)
 
     tokens = search_term.lower().split()
     expanded = set(tokens)
@@ -112,18 +144,30 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
         if best_dist <= max_edit_distance:
             add(best_word)
 
-    # Check synonyms
-    for word in tokens:
-        synsets = _cached_synsets(word, "n") if limit_to_noun else _cached_synsets(word)
-        for syn in synsets[:max_senses]:
-            for lemma in syn.lemmas():
-                name = lemma.name()
-                add(name.replace("_", " "))
+    
+    if use_wordnet:
+        # Check synonyms
+        for word in tokens:
+            synsets = _cached_synsets(word, "n") if limit_to_noun else _cached_synsets(word)
+            for syn in synsets[:max_senses]:
+                for lemma in syn.lemmas():
+                    name = lemma.name()
+                    add(name.replace("_", " "))
 
-    # Stemming and lemmatization
-    for w in tuple(expanded):
-        add(stemmer.stem(w))
-        add(lemmatizer.lemmatize(w))
+        # Stemming and lemmatization
+        for w in tuple(expanded):
+            add(STEMMER.stem(w))
+            add(LEMMATIZER.lemmatize(w))
+    else:
+        for w in tuple(expanded):
+            add(STEMMER.stem(w))
+
+            # plural handling
+            if w.endswith("s") and len(w) > 3:
+                add(w[:-1])
+
+            for synonym in MATERIAL_SYNONYMS.get(w, ()):
+                add(synonym)
 
     return list(expanded)
 
@@ -148,8 +192,8 @@ def rank_entries(products, search_terms, support_data_set=None, support_data_wei
     ~pandas.DataFrame
         Ranked list of products with similarity values.
     """
-    if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
-        raise ImportError("Please install the 'nltk'  and 'sklearn' packages to use the search methods.")
+    if not SKLEARN_IMPORTED:
+        raise ImportError("Please install the 'sklearn' packages to use the search methods.")
 
     docs = products.astype(str).values
     query = " ".join(search_terms)
@@ -218,6 +262,9 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     ~pandas.DataFrame
             Ranked list of products with impact and similarity values.
     """
+    if not SKLEARN_IMPORTED:
+        raise ImportError("Please install the 'sklearn' packages to use the search methods.")
+    
     impact_scores = asarray(impact_scores).reshape(-1, 1)
     prev_means = None
     k = k_initial

@@ -450,7 +450,7 @@ class ImpactsDatabase:
     # =================================
     # Search Methods
     # =================================
-    def find(self, product, additional_headers=None, shortlist=False, printout=True):
+    def find(self, product, additional_headers=None, shortlist=False, printout=True, use_wordnet=False):
         """Search for a product in the database. Search is done on the primary data column of the database.
 
         Parameters
@@ -463,6 +463,8 @@ class ImpactsDatabase:
             If true, shortlist the matching product list based on impacts.
         printout : bool
             Print the results if true.
+        use_wordnet : bool
+            If true, search uses wordnet corpus for stemming and lemmatization to expand the search terms.
 
         Returns
         -------
@@ -479,7 +481,7 @@ class ImpactsDatabase:
 
         documents = products_all if product_support_data is None else concat([products_all, product_support_data])
         vocab = set(" ".join(documents).lower().split())
-        expanded = expand_search_terms(product, data_set=vocab)
+        expanded = expand_search_terms(product, data_set=vocab, use_wordnet=use_wordnet)
 
         ranked = rank_entries(products_all, expanded, product_support_data)
         if ranked.empty:
