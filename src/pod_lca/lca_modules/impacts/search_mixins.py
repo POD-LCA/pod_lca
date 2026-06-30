@@ -7,6 +7,9 @@ __version__ = "0.1.0"
 from functools import lru_cache
 from numpy import abs
 from numpy import array
+from numpy import int8
+from numpy import zeros
+from numpy import asarray
 from numpy import sort
 from pandas import DataFrame
 
@@ -210,7 +213,7 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     ~pandas.DataFrame
             Ranked list of products with impact and similarity values.
     """
-    impact_scores = array(impact_scores).reshape(-1, 1)
+    impact_scores = asarray(impact_scores).reshape(-1, 1)
     prev_means = None
     k = k_initial
 
@@ -218,7 +221,9 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     for i in range(n_initial, len(impact_scores) + 1):
         subset = impact_scores[:i]
         kmeans = KMeans(n_clusters=k, n_init="auto", random_state=0).fit(subset)
-        means = sort(kmeans.cluster_centers_.flatten())
+        means = sort(kmeans.cluster_centers_.ravel())
+
+        del kmeans
 
         if prev_means is not None:
             move_max = max(abs(means - prev_means) / prev_means)
@@ -238,22 +243,28 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
         cutoff_index = len(impact_scores)
         subset_scores = impact_scores[:cutoff_index]
         items = products[:cutoff_index]
-        cluster_labels = array([0] * len(impact_scores))
+        cluster_labels = zeros(len(impact_scores), dtype=int8)
 
     df = DataFrame(
         {
-            "item": items["item"].tolist(),
+            "item": items["item"],
             "impact": subset_scores.flatten(),
-            "similarity": items["similarity"].tolist(),
+            "similarity": items["similarity"],
             "cluster": cluster_labels,
         }
     )
 
     # order by similarity / set cluster rank by mean impact
-    cluster_score = df.groupby("cluster")["similarity"].max().to_dict()
-    df["cluster_score"] = df["cluster"].map(cluster_score)
-    df_sorted = df.sort_values(["cluster_score", "similarity"], ascending=[False, False]).reset_index(drop=True)
-    df_sorted = df_sorted.drop(columns=["cluster_score"])
+    df["cluster_score"] = (
+        df.groupby("cluster")["similarity"]
+        .transform("max")
+    )
+    df_sorted = df.sort_values(
+        ["cluster_score", "similarity"],
+        ascending=[False, False],
+        ignore_index=True,
+    )
+    df_sorted.drop(columns="cluster_score", inplace=True)
 
     cluster_means = df.groupby('cluster')['impact'].mean()
     sorted_clusters = cluster_means.sort_values(ascending=False).index
