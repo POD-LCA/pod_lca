@@ -1,6 +1,7 @@
 from .records import Records
 from .impact_object import Impacts
 from .emission_inventories import Emissions
+from .search_mixins import ensure_nltk_data
 from .search_mixins import expand_search_terms
 from .search_mixins import rank_entries
 from .search_mixins import adaptive_kmeans_cutoff
