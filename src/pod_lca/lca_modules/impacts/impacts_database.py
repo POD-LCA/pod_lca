@@ -179,7 +179,7 @@ class ImpactsDatabase:
 
             unit_header = kwargs["grouped_data"] + "_" + self.get_unit_key()
             new_headers.append(unit_header)
-            data_type_mapping[qty_header] = 'category'
+            data_type_mapping[unit_header] = 'category'
 
             data_headers = data_headers + new_headers
 
