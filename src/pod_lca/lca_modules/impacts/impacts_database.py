@@ -477,7 +477,14 @@ class ImpactsDatabase:
         if additional_headers is not None:
             valid_headers = [header for header in additional_headers if header in self.data.columns]
             if valid_headers:
-                product_support_data = self.data[valid_headers].fillna("").astype(str).agg(" ".join, axis=1)
+                for header in valid_headers:
+                    if self.data[header].dtype.name == "category":
+                        self.data[header] = self.data[header].cat.add_categories([""])
+                        self.data[header] = self.data[header].fillna("")
+                    else:
+                        product_support_data = self.data[valid_headers].fillna("")
+
+                product_support_data = self.data[valid_headers].astype(str).agg(" ".join, axis=1)
 
         documents = products_all if product_support_data is None else concat([products_all, product_support_data])
         vocab = set(" ".join(documents).lower().split())
