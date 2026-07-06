@@ -84,6 +84,10 @@ class Master:
         self.data_distributions = {}
         self.pedigree_score = PedigreeScore.from_parent(self)
 
+        # cache
+        self._cache_impacts = None
+        self._last_params = None
+
     # ================================
     # Constructors
     # ================================
@@ -457,6 +461,17 @@ class Master:
         ~pod_lca.impacts.Impacts
             Impacts of the product/process.
         """
+        # check for cached result
+        current_params = (
+            self.get_qty(),
+            self.get_unit().standard_notation,
+            self.get_impact_database_entry()
+        )
+        if self._last_params == current_params and self._cache_impacts is not None:
+            log("Returning cached result.", "Info")
+            return self._cache_impacts
+
+        # update inventory records and impacts
         self.update_inventory_records()
 
         carbonation_effects_impact_cat = config["setup"]["impacts"]["ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]

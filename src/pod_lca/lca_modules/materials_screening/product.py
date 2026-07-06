@@ -15,6 +15,7 @@ from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOGRAM
 from ...units import Quantity
+from ...utilities import log
 from ...utilities import config
 
 
@@ -69,6 +70,10 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         self.dry_density = None
         self.dry_mass = None
         self.moisture_content = 0.0
+
+        # cache
+        self._cache_impacts = {"A1": None, "A3": None}
+        self._last_params = None
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -264,6 +269,25 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         ~pod_lca.impacts.Impacts
             Impacts of the product/process.
         """
+        # check for cached result
+        current_params = (
+            self.get_qty(),
+            self.get_unit().standard_notation,
+            self.get_impact_database_entry(),
+            self.get_life_cycle_stage(),
+            self.get_electricity_source(),
+            self.get_electricity_scenario(),
+            self.get_electricity_year(),
+            self.get_electricity_geographical_scope(),
+            self.get_moisture_content(),
+            self.get_dry_density(),
+            # TODO: add carbon storage parameters to the cache check
+        )
+        if self._last_params == current_params and self._cache_impacts.get(lc_stage) is not None:
+            log("Returning cached result.", "Info")
+            return self._cache_impacts.get(lc_stage)
+
+        # update inventory records and impacts
         if lc_stage is None:
             return super().get_impacts()
         else:
@@ -298,6 +322,9 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
 
             impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
             impacts.update_qty({bio_carbon_storage_effects_impact_cat: adjusted_impact_biogenic})
+
+            self._cache_impacts[lc_stage] = impacts
+            self._last_params = current_params
 
             return impacts
     # ================================
