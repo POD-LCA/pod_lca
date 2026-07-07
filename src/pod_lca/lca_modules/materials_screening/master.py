@@ -85,7 +85,7 @@ class Master:
         self.pedigree_score = PedigreeScore.from_parent(self)
 
         # cache
-        self._cache_impacts = None
+        self._cache_impacts = {}
         self._last_params = None
 
     # ================================
@@ -462,14 +462,11 @@ class Master:
             Impacts of the product/process.
         """
         # check for cached result
-        current_params = (
-            self.get_qty(),
-            self.get_unit().standard_notation,
-            self.get_impact_database_entry()
-        )
-        if self._last_params == current_params and self._cache_impacts is not None:
+        current_params = self.get_cache_key()
+        lc_stage = self.get_life_cycle_stage()
+        if self._last_params == current_params and self._cache_impacts[lc_stage] is not None:
             log("Returning cached result.", "Info")
-            return self._cache_impacts
+            return self._cache_impacts[lc_stage]
 
         # update inventory records and impacts
         self.update_inventory_records()
@@ -480,6 +477,9 @@ class Master:
         adjusted_impact = self.impacts.get_record(carbonation_effects_impact_cat) - mineral_carbonation_effect
 
         self.impacts.update_qty({carbonation_effects_impact_cat: adjusted_impact})
+
+        self._last_params = current_params
+        self._cache_impacts[lc_stage] = self.impacts
 
         return self.impacts
 
@@ -789,6 +789,16 @@ class Master:
             self.unit_carbon_storage.update_biogenic_carbon_content()
 
         return self
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_impact_database_entry()
+        )
 
 
 if __name__ == "__main__":

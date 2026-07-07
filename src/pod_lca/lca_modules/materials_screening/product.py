@@ -72,7 +72,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         self.moisture_content = 0.0
 
         # cache
-        self._cache_impacts = {"A1": None, "A3": None}
+        self._cache_impacts = {"A1": None, "A3": None, None: None}
         self._last_params = None
 
     def __str__(self):
@@ -270,22 +270,10 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             Impacts of the product/process.
         """
         # check for cached result
-        current_params = (
-            self.get_qty(),
-            self.get_unit().standard_notation,
-            self.get_impact_database_entry(),
-            self.get_life_cycle_stage(),
-            self.get_electricity_source(),
-            self.get_electricity_scenario(),
-            self.get_electricity_year(),
-            self.get_electricity_geographical_scope(),
-            self.get_moisture_content(),
-            self.get_dry_density(),
-            # TODO: add carbon storage parameters to the cache check
-        )
-        if self._last_params == current_params and self._cache_impacts.get(lc_stage) is not None:
+        current_params = self.get_cache_key()
+        if self._last_params == current_params and self._cache_impacts[lc_stage] is not None:
             log("Returning cached result.", "Info")
-            return self._cache_impacts.get(lc_stage)
+            return self._cache_impacts[lc_stage]
 
         # update inventory records and impacts
         if lc_stage is None:
@@ -318,6 +306,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
                 adjusted_impact_biogenic = 0.0
 
             else:
+                self._cache_impacts[lc_stage] = None
                 return None
 
             impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
@@ -344,6 +333,23 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             
         return self
 
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_impact_database_entry(),
+            self.get_life_cycle_stage(),
+            self.get_electricity_source(),
+            self.get_electricity_scenario(),
+            self.get_electricity_year(),
+            self.get_electricity_geographical_scope(),
+            self.get_moisture_content(),
+            self.get_dry_density() if self.get_impact_database_entry() else None,
+            # TODO: add carbon storage parameters to the cache check
+        )
+    
 
 class Fuel(Product):
     """Fuel product.
