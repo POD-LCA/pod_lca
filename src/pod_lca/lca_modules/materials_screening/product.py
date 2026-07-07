@@ -337,7 +337,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
     # Cache Methods
     # ================================
     def get_cache_key(self):
-        return (self.get_qty(),
+        return (
+            self.get_qty(),
             self.get_unit().standard_notation if self.get_unit() else None,
             self.get_impact_database_entry(),
             self.get_life_cycle_stage(),
@@ -345,9 +346,14 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             self.get_electricity_scenario(),
             self.get_electricity_year(),
             self.get_electricity_geographical_scope(),
+            self.get_electricity_location_regional(),
+            self.get_electricity_location_local(),
             self.get_moisture_content(),
             self.get_dry_density() if self.get_impact_database_entry() else None,
-            # TODO: add carbon storage parameters to the cache check
+            self.unit_carbon_storage.get_mineral_carbonation_potential(),
+            self.unit_carbon_storage.get_biogenic_carbon_storage_potential(),
+            self.unit_carbon_storage.get_biogenic_carbon_composition(),
+            self.unit_carbon_storage.get_mineral_carbon_storage_qty(),
         )
     
 
