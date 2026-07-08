@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import math
+from copy import copy
 
 from . import Master
 from . import ProductBioPropertiesMixin
@@ -280,7 +281,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         if lc_stage is None:
             impacts = super().get_impacts()
 
-            self._cache_impacts[lc_stage] = impacts
+            self._cache_impacts[lc_stage] = copy(impacts)
             self._cache_is_computed[lc_stage] = True
             self._last_params[lc_stage] = current_params
 
@@ -321,7 +322,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
             impacts.update_qty({bio_carbon_storage_effects_impact_cat: adjusted_impact_biogenic})
 
-            self._cache_impacts[lc_stage] = impacts
+            self._cache_impacts[lc_stage] = copy(impacts)
             self._cache_is_computed[lc_stage] = True
             self._last_params[lc_stage] = current_params
 
