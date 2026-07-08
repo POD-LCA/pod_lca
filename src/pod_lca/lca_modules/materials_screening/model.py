@@ -399,6 +399,9 @@ class Model:
             case "all_transportation":
                 self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
 
+        # remove None impacts
+        self.impacts = {key: [item for item in value if item is not None] for key, value in self.impacts.items()}
+
         return self.impacts
 
     def get_emissions(self):

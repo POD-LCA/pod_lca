@@ -73,7 +73,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
 
         # cache
         self._cache_impacts = {"A1": None, "A3": None, None: None}
-        self._last_params = None
+        self._cache_is_computed = {"A1": False, "A3": False, None: False}
+        self._last_params = {"A1": False, "A3": False, None: False}
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -271,13 +272,19 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         """
         # check for cached result
         current_params = self.get_cache_key()
-        if self._last_params == current_params and self._cache_impacts[lc_stage] is not None:
+        if (self._last_params[lc_stage] == current_params) and self._cache_is_computed[lc_stage]:
             log("Returning cached result.", "Info")
             return self._cache_impacts[lc_stage]
 
         # update inventory records and impacts
         if lc_stage is None:
-            return super().get_impacts()
+            impacts = super().get_impacts()
+
+            self._cache_impacts[lc_stage] = impacts
+            self._cache_is_computed[lc_stage] = True
+            self._last_params[lc_stage] = current_params
+
+            return impacts
         else:
             impacts = super().get_impacts()
 
@@ -307,15 +314,19 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
 
             else:
                 self._cache_impacts[lc_stage] = None
+                self._cache_is_computed[lc_stage] = True
+                self._last_params[lc_stage] = current_params
                 return None
 
             impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
             impacts.update_qty({bio_carbon_storage_effects_impact_cat: adjusted_impact_biogenic})
 
             self._cache_impacts[lc_stage] = impacts
-            self._last_params = current_params
+            self._cache_is_computed[lc_stage] = True
+            self._last_params[lc_stage] = current_params
 
             return impacts
+        
     # ================================
     # Methods
     # ================================
