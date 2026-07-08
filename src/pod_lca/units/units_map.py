@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..units import BTU
+from ..units import CENTI
 from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
 from ..units import DAY
@@ -23,6 +24,7 @@ from ..units import LITER
 from ..units import MEGA
 from ..units import METER
 from ..units import MILE
+from ..units import MILI
 from ..units import SQUARE_FEET
 from ..units import SQUARE_METER
 from ..units import OUNCE
@@ -55,6 +57,8 @@ UNITS_MAP.update(
         "tn": S_TON,
         "km": KILOMETER,
         "mile": MILE,
+        "mm" : MILI * METER,
+        "cm": CENTI * METER,
         "m": METER,
         "ft": FEET,
         "in": INCH,
