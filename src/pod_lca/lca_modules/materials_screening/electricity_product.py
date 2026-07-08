@@ -12,6 +12,7 @@ from ..impacts import Impacts
 from ..location import Location
 from ..analysis import DataDistribution
 from ...utilities import config
+from ...utilities import log
 
 
 class Electricity(Master):
@@ -37,6 +38,10 @@ class Electricity(Master):
         self.location = None
         self.scenario = None
 
+        # cache
+        self._cache_impacts = None
+        self._cache_is_computed = None
+        self._last_params = None
     # ================================
     # Constructors
     # ================================
@@ -260,7 +265,7 @@ class Electricity(Master):
         int
             Year of electricity consumption.
         """
-        if self.year is None:
+        if (self.year is None) and (self.get_supplier() is not None):
             self.year = self.get_supplier().get_year()
         return self.year
 
@@ -272,7 +277,7 @@ class Electricity(Master):
         str
             Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
         """
-        if self.geographical_scope is None:
+        if (self.geographical_scope is None) and (self.get_supplier() is not None):
             self.geographical_scope = self.get_supplier().get_geographical_scope()
         return self.geographical_scope
 
@@ -284,7 +289,7 @@ class Electricity(Master):
         ~pod_lca.location.Location
             Location object.
         """
-        if self.location is None:
+        if (self.location is None) and (self.get_supplier() is not None):
             return self.get_supplier().get_location()
         else:
             return self.location
@@ -297,7 +302,7 @@ class Electricity(Master):
         str
             Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
         """
-        if self.scenario is None:
+        if (self.scenario is None) and (self.get_supplier() is not None):
             self.scenario = self.get_supplier().get_scenario()
         return self.scenario
 
@@ -335,6 +340,28 @@ class Electricity(Master):
         else:
             return self.data_distributions[attr]
 
+    def get_impacts(self):
+        """Retrieve the impacts of the product.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            Impacts of the product/process.
+        """
+        # check for cached result
+        current_params = self.get_cache_key()
+        if (self._last_params == current_params) and self._cache_is_computed:
+            log("Returning cached result.", "Info")
+            return self._cache_impacts
+        else:
+            impacts = super().get_impacts()
+
+            self._cache_is_computed = True
+            self._last_params = current_params
+            self._cache_impacts = impacts
+
+            return impacts
+
     # ================================
     # Methods
     # ================================
@@ -347,6 +374,21 @@ class Electricity(Master):
         super().update_inventory_records()
 
         return self
+
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_scenario(),
+            self.get_year(),
+            self.get_geographical_scope(),
+            self.get_location().get_state() if self.get_location() else None,
+            self.get_location().get_zip() if self.get_location() else None,
+        )
 
 
 if __name__ == "__main__":
