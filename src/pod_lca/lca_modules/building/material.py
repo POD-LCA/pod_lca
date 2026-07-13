@@ -188,6 +188,19 @@ class Material(Product):
             database = self.get_impact_database()
             data_entry = database.get_data_entry(database_entry_name)
 
+            # set thickness
+            if data_entry['Thickness unit'] in [None, '', 'N/A', 'Null']:
+                log(f"Thickness unit not specified for {self.get_name()}. Skipping thickness setting.", level='Warn')
+            else:
+                thickness = data_entry['Thickness']
+                if isinstance(thickness, str):
+                    thickness_unit = UNITS_MAP[data_entry['Thickness unit']]
+                    self.set_thickness(thickness, thickness_unit)
+                    for replacement_product in replacement_materials:
+                        replacement_product.set_thickness(thickness, thickness_unit)
+                else:
+                    ValueError(f"Thickness value/unit not recognized for {self.get_name()}.")
+
             # set density
             if data_entry['Density unit'] in [None, '', 'N/A', 'Null']:
                 log(f"Density unit not specified for {self.get_name()}. Skipping density setting.", level='Warn')

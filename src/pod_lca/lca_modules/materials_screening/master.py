@@ -11,6 +11,7 @@ from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ...units import KG_CARBON_DIOXIDE
+from ...units import Unit
 from ...utilities import log
 from ...utilities import config
 
@@ -67,6 +68,9 @@ class Master:
         self.impact_database_entry = None
         self.qty = 0.0
         self.unit = None
+
+        self.thickness = None
+        self.thickness_unit = None
 
         # total inventories
         self.impacts = None
@@ -237,8 +241,9 @@ class Master:
             database = self.get_impact_database()
 
             unit_inventories = database.get_data_entry(self.get_impact_database_entry()).fillna(0.0)
-            self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
-            self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
+            self.set_inventories_declared_qty(
+                qty=unit_inventories[database.get_qty_key()], 
+                unit=unit_inventories[database.get_unit_key()])
 
             impacts = {key: unit_inventories[key] for key in self.unit_impacts.get_categories()}
             self.unit_impacts.update_qty(impacts)
@@ -252,6 +257,32 @@ class Master:
             self.update_bio_carbon_storage(database_item)
 
             del unit_inventories
+
+        return self
+    
+    def set_inventories_declared_qty(self, qty, unit):
+        """Set the declared quantity of the product/process.
+
+        Parameters
+        ----------
+        qty : float
+            Declared quantity of the product/process.
+        unit : ~pod_lca.units.Unit
+            Unit corresponding to the declared quantity.
+        """
+        if isinstance(qty, str):
+            try:
+                qty = float(qty)
+            except:
+                raise TypeError("Declared quantity should be a number.")
+        
+        if isinstance(qty, (float, int)):
+            self.inventories_declared_qty = qty
+
+        if isinstance(unit, Unit):
+            self.inventories_declared_unit = unit
+        else:
+            self.inventories_declared_unit = None
 
         return self
 
@@ -434,6 +465,13 @@ class Master:
                 return qty * conversion_factor
             except:
                 pass
+
+            try:
+                conversion_factor = (defined_unit / (self.thickness_unit * self.get_density_unit())).convert_to(unit)
+                qty = (self.qty / (self.thickness * self.get_density()))
+                return qty * conversion_factor
+            except:
+                pass            
 
         raise ImportError(
             f"{self.get_name()} (of units {defined_unit}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit}) are of incompatible units."

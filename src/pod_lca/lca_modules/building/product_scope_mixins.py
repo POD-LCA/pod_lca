@@ -42,6 +42,8 @@ class ProductScopeMixins:
                                                                     'waste_rate_category':'category',
                                                                     'bio-based': 'boolean',
                                                                     'DRF Category': 'category',
+                                                                    'Thickness': object, # FIXME: this should be float---potential issue in data
+                                                                    'Thickness unit': 'category',
                                                                     'Density': object, # FIXME: this should be float---potential issue in data
                                                                     'Density unit': 'category'})
             self.material_impact_database = impact_database
