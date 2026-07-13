@@ -15,7 +15,7 @@ class DataImporter:
     # ========================
     # CSV
     # ========================
-    def csv_to_pandas(file_path, headers=None, multipliers=None, dtype=None):
+    def csv_to_pandas(file_path, headers=None, multipliers=None, dtype_map=None):
         """Import data to database from a CSV file.
 
         Parameters
@@ -35,13 +35,17 @@ class DataImporter:
         else:
             headers_present = [col for col in headers if col in df_headers.columns.tolist()]
 
-        data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers_present, dtype=dtype)
+        if dtype_map:
+            dtype_map_adjusted = {k: v for k, v in dtype_map.items() if k in set(headers_present)}
+        else:
+            dtype_map_adjusted = None
+        data_frame = read_csv(filepath_or_buffer=file_path, usecols=headers_present, dtype=dtype_map_adjusted)
 
         if multipliers is not None:
-            n = len(headers)
-            for i in range(n):
-                if multipliers[i] is not None and headers[i] in headers_present:
-                    data_frame[headers[i]] *= multipliers[i]
+            multipliers_adjusted = {k: v for k, v in multipliers.items() if k in set(headers_present)}
+            for header, multiplier in multipliers_adjusted.items():
+                if multiplier:
+                    data_frame[header] *= multiplier
 
         return data_frame
 

@@ -775,6 +775,16 @@ class Master:
 
         return self
 
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_impact_database_entry()
+        )
+
 
 if __name__ == "__main__":
     pass

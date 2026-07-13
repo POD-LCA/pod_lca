@@ -33,12 +33,14 @@ from pod_lca.lca_modules.building_envelope import BuildingEnvelope
 from pod_lca.lca_modules.building_envelope import Envelope
 from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Layer
-from pod_lca.lca_modules.building_envelope import Framing
-from pod_lca.lca_modules.building_envelope import FramedWall
+from pod_lca.lca_modules.building_envelope import WoodFraming
+from pod_lca.lca_modules.building_envelope import MetalFraming
+from pod_lca.lca_modules.building_envelope import Wall
 from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
 from pod_lca.lca_modules.building_envelope import Window
 from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
+from pod_lca.lca_modules.building_envelope import BrickLayer
 
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyMass
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyAirGap
@@ -96,10 +98,21 @@ flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
 
 m0 = EnvelopeMaterialPropertyMass.from_idf('Clay brick', constructions_path)
 m1 = EnvelopeMaterialPropertyAirGap.from_idf('Generic Wall Air Gap', constructions_path)
-m2 = EnvelopeMaterialPropertyNoMass.from_idf('Expanded polystyrene (EPS) Type 1', constructions_path)
+# m2 = EnvelopeMaterialPropertyMass.from_idf('Expanded polystyrene (EPS) Type 1', constructions_path)
 m3 = EnvelopeMaterialPropertyMass.from_idf('Gypsum board', constructions_path)
-m4 = EnvelopeMaterialPropertyNoMass.from_idf('Mineral wool blanket baseline', constructions_path)
+m4 = EnvelopeMaterialPropertyMass.from_idf('Mineral wool blanket baseline', constructions_path)
 
+m2 = EnvelopeMaterialPropertyNoMass()
+m2.name                = 'Expanded polystyrene (EPS) Type 1'
+m2.conductivity        = Q(.1, WATT/(METER*KELVIN))
+m2.thickness           = Q(.05, METER)
+m2.roughness           = 'MediumRough'
+m2.thermal_absorptance = 0.9
+m2.solar_absorptance   = 0.7
+m2.visible_absorptance = 0.7
+
+mortar_property      = EnvelopeMaterialPropertyNoMass()
+mortar_property.name = 'Type S Mortar'
 
 
 layers = [
@@ -111,28 +124,23 @@ layers = [
           {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH)}
             ]
 
-framing = {'name': 'metal_16in', 
-           'type': 'Metal', 
-           'member': '400S125-18', 
-           'spacing': Q(16.0, INCH),
-           'L':       Q(1.25, INCH),
-           'ds':      Q(3.5, INCH),
-           'dII':     Q(0.043, INCH)}
-
 layers_ = {}
 for i in range(len(layers)):
     name = layers[i]['material'].name
     thickness = layers[i]['thickness']
     classification = layers[i]['classification']
     material_property = layers[i]['material']
-    l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
+    if name == 'Clay brickssss':
+        l = BrickLayer.from_brick_and_mortar_properties(name, material_property, mortar_property, thickness, classification)
+    else:
+        l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
     layers_[i] = l
 
 layers_[0].set_structural(True)
 
-framing = Framing.from_data(framing)
 
-framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+
+wall = Wall.from_layers('solid_wall_test', layers_)
 
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -164,7 +172,7 @@ windows = {wall_key1: window1, wall_key2: window2}
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
-e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
+e = Envelope.from_components(ename, flr, wall=wall, floor=f, ceiling=c, windows=windows)
 
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
@@ -186,8 +194,8 @@ b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 # overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
-# b.set_eplus_out_folder("temp/out") # default writes to a temp folder
-# b.set_idf_file_path("temp/out/temp_operational.idf") # default writes to a temp file
+# b.set_eplus_out_folder("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out") # default writes to a temp folder
+# b.set_idf_file_path("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
@@ -203,8 +211,8 @@ print(b.get_operational_impacts()) # default is 'total'
 
 # # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-# print(b.get_emissions(scope='product'))
+print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product'))
 
 # print(b.get_material_quantities_of_assembly("generic structural element"))
 # print(b.get_material_impacts_of_assembly_lcstage("generic structural element", impact_cat="GWP", lc_stage="A1-A3"))
@@ -216,6 +224,3 @@ print(b.get_operational_impacts()) # default is 'total'
 # # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # # graph.show()
 
-# TODO: check if the last layer or first layer was used in the ASHRAE model. 
-# TODO: Make framed wall get_embodied_layers (similar to construction) to include framing
-# TODO: Make no mass materiasls parametric, conductivity instead of resistance. 

@@ -247,25 +247,26 @@ def read_material_no_mass(filepath, i):
     fh.close()
 
     name = lines[i + 1].split(",")[0].strip()
-    rough = lines[i + 2].split(",")[0].strip()
-    thres = Q(float(lines[i + 3].split(",")[0]), m2KW)
-    thabs = float(lines[i + 4].split(",")[0])
-    slra = float(lines[i + 5].split(",")[0])
-    if ";" not in lines[i + 6]:
-        visa = float(lines[i + 6].split(",")[0])
-        thic = Q(float(lines[i + 7].split(";")[0]), METER)
-    else:
-        visa = float(lines[i + 6].split(";")[0])
-        thic = None
+    # rough = lines[i + 2].split(",")[0].strip()
+    # thres = Q(float(lines[i + 3].split(",")[0]), m2KW)
+    # thabs = float(lines[i + 4].split(",")[0])
+    # slra = float(lines[i + 5].split(",")[0])
+    # if ";" not in lines[i + 6]:
+    #     visa = float(lines[i + 6].split(",")[0])
+    #     thic = Q(float(lines[i + 7].split(";")[0]), METER)
+    # else:
+    #     visa = float(lines[i + 6].split(";")[0])
+    #     thic = None
 
-    return {"__type__": "MaterialPropertyNoMass",
-            "name": name,
-            "roughness": rough,
-            "thermal_resistance": thres,
-            "thermal_absorptance": thabs,
-            "solar_absorptance": slra,
-            "visible_absorptance": visa,
-            "thickness": thic}
+    # return {"__type__": "MaterialPropertyNoMass",
+    #         "name": name,
+    #         "roughness": rough,
+    #         "thermal_resistance": thres,
+    #         "thermal_absorptance": thabs,
+    #         "solar_absorptance": slra,
+    #         "visible_absorptance": visa,
+    #         "thickness": thic}
+    raise KeyError('Reading No Mass materials from IDF has been deleted. {} material cant be read.'.format(name))
 
 
 def find_no_mass_materials(filepath, data):
@@ -359,6 +360,7 @@ def find_glazing_materials(filepath, data):
         }
     
     return data
+
 
 def find_constructions(filepath, data):
     fh = open(filepath, "r")

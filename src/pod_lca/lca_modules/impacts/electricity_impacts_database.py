@@ -125,7 +125,8 @@ class ElectricityImpactsDatabase(ImpactsDatabase):
         list of str
             Headers of the database.
         """
-        return [self.get_qty_key(), self.get_unit_key(), self.get_region_key(), self.get_technology_key()]
+        return ([self.get_qty_key(), self.get_unit_key(), self.get_region_key(), self.get_technology_key()],
+                [float, 'category', 'category', 'category'])
 
     def get_data_entry(self, region, technology):
         """Retrieve impacts for given flow.

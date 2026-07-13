@@ -5,7 +5,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.lca_modules.building_envelope.construction import Construction
-from pod_lca.lca_modules.building_envelope.layer import Layer
+from pod_lca.lca_modules.building_envelope.layer import Layer, AncillaryMaterial
 from pod_lca.units import Quantity as Q
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
 from pod_lca.units import METER, SQUARE_METER, KELVIN, WATT
@@ -52,8 +52,8 @@ class FramedWall(Construction):
         super().__init__()
         self.__type__ = 'FramedWall'
         self.framing = None
-        self.r = None
-        self.u = None
+        self.resistance = None
+        self.conductance = None
         self.virtual_layers = {}
         self.virtual_layer_order = []
 
@@ -90,7 +90,8 @@ class FramedWall(Construction):
         fwall.compute_wall_r()
 
         vmat = EnvelopeMaterialPropertyNoMass()
-        vmat.thermal_resistance = fwall.r
+        vmat.thickness           = Q(1, METER)
+        vmat.conductivity        = vmat.thickness / fwall.resistance
         vmat.roughness           = 'MediumRough'
         vmat.thermal_absorptance = 0.9
         vmat.solar_absorptance   = 0.7
@@ -99,7 +100,7 @@ class FramedWall(Construction):
         vlayer.name = '{}_virtual_layer'.format(name)
         vlayer.parent_construction = fwall
         vlayer.material_property = vmat
-        vlayer._thickness = Q(0, METER)
+        vlayer._thickness = vmat.thickness
         vlayer.unit = None
         vlayer.classification = 'virtual_layer'
         vlayer.is_structural = False
@@ -108,10 +109,10 @@ class FramedWall(Construction):
 
         fwall.virtual_layers['interior'] = vlayer
         fwall.virtual_layers[last_layer] = fwall.layers[last_layer]
-        fwall.virtual_layer_order.append(last_layer)
         fwall.virtual_layer_order.append('interior') 
-
-
+        fwall.virtual_layer_order.append(last_layer)
+        
+        framing.set_parent(fwall)
         return fwall
     
     def compute_wall_r(self):
@@ -157,22 +158,15 @@ class FramedWall(Construction):
         Ra += Q(.2  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
         Rb += Q(.7  / 5.678, m2KW)  # ft²·°F·h/Btu --> (m2K/W)
 
+
         ratio = ri / rins if rins > 0 else 0
-        self.framing.get_zf(ratio)
 
-        framing_type = self.framing.type
-        spacing = self.framing.spacing
+        self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
 
-        if framing_type == "Metal":
-            r, u = self.framing.metal_bridge(ri=ri, rins=rins, di=di, Ra=Ra, Rb=Rb)
-            self.r = r
-            self.u = u
 
-        elif framing_type == "Wood":
-            width = 1.5  # default 2-by construction
-            k_wood = .12  # W/m-K (typical softwood) conductivity
-            self.r = self.framing.wood_bridge(s=spacing, width=width, ds=ds, k=k_wood, Ra=Ra, Rb=Rb, rins=rins)
-
-        else:
-            raise ValueError(f"Unknown framing type: {framing_type}")
-
+    def get_constituent_materials(self):
+        constituent_materials = super().get_constituent_materials()
+        
+        framing_ancillary = self.framing.get_ancillary_materials()
+        constituent_materials.extend(framing_ancillary)
+        return constituent_materials

@@ -113,7 +113,8 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         list of str
             Database headers.
         """
-        return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_variability_key(), self.get_geography_key()] 
+        return  ([self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_variability_key(), self.get_geography_key()],
+                 [str, float, 'category', 'category', 'category']) 
     
     def get_data_entry(self, material_name, variability_level='Baseline', geography_representation='US'):
         """ Retrieve impacts for given flow.

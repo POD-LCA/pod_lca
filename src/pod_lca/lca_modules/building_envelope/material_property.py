@@ -10,6 +10,7 @@ from pod_lca.lca_modules.operational.read_write import find_materials
 from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
 from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
 
+
 class EnvelopeMaterialProperty(object):
     """ The envelope material properties base class.
     
@@ -128,6 +129,7 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
         material.visible_absorptance = data['visible_absorptance']
         return material
 
+
 class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
     """ Defines an envelope Air Gap material properties class. 
     
@@ -192,7 +194,7 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
         super().__init__()  
         self.__type__            = 'MaterialPropertyNoMass'
         self.roughness           = None
-        self.thermal_resistance  = None
+        self.conductivity        = None
         self.thermal_absorptance = None
         self.solar_absorptance   = None
         self.visible_absorptance = None
@@ -212,13 +214,16 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
         material.__type__            = 'MaterialPropertyNoMass'
         material.name                = data['name']
         material.roughness           = data['roughness']
-        material.thermal_resistance  = data['thermal_resistance'] 
+        material.conductivity        = data['conductivity'] 
         material.thermal_absorptance = data['thermal_absorptance'] 
         material.solar_absorptance   = data['solar_absorptance']
         material.visible_absorptance = data['visible_absorptance']
         material.thickness           = data['thickness']
         return material
     
+    @property
+    def thermal_resistance(self):
+        return self.thickness / self.conductivity
 
 class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
     """ Defines an envelope Glazing material properties class. 
@@ -353,6 +358,7 @@ class WindowMaterialPropertyGas(EnvelopeMaterialProperty):
         material.gas_type           = data.get('gas_type') or {}
 
         return material
+
 
 if __name__ == '__main__':
     pass

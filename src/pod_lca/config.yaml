@@ -97,6 +97,7 @@ file_paths:
     IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.json
     IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.json
     IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.json
+    NLTK_DATA_DIR: .nltk_data
   location:
     US_STATES: data/location_faa_us-states.json
     US_STATE_COORDS: data/location_podlca_us-state-coords.csv
@@ -154,6 +155,7 @@ file_paths:
     EUI: data/building_podlca_eui.csv
     SAMPLE_BUILDING_STRUCTURES: data/buildings_podlca_sample-structures.csv
     IDF_IMPACT_DATA_PRODUCT_MAP: data/building_podlca_idf-to-database-material-mapping.csv
+    STEEL_STUD_DESIGN_TABLE: data/buildings_ _steel-stud-sizing.csv
   carbon:
     BIO_MATERIAL_DATA: data\\carbon_podlca_bio-material-data.csv
 Keys and Credentials:

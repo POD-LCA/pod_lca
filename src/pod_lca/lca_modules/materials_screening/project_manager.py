@@ -118,13 +118,13 @@ class Project:
             impact_database.set_data(file_path, 
                                      grouped_data="Electricity",
                                      density_headers=["Density", "Density unit"],
-                                     additional_headers=["Biomaterial Species",
-                                                         "Region",
-                                                         "Biomaterial Form", 
-                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER'], 
-                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER'],
-                                                         config['setup']['impacts']['BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER'],
-                                                         config['setup']['impacts']['ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER'],])
+                                     additional_headers={"Biomaterial Species":'category',
+                                                         "Region":'category',
+                                                         "Biomaterial Form":'category', 
+                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER']:'boolean', 
+                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER']:float,
+                                                         config['setup']['impacts']['BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER']:float,
+                                                         config['setup']['impacts']['ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER']:'boolean',})
             self.impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")

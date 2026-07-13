@@ -6,42 +6,99 @@ __version__ = "0.1.0"
 
 from functools import lru_cache
 from numpy import abs
-from numpy import array
+from numpy import concatenate
+from numpy import int8
+from numpy import zeros
+from numpy import asarray
 from numpy import sort
 from pandas import DataFrame
+
+from ...utilities import config
 
 try:
     from sklearn.cluster import KMeans
     from sklearn.feature_extraction.text import TfidfVectorizer
-    from sklearn.metrics.pairwise import cosine_similarity
 
     SKLEARN_IMPORTED = True
 except ImportError:
     SKLEARN_IMPORTED = False
 
-try:
-    import nltk
-    from nltk.corpus import wordnet
-    from nltk.metrics import edit_distance
-    from nltk.stem import PorterStemmer
-    from nltk.stem import WordNetLemmatizer
+NLTK_IMPORTED = False
+WORDNET_IMPORTED = False
+STEMMER = None
+LEMMATIZER = None
+wordnet = None
 
-    nltk.download("wordnet", quiet=True)
-    nltk.download("omw-1.4", quiet=True)
-    nltk.download("punkt", quiet=True)
-    nltk.download("punkt_tab", quiet=True)
+MATERIAL_SYNONYMS = {
+    "timber": ["timber", "lumber"],
+    "lumber": ["timber", "lumber"],
+    "chemical": ["chemical", "chemical_substance"],
+    "clt": ["cross laminated timber"],
+    "lvl": ["laminated veneer lumber"],
+    "glt": ["glulam", "glued laminated timber"],
+    "drywall": ["gypsum board", "plasterboard"],
+    "gypsum": ["plasterboard", "drywall"],
+    "rebar": ["reinforcing steel"],
+}
 
-    NLTK_IMPORTED = True
-except ImportError:
-    NLTK_IMPORTED = False
 
+def import_nltk_dependencies(use_wordnet=False):
+    """Import NLTK dependencies on demand."""
+
+    global NLTK_IMPORTED
+    global WORDNET_IMPORTED
+    global STEMMER
+    global LEMMATIZER
+    global wordnet
+
+    if not NLTK_IMPORTED:
+        import nltk
+        from nltk.metrics import edit_distance
+        from nltk.stem import PorterStemmer
+
+        globals()["edit_distance"] = edit_distance
+
+        STEMMER = PorterStemmer()
+        NLTK_IMPORTED = True
+
+    if use_wordnet and not WORDNET_IMPORTED:
+        from nltk.corpus import wordnet
+        from nltk.stem import WordNetLemmatizer
+
+        LEMMATIZER = WordNetLemmatizer()
+
+        WORDNET_IMPORTED = True
+
+    ensure_nltk_data()
+
+def ensure_nltk_data(use_wordnet=False):
+    NLTK_DATA_DIR = config["file_paths"]["impacts"]["NLTK_DATA_DIR"]
+    
+    NLTK_DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+    packages = {}
+
+    if use_wordnet:
+        packages = {
+            "corpora/wordnet": "wordnet",
+            "corpora/omw-1.4": "omw-1.4",
+        }
+
+    for resource_path, package_name in packages.items():
+        try:
+            nltk.data.find(resource_path)
+        except LookupError:
+            nltk.download(
+                package_name,
+                download_dir=str(NLTK_DATA_DIR),
+                quiet=True,
+            )
 
 @lru_cache(maxsize=50000)
 def _cached_synsets(word, pos=None):
     return wordnet.synsets(word, pos=pos)
 
-
-def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False):
+def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1, limit_to_noun=False, use_wordnet=True):
     """Expand search term by correcting misspellings, adding synonyms, and stemming/lemmatizing.
 
     Parameters
@@ -62,38 +119,56 @@ def expand_search_terms(search_term, data_set, max_edit_distance=2, max_senses=1
     list of str
         Expanded list of search terms.
     """
-    if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
-        raise ImportError("Please install the 'nltk' and 'sklearn' packages to use the search methods.")
+    import_nltk_dependencies(use_wordnet)
 
-    lemmatizer = WordNetLemmatizer()
-    stemmer = PorterStemmer()
-
-    tokens = nltk.word_tokenize(search_term.lower())
+    tokens = search_term.lower().split()
     expanded = set(tokens)
     add = expanded.add
 
     # Correct spelling
     for word in tokens:
-        closest = min(data_set, key=lambda w: edit_distance(word, w))
-        if edit_distance(word, closest) <= max_edit_distance:
-            add(closest)
+        best_word = None
+        best_dist = max_edit_distance + 1
 
-    # Check synonyms
-    for word in tokens:
-        synsets = _cached_synsets(word, "n")[:max_senses] if limit_to_noun else _cached_synsets(word)[:max_senses]
-        for syn in synsets:
-            lemmas = syn.lemmas()
-            for lemma in lemmas:
-                name = lemma._name
-                add(name.replace("_", " "))
+        for candidate in data_set:
+            dist = edit_distance(word, candidate)
 
-    # Stemming and lemmatization
-    stems = {stemmer.stem(w) for w in expanded}
-    lemmas = {lemmatizer.lemmatize(w) for w in expanded}
-    expanded |= stems | lemmas
+            if dist < best_dist:
+                best_dist = dist
+                best_word = candidate
+
+                if dist == 0:
+                    break
+
+        if best_dist <= max_edit_distance:
+            add(best_word)
+
+    
+    if use_wordnet:
+        # Check synonyms
+        for word in tokens:
+            synsets = _cached_synsets(word, "n") if limit_to_noun else _cached_synsets(word)
+            for syn in synsets[:max_senses]:
+                for lemma in syn.lemmas():
+                    name = lemma.name()
+                    add(name.replace("_", " "))
+
+        # Stemming and lemmatization
+        for w in tuple(expanded):
+            add(STEMMER.stem(w))
+            add(LEMMATIZER.lemmatize(w))
+    else:
+        for w in tuple(expanded):
+            add(STEMMER.stem(w))
+
+            # plural handling
+            if w.endswith("s") and len(w) > 3:
+                add(w[:-1])
+
+            for synonym in MATERIAL_SYNONYMS.get(w, ()):
+                add(synonym)
 
     return list(expanded)
-
 
 def rank_entries(products, search_terms, support_data_set=None, support_data_weight=0.25, max_returns=25):
     """Rank products based on TF-IDF similarity to search terms.
@@ -116,45 +191,52 @@ def rank_entries(products, search_terms, support_data_set=None, support_data_wei
     ~pandas.DataFrame
         Ranked list of products with similarity values.
     """
-    if not SKLEARN_IMPORTED or not NLTK_IMPORTED:
-        raise ImportError("Please install the 'nltk'  and 'sklearn' packages to use the search methods.")
+    if not SKLEARN_IMPORTED:
+        raise ImportError("Please install the 'sklearn' packages to use the search methods.")
 
-    docs = products.astype(str).tolist()
+    docs = products.astype(str).values
+    query = " ".join(search_terms)
+
+    corpus = concatenate([docs, [query]])
+
     vectorizer = TfidfVectorizer(stop_words="english")
-    tfidf_matrix = vectorizer.fit_transform(docs + [" ".join(search_terms)])
+    tfidf_matrix = vectorizer.fit_transform(corpus)
 
     search_vec = tfidf_matrix[-1]
     doc_vecs = tfidf_matrix[:-1]
-    scores = cosine_similarity(search_vec, doc_vecs)[0]
+
+    scores = (doc_vecs @ search_vec.T).toarray().ravel()
 
     if support_data_set is not None:
-        support_docs = support_data_set.astype(str).tolist()
-        vectorizer = TfidfVectorizer(stop_words="english")
-        tfidf_matrix = vectorizer.fit_transform(support_docs + [" ".join(search_terms)])
+        support_docs = support_data_set.astype(str).values
+        
+        corpus = concatenate([support_docs, [query]])
+        tfidf_matrix = vectorizer.fit_transform(corpus)
 
         search_vec = tfidf_matrix[-1]
         doc_vecs = tfidf_matrix[:-1]
-        support_scores = cosine_similarity(search_vec, doc_vecs)[0]
+        support_scores = (doc_vecs @ search_vec.T).toarray().ravel()
+
+        similarity = (scores * (1 - support_data_weight)) + (support_scores * support_data_weight)
+    else:
+        similarity = scores
+
+    mask = similarity > 0
 
     ranked = (
         DataFrame(
             {
-                "item": docs,
-                "similarity": (
-                    scores
-                    if support_data_set is None
-                    else (scores * (1 - support_data_weight)) + (support_scores * support_data_weight)
-                ),
+                "item": docs[mask],
+                "similarity": similarity[mask]
             }
         )
-        .loc[lambda df: df["similarity"] > 0]
-        .sort_values(by="similarity", ascending=False)
+        .sort_values(by="similarity", 
+                     ascending=False,
+                     ignore_index=True)
         .head(max_returns)
-        .reset_index(drop=True)
     )
 
     return ranked
-
 
 def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_max=3, move_thresh=0.1):
     """Dynamically find cutoff in ranked scores using adaptive k-means clustering.
@@ -179,7 +261,10 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     ~pandas.DataFrame
             Ranked list of products with impact and similarity values.
     """
-    impact_scores = array(impact_scores).reshape(-1, 1)
+    if not SKLEARN_IMPORTED:
+        raise ImportError("Please install the 'sklearn' packages to use the search methods.")
+    
+    impact_scores = asarray(impact_scores).reshape(-1, 1)
     prev_means = None
     k = k_initial
 
@@ -187,7 +272,9 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
     for i in range(n_initial, len(impact_scores) + 1):
         subset = impact_scores[:i]
         kmeans = KMeans(n_clusters=k, n_init="auto", random_state=0).fit(subset)
-        means = sort(kmeans.cluster_centers_.flatten())
+        means = sort(kmeans.cluster_centers_.ravel())
+
+        del kmeans
 
         if prev_means is not None:
             move_max = max(abs(means - prev_means) / prev_means)
@@ -207,22 +294,28 @@ def adaptive_kmeans_cutoff(products, impact_scores, n_initial=5, k_initial=2, k_
         cutoff_index = len(impact_scores)
         subset_scores = impact_scores[:cutoff_index]
         items = products[:cutoff_index]
-        cluster_labels = array([0] * len(impact_scores))
+        cluster_labels = zeros(len(impact_scores), dtype=int8)
 
     df = DataFrame(
         {
-            "item": items["item"].tolist(),
+            "item": items["item"],
             "impact": subset_scores.flatten(),
-            "similarity": items["similarity"].tolist(),
+            "similarity": items["similarity"],
             "cluster": cluster_labels,
         }
     )
 
     # order by similarity / set cluster rank by mean impact
-    cluster_score = df.groupby("cluster")["similarity"].max().to_dict()
-    df["cluster_score"] = df["cluster"].map(cluster_score)
-    df_sorted = df.sort_values(["cluster_score", "similarity"], ascending=[False, False]).reset_index(drop=True)
-    df_sorted = df_sorted.drop(columns=["cluster_score"])
+    df["cluster_score"] = (
+        df.groupby("cluster")["similarity"]
+        .transform("max")
+    )
+    df_sorted = df.sort_values(
+        ["cluster_score", "similarity"],
+        ascending=[False, False],
+        ignore_index=True,
+    )
+    df_sorted.drop(columns="cluster_score", inplace=True)
 
     cluster_means = df.groupby('cluster')['impact'].mean()
     sorted_clusters = cluster_means.sort_values(ascending=False).index

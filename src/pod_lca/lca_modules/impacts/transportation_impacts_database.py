@@ -84,7 +84,8 @@ class TranportationModeImpactsDatabase(ImpactsDatabase):
         list of str
             Database headers.
         """
-        return [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_mode_efficiency_key()]
+        return ([self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_mode_efficiency_key()],
+                [str, float, 'category', 'category'])
 
     def get_data_entry(self, mode):
         """Retrieve impacts for given flow.

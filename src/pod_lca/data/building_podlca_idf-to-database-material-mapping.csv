@@ -47,3 +47,7 @@ Generic Low-e Glass,Insulated glazing unit (IGU),m2,glazing
 REF B CLEAR HI 6MM,,,
 U 0.36 SHGC 0.36 Simple Glazing,,,
 U 0.5 SHGC 0.4 Simple Glazing,,,
+Softwood Lumber,Softwood Lumber,m3,encl_brickconc_panels
+Cold-formed steel framing,Cold-formed steel framing,metric ton,encl_rs_steelpanel
+"Steel plate, fabricated","Steel plate, fabricated",metric ton,encl_rs_steelpanel
+Type S Mortar,"Portland cement, USA",metric ton,encl_brickconc_panels

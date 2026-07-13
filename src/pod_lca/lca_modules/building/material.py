@@ -15,6 +15,7 @@ from ..impacts import UniformEmissionProfile
 from ..materials_screening import Product
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
+from ...units import Quantity
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
@@ -324,6 +325,8 @@ class Material(Product):
         service_life : float
             Service life of the material in years.
         """
+        if (service_life is None) and (self.get_service_life() is not None):
+            return self
         if (service_life is None) and (self.get_service_life_category() is None) and (self.get_service_life() is None):
             self.service_life = self.get_parent().get_service_life()
         elif isinstance(service_life, str) or (self.get_service_life_category() is not None):
@@ -369,11 +372,8 @@ class Material(Product):
         eol_material = self.get_eol_material()
         waste_qty = self.get_weight()
         if waste_qty is None:
-            waste_qty = 0.0
-            waste_unit = KILOGRAM
+            waste_qty = Quantity(0.0, KILOGRAM)
             log(" Cannot determine waste quantity in mass.", level='Warn')
-        else:
-            waste_unit = self.get_weight_unit()
 
         eol_mix_data_mat = eol_mix_data['Material']
         eol_default_mat = config['setup']['eol']['EOL_DEFAULT_KEY']
@@ -387,15 +387,15 @@ class Material(Product):
         if self.get_bio_based() is not None:
             waste_obj = Waste.new(self, 
                                 database_item=eol_material, 
-                                qty=waste_qty, 
-                                unit=waste_unit, 
+                                qty=waste_qty.value, 
+                                unit=waste_qty.unit, 
                                 process_mix=eol_mix, 
                                 bio_based=self.get_bio_based())
         else:
             waste_obj = Waste.new(self, 
                                     database_item=eol_material, 
-                                    qty=waste_qty, 
-                                    unit=waste_unit, 
+                                    qty=waste_qty.value, 
+                                    unit=waste_qty.unit, 
                                     process_mix=eol_mix)
             
         self.waste_obj = waste_obj

@@ -10,7 +10,6 @@ from .material_property import EnvelopeMaterialPropertyNoMass
 from .material_property import WindowMaterialPropertyGlazing
 from .material_property import WindowMaterialPropertyGas
 
-from pod_lca.units import Quantity as Q
 from pod_lca.units import METER, KELVIN, WATT
 
 mKW = (METER * KELVIN) / WATT
@@ -43,6 +42,9 @@ class Layer(object):
 
     structural_element: None or str
         What type of structrural element the layer is ("Slab", "Wall", "Roof")
+
+    anciallary_materials : (list of) ~pod_lca.building_envelope.AncillaryMaterial
+        List of materials not accounted in operational model, but in embodied. 
     """
     def __init__(self):
         self.name = None
@@ -55,6 +57,7 @@ class Layer(object):
         self.is_structural = False
         self.structural_element = None # {"Slab", "Wall", "Roof"}
 
+        self.anciallary_materials = []
 
     def get_quantity(self, area=None, qty_in=None):
         """ Returns the quantity of the layer.
@@ -64,7 +67,7 @@ class Layer(object):
         area : float
             The surface area of the layer
         qty_in : {'volume', 'area', 'mass'}
-            Requested quantity measured in?
+            Requested quantity measured in. 
         """
         if qty_in in ['volume', 'mass']:
             return area * self.thickness
@@ -94,6 +97,30 @@ class Layer(object):
         if self.parent_construction is not None:
             self.parent_construction.get_building().get_structure().update_structure(self.structural_element, self._thickness)
 
+    @classmethod
+    def from_data(cls, data, thickness, classification=None):
+        """Creates a Layer instance from a data dictionary. 
+
+        Parameters
+        ----------
+        data :  dict
+            Dictionary containing all required inputs. 
+        thickness : ~pod_lca.Quantity
+            The thickness of the layer. 
+        classiification : str
+            The layer classification (exterior_cladding, air gap, etc.)
+
+        Returns
+        -------
+        layer : ~pod_lca.building_envelope.Layer
+            The layer instance. 
+        """
+        layer = cls()
+        layer.name = data['name']
+        layer.thickness = thickness
+        layer.material_property = layer.add_envelope_material_property(data)
+        layer.classification = classification
+        return layer
 
     @classmethod
     def from_property_and_thickness(cls, name, material_property, thickness, classification=None):
@@ -209,6 +236,22 @@ class Layer(object):
         """
         self.is_structural = is_structural
 
+    def add_ancillary_material(self, ancillary_mat):
+        """Add an ancillary material to the layer.
+        """
+        self.anciallary_materials.append(ancillary_mat)
+        ancillary_mat.parent = self
+
+
+class AncillaryMaterial(object):
+
+    def __init__(self, material_property):
+        self.parent             = None
+        self.material_property  = material_property
+        self.is_structural      = False
+
+    def get_quantity(self):
+        pass
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from collections import Counter
 from math import log10
+from copy import copy
 from copy import deepcopy
 
 from ..units import ALL_PREFIXES
@@ -310,7 +311,9 @@ class Unit:
         TypeError
             Incompatible units for conversion.
         """
-        # simplify denominator and numerator
+        to_unit_copy = copy(to_unit)
+
+        # simplify units
         starting_factor = 1.0
 
         if self.is_compound():
@@ -318,27 +321,40 @@ class Unit:
         else:
             factor_num = 1.0
 
-        if to_unit.is_compound():
-            to_unit, factor_denom = to_unit.simplify()
+        if to_unit_copy.is_compound():
+            to_unit_copy, factor_denom = to_unit_copy.simplify()
         else:
             factor_denom = 1.0
 
         starting_factor *= factor_num / factor_denom
 
-        # incompatible units
-        if self.get_qty_measured() != to_unit.get_qty_measured():
-            raise TypeError("Incompatible units for conversion.")
+        # try expanding incompatible units
+        expanded = False
+        if self.get_qty_measured() != to_unit_copy.get_qty_measured():
+            if self.is_compound():
+                self.expand_standard_compounds()
+                self._rebuild_strings()
+
+                to_unit_copy.expand_standard_compounds()
+                to_unit_copy._rebuild_strings()
+
+                expanded = True
+
+                if self.get_qty_measured() != to_unit_copy.get_qty_measured():
+                    raise TypeError("Incompatible units for conversion.")
+            else:
+                raise TypeError("Incompatible units for conversion.")
     
         # simple unit conversion
-        if (not self.is_compound()) and (not to_unit.is_compound()):
-            if self == to_unit:
+        if (not self.is_compound()) and (not to_unit_copy.is_compound()):
+            if self == to_unit_copy:
                 return starting_factor
-            return Unit.compute_conversion_factor(self, to_unit)
+            return Unit.compute_conversion_factor(self, to_unit_copy)
 
         # compound unit conversion
         factor = starting_factor
         for component_in, power_in in self.units.items():
-            for component_out, power_out in to_unit.units.items():
+            for component_out, power_out in to_unit_copy.units.items():
                 if power_in != power_out:
                     continue
 
@@ -355,8 +371,13 @@ class Unit:
         if self.prefix:
             factor *= 10 ** self.prefix.get_power()
 
-        if to_unit.prefix:
-            factor /= 10 ** to_unit.prefix.get_power()
+        if to_unit_copy.prefix:
+            factor /= 10 ** to_unit_copy.prefix.get_power()
+
+        # collapse expanded units
+        if expanded and self.is_compound():
+                self.collapse_standard_compounds()
+                self._rebuild_strings()
 
         return factor
 
@@ -458,8 +479,16 @@ class Unit:
         - Parentheses if more than one unit in numerator or denominator
         - Prefix applied at the front if present. If no numerator, prefix indicated in the denominator
         """
-        num_units = [u for u in self.numerator if not u.is_dimensionless()]
-        denom_units = [u for u in (self.denominator or []) if not u.is_dimensionless()]
+        num_units_filtered = [u for u in self.numerator if not u.is_dimensionless()]
+        denom_units_filtered = [u for u in (self.denominator or []) if not u.is_dimensionless()]
+
+        num_units = sorted(num_units_filtered, key=lambda u: u.qty_measured)
+        denom_units = sorted(denom_units_filtered, key=lambda u: u.qty_measured)
+
+        units = BaseUnits()
+        for unit in num_units + denom_units:
+            units[unit] = self.units[unit]
+        self.units = units
 
         # Helper
         def join_group(units):

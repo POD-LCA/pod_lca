@@ -37,13 +37,13 @@ class ProductScopeMixins:
             impact_database.set_unit_key('Declared unit')
             impact_database.set_variability_key('Value')
             impact_database.set_geography_key('Geography')
-            impact_database.set_data(file_path, additional_headers=['sctg code',
-                                                                    'eol material',
-                                                                    'waste_rate_category',
-                                                                    'bio-based',
-                                                                    'DRF Category',
-                                                                    'Density', 
-                                                                    'Density unit'])
+            impact_database.set_data(file_path, additional_headers={'sctg code': int,
+                                                                    'eol material': 'category',
+                                                                    'waste_rate_category':'category',
+                                                                    'bio-based': 'boolean',
+                                                                    'DRF Category': int,
+                                                                    'Density': object, # FIXME: this should be float---potential issue in data
+                                                                    'Density unit': 'category'})
             self.material_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")

@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import math
+from copy import copy
 
 from . import Master
 from . import ProductBioPropertiesMixin
@@ -14,6 +15,8 @@ from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOGRAM
+from ...units import Quantity
+from ...utilities import log
 from ...utilities import config
 
 
@@ -68,6 +71,11 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         self.dry_density = None
         self.dry_mass = None
         self.moisture_content = 0.0
+
+        # cache
+        self._cache_impacts = {"A1": None, "A3": None, None: None}
+        self._cache_is_computed = {"A1": False, "A3": False, None: False}
+        self._last_params = {"A1": False, "A3": False, None: False}
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -166,7 +174,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             self.density = density
             self.density_unit = density_unit
         elif density is None:
-            database = self.get_project().get_impact_database()
+            database = self.get_impact_database()
             if self.get_impact_database_entry() is not None:
                 unit_inventories = database.get_data_entry(self.get_impact_database_entry())
                 if database.get_density_unit_key() is not None:
@@ -201,28 +209,23 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             Mass of the product.
         """
         if self.get_unit().get_qty_measured() == "mass":
-            return self.get_qty()
+            return Quantity(self.get_qty(), self.get_unit())
         else:
             if self.get_density() is None:
                 return None
             else:
-                declared_unit = self.inventories_declared_unit
-                conversion_factor = self.get_unit().convert_to(declared_unit)
-                return self.get_qty() * conversion_factor * self.get_density()
-
-    def get_weight_unit(self):
-        """Retrieve the unit of measurement of mass of the product.
-            This is used for the definition of density of the product.
-
-        Returns
-        -------
-        ~pod_lca.units.Unit
-            Unit of measurement of mass of the product.
-        """
-        if self.get_unit().get_qty_measured() == "mass":
-            return self.get_unit()
-        else:
-            return self.inventories_declared_unit * self.get_density_unit()
+                test_unit_mult, factor = (self.unit * self.get_density_unit()).simplify()
+                test_unit_div, factor = (self.unit / self.get_density_unit()).simplify()
+                if (test_unit_mult).get_qty_measured() == "mass":
+                    val = self.get_qty() * self.get_density() * factor
+                    unit = test_unit_mult
+                    return Quantity(val, unit)
+                elif (test_unit_div).get_qty_measured() == "mass":
+                    val = (self.get_qty() / self.get_density()) * factor
+                    unit = test_unit_div * factor
+                    return Quantity(val, unit)
+                else:
+                    return None
 
     def get_density(self):
         """Retrieve density of the product.
@@ -268,8 +271,21 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         ~pod_lca.impacts.Impacts
             Impacts of the product/process.
         """
+        # check for cached result
+        current_params = self.get_cache_key()
+        if (self._last_params[lc_stage] == current_params) and self._cache_is_computed[lc_stage]:
+            log("Returning cached result.", "Info")
+            return self._cache_impacts[lc_stage]
+
+        # update inventory records and impacts
         if lc_stage is None:
-            return super().get_impacts()
+            impacts = super().get_impacts()
+
+            self._cache_impacts[lc_stage] = copy(impacts)
+            self._cache_is_computed[lc_stage] = True
+            self._last_params[lc_stage] = current_params
+
+            return impacts
         else:
             impacts = super().get_impacts()
 
@@ -298,12 +314,20 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
                 adjusted_impact_biogenic = 0.0
 
             else:
+                self._cache_impacts[lc_stage] = None
+                self._cache_is_computed[lc_stage] = True
+                self._last_params[lc_stage] = current_params
                 return None
 
             impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
             impacts.update_qty({bio_carbon_storage_effects_impact_cat: adjusted_impact_biogenic})
 
+            self._cache_impacts[lc_stage] = copy(impacts)
+            self._cache_is_computed[lc_stage] = True
+            self._last_params[lc_stage] = current_params
+
             return impacts
+        
     # ================================
     # Methods
     # ================================
@@ -321,6 +345,29 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             
         return self
 
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_impact_database_entry(),
+            self.get_life_cycle_stage(),
+            self.get_electricity_source(),
+            self.get_electricity_scenario(),
+            self.get_electricity_year(),
+            self.get_electricity_geographical_scope(),
+            self.get_electricity_location_regional(),
+            self.get_electricity_location_local(),
+            self.get_moisture_content(),
+            self.get_dry_density() if self.get_impact_database_entry() else None,
+            self.unit_carbon_storage.get_mineral_carbonation_potential(),
+            self.unit_carbon_storage.get_biogenic_carbon_storage_potential(),
+            self.unit_carbon_storage.get_biogenic_carbon_composition(),
+            self.unit_carbon_storage.get_mineral_carbon_storage_qty(),
+        )
+    
 
 class Fuel(Product):
     """Fuel product.

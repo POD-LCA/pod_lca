@@ -5,6 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..units import BTU
+from ..units import CENTI
 from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
 from ..units import DAY
@@ -23,6 +24,7 @@ from ..units import LITER
 from ..units import MEGA
 from ..units import METER
 from ..units import MILE
+from ..units import MILI
 from ..units import SQUARE_FEET
 from ..units import SQUARE_METER
 from ..units import OUNCE
@@ -35,6 +37,8 @@ from ..units import US_GALLON
 from ..units import YARD
 from ..units import WATT_HOUR
 from ..units import US_DOLLAR
+from ..units import WATT
+from ..units import KELVIN
 
 # This file contains a mapping of strings to their corresponding unit objects.
 # This is to be used for conversions strings in import files (CSV, JSON, etc.) to their corresponding unit objects in the code.
@@ -53,6 +57,8 @@ UNITS_MAP.update(
         "tn": S_TON,
         "km": KILOMETER,
         "mile": MILE,
+        "mm" : MILI * METER,
+        "cm": CENTI * METER,
         "m": METER,
         "ft": FEET,
         "in": INCH,
@@ -90,5 +96,6 @@ UNITS_MAP.update(
         "kg/m3": KILOGRAM / CUBIC_METER,
         "kg/item": KILOGRAM / ITEM,
         "USD": US_DOLLAR,
+        "W/m*K": WATT/(METER*KELVIN),
     }
 )

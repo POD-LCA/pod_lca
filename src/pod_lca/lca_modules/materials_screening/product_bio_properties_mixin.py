@@ -77,9 +77,10 @@ class ProductBioPropertiesMixin:
             if wet_mass:
                 unit = self.get_unit()
         else:
-            wet_mass = self.get_weight()
-            if wet_mass:
-                unit = self.get_weight_unit()
+            weight = self.get_weight()
+            if weight:
+                wet_mass = weight.value
+                unit = weight.unit
 
         if wet_mass:
             return Q(wet_mass / (1 + self.get_moisture_content()), unit) 
