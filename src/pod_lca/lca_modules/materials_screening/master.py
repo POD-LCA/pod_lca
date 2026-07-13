@@ -473,6 +473,13 @@ class Master:
             except:
                 pass            
 
+            try:
+                conversion_factor = (defined_unit / self.thickness_unit).convert_to(unit)
+                qty = (self.qty / self.thickness)
+                return qty * conversion_factor
+            except:
+                pass   
+
         raise ImportError(
             f"{self.get_name()} (of units {defined_unit}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit}) are of incompatible units."
         )
