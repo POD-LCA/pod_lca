@@ -151,7 +151,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
 
             if len(row_id) == 1:
                 data = self.data.iloc[row_id[0]].copy(deep=False)
-                if 'DRF Category' in data and not isnan(data["DRF Category"]):
+                if 'DRF Category' in data and not isnan(int(data["DRF Category"])):
                     data = BuildingMaterialImpactsDatabase.emissions_from_drf_category(data)
                 return data
             elif len(row_id) == 0:
