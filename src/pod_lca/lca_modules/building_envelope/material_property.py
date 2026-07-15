@@ -6,9 +6,12 @@ __version__ = "0.1.0"
 
 
 from pod_lca.lca_modules.operational.read_write import find_material_by_name
-from pod_lca.lca_modules.operational.read_write import find_materials
-from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
-from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+from pod_lca.units import Quantity as Q
+from pod_lca.units import INCH 
+from pod_lca.units import KELVIN
+from pod_lca.units import METER
+from pod_lca.units import SQUARE_METER
+from pod_lca.units import WATT
 
 
 class EnvelopeMaterialProperty(object):
@@ -65,7 +68,72 @@ class EnvelopeMaterialProperty(object):
         """
         data = find_material_by_name(filepath, name)
         return cls.from_data(data)
+    
+    @classmethod
+    def from_database(cls, name):
+        """Creates an instance of the material properties class from the
+        default database. 
 
+        Parameters
+        ----------
+        name : str
+            Name of the material property to be read in the default database. 
+        """
+        material_prop = cls()
+        material_prop.name = name
+
+        return material_prop
+
+    def get_thermal_resistance(self, thickness=None, building=None):
+        if self.thermal_resistance is None:
+            if building:
+                RSI_per_inch = building.material_impact_database.get_data_entry(self.name)['RSI /inch (m2C/W)']
+                
+                if thickness:
+                    thickness = thickness.convert_to(INCH)
+                    thermal_resistance_val = RSI_per_inch * thickness.value 
+                else:
+                    thermal_resistance_val = RSI_per_inch
+
+                self.thermal_resistance = Q(thermal_resistance_val, (SQUARE_METER * KELVIN) / WATT)
+
+        return self.thermal_resistance
+
+    def get_roughness(self, building=None):
+        if self.roughness is None:
+            if building:
+                self.roughness = building.material_impact_database.get_data_entry(self.name)['Roughness']
+            else:
+                raise ValueError
+
+        return self.roughness
+
+    def get_conductivity(self, building=None):
+        if self.conductivity is None:
+            if building:
+                conductivity_val = building.material_impact_database.get_data_entry(self.name)['Thermal conductivity']
+                self.conductivity = Q(conductivity_val, WATT/(METER*KELVIN)) 
+            else:
+                raise ValueError
+        
+        return self.conductivity
+    
+    def get_resistivity(self, thickness=None, building=None):
+        """Returns the thermal resistivity of the layer
+
+        Parameters
+        ----------
+        thickness : ~pod_lca.units.Quantity
+            (optional) The thickness of the layer if the resistivity should be computed 
+            for a different thickness than currently assigned to the layer. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal resistivity of the layer. 
+        """
+        pass        
+    
 
 class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
     """ Defines an envelope MASS material properties class. To be used
@@ -98,7 +166,7 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
     def __init__(self):
         super().__init__()  
         # Operational Energy attributes
-        self.__type__ = 'EnvelopeMaterialPropertyMass'
+        self.__type__ = 'MaterialPropertyMass'
         self.roughness = None
         self.conductivity = None
         self.specific_heat = None
@@ -127,8 +195,27 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
         material.thermal_absorptance = data['thermal_absorptance']
         material.solar_absorptance   = data['solar_absorptance']
         material.visible_absorptance = data['visible_absorptance']
-        return material
+        return material       
 
+    def get_thermal_resistance(self, thickness=None, building=None):
+        resistivity =  self.get_conductivity(building).invert()
+        return resistivity * thickness
+
+    def get_resistivity(self, thickness=None, building=None):
+        """Returns the thermal resistivity of the layer
+
+        Parameters
+        ----------
+        thickness : ~pod_lca.units.Quantity
+            (optional) The thickness of the layer if the resistivity should be computed 
+            for a different thickness than currently assigned to the layer. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal resistivity of the layer. 
+        """
+        return self.get_conductivity(building).invert()
 
 class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
     """ Defines an envelope Air Gap material properties class. 
@@ -221,9 +308,25 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
         material.thickness           = data['thickness']
         return material
     
-    @property
-    def thermal_resistance(self):
-        return self.thickness / self.conductivity
+    def get_thermal_resistance(self, thickness, building=None):
+        return thickness / self.get_conductivity(building)
+
+    def get_resistivity(self, thickness=None, building=None):
+        """Returns the thermal resistivity of the layer
+
+        Parameters
+        ----------
+        thickness : ~pod_lca.units.Quantity
+            (optional) The thickness of the layer if the resistivity should be computed 
+            for a different thickness than currently assigned to the layer. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal resistivity of the layer. 
+        """
+        return self.get_thermal_resistance(thickness, building) / thickness
+    
 
 class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
     """ Defines an envelope Glazing material properties class. 

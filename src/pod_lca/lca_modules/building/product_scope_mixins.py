@@ -45,7 +45,10 @@ class ProductScopeMixins:
                                                                     'Thickness': object, # FIXME: this should be float---potential issue in data
                                                                     'Thickness unit': 'category',
                                                                     'Density': object, # FIXME: this should be float---potential issue in data
-                                                                    'Density unit': 'category'})
+                                                                    'Density unit': 'category',
+                                                                    'Roughness': 'category',
+                                                                    'Thermal conductivity': float,
+                                                                    'RSI /inch (m2C/W)': float, })
             self.material_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")

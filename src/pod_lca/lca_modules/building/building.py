@@ -459,6 +459,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.building_envelope = building_envelope
         building_envelope.set_building(self)
 
+        for envelope in self.building_envelope.envelopes.values():
+            envelope.set_materials_in_conmponents()
+
     def set_operational_energy_object(self, operational_energy_object):
         """ Set the operational energy object used in energy plus simulations.
         

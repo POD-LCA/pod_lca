@@ -216,10 +216,10 @@ class Material(Product):
 
             # set transportation process
             sctg_code = data_entry['sctg code']
-            if isnan(int(sctg_code)) or (sctg_code in [999, '999', None, '', 'N/A', 'Null']):
+            if isinstance(sctg_code, (int, float)) and isnan(sctg_code) or (sctg_code in [999, '999', None, '', 'N/A', 'Null']):
                 log(f"SCTG code not specified for {self.get_name()}. Skipping SCTG setting.", level='Warn')
             else:
-                self.set_sctg_code(sctg_code)
+                self.set_sctg_code(int(sctg_code))
                 self.set_transportation()
                 for replacement_product in replacement_materials:
                     replacement_product.set_sctg_code(sctg_code)

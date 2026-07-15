@@ -388,9 +388,9 @@ def write_layers(building, file_path):
         lay_name = lk
 
         if mat.__type__ == "MaterialPropertyMass":
-            write_material(mat, thick, lay_name, file_path)
+            write_material(mat, thick, lay_name, building, file_path)
         elif mat.__type__ == "MaterialPropertyNoMass":
-            write_materials_nomass(mat, lay_name, file_path)
+            write_materials_nomass(mat, lay_name, building, file_path)
         elif mat.__type__ == "EnvelopeMaterialPropertyAirGap":
             write_material_air_gap(mat, lay_name, file_path)
         elif mat.__type__ == "WindowMaterialPropertyGlazing":
@@ -403,7 +403,7 @@ def write_layers(building, file_path):
             raise ValueError('materyal type {} has not been implemented yet'.format(mat.__type__))
 
 
-def write_material(mat, thickness, layer_name, file_path):
+def write_material(mat, thickness, layer_name, building=None, file_path=None):
     """
     Writes a material to the .idf file from the building data.
     Parameters
@@ -416,6 +416,8 @@ def write_material(mat, thickness, layer_name, file_path):
         The thickness of the material layer
     layer_name: str
         The name of the material layer, including the thickness modifier
+    building: object
+        The building to access the building data to be used
 
     Returns
     -------
@@ -427,9 +429,9 @@ def write_material(mat, thickness, layer_name, file_path):
         fh.write("\n")
         fh.write("Material,\n")
         fh.write("  {},     !- Name\n".format(layer_name))
-        fh.write("  {},     !- Roughness\n".format(mat.roughness))
+        fh.write("  {},     !- Roughness\n".format(mat.get_roughness(building)))
         fh.write("  {},     !- Thickness (m)\n".format(thickness))
-        fh.write("  {},     !- Conductivity (W/m-K)\n".format(mat.conductivity))
+        fh.write("  {},     !- Conductivity (W/m-K)\n".format(mat.get_conductivity(building)))
         fh.write("  {},     !- Density (kg/m3)\n".format(mat.density))
         fh.write("  {},     !- Specific Heat (J/kg-K)\n".format(mat.specific_heat))
         fh.write("  {},     !- Thermal Absorptance\n".format(mat.thermal_absorptance))
@@ -440,7 +442,7 @@ def write_material(mat, thickness, layer_name, file_path):
         fh.close()
 
 
-def write_materials_nomass(mat, layer_name, file_path):
+def write_materials_nomass(mat, layer_name, building=None, file_path=None):
     """
     Writes a no mass material to the .idf file from the building data.
     Parameters
@@ -459,8 +461,8 @@ def write_materials_nomass(mat, layer_name, file_path):
     fh.write("\n")
     fh.write("Material:NoMass,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
-    fh.write("  {},     !- Roughness\n".format(mat.roughness))
-    fh.write("  {},     !- Thermal Resistance (m2-K/W)\n".format(mat.thermal_resistance))
+    fh.write("  {},     !- Roughness\n".format(mat.get_roughness(building)))
+    fh.write("  {},     !- Thermal Resistance (m2-K/W)\n".format(mat.get_thermal_resistance(building)))
     fh.write("  {},     !- Thermal Absorptance\n".format(mat.thermal_absorptance))
     fh.write("  {},     !- Solar Absorptance\n".format(mat.solar_absorptance))
     fh.write("  {};     !- Visible Absorptance\n".format(mat.visible_absorptance))

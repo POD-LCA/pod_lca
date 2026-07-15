@@ -9,11 +9,8 @@ from ..building_envelope import Layer
 from pod_lca.lca_modules.building.assembly import Assembly
 from ...units import METER
 from ...units import SQUARE_METER
-from ...units import UNITS_MAP
 from ...units import Quantity as Q
 
-from ...utilities import DataImporter
-from ...utilities import config
 from pod_lca.lca_modules.operational.read_write import find_constructions
 from pod_lca.lca_modules.operational.read_write import find_materials
 from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
@@ -104,6 +101,12 @@ class Construction(Assembly):
 
         return construction
 
+    def update_layer_properties(self):
+        pass
+
+    def get_layers(self):
+        return [self.layers[lk] for lk in self.layers]
+
     def set_building(self):
         """Set data from building level."""
         building = self.get_building()
@@ -117,7 +120,8 @@ class Construction(Assembly):
     def set_materials(self):
         """Set the materials for the construction. 
         """
-        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['IDF_IMPACT_DATA_PRODUCT_MAP'], 'IDF Material Name')
+        mat_impact_database = self.get_building().material_impact_database
+        database_unit_key = mat_impact_database.get_unit_key()
         
         area = self.area
         for layer in self.get_constituent_materials():
@@ -125,16 +129,16 @@ class Construction(Assembly):
             if (not layer.is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
                 mat_name = layer.material_property.name
 
-                database_declared_qty_in = UNITS_MAP[default_database_entry_map[mat_name]["LCI Database Declared Unit"]].get_qty_measured()
+                database_data = mat_impact_database.get_data_entry(mat_name)
+
+                database_declared_qty_in = database_data[database_unit_key].get_qty_measured()
 
                 quantity = layer.get_quantity(area, database_declared_qty_in)
 
                 material = EnvelopeMaterial.new(name=mat_name,
                                                 qty=quantity.value,
                                                 unit=quantity.unit,
-                                                material_database_entry=default_database_entry_map[mat_name]['LCI Database Product Name'],)
-                material.set_service_life_category(default_database_entry_map[mat_name]["POD|LCA RSL Category"])
-
+                                                material_database_entry=mat_name,)
 
                 self.add_material(material)
 
@@ -154,7 +158,6 @@ class Construction(Assembly):
             return area
         else:
             return Q(0, SQUARE_METER)
-
 
     def get_constituent_materials(self):
         constituent_materials = []

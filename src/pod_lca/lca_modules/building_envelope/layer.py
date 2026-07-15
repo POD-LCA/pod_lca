@@ -181,7 +181,7 @@ class Layer(object):
 
         return material_prop
     
-    def get_r(self, thickness=None):
+    def get_r(self, thickness=None, building=None):
         """Returns the thermal resistance of the layer
 
         Parameters
@@ -195,18 +195,9 @@ class Layer(object):
         ~pod_lca.units.Quantity
             The thermal resistance of the layer. 
         """
-        mtype = self.material_property.__type__
-        if mtype == 'MaterialPropertyMass':
-            resistivity =  self.material_property.conductivity.invert()
-            return resistivity * thickness
-        elif mtype == 'EnvelopeMaterialPropertyAirGap':
-            return self.material_property.thermal_resistance
-        elif mtype == 'MaterialPropertyNoMass':
-            return self.material_property.thermal_resistance
-        else:
-            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        return self.material_property.get_thermal_resistance(thickness, building)
 
-    def get_resistivity(self, thickness=None):
+    def get_resistivity(self, thickness=None, building=None):
         """Returns the thermal resistivity of the layer
 
         Parameters
@@ -220,16 +211,7 @@ class Layer(object):
         ~pod_lca.units.Quantity
             The thermal resistivity of the layer. 
         """
-        mat = self.material_property
-        mtype = mat.__type__
-        if mtype == 'MaterialPropertyMass':
-            return mat.conductivity.invert()
-        elif mtype == 'MaterialPropertyNoMass':
-            resistivity = mat.thermal_resistance / thickness
-            # return Q(resistivity.value, mKW)
-            return resistivity
-        else:
-            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        return self.material_property.get_resistivity(self, thickness, building)
         
     def set_structural(self, is_structural):
         """Sets the layer as structural. 

@@ -1,0 +1,246 @@
+import sys
+import importlib
+
+def reload_library():
+    # Wipe the entire library and all submodules from cache
+    to_delete = [key for key in sys.modules if key == "pod_lca" or key.startswith("pod_lca.")]
+    for key in to_delete:
+        del sys.modules[key]
+
+# Call this FIRST, before any library imports
+reload_library()
+
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "tmendeze@uw.edu"
+__version__ = "0.1.0"
+
+import os
+import pod_lca
+
+from pod_lca.utilities import config
+
+from pod_lca.lca_modules.building import Building
+from pod_lca.lca_modules.building import BuildingFloor
+
+from pod_lca.lca_modules.building_structure import StatisticalStructure
+from pod_lca.lca_modules.building_structure import Structure
+from pod_lca.lca_modules.location import Location
+
+
+from pod_lca.lca_modules.building_envelope import BuildingEnvelope
+from pod_lca.lca_modules.building_envelope import Envelope
+from pod_lca.lca_modules.building_envelope import Construction
+from pod_lca.lca_modules.building_envelope import Layer
+from pod_lca.lca_modules.building_envelope import WoodFraming
+from pod_lca.lca_modules.building_envelope import MetalFraming
+from pod_lca.lca_modules.building_envelope import FramedWall
+from pod_lca.lca_modules.building_envelope import Floor
+from pod_lca.lca_modules.building_envelope import Ceiling
+from pod_lca.lca_modules.building_envelope import Window
+from pod_lca.lca_modules.building_envelope import EnvelopeMaterialProperty
+
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyMass
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyAirGap
+from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
+from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialPropertyGlazing
+from pod_lca.lca_modules.building_envelope.material_property import WindowMaterialPropertyGas
+
+
+from pod_lca.lca_modules.operational import OperationalEnergyObject
+# from pod_lca.lca_modules.operational.read_write import find_materials
+# from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+# from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+
+from pod_lca.units import INCH, METER, SQUARE_METER, CUBIC_METER, WATT, KELVIN, KILOGRAM, JOULE
+from pod_lca.units import Quantity as Q
+
+from pod_lca.visualizer import BarChart
+from pod_lca.visualizer import MatplotlibPlotter
+
+
+for i in range(100): print('')
+
+constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
+
+# general inputs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+bname = 'Tomas'
+btype = 'Residential'
+location = Location.from_str("98126, Seattle")
+built_year =  2025
+life_span = 100
+
+x = Q(20, METER)
+y = Q(50, METER)
+zero = Q(0, METER)
+floor_to_floor = Q(3, METER)
+num_stories = 8
+# floor_plan = [[zero,zero,zero],
+#               [x/2, -y/4,zero],
+#               [x,zero,zero],
+#               [x,y,zero],
+#               [x/2, y+(y/4),zero],
+#               [zero,y,zero]] 
+
+floor_plan = [[zero,zero,zero],
+              [zero,y,zero], 
+              [x/2, y+(y/4),zero],
+              [x,y,zero],
+              [x,zero,zero],
+              [x/2, -y/4,zero]]
+flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
+
+# make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+
+m0 = EnvelopeMaterialPropertyMass.from_database('Clay brick')
+m1 = EnvelopeMaterialPropertyAirGap.from_database('Air')
+# m2 = EnvelopeMaterialPropertyMass.from_idf('Expanded polystyrene (EPS) Type I',)
+m3 = EnvelopeMaterialPropertyMass.from_database('Gypsum board, 5/8 in')
+m4 = EnvelopeMaterialPropertyMass.from_database('Heavy density mineral wool board')
+
+m2 = EnvelopeMaterialPropertyNoMass()
+m2.name                = 'Expanded polystyrene (EPS) Type I'
+m2.conductivity        = Q(.1, WATT/(METER*KELVIN))
+m2.thickness           = Q(.05, METER)
+m2.roughness           = 'MediumRough'
+m2.thermal_absorptance = 0.9
+m2.solar_absorptance   = 0.7
+m2.visible_absorptance = 0.7
+
+layers = [
+          {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH)},
+          {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH)},
+          {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH)},
+          {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH)},
+          {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH)},
+          {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH)}
+            ]
+
+layers_ = {}
+for i in range(len(layers)):
+    name = layers[i]['material'].name
+    thickness = layers[i]['thickness']
+    classification = layers[i]['classification']
+    material_property = layers[i]['material']
+    l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
+    layers_[i] = l
+
+layers_[0].set_structural(True)
+
+
+framing_name                  = 'tomas_wooden_framing'
+framing_material_property     = EnvelopeMaterialPropertyMass.from_idf('Softwood Lumber', constructions_path)
+framing_spacing               = Q(12, INCH)
+framing_width                 = Q(1.5, INCH)
+framing_length                = Q(3.5, INCH)
+framing = WoodFraming.from_parameters(framing_name, framing_material_property, framing_spacing, framing_width, framing_length)
+framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing, 'encl_curtainwall')
+
+# framing_name                = 'tomas_metal_framing'
+# framing_material_property   = EnvelopeMaterialPropertyMass.from_idf('Cold-formed steel framing', constructions_path)
+# framing_spacing             = Q(12, INCH)
+# # framing_metal_thickness     = Q(.043, INCH)
+# # framing_width               = Q(1.5, INCH)
+# # framing_length              = Q(3.5, INCH)
+# # framing = MetalFraming.from_parameters(framing_name,
+# #                                        framing_material_property,
+# #                                        framing_spacing,
+# #                                        framing_metal_thickness,
+# #                                        framing_width,
+# #                                        framing_length)
+# framing = MetalFraming.from_parameters(framing_name,
+#                                        framing_material_property,
+#                                        framing_spacing,
+#                                        section_id="400S137-43")
+
+framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
+
+
+# make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# f = Floor.from_idf('Generic Interior Floor', constructions_path)
+
+# make a ceiling - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
+
+
+# make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# window1 = Window.from_idf('Generic Double Pane', constructions_path)
+
+# w = Q(3, METER)
+# h = Q(2, METER)
+# wall_key1 = 'wall_1'
+# window1.set_width_height(w, h)
+
+# wall_key2 = 'wall_2'
+# wwr = .9
+# window2 = Window.from_idf('Generic Double Pane', constructions_path)
+# window2.set_wwr(wwr)
+
+
+# windows = {wall_key1: window1, wall_key2: window2}
+
+
+# make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ename = 'tomas_envelope'
+e = Envelope.from_components(ename, flr, wall=framed_wall)
+# e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
+
+be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
+
+
+# make a structure - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+stype = 'Concrete' # 'Concrete', 'Steel', 'CLT', 'Light-Frame'
+mui_type = 'low' # 'mid', 'high'
+
+s_floor = Structure.create(stype, flr)
+s = StatisticalStructure.create(s_floor, num_stories)
+s.build(mui_type)
+
+# make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
+# b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
+
+# overide defaults - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system locations
+# b.set_eplus_out_folder("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out") # default writes to a temp folder
+# b.set_idf_file_path("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out/temp_operational.idf") # default writes to a temp file
+# b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
+b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
+b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
+
+# get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# from pod_lca.lca_modules.operational import OperationalEnergyObject
+# opp_obj = OperationalEnergyObject.from_idf(config['file_paths']['operational']['SYSTEMS'])
+# b.set_operational_energy_object(opp_obj)
+# b.write_idf()
+
+print(b.get_operational_impacts()) # default is 'total'
+
+# # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_emissions(scope='product'))
+
+# print(b.get_material_quantities_of_assembly("generic structural element"))
+# print(b.get_material_impacts_of_assembly_lcstage("generic structural element", impact_cat="GWP", lc_stage="A1-A3"))
+
+drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('cumulative radiative forcing')
+
+# # # graph = BarChart.from_plotter(MatplotlibPlotter)
+# # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
+# # # graph.show()
+
+
+
+
