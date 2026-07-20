@@ -1,20 +1,66 @@
-Material,Recycle,Compost,Incinerate,Landfill
-Aluminum,77%,NA,NA,23%
-Steel,77%,NA,NA,23%
-Drywall,14%,NA,NA,86%
-Concrete,82%,NA,NA,18%
-Inert,NA,NA,NA,100%
-Paint,NA,NA,NA,100%
-Polyurethane,NA,NA,NA,100%
-Polystyrene,NA,NA,21%,79%
-Polyethylene,2%,NA,19%,79%
-Polypropylene,2%,NA,19%,79%
-Polyvinylchloride,NA,NA,21%,79%
-Unspecified Plastics,NA,NA,21%,79%
-Wood,10%,5%,10%,75%
-Bamboo,NA,NA,NA,100%
-Agricultural Residues- Low Lignin,NA,NA,NA,100%
-Agricultural Residues- High Lignin,NA,NA,NA,100%
-Cellulose,NA,NA,NA,100%
-Fungi,NA,NA,NA,100%
-DEFAULT,NA,NA,NA,100%
+Material,Landfill,Incinerate,Recycle,Compost,,,,,,,,,,,,
+Aluminum,23%,0%,77%,NA,,,,,,,,,,,,
+Steel,23%,0%,77%,NA,,,,,,,,,,,,
+Gypsum Drywall,86%,NA,14%,NA,,,,,,,,,,,,
+Concrete,82%,NA,18%,NA,,,,,,,,,,,,
+Paint,100%,0%,NA,NA,,,,,,,,,,,,
+Polyurethane,100%,0%,NA,NA,,,,,,,,,,,,
+Polystyrene,79%,21%,NA,NA,,,,,,,,,,,,
+Polyethylene,79%,19%,2%,NA,,,,,,,,,,,,
+Polypropylene,79%,19%,2%,NA,,,,,,,,,,,,
+Polyvinylchloride,79%,21%,NA,NA,,,,,,,,,,,,
+Unspecified Plastic,79%,21%,NA,NA,,,,,,,,,,,,
+Wood (untreated),75%,10%,10%,5%,,,,,,,,,,,,
+DEFAULT,100%,0%,0%,0%,,,,,,,,,,,,
+Bamboo,100%,NA,NA,NA,,,,,,,,,,,,
+Agricultural Residues (high lignin),100%,NA,NA,NA,,,,,,,,,,,,
+Agricultural Residues (low lignin),100%,0%,NA,NA,,,,,,,,,,,,
+Cellulose,100%,0%,NA,NA,,,,,,,,,,,,
+Fungi,100%,0%,NA,NA,,,,,,,,,,,,
+Inert,100%,NA,NA,NA,,,,,,,,,,,,
+"Adhesives, sealants, and coatings",100%,0%,NA,NA,,,,,,,,,,,,
+Asphalt,100%,NA,NA,NA,,,,,,,,,,,,
+Asphalt sheet,100%,0%,NA,NA,,,,,,,,,,,,
+Cardboard,100%,0%,NA,NA,,,,,,,,,,,,
+Carpet,100%,0%,0%,NA,,,,,,,,,,,,
+Carpet padding,100%,0%,0%,NA,,,,,,,,,,,,
+Cement,100%,NA,0%,NA,,,,,,,,,,,,
+Cement-fiber slab,100%,0%,NA,NA,,,,,,,,,,,,
+Clay brick,100%,NA,0%,NA,,,,,,,,,,,,
+Concrete (reinforced),18%,NA,82%,NA,,,,,,,,,,,,
+Fiberboard,100%,0%,NA,NA,,,,,,,,,,,,
+Fiberglass insulation,100%,NA,NA,NA,,,,,,,,,,,,
+Flooring (cork),100%,0%,NA,NA,,,,,,,,,,,,
+Flooring (laminate),100%,0%,NA,NA,,,,,,,,,,,,
+Flooring (synthetic resin),100%,0%,NA,NA,,,,,,,,,,,,
+Flooring (synthetic rubber),100%,0%,NA,NA,,,,,,,,,,,,
+Glass,100%,0%,NA,NA,,,,,,,,,,,,
+Glass fiber reinforced polymer,100%,0%,NA,NA,,,,,,,,,,,,
+Gravel,100%,NA,NA,NA,,,,,,,,,,,,
+Gypsum,86%,0%,14%,NA,,,,,,,,,,,,
+Gypsum board,86%,0%,14%,NA,,,,,,,,,,,,
+Laminated wood board,100%,0%,NA,NA,,,,,,,,,,,,
+Limestone,100%,NA,NA,NA,,,,,,,,,,,,
+Mass timber,100%,0%,NA,NA,,,,,,,,,,,,
+Medium density fiberboard,100%,0%,NA,NA,,,,,,,,,,,,
+Mineral plaster,100%,NA,0%,NA,,,,,,,,,,,,
+Mineral wool,100%,NA,NA,NA,,,,,,,,,,,,
+Paint (emulsion),100%,0%,NA,NA,,,,,,,,,,,,
+Paper (building waste),100%,0%,NA,NA,,,,,,,,,,,,
+Paper (packaging),100%,0%,NA,NA,,,,,,,,,,,,
+Particle board (3.5% melamine-formaldehyde resin),100%,0%,NA,NA,,,,,,,,,,,,
+Particle board (unspecified binder),100%,0%,NA,NA,,,,,,,,,,,,
+Polystyrene (building insulation),79%,21%,NA,NA,,,,,,,,,,,,
+Polystyrene (building waste),79%,21%,NA,NA,,,,,,,,,,,,
+"Polystyrene (expanded, EPS)",79%,21%,NA,NA,,,,,,,,,,,,
+Polyurethane (foam),100%,0%,NA,NA,,,,,,,,,,,,
+Sealing sheet,79%,21%,NA,NA,,,,,,,,,,,,
+Sealing sheet (EPDM),79%,21%,NA,NA,,,,,,,,,,,,
+Sealing sheet (Polyethylene),79%,19%,2%,NA,,,,,,,,,,,,
+Sealing sheet (polyvinylchloride),79%,21%,NA,NA,,,,,,,,,,,,
+Slag (steel),100%,NA,NA,NA,,,,,,,,,,,,
+Tin,100%,0%,NA,NA,,,,,,,,,,,,
+Unspecified metals,100%,NA,NA,NA,,,,,,,,,,,,
+Vinyl composition tile,100%,0%,NA,NA,,,,,,,,,,,,
+Wood (chrome preserved),100%,0%,NA,NA,,,,,,,,,,,,
+"Wood (particleboard, oriented strand board)",100%,0%,NA,NA,,,,,,,,,,,,
