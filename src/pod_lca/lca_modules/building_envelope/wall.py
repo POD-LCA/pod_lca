@@ -163,7 +163,6 @@ class FramedWall(Construction):
 
         self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
 
-
     def get_constituent_materials(self):
         constituent_materials = super().get_constituent_materials()
         

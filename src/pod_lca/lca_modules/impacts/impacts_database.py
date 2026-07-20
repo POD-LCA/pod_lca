@@ -209,7 +209,10 @@ class ImpactsDatabase:
         for data_categroy, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
             for header in DATA_HEADERS_DICT:
                 if header not in data.columns:
-                    data[header] = 0.0
+                    if data_type_mapping[header] == 'category':
+                        data[header] = None
+                    else:
+                        data[header] = 0.0
                     log(f"{header} {data_categroy} not found in the data. Setting to 0.0.", level="Warn")
 
         # loading data to existing dataset

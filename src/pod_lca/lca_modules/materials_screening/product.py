@@ -15,7 +15,9 @@ from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
 from ...units import KILOGRAM
+from ...units import METER
 from ...units import Quantity
+from ...units import Unit
 from ...utilities import log
 from ...utilities import config
 
@@ -187,6 +189,37 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
 
         return self
 
+    def set_thickness(self, thickness=None, thickness_unit=METER):
+        """Set thickness of the product.
+
+        Parameters
+        ----------
+        thickness : str or float
+            Thickness of product.
+        thickness_unit : ~pod_lca.units.unit
+            Unit of measurement of thickness.
+
+        Raises
+        ------
+        TypeError
+            Thickness must be a numerical value.
+        """
+        if isinstance(thickness, str):
+            try:
+                self.thickness = float(thickness)
+                self.thickness_unit = thickness_unit
+            except:
+                raise TypeError(f"Thickness of {self.get_name()} should be a numerical value.")
+        elif isinstance(thickness, (float, int)):
+            if math.isnan(thickness):
+                thickness = None
+            self.thickness = thickness
+            self.thickness_unit = thickness_unit
+        else:
+            raise ValueError("Thickness input not recognized.")
+
+        return self
+
     # ================================
     # Getters
     # ================================
@@ -227,6 +260,16 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
                 else:
                     return None
 
+    def get_thickness(self):
+        """Retrieve thickness of the product.
+
+        Returns
+        -------
+        float
+            Thickness of product.
+        """
+        return self.thickness
+    
     def get_density(self):
         """Retrieve density of the product.
             Density is defined here as mass per unit measurement of product (not necessarily volume)
@@ -247,6 +290,16 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             Unit of measurement of the denisty of product.
         """
         return self.density_unit
+    
+    def get_thickness_unit(self):
+        """Retrieve thickness unit of the product.
+
+        Returns
+        -------
+        ~pod_lca.units.Unit
+            Unit of measurement of the thickness of product.
+        """
+        return self.thickness_unit
 
     def get_eol_manager(self):
         """Return the place where end-of-life transport dataset reside.
@@ -361,7 +414,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             self.get_electricity_location_regional(),
             self.get_electricity_location_local(),
             self.get_moisture_content(),
-            self.get_dry_density() if self.get_impact_database_entry() else None,
+            self.get_dry_density() if (self.get_impact_database_entry() and isinstance(self.inventories_declared_unit, Unit)) else None,
             self.unit_carbon_storage.get_mineral_carbonation_potential(),
             self.unit_carbon_storage.get_biogenic_carbon_storage_potential(),
             self.unit_carbon_storage.get_biogenic_carbon_composition(),
