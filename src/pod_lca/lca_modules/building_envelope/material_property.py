@@ -148,7 +148,7 @@ class EnvelopeMaterialProperty(object):
             
         if of_unit:
             if (of_unit.qty_measured == self.density.unit.qty_measured):
-                self.density.convert_to(of_unit) 
+                self.density = self.density.convert_to(of_unit) 
             elif thickness:   
                 if (of_unit.qty_measured == (self.density / thickness).unit.qty_measured):
                     self.density = self.density / thickness
@@ -156,10 +156,10 @@ class EnvelopeMaterialProperty(object):
                     self.density = self.density * thickness
                 else:
                     raise ValueError("Cannot compute the density in the desired units.")
+                self.density = self.density.convert_to(of_unit)
             else:
                 raise NotImplementedError
 
-        
         return self.density
     
     def get_specific_heat(self, building=None):
