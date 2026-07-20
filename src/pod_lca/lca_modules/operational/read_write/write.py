@@ -7,7 +7,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from pod_lca.utilities import config
-from pod_lca.units import METER, CUBIC_METER
+from pod_lca.units import METER, CUBIC_METER, WATT, KELVIN, JOULE, KILOGRAM, SQUARE_METER
 
 def write_idf_from_building(building):
     """
@@ -380,7 +380,7 @@ def write_layers(building, file_path):
     -------
     None
     """
-
+    
     for lk in building.layers:
         layer = building.layers[lk]['layer']
         mat = layer.material_property
@@ -390,11 +390,11 @@ def write_layers(building, file_path):
         if mat.__type__ == "MaterialPropertyMass":
             write_material(mat, thick, lay_name, building, file_path)
         elif mat.__type__ == "MaterialPropertyNoMass":
-            write_materials_nomass(mat, lay_name, building, file_path)
+            write_materials_nomass(mat, lay_name, thick, building, file_path)
         elif mat.__type__ == "EnvelopeMaterialPropertyAirGap":
-            write_material_air_gap(mat, lay_name, file_path)
+            write_material_air_gap(mat, lay_name, thick, building, file_path)
         elif mat.__type__ == "WindowMaterialPropertyGlazing":
-            write_material_glazing(mat, thick, lay_name, file_path)
+            write_material_glazing(mat, thick, lay_name, building, file_path)
         elif mat.__type__ == "WindowMaterialPropertyGas":
             write_material_gas(mat, thick, lay_name, file_path)
         # elif mat.__type__ == 'WindowMaterialGlazingSimple':
@@ -430,19 +430,19 @@ def write_material(mat, thickness, layer_name, building=None, file_path=None):
         fh.write("Material,\n")
         fh.write("  {},     !- Name\n".format(layer_name))
         fh.write("  {},     !- Roughness\n".format(mat.get_roughness(building)))
-        fh.write("  {},     !- Thickness (m)\n".format(thickness))
-        fh.write("  {},     !- Conductivity (W/m-K)\n".format(mat.get_conductivity(building)))
-        fh.write("  {},     !- Density (kg/m3)\n".format(mat.density))
-        fh.write("  {},     !- Specific Heat (J/kg-K)\n".format(mat.specific_heat))
-        fh.write("  {},     !- Thermal Absorptance\n".format(mat.thermal_absorptance))
-        fh.write("  {},     !- Solar Absorptance\n".format(mat.solar_absorptance))
-        fh.write("  {};     !- Visible Absorptance\n".format(mat.visible_absorptance))
+        fh.write("  {},     !- Thickness (m)\n".format(thickness.convert_to(METER).value))
+        fh.write("  {},     !- Conductivity (W/m-K)\n".format(mat.get_conductivity(building).convert_to(WATT/(METER*KELVIN)).value))
+        fh.write("  {},     !- Density (kg/m3)\n".format(mat.get_density(building, KILOGRAM/CUBIC_METER, thickness).value))
+        fh.write("  {},     !- Specific Heat (J/kg-K)\n".format(mat.get_specific_heat(building).convert_to(JOULE/(KILOGRAM*KELVIN)).value))
+        fh.write("  {},     !- Thermal Absorptance\n".format(mat.get_thermal_absorptance(building)))
+        fh.write("  {},     !- Solar Absorptance\n".format(mat.get_solar_absorptance(building)))
+        fh.write("  {};     !- Visible Absorptance\n".format(mat.get_visible_absorptance(building)))
         fh.write("\n")
         fh.write("\n")
         fh.close()
 
 
-def write_materials_nomass(mat, layer_name, building=None, file_path=None):
+def write_materials_nomass(mat, layer_name, thickness, building, file_path):
     """
     Writes a no mass material to the .idf file from the building data.
     Parameters
@@ -462,27 +462,27 @@ def write_materials_nomass(mat, layer_name, building=None, file_path=None):
     fh.write("Material:NoMass,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
     fh.write("  {},     !- Roughness\n".format(mat.get_roughness(building)))
-    fh.write("  {},     !- Thermal Resistance (m2-K/W)\n".format(mat.get_thermal_resistance(building)))
-    fh.write("  {},     !- Thermal Absorptance\n".format(mat.thermal_absorptance))
-    fh.write("  {},     !- Solar Absorptance\n".format(mat.solar_absorptance))
-    fh.write("  {};     !- Visible Absorptance\n".format(mat.visible_absorptance))
+    fh.write("  {},     !- Thermal Resistance (m2-K/W)\n".format(mat.get_thermal_resistance(thickness, building).convert_to(SQUARE_METER*KELVIN/WATT).value))
+    fh.write("  {},     !- Thermal Absorptance\n".format(mat.get_thermal_absorptance(building)))
+    fh.write("  {},     !- Solar Absorptance\n".format(mat.get_solar_absorptance(building)))
+    fh.write("  {};     !- Visible Absorptance\n".format(mat.get_visible_absorptance(building)))
     fh.write("\n")
     fh.write("\n")
     fh.close()
 
 
-def write_material_air_gap(mat, layer_name, file_path):
+def write_material_air_gap(mat, layer_name, thickness, building, file_path):
     fh = open(file_path, "a")
     fh.write("\n")
     fh.write("Material:AirGap,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
-    fh.write("  {};     !- Resistance (M**2K/W)\n".format(mat.thermal_resistance))
+    fh.write("  {};     !- Resistance (M**2K/W)\n".format(mat.get_thermal_resistance(thickness, building).convert_to(SQUARE_METER*KELVIN/WATT).value))
     fh.write("\n")
     fh.write("\n")
     fh.close()
 
 
-def write_material_glazing(mat, thickness, layer_name, file_path):
+def write_material_glazing(mat, thickness, layer_name, building, file_path):
     """
     Writes a glazing material to the .idf file from the building data.
     Parameters
@@ -506,29 +506,29 @@ def write_material_glazing(mat, thickness, layer_name, file_path):
     fh.write("  {},         !- Name\n".format(layer_name))
     fh.write("  {},         !- Optical Data Type\n".format(mat.optical_data_type))
     fh.write("  {},         !- Window Glass Spectral Data Set Name\n".format(mat.win_glass_spectral_data_name))
-    fh.write("  {},         !- Thickness (m)\n".format(thickness))
-    fh.write("  {},         !- Solar Transmittance at Normal Incidence\n".format(mat.solar_transmittance))
-    fh.write("  {},         !- Front Side Solar Reflectance at Normal Incidence\n".format(mat.front_solar_reflectance))
-    fh.write("  {},         !- Back Side Solar Reflectance at Normal Incidence\n".format(mat.back_solar_reflectance))
-    fh.write("  {},         !- Visible Transmittance at Normal Incidence\n".format(mat.visible_transmittance))
+    fh.write("  {},         !- Thickness (m)\n".format(thickness.convert_to(METER).value))
+    fh.write("  {},         !- Solar Transmittance at Normal Incidence\n".format(mat.get_solar_transmittance(building)))
+    fh.write("  {},         !- Front Side Solar Reflectance at Normal Incidence\n".format(mat.get_front_solar_reflectance(building)))
+    fh.write("  {},         !- Back Side Solar Reflectance at Normal Incidence\n".format(mat.get_back_solar_reflectance(building)))
+    fh.write("  {},         !- Visible Transmittance at Normal Incidence\n".format(mat.get_visible_transmittance(building)))
     fh.write(
-        "  {},         !- Front Side Visible Reflectance at Normal Incidence\n".format(mat.front_visible_reflectance)
+        "  {},         !- Front Side Visible Reflectance at Normal Incidence\n".format(mat.get_front_visible_reflectance(building))
     )
     fh.write(
-        "  {},         !- Back Side Visible Reflectance at Normal Incidence\n".format(mat.back_visible_reflectance)
+        "  {},         !- Back Side Visible Reflectance at Normal Incidence\n".format(mat.get_back_visible_reflectance(building))
     )
-    fh.write("  {},         !- Infrared Transmittance at Normal Incidence\n".format(mat.infrared_transmittance))
+    fh.write("  {},         !- Infrared Transmittance at Normal Incidence\n".format(mat.get_infrared_transmittance(building)))
     fh.write(
         "  {},         !- Front Side Infrared Hemispherical Emissivity\n".format(
-            mat.front_infrared_hemispherical_emissivity
+            mat.get_front_infrared_hemispherical_emissivity(building)
         )
     )
     fh.write(
         "  {},         !- Back Side Infrared Hemispherical Emissivity\n".format(
-            mat.back_infrared_hemispherical_emissivity
+            mat.get_back_infrared_hemispherical_emissivity(building)
         )
     )
-    fh.write("  {},         !- Conductivity (W/m-K)\n".format(mat.conductivity))
+    fh.write("  {},         !- Conductivity (W/m-K)\n".format(mat.get_conductivity(building)))
     fh.write(
         "  {},         !- Dirt Correction Factor for Solar and Visible Transmittance\n".format(
             mat.dirt_correction_factor
@@ -561,7 +561,7 @@ def write_material_gas(mat, thickness, layer_name, file_path):
     fh.write("WindowMaterial:Gas,\n")
     fh.write("  {},         !- Name\n".format(layer_name))
     fh.write("  {},         !- Gas Type\n".format(mat.gas_type))
-    fh.write("  {};         !- Thickness (m)\n".format(thickness))
+    fh.write("  {};         !- Thickness (m)\n".format(thickness.convert_to(METER).value))
     fh.write("\n")
     fh.close()
 

@@ -1,0 +1,64 @@
+{
+    "Generic Interior Floor":{
+        "0": {
+            "name": "Acoustic Tile",
+            "database_entry_name": "ACT, NRC < 0.75", 
+            "thickness": "0.02",
+            "thickness_unit": "m"
+        },
+        "1": {
+            "name": "Air Gap",
+            "database_entry_name": "Air",
+            "type": "AirGap"
+        },
+        "2": {
+            "name": "Normalweight concrete 6000 psi",
+            "database_entry_name": "Ready-mixed concrete, USA, National, 6000 psi",
+            "thickness": "0.2032",
+            "thickness_unit": "m"
+        },
+        "service_life_category" : "fin_accessfloortile"
+    },
+    "Generic Interior Ceiling":{
+        "0": {
+            "name": "Normalweight concrete 6000 psi",
+            "database_entry_name": "Ready-mixed concrete, USA, National, 6000 psi",
+            "thickness": "0.2032",
+            "thickness_unit": "m"
+        },
+        "1": {
+            "name": "Air Gap",
+            "database_entry_name": "Air",
+            "type": "AirGap"
+        },
+        "2": {
+            "name": "Acoustic Tile",
+            "database_entry_name": "ACT, NRC < 0.75", 
+            "thickness": "0.02",
+            "thickness_unit": "m"
+        },
+        "service_life_category" : "fin_accessfloortile"     
+    },
+    "Generic Double Pane":{
+        "0": {
+            "name": "Low-e Glass",
+            "database_entry_name": "Flat glass",
+            "thickness": "0.006",
+            "thickness_unit": "m",
+            "type": "Glazing"
+        },
+        "1": {
+            "name": "Air Gap",
+            "database_entry_name": "Air",
+            "type": "AirGap"
+        },
+        "2": {
+            "name": "Clear Glass",
+            "database_entry_name": "Flat glass",
+            "thickness": "0.006",
+            "thickness_unit": "m",
+            "type": "Glazing"
+        },
+        "service_life_category" : "ecl_windows_openings"
+    }
+}

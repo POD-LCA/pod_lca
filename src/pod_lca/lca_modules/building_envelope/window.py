@@ -83,6 +83,7 @@ class Window(Construction):
         win.height       = data['height']
         win.wwr          = data['wwr']
         win.materials    = data['materials']
+        win.service_life_category = data['service_life_category']
         win.layers       = data['layers']
         win.layer_order  = data['layer_order']
         win.surfaces     = {}
@@ -108,8 +109,9 @@ class Window(Construction):
         data['height']          = self.height        
         data['wwr']             = self.wwr          
         data['materials']       = self.materials
+        data['service_life_category']  = self.service_life_category
         data['layers']          = self.layers
-        data['layer_order']      = self.layer_order
+        data['layer_order']     = self.layer_order
         data['surfaces'] = {}
         for sk in self.surfaces:
             data['surfaces'][sk] = self.surfaces[sk].to_data()

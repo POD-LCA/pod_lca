@@ -95,14 +95,15 @@ flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
 # make framed wall - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 
-m0 = EnvelopeMaterialPropertyMass.from_database('Clay brick')
-m1 = EnvelopeMaterialPropertyAirGap.from_database('Air')
-# m2 = EnvelopeMaterialPropertyMass.from_idf('Expanded polystyrene (EPS) Type I',)
-m3 = EnvelopeMaterialPropertyMass.from_database('Gypsum board, 5/8 in')
-m4 = EnvelopeMaterialPropertyMass.from_database('Heavy density mineral wool board')
+m0 = EnvelopeMaterialPropertyMass.from_database(name='Clay brick', database_entry_name='Clay brick')
+m1 = EnvelopeMaterialPropertyAirGap.from_database(name='Window Air Gap', database_entry_name='Air')
+# m2 = EnvelopeMaterialPropertyMass.from_idf(name='EPS', database_entry_name='Expanded polystyrene (EPS) Type I',)
+m3 = EnvelopeMaterialPropertyMass.from_database(name='Gypsum Wall Board', database_entry_name='Gypsum board, 5/8 in')
+m4 = EnvelopeMaterialPropertyMass.from_database(name='Mineral wool blanket', database_entry_name='Heavy density mineral wool board')
 
 m2 = EnvelopeMaterialPropertyNoMass()
-m2.name                = 'Expanded polystyrene (EPS) Type I'
+m2.name                = 'EPS board'
+m2.database_entry_name = 'Expanded polystyrene (EPS) Type I'
 m2.conductivity        = Q(.1, WATT/(METER*KELVIN))
 m2.thickness           = Q(.05, METER)
 m2.roughness           = 'MediumRough'
@@ -132,7 +133,7 @@ layers_[0].set_structural(True)
 
 
 framing_name                  = 'tomas_wooden_framing'
-framing_material_property     = EnvelopeMaterialPropertyMass.from_idf('Softwood Lumber', constructions_path)
+framing_material_property     = EnvelopeMaterialPropertyMass.from_database(name="Softwood Lumber", database_entry_name='Softwood Lumber')
 framing_spacing               = Q(12, INCH)
 framing_width                 = Q(1.5, INCH)
 framing_length                = Q(3.5, INCH)
@@ -161,35 +162,34 @@ framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framin
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# f = Floor.from_idf('Generic Interior Floor', constructions_path)
+f = Floor.from_database('Generic Interior Floor')
 
 # make a ceiling - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# c = Ceiling.from_idf('Generic Interior Ceiling', constructions_path)
+c = Ceiling.from_database('Generic Interior Ceiling')
 
 
 # make a window - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# window1 = Window.from_idf('Generic Double Pane', constructions_path)
+window1 = Window.from_database('Generic Double Pane')
 
-# w = Q(3, METER)
-# h = Q(2, METER)
-# wall_key1 = 'wall_1'
-# window1.set_width_height(w, h)
+w = Q(3, METER)
+h = Q(2, METER)
+wall_key1 = 'wall_1'
+window1.set_width_height(w, h)
 
-# wall_key2 = 'wall_2'
-# wwr = .9
-# window2 = Window.from_idf('Generic Double Pane', constructions_path)
-# window2.set_wwr(wwr)
+wall_key2 = 'wall_2'
+wwr = .9
+window2 = Window.from_database('Generic Double Pane')
+window2.set_wwr(wwr)
 
-
-# windows = {wall_key1: window1, wall_key2: window2}
+windows = {wall_key1: window1, wall_key2: window2}
 
 
 # make an envelope - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ename = 'tomas_envelope'
-e = Envelope.from_components(ename, flr, wall=framed_wall)
-# e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
+# e = Envelope.from_components(ename, flr, wall=framed_wall)
+e = Envelope.from_components(ename, flr, wall=framed_wall, floor=f, ceiling=c, windows=windows)
 
 be = BuildingEnvelope.from_envelope_and_stories(e, num_stories)
 
@@ -215,7 +215,6 @@ b.set_eplus_path("temp/EnergyPlus-25-1-0/") # default looks standard system loca
 # b.set_idf_file_path("/Users/time/Documents/UW/04_code/pod_lca/pod_lca/temp/out/temp_operational.idf") # default writes to a temp file
 # b.set_weather_file_path("src/pod_lca/data/operational_weather_seattle.epw") # default based on climate zone
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
-b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 
 # get operational impacts - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -240,7 +239,4 @@ drf_record.plot('cumulative radiative forcing')
 # # # graph = BarChart.from_plotter(MatplotlibPlotter)
 # # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
 # # # graph.show()
-
-
-
 

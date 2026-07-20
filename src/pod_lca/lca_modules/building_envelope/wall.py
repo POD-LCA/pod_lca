@@ -4,6 +4,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from math import isnan
+
 from pod_lca.lca_modules.building_envelope.construction import Construction
 from pod_lca.lca_modules.building_envelope.layer import Layer
 from pod_lca.units import Quantity as Q
@@ -148,7 +150,7 @@ class FramedWall(Construction):
         ~pod_lca.units.Quantity
             The thermal resistance of the framed wall. 
         """
-        if self.resistance is None:
+        if (self.resistance is None) or (isnan(self.resistance.value)):
             self.compute_wall_r()
 
         return self.resistance
@@ -201,7 +203,7 @@ class FramedWall(Construction):
 
         ratio = ri / rins if rins > 0 else 0
 
-        self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
+        self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio, bldg=bldg)
 
     def get_constituent_materials(self):
         constituent_materials = super().get_constituent_materials()
