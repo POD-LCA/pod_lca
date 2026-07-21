@@ -206,8 +206,10 @@ class Material(Product):
                 log(f"Density unit not specified for {self.get_name()}. Skipping density setting.", level='Warn')
             else:
                 density = data_entry['Density']
-                if isinstance(density, str):
-                    density_unit = UNITS_MAP[data_entry['Density unit']]
+                if isinstance(density, (str, int, float)):
+                    density_unit = data_entry['Density unit']
+                    if isinstance(density_unit, str):
+                        density_unit = UNITS_MAP[density_unit]
                     self.set_density(density, density_unit)
                     for replacement_product in replacement_materials:
                         replacement_product.set_density(density, density_unit)
@@ -242,7 +244,7 @@ class Material(Product):
 
             # set waste rate
             waste_rate_cat = data_entry['waste_rate_category']
-            if waste_rate_cat in [None, '', 'N/A', 'Null'] :
+            if (waste_rate_cat in [None, '', 'N/A', 'null', 'Null']) :
                 self.set_waste_rate(waste_rate_category='DEFAULT')
                 for replacement_product in replacement_materials:
                     replacement_product.set_waste_rate(waste_rate_category='DEFAULT')
