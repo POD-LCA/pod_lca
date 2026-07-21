@@ -173,7 +173,7 @@ class ARXCalculation:
     def get_radiative_forcing(
         cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5, convolution_time_step=0.01
     ):
-        """Get the radiative forcing (in W/m^2) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
+        """Get the radiative forcing (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
 
         Parameters
         ----------
@@ -193,7 +193,7 @@ class ARXCalculation:
         Returns
         -------
         float
-            radiative forcing, in W/m2.
+            radiative forcing, in W/m2 (instantaneous) or W-yr/m2 (cumulative).
         """
         if greenhouse_gas == "CH4":
             molecular_weight_dict = DataImporter.json_to_dict(config["file_paths"]["drf"]["MOLECULER_WEIGHT"])
@@ -277,7 +277,7 @@ class ARXCalculation:
     def get_radiative_forcing_time_series(
         cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=False, alpha=0.5
     ):
-        """Get the daynamic radiative forcing values (in W/m^2) as a time-series, given that a 1kg of gas emitted on start year.
+        """Get the daynamic radiative forcing values (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) as a time-series, given that a 1kg of gas emitted on start year.
 
         Parameters
         ----------

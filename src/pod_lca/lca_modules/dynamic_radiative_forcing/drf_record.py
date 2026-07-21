@@ -42,7 +42,7 @@ class DynamicRadiativeForcingRecord:
     data_irf : dict
         Instantaneous radiative forcing values at the time steps (in W/m^2); {**greenhous gas** (:class:`str`): [**irf** (:class:`float`)]}.
     data_crf : dict
-        Cumulative radiative forcing values at the time steps (in W/m^2); {**greenhous gas** (:class:`str`): [**crf** (:class:`float`)]}.
+        Cumulative radiative forcing values at the time steps (in W-yr/m^2); {**greenhous gas** (:class:`str`): [**crf** (:class:`float`)]}.
     """
 
     def __init__(self):
@@ -378,7 +378,7 @@ class DynamicRadiativeForcingRecord:
             y_label = "dynamic radiative forcing (W/m^2)"
         elif to_plot == "cumulative radiative forcing":
             title = "Cumulative Dynamic Radiative Forcing Record"
-            y_label = "dynamic radiative forcing (W/m^2)"
+            y_label = "dynamic radiative forcing (W-yr/m^2)"
         else:
             raise ValueError("Parameter to be plotted is not recognized.")
 
@@ -436,7 +436,7 @@ class DynamicRadiativeForcingRecord:
 
         if crf:
             for greenhouse_gas, data_array in self.data_crf.items():
-                headers.append(f"{greenhouse_gas} crf (in W/m^2)")
+                headers.append(f"{greenhouse_gas} crf (in W-yr/m^2)")
                 lists_to_write.append(data_array.tolist())
 
         return DataExporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)

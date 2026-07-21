@@ -102,7 +102,7 @@ class DynamicRadiativeForcing:
     def get_radiative_forcing(
         self, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5, convolution_time_step=0.01
     ):
-        """Get the radiative forcing (in W/m^2) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
+        """Get the radiative forcing (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
 
         Parameters
         ----------
@@ -122,7 +122,7 @@ class DynamicRadiativeForcing:
         Returns
         -------
         float
-            radiative forcing, in W/m2.
+            radiative forcing, in W/m2 (instantaneous) or W-yr/m2 (cumulative).
         """
         return self.calculator.get_radiative_forcing(
             self, greenhouse_gas, at_year, cumulative, CH4_oxidation, alpha, convolution_time_step
@@ -169,7 +169,7 @@ class DynamicRadiativeForcing:
     def get_radiative_forcing_time_series(
         self, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=False, alpha=0.5
     ):
-        """Get the daynamic radiative forcing values (in W/m^2) as a time-series, given that a 1kg of gas emitted on start year.
+        """Get the daynamic radiative forcing values (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) as a time-series, given that a 1kg of gas emitted on start year.
 
         Parameters
         ----------
