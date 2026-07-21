@@ -48,9 +48,12 @@
             "type": "Glazing"
         },
         "1": {
-            "name": "Air Gap",
+            "name": "Window Air Gap",
             "database_entry_name": "Air",
-            "type": "AirGap"
+            "type": "Gas",
+            "thickness": "0.0127",
+            "thickness_unit": "m",
+            "gas_type": "Air"
         },
         "2": {
             "name": "Clear Glass",

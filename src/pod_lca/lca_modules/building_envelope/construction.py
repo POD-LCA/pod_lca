@@ -5,8 +5,9 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from . import EnvelopeMaterial
+from ..building.assembly import Assembly
+from ..building_envelope import EnvelopeMaterialProperty
 from ..building_envelope import Layer
-from pod_lca.lca_modules.building.assembly import Assembly
 from ...units import METER
 from ...units import SQUARE_METER
 from ...units import Quantity as Q
@@ -112,11 +113,16 @@ class Construction(Assembly):
                 thickness = Q(0.0, METER)
             mat_type = "MaterialProperty" + layer.get("type", "Mass")
 
+            additional_data = {key: value for key, value in layer.items() if key not in ['name', 'database_entry_name']}
+            data = {"name": layer["name"], 
+                    "database_entry_name": layer["database_entry_name"],
+                    "additional": additional_data}
+            mat_prop = EnvelopeMaterialProperty.make_envelope_material_property_from_type(data, mat_type, "from_database")
+
             l = Layer.from_database(
                 layer["name"], 
-                layer["database_entry_name"],
                 thickness, 
-                mat_type)
+                mat_prop)
             layers_[int(layer_id)] = l
 
         construction = cls.from_layers(name, layers_)

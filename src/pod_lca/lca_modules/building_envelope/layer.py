@@ -4,13 +4,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from .material_property import EnvelopeMaterialPropertyMass
-from .material_property import EnvelopeMaterialPropertyAirGap
-from .material_property import EnvelopeMaterialPropertyNoMass
-from .material_property import WindowMaterialPropertyGlazing
-from .material_property import WindowMaterialPropertyGas
-
-from pod_lca.units import METER, KELVIN, WATT
+from .material_property import EnvelopeMaterialProperty
+from ...units import METER, KELVIN, WATT
 
 mKW = (METER * KELVIN) / WATT
 
@@ -117,12 +112,12 @@ class Layer(object):
         layer = cls()
         layer.name = data['name']
         layer.thickness = thickness
-        layer.material_property = layer.add_envelope_material_property(data, data['__type__'])
+        layer.material_property = EnvelopeMaterialProperty.make_envelope_material_property_from_type(data, data['__type__'])
         layer.classification = classification
         return layer      
 
     @classmethod
-    def from_database(cls, name, database_entry_name, thickness, mat_type):
+    def from_database(cls, name, thickness, mat_prop):
         """Creates a Layer instance from a data dictionary. 
 
         Parameters
@@ -131,8 +126,8 @@ class Layer(object):
             Name as appears on the database. 
         thickness : ~pod_lca.Quantity
             The thickness of the layer.
-        mtype : {'MaterialPropertyMass', 'MaterialPropertyAirGap', 'MaterialPropertyNoMass', 'WindowMaterialPropertyGlazing', 'WindowMaterialPropertyGas'} 
-            Material property type.
+        mat_prop : ~pod_lca.EnvelopeMaterialProperty Obj 
+            Material property.
 
         Returns
         -------
@@ -142,9 +137,8 @@ class Layer(object):
         layer = cls()
         layer.name = name
         layer.thickness = thickness
+        layer.material_property = mat_prop
 
-        data = {"name": name, "database_entry_name": database_entry_name}
-        layer.material_property = layer.add_envelope_material_property(data, mat_type, "from_database")
         return layer    
     
     @classmethod
@@ -175,44 +169,6 @@ class Layer(object):
         layer.material_property = material_property
         layer.classification = classification
         return layer
-
-    def add_envelope_material_property(self, data, mtype, method="from_data"):
-        """Adds a material properrty to the layer
-
-        Parameters
-        ----------
-        data :  dict
-            Material property data dictionary.
-        mtype : {'MaterialPropertyMass', 'MaterialPropertyAirGap', 'MaterialPropertyNoMass', 'WindowMaterialPropertyGlazing', 'WindowMaterialPropertyGas'} 
-            Material property type.
-        method : {'from_data', 'from_database'}
-            Creation method for property class
-
-        Returns
-        -------
-        material_prop : ~pod_lca.building_envelope.MaterialProperty
-            The material property object
-        
-        """
-        if mtype == 'MaterialPropertyMass':
-            material_prop_class = EnvelopeMaterialPropertyMass
-        elif mtype == 'MaterialPropertyAirGap':
-            material_prop_class = EnvelopeMaterialPropertyAirGap
-        elif mtype == 'MaterialPropertyNoMass':
-            material_prop_class = EnvelopeMaterialPropertyNoMass
-        elif (mtype == 'WindowMaterialPropertyGlazing') or (mtype == 'MaterialPropertyGlazing'):
-            material_prop_class = WindowMaterialPropertyGlazing
-        elif (mtype == 'WindowMaterialPropertyGas') or (mtype == 'MaterialPropertyGas'):
-            material_prop_class = WindowMaterialPropertyGas
-        else:
-            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
-        
-        if method == "from_data":
-            material_prop = material_prop_class.from_data(data)
-        elif method == "from_database":
-            material_prop = material_prop_class.from_database(data["name"], data["database_entry_name"])
-
-        return material_prop
     
     def get_r(self, thickness=None, building=None):
         """Returns the thermal resistance of the layer

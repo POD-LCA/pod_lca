@@ -73,14 +73,16 @@ class EnvelopeMaterialProperty(object):
         return cls.from_data(data)
     
     @classmethod
-    def from_database(cls, name, database_entry_name):
+    def from_database(cls, name, database_entry_name, kwargs=None):
         """Creates an instance of the material properties class from the
         default database. 
 
         Parameters
         ----------
         name : str
-            Name of the material property to be read in the default database. 
+            Name of the material property to be read in the default database.
+        database_entry_name : str
+            Database entry name to pick the material property data from. 
         """
         material_prop = cls()
         material_prop.name = name
@@ -88,6 +90,48 @@ class EnvelopeMaterialProperty(object):
 
         return material_prop
 
+    @staticmethod
+    def make_envelope_material_property_from_type(data, mtype, method="from_data"):
+        """Adds a material properrty
+
+        Parameters
+        ----------
+        data :  dict
+            Material property data dictionary.
+        mtype : {'MaterialPropertyMass', 'MaterialPropertyAirGap', 'MaterialPropertyNoMass', 'WindowMaterialPropertyGlazing', 'WindowMaterialPropertyGas'} 
+            Material property type.
+        method : {'from_data', 'from_database'}
+            Creation method for property class
+
+        Returns
+        -------
+        material_prop : ~pod_lca.building_envelope.MaterialProperty
+            The material property object
+        
+        """
+        if mtype == 'MaterialPropertyMass':
+            material_prop_class = EnvelopeMaterialPropertyMass
+        elif mtype == 'MaterialPropertyAirGap':
+            material_prop_class = EnvelopeMaterialPropertyAirGap
+        elif mtype == 'MaterialPropertyNoMass':
+            material_prop_class = EnvelopeMaterialPropertyNoMass
+        elif (mtype == 'WindowMaterialPropertyGlazing') or (mtype == 'MaterialPropertyGlazing'):
+            material_prop_class = WindowMaterialPropertyGlazing
+        elif (mtype == 'WindowMaterialPropertyGas') or (mtype == 'MaterialPropertyGas'):
+            material_prop_class = WindowMaterialPropertyGas
+        else:
+            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        
+        if method == "from_data":
+            material_prop = material_prop_class.from_data(data)
+        elif method == "from_database":
+            material_prop = material_prop_class.from_database(
+                data["name"], 
+                data["database_entry_name"], 
+                data.get("additional", None))
+
+        return material_prop
+    
     def get_thermal_resistance(self, thickness=None, building=None):
         if (self.thermal_resistance is None) or (isnan(self.thermal_resistance.value)):
             if building:
@@ -588,7 +632,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         return self.back_infrared_hemispherical_emissivity
 
 
-class WindowMaterialPropertyGas(EnvelopeMaterialProperty):
+class WindowMaterialPropertyGas(EnvelopeMaterialPropertyAirGap):
     """
     Datastructure containing a WindowMaterialGass for Energy+ analysis
 
@@ -624,6 +668,22 @@ class WindowMaterialPropertyGas(EnvelopeMaterialProperty):
 
         return material
 
+    @classmethod
+    def from_database(cls, name, database_entry_name, kwargs):
+        """Creates an instance of the material properties class from the
+        default database. 
+
+        Parameters
+        ----------
+        name : str
+            Name of the material property to be read in the default database. 
+        """
+        material_prop = cls()
+        material_prop.name = name
+        material_prop.gas_type = kwargs.get("gas_type", None)
+        material_prop.database_entry_name = database_entry_name
+
+        return material_prop
 
 if __name__ == '__main__':
     pass

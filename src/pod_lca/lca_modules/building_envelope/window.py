@@ -116,7 +116,7 @@ class Window(Construction):
         for sk in self.surfaces:
             data['surfaces'][sk] = self.surfaces[sk].to_data()
         return data
-
+   
     @property
     def area(self):
         """Returns the surface area of the window. 
