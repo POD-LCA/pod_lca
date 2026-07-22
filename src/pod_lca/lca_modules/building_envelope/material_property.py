@@ -27,6 +27,7 @@ class EnvelopeMaterialProperty(object):
     """
     def __init__(self):
         self.name               = None
+        self.database_entry_name = None
         # Operational Energy attributes
         pass
     
