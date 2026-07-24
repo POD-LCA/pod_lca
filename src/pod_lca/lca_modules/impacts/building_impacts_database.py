@@ -5,7 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from numpy import isnan
+from pandas import isna
 
 from . import ImpactsDatabase
 from ...utilities import config
@@ -151,7 +151,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
 
             if len(row_id) == 1:
                 data = self.data.iloc[row_id[0]].copy(deep=False)
-                if 'DRF Category' in data and not isnan(data["DRF Category"]):
+                if 'DRF Category' in data and not isna(data["DRF Category"]):
                     data = BuildingMaterialImpactsDatabase.emissions_from_drf_category(data)
                 return data
             elif len(row_id) == 0:
@@ -192,7 +192,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         impacts_cat = drf_categories['CF']['Value']
         impact_val = data[impacts_cat]
         for emission in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']:
-            if emission in drf_categories['CF'] and isnan(data[emission]):
+            if emission in drf_categories['CF'] and isna(data[emission]):
                 data.loc[emission] = impact_val * (float(drf_categories[str(drf_category)][emission]) / 100) / float(drf_categories['CF'][emission])
 
         # TODO: incorporate 'Value' variable

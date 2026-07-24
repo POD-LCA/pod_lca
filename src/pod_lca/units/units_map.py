@@ -74,6 +74,7 @@ UNITS_MAP.update(
         "ft²": SQUARE_FEET,
         "l": LITER,
         "m3": CUBIC_METER,
+        "Nm3": CUBIC_METER, # gas volume under temperature of 0°C and an absolute pressure of 1 atm
         "m³": CUBIC_METER,
         "ft3": CUBIC_FEET,
         "ft³": CUBIC_FEET,
@@ -93,6 +94,7 @@ UNITS_MAP.update(
         "kg/m": KILOGRAM / METER,
         "kg/m2": KILOGRAM / SQUARE_METER,
         "kg/ft2": KILOGRAM / SQUARE_FEET,
+        "g/ft2": GRAM / SQUARE_FEET,
         "kg/m3": KILOGRAM / CUBIC_METER,
         "kg/item": KILOGRAM / ITEM,
         "USD": US_DOLLAR,

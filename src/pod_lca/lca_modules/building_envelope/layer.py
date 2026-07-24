@@ -4,13 +4,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from .material_property import EnvelopeMaterialPropertyMass
-from .material_property import EnvelopeMaterialPropertyAirGap
-from .material_property import EnvelopeMaterialPropertyNoMass
-from .material_property import WindowMaterialPropertyGlazing
-from .material_property import WindowMaterialPropertyGas
-
-from pod_lca.units import METER, KELVIN, WATT
+from .material_property import EnvelopeMaterialProperty
+from ...units import METER, KELVIN, WATT
 
 mKW = (METER * KELVIN) / WATT
 
@@ -76,7 +71,6 @@ class Layer(object):
         else:
             raise ValueError("Quantity request not recognized.")
 
-
     @property
     def thickness(self):
         """Returns the thickness of the layer
@@ -118,10 +112,35 @@ class Layer(object):
         layer = cls()
         layer.name = data['name']
         layer.thickness = thickness
-        layer.material_property = layer.add_envelope_material_property(data)
+        layer.material_property = EnvelopeMaterialProperty.make_envelope_material_property_from_type(data, data['__type__'])
         layer.classification = classification
-        return layer
+        return layer      
 
+    @classmethod
+    def from_database(cls, name, thickness, mat_prop):
+        """Creates a Layer instance from a data dictionary. 
+
+        Parameters
+        ----------
+        database_entry_name :  str
+            Name as appears on the database. 
+        thickness : ~pod_lca.Quantity
+            The thickness of the layer.
+        mat_prop : ~pod_lca.EnvelopeMaterialProperty Obj 
+            Material property.
+
+        Returns
+        -------
+        layer : ~pod_lca.building_envelope.Layer
+            The layer instance. 
+        """
+        layer = cls()
+        layer.name = name
+        layer.thickness = thickness
+        layer.material_property = mat_prop
+
+        return layer    
+    
     @classmethod
     def from_property_and_thickness(cls, name, material_property, thickness, classification=None):
         """Creates an instance of the Layer class from material property, thickness 
@@ -150,38 +169,8 @@ class Layer(object):
         layer.material_property = material_property
         layer.classification = classification
         return layer
-
-    def add_envelope_material_property(self, data):
-        """Adds a material properrty to the layer
-
-        Parameters
-        ----------
-        data :  dict
-            Material property data dictionary. 
-
-        Returns
-        -------
-        material_prop : ~pod_lca.building_envelope.MaterialProperty
-            The material property object
-        
-        """
-        mtype = data['__type__']
-        if mtype == 'MaterialPropertyMass':
-            material_prop = EnvelopeMaterialPropertyMass.from_data(data)
-        elif mtype == 'MaterialPropertyAirGap':
-            material_prop = EnvelopeMaterialPropertyAirGap.from_data(data)
-        elif mtype == 'MaterialPropertyNoMass':
-            material_prop = EnvelopeMaterialPropertyNoMass.from_data(data)
-        elif mtype == 'WindowMaterialPropertyGlazing':
-            material_prop = WindowMaterialPropertyGlazing.from_data(data)
-        elif mtype == 'WindowMaterialPropertyGas':
-            material_prop = WindowMaterialPropertyGas.from_data(data)
-        else:
-            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
-
-        return material_prop
     
-    def get_r(self, thickness=None):
+    def get_r(self, thickness=None, building=None):
         """Returns the thermal resistance of the layer
 
         Parameters
@@ -195,18 +184,9 @@ class Layer(object):
         ~pod_lca.units.Quantity
             The thermal resistance of the layer. 
         """
-        mtype = self.material_property.__type__
-        if mtype == 'MaterialPropertyMass':
-            resistivity =  self.material_property.conductivity.invert()
-            return resistivity * thickness
-        elif mtype == 'EnvelopeMaterialPropertyAirGap':
-            return self.material_property.thermal_resistance
-        elif mtype == 'MaterialPropertyNoMass':
-            return self.material_property.thermal_resistance
-        else:
-            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        return self.material_property.get_thermal_resistance(thickness, building)
 
-    def get_resistivity(self, thickness=None):
+    def get_resistivity(self, thickness=None, building=None):
         """Returns the thermal resistivity of the layer
 
         Parameters
@@ -220,16 +200,7 @@ class Layer(object):
         ~pod_lca.units.Quantity
             The thermal resistivity of the layer. 
         """
-        mat = self.material_property
-        mtype = mat.__type__
-        if mtype == 'MaterialPropertyMass':
-            return mat.conductivity.invert()
-        elif mtype == 'MaterialPropertyNoMass':
-            resistivity = mat.thermal_resistance / thickness
-            # return Q(resistivity.value, mKW)
-            return resistivity
-        else:
-            raise ValueError('Material Property type {} has not been implemented yet'.format(mtype))
+        return self.material_property.get_resistivity(thickness, building)
         
     def set_structural(self, is_structural):
         """Sets the layer as structural. 

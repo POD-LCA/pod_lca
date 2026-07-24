@@ -114,7 +114,7 @@ file_paths:
     REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
     CLIMATE_ZONE_ZIPCODE_MAP_PATH: data/location_olsonkundig_climate-zones.csv
   operational:
-    CONSTRUCTIONS: data/operational_constructions.idf
+    CONSTRUCTIONS: data/operational_podlca_constructions-database.json
     SYSTEMS: data/operational_systems.idf
   weather_files:
     1A: data/USA_FL_Miami.Intl.AP.722020_TMY3.epw

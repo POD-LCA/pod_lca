@@ -32,18 +32,41 @@ class ProductScopeMixins:
             file_path = config['file_paths']['building']['DEFAULT_IMPACT_DATABASE']
         if isinstance(file_path, (str, Path)):
             impact_database = BuildingMaterialImpactsDatabase.new("impact database")
-            impact_database.set_primary_key('product')
+            impact_database.set_primary_key('Product')
             impact_database.set_qty_key('Declared qty')
             impact_database.set_unit_key('Declared unit')
             impact_database.set_variability_key('Value')
             impact_database.set_geography_key('Geography')
-            impact_database.set_data(file_path, additional_headers={'sctg code': int,
-                                                                    'eol material': 'category',
-                                                                    'waste_rate_category':'category',
-                                                                    'bio-based': 'boolean',
-                                                                    'DRF Category': int,
-                                                                    'Density': object, # FIXME: this should be float---potential issue in data
-                                                                    'Density unit': 'category'})
+            impact_database.set_data(file_path,
+                                     density_headers = [
+                                         'Density',
+                                         'Density unit'
+                                     ],
+                                     additional_headers={
+                                         'sctg code': 'category',
+                                         'eol material': 'category',
+                                         'waste_rate_category':'category',
+                                         'bio-based': 'boolean',
+                                         'DRF Category': 'category',
+                                         'Thickness': object, # FIXME: this should be float---potential issue in data
+                                         'Thickness unit': 'category',
+                                         'Roughness': 'category',
+                                         'Thermal conductivity': float,
+                                         'RSI /inch (m2C/W)': float, 
+                                         'Specific Heat J/kg-K': float,
+                                         'Thermal Absorptance': float,
+                                         'Solar Absorptance': float,
+                                         'Visible Absorptance': float,
+                                         'Solar Transmittance at Normal Incidence': float,
+                                         'Front Side Visible Reflectance at Normal Incidence': float,
+                                         'Back Side Solar Reflectance at Normal Incidence': float,
+                                         'Visible Transmittance at Normal Incidence': float,
+                                         'Front Side Visible Reflectance at Normal Incidence': float,
+                                         'Back Side Visible Reflectance at Normal Incidence': float,
+                                         'Infrared Transmittance at Normal Incidence': float,
+                                         'Front Side Infrared Hemispherical Emissivity': float,
+                                         'Back Side Infrared Hemispherical Emissivity': float
+                                         })
             self.material_impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")

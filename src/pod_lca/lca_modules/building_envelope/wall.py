@@ -4,11 +4,16 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from math import isnan
+
 from pod_lca.lca_modules.building_envelope.construction import Construction
-from pod_lca.lca_modules.building_envelope.layer import Layer, AncillaryMaterial
+from pod_lca.lca_modules.building_envelope.layer import Layer
 from pod_lca.units import Quantity as Q
 from pod_lca.lca_modules.building_envelope.material_property import EnvelopeMaterialPropertyNoMass
-from pod_lca.units import METER, SQUARE_METER, KELVIN, WATT
+from pod_lca.units import KELVIN 
+from pod_lca.units import METER
+from pod_lca.units import SQUARE_METER
+from pod_lca.units import WATT
 
 m2KW = (SQUARE_METER * KELVIN) / WATT
 mKW = (METER * KELVIN) / WATT
@@ -59,7 +64,7 @@ class FramedWall(Construction):
 
 
     @classmethod
-    def from_layers_framing(cls, name, layers, framing):
+    def from_layers_framing(cls, name, layers, framing, service_life_category='encl_curtainwall'):
         """Create a framed wall instance from layers and framing. 
 
         Parameters
@@ -86,12 +91,10 @@ class FramedWall(Construction):
 
         for i in range(len(fwall.layers)):
             fwall.layers[i].parent_construction = fwall
-        
-        fwall.compute_wall_r()
 
         vmat = EnvelopeMaterialPropertyNoMass()
         vmat.thickness           = Q(1, METER)
-        vmat.conductivity        = vmat.thickness / fwall.resistance
+        vmat.conductivity        = None # updated in update_layer_properties()
         vmat.roughness           = 'MediumRough'
         vmat.thermal_absorptance = 0.9
         vmat.solar_absorptance   = 0.7
@@ -111,14 +114,53 @@ class FramedWall(Construction):
         fwall.virtual_layers[last_layer] = fwall.layers[last_layer]
         fwall.virtual_layer_order.append('interior') 
         fwall.virtual_layer_order.append(last_layer)
+
+        fwall.set_service_life_category(service_life_category)
         
         framing.set_parent(fwall)
         return fwall
+    
+    def update_layer_properties(self):
+        self.compute_wall_r()
+
+        vmat = self.virtual_layers['interior'].material_property
+        vmat.conductivity = vmat.thickness / self.get_resistance()
+    
+    def get_layers(self):
+        return [self.virtual_layers[lk] for lk in self.virtual_layers]
+
+    def get_conductance(self):
+        """Get the thermal conductance of the framed wall. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal conductance of the framed wall. 
+        """
+        if self.conductance is None:
+            self.compute_wall_r()
+
+        return self.conductance
+    
+    def get_resistance(self):
+        """Get the thermal resistance of the framed wall. 
+
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The thermal resistance of the framed wall. 
+        """
+        if (self.resistance is None) or (isnan(self.resistance.value)):
+            self.compute_wall_r()
+
+        return self.resistance
     
     def compute_wall_r(self):
         """Computes the R value and U value of the framed wall,
         including the thermal bridges caused by the framing. 
         """
+        bldg = self.get_building()
+
         Ra   = Q(0., m2KW)
         Rb   = Q(0., m2KW)
         ri   = Q(0., mKW)
@@ -131,26 +173,26 @@ class FramedWall(Construction):
 
             if classification == "exterior_cladding":
                 # Ra += self.compute_layer_r(material_property, thickness)
-                Ra += layer.get_r(thickness)
+                Ra += layer.get_r(thickness, bldg)
 
             elif classification == "air_gap":
                 # Ra += self.compute_layer_r(material_property, None)
-                Ra += layer.get_r(None)
+                Ra += layer.get_r(None, bldg)
 
             elif classification == "exterior_insulation":
                 Ra += layer.get_r(thickness)
-                ri += layer.get_resistivity(thickness)
+                ri += layer.get_resistivity(thickness, bldg)
 
             elif classification == "sheathing":
                 di = thickness
-                Ra += layer.get_r(thickness)
-                ri += layer.get_resistivity(thickness)
+                Ra += layer.get_r(thickness, bldg)
+                ri += layer.get_resistivity(thickness, bldg)
 
             elif classification == "framing_insulation":
-                rins = layer.get_resistivity(thickness)
+                rins = layer.get_resistivity(thickness, bldg)
 
             elif classification == "interior_finish":
-                Rb += layer.get_r(thickness)
+                Rb += layer.get_r(thickness, bldg)
                 # interior_finish_material = material_property
                 interior_finish_thickness = thickness
 
@@ -161,8 +203,7 @@ class FramedWall(Construction):
 
         ratio = ri / rins if rins > 0 else 0
 
-        self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio)
-
+        self.resistance, self.conductance = self.framing.compute_bridge(Ra=Ra, Rb=Rb, rins=rins, di=di, ratio=ratio, bldg=bldg)
 
     def get_constituent_materials(self):
         constituent_materials = super().get_constituent_materials()
@@ -170,3 +211,6 @@ class FramedWall(Construction):
         framing_ancillary = self.framing.get_ancillary_materials()
         constituent_materials.extend(framing_ancillary)
         return constituent_materials
+
+    def get_building(self):
+        return self.parent.building
