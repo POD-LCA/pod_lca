@@ -41,23 +41,51 @@ process_list_all = openLCA.get_process_list(openLCA_client)
 if IMPACT_SOURCE_DATABASE == "FLCAC":
     process_list = process_list_all
 elif IMPACT_SOURCE_DATABASE == "BAFU":
-    filter_by = ["cardboard",
-                 "compressed air",
-                 "construction waste",
-                 "energy",
-                 "heat pumps",
-                 "incineration",
-                 "landfarming",
-                 "landfill",
-                 "material",
-                 "pipeline",
-                 "recycling",
-                 "transport systems",
-                 "underground deposit",
-                 "waste management",
-                 "wastewater treatment",
-                 "water"
-                 ] 
+    filter_by = ["agricultural/plant production",
+                "biomass",
+                "building components",
+                "building processes",
+                "cardboard",
+                "chemicals",
+                "compressed air/generation",
+                "construction",
+                "construction materials",
+                "construction processes", 
+                "electricity",
+                "electricity by fuel",
+                "electronics/photovoltaic",
+                "energy supply, kbob recommendation",
+                "flooring",
+                "fuels",
+                "glass",
+                "heat",
+                "heating",
+                "insulation materials",
+                "mechanical/other energy",
+                "metals",
+                "minerals",
+                "natural gas",
+                "oil",
+                "paper+ board",
+                "photovoltaic",
+                "pipeline",
+                "plastics",
+                "textiles",
+                "transport systems",
+                "underground deposit", 
+                "ventilation",
+                "wastewater treatment",
+                "water",
+                "wind power",
+                "wood",
+                "construction waste", # EOL data 
+                "incineration", # EOL data 
+                "landfarming", # EOL data
+                "landfill", # EOL data
+                "Others", # EOL data
+                "recycling", # EOL data
+                "waste management" # EOL data
+                ]
  
     process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
