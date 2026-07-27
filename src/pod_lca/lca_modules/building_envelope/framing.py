@@ -88,8 +88,8 @@ class WoodFraming(Framing):
         rins : ~pod_lca.units.Quantity
             Framing insulation resistivity
         """
-
-        conductivity = self.material_property.conductivity
+        building = kwargs.get("bldg", None)
+        conductivity = self.material_property.get_conductivity(building)
 
         COND_TO_RIMP = 0.144
         # --------------------------

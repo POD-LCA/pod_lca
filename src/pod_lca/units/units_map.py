@@ -74,6 +74,7 @@ UNITS_MAP.update(
         "ft²": SQUARE_FEET,
         "l": LITER,
         "m3": CUBIC_METER,
+        "Nm3": CUBIC_METER, # gas volume under temperature of 0°C and an absolute pressure of 1 atm
         "m³": CUBIC_METER,
         "ft3": CUBIC_FEET,
         "ft³": CUBIC_FEET,
