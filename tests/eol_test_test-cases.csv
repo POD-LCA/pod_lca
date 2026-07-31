@@ -1,0 +1,21 @@
+Test Number,EOL Category,Location,Qty,Unit,transport_scenario,Biogenic C [kgC] 
+test_01,Agricultural Residues (high lignin),US,1,kg,Min.,0.44
+test_02,Bamboo,MD,1,kg,Max.,0.44
+test_03,Concrete (reinforced),MI,1,kg,Mean,NA
+test_04,Vinyl composition tile,MO,1,kg,Min.,NA
+test_05,Sealing sheet,AZ,1,kg,Max.,NA
+test_06,Polyurethane,OH,1,kg,Mean,NA
+test_07,Glass,MN,1,kg,Min.,NA
+test_08,Paint,WA,1,kg,Max.,NA
+test_09,Wood (untreated),DE,1,kg,Mean,0.44
+test_10,Wood (chrome preserved),VT,1,kg,Min.,0.44
+test_11,Polyvinylchloride,CT,1,kg,Max.,NA
+test_12,Polystyrene (building waste),TN,1,kg,Mean,NA
+test_13,Polypropylene,CA,1,kg,Min.,NA
+test_14,Paper (building waste),KY,1,kg,Max.,0.44
+test_15,Medium density fiberboard,OR,708,kg,Mean,311.52
+test_16,Sealing sheet (polyvinylchloride),TX,693,kg,Min.,NA
+test_17,Clay brick,NM,241,kg,Max.,NA
+test_18,Cement,CO,957,kg,Mean,NA
+test_19,Polyurethane (foam),AK,710,kg,Min.,NA
+test_20,Carpet padding,ME,289,kg,Max.,NA
