@@ -22,7 +22,7 @@ from ...utilities import DataImporter
 class BrickLayer(Layer):
 
     @classmethod
-    def from_property_and_thickness(cls, name, brick_property, thickness, classification=None):
+    def from_property_and_thickness(cls, name, brick_property, thickness, classification='exterior_cladding'):
         brick_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
         brick_layer.add_ancillary_material(Mortar())
         return brick_layer
@@ -45,7 +45,7 @@ class BrickLayer(Layer):
 class SheathingLayer(Layer):
 
     @classmethod
-    def from_property_and_thickness(cls, name, brick_property, thickness, classification=None):
+    def from_property_and_thickness(cls, name, brick_property, thickness, classification='sheathing'):
         sheathing_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
         sheathing_layer.add_ancillary_material(Fastners())
         return sheathing_layer
