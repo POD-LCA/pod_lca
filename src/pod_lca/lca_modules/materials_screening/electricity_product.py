@@ -46,7 +46,7 @@ class Electricity(Master):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, id, name, model, stage, qty, unit, location=None, year=None):
+    def new(cls, id, name, model, stage, qty, unit, location=None, year=None, geographical_scope='Regional'):
         """Create a new electricity product in a model.
 
         Parameters
@@ -65,6 +65,10 @@ class Electricity(Master):
             Quantity of the item
         unit : ~pod_lca.units.Unit
             Unit corresponding to the quantity.
+        location : ~pod_lca.location.Location, optional
+            Location object to set, by default None
+        geographical_scope: {'National'. 'Regional', 'Local'}
+            Geographical scope considered for electricity data.
         """
         item = cls()
 
@@ -82,6 +86,8 @@ class Electricity(Master):
             location = model.get_location()
         electricity_supplier = ElectricitySupply.from_location(location, year)
         item.set_supplier(electricity_supplier)
+
+        item.set_geographical_scope(geographical_scope)
 
         return item
 
