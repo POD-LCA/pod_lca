@@ -153,7 +153,9 @@ elif IMPACT_SOURCE_DATABASE == "BAFU":
     impact_method_uuid = "188468cc-78ac-465e-89fd-5e196de09c21"
 
 # impact groupings
-if IMPACT_SOURCE_DATABASE != "BAFU": # renewable and nonrenewable fuel combustion groups are not yet set up for the BAFU database
+if IMPACT_SOURCE_DATABASE == "BAFU":
+    pass #TODO: renewable and nonrenewable fuel combustion groups not yet set up for the BAFU database
+else:
     renewable_fuels_process_list = DataImporter.csv_to_list(
         "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_renewable-fuels-group.csv", column_header="UUID"
     )
