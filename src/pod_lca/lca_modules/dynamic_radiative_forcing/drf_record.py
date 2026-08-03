@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from numpy import arange as np_arange
 from numpy import convolve
+from numpy import divide
 from numpy import zeros
 
 from . import DynamicRadiativeForcing
@@ -55,6 +56,8 @@ class DynamicRadiativeForcingRecord:
         self.data_concentrations = None
         self.data_irf = None
         self.data_crf = None
+        self.data_crf_ref = None
+        self.data_dGWP = None
 
     # ========================
     # Constructors
@@ -187,7 +190,10 @@ class DynamicRadiativeForcingRecord:
         drf_calculator = DynamicRadiativeForcing(config["setup"]["drf"]["IPCC_REPORT_VERSION"])
 
         #get crf_ref for pulse CO2 ref
+        self.data_crf_ref = {} # reference pulse 1 kg CO2 at start year
+        self.data_crf_ref["CO2"] = zeros(len(self.data_years))
         _, _, crf_CO2_ref = drf_calculator.get_radiative_forcing_time_series("CO2", record_time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5)
+        self.data_crf_ref["CO2"] += crf_CO2_ref
         
         for emission in self.get_emissions_list():
             # emission time profile
@@ -239,7 +245,12 @@ class DynamicRadiativeForcingRecord:
                     concentrations = convolve(emission_profile, concentrations)[: len(self.data_years)]
                     irf = convolve(emission_profile, irf)[: len(self.data_years)]
                     crf = convolve(emission_profile, crf)[: len(self.data_years)]
-                    dGWP = crf / crf_CO2_ref
+                    dGWP = divide(
+                        crf,
+                        crf_CO2_ref,
+                        out = zeros(len(self.data_years)),
+                        where=abs(crf_CO2_ref) > 1e-30, # avoid divide by zero at t=start when crf_CO2_ref = 0
+                    )
 
                     # add to data record
                     self.data_emission_intensity[greenhouse_gas] += emission_profile / self.get_time_step()
@@ -320,7 +331,7 @@ class DynamicRadiativeForcingRecord:
         elif data_category == "cumulative radiative forcing":
             data_y = self.data_crf
         elif data_category == "GWP-dynamic":
-                    data_y = self.data_dGWP
+            data_y = self.data_dGWP
         else:
             raise ValueError("Data category is not recognized.")
 
@@ -409,7 +420,7 @@ class DynamicRadiativeForcingRecord:
         graph.get_plot().set_xticks(range(x_start, x_end, plot_time_step))
         graph.show()
 
-    def save(self, file_path, emission_intensity=True, concentration=True, irf=True, crf=True):
+    def save(self, file_path, emission_intensity=True, concentration=True, irf=True, crf=True, crf_ref=True, dGWP=True):
         """Write the data to a file.
 
         Parameters
@@ -423,7 +434,11 @@ class DynamicRadiativeForcingRecord:
         irf : bool
             If true, save the Instantaneous Radiative Forcing (IRF) values of greenhouse gases.
         crf : bool
-            If true, save the Cumulative Radiative Forcing (IRF) values of greenhouse gases.
+            If true, save the Cumulative Radiative Forcing (CRF) values of greenhouse gases.
+        crf_ref : bool
+            If true, save the reference Cumulative Radiative Forcing values (reference pulse 1 kg CO2 emission at start year).
+        dGWP : bool
+            If true, save the Dynamic Global Warming Potential (dGWP) values of greenhouse gases.
         """
         if self.data_years is None:
             self.set_data()
@@ -449,6 +464,16 @@ class DynamicRadiativeForcingRecord:
         if crf:
             for greenhouse_gas, data_array in self.data_crf.items():
                 headers.append(f"{greenhouse_gas} crf (in W-yr/m^2)")
+                lists_to_write.append(data_array.tolist())
+
+        if crf_ref:
+            for greenhouse_gas, data_array in self.data_crf_ref.items():
+                headers.append(f"{greenhouse_gas} crf_ref (in W-yr/m^2)")
+                lists_to_write.append(data_array.tolist())
+
+        if dGWP:
+            for greenhouse_gas, data_array in self.data_dGWP.items():
+                headers.append(f"{greenhouse_gas} dGWP (in kgCO2e)")
                 lists_to_write.append(data_array.tolist())
 
         return DataExporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)
