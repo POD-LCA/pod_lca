@@ -320,6 +320,30 @@ class ImpactsDatabase:
 
         return self
 
+    def set_density_key(self, key):
+        """ Set density key of the database.
+        
+        Parameters
+        ----------
+        key : str
+            Data header corresponding to the density of the database entries.        
+        """
+        self.density_key = key
+
+        return self
+    
+    def set_density_unit_key(self, key):
+        """ Set density unit key of the database.
+        
+        Parameters
+        ----------
+        key : str
+            Data header corresponding to the density unit of the database entries.        
+        """
+        self.density_unit_key = key
+
+        return self
+    
     # =================================
     # Getters
     # =================================

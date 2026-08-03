@@ -71,12 +71,18 @@ print(project)
 # drf_record = CLT_model.get_drf_record(time_horizon=100, time_step=1 / 12)
 # drf_record.plot("instantaneous radiative forcing")
 
+print(CLT_model.get_total_carbon_storage_effects())
+print(CLT_model.get_total_carbon_storage_effects(_type="biogenic"))
+print(CLT_model.get_total_carbon_storage_effects(_type="mineral"))
+
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(CLT_model)
-hotspot_analysis.transportation_grouping = "not_grouped" #'not_grouped', 'with_material', 'all_transportation'
-hot_spots_GWP = hotspot_analysis.run(impact_category="GWP") 
+hot_spots_GWP = hotspot_analysis.run(impact_category="GWP", transportation_grouping="not_grouped") #'not_grouped', 'with_material', 'all_transportation' 
 print(hotspot_analysis)
 
 graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(CLT_model.get_impacts_by_LCstages("GWP"), "Parameter by category", "Category", "Parameter (unit)")
+graph.draw({"Impacts": CLT_model.get_impacts_by_LCstages_with_hotspots("GWP")},
+            "Parameter by category",
+            "Category",
+            "Parameter (unit)")
 graph.show()
