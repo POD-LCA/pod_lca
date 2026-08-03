@@ -428,7 +428,12 @@ class Model:
             Carbon Storage of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.CarbonStorage`}
         """
         for item in self.get_all_items():
-            item.update_inventory_records()
+            if isinstance(item, Product):
+                current_params = item.get_cache_key()
+                if not ((item._last_params["A1"] == current_params) and item._cache_is_computed["A1"]):
+                    item.update_inventory_records()
+            else:
+                item.update_inventory_records()
 
         return self.carbon_storage
     
