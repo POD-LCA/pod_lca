@@ -81,8 +81,24 @@ x_data_CH4fossil, _, y_data_CH4fossil = DynamicRadiativeForcing().get_radiative_
 graph = LinePlot.from_plotter(MatplotlibPlotter)
 graph.draw(
     {"CH4_fossil": list(zip(x_data_CH4fossil, y_data_CH4fossil)), "CH4": list(zip(x_data_CH4, y_data_CH4))},
-    "Cumulative Dynamic Radiative Forcing CO2",
+    "Cumulative Dynamic Radiative Forcing",
     "Year",
     "Cumulative dynamic radiative forcing (W-yr/m^2)",
+)
+graph.show()
+
+x_data_CH4, y_data_CH4 = DynamicRadiativeForcing().get_dynamic_GWP_time_series(
+    "CH4", time_horizon=500, time_step=1.0, cumulative=True, CH4_oxidation=False
+)
+x_data_CH4fossil, y_data_CH4fossil = DynamicRadiativeForcing().get_dynamic_GWP_time_series(
+    "CH4", time_horizon=500, time_step=1.0, cumulative=True, CH4_oxidation=True, alpha=1.0
+)
+
+graph = LinePlot.from_plotter(MatplotlibPlotter)
+graph.draw(
+    {"CH4_fossil": list(zip(x_data_CH4fossil, y_data_CH4fossil)), "CH4": list(zip(x_data_CH4, y_data_CH4))},
+    "Dynamic GWP",
+    "Year",
+    "GWP-dynamic (kgCO2e)",
 )
 graph.show()

@@ -175,14 +175,20 @@ class DynamicRadiativeForcingRecord:
         self.data_concentrations = {}
         self.data_irf = {}
         self.data_crf = {}
+        self.data_dGWP = {} # dynamic GWP
         for greenhouse_gas in Emissions.record_attr_dict:
             self.data_emission_intensity[greenhouse_gas] = zeros(len(self.data_years))
             self.data_concentrations[greenhouse_gas] = zeros(len(self.data_years))
             self.data_irf[greenhouse_gas] = zeros(len(self.data_years))
             self.data_crf[greenhouse_gas] = zeros(len(self.data_years))
+            self.data_dGWP[greenhouse_gas] = zeros(len(self.data_years))
 
         # set data
         drf_calculator = DynamicRadiativeForcing(config["setup"]["drf"]["IPCC_REPORT_VERSION"])
+
+        #get crf_ref for pulse CO2 ref
+        _, _, crf_CO2_ref = drf_calculator.get_radiative_forcing_time_series("CO2", record_time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5)
+        
         for emission in self.get_emissions_list():
             # emission time profile
             time_profile = emission.get_temporal_emission_profile()
@@ -202,8 +208,7 @@ class DynamicRadiativeForcingRecord:
                 greenhouse_gas_emission_qty = getattr(emission, greenhouse_gas, 0.0) * conversion_factor
                 if (
                     greenhouse_gas_emission_qty != 0
-                ):  # EE: changed from > to != so negative emissions (removals) are included
-                    # get emission records for unit pulse
+                ):   # get emission records for unit pulse
                     if greenhouse_gas in ["CH4fossil", "CH4_fossil", "CH4 fossil"]:
                         _, concentrations, irf = drf_calculator.get_radiative_forcing_time_series(
                             "CH4",
@@ -234,12 +239,14 @@ class DynamicRadiativeForcingRecord:
                     concentrations = convolve(emission_profile, concentrations)[: len(self.data_years)]
                     irf = convolve(emission_profile, irf)[: len(self.data_years)]
                     crf = convolve(emission_profile, crf)[: len(self.data_years)]
+                    dGWP = crf / crf_CO2_ref
 
                     # add to data record
                     self.data_emission_intensity[greenhouse_gas] += emission_profile / self.get_time_step()
                     self.data_concentrations[greenhouse_gas] += concentrations
                     self.data_irf[greenhouse_gas] += irf
                     self.data_crf[greenhouse_gas] += crf
+                    self.data_dGWP[greenhouse_gas] += dGWP
 
         return self
 
@@ -312,6 +319,8 @@ class DynamicRadiativeForcingRecord:
             data_y = self.data_irf
         elif data_category == "cumulative radiative forcing":
             data_y = self.data_crf
+        elif data_category == "GWP-dynamic":
+                    data_y = self.data_dGWP
         else:
             raise ValueError("Data category is not recognized.")
 
@@ -351,7 +360,7 @@ class DynamicRadiativeForcingRecord:
 
         Parameters
         ----------
-        to_plot : {'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record'}
+        to_plot : {'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record', 'GWP-dynamic'}
             Parameter to be ploted.
         plot_type : {'lineplot', 'stackplot'}
             Type of the plot.
@@ -379,6 +388,9 @@ class DynamicRadiativeForcingRecord:
         elif to_plot == "cumulative radiative forcing":
             title = "Cumulative Dynamic Radiative Forcing Record"
             y_label = "dynamic radiative forcing (W-yr/m^2)"
+        elif to_plot == 'GWP-dynamic':
+            title = "GWP-dynamic Record (kgCO2e)"
+            y_label = "GWP-dynamic (kgCO2e)"
         else:
             raise ValueError("Parameter to be plotted is not recognized.")
 

@@ -13,10 +13,10 @@ emission_02 = Emissions.from_dict(record_dict={"CH4": 0.01})
 uniform = UniformEmissionProfile.from_params(start=2045, step=10)
 emission_02.set_temporal_emission_profile(uniform)
 
-emission_03 = Emissions.from_dict(record_dict={"CH4 fossil": 0.01})
-norm = NormEmissionProfile.from_range(start=2060, range=10)
-emission_03.set_temporal_emission_profile(norm)
-emission_03.methane_bio_oxidation = 0.5
+# emission_03 = Emissions.from_dict(record_dict={"CH4 fossil": 0.01})
+# norm = NormEmissionProfile.from_range(start=2060, range=10)
+# emission_03.set_temporal_emission_profile(norm)
+# emission_03.methane_bio_oxidation = 0.5
 
 emission_04 = Emissions.from_dict(record_dict={"N2O": 0.005})
 lognorm = LogNormEmissionProfile.from_range(start=2075, range=10)
@@ -28,14 +28,22 @@ expon = ExponentDecayEmissionProfile.from_decay_rate(start=2085, decay_rate=10)
 emission_05.set_temporal_emission_profile(expon)
 
 drf_record = DynamicRadiativeForcingRecord.from_emissions(
-    [emission_02, emission_03, emission_04, emission_05], start_year=2025, time_horizon=100, time_step=1 / 12
+    [emission_01, 
+     emission_02, 
+     #emission_03,
+     emission_04, 
+     emission_05
+     ], 
+     start_year=2025, 
+     time_horizon=100, 
+     time_step=1 / 12
 )
 
 drf_record.set_data()
 
 drf_record.plot(
-    "emission intensity", "lineplot"
-)  # 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'
+    "GWP-dynamic", "stackplot"
+)  # 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic'
 
-output_file = "temp\\drf_record_temp.csv"
+output_file = "src/pod_lca/data/drf_record_temp.csv"
 drf_record.save(output_file)
