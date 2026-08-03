@@ -16,6 +16,7 @@ from ..analysis import ExponentDecay
 from ..analysis import LogNorm 
 from ..analysis import Norm 
 from ..analysis import Uniform 
+from ..analysis import Linear
 
 
 class TemporalEmissionProfiles(DataDistribution):
@@ -167,6 +168,30 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
 
         return pulse
 
+class LinearEmissionProfile(TemporalEmissionProfiles, Linear):
+    """A linear data distribution."""
+
+    @classmethod
+    def from_params(cls, start, step, slope, name="unspecified"):
+        """Create a linear distribution from parameters specified.
+
+        Parameters
+        ----------
+        start : int or float
+            Starting point of linear distribution.
+        step : int or float
+            Width of the distributions (distribution ends at start + step).
+        name : str
+            Name of the data distribution.
+        """
+        linear = super().from_params(start, step, slope, name)
+
+        linear.set_start(start)
+        linear.set_duration(step)
+
+        return linear
+
+    #TODO: test linear emission profile with real examples and add other options for generating distribution as needed
 
 class NormEmissionProfile(TemporalEmissionProfiles, Norm):
     """A normal data distribution."""

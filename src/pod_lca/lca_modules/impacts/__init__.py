@@ -15,6 +15,7 @@ from .temporal_emission_profiles import UniformEmissionProfile
 from .temporal_emission_profiles import NormEmissionProfile
 from .temporal_emission_profiles import LogNormEmissionProfile
 from .temporal_emission_profiles import ExponentDecayEmissionProfile
+from .temporal_emission_profiles import LinearEmissionProfile
 
 __all__ = [
     "ElectricityImpactsDatabase",

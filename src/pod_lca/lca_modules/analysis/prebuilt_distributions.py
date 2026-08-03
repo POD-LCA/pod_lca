@@ -5,7 +5,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from math import exp
-
+import numpy as np
 from scipy import stats
 
 from . import DataDistribution
@@ -104,6 +104,68 @@ class ExponentDecay(DataDistribution):
 
         return expon
 
+class Linear(DataDistribution):
+    """A linear data distribution."""
+
+    @classmethod
+    def from_params(cls, start, step, slope, name="unspecified"):
+        """Create a linear distribution from parameters specified.
+
+        Parameters
+        ----------
+        start : int or float
+            Starting point of linear distribution.
+        step : int or float
+            Width of the distributions (distribution ends at start + step).
+        slope : int or float
+            Slope of the linear distribution.
+        name : str
+            Name of the data distribution.
+        """
+        if step <= 0:
+            raise ValueError("step must be positive")
+
+        class _LinearDistribution:
+            name = "linear"
+
+            def __init__(self, start, step, slope):
+                self.start = float(start)
+                self.step = float(step)
+                self.slope = float(slope)
+                self.end = self.start + self.step
+
+            def pdf(self, x):
+                x_arr = np.asarray(x, dtype=float)
+                density = np.zeros_like(x_arr, dtype=float)
+                within = (x_arr >= self.start) & (x_arr <= self.end)
+
+                if np.any(within):
+                    x_rel = (x_arr[within] - self.start) / self.step
+                    density[within] = ((1 - 0.5 * self.slope) + self.slope * x_rel) / self.step
+
+                return density
+
+            def cdf(self, x):
+                x_arr = np.asarray(x, dtype=float)
+                cumulative = np.zeros_like(x_arr, dtype=float)
+                below = x_arr < self.start
+                above = x_arr > self.end
+                within = ~below & ~above
+
+                if np.any(within):
+                    x_rel = (x_arr[within] - self.start) / self.step
+                    cumulative[within] = (1 - 0.5 * self.slope) * x_rel + 0.5 * self.slope * x_rel ** 2
+
+                cumulative[above] = 1.0
+
+                return cumulative
+            #TODO verify linear distribution PDF and CDF are correct
+
+        dist = _LinearDistribution(start, step, slope)
+        linear = super().from_distributions(dist, is_cts=True, name=name)
+        linear.dist_name = "linear"
+
+        return linear
 
 if __name__ == "__main__":
     pass
