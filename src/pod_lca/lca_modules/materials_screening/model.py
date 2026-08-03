@@ -447,23 +447,26 @@ class Model:
         """
         carbon_storage_records = self.get_carbon_storage()
 
-        bio_total = sum(
-            record.get_biogenic_carbon_storage_qty(unit)
-            for record in carbon_storage_records["A1"]
-        )
+        if _type == "biogenic" or _type == "total":
+            bio_total = sum(
+                record.get_biogenic_carbon_storage_qty(unit)
+                for record in carbon_storage_records["A1"]
+            )
 
-        if _type == "biogenic":
-            return bio_total
+            if _type == "biogenic":     
+                return bio_total
 
-        mnrl_total = sum(
-            record.get_mineral_carbon_storage_qty(unit)
-            for record in carbon_storage_records["A1"]
-        )
+        if _type == "mineral" or _type == "total":
+            mnrl_total = sum(
+                record.get_mineral_carbon_storage_qty(unit)
+                for record in carbon_storage_records["A1"]
+            )
 
-        if _type == "mineral":
-            return mnrl_total
+            if _type == "mineral":
+                return mnrl_total
 
         total = bio_total + mnrl_total
+        
         return total
 
     # ================================
