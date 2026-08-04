@@ -39,12 +39,13 @@ sqrt = SquareRootEmissionProfile.from_range(start=2050, step=50)
 emission_07.set_temporal_emission_profile(sqrt)
 
 drf_record = DynamicRadiativeForcingRecord.from_emissions(
-    [# emission_01, 
+    [
+     emission_01, 
      # emission_02, 
      # emission_04, 
      # emission_05,
-     emission_06,
-     emission_07
+     # emission_06,
+     # emission_07
      ], 
      start_year=2025, 
      time_horizon=100, 
@@ -54,8 +55,12 @@ drf_record = DynamicRadiativeForcingRecord.from_emissions(
 drf_record.set_data()
 
 drf_record.plot(
-    "emission intensity", "lineplot"
-)  # 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic'
+    "AGTP", "lineplot"
+)  
+# plot options: 'emission intensity', 'atmospheric concentration', 
+#               'instantaneous radiative forcing', 'cumulative radiative forcing', 
+#               'GWP-dynamic', 'AGTP'
+# plot types: 'lineplot', 'stackplot'
 
 output_file = "src/pod_lca/data/drf_record_temp.csv"
 drf_record.save(output_file)

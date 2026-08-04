@@ -58,6 +58,7 @@ class DynamicRadiativeForcingRecord:
         self.data_crf = None
         self.data_crf_ref = None
         self.data_dGWP = None
+        self.data_AGTP = None
 
     # ========================
     # Constructors
@@ -179,12 +180,14 @@ class DynamicRadiativeForcingRecord:
         self.data_irf = {}
         self.data_crf = {}
         self.data_dGWP = {} # dynamic GWP
+        self.data_AGTP = {} # Absolute Global Temperature Potential
         for greenhouse_gas in Emissions.record_attr_dict:
             self.data_emission_intensity[greenhouse_gas] = zeros(len(self.data_years))
             self.data_concentrations[greenhouse_gas] = zeros(len(self.data_years))
             self.data_irf[greenhouse_gas] = zeros(len(self.data_years))
             self.data_crf[greenhouse_gas] = zeros(len(self.data_years))
             self.data_dGWP[greenhouse_gas] = zeros(len(self.data_years))
+            self.data_AGTP[greenhouse_gas] = zeros(len(self.data_years))
 
         # set data
         drf_calculator = DynamicRadiativeForcing(config["setup"]["drf"]["IPCC_REPORT_VERSION"])
@@ -232,6 +235,11 @@ class DynamicRadiativeForcingRecord:
                             CH4_oxidation=True,
                             alpha=emission.methane_bio_oxidation,
                         )
+                        _, agtp = drf_calculator.get_AGTP_time_series(
+                            "CH4",
+                            time_step,
+                            emission_time_horizon,
+                        )
                     else:
                         _, concentrations, irf = drf_calculator.get_radiative_forcing_time_series(
                             greenhouse_gas, emission_time_horizon, time_step, cumulative=False
@@ -239,18 +247,23 @@ class DynamicRadiativeForcingRecord:
                         _, _, crf = drf_calculator.get_radiative_forcing_time_series(
                             greenhouse_gas, emission_time_horizon, time_step, cumulative=True
                         )
+                        _, agtp = drf_calculator.get_AGTP_time_series(
+                            greenhouse_gas, time_step, emission_time_horizon
+                        )
 
                     # convolve with emission temporal profile
                     emission_profile = unit_emission_profile * greenhouse_gas_emission_qty
                     concentrations = convolve(emission_profile, concentrations)[: len(self.data_years)]
                     irf = convolve(emission_profile, irf)[: len(self.data_years)]
                     crf = convolve(emission_profile, crf)[: len(self.data_years)]
+                    agtp = convolve(emission_profile, agtp)[: len(self.data_years)]
                     dGWP = divide(
                         crf,
                         crf_CO2_ref,
                         out = zeros(len(self.data_years)),
                         where=abs(crf_CO2_ref) > 1e-30, # avoid divide by zero at t=start when crf_CO2_ref = 0
                     )
+                    
 
                     # add to data record
                     self.data_emission_intensity[greenhouse_gas] += emission_profile / self.get_time_step()
@@ -258,7 +271,7 @@ class DynamicRadiativeForcingRecord:
                     self.data_irf[greenhouse_gas] += irf
                     self.data_crf[greenhouse_gas] += crf
                     self.data_dGWP[greenhouse_gas] += dGWP
-
+                    self.data_AGTP[greenhouse_gas] += agtp
         return self
 
     # ========================
@@ -332,6 +345,8 @@ class DynamicRadiativeForcingRecord:
             data_y = self.data_crf
         elif data_category == "GWP-dynamic":
             data_y = self.data_dGWP
+        elif data_category == "AGTP":
+            data_y = self.data_AGTP
         else:
             raise ValueError("Data category is not recognized.")
 
@@ -402,6 +417,9 @@ class DynamicRadiativeForcingRecord:
         elif to_plot == 'GWP-dynamic':
             title = "GWP-dynamic Record (kgCO2e)"
             y_label = "GWP-dynamic (kgCO2e)"
+        elif to_plot == 'AGTP':
+            title = "AGTP Record (K)"
+            y_label = "AGTP (K)"
         else:
             raise ValueError("Parameter to be plotted is not recognized.")
 
@@ -420,7 +438,7 @@ class DynamicRadiativeForcingRecord:
         graph.get_plot().set_xticks(range(x_start, x_end, plot_time_step))
         graph.show()
 
-    def save(self, file_path, emission_intensity=True, concentration=True, irf=True, crf=True, crf_ref=True, dGWP=True):
+    def save(self, file_path, emission_intensity=True, concentration=True, irf=True, crf=True, crf_ref=True, dGWP=True, AGTP=True):
         """Write the data to a file.
 
         Parameters
@@ -474,6 +492,11 @@ class DynamicRadiativeForcingRecord:
         if dGWP:
             for greenhouse_gas, data_array in self.data_dGWP.items():
                 headers.append(f"{greenhouse_gas} dGWP (in kgCO2e)")
+                lists_to_write.append(data_array.tolist())
+
+        if AGTP:
+            for greenhouse_gas, data_array in self.data_AGTP.items():
+                headers.append(f"{greenhouse_gas} AGTP (in K)")
                 lists_to_write.append(data_array.tolist())
 
         return DataExporter.lists_to_csv(lists_to_write, file_path, as_columns=True, headers=headers)

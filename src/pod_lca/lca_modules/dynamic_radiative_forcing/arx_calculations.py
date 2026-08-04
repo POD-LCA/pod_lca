@@ -10,6 +10,8 @@ from numpy import arange as np_arange
 from numpy import exp as np_exp
 from numpy import convolve
 from numpy import flip
+from numpy import zeros
+from numpy import array
 
 from ...utilities import config
 from ...utilities import DataImporter
@@ -171,7 +173,7 @@ class ARXCalculation:
 
     @classmethod
     def get_radiative_forcing(
-        cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=False, alpha=0.5, convolution_time_step=0.01
+        cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01
     ):
         """Get the radiative forcing (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
 
@@ -275,7 +277,7 @@ class ARXCalculation:
 
     @classmethod
     def get_radiative_forcing_time_series(
-        cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=False, alpha=0.5
+        cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5
     ):
         """Get the dynamic radiative forcing values (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) as a time-series, given that a 1kg of gas emitted on start year.
 
@@ -395,7 +397,7 @@ class ARXCalculation:
 
     @classmethod
     def get_dynamic_GWP_time_series(
-            cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=False, alpha=0.5
+            cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5
         ):
             """Get the dynamic GWP values (in kgCO2e) as a time-series, given that a 1kg of gas emitted on start year.
 
@@ -423,12 +425,74 @@ class ARXCalculation:
             numpy.array
                 Radiative forcing values at the end of the year.
             """
-            #radiative_efficiency = cls.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1")
-            #years, concentrations = cls.get_concentration_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
             years, _, cumulative_rf = cls.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha)
             years, _, cumulative_rf_CO2 = cls.get_radiative_forcing_time_series("CO2", time_horizon, time_step, cumulative, CH4_oxidation, alpha)
             dynamic_GWP = cumulative_rf / cumulative_rf_CO2
             return years, dynamic_GWP
+
+    @classmethod
+    def get_temp_response(cls, time_horizon, time_step):
+        """Get the temperature response function for the given time_horizon.
+
+        Parameters
+        ----------
+        time_horizon : int
+            Time horizon in years.
+        time_step : float
+            Time step in years.
+        """
+        years = np_arange(0, time_horizon + time_step, time_step)
+        if years[-1] > time_horizon:
+            years = years[:-1]
+
+        # Define climate response function parameters for AGTP calculation (per IPCCAR5, Ch.8SM, Table 8.SM.9 (section 8.SM.11.2)
+        c = array([0.631, 0.429]) # climate sensitivity [K / (w/m2)]
+        d = array([8.4, 409.5]) # climate time response [years]
+        agtp_fn = zeros(len(years))
+        for i in range(len(c)):
+            agtp_fn += (c[i] / d[i]) * np_exp(-years / d[i])
+
+        return years, agtp_fn
+
+    @classmethod 
+    def get_AGTP_time_series(cls, greenhouse_gas, time_step, time_horizon):
+        """Get the Absolute Global Temperature Potential (AGTP) of a greenhouse gas, for the given time_horizon.
+
+        Parameters
+        ----------
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the gas.
+        time_horizon : int
+            Time horizon in years.
+        """
+        # Get the temperature response function
+        years, temp_response = cls.get_temp_response(time_horizon, time_step)
+
+        #Get instantaneous radiative forcing time series
+        _, _, irf_for_agtp = cls.get_radiative_forcing_time_series(
+            greenhouse_gas, time_horizon, time_step, cumulative=False)
+        irf_for_agtp[0] = 0 
+                    
+        #Calculate AGTP as convolution of instantaneous radiative forcing and temperature response function
+        agtp = convolve(irf_for_agtp, temp_response, mode="full")[:len(years)] * time_step
+
+        return years, agtp
+
+    @classmethod
+    def get_AGTP(cls, greenhouse_gas, at_year, time_step):
+        """Get the Absolute Global Temperature Potential (AGTP) of a greenhouse gas, for the given time_horizon.
+
+        Parameters
+        ----------
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the gas.
+        at_year : int
+            Year for which to calculate AGTP.
+        convolution_time_step : float
+            Time step for convolution in years.
+        """
+        pass
+        #TODO: write method to get AGTP at a specific year
 
 
 if __name__ == "__main__":
