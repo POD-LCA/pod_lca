@@ -80,11 +80,11 @@ class DataMixins:
                         case _:
                             raise KeyError(f"life cycle stage not recognized.")
 
-            if as_df:
-                impact_unit = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"][impact_cat]
-                return DataFrame(results.items(), columns=['Material', f"{impact_cat} ({impact_unit})"])
-            else:                  
-                return results
+        if as_df:
+            impact_unit = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"][impact_cat]
+            return DataFrame(results.items(), columns=['Material', f"{impact_cat} ({impact_unit})"])
+        else:                  
+            return results
     
     def get_material_quantities_of_assembly(self, assembly_name, as_df=True):
         """ Get material quantities of a given assembly.
@@ -102,13 +102,13 @@ class DataMixins:
                 for material in assembly.get_materials():
                     results[material.get_name()] = (material.get_qty(), material.get_unit().standard_notation)
                         
-            if as_df:
-                return DataFrame([
-                    {"Material": key, "Amount": val[0], "Unit": val[1]} 
-                    for key, val in results.items()
-                ])
-            else:                  
-                return results
+        if as_df:
+            return DataFrame([
+                {"Material": key, "Amount": val[0], "Unit": val[1]} 
+                for key, val in results.items()
+            ])
+        else:                  
+            return results
 
     # TODO: plot option for comparing scenarios
 

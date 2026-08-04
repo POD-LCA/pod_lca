@@ -56,7 +56,7 @@ class Mortar(AncillaryMaterial):
         if material_property is None:
             material_property = EnvelopeMaterialPropertyMass()
             material_property.name = "Mortar"
-            material_property.database_entry_name = "Type S Mortar"
+            material_property.database_entry_name = "Blended hydraulic cement, USA"
         super().__init__(material_property)
 
 
