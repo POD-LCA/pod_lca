@@ -167,5 +167,28 @@ class Linear(DataDistribution):
 
         return linear
 
+class SquareRoot(DataDistribution):
+    """A square root data distribution."""
+    @classmethod
+    def from_params(cls, start, step, name="unspecified"):
+        """Create a square root distribution from parameters specified.
+
+        Parameters
+        ----------
+        start : int or float
+            Starting point of the square root function.
+        scale : int or float
+            Scale parameter of the square root function.
+        name : str
+            Name of the data distribution.
+        """
+        dist =  stats.powerlaw(a=1.5, loc=start, scale=step)
+        sqrt = super().from_distributions(dist, is_cts=True, name=name)
+        sqrt.dist_name = "sqrt"
+
+        return sqrt  
+
+
+
 if __name__ == "__main__":
     pass

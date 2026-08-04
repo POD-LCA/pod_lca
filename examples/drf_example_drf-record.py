@@ -5,6 +5,7 @@ from pod_lca.impacts import UniformEmissionProfile
 from pod_lca.impacts import NormEmissionProfile
 from pod_lca.impacts import LogNormEmissionProfile
 from pod_lca.impacts import LinearEmissionProfile
+from pod_lca.impacts import SquareRootEmissionProfile
 
 emission_01 = Emissions.from_dict(record_dict={"CO2": 1})
 pulse = UniformEmissionProfile.unit_pulse(at=2035)
@@ -33,13 +34,17 @@ linear = LinearEmissionProfile.from_params(start=2035, step=50, slope=-0.1)
 # linear = LinearEmissionProfile.from_percent_decrease(start=2035, step=50, percent_decrease=50)
 emission_06.set_temporal_emission_profile(linear)
 
+emission_07 = Emissions.from_dict(record_dict={"CH4": 1})
+sqrt = SquareRootEmissionProfile.from_range(start=2050, step=50)
+emission_07.set_temporal_emission_profile(sqrt)
+
 drf_record = DynamicRadiativeForcingRecord.from_emissions(
-    [emission_01, 
-     emission_02, 
-     # emission_03,
-     emission_04, 
-     emission_05,
-     emission_06
+    [# emission_01, 
+     # emission_02, 
+     # emission_04, 
+     # emission_05,
+     emission_06,
+     emission_07
      ], 
      start_year=2025, 
      time_horizon=100, 
@@ -49,7 +54,7 @@ drf_record = DynamicRadiativeForcingRecord.from_emissions(
 drf_record.set_data()
 
 drf_record.plot(
-    "GWP-dynamic", "lineplot"
+    "emission intensity", "lineplot"
 )  # 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic'
 
 output_file = "src/pod_lca/data/drf_record_temp.csv"
