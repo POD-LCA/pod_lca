@@ -204,7 +204,7 @@ class DynamicRadiativeForcing:
             greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha
         )
 
-    def get_AGWP(self, greenhouse_gas, time_horizon):
+    def get_AGWP(self, greenhouse_gas, time_horizon, CH4_oxidation=True):
         """Get the Absolute Global Warming Potential (AGWP) of a greenhouse gas, for the given time_horizon.
 
         Note
@@ -217,10 +217,12 @@ class DynamicRadiativeForcing:
             Name of the greenhouse gas.
         time_horizon : int
             Time horizon in years.
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2.
         """
-        return self.calculator.get_AGWP(greenhouse_gas, time_horizon)
+        return self.calculator.get_AGWP(greenhouse_gas, time_horizon, CH4_oxidation=CH4_oxidation)
 
-    def get_GWP(self, greenhouse_gas, time_horizon):
+    def get_GWP(self, greenhouse_gas, time_horizon, CH4_oxidation=True):
         """Get the Global Warming Potential (GWP) of a greenhouse gas, for the given time_horizon.
 
         Note
@@ -233,14 +235,16 @@ class DynamicRadiativeForcing:
             Name of the greenhouse gas.
         time_horizon : int
             Time horizon in years.
-
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2.
+        
         Returns
         -------
         float
             GWP value.
         """
         agwp_CO2 = self.get_AGWP("CO2", time_horizon)
-        agwp_gas = self.get_AGWP(greenhouse_gas, time_horizon)
+        agwp_gas = self.get_AGWP(greenhouse_gas, time_horizon, CH4_oxidation=CH4_oxidation)
 
         return agwp_gas / agwp_CO2
 

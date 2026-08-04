@@ -343,7 +343,7 @@ class ARXCalculation:
             return years, concentrations, radiative_efficiency * concentrations
 
     @classmethod
-    def get_AGWP(cls, greenhouse_gas, time_horizon):
+    def get_AGWP(cls, greenhouse_gas, time_horizon, CH4_oxidation=True):
         """Get the Absolute Global Warming Potential (AGWP) of a greenhouse gas, for the given time_horizon.
 
         Note
@@ -356,22 +356,21 @@ class ARXCalculation:
             Name of the gas.
         time_horizon : int
             Time horizon in years.
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2.
         """
         root, ext = os.path.splitext(config["file_paths"]["drf"]["INDIRECT_EFFECTS_FACTORS"])
 
         indirect_factors = DataImporter.json_to_dict(root + "_" + cls._ipcc_annual_report + ext)
 
-        if greenhouse_gas in ["CH4fossil", "CH4_fossil", "CH4 fossil"]:
-            agwp = cls.get_radiative_forcing(
-                "CH4",
-                time_horizon,
-                cumulative=True,
-                CH4_oxidation=True,
-                alpha=indirect_factors["alpha"],
-                convolution_time_step=0.01,
-            )
-        else:
-            agwp = cls.get_radiative_forcing(greenhouse_gas, time_horizon, cumulative=True)
+        agwp = cls.get_radiative_forcing(
+            greenhouse_gas,
+            time_horizon,
+            cumulative=True,
+            CH4_oxidation=CH4_oxidation,
+            alpha=indirect_factors["alpha"],
+            convolution_time_step=0.01,
+        )
 
         return agwp
 
