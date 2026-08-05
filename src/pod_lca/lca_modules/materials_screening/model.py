@@ -393,12 +393,17 @@ class Model:
 
             case "with_material":
                 transportation_manager = self.get_transportation_manager()
+
+                combined_impacts_list = []
                 for impact in self.impacts["A1"]:
                     product = impact.get_parent()
                     if product.get_transportation() is not None:
-                        impact += transportation_manager.get_impacts(product)
+                        combined_impacts_list.append(impact + transportation_manager.get_impacts(product))
+                    else:
+                        combined_impacts_list.append(impact)
                 
                 self.impacts["A2"] = []
+                self.impacts["A1"] = combined_impacts_list
 
             case "all_transportation":
                 self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
