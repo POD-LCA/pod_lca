@@ -35,7 +35,7 @@ setup:
       Incinerate: C4
       Landfill: C4
   impacts:
-    IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391'
+    IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391' or 'BAFU'
     PRIMARY_IMPACT_CATEGORY: GWP
     ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY: GWP
     BIOGENIC_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY: GWP_biogenic

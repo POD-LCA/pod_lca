@@ -288,7 +288,7 @@ class openLCA:
             if category.isdigit():  # ISIC division / NAICS code
                 test = "/" + category + ":" in node.product.category
             else:  # ISIC section
-                test = node.product.category.startswith(category + ":")
+                test = node.product.category.startswith(category)
 
             if test:
                 if unit is None:
@@ -533,7 +533,7 @@ class openLCA:
                     if filter.isdigit():  # ISIC division / NAICS code
                         test = ("/" + filter + ":" in process.category) or process.category.startswith(filter + ":")
                     else:  # ISIC section
-                        test = ("/" + filter + ":" in process.category) or process.category.startswith(filter + ":")
+                        test = ("/" + filter + ":" in process.category) or process.category.startswith(filter + ":") or process.category.startswith(filter + "/") 
 
                     if test:
                         new_process_lst.append(process)
