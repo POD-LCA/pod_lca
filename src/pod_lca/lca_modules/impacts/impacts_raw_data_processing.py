@@ -40,6 +40,54 @@ openLCA_client = openLCA.set_connection()
 process_list_all = openLCA.get_process_list(openLCA_client)
 if IMPACT_SOURCE_DATABASE == "FLCAC":
     process_list = process_list_all
+elif IMPACT_SOURCE_DATABASE == "BAFU":
+    filter_by = ["agricultural/plant production",
+                "biomass",
+                "building components",
+                "building processes",
+                "cardboard",
+                "chemicals",
+                "compressed air/generation",
+                "construction",
+                "construction materials",
+                "construction processes", 
+                "electricity",
+                "electricity by fuel",
+                "electronics/photovoltaic",
+                "energy supply, kbob recommendation",
+                "flooring",
+                "fuels",
+                "glass",
+                "heat",
+                "heating",
+                "insulation materials",
+                "mechanical/other energy",
+                "metals",
+                "minerals",
+                "natural gas",
+                "oil",
+                "paper+ board",
+                "photovoltaic",
+                "pipeline",
+                "plastics",
+                "textiles",
+                "transport systems",
+                "underground deposit", 
+                "ventilation",
+                "wastewater treatment",
+                "water",
+                "wind power",
+                "wood",
+                "construction waste", # EOL data 
+                "incineration", # EOL data 
+                "landfarming", # EOL data
+                "landfill", # EOL data
+                "Others", # EOL data
+                "recycling", # EOL data
+                "waste management" # EOL data
+                ]
+ 
+    process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     filter_by = [
         "01",
@@ -101,15 +149,20 @@ if IMPACT_SOURCE_DATABASE == "FLCAC":
     impact_method_uuid = "0ed73bce-2198-4148-8c4d-8b2ce68b6e1a"
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     impact_method_uuid = "5d5b2a0c-0a99-48d4-93e9-2f2b9d852655"
+elif IMPACT_SOURCE_DATABASE == "BAFU":
+    impact_method_uuid = "188468cc-78ac-465e-89fd-5e196de09c21"
 
 # impact groupings
-renewable_fuels_process_list = DataImporter.csv_to_list(
-    "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_renewable-fuels-group.csv", column_header="UUID"
-)
-nonrenewable_fuels_process_list = DataImporter.csv_to_list(
-    "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_nonrenewable-fuels-group.csv", column_header="UUID"
-)
-heating_values = DataImporter.csv_to_dict("src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_heating-values.csv", "UUID")
+if IMPACT_SOURCE_DATABASE == "BAFU":
+    pass #TODO: renewable and nonrenewable fuel combustion groups not yet set up for the BAFU database
+else:
+    renewable_fuels_process_list = DataImporter.csv_to_list(
+        "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_renewable-fuels-group.csv", column_header="UUID"
+    )
+    nonrenewable_fuels_process_list = DataImporter.csv_to_list(
+        "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_nonrenewable-fuels-group.csv", column_header="UUID"
+    )
+    heating_values = DataImporter.csv_to_dict("src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_heating-values.csv", "UUID")
 
 if IMPACT_SOURCE_DATABASE == "FLCAC":
     group_by = [
@@ -152,6 +205,19 @@ elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
             "conversion_map": heating_values,
         },
     ]
+
+elif IMPACT_SOURCE_DATABASE == "BAFU":
+    bafu_electricity_process_list = []
+    for process in process_list:
+        if process.name.startswith("Electricity"):
+            bafu_electricity_process_list.append(process.id)
+
+    group_by = [{
+            "name": "electricity",
+            "ids": bafu_electricity_process_list, 
+            "unit": MEGA * JOULE,
+            "conversion_map": None,
+        }]
 
 
 results = openLCA.generate_impacts_dir(
