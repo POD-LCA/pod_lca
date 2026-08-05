@@ -240,8 +240,11 @@ print(b.get_operational_impacts()) # default is 'total'
 print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 print(b.get_emissions(scope='product'))
 
-print(b.get_material_quantities_of_assembly("framed_wall_test"))
-print(b.get_material_impacts_of_assembly_lcstage("framed_wall_test", impact_cat="GWP", lc_stage="A1-A3"))
+frame_wall_qtys = b.get_material_quantities_of_assembly("framed_wall_test")
+framed_wall_impacts = b.get_material_impacts_of_assembly_lcstage("framed_wall_test", impact_cat="GWP", lc_stage="A1-A3")
+
+print(frame_wall_qtys)
+print(framed_wall_impacts)
 
 drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('cumulative radiative forcing')
