@@ -35,6 +35,8 @@ from pod_lca.lca_modules.building_envelope import Construction
 from pod_lca.lca_modules.building_envelope import Layer
 from pod_lca.lca_modules.building_envelope import WoodFraming
 from pod_lca.lca_modules.building_envelope import MetalFraming
+from pod_lca.lca_modules.building_envelope import BrickLayer
+from pod_lca.lca_modules.building_envelope import SheathingLayer
 from pod_lca.lca_modules.building_envelope import FramedWall
 from pod_lca.lca_modules.building_envelope import Floor
 from pod_lca.lca_modules.building_envelope import Ceiling
@@ -111,26 +113,34 @@ m2.thermal_absorptance = 0.9
 m2.solar_absorptance   = 0.7
 m2.visible_absorptance = 0.7
 
-layers = [
-          {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH)},
-          {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH)},
-          {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH)},
-          {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH)},
-          {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH)},
-          {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH)}
-            ]
+layers_ = {
+    0:BrickLayer.from_property_and_thickness(m0.name, m0, Q(0.75, INCH)),
+    1:Layer.from_property_and_thickness(m1.name, m1, Q(1.5,  INCH), 'air_gap'),
+    2:Layer.from_property_and_thickness(m2.name, m2, Q(1.5,  INCH), 'exterior_insulation'),
+    3:SheathingLayer.from_property_and_thickness(m3.name, m3, Q(0.5,  INCH)),
+    4:Layer.from_property_and_thickness(m4.name, m4, Q(2.0,  INCH), 'framing_insulation'),
+    5:Layer.from_property_and_thickness(m3.name, m3, Q(0.5,  INCH), 'interior_finish'),
+}
 
-layers_ = {}
-for i in range(len(layers)):
-    name = layers[i]['material'].name
-    thickness = layers[i]['thickness']
-    classification = layers[i]['classification']
-    material_property = layers[i]['material']
-    l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
-    layers_[i] = l
+# layers = [
+#           {'classification':'exterior_cladding', 'material': m0, 'thickness': Q(0.75, INCH)},
+#           {'classification':'air_gap', 'material': m1, 'thickness': Q(1.5,  INCH)},
+#           {'classification':'exterior_insulation', 'material': m2, 'thickness': Q(1.5, INCH)},
+#           {'classification':'sheathing', 'material': m3, 'thickness': Q(0.5, INCH)},
+#           {'classification':'framing_insulation', 'material': m4, 'thickness': Q(2.0, INCH)},
+#           {'classification':'interior_finish', 'material': m3, 'thickness': Q(0.5, INCH)}
+#             ]
+
+# layers_ = {}
+# for i in range(len(layers)):
+#     name = layers[i]['material'].name
+#     thickness = layers[i]['thickness']
+#     classification = layers[i]['classification']
+#     material_property = layers[i]['material']
+#     l = Layer.from_property_and_thickness(name, material_property, thickness, classification)
+#     layers_[i] = l
 
 layers_[0].set_structural(True)
-
 
 framing_name                  = 'tomas_wooden_framing'
 framing_material_property     = EnvelopeMaterialPropertyMass.from_database(name="Softwood Lumber", database_entry_name='Softwood Lumber')
@@ -227,11 +237,14 @@ print(b.get_operational_impacts()) # default is 'total'
 
 # # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-print(b.get_impacts(scope='all')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 print(b.get_emissions(scope='product'))
 
-# print(b.get_material_quantities_of_assembly("generic structural element"))
-# print(b.get_material_impacts_of_assembly_lcstage("generic structural element", impact_cat="GWP", lc_stage="A1-A3"))
+frame_wall_qtys = b.get_material_quantities_of_assembly("framed_wall_test")
+framed_wall_impacts = b.get_material_impacts_of_assembly_lcstage("framed_wall_test", impact_cat="GWP", lc_stage="A1-A3")
+
+print(frame_wall_qtys)
+print(framed_wall_impacts)
 
 drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('cumulative radiative forcing')
