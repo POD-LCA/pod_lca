@@ -426,7 +426,10 @@ class ARXCalculation:
             """
             years, _, cumulative_rf = cls.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha)
             years, _, cumulative_rf_CO2 = cls.get_radiative_forcing_time_series("CO2", time_horizon, time_step, cumulative, CH4_oxidation, alpha)
-            dynamic_GWP = cumulative_rf / cumulative_rf_CO2
+            dynamic_GWP = zeros(len(years))
+            dynamic_GWP[0] = 0 # avoid divide by zero at t=start when cumulative_rf_CO2 = 0
+            dynamic_GWP[1:] = cumulative_rf[1:] / cumulative_rf_CO2[1:]
+
             return years, dynamic_GWP
 
     @classmethod

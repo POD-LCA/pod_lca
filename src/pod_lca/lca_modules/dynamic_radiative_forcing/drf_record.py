@@ -6,7 +6,6 @@ __version__ = "0.1.0"
 
 from numpy import arange as np_arange
 from numpy import convolve
-from numpy import divide
 from numpy import zeros
 
 from . import DynamicRadiativeForcing
@@ -257,12 +256,11 @@ class DynamicRadiativeForcingRecord:
                     irf = convolve(emission_profile, irf)[: len(self.data_years)]
                     crf = convolve(emission_profile, crf)[: len(self.data_years)]
                     agtp = convolve(emission_profile, agtp)[: len(self.data_years)]
-                    dGWP = divide(
-                        crf,
-                        crf_CO2_ref,
-                        out = zeros(len(self.data_years)),
-                        where=abs(crf_CO2_ref) > 1e-30, # avoid divide by zero at t=start when crf_CO2_ref = 0
-                    )
+
+                    # calculate dynamic GWP
+                    dGWP = zeros(len(self.data_years))
+                    dGWP[0] = 0 # avoid divide by zero at t=start when cumulative_rf_CO2 = 0
+                    dGWP[1:] = crf[1:] / crf_CO2_ref[1:]
                     
 
                     # add to data record
