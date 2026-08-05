@@ -17,9 +17,9 @@ product.set_sctg_code("10")
 
 project.add_good(
     product,
-    shipping_dest=Location.from_US_state("Georgia"),
-    shipping_org=None,
-    mode_name="Ocean",
+    shipping_dest=None,
+    shipping_org=Location.from_faf_regions('Europe'),
+    mode_name=None,
     transport_scenario="Global",
 )
 
@@ -38,4 +38,4 @@ emissions = project.get_emissions(product)
 print(distance)
 print(RTT)
 print(transportation_leg.get_domestic_leg().get_travel_dist())
-# print (emissions)
+print (impacts)
