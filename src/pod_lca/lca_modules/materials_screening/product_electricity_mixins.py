@@ -157,6 +157,28 @@ class ProductElectricityMixins:
         
         return self
     
+    def set_electricity_geographical_scope(self, scope):
+        """Set the geographic scope for the electricity.
+        This forced the electricity source to be "custom" if scope is provided, and revet to "default" if scope is None.
+
+        Parameters
+        ----------
+        scope : {'Regional', 'Local'}
+            Geographic scope for the electricity by location data.
+        """
+        current_source = self.get_electricity_source()
+
+        if scope is None:
+            if current_source == "custom":
+                self.set_electricity_source("default")
+                self.electricity["custom"].set_geographical_scope(config["setup"]["electricity"]["DEFAULT_REIGIONAL_RESOLUTION"])
+        else:
+            if current_source == "default":
+                self.set_electricity_source("custom")
+            self.electricity["custom"].set_geographical_scope(scope)
+        
+        return self
+
     def set_electricity_location_regional(self, state):
         """Set the location for the electricity, at the regional level.
         This forced the electricity source to be "custom" if location is provided, and revet to "default" if location is None.
