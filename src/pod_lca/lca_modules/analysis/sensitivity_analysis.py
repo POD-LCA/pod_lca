@@ -63,14 +63,14 @@ class SensitivityAnalysis:
         base_impact = model.get_total_impact(impact_cat)
         base_val = getattr(obj, "get_" + param)()
 
+        # check cache
+        current_params = (base_impact, impact_cat, sensitivity_type)
+        if (self.sensitivity_param_cache_last_params.get(obj.name, {}).get(param) == current_params): 
+            return self.sensitivity_param_cache[obj.name][param]
+
         method_name = "set_" + param
         method = getattr(obj, method_name)
 
-        # check cache
-        current_params = (base_impact, impact_cat, sensitivity_type)
-        if (self._last_params.get(obj.name, {}).get(param) == current_params): 
-            return self.sensitivity_param_cache[obj.name][param]
-        
         result_range = [0, 0]
         impacts_range = [None, None]
         if "range" in kwargs:
@@ -208,7 +208,7 @@ class SensitivityAnalysis:
             Keyword arguments not recognized.
         """
         base_impact = model.get_total_impact(impact_cat)
-
+        
         for group in groups:
             obj = group["obj"]
             param = group["param"]
