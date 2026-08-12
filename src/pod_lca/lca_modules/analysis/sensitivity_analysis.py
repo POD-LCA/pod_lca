@@ -13,11 +13,17 @@ class SensitivityAnalysis:
         self.sensitivity_param_cache = {}
         self.sensitivity_param_cache_last_params = {}
 
-        self.sensitivity_params_cache = {}
-        self.sensitivity_params_cache_last_params = {}   
+        self.sensitivity_param_group_cache = {}
+        self.sensitivity_params_group_cache_last_params = {}   
 
     def compute_sensitivity_of_param(
-        self, obj, param, impact_cat="weighted", sensitivity_type="relative", printout=True, **kwargs
+        self, 
+        obj, 
+        param, 
+        impact_cat="weighted", 
+        sensitivity_type="relative", 
+        printout=True, 
+        **kwargs
     ):
         """Compute the sensitivity of a parameter of an object.
 
@@ -308,6 +314,53 @@ class SensitivityAnalysis:
 
         return [results["min"], results["max"]]
 
+
+    def compute_sensitivity_of_param_combos(
+        self, 
+        obj, 
+        param_group,
+        combos, 
+        impact_cat="weighted", 
+        sensitivity_type="relative", 
+    ):
+        model = obj.get_model()
+        base_impact = model.get_total_impact(impact_cat)
+
+        min_results, max_results = [], []
+        for combo in combos:
+
+            # check cache
+            current_params = (base_impact, impact_cat, sensitivity_type)
+            if (self.sensitivity_param_group_cache_last_params.get(obj.name, {}).get(param_group, {}).get(combo, {}) == current_params): 
+                result = self.sensitivity_param_group_cache[obj.name][param_group]
+
+            else:
+                for item in combo:
+                    item["obj"] = obj
+
+                result = self.compute_sensitivity_of_params(
+                    model=model,
+                    groups=combo, 
+                    impact_cat=impact_cat,
+                    sensitivity_type="relative", 
+                    printout=False)
+
+                # set cache
+                if obj.name not in self.sensitivity_param_group_cache:
+                    self.sensitivity_param_group_cache[obj.name] = {}
+                    self.sensitivity_param_group_cache_last_params[obj.name] = {}
+
+                if param_group not in self.sensitivity_param_cache[obj.name]:
+                    self.sensitivity_param_cache[obj.name][param_group] = {}
+                    self.sensitivity_param_cache_last_params[obj.name][param_group]
+
+                self.sensitivity_param_cache[obj.name][param_group][combo] = result
+                self.sensitivity_param_cache_last_params[obj.name][param_group][combo] = current_params
+
+            min_results.append(result[0])
+            max_results.append(result[1])
+
+        return [min(min_results), max(max_results)]
 
 if __name__ == "__main__":
     pass
