@@ -153,6 +153,10 @@ class SensitivityAnalysis:
                 raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
 
         # set cache
+        if obj.name not in self.sensitivity_param_cache:
+            self.sensitivity_param_cache[obj.name] = {}
+            self.sensitivity_param_cache_last_params[obj.name] = {}
+
         self.sensitivity_param_cache[obj.name][param] = result_range
         self.sensitivity_param_cache_last_params[obj.name][param] = current_params
 
