@@ -7,8 +7,17 @@ __version__ = "0.1.0"
 
 class SensitivityAnalysis:
 
+    def __init__(self):
+        self.model = None
+
+        self.sensitivity_param_cache = {}
+        self.sensitivity_param_cache_last_params = {}
+
+        self.sensitivity_params_cache = {}
+        self.sensitivity_params_cache_last_params = {}   
+
     def compute_sensitivity_of_param(
-        obj, param, impact_cat="weighted", sensitivity_type="relative", printout=True, **kwargs
+        self, obj, param, impact_cat="weighted", sensitivity_type="relative", printout=True, **kwargs
     ):
         """Compute the sensitivity of a parameter of an object.
 
@@ -57,6 +66,11 @@ class SensitivityAnalysis:
         method_name = "set_" + param
         method = getattr(obj, method_name)
 
+        # check cache
+        current_params = (base_impact, impact_cat, sensitivity_type)
+        if (self._last_params.get(obj.name, {}).get(param) == current_params): 
+            return self.sensitivity_param_cache[obj.name][param]
+        
         result_range = [0, 0]
         impacts_range = [None, None]
         if "range" in kwargs:
@@ -138,9 +152,14 @@ class SensitivityAnalysis:
             else:
                 raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
 
+        # set cache
+        self.sensitivity_param_cache[obj.name][param] = result_range
+        self.sensitivity_param_cache_last_params[obj.name][param] = current_params
+
         return result_range
 
     def compute_sensitivity_of_params(
+        self,
         model,
         groups,
         impact_cat="weighted",
