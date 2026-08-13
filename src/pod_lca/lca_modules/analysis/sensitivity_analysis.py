@@ -14,7 +14,7 @@ class SensitivityAnalysis:
         self.sensitivity_param_cache_last_params = {}
 
         self.sensitivity_param_group_cache = {}
-        self.sensitivity_params_group_cache_last_params = {}   
+        self.sensitivity_param_group_cache_last_params = {}   
 
     def compute_sensitivity_of_param(
         self, 
@@ -323,6 +323,12 @@ class SensitivityAnalysis:
         impact_cat="weighted", 
         sensitivity_type="relative", 
     ):
+        """
+        
+        Notes:
+        1 - parameter set of one item in the model
+        2 - each parameter is set to a given value in each combo
+        """
         model = obj.get_model()
         base_impact = model.get_total_impact(impact_cat)
 
@@ -332,30 +338,54 @@ class SensitivityAnalysis:
             # check cache
             current_params = (base_impact, impact_cat, sensitivity_type)
             if (self.sensitivity_param_group_cache_last_params.get(obj.name, {}).get(param_group, {}).get(combo, {}) == current_params): 
-                result = self.sensitivity_param_group_cache[obj.name][param_group]
+                result = self.sensitivity_param_group_cache[obj.name][param_group][combo]
 
             else:
-                for item in combo:
-                    item["obj"] = obj
+                for item in combos[combo]:
+                    param = item["param"]
+                    base_val = getattr(obj, "get_" + param)()
 
-                result = self.compute_sensitivity_of_params(
-                    model=model,
-                    groups=combo, 
-                    impact_cat=impact_cat,
-                    sensitivity_type="relative", 
-                    printout=False)
+                    method_name = "set_" + param
+                    method = getattr(obj, method_name)
+
+                    item["base_val"] = base_val
+                    item["method"] = method
+
+                    if isinstance(item["options"], list):
+                        selected_option = item["options"][0]
+
+                    method(selected_option)
+                    
+                obj.update_inventory_records()
+                impact_new = model.get_total_impact(impact_cat)
+
+                if sensitivity_type == "relative":
+                    combo_sensitivity = 100 * (impact_new - base_impact) / base_impact
+                elif sensitivity_type == "symmetric":
+                    combo_sensitivity = 100 * (impact_new - base_impact) / (base_impact + impact_new)
+                else:
+                    raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
+                
+                if impact_new > base_impact:
+                    result = (0.0, combo_sensitivity)
+                else:
+                    result = (combo_sensitivity, 0.0)
+
+                # reset params
+                for item in combos[combo]:
+                    item["method"](item["base_val"])    
 
                 # set cache
                 if obj.name not in self.sensitivity_param_group_cache:
                     self.sensitivity_param_group_cache[obj.name] = {}
                     self.sensitivity_param_group_cache_last_params[obj.name] = {}
 
-                if param_group not in self.sensitivity_param_cache[obj.name]:
-                    self.sensitivity_param_cache[obj.name][param_group] = {}
-                    self.sensitivity_param_cache_last_params[obj.name][param_group]
+                if param_group not in self.sensitivity_param_group_cache[obj.name]:
+                    self.sensitivity_param_group_cache[obj.name][param_group] = {}
+                    self.sensitivity_param_group_cache_last_params[obj.name][param_group] = {}
 
-                self.sensitivity_param_cache[obj.name][param_group][combo] = result
-                self.sensitivity_param_cache_last_params[obj.name][param_group][combo] = current_params
+                self.sensitivity_param_group_cache[obj.name][param_group][combo] = result
+                self.sensitivity_param_group_cache_last_params[obj.name][param_group][combo] = current_params
 
             min_results.append(result[0])
             max_results.append(result[1])
