@@ -98,7 +98,7 @@ class ExponentDecay(DataDistribution):
         name : str
             Name of the data distribution.
         """
-        dist = stats.expon(loc=start, scale=decay_rate)
+        dist = stats.expon(loc=start, scale=1/decay_rate)
         expon = super().from_distributions(dist, is_cts=True, name=name)
         expon.dist_name = "expon"
 

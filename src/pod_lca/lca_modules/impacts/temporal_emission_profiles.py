@@ -133,22 +133,22 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
     """A uniform data distribution."""
 
     @classmethod
-    def from_params(cls, start, step, name="unspecified"):
+    def from_params(cls, start, range, name="unspecified"):
         """Create a uniform distribution from parameters specified.
 
         Parameters
         ----------
         start : int or float
             Starting point of uniform distribution.
-        step : int or float
-            Width of the distributions (distribution ends at start + step).
+        range : int or float
+            Width of the distributions (distribution ends at start + range).
         name : str
             Name of the data distribution.
         """
-        uniform = super().from_params(start, step, name)
+        uniform = super().from_params(start, range, name)
 
         uniform.set_start(start)
-        uniform.set_duration(step)
+        uniform.set_duration(range)
 
         return uniform
 
@@ -163,7 +163,7 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
         name : str
             Name of the data distribution.
         """
-        pulse = cls.from_params(start=at, step=0.001, name=name)
+        pulse = cls.from_params(start=at, range=0.001, name=name)
         pulse.dist_name = "pulse"
 
         pulse.set_start(at)
@@ -341,22 +341,24 @@ class LinearEmissionProfile(TemporalEmissionProfiles, Linear):
     """A linear data distribution."""
 
     @classmethod
-    def from_params(cls, start, step, slope, name="unspecified"):
+    def from_params(cls, start, range, slope, name="unspecified"):
         """Create a linear distribution from parameters specified.
 
         Parameters
         ----------
         start : int or float
             Starting point of linear distribution.
-        step : int or float
+        range : int or float
             Width of the distributions (distribution ends at start + step).
+        slope : int or float
+            Slope of the linear function.
         name : str
             Name of the data distribution.
         """
-        linear = super().from_params(start, step, slope, name)
+        linear = super().from_params(start, range, slope, name)
 
         linear.set_start(start)
-        linear.set_duration(step)
+        linear.set_duration(range)
 
         return linear
 
@@ -366,25 +368,26 @@ class SquareRootEmissionProfile(TemporalEmissionProfiles, SquareRoot):
     """A square root data distribution."""
 
     @classmethod
-    def from_range(cls, start, step, name="unspecified"):
+    def from_range(cls, start, range, name="unspecified"):
         """Create a square root distribution from parameters specified.
 
         Parameters
         ----------
         start : int or float
             Starting point of square root distribution.
-        scale : int or float
-            Scale parameter of the square root function.
+        range : int or float
+            Width of the distributions (distribution ends at start + range).
         name : str
             Name of the data distribution.
         """
-        sqrt = super().from_params(start, step, name)
+        sqrt = super().from_params(start, range, name)
 
         sqrt.set_start(start)
-        sqrt.set_duration(step)
+        sqrt.set_duration(range)
 
         return sqrt
 
+    #TODO: test sqrt emission profile with real examples and add other options for generating distribution as needed
 
 if __name__ == "__main__":
     pass

@@ -11,10 +11,16 @@ from numpy import zeros
 from . import DynamicRadiativeForcing
 from ..impacts import Emissions
 from ..impacts import UniformEmissionProfile
+from ..impacts import NormEmissionProfile
+from ..impacts import ExponentDecayEmissionProfile
+from ..impacts import LogNormEmissionProfile
+from ..impacts import LinearEmissionProfile
+from ..impacts import SquareRootEmissionProfile
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataExporter
+from ...utilities import DataImporter
 from ...visualizer import LinePlot
 from ...visualizer import MatplotlibPlotter
 from ...visualizer import Stackplot
@@ -31,7 +37,7 @@ class DynamicRadiativeForcingRecord:
         Time horizon in years.
     time_step : int or float
         Time step of the record. The same time step is used for both for integration and for reporting.
-    emissions_lst : list of ~pod_lca.impacts.Emissions
+    emissions_list : list of ~pod_lca.impacts.Emissions
         List of emissions considered in the record.
     data_years : numpy.array of int or float
         Years in the record.
@@ -49,7 +55,7 @@ class DynamicRadiativeForcingRecord:
         self.time_horizon = None
         self.start_year = None
         self.time_step = None
-        self.emissions_lst = []
+        self.emissions_list = []
         self.data_years = None
         self.data_emission_intensity = None
         self.data_concentrations = None
@@ -111,9 +117,9 @@ class DynamicRadiativeForcingRecord:
         ~pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord
             DRF record object.
         """
-        emissions_lst = [item.get_emissions() for item in products]
+        emissions_list = [item.get_emissions() for item in products]
 
-        return cls.from_emissions(emissions_lst, start_year, time_horizon, time_step)
+        return cls.from_emissions(emissions_list, start_year, time_horizon, time_step)
 
     # ========================
     # Setters
@@ -201,7 +207,7 @@ class DynamicRadiativeForcingRecord:
             # emission time profile
             time_profile = emission.get_temporal_emission_profile()
             if time_profile.get_dist_name() == "pulse":
-                pulse = UniformEmissionProfile.from_params(start=emission.get_start_year(), step=time_step)
+                pulse = UniformEmissionProfile.from_params(start=emission.get_start_year(), range=time_step)
                 pulse.dist_name = "pulse"
                 emission.set_temporal_emission_profile(pulse)
                 time_profile = emission.get_temporal_emission_profile()
@@ -303,7 +309,7 @@ class DynamicRadiativeForcingRecord:
         list of ~pod_lca.impacts.Emissions
             List of emissions considered in the record.
         """
-        return self.emissions_lst
+        return self.emissions_list
 
     def get_time_step(self):
         """Set the time step for time series record.
@@ -366,13 +372,139 @@ class DynamicRadiativeForcingRecord:
 
         Parameters
         ----------
-        emissions : list or ~pod_lac.impacts.Emissions
+        emissions : list or ~pod_lca.impacts.Emissions
             Emission(s) to be assigned to the record
         """
         if isinstance(emissions, list):
-            self.emissions_lst.extend(emissions)
+            self.emissions_list.extend(emissions)
         elif isinstance(emissions, Emissions):
-            self.emissions_lst.append(emissions)
+            self.emissions_list.append(emissions)
+
+        return self
+
+    def add_emissions_from_list_of_dicts(self, emissions):
+        """Assign a list of emissions to the dynamic radiative forcing record from a dictionary.
+
+        Parameters
+        ----------
+        emissions : list of dicts or list of ~pod_lca.impacts.Emissions
+            List of dictionaries containing emission data: [{'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
+                                                            'qty': float [kg], 
+                                                            'emission_profile': 
+                                                                {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'sqrt'),
+                                                                 'start': int [year], 
+                                                                 **'range': float [years],
+                                                                 **'decay_rate': float [1/years],
+                                                                 **'skew': float,
+                                                                 **'slope': float}
+                                                                 }, {emission_2}, ...]]
+
+                                                   (Note: '*' indicates an optional parameters depending on the profile type.)
+        """
+        for emission_dict in emissions:
+            greenhouse_gas = emission_dict.get("greenhouse_gas")
+            emission_qty = emission_dict.get("qty")
+            emission_profile = emission_dict.get("emission_profile")
+
+            if emission_qty != 0:
+                emission = Emissions.from_dict({greenhouse_gas: emission_qty})
+
+                #Assign emission profile
+                profile_type = emission_profile.get("profile_type", "pulse").lower()
+                t_start = emission_profile.get("start")
+
+                if profile_type == "pulse":
+                    pulse = UniformEmissionProfile.unit_pulse(at=t_start)
+                    emission.set_temporal_emission_profile(pulse)
+
+                elif profile_type == "uniform":
+                    t_range = emission_profile.get("range")
+                    uniform = UniformEmissionProfile.from_params(start=t_start, range=t_range)
+                    emission.set_temporal_emission_profile(uniform)
+
+                elif profile_type == "normal":
+                    t_range = emission_profile.get("range")
+                    norm = NormEmissionProfile.from_range(start=t_start, range=t_range)
+                    emission.set_temporal_emission_profile(norm)
+
+                elif profile_type in ["exponential decay", "exponential_decay", "exp_decay"]:
+                    decay_rate = emission_profile.get("decay_rate")
+                    exp_decay = ExponentDecayEmissionProfile.from_decay_rate(start=t_start, decay_rate=decay_rate)
+                    emission.set_temporal_emission_profile(exp_decay)
+
+                elif profile_type == "lognormal":
+                    t_range = emission_profile.get("range")
+                    skew = emission_profile.get("skew", 0)
+                    lognorm = LogNormEmissionProfile.from_range(start=t_start, range=t_range, skew=skew)
+                    emission.set_temporal_emission_profile(lognorm)
+
+                elif profile_type == "linear":
+                    t_range = emission_profile.get("range")
+                    slope = emission_profile.get("slope")
+                    linear = LinearEmissionProfile.from_params(start=t_start, range=t_range, slope=slope)
+                    emission.set_temporal_emission_profile(linear)
+
+                elif profile_type in ["square root", "square_root", "sqrt"]:
+                    t_range = emission_profile.get("range")
+                    sqrt = SquareRootEmissionProfile.from_range(start=t_start, range=t_range)
+                    emission.set_temporal_emission_profile(sqrt)
+
+                else:
+                    raise ValueError(f"Emission profile type {profile_type} is not recognized.")
+
+                self.emissions_list.append(emission)
+
+        return self
+
+    def add_emissions_from_csv(self, file_path):
+        """Assign a list of emissions to the dynamic radiative forcing record from a csv file.
+        Note: CSV file should have headers: 
+            "Greenhouse Gas Type" : 'CO2', 'CH4', or 'N2O', 
+            "Quantity (kg)" : float, 
+            "Temporal Emission Profile" : 'pulse', 'uniform', 'normal', 'exponential decay', 'lognormal', 'linear', or 'square root'
+            "Start Time (year)" : float,
+            **"Duration (years)" : float, (required for uniform, normal, lognormal, linear, or square root profiles)
+            **"Decay Rate (1/years)", (required for exponential decay profile)
+            **"Skew", (required for lognormal profile)
+            **"Slope (1/years)" (required for linear profile)
+
+        Parameters
+        ----------
+        file_path : str
+            Location of the csv file containing emission data.
+        """
+        emissions_data = DataImporter.csv_to_dict(file_path)
+        emissions_list_raw = list(emissions_data.values())
+        emissions_list_formatted = []
+        #convert temporal emission profile parameter to separate dict for each emission
+        for emission_dict in emissions_list_raw:
+            emission_profile = {}
+            for key, value in emission_dict.items():
+                if key == "Greenhouse Gas Type" and value != "":
+                    greenhouse_gas = value
+                elif key == "Quantity (kg)" and value != "":
+                    qty = float(value)
+                elif key == "Temporal Emission Profile" and value != "":
+                    emission_profile["profile_type"] = value
+                elif key == "Start Time (year)" and value != "":
+                    emission_profile["start"] = float(value)
+                elif key == "Duration (years)" and value != "":
+                    emission_profile["range"] = float(value)
+                elif key == "Decay Rate (1/years)" and value != "":
+                    emission_profile["decay_rate"] = float(value)
+                elif key == "Skew" and value != "":
+                    emission_profile["skew"] = float(value)
+                elif key == "Slope (1/years)" and value != "":
+                    emission_profile["slope"] = float(value)
+                elif value == "":
+                    pass
+                else:
+                    raise ValueError(f"Emission profile parameter {key} is not recognized.")
+
+            emission_dict_formatted = {'greenhouse_gas': greenhouse_gas, 'qty': qty, 'emission_profile': emission_profile}
+            emissions_list_formatted.append(emission_dict_formatted)
+
+        self.add_emissions_from_list_of_dicts(emissions_list_formatted)
 
         return self
 
