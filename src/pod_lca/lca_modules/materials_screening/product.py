@@ -380,7 +380,21 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             self._last_params[lc_stage] = current_params
 
             return impacts
-        
+
+    def get_carbon_storage(self):
+        """Retrieve the carbon storage of the product/process.
+
+        Returns
+        -------
+        ~pod_lca.impacts.CarbonStorage
+            Carbon storage of the product/process.
+        """
+        current_params = self.get_cache_key()
+        if not ((self._last_params["A1"] == current_params) and self._cache_is_computed["A1"]):
+            self.update_inventory_records()
+
+        return self.carbon_storage
+
     # ================================
     # Methods
     # ================================

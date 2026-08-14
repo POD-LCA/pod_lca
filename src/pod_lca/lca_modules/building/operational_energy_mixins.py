@@ -306,7 +306,8 @@ class OperationalMixins:
 
             for sk in env.surfaces:
                 con = env.surfaces[sk].construction
-                self.constructions[con.name] = con
+                if con:
+                    self.constructions[con.name] = con
 
         windows = self.building_envelope.envelopes[ek].windows
         for wk in windows:
@@ -325,10 +326,9 @@ class OperationalMixins:
         """
         self.layers = {}
         for ck in self.constructions:
-            if self.constructions[ck].__type__ == 'FramedWall':
-                layers = [self.constructions[ck].virtual_layers[lk] for lk in self.constructions[ck].virtual_layers]
-            else:
-                layers = [self.constructions[ck].layers[lk] for lk in self.constructions[ck].layers]
+            cstr = self.constructions[ck]
+            cstr.update_layer_properties()
+            layers = cstr.get_layers()
             for layer in layers:
                 name = layer.name
                 thick = layer.thickness

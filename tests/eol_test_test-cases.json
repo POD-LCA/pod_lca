@@ -1,12 +1,62 @@
 {
     "test_01" :{
-        "Wood":{"qty": 4.2, "unit": "kg"},
-        "Glass": {"qty": 0.5, "unit": "kg", "bio_based": false}
+        "Agricultural Residues (high lignin)":{"origin": "US", "qty": 1.0, "unit": "kg", "bio_based": true, "stored_bioC": 0.44, "transport_scenario": "Min" }
     },
      "test_02":{
-        "Concrete":{"qty": 100000, "unit": "kg"}
+        "Bamboo":{"origin": "MD", "qty": 1, "unit": "kg", "bio_based": true, "stored_bioC": 0.44, "transport_scenario": "Max"}
     },
     "test_03":{
-        "Bamboo":{"qty": 538, "unit": "kg"}
+        "Concrete (reinforced)":{"origin": "MI", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Mean"}
+    },
+    "test_04":{
+        "Vinyl composition tile":{"origin": "MO", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Min"}
+    },
+    "test_05":{
+        "Sealing sheet":{"origin": "AZ","qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Max"}
+    },
+    "test_06":{
+        "Polyurethane":{"origin": "OH", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Mean"}
+    },
+    "test_07":{
+        "Glass":{"origin": "MN", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Min"}
+    },
+    "test_08":{
+        "Paint":{"origin": "WA", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Max"}
+    },
+    "test_09":{
+        "Wood (untreated)":{"origin": "DE", "qty": 1, "unit": "kg", "bio_based": true, "stored_bioC": 0.44, "transport_scenario": "Mean"}
+    },
+    "test_10":{
+        "Wood (chrome preserved)":{"origin": "VT", "qty": 1, "unit": "kg", "bio_based": true, "stored_bioC": 0.44, "transport_scenario": "Min"}
+    },
+    "test_11":{
+        "Polyvinylchloride":{"origin": "CT", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Max"}
+    },
+    "test_12":{
+        "Polystyrene":{"origin": "TN", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Mean"}
+    },
+    "test_13":{
+        "Polypropylene":{"origin": "CA", "qty": 1, "unit": "kg", "bio_based": false, "transport_scenario": "Min"}
+    },
+    "test_14":{
+        "Paper (building waste)":{"origin": "KY", "qty": 1, "unit": "kg", "bio_based": true, "stored_bioC": 0.44, "transport_scenario": "Max"}
+    },
+    "test_15":{
+        "Medium density fiberboard":{"origin": "OR", "qty": 708, "unit": "kg", "bio_based": true, "stored_bioC": 311.52, "transport_scenario": "Mean"}
+    },
+    "test_16":{
+        "Sealing sheet (polyvinylchloride)":{"origin": "TX", "qty": 693, "unit": "kg", "bio_based": false, "transport_scenario": "Min"}
+    },
+    "test_17":{
+        "Clay brick":{"origin": "NM", "qty": 241, "unit": "kg", "bio_based": false, "transport_scenario": "Max"}
+    },
+    "test_18":{
+        "Cement":{"origin": "CO", "qty": 957, "unit": "kg", "bio_based": false, "transport_scenario": "Mean"}
+    },
+    "test_19":{
+        "Polyurethane (foam)":{"origin": "AK", "qty": 710, "unit": "kg", "bio_based": false, "transport_scenario": "Min"}
+    },
+    "test_20":{
+        "Carpet padding":{"origin": "ME", "qty": 289, "unit": "kg", "bio_based": false, "transport_scenario": "Max"}
     }
 }

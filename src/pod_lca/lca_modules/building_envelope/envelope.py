@@ -350,11 +350,12 @@ class Envelope:
         if shadings:
             pass
         
-        wall.set_parent(envelope)
-        floor.set_parent(envelope)
-        ceiling.set_parent(envelope)
-
-        envelope.set_materials_in_conmponents()
+        if wall:
+            wall.set_parent(envelope)
+        if floor:
+            floor.set_parent(envelope)
+        if ceiling:
+            ceiling.set_parent(envelope)
 
         return envelope
 

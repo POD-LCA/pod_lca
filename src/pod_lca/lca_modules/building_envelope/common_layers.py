@@ -10,7 +10,11 @@ from .framing import Framing
 from .layer import Layer
 from .layer import AncillaryMaterial
 from ...units import Quantity
-from ...units import KILOGRAM, INCH, SQUARE_FEET, FEET, CUBIC_METER
+from ...units import CUBIC_METER
+from ...units import FEET
+from ...units import INCH
+from ...units import KILOGRAM
+from ...units import SQUARE_FEET
 from ...utilities import config
 from ...utilities import DataImporter
 
@@ -18,7 +22,7 @@ from ...utilities import DataImporter
 class BrickLayer(Layer):
 
     @classmethod
-    def from_property_and_thickness(cls, name, brick_property, thickness, classification=None):
+    def from_property_and_thickness(cls, name, brick_property, thickness, classification='exterior_cladding'):
         brick_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
         brick_layer.add_ancillary_material(Mortar())
         return brick_layer
@@ -41,7 +45,7 @@ class BrickLayer(Layer):
 class SheathingLayer(Layer):
 
     @classmethod
-    def from_property_and_thickness(cls, name, brick_property, thickness, classification=None):
+    def from_property_and_thickness(cls, name, brick_property, thickness, classification='sheathing'):
         sheathing_layer = super().from_property_and_thickness(name, brick_property, thickness, classification)
         sheathing_layer.add_ancillary_material(Fastners())
         return sheathing_layer
@@ -51,7 +55,8 @@ class Mortar(AncillaryMaterial):
     def __init__(self, material_property=None):
         if material_property is None:
             material_property = EnvelopeMaterialPropertyMass()
-            material_property.name = "Type S Mortar"
+            material_property.name = "Mortar"
+            material_property.database_entry_name = "Blended hydraulic cement, USA"
         super().__init__(material_property)
 
 
@@ -69,7 +74,8 @@ class Fastners(AncillaryMaterial):
     def __init__(self, material_property=None):
         if material_property is None:
             material_property = EnvelopeMaterialPropertyMass()
-            material_property.name = "Steel plate, fabricated"
+            material_property.name = "Fastners"
+            material_property.database_entry_name = "Steel plate, fabricated"
         super().__init__(material_property)
 
     def get_quantity(self, area=None, qty_in=None):

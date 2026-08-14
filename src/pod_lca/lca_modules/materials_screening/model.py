@@ -363,15 +363,19 @@ class Model:
         self.impacts["A1"] = []
         self.impacts["A3"] = []
         for item in self.get_all_items(transportation=False):
-            item.update_inventory_records()
+            current_params = item.get_cache_key()
 
             if isinstance(item, Product):
                 if plus_minus_accounting:
                     A1_impacts = copy(item.get_impacts("A1"))
                     if A1_impacts:
+                        if not ((item._last_params["A1"] == current_params) and item._cache_is_computed["A1"]):
+                            item.update_inventory_records()
                         self.impacts["A1"].append(A1_impacts)
                     A3_impacts = copy(item.get_impacts("A3"))
                     if A3_impacts:
+                        if not ((item._last_params["A3"] == current_params) and item._cache_is_computed["A3"]):
+                            item.update_inventory_records()
                         self.impacts["A3"].append(A3_impacts)
                 else:
                     self.impacts[item.get_life_cycle_stage()].append(item.get_impacts())
@@ -389,12 +393,19 @@ class Model:
 
             case "with_material":
                 transportation_manager = self.get_transportation_manager()
+
+                combined_impacts_list = []
                 for impact in self.impacts["A1"]:
                     product = impact.get_parent()
                     if product.get_transportation() is not None:
-                        impact += transportation_manager.get_impacts(product)
+                        combined_impact = impact + transportation_manager.get_impacts(product)
+                        combined_impact.set_parent(product)
+                        combined_impacts_list.append(combined_impact)
+                    else:
+                        combined_impacts_list.append(impact)
                 
                 self.impacts["A2"] = []
+                self.impacts["A1"] = combined_impacts_list
 
             case "all_transportation":
                 self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
@@ -413,7 +424,13 @@ class Model:
             Emissions of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Emissions`}
         """
         for item in self.get_all_items():
-            item.update_inventory_records()
+            if isinstance(item, Product):
+                current_params = item.get_cache_key()
+                lc_stage = item.get_life_cycle_stage()
+                if not ((item._last_params[lc_stage] == current_params) and item._cache_is_computed[lc_stage]):
+                    item.update_inventory_records()
+            else:
+                item.update_inventory_records()
 
         self.emissions["A2"] = [self.get_transportation_manager().get_emissions()]
 
@@ -428,7 +445,12 @@ class Model:
             Carbon Storage of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.CarbonStorage`}
         """
         for item in self.get_all_items():
-            item.update_inventory_records()
+            if isinstance(item, Product):
+                current_params = item.get_cache_key()
+                if not ((item._last_params["A1"] == current_params) and item._cache_is_computed["A1"]):
+                    item.update_inventory_records()
+            else:
+                item.update_inventory_records()
 
         return self.carbon_storage
     
@@ -447,23 +469,26 @@ class Model:
         """
         carbon_storage_records = self.get_carbon_storage()
 
-        bio_total = 0
-        all_records = carbon_storage_records["A1"]
-        for record in all_records:
-            bio_total += record.get_biogenic_carbon_storage_qty(unit)
+        if _type == "biogenic" or _type == "total":
+            bio_total = sum(
+                record.get_biogenic_carbon_storage_qty(unit)
+                for record in carbon_storage_records["A1"]
+            )
 
-        if _type == "biogenic":
-            return bio_total
+            if _type == "biogenic":     
+                return bio_total
 
-        mnrl_total = 0
-        all_records = [item for sublist in carbon_storage_records.values() for item in sublist]
-        for record in carbon_storage_records["A1"]:
-            mnrl_total += record.get_mineral_carbon_storage_qty(unit)
+        if _type == "mineral" or _type == "total":
+            mnrl_total = sum(
+                record.get_mineral_carbon_storage_qty(unit)
+                for record in carbon_storage_records["A1"]
+            )
 
-        if _type == "mineral":
-            return mnrl_total
+            if _type == "mineral":
+                return mnrl_total
 
         total = bio_total + mnrl_total
+        
         return total
 
     # ================================

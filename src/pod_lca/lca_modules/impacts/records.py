@@ -115,6 +115,13 @@ class Records:
         """Reflexive multiplication of a record by a scalar."""
         return self.__mul__(scalar)
 
+    def __copy__(self):
+        """Make a copy of the record object."""
+        new_record = self.__class__()
+        new_record.__dict__.update(self.__dict__)
+
+        return new_record
+
     # ========================
     # Constructors
     # ========================
@@ -169,7 +176,7 @@ class Records:
         ~pod_lca.impacts.Records
             Copy of the object.
         """
-        new_obj = cls()
+        new_obj = record_obj.__class__.__new__(record_obj.__class__)
         new_obj.__dict__.update(record_obj.__dict__)
 
         return new_obj

@@ -5,6 +5,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ...utilities import DataImporter
+from ...utilities import config
+
 
 class Assembly:
     """ Assemblies which the building is made up of.
@@ -197,6 +200,26 @@ class Assembly:
         float
             Service life of the material in years.
         """
+        if (self.service_life is None)and self.get_service_life_category():
+            service_life = self.get_service_life_category()
+
+            building_standard = self.get_building().get_building_data_standard()
+            service_life_mapping = DataImporter.csv_to_dict(config['file_paths']['building'][building_standard.upper() + '_SERVICE_LIFE'], 'POD|LCA RSL Category')
+            
+            if service_life in service_life_mapping:
+                if isinstance(service_life_mapping[service_life]['service_life'], (int, float)):
+                    self.service_life = float(service_life_mapping[service_life]['service_life'])
+                elif isinstance(service_life_mapping[service_life]['service_life'], str):
+                    if service_life_mapping[service_life]['service_life'].lower() in ['life of building', 'building life span', 'building lifespan']:
+                        self.service_life = self.get_building().get_life_span()
+                    else:
+                        try:
+                            self.service_life = float(service_life_mapping[service_life]['service_life'])
+                        except ValueError:
+                            raise ValueError(f"Service life value '{service_life_mapping[service_life]['service_life']}' not recognized for category '{service_life}' in '{building_standard}' service life database.")
+                else:
+                    raise ValueError(f"Service life value type not recognized for category '{service_life}' in '{building_standard}' service life database.")
+
         return self.service_life
     
     # ================================

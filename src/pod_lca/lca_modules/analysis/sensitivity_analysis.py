@@ -7,8 +7,23 @@ __version__ = "0.1.0"
 
 class SensitivityAnalysis:
 
+    def __init__(self):
+        self.model = None
+
+        self.sensitivity_param_cache = {}
+        self.sensitivity_param_cache_last_params = {}
+
+        self.sensitivity_param_group_cache = {}
+        self.sensitivity_param_group_cache_last_params = {}   
+
     def compute_sensitivity_of_param(
-        obj, param, impact_cat="weighted", sensitivity_type="relative", printout=True, **kwargs
+        self, 
+        obj, 
+        param, 
+        impact_cat="weighted", 
+        sensitivity_type="relative", 
+        printout=True, 
+        **kwargs
     ):
         """Compute the sensitivity of a parameter of an object.
 
@@ -53,6 +68,11 @@ class SensitivityAnalysis:
 
         base_impact = model.get_total_impact(impact_cat)
         base_val = getattr(obj, "get_" + param)()
+
+        # check cache
+        current_params = (base_impact, impact_cat, sensitivity_type)
+        if (self.sensitivity_param_cache_last_params.get(obj.name, {}).get(param) == current_params): 
+            return self.sensitivity_param_cache[obj.name][param]
 
         method_name = "set_" + param
         method = getattr(obj, method_name)
@@ -138,9 +158,18 @@ class SensitivityAnalysis:
             else:
                 raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
 
+        # set cache
+        if obj.name not in self.sensitivity_param_cache:
+            self.sensitivity_param_cache[obj.name] = {}
+            self.sensitivity_param_cache_last_params[obj.name] = {}
+
+        self.sensitivity_param_cache[obj.name][param] = result_range
+        self.sensitivity_param_cache_last_params[obj.name][param] = current_params
+
         return result_range
 
     def compute_sensitivity_of_params(
+        self,
         model,
         groups,
         impact_cat="weighted",
@@ -189,7 +218,7 @@ class SensitivityAnalysis:
             Keyword arguments not recognized.
         """
         base_impact = model.get_total_impact(impact_cat)
-
+        
         for group in groups:
             obj = group["obj"]
             param = group["param"]
@@ -285,6 +314,83 @@ class SensitivityAnalysis:
 
         return [results["min"], results["max"]]
 
+
+    def compute_sensitivity_of_param_combos(
+        self, 
+        obj, 
+        param_group,
+        combos, 
+        impact_cat="weighted", 
+        sensitivity_type="relative", 
+    ):
+        """
+        
+        Notes:
+        1 - parameter set of one item in the model
+        2 - each parameter is set to a given value in each combo
+        """
+        model = obj.get_model()
+        base_impact = model.get_total_impact(impact_cat)
+
+        min_results, max_results = [], []
+        for combo in combos:
+
+            # check cache
+            current_params = (base_impact, impact_cat, sensitivity_type)
+            if (self.sensitivity_param_group_cache_last_params.get(obj.name, {}).get(param_group, {}).get(combo, {}) == current_params): 
+                result = self.sensitivity_param_group_cache[obj.name][param_group][combo]
+
+            else:
+                for item in combos[combo]:
+                    param = item["param"]
+                    base_val = getattr(obj, "get_" + param)()
+
+                    method_name = "set_" + param
+                    method = getattr(obj, method_name)
+
+                    item["base_val"] = base_val
+                    item["method"] = method
+
+                    if isinstance(item["options"], list):
+                        selected_option = item["options"][0]
+
+                    method(selected_option)
+                    
+                obj.update_inventory_records()
+                impact_new = model.get_total_impact(impact_cat)
+
+                if sensitivity_type == "relative":
+                    combo_sensitivity = 100 * (impact_new - base_impact) / base_impact
+                elif sensitivity_type == "symmetric":
+                    combo_sensitivity = 100 * (impact_new - base_impact) / (base_impact + impact_new)
+                else:
+                    raise ValueError(f"Invalid sensitivity type: {sensitivity_type}")
+                
+                if impact_new > base_impact:
+                    result = (0.0, combo_sensitivity)
+                else:
+                    result = (combo_sensitivity, 0.0)
+
+                # reset params
+                for item in combos[combo]:
+                    item["method"](item["base_val"])    
+
+                # set cache
+                if obj.name not in self.sensitivity_param_group_cache:
+                    self.sensitivity_param_group_cache[obj.name] = {}
+                    self.sensitivity_param_group_cache_last_params[obj.name] = {}
+
+                if param_group not in self.sensitivity_param_group_cache[obj.name]:
+                    self.sensitivity_param_group_cache[obj.name][param_group] = {}
+                    self.sensitivity_param_group_cache_last_params[obj.name][param_group] = {}
+
+                self.sensitivity_param_group_cache[obj.name][param_group][combo] = result
+                self.sensitivity_param_group_cache_last_params[obj.name][param_group][combo] = current_params
+
+            min_results.append(result[0])
+            max_results.append(result[1])
+
+        return [min(min_results), max(max_results)]
 
 if __name__ == "__main__":
     pass
