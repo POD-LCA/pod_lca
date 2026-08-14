@@ -387,19 +387,22 @@ class DynamicRadiativeForcingRecord:
 
         Parameters
         ----------
-        emissions : list of dicts or list of ~pod_lca.impacts.Emissions
-            List of dictionaries containing emission data: [{'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
-                                                            'qty': float [kg], 
-                                                            'emission_profile': 
-                                                                {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'sqrt'),
-                                                                 'start': int [year], 
-                                                                 **'range': float [years],
-                                                                 **'decay_rate': float [1/years],
-                                                                 **'skew': float,
-                                                                 **'slope': float}
-                                                                 }, {emission_2}, ...]]
+        emissions : list of dicts
+            List of dictionaries containing emission data: 
+                  [{'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
+                    'qty': float [kg], 
+                    'emission_profile': 
+                        {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'sqrt'),
+                            'start': int [year], 
+                            **'range': float [years],
+                            **'decay_rate': float [1/years],
+                            **'skew': float,
+                            **'slope': float}
+                            }, 
+                    {...}, 
+                    ...]
 
-                                                   (Note: '*' indicates an optional parameters depending on the profile type.)
+                    (Note: '**' indicates an optional parameters depending on the profile type.)
         """
         for emission_dict in emissions:
             greenhouse_gas = emission_dict.get("greenhouse_gas")

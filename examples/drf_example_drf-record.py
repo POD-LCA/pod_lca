@@ -64,8 +64,8 @@ drf_record = DynamicRadiativeForcingRecord()
 drf_record.set_start_year(0)
 drf_record.set_time_horizon(100)
 drf_record.set_time_step(1 / 12)
-drf_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)'''
-
+drf_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
+'''
 # ====== Example of creating a DRF record from a CSV file of emissions dictionaries =========
 '''drf_record = DynamicRadiativeForcingRecord()
 drf_record.set_start_year(0)
@@ -74,7 +74,8 @@ drf_record.set_time_step(1 / 12)
 
 # Set DLCI File path
 test_DLCI_file_path = "examples/drf_example_dlci.csv"
-drf_record.add_emissions_from_csv(test_DLCI_file_path)'''
+drf_record.add_emissions_from_csv(test_DLCI_file_path)
+'''
 # ===========================================================================================
 
 drf_record.set_data()
@@ -82,9 +83,7 @@ drf_record.set_data()
 drf_record.plot(
     "atmospheric concentration", "lineplot"
 )  
-# plot options: 'emission intensity', 'atmospheric concentration', 
-#               'instantaneous radiative forcing', 'cumulative radiative forcing', 
-#               'GWP-dynamic', 'AGTP'
+# plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
 # plot types: 'lineplot', 'stackplot'
 
 output_file = "src/pod_lca/data/drf_record_temp.csv"
