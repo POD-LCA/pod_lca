@@ -398,7 +398,9 @@ class Model:
                 for impact in self.impacts["A1"]:
                     product = impact.get_parent()
                     if product.get_transportation() is not None:
-                        combined_impacts_list.append(impact + transportation_manager.get_impacts(product))
+                        combined_impact = impact + transportation_manager.get_impacts(product)
+                        combined_impact.set_parent(product)
+                        combined_impacts_list.append(combined_impact)
                     else:
                         combined_impacts_list.append(impact)
                 
