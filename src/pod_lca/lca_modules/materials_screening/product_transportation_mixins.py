@@ -7,6 +7,8 @@ __version__ = "0.1.0"
 from math import isnan
 
 from ..impacts import UniformEmissionProfile
+from .. transportation import DomesticLeg
+from .. transportation import ForeignLeg
 from ...units import KILOMETER
 from ...utilities import config
 from ...utilities import DataImporter
@@ -98,6 +100,53 @@ class ProductTransportationMixins:
             self.sctg_code = code
 
         return self
+
+    def set_transport_scenario(self, scenario):
+        """Set the transport scenario of the transportation leg.
+
+        Parameters
+        ----------
+        transport_scenario : {'Local', 'Regional', 'National', 'N/A', 'No Scenario'}
+            Transport scenario of the transportation leg.
+        """
+        transportation_leg = self.get_transportation()
+
+        if isinstance(transportation_leg, DomesticLeg):
+            transportation_leg.set_transport_scenario(scenario)
+        elif isinstance(transportation_leg, ForeignLeg):
+            pass # TODO: set a domestic leg with the defaults
+        else:
+            pass # TODO: set a domestic leg with the defaults
+
+    def set_transport_mode(self, mode):
+        """Set the transportation mode of the transportation leg.
+
+        Parameters
+        ----------
+        mode : {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
+            Transportation mode of the transportation leg.
+        """
+        transportation_leg = self.get_transportation()
+
+        if isinstance(transportation_leg, (DomesticLeg, ForeignLeg)):
+            transportation_leg.set_mode(mode=mode)
+        else:
+            pass  # TODO: raise error     
+
+    def set_transport_mode_efficiency(self, efficiency):
+        """Set the transportation mode efficiency of the transportation leg.
+
+        Parameters
+        ----------
+        efficiency : {'High', 'Median', 'Low'}
+            Efficiency of the transportation mode.
+        """
+        transportation_leg = self.get_transportation()
+
+        if isinstance(transportation_leg, (DomesticLeg, ForeignLeg)):
+            transportation_leg.set_mode(efficiency=efficiency)
+        else:
+            pass # TODO: raise error  
 
     # ================================
     # Getters
