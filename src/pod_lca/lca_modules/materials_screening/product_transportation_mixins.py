@@ -199,6 +199,42 @@ class ProductTransportationMixins:
         else:
             return self.sctg_code
 
+    def get_transport_scenario(self):
+        """Get the transport scenario of the transportation leg.
+
+        Returns
+        -------
+        str
+            Transport scenario of the transportation leg.
+        """
+        transportation_leg = self.get_transportation()
+
+        return transportation_leg.get_transport_scenario()
+    
+    def set_transport_mode(self):
+        """Get the transportation mode of the transportation leg.
+
+        Returns
+        -------
+        str
+            Transportation mode of the transportation leg.
+        """
+        transportation_leg = self.get_transportation()
+
+        return transportation_leg.get_mode().get_name()
+
+    def set_transport_mode_efficiency(self):
+        """Get the transportation mode efficiency of the transportation leg.
+
+        Returns
+        -------
+        str
+            Efficiency of the transportation mode.
+        """
+        transportation_leg = self.get_transportation()
+
+        return transportation_leg.get_mode().get_efficiency()
+
     # ================================
     # Methods
     # ================================
