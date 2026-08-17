@@ -207,11 +207,11 @@ class ProductTransportationMixins:
         str
             Transport scenario of the transportation leg.
         """
-        transportation_leg = self.get_transportation()
+        transportation_leg = self.get_transportation()[0]
 
         return transportation_leg.get_transport_scenario()
     
-    def set_transport_mode(self):
+    def get_transport_mode(self):
         """Get the transportation mode of the transportation leg.
 
         Returns
@@ -219,11 +219,11 @@ class ProductTransportationMixins:
         str
             Transportation mode of the transportation leg.
         """
-        transportation_leg = self.get_transportation()
+        transportation_leg = self.get_transportation()[0]
 
         return transportation_leg.get_mode().get_name()
 
-    def set_transport_mode_efficiency(self):
+    def get_transport_mode_efficiency(self):
         """Get the transportation mode efficiency of the transportation leg.
 
         Returns
@@ -231,7 +231,7 @@ class ProductTransportationMixins:
         str
             Efficiency of the transportation mode.
         """
-        transportation_leg = self.get_transportation()
+        transportation_leg = self.get_transportation()[0]
 
         return transportation_leg.get_mode().get_efficiency()
 
