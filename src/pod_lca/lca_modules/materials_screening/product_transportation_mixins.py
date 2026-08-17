@@ -109,7 +109,7 @@ class ProductTransportationMixins:
         transport_scenario : {'Local', 'Regional', 'National', 'N/A', 'No Scenario'}
             Transport scenario of the transportation leg.
         """
-        transportation_leg = self.get_transportation()
+        transportation_leg = self.get_transportation()[0]
 
         if isinstance(transportation_leg, DomesticLeg):
             transportation_leg.set_transport_scenario(scenario)
@@ -126,7 +126,7 @@ class ProductTransportationMixins:
         mode : {'Truck', 'E_Truck', 'Rail', 'Barge', 'Ocean', 'Air'}
             Transportation mode of the transportation leg.
         """
-        transportation_leg = self.get_transportation()
+        transportation_leg = self.get_transportation()[0]
 
         if isinstance(transportation_leg, (DomesticLeg, ForeignLeg)):
             transportation_leg.set_mode(mode=mode)
@@ -141,7 +141,7 @@ class ProductTransportationMixins:
         efficiency : {'High', 'Median', 'Low'}
             Efficiency of the transportation mode.
         """
-        transportation_leg = self.get_transportation()
+        transportation_leg = self.get_transportation()[0]
 
         if isinstance(transportation_leg, (DomesticLeg, ForeignLeg)):
             transportation_leg.set_mode(efficiency=efficiency)
