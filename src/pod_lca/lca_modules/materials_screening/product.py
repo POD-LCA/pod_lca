@@ -64,10 +64,12 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         
         # electricity mixin
         self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
+        self.electricity_combo = None
 
         # transportation mixin
         self.sctg_code = None
         self.transport_legs = None
+        self.transportation_combo = None
 
         # bio properties mixin
         self.dry_density = None
