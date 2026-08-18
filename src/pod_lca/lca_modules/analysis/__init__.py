@@ -4,7 +4,7 @@ from .prebuilt_distributions import LogNorm
 from .prebuilt_distributions import Norm
 from .prebuilt_distributions import Uniform
 from .prebuilt_distributions import Linear
-from .prebuilt_distributions import SquareRoot
+from .prebuilt_distributions import InverseSquareRoot
 from .utils import UncertainityUtils
 from .data_quality_assessment import PedigreeScore
 from .data_quality_assessment import DataQualityAnalysis

@@ -18,7 +18,7 @@ from ..analysis import LogNorm
 from ..analysis import Norm 
 from ..analysis import Uniform 
 from ..analysis import Linear
-from ..analysis import SquareRoot
+from ..analysis import InverseSquareRoot
 
 
 class TemporalEmissionProfiles(DataDistribution):
@@ -364,8 +364,8 @@ class LinearEmissionProfile(TemporalEmissionProfiles, Linear):
 
     #TODO: test linear emission profile with real examples and add other options for generating distribution as needed
 
-class SquareRootEmissionProfile(TemporalEmissionProfiles, SquareRoot):
-    """A square root data distribution."""
+class InverseSquareRootEmissionProfile(TemporalEmissionProfiles, InverseSquareRoot):
+    """An inverse square root data distribution."""
 
     @classmethod
     def from_range(cls, start, range, name="unspecified"):
@@ -380,12 +380,12 @@ class SquareRootEmissionProfile(TemporalEmissionProfiles, SquareRoot):
         name : str
             Name of the data distribution.
         """
-        sqrt = super().from_params(start, range, name)
+        invsqrt = super().from_params(start, range, name)
 
-        sqrt.set_start(start)
-        sqrt.set_duration(range)
+        invsqrt.set_start(start)
+        invsqrt.set_duration(range)
 
-        return sqrt
+        return invsqrt
 
     #TODO: test sqrt emission profile with real examples and add other options for generating distribution as needed
 

@@ -15,7 +15,7 @@ from ..impacts import NormEmissionProfile
 from ..impacts import ExponentDecayEmissionProfile
 from ..impacts import LogNormEmissionProfile
 from ..impacts import LinearEmissionProfile
-from ..impacts import SquareRootEmissionProfile
+from ..impacts import InverseSquareRootEmissionProfile
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config
@@ -392,7 +392,7 @@ class DynamicRadiativeForcingRecord:
                   [{'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
                     'qty': float [kg], 
                     'emission_profile': 
-                        {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'sqrt'),
+                        {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'inv_sqrt'),
                             'start': int [year], 
                             **'range': float [years],
                             **'decay_rate': float [1/years],
@@ -447,10 +447,10 @@ class DynamicRadiativeForcingRecord:
                     linear = LinearEmissionProfile.from_params(start=t_start, range=t_range, slope=slope)
                     emission.set_temporal_emission_profile(linear)
 
-                elif profile_type in ["square root", "square_root", "sqrt"]:
+                elif profile_type in ["inverse square root", "inverse_square_root", "inv_sqrt"]:
                     t_range = emission_profile.get("range")
-                    sqrt = SquareRootEmissionProfile.from_range(start=t_start, range=t_range)
-                    emission.set_temporal_emission_profile(sqrt)
+                    invsqrt = InverseSquareRootEmissionProfile.from_range(start=t_start, range=t_range)
+                    emission.set_temporal_emission_profile(invsqrt)
 
                 else:
                     raise ValueError(f"Emission profile type {profile_type} is not recognized.")
@@ -464,9 +464,9 @@ class DynamicRadiativeForcingRecord:
         Note: CSV file should have headers: 
             "Greenhouse Gas Type" : 'CO2', 'CH4', or 'N2O', 
             "Quantity (kg)" : float, 
-            "Temporal Emission Profile" : 'pulse', 'uniform', 'normal', 'exponential decay', 'lognormal', 'linear', or 'square root'
+            "Temporal Emission Profile" : 'pulse', 'uniform', 'normal', 'exponential decay', 'lognormal', 'linear', or 'inverse square root'
             "Start Time (year)" : float,
-            **"Duration (years)" : float, (required for uniform, normal, lognormal, linear, or square root profiles)
+            **"Duration (years)" : float, (required for uniform, normal, lognormal, linear, or inverse square root profiles)
             **"Decay Rate (1/years)", (required for exponential decay profile)
             **"Skew", (required for lognormal profile)
             **"Slope (1/years)" (required for linear profile)

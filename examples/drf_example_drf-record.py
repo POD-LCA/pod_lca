@@ -5,7 +5,7 @@ from pod_lca.impacts import UniformEmissionProfile
 from pod_lca.impacts import NormEmissionProfile
 from pod_lca.impacts import LogNormEmissionProfile
 from pod_lca.impacts import LinearEmissionProfile
-from pod_lca.impacts import SquareRootEmissionProfile
+from pod_lca.impacts import InverseSquareRootEmissionProfile
 
 # ========== Example creating emissions object individually ===========
 emission_01 = Emissions.from_dict(record_dict={"CO2": 1})
@@ -35,9 +35,9 @@ linear = LinearEmissionProfile.from_params(start=2035, range=50, slope=-0.1)
 # linear = LinearEmissionProfile.from_percent_decrease(start=2035, step=50, percent_decrease=50)
 emission_06.set_temporal_emission_profile(linear)
 
-emission_07 = Emissions.from_dict(record_dict={"CH4": 1})
-sqrt = SquareRootEmissionProfile.from_range(start=2050, range=50)
-emission_07.set_temporal_emission_profile(sqrt)
+emission_07 = Emissions.from_dict(record_dict={"CO2": 1})
+invsqrt = InverseSquareRootEmissionProfile.from_range(start=2085, range=40)
+emission_07.set_temporal_emission_profile(invsqrt)
 
 drf_record = DynamicRadiativeForcingRecord.from_emissions(
     [
@@ -81,7 +81,7 @@ drf_record.add_emissions_from_csv(test_DLCI_file_path)
 drf_record.set_data()
 
 drf_record.plot(
-    "atmospheric concentration", "lineplot"
+    "emission intensity", "lineplot"
 )  
 # plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
 # plot types: 'lineplot', 'stackplot'
