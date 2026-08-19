@@ -199,6 +199,10 @@ class Construction(Assembly):
     @property
     def area(self):
         """ Returns the surface area of the construction.
+
+        Notes
+        -----
+        1. Assumes to fully cover (once) the surfaces assigned to.
         
         Returns
         -------
