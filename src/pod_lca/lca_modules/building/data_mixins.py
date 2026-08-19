@@ -96,15 +96,19 @@ class DataMixins:
         as_df : bool
             Return results as a dataframe, if True; otherwise, dictionary.
         """
+        results = {}
         for assembly in self.get_assemblies():
-            results = {}
             if assembly.get_name() == assembly_name:
                 for material in assembly.get_materials():
-                    results[material.get_name()] = (material.get_qty(), material.get_unit().standard_notation)
+                    if material.get_name() in results:
+                        qty, unit =  results[material.get_name()]
+                        results[material.get_name()] = (qty + material.get_qty() * material.get_unit().convert_to(unit), unit)
+                    else:
+                        results[material.get_name()] = (material.get_qty(), material.get_unit())
                         
         if as_df:
             return DataFrame([
-                {"Material": key, "Amount": val[0], "Unit": val[1]} 
+                {"Material": key, "Amount": val[0], "Unit": val[1].standard_notation} 
                 for key, val in results.items()
             ])
         else:                  
