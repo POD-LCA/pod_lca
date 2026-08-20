@@ -174,6 +174,10 @@ class Construction(Assembly):
 
     def set_materials(self):
         """Set the materials for the construction. 
+
+        Notes
+        -----
+        1. Material impacts initial set at 'Baseline' level.
         """
         mat_impact_database = self.get_building().material_impact_database
         database_unit_key = mat_impact_database.get_unit_key()
@@ -185,7 +189,7 @@ class Construction(Assembly):
                 mat_name = layer.material_property.name
                 database_entry_name = layer.material_property.database_entry_name
 
-                database_data = mat_impact_database.get_data_entry(database_entry_name)
+                database_data = mat_impact_database.get_data_entry(database_entry_name, 'Baseline')
                 database_declared_qty_in = database_data[database_unit_key].get_qty_measured()
                 quantity = layer.get_quantity(area, database_declared_qty_in)
 

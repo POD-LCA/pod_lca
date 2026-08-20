@@ -50,6 +50,7 @@ class Material(Product):
 
         # LCA attributes
         self.material_database_entry = None
+        self.variability_level = 'Baseline'
         self.lca_data_flag = False  # temp test variable
         self.sctg_code = None
         self.eol_product = None
@@ -172,6 +173,7 @@ class Material(Product):
     def set_properties_from_database(self):
         """ Set properties from databases for LCA calculations."""
         database_entry_name = self.get_material_database_entry()
+
         replacement_materials = [] if self.get_replacement_materials() is None else self.get_replacement_materials()
 
         if database_entry_name in [None, '', 'N/A']:
@@ -186,7 +188,9 @@ class Material(Product):
                 replacement_product.set_impact_database_entry(database_entry_name)
 
             database = self.get_impact_database()
-            data_entry = database.get_data_entry(database_entry_name)
+            data_entry = database.get_data_entry(
+                database_entry_name,
+                variability_level=self.get_impact_variability_level())
 
             # set thickness
             if data_entry['Thickness unit'] in [None, '', 'N/A', 'Null']:
@@ -258,6 +262,17 @@ class Material(Product):
                     ValueError(f"Waste rate value not recognized for {self.get_name()}.")
 
             self.lca_data_flag = True
+
+    def set_impact_variability_level(self, variability_level):
+        """ Set the variability level for material impacts.
+
+        Parameters
+        ----------
+        variability_level : {'Baseline', 'High-80th%', 'Low-20th%'}
+            The variablity percentile level.
+        """
+        self.variability_level = variability_level
+        self.set_impact_database_entry(self.material_database_entry) 
 
     def set_name(self, name):
         """ Set name of the product/process.
@@ -468,6 +483,29 @@ class Material(Product):
         """
         return self.material_database_entry
 
+    def get_impact_variability_level(self):
+        """ Get the variability level for material impacts.
+
+        Returns
+        -------
+        str
+            The variablity percentile level.
+        """
+        return self.variability_level
+
+    def get_data_from_database(self, database_item):
+        """ Get the raw data from the database
+        
+        Parameters
+        ----------
+        database_item : str
+            Database entry name assigned to the material.
+        """
+        return self.get_impact_database().get_data_entry(
+            material_name=database_item,
+            variability_level=self.get_impact_variability_level()
+            ).fillna(0.0)
+    
     def get_project(self):
         """ Get the project (building) of the assembly.
         
@@ -625,7 +663,24 @@ class Material(Product):
     
     # ================================
     # Inventory Records Methods
-    # ================================
+    # ================================   
+    def update_inventory_records(self):
+        """Set inventory quantities, based on database item asigned to the building material and its quantity. If no database entry is asigned, impacts are not updated.
+
+        Notes
+        -----
+        1. Building material data do not include separated out electricity impacts. Therefore, no setting of electricity impacts.
+
+        Raises
+        ------
+        ValueError
+            Mineral carbonation potential not recognized.
+        """
+        if self.get_impact_database_entry() is not None:
+            super(Product, self).update_inventory_records() 
+            
+        return self
+    
     def get_product_impacts(self):
         """ Get A1-A3 impacts of the material.
         
@@ -889,3 +944,9 @@ class Material(Product):
                                                     replacement.get_construction_emissions())
                             emissions += replacement_emission
             return emissions
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return super().get_cache_key() + (self.get_impact_variability_level(),)

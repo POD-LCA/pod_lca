@@ -460,7 +460,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         building_envelope.set_building(self)
 
         for envelope in self.building_envelope.envelopes.values():
-            envelope.set_materials_in_conmponents()
+            envelope.set_materials_in_components()
 
     def set_operational_energy_object(self, operational_energy_object):
         """ Set the operational energy object used in energy plus simulations.
@@ -610,6 +610,27 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         assembly : ~pod_lca.building.Assembly
             Structural or envelope element to be removed from the building."""
         self.get_assemblies().remove(assembly)
+
+    # ================================
+    # Model Customization Methods
+    # ================================ 
+    def update_material_efficiency(self, variability, material_name=None, assembly_name=None):
+        """ Set the variability level for the material impacts.
+
+        Parameters
+        ----------
+        variability : {'Baseline', 'High-80th%', 'Low-20th%'}
+            Level of variability.
+        material_name : str
+            Materials for which the variability is applied. If None, applied to all materials.
+        assembly_name: str
+            Assembly for which the variability is applied. If None, applied to all materials.
+        """
+        for assembly in self.get_assemblies():
+            if (assembly_name is None) or (assembly.get_name() == assembly_name):
+                for material in assembly.get_materials():
+                    if (material_name is None) or (material.get_name() == material_name):
+                        material.set_impact_variability_level(variability)
 
     # ================================
     # LCA Methods

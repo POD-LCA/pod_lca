@@ -240,7 +240,7 @@ class Master:
         else:
             database = self.get_impact_database()
 
-            unit_inventories = database.get_data_entry(self.get_impact_database_entry()).fillna(0.0)
+            unit_inventories = self.get_data_from_database(database_item)
             self.set_inventories_declared_qty(
                 qty=unit_inventories[database.get_qty_key()], 
                 unit=unit_inventories[database.get_unit_key()])
@@ -605,6 +605,9 @@ class Master:
     # ================================
     # Methods
     # ================================
+    def get_data_from_database(self, database_item):
+        return self.get_impact_database().get_data_entry(database_item).fillna(0.0)
+
     def update_inventory_records(self):
         """Sets inventory quantities, based on database item asigned to the product/process
             and the product/process quantity.
@@ -715,7 +718,7 @@ class Master:
             The name of the database item which gives the item impacts.
         """
         if database_item:
-            data_entry = self.get_impact_database().get_data_entry(database_item).fillna(0.0)
+            data_entry = self.get_data_from_database(database_item)
         else:
             self.carbon_storage.set_mineral_carbonation_potential(False)
             self.unit_carbon_storage.set_mineral_carbonation_potential(False)
@@ -760,7 +763,7 @@ class Master:
             The name of the database item which gives the item impacts.
         """
         if database_item:
-            data_entry = self.get_impact_database().get_data_entry(database_item).fillna(0.0)
+            data_entry = self.get_data_from_database(database_item)
         else:
             self.unit_carbon_storage.set_biogenic_carbon_storage_potential(False)
             self.carbon_storage.set_biogenic_carbon_storage_potential(False)
