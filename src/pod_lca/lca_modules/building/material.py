@@ -535,7 +535,10 @@ class Material(Product):
             Waste rate of the material during construction of the assembly/building.
             Value between 0 and 100.
         """
-        return self.waste_rate
+        if self.waste_rate:
+            return self.waste_rate
+        else:
+            return 0.0
     
     def get_service_life_category(self):
         """ Get the service life category.
