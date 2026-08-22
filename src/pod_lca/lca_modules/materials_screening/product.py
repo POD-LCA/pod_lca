@@ -112,6 +112,21 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
 
         return self
 
+
+    def set_impact_database_entry(self, database_item):
+        """Sets the database (impacts) entry corresponding to the item.
+            This method will also update the corresponding impact quanitities.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
+        super().set_impact_database_entry(database_item)
+
+        if database_item is None:
+            self.reset_electricity()
+
     def set_production_year(self, year):
         """Set the year of production for the item.
 

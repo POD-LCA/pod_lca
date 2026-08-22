@@ -419,6 +419,11 @@ class ProductElectricityMixins:
                     product_record += getattr(self.electricity["custom"], method_name)()
 
         return self
-    
+
+    def reset_electricity(self):
+        """ Reset electricity data to default.
+        """
+        self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
+
 if __name__ == "__main__":
     pass
