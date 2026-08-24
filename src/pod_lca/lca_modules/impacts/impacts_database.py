@@ -4,9 +4,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import nan
 from pandas import concat
 from pandas import DataFrame
-from pandas import NA
 
 from . import expand_search_terms
 from . import rank_entries
@@ -213,7 +213,7 @@ class ImpactsDatabase:
                     if data_type_mapping[header] == 'category':
                         data[header] = None
                     else:
-                        data[header] = NA
+                        data[header] = nan
                     log(f"{header} {data_categroy} not found in the data. Setting to default: {data[header]}", level="Warn")
 
         # loading data to existing dataset
