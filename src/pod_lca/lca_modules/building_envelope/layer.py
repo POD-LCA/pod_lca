@@ -184,6 +184,8 @@ class Layer(object):
         ~pod_lca.units.Quantity
             The thermal resistance of the layer. 
         """
+        if thickness is None:
+            thickness = self.thickness
         return self.material_property.get_thermal_resistance(thickness, building)
 
     def get_resistivity(self, thickness=None, building=None):
