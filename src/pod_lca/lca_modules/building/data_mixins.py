@@ -8,6 +8,7 @@ __version__ = "0.1.0"
 from pandas import DataFrame
 
 from pod_lca.utilities import config
+from pod_lca.utilities import ArrayMethods
 
 
 class DataMixins:
@@ -83,6 +84,41 @@ class DataMixins:
         if as_df:
             impact_unit = config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"][impact_cat]
             return DataFrame(results.items(), columns=['Material', f"{impact_cat} ({impact_unit})"])
+        else:                  
+            return results
+
+    def get_material_quantities(self, assemblies=None, as_df=True):
+        """ Get material quantities of a given assembly.
+         
+        Parameters
+        ----------
+        assembly_name : str
+            Name of the assembly.
+        as_df : bool
+            Return results as a dataframe, if True; otherwise, dictionary.
+        """
+        assemblies_all = self.get_assemblies()
+        if assemblies is None:
+            assemblies = ArrayMethods.get_attribute_as_list(assemblies_all, 'name')    
+
+        if not isinstance(assemblies, list):
+            assemblies = [assemblies]
+
+        results = {}
+        for assembly in assemblies_all:
+            if assembly.get_name() in assemblies:
+                for material in assembly.get_materials():
+                    if material.get_name() in results:
+                        qty, unit =  results[material.get_name()]
+                        results[material.get_name()] = (qty + material.get_qty() * material.get_unit().convert_to(unit), unit)
+                    else:
+                        results[material.get_name()] = (material.get_qty(), material.get_unit())
+                        
+        if as_df:
+            return DataFrame([
+                {"Material": key, "Amount": val[0], "Unit": val[1].standard_notation} 
+                for key, val in results.items()
+            ])
         else:                  
             return results
     
