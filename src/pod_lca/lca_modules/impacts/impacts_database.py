@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from pandas import concat
 from pandas import DataFrame
+from pandas import NA
 
 from . import expand_search_terms
 from . import rank_entries
@@ -205,15 +206,15 @@ class ImpactsDatabase:
             if map_name in kwargs:
                 data.rename(columns=kwargs[map_name], inplace=True)
 
-        # set missing data to 0.0
+        # set missing data to defaults
         for data_categroy, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
             for header in DATA_HEADERS_DICT:
                 if header not in data.columns:
                     if data_type_mapping[header] == 'category':
                         data[header] = None
                     else:
-                        data[header] = 0.0
-                    log(f"{header} {data_categroy} not found in the data. Setting to 0.0.", level="Warn")
+                        data[header] = NA
+                    log(f"{header} {data_categroy} not found in the data. Setting to default: {data[header]}", level="Warn")
 
         # loading data to existing dataset
         if self.get_data_all() is None:
@@ -276,7 +277,7 @@ class ImpactsDatabase:
         for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
             for category in DATA_HEADERS_DICT:
                 if category not in tmp_data:
-                    tmp_data[category] = 0.0
+                    tmp_data[category] = None
                     log(f"{category} {data_type} not found in the data. Setting to 0.0.", level="Warn")
 
         # set data to database
