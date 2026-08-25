@@ -67,7 +67,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, name, qty, unit, material_database_entry, service_life_category=None):
+    def new(cls, name, qty, material_database_entry, service_life_category=None):
         """ Create new structural material.
         
         Parameters
@@ -76,10 +76,8 @@ class Material(Product):
             Assembly to whcih the material belong.
         name : str
             Name of the product.
-        qty : float
-            Product quantity.
-        unit : ~pod_lca.units.Unit
-            Unit of measurement.            
+        qty : ~pod_lca.units.Quantity
+            Product quantity.      
         material_database_entry : str
             Name of the impact database entry from which to use impacts.
         waste_rate : float
@@ -91,7 +89,6 @@ class Material(Product):
 
         material.set_name(name)
         material.set_qty(qty)
-        material.set_unit(unit)
         material.set_material_database_entry(material_database_entry)
         if service_life_category is not None:
             material.set_service_life_category(service_life_category)
@@ -125,8 +122,7 @@ class Material(Product):
         material = cls()
 
         material.set_name(other.get_name())
-        material.set_qty(other.get_qty())
-        material.set_unit(other.get_unit())
+        material.set_qty(Quantity(other.get_qty(), other.get_unit()))
         material.set_production_year(production_year)
 
         material.impacts = Impacts.from_parent(material)
@@ -155,7 +151,31 @@ class Material(Product):
         self.set_building()
 
         return self
-    
+
+    def set_qty(self, qty):
+        if isinstance(qty, Quantity):
+            super().set_qty(qty.value)
+            super().set_unit(qty.unit)
+        else:
+            super().set_qty(qty)
+
+        # update replacement material qty
+        if self.replacement_product is None:
+             return None
+        else:
+            if isinstance(qty, Quantity):
+                self.replacement_product.set_qty(qty.value)
+                self.replacement_product.set_unit(qty.unit)
+            else:
+                self.replacement_product.set_qty(qty)
+
+        # update eol material qty
+        waste_product = self.get_waste_product()
+        if waste_product is not None:
+            waste_product.set_qty(qty)
+
+        return self
+
     def set_material_database_entry(self, material_database_entry):
         """Set material database entry name.
         

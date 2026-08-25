@@ -54,8 +54,7 @@ class StatisticalStructure(BuildingStructure):
                 quantity = floor_area * mui_gfa
                 building_material = StructuralMaterial.new(
                     name='{} {}'.format(omniclass_element, mat_type), 
-                    qty=quantity.value,
-                    unit=quantity.unit,
+                    qty=quantity,
                     material_database_entry=mat_type_podlca,
                 )
 

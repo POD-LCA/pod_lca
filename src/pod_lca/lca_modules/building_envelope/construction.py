@@ -194,8 +194,7 @@ class Construction(Assembly):
                 quantity = layer.get_quantity(area, database_declared_qty_in)
 
                 material = EnvelopeMaterial.new(name=mat_name,
-                                                qty=quantity.value,
-                                                unit=quantity.unit,
+                                                qty=quantity,
                                                 material_database_entry=database_entry_name,)
 
                 self.add_material(material)
