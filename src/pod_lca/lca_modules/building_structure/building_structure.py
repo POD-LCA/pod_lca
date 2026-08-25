@@ -196,17 +196,27 @@ class BuildingStructure:
 
         results = {}
         for assembly in assemblies_all:
+            assembly_name = assembly.get_name()
+
             for material in assembly.get_materials():
-                if material.get_name() in results:
-                    qty, unit =  results[material.get_name()]
-                    results[material.get_name()] = (qty + material.get_qty() * material.get_unit().convert_to(unit), unit)
+                key = (assembly_name, material.get_name())
+
+                if key  in results:
+                    qty, unit =  results[key ]
+                    results[key ] = (qty + material.get_qty() * material.get_unit().convert_to(unit), 
+                                     unit)
                 else:
-                    results[material.get_name()] = (material.get_qty(), material.get_unit())
+                    results[key ] = (material.get_qty(), material.get_unit())
                         
         if as_df:
             return DataFrame([
-                {"Material": key, "Amount": val[0], "Unit": val[1].standard_notation} 
-                for key, val in results.items()
+                {
+                    "Assembly": assembly_name,
+                    "Material": material_name, 
+                    "Amount": qty, 
+                    "Unit": unit.standard_notation
+                } 
+                for (assembly_name, material_name), (qty, unit) in results.items()
             ])
         else:                  
             return results
