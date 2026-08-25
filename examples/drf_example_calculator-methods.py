@@ -62,13 +62,13 @@ print(
 # print("Cumulative radiative forcing of CH4 fossil, after 12 years of emitting 1 kg (in W/m2):", DynamicRadiativeForcing.get_radiative_forcing("CH4", at_year=25, cumulative=False, CH4_oxidation=True, alpha=1.0))
 print("=" * 15)
 print("GWP - 20yr - CO2: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CO2", 20)))
-print("GWP - 20yr - CH4: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4", 20)))
-print("GWP - 20yr - CH4 fossil: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4 fossil", 20)))
+print("GWP - 20yr - CH4 non-fossil: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4", 20, CH4_oxidation=False)))
+print("GWP - 20yr - CH4 fossil: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4", 20)))
 print("GWP - 20yr - N2O: {:.0f}".format(DynamicRadiativeForcing().get_GWP("N2O", 20)))
 print("=" * 15)
 print("GWP - 100yr - CO2: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CO2", 100)))
-print("GWP - 100yr - CH4: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4", 100)))
-print("GWP - 100yr - CH4 fossil: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4 fossil", 100)))
+print("GWP - 100yr - CH4 non-fossil: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4", 100, CH4_oxidation=False)))
+print("GWP - 100yr - CH4 fossil: {:.0f}".format(DynamicRadiativeForcing().get_GWP("CH4", 100)))
 print("GWP - 100yr - N2O: {:.0f}".format(DynamicRadiativeForcing().get_GWP("N2O", 100)))
 
 x_data_CH4, _, y_data_CH4 = DynamicRadiativeForcing().get_radiative_forcing_time_series(
@@ -80,9 +80,25 @@ x_data_CH4fossil, _, y_data_CH4fossil = DynamicRadiativeForcing().get_radiative_
 
 graph = LinePlot.from_plotter(MatplotlibPlotter)
 graph.draw(
-    {"CH4_fossil": list(zip(x_data_CH4fossil, y_data_CH4fossil)), "CH4": list(zip(x_data_CH4, y_data_CH4))},
-    "Instantaneous Dynamic Radiative Forcing CO2",
+    {"CH4_fossil": list(zip(x_data_CH4fossil, y_data_CH4fossil)), "CH4_non-fossil": list(zip(x_data_CH4, y_data_CH4))},
+    "Cumulative Dynamic Radiative Forcing",
     "Year",
-    "dynamic radiative forcing (Wm-2)",
+    "Cumulative dynamic radiative forcing (W-yr/m^2)",
+)
+graph.show()
+
+x_data_CH4, y_data_CH4 = DynamicRadiativeForcing().get_dynamic_GWP_time_series(
+    "CH4", time_horizon=500, time_step=1.0, cumulative=True, CH4_oxidation=False
+)
+x_data_CH4fossil, y_data_CH4fossil = DynamicRadiativeForcing().get_dynamic_GWP_time_series(
+    "CH4", time_horizon=500, time_step=1.0, cumulative=True, CH4_oxidation=True, alpha=1.0
+)
+
+graph = LinePlot.from_plotter(MatplotlibPlotter)
+graph.draw(
+    {"CH4_fossil": list(zip(x_data_CH4fossil, y_data_CH4fossil)), "CH4_non-fossil": list(zip(x_data_CH4, y_data_CH4))},
+    "GWP-dynamic",
+    "Year",
+    "GWP-dynamic (kgCO2e)",
 )
 graph.show()

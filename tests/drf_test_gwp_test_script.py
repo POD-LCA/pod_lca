@@ -28,8 +28,18 @@ def test_drf_gwp():
         test_agwp = float(test_dict[test_name]["AGWP"])
         test_gwp = int(test_dict[test_name]["GWP"])
 
-        agwp = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon)
-        gwp = round(DynamicRadiativeForcing().get_GWP(greenhouse_gas, time_horizon))
+        if greenhouse_gas == "CH4 biogenic":
+            greenhouse_gas = "CH4"
+            agwp = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon, CH4_oxidation=False)
+            gwp = round(DynamicRadiativeForcing().get_GWP(greenhouse_gas, time_horizon, CH4_oxidation=False))
+        elif greenhouse_gas == "CH4 fossil":
+            greenhouse_gas = "CH4"
+            agwp = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon)
+            gwp = round(DynamicRadiativeForcing().get_GWP(greenhouse_gas, time_horizon))
+        else:
+            agwp = DynamicRadiativeForcing().get_AGWP(greenhouse_gas, time_horizon)
+            gwp = round(DynamicRadiativeForcing().get_GWP(greenhouse_gas, time_horizon))
+
 
         sym_diff_agwp = 2 * abs(agwp - test_agwp) / abs(agwp + test_agwp)
 
