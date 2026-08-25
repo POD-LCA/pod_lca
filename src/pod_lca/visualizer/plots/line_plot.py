@@ -44,8 +44,11 @@ class LinePlot(AbstractPlot):
             counter = 0
             for label, xy_data in data.items():
                 x_data, y_data = zip(*xy_data)
-                colors = config["Preferences"]["COLOUR_ORDER_LIST"]
-                self.get_plot().draw_line(x_data, y_data, label, colors[counter])
+                if colors==None:
+                    colors = config["Preferences"]["COLOUR_ORDER_LIST"]
+                # self.get_plot().draw_line(x_data, y_data, label, colors[counter])
+                color = colors[counter % len(colors)]
+                self.get_plot().draw_line(x_data, y_data, label, color)
                 counter += 1
         elif isinstance(data, list):
             if colors is None:

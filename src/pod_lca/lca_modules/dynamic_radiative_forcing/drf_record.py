@@ -16,6 +16,7 @@ from ..impacts import ExponentDecayEmissionProfile
 from ..impacts import LogNormEmissionProfile
 from ..impacts import LinearEmissionProfile
 from ..impacts import InverseSquareRootEmissionProfile
+
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
 from ...utilities import config
@@ -64,6 +65,7 @@ class DynamicRadiativeForcingRecord:
         self.data_crf_ref = None
         self.data_dGWP = None
         self.data_AGTP = None
+        self._data_by_emission = None
 
     # ========================
     # Constructors
@@ -177,7 +179,7 @@ class DynamicRadiativeForcingRecord:
 
         # create data records
         self.data_years = np_arange(record_start_year, record_start_year + record_time_horizon + time_step, time_step)
-        if self.data_years[-1] > record_time_horizon:
+        if self.data_years[-1] > record_start_year + record_time_horizon:
             self.data_years = self.data_years[:-1]
 
         self.data_emission_intensity = {}
@@ -186,6 +188,7 @@ class DynamicRadiativeForcingRecord:
         self.data_crf = {}
         self.data_dGWP = {} # dynamic GWP
         self.data_AGTP = {} # Absolute Global Temperature Potential
+        self._data_by_emission = []
         for greenhouse_gas in Emissions.record_attr_dict:
             self.data_emission_intensity[greenhouse_gas] = zeros(len(self.data_years))
             self.data_concentrations[greenhouse_gas] = zeros(len(self.data_years))
@@ -204,6 +207,14 @@ class DynamicRadiativeForcingRecord:
         self.data_crf_ref["CO2"] += crf_CO2_ref
         
         for emission in self.get_emissions_list():
+            emission_data = {
+                "emission intensity": {},
+                "atmospheric concentration": {},
+                "instantaneous radiative forcing": {},
+                "cumulative radiative forcing": {},
+                "GWP-dynamic": {},
+                "AGTP": {},
+            }
             # emission time profile
             time_profile = emission.get_temporal_emission_profile()
             if time_profile.get_dist_name() == "pulse":
@@ -276,6 +287,15 @@ class DynamicRadiativeForcingRecord:
                     self.data_crf[greenhouse_gas] += crf
                     self.data_dGWP[greenhouse_gas] += dGWP
                     self.data_AGTP[greenhouse_gas] += agtp
+
+                    emission_data["emission intensity"][greenhouse_gas] = emission_profile / self.get_time_step()
+                    emission_data["atmospheric concentration"][greenhouse_gas] = concentrations
+                    emission_data["instantaneous radiative forcing"][greenhouse_gas] = irf
+                    emission_data["cumulative radiative forcing"][greenhouse_gas] = crf
+                    emission_data["GWP-dynamic"][greenhouse_gas] = dGWP
+                    emission_data["AGTP"][greenhouse_gas] = agtp
+
+                    self._data_by_emission.append((emission, emission_data))
         return self
 
     # ========================
@@ -364,6 +384,38 @@ class DynamicRadiativeForcingRecord:
         else:
             return self.data_years, data_y
 
+    def get_grouped_data(self, data_category="atmospheric concentration", group_by="greenhouse_gas"):
+        """Get a data series aggregated by greenhouse gas, material, or LCA stage."""
+        valid_groups = {"greenhouse_gas", "material", "lca_stage"}
+        if group_by not in valid_groups:
+            raise ValueError("Grouping must be 'greenhouse_gas', 'material', or 'lca_stage'.")
+        if self.data_years is None:
+            self.set_data()
+
+        grouped_data = {}
+        for emission, emission_data in self._data_by_emission:
+            parent = emission.get_parent()
+            if group_by == "greenhouse_gas":
+                labels = emission_data[data_category].keys()
+            elif group_by == "material":
+                material = parent.get_name() if parent is not None else None
+                labels = [material or "Unspecified material"]
+            else:
+                stage = parent.get_life_cycle_stage() if parent is not None else None
+                labels = [stage or "Unspecified LCA stage"]
+
+            for label in labels:
+                if group_by == "greenhouse_gas":
+                    values = emission_data[data_category][label]
+                else:
+                    values = zeros(len(self.data_years))
+                    for series in emission_data[data_category].values():
+                        values += series
+                grouped_data.setdefault(label, zeros(len(self.data_years)))
+                grouped_data[label] += values
+
+        return {label: list(zip(self.data_years, values)) for label, values in grouped_data.items()}
+
     # ========================
     # Methods
     # ========================
@@ -398,12 +450,20 @@ class DynamicRadiativeForcingRecord:
                             **'decay_rate': float [1/years],
                             **'skew': float,
                             **'slope': float}
-                            }, 
+                    **'name': name of parent product or material (str),
+                    **'lca_stage': lca stage of emission (str)
+                    },
                     {...}, 
                     ...]
 
-                    (Note: '**' indicates an optional parameters depending on the profile type.)
+                    (Note: '**' indicates an optional parameters.)
         """
+        from ..materials_screening import Master
+        from ..materials_screening import Model
+        from ..materials_screening import Project
+        project = Project.new()
+        model = Model.in_project(project)
+
         for emission_dict in emissions:
             greenhouse_gas = emission_dict.get("greenhouse_gas")
             emission_qty = emission_dict.get("qty")
@@ -455,6 +515,23 @@ class DynamicRadiativeForcingRecord:
                 else:
                     raise ValueError(f"Emission profile type {profile_type} is not recognized.")
 
+                if emission_dict.get("name") is not None and emission_dict.get("name") != "":
+                    name = emission_dict.get("name")
+                    emission.set_parent(Master.new(None, name, model, None, None, None, None))
+                    # parent = emission.get_parent()
+                    #parent.set_name(self, name=name)
+
+                    if emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
+                        parent = emission.get_parent()
+                        stage = emission_dict.get("lca_stage")
+                        parent.set_life_cycle_stage(stage=stage)
+
+                elif emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
+                    stage = emission_dict.get("lca_stage")
+                    emission.set_parent(Master.new(None, None, model, stage, None, None, None))
+                    #parent = emission.get_parent()
+                    #parent.set_life_cycle_stage(stage=stage)
+
                 self.emissions_list.append(emission)
 
         return self
@@ -482,6 +559,8 @@ class DynamicRadiativeForcingRecord:
         #convert temporal emission profile parameter to separate dict for each emission
         for emission_dict in emissions_list_raw:
             emission_profile = {}
+            name = None
+            stage = None
             for key, value in emission_dict.items():
                 if key == "Greenhouse Gas Type" and value != "":
                     greenhouse_gas = value
@@ -499,12 +578,18 @@ class DynamicRadiativeForcingRecord:
                     emission_profile["skew"] = float(value)
                 elif key == "Slope (1/years)" and value != "":
                     emission_profile["slope"] = float(value)
+                elif key in ("Name", "Material","Product") and value != "":
+                    name = value
+                elif key == "LCA Stage" and value != "":
+                    stage = value
                 elif value == "":
                     pass
                 else:
-                    raise ValueError(f"Emission profile parameter {key} is not recognized.")
+                    # Preserve additional parameters so they can be used.
+                    emission_profile[key] = value
+                    # raise ValueError(f"Emission profile parameter {key} is not recognized.")
 
-            emission_dict_formatted = {'greenhouse_gas': greenhouse_gas, 'qty': qty, 'emission_profile': emission_profile}
+            emission_dict_formatted = {'greenhouse_gas': greenhouse_gas, 'qty': qty, 'emission_profile': emission_profile, 'name': name, 'lca_stage': stage}
             emissions_list_formatted.append(emission_dict_formatted)
 
         self.add_emissions_from_list_of_dicts(emissions_list_formatted)
@@ -514,12 +599,12 @@ class DynamicRadiativeForcingRecord:
     # ========================
     # Plot
     # ========================
-    def plot(self, to_plot="atmospheric concentration", plot_type="lineplot", plot_time_step=10, colors=None):
+    def plot(self, to_plot="atmospheric concentration", plot_type="lineplot", plot_time_step=10, colors=None, group_by="greenhouse_gas"):
         """Plot the dynamic radiative forcing record.
 
         Parameters
         ----------
-        to_plot : {'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record', 'GWP-dynamic'}
+        to_plot : {'atmospheric concentration', 'emission', 'instantaneous radiative forcing', 'Cumulative Dynamic Radiative Forcing Record', 'GWP-dynamic', 'AGTP'}
             Parameter to be ploted.
         plot_type : {'lineplot', 'stackplot'}
             Type of the plot.
@@ -527,6 +612,8 @@ class DynamicRadiativeForcingRecord:
             Time step for ticks along x axis.
         colors : list of str
             Colors of each line or stack.
+        group_by : {'greenhouse_gas', 'material', 'lca_stage'}
+            Grouping used for line or stack labels and colors.
 
         Raises
         ------
@@ -558,10 +645,12 @@ class DynamicRadiativeForcingRecord:
 
         if plot_type == "lineplot":
             graph = LinePlot.from_plotter(MatplotlibPlotter)
-            graph.draw(self.get_data(to_plot), title, "Year", y_label, colors)
+            graph.draw(self.get_grouped_data(to_plot, group_by), title, "Year", y_label, colors)
         elif plot_type == "stackplot":
             graph = Stackplot.from_plotter(MatplotlibPlotter)
-            graph.draw(*self.get_data(to_plot, xy_pairs=False), title, "Year", y_label, colors)
+            grouped_data = self.get_grouped_data(to_plot, group_by)
+            grouped_values = {label: [value for _, value in series] for label, series in grouped_data.items()}
+            graph.draw(self.data_years, grouped_values, title, "Year", y_label, colors)
         else:
             raise ValueError("Plot type is not recognized.")
 
