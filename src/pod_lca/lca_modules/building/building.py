@@ -632,6 +632,8 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
                     if (material_name is None) or (material.get_name() == material_name):
                         material.set_impact_variability_level(variability)
 
+        return self
+
     # ================================
     # LCA Methods
     # ================================ 
