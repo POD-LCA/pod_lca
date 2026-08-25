@@ -22,7 +22,6 @@ class StatisticalStructure(BuildingStructure):
     def __init__(self):
         super().__init__()
 
-
     def build(self, mui_type):
         """ Build the structural material quantities from the data set.
         
@@ -106,6 +105,16 @@ class StatisticalStructure(BuildingStructure):
 
         return sample_building
 
+    def customize_bom(self, assembly_name, material_name, qty):
+        assemblies_all =  self.get_structural_elements()
+
+        for assembly in assemblies_all:
+            if (assembly.get_name() == assembly_name):
+                for material in assembly.get_materials():
+                    if (material_name is None) or (material.get_name() == material_name):
+                        material.set_qty(qty)
+
+        return self
 
 if __name__ == '__main__':
     pass    

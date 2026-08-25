@@ -115,7 +115,7 @@ class Structure:
         elif structural_element == "Roof":
             # Update roof properties
             pass
-
+    
 
 if __name__ == '__main__':
     pass    
