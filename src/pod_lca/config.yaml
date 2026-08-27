@@ -163,11 +163,11 @@ Keys and Credentials:
 
 Preferences:
   COLOUR_PALETTES:
-    blue: ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3']
+    blue: ['#1B75BC', '#4182E4', '#6BA4F8', '#91C2FF', '#C2E0FF']
     orange: ['#7F1C00', '#9C2B00', '#ED7D31', '#F4B183', '#FCE4D6']
-    grey: ['#3F3F3F', '#595959', '#A5A5A5', '#D9D9D9', '#F2F2F2']
+    grey: ['#7F8C8D', '#95A5A6', '#BDC3C7', '#D5DBDB', '#EAECEE']
     yellow: ['#7F6000', '#9F7700', '#FFC000', '#FFD966', '#FFF2CC']
-    green: ['#1F4D1F', '#2D6A2D', '#70AD47', '#A9D08E', '#E2EFDA']
+    green: ['#2E8B57', '#4CAF50', '#72D175', '#A3E7A5', '#D4F5D5']
     red: ['#7F0000', '#9C0000', '#C00000', '#E26B6B', '#F4CCCC']
     purple: ['#3F1C59', '#5B2A8F', '#7030A0', '#B4A7D6', '#EAD1DC']
   COLOUR_ORDER_LIST: [blue, green, grey, yellow, orange, red, purple]
