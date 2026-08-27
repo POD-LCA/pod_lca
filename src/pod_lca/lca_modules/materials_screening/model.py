@@ -762,17 +762,19 @@ class Model:
 
             return sorted_dict
 
-    def get_total_stored_carbon_bio(self):
-        bio_carbon_storage_effects_impact_cat = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
-
+    def get_total_stored_biogenic_carbon(self):
+        """ Returns the total biogenic carbon storage of the model, in kg CO2.
+        
+        Returns
+        -------
+        float
+            total biogenic carbon storage of the model, in kg CO2
+        """
         biogenic_carbon_stored = 0.0
         for item in self.get_all_items(transportation=False):
-            biogenic_carbon_stored += self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
+            biogenic_carbon_stored += item.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
 
-        bio_stored = Impacts.from_parent(item)
-        bio_stored.update_qty({bio_carbon_storage_effects_impact_cat: biogenic_carbon_stored})
-
-        return bio_stored
+        return biogenic_carbon_stored
 
     def get_impacts_by_LCstages_with_hotspots(self, impact_cat):
         """Returns impact data by life cycle stage for given model and impact category, with hotspot impacts separated.
