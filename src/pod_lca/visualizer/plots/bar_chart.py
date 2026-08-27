@@ -20,7 +20,7 @@ class BarChart(AbstractPlot):
     # ================================
     # Methods
     # ================================
-    def draw(self, data, title, x_label, y_label):
+    def draw(self, data, title, x_label, y_label, graph_type='simple'):
         """Draw the bar chart.
 
         Parameters
@@ -28,92 +28,151 @@ class BarChart(AbstractPlot):
         data : dict
             Data to be plotted, given in one of the following dictionaries: \n
             - standard bar chart - {**category** (:class:`str`) : **value** (:class:`float`)};
-            - grouped bar chart - {**category** (:class:`str`) : {group (:class:`str`) : value (:class:`float`)}};
-            - grouped bar chart with components - {category (:class:`str`) : {group (:class:`str`) : {component (:class:`str`) : value (:class:`float`)}}}.
+            - grouped/stacked bar chart - {**category** (:class:`str`) : {group (:class:`str`) : value (:class:`float`)}};
+            # - grouped bar chart with components - {category (:class:`str`) : {group (:class:`str`) : {component (:class:`str`) : value (:class:`float`)}}}. #TODO: to be implemented
         title : str
             Title of the barchart.
         x_label : str
             X-label of the barchart.
         y_label : str
             Y-label of the barchart.
+        graph_type: {'simple', 'grouped', 'stacked'}
+            The type of graph.
         """
+        match graph_type:
+            case 'simple':
+                self.draw_simple_bar(data, title, x_label, y_label)
+            case 'grouped':
+                self.draw_grouped_bar(data, title, x_label, y_label)
+            case 'stacked':
+                self.draw_stacked_bar(data, title, x_label, y_label)
+            case _:
+                raise ValueError("graph type not recognzed.")
+
+    def draw_simple_bar(self, data, title, x_label, y_label):
+
         self.get_plot().clear_plot()
 
-        COLOUR_BASE = config["Preferences"]["COLOUR_BASE"]
-        COLOUR_PALETTES = config["Preferences"]["COLOUR_PALETTES"]
-        COLOUR_ORDER_LIST = config["Preferences"]["COLOUR_ORDER_LIST"]
-
         categories = list(data.keys())
-        if not (isinstance(data[categories[0]], float) or isinstance(data[categories[0]], int)):
-            groups = list(next(iter(data.values())).keys())
-        else:
-            groups = None
-
-        gap = 0.2
         x = arange(len(categories))
+        width = 0.8
 
         color_lst = BarChart.get_color_list()
+
+        for i, (category, value) in enumerate(data.items()):
+
+            height = MathFuncs.round_to_significant([value])[0]
+
+            self.get_plot().draw_bar(
+                x[i],
+                height,
+                width,
+                label=category,
+                color=color_lst[i],
+                label_pos="center",
+            )
+
+        self.get_plot().set_xticks(range(len(categories)), categories)
+        self.get_plot().set_legend(title=x_label)
+        self.get_plot().set_title(title)
+        self.get_plot().set_labels(x_label, y_label)
+        self.get_plot().set_grid()
+
+    def draw_grouped_bar(self, data, title, x_label, y_label):
+
+        self.get_plot().clear_plot()
+
+        categories = list(data.keys())
+        groups = list(next(iter(data.values())).keys())
+
+        x = arange(len(groups))
+
+        gap = 0.2
+        width = (1.0 - gap) / len(categories)
+
+        color_lst = BarChart.get_color_list()
+
         for i, (category, category_data) in enumerate(data.items()):
-            if isinstance(category_data, float) or isinstance(category_data, int):
-                width = 1.0 - gap
-                height = MathFuncs.round_to_significant([category_data])[0]
+
+            for j, group in enumerate(groups):
+
+                pos = (
+                    x[j]
+                    - ((len(categories) - 1) * width / 2)
+                    + i * width
+                )
+
+                height = MathFuncs.round_to_significant(
+                    [category_data[group]]
+                )[0]
+
                 self.get_plot().draw_bar(
-                    x[i],
+                    pos,
                     height,
                     width,
-                    label=f"{category}",
                     color=color_lst[i],
+                    label=None,
                     label_pos="center",
                 )
-            else:
-                width = (1.0 - gap) / len(categories)
-                for j, (group, group_data) in enumerate(category_data.items()):
-                    pos = j - ((len(categories) - 1) * (width) / 2) + (i * width)
-                    if isinstance(group_data, float) or isinstance(group_data, int):
-                        height = MathFuncs.round_to_significant([group_data])[0]
-                        self.get_plot().draw_bar(
-                            pos,
-                            height,
-                            width,
-                            label=None,
-                            color=color_lst[i],
-                            label_pos="center",
-                        )
-                    else:
-                        bottom = 0
-                        counter = 0
-                        sorted_group_data = dict(sorted(group_data.items(), key=lambda item: item[1], reverse=True))
-                        for component_name, value in sorted_group_data.items():
-                            height = MathFuncs.round_to_significant([value])[0]
-                            self.get_plot().draw_bar(
-                                pos,
-                                height,
-                                width,
-                                bottom=bottom,
-                                label=f"{component_name} - ({category})",
-                                color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][counter],
-                                label_pos="center",
-                            )
-                            bottom += height
-                            counter += 1
 
-        if isinstance(category_data, float) or isinstance(category_data, int):
-            self.get_plot().set_xticks(range(len(categories)), categories)
-            self.get_plot().set_legend(title=x_label)
-        else:
-            if isinstance(group_data, float) or isinstance(group_data, int):
-                self.get_plot().set_xticks(range(len(groups)), groups)
-                colors = [color_lst[i] for i in arange(len(categories))]
-                labels = categories
-                self.get_plot().set_legend(colors, labels)
-            else:
-                self.get_plot().set_xticks(range(len(groups)), groups)
-                self.get_plot().set_legend(title=x_label)
+        self.get_plot().set_xticks(range(len(groups)), groups)
+
+        colors = [color_lst[i] for i in range(len(categories))]
+        self.get_plot().set_legend(colors, categories)
 
         self.get_plot().set_title(title)
         self.get_plot().set_labels(x_label, y_label)
         self.get_plot().set_grid()
 
+    def draw_stacked_bar(self, data, title, x_label, y_label):
+        # clean data
+        data = {
+            k: v if isinstance(v, dict) else {k: v}
+            for k, v in data.items()
+        }
+
+        self.get_plot().clear_plot()
+
+        COLOUR_PALETTES = config["Preferences"]["COLOUR_PALETTES"]
+        COLOUR_ORDER_LIST = config["Preferences"]["COLOUR_ORDER_LIST"]
+
+        categories = list(data.keys())
+
+        x = arange(len(categories))
+        width = 0.8
+
+        for i, (category, components) in enumerate(data.items()):
+
+            positive_bottom = 0
+            negative_bottom = 0
+
+            for counter, (component_name, value) in enumerate(components.items()):
+
+                height = MathFuncs.round_to_significant([value])[0]
+
+                if height >= 0:
+                    bottom = positive_bottom
+                    positive_bottom += height
+                else:
+                    bottom = negative_bottom
+                    negative_bottom += height
+
+                self.get_plot().draw_bar(
+                    x[i],
+                    height,
+                    width,
+                    bottom=bottom,
+                    label=component_name,
+                    color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][counter],
+                    label_pos="center",
+                )
+
+        self.get_plot().set_xticks(range(len(categories)), categories)
+        self.get_plot().set_legend(title=x_label)
+
+        self.get_plot().set_title(title)
+        self.get_plot().set_labels(x_label, y_label)
+        self.get_plot().set_grid()
 
     @staticmethod
     def get_color_list():

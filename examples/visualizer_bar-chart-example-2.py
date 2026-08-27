@@ -15,5 +15,5 @@ data = {
 }
 
 graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(data, "Profit in 2007 and 2008, by quarter", "Year", "Profit (in mil dollars)")
+graph.draw(data, "Profit in 2007 and 2008, by quarter", "Year", "Profit (in mil dollars)", 'grouped')
 graph.show()
