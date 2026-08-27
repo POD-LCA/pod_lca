@@ -15,6 +15,7 @@ from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ..impacts import UniformEmissionProfile
+from ..impacts import Impacts
 from ..transportation import TransportationManager
 from ..transportation import USTransportationManager
 from ...units import KG_CARBON_DIOXIDE
@@ -760,6 +761,18 @@ class Model:
             del impacts_dict
 
             return sorted_dict
+
+    def get_total_stored_carbon_bio(self):
+        bio_carbon_storage_effects_impact_cat = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
+
+        biogenic_carbon_stored = 0.0
+        for item in self.get_all_items(transportation=False):
+            biogenic_carbon_stored += self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
+
+        bio_stored = Impacts.from_parent(item)
+        bio_stored.update_qty({bio_carbon_storage_effects_impact_cat: biogenic_carbon_stored})
+
+        return bio_stored
 
     def get_impacts_by_LCstages_with_hotspots(self, impact_cat):
         """Returns impact data by life cycle stage for given model and impact category, with hotspot impacts separated.
