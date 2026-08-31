@@ -75,22 +75,22 @@ class StatisticalStructure(BuildingStructure):
         mui_type : {'low', 'mid', 'high'}
             Material usage intensity of the structural components.
         """
-        if building_type == 'Residential':
-            if structure_type == 'Concrete':
+        if building_type.lower() == 'residential':
+            if structure_type.lower() == 'concrete':
                 low, mid, high = 139, 170, 81
-            elif structure_type == 'Light-Frame':
+            elif structure_type.lower() == 'light-frame':
                 low, mid, high = 142, 263, 84
-            elif structure_type == 'CLT':
+            elif structure_type.lower() == 'clt':
                 low, mid, high = 131, 38, 79
             else:
                 raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
 
-        elif building_type == 'Commercial':
-            if structure_type == 'Conrete':
+        elif building_type.lower() == 'commercial':
+            if structure_type.lower() == 'concrete':
                 low, mid, high = 5, 93, 132
-            elif structure_type == 'Steel':
+            elif structure_type.lower() == 'steel':
                 low, mid, high = 183, 179, 223
-            elif structure_type == 'CLT':
+            elif structure_type.lower() == 'clt':
                 low, mid, high = 131, 38, 79
             else:
                 raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
