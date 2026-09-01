@@ -141,12 +141,27 @@ class BarChart(AbstractPlot):
         x = arange(len(categories))
         width = 0.8
 
+        colour_map = {}
+        colour_counter = 0
+
+        legend_components = set()
+
         for i, (category, components) in enumerate(data.items()):
 
             positive_bottom = 0
             negative_bottom = 0
 
-            for counter, (component_name, value) in enumerate(components.items()):
+            for component_name, value in components.items():
+
+                # Assign a colour to this component if not already assigned
+                if component_name not in colour_map:
+                    palette = COLOUR_PALETTES[
+                        COLOUR_ORDER_LIST[colour_counter % len(COLOUR_ORDER_LIST)]
+                    ]
+
+                    colour_map[component_name] = palette[
+                        len(colour_map) % len(palette)
+                    ]
 
                 height = MathFuncs.round_to_significant([value])[0]
 
@@ -157,15 +172,23 @@ class BarChart(AbstractPlot):
                     bottom = negative_bottom
                     negative_bottom += height
 
+                label = (
+                    component_name
+                    if component_name not in legend_components
+                    else None
+                )
+
                 self.get_plot().draw_bar(
                     x[i],
                     height,
                     width,
                     bottom=bottom,
-                    label=component_name,
-                    color=COLOUR_PALETTES[COLOUR_ORDER_LIST[i]][counter],
+                    label=label,
+                    color=colour_map[component_name],
                     label_pos="center",
                 )
+
+                legend_components.add(component_name)
 
         self.get_plot().set_xticks(range(len(categories)), categories)
         self.get_plot().set_legend(title=x_label)

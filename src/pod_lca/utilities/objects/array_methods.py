@@ -61,6 +61,47 @@ class ArrayMethods:
         for obj in objects:
             setattr(obj, attr_name, value)
 
+    @staticmethod
+    def find(objects, attr_name, value, return_first=False):
+        """Find objects whose attribute matches the given value.
+
+        Parameters
+        ----------
+        objects : list of object
+            List of objects.
+        attr_name : str
+            Attribute (or method) to search.
+        value : any
+            Value to match.
+        return_first : bool
+            If True, return the first matching object; otherwise, return a list of all matching objects.
+
+        Returns
+        -------
+        object or None
+            Matching object, or None if not found.
+        """
+        matches = []
+        for obj in objects:
+            member = getattr(obj, attr_name)
+
+            # check if it is a method
+            if callable(member):
+                member_value = member()
+            else:
+                member_value = member
+
+            if member_value == value:
+                if return_first:
+                    return obj
+                else:
+                    matches.append(obj)
+
+        if matches:
+            return matches
+        else:
+            return None
+    
 
 if __name__ == "__main__":
     pass

@@ -4,6 +4,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import math
+
 
 class Records:
     """Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.
@@ -40,7 +42,8 @@ class Records:
             return NotImplemented
 
         summed_records = {
-            attr: getattr(self, attr, 0.0) + getattr(other, attr, 0.0)
+            attr: self._safe_value(getattr(self, attr, 0.0))
+                + self._safe_value(getattr(other, attr, 0.0))
             for attr in self.__class__.record_attr_dict.keys()
         }
 
@@ -66,7 +69,8 @@ class Records:
             return NotImplemented
 
         difference_records = {
-            attr: getattr(self, attr, 0.0) - getattr(other, attr, 0.0)
+            attr: self._safe_value(getattr(self, attr, 0.0)) 
+                - self._safe_value(getattr(other, attr, 0.0))
             for attr in self.__class__.record_attr_dict.keys()
         }
 
@@ -92,7 +96,7 @@ class Records:
             return NotImplemented
 
         multiplied_records = {
-            attr: getattr(self, attr, 0.0) * scalar for attr in self.__class__.record_attr_dict.keys()
+            attr: self._safe_value(getattr(self, attr, 0.0)) * scalar for attr in self.__class__.record_attr_dict.keys()
         }
 
         new_record = self.__class__()
@@ -122,6 +126,9 @@ class Records:
 
         return new_record
 
+    @staticmethod
+    def _safe_value(value):
+        return 0.0 if isinstance(value, float) and math.isnan(value) else value
     # ========================
     # Constructors
     # ========================

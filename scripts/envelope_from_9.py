@@ -235,12 +235,14 @@ b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 # print(b.get_emissions(scope='product'))
 
-b.update_material_efficiency('High-80th%')
+# b.update_material_efficiency('High-80th%')
 
 print(b.get_impacts(scope='product'))
 
-frame_wall_qtys = b.get_material_quantities("framed_wall_test")
-framed_wall_impacts = b.get_material_impacts_of_assembly_lcstage("framed_wall_test", impact_cat="GWP", lc_stage="A1-A3")
+frame_wall_qtys = b.get_material_quantities(assembly_names=["framed_wall_test"])
+framed_wall_impacts = b.get_impact_totals(assembly_names=["framed_wall_test"], 
+                                          impact_cat="GWP",
+                                          lc_stages=["A1-A3"])
 
 print(frame_wall_qtys)
 print(framed_wall_impacts)
@@ -248,7 +250,13 @@ print(framed_wall_impacts)
 # drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
 # drf_record.plot('cumulative radiative forcing')
 
-# # # graph = BarChart.from_plotter(MatplotlibPlotter)
-# # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# # # graph.show()
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(b.get_impact_totals(impact_cat='GWP',
+                               lc_stages=["A1-A3", "A5", "C1-C4"], #"A1-A3", "A4", "A5", "B4", "C1-C4"
+                               as_df=False), 
+           "Environmental impacts of Building assemblies by life cycle stage.", 
+           "Life cycle stage", 
+           "GWP (in kg CO2eq)",
+           graph_type='stacked')
+graph.show()
 

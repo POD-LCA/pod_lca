@@ -26,6 +26,7 @@ from ...units import Quantity as Q
 from ...units import WATT_HOUR
 from ...units import UNITS_MAP
 from ...utilities import DataImporter
+from ...utilities import ArrayMethods
 
 
 class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
@@ -610,6 +611,23 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         assembly : ~pod_lca.building.Assembly
             Structural or envelope element to be removed from the building."""
         self.get_assemblies().remove(assembly)
+
+    def find_assembly(self, assembly_name):
+        """ Find assembly in a building.
+
+        Parameters
+        ----------
+        assembly_name : str
+            Name of the assembly to be found.
+
+        Returns
+        -------
+        ~pod_lca.building.Assembly
+            Assembly found.
+        """
+        assemblies = self.get_assemblies()
+
+        return ArrayMethods.find(assemblies, 'get_name', assembly_name)
 
     # ================================
     # Model Customization Methods
