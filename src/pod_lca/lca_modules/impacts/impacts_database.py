@@ -511,7 +511,7 @@ class ImpactsDatabase:
                     else:
                         product_support_data = self.data[valid_headers].fillna("")
 
-                product_support_data = self.data[valid_headers].astype(str).agg(" ".join, axis=1)
+                product_support_data = product_support_data.apply(lambda row: " ".join(str(value) for value in row), axis=1)
 
         documents = products_all if product_support_data is None else concat([products_all, product_support_data])
         vocab = set(" ".join(documents).lower().split())
@@ -562,6 +562,11 @@ class ImpactsDatabase:
         local_data_copy = data.copy()
         if isinstance(local_data_copy[self.get_unit_key()], str):
             local_data_copy["Unit"] = UNITS_MAP[local_data_copy["Unit"]]
+        for key in local_data_copy.keys():
+            if isinstance(local_data_copy[key], str):
+                if key.endswith("_" + self.get_unit_key()):
+                    local_data_copy[key] = UNITS_MAP[local_data_copy[key]]
+
 
         new_row_df = DataFrame([local_data_copy])
         self.data = concat([self.data, new_row_df], ignore_index=True)
