@@ -375,7 +375,7 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
     __type__ : str
         Contains the specific material property type. 
 
-    roughness :  str
+    roughness :  {'Rough', 'MediumRough', 'MediumSmooth', 'Smooth', 'VeryRough', 'VerySmooth'}
         Energy plus material roughness setting 
 
     thermal_resistance :  ~pod_lca.units.Quantity

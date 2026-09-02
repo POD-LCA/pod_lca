@@ -154,7 +154,7 @@ class Layer(object):
         thickness :  ~pod_lca.units.Quantity
             The thickness of the layer
 
-        classification :  str
+        classification :  {"exterior_cladding", "air_gap", "exterior_insulation",  "sheathing", "framing_insulation", "interior_finish", "virtual_layer"}
             The classification of the layer in the envelope ( exterior_cladding, air_gap,
             exterior_insulation, etc.). 
 

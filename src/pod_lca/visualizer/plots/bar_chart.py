@@ -39,15 +39,14 @@ class BarChart(AbstractPlot):
         graph_type: {'simple', 'grouped', 'stacked'}
             The type of graph.
         """
-        match graph_type:
-            case 'simple':
-                self.draw_simple_bar(data, title, x_label, y_label)
-            case 'grouped':
-                self.draw_grouped_bar(data, title, x_label, y_label)
-            case 'stacked':
-                self.draw_stacked_bar(data, title, x_label, y_label)
-            case _:
-                raise ValueError("graph type not recognzed.")
+        if graph_type == 'simple':
+            self.draw_simple_bar(data, title, x_label, y_label)
+        elif graph_type == 'grouped':
+            self.draw_grouped_bar(data, title, x_label, y_label)
+        elif graph_type == 'stacked':
+            self.draw_stacked_bar(data, title, x_label, y_label)
+        else:
+            raise ValueError("graph type not recognized.")
 
     def draw_simple_bar(self, data, title, x_label, y_label):
 
