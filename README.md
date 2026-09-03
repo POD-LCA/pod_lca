@@ -76,7 +76,7 @@ prop_glycol = CLT_model.add_product(
     stage="A1",
     qty=2.77,
     unit=KILOGRAM,
-    impacts_from="Ethylene glycol, materials production, organic compound, at plant, kg",
+    impacts_from="Ethylene glycol; at plant",
     sctg_code=28,
 )
 ```
