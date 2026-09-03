@@ -506,7 +506,8 @@ class ImpactsDatabase:
             if valid_headers:
                 for header in valid_headers:
                     if self.data[header].dtype.name == "category":
-                        self.data[header] = self.data[header].cat.add_categories([""])
+                        if "" not in self.data[header].cat.categories:
+                            self.data[header] = self.data[header].cat.add_categories([""])
                         self.data[header] = self.data[header].fillna("")
                     else:
                         product_support_data = self.data[valid_headers].fillna("")
