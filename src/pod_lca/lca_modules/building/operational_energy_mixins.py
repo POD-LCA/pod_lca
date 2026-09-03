@@ -39,12 +39,12 @@ class OperationalMixins:
     def set_operational_electricity_product(self, unit=None):
         """ Set the operational electricity product of the building
         """
-        self.operational_energy_product = OperationalElectricityProduct.create(self, unit)
+        self.operational_electricity_product = OperationalElectricityProduct.create(self, unit)
 
     def get_operational_electricity_product(self):
-        """ Set the operational electricity product of the building
+        """ Get the operational electricity product of the building
         """
-        return self.operational_energy_product
+        return self.operational_electricity_product
 
     def get_operational_electricity_usasge(self, method='EUI', summed_at='year', group_by_category=True, group_by_zone=False, unit=WATT_HOUR):
         """ Get the operational electricity demands of the building.

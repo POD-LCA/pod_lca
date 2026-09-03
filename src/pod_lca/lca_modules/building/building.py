@@ -341,6 +341,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.structure_type = structure_type
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
         
     def set_built_year(self, year):
@@ -352,6 +355,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Built year of the building.
         """
         self.built_year = year
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
     
@@ -365,6 +371,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.life_span = life_span
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
 
     def set_location(self, location):
@@ -377,6 +386,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.location = location
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
     
     def set_building_data_standard(self, standard):
@@ -388,6 +400,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             building strnadard used for 
         """
         self.building_data_standard = standard
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
+        return self
     
     def set_scenario(self, name):
         """ Create new scenario for the building.
