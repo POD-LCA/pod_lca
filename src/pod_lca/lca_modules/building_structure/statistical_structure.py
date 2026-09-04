@@ -22,7 +22,6 @@ class StatisticalStructure(BuildingStructure):
     def __init__(self):
         super().__init__()
 
-
     def build(self, mui_type):
         """ Build the structural material quantities from the data set.
         
@@ -54,8 +53,7 @@ class StatisticalStructure(BuildingStructure):
                 quantity = floor_area * mui_gfa
                 building_material = StructuralMaterial.new(
                     name='{} {}'.format(omniclass_element, mat_type), 
-                    qty=quantity.value,
-                    unit=quantity.unit,
+                    qty=quantity,
                     material_database_entry=mat_type_podlca,
                 )
 
@@ -77,22 +75,22 @@ class StatisticalStructure(BuildingStructure):
         mui_type : {'low', 'mid', 'high'}
             Material usage intensity of the structural components.
         """
-        if building_type == 'Residential':
-            if structure_type == 'Concrete':
+        if building_type.lower() == 'residential':
+            if structure_type.lower() == 'concrete':
                 low, mid, high = 139, 170, 81
-            elif structure_type == 'Light-Frame':
+            elif structure_type.lower() == 'light-frame':
                 low, mid, high = 142, 263, 84
-            elif structure_type == 'CLT':
+            elif structure_type.lower() == 'clt':
                 low, mid, high = 131, 38, 79
             else:
                 raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
 
-        elif building_type == 'Commercial':
-            if structure_type == 'Conrete':
+        elif building_type.lower() == 'commercial':
+            if structure_type.lower() == 'concrete':
                 low, mid, high = 5, 93, 132
-            elif structure_type == 'Steel':
+            elif structure_type.lower() == 'steel':
                 low, mid, high = 183, 179, 223
-            elif structure_type == 'CLT':
+            elif structure_type.lower() == 'clt':
                 low, mid, high = 131, 38, 79
             else:
                 raise ValueError('{} in {} has not been yet implemented in this model'.format(building_type, structure_type))
@@ -107,6 +105,16 @@ class StatisticalStructure(BuildingStructure):
 
         return sample_building
 
+    def customize_bom(self, assembly_name, material_name, qty):
+        assemblies_all =  self.get_structural_elements()
+
+        for assembly in assemblies_all:
+            if (assembly.get_name() == assembly_name):
+                for material in assembly.get_materials():
+                    if (material_name is None) or (material.get_name() == material_name):
+                        material.set_qty(qty)
+
+        return self
 
 if __name__ == '__main__':
     pass    

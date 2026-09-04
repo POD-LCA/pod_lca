@@ -64,8 +64,6 @@ from pod_lca.visualizer import MatplotlibPlotter
 
 for i in range(100): print('')
 
-constructions_path = config['file_paths']['operational']['CONSTRUCTIONS']
-
 # general inputs - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bname = 'Tomas'
@@ -142,33 +140,24 @@ layers_ = {
 
 layers_[0].set_structural(True)
 
-framing_name                  = 'tomas_wooden_framing'
-framing_material_property     = EnvelopeMaterialPropertyMass.from_database(name="Softwood Lumber", database_entry_name='Softwood Lumber')
-framing_spacing               = Q(12, INCH)
-framing_width                 = Q(1.5, INCH)
-framing_length                = Q(3.5, INCH)
-framing = WoodFraming.from_parameters(framing_name, framing_material_property, framing_spacing, framing_width, framing_length)
+framing_type = "wooden" # 'wooden', 'steel'
+if framing_type == "wooden":
+    framing_name                  = 'tomas_wooden_framing'
+    framing_material_property     = EnvelopeMaterialPropertyMass.from_database(name="Softwood Lumber", database_entry_name='Softwood Lumber')
+    framing_spacing               = Q(12, INCH)
+    framing_width                 = Q(1.5, INCH)
+    framing_length                = Q(3.5, INCH)
+    framing = WoodFraming.from_parameters(framing_name, framing_material_property, framing_spacing, framing_width, framing_length)
+elif framing_type == 'steel':
+    framing_name                = 'tomas_metal_framing'
+    framing_material_property   = EnvelopeMaterialPropertyMass.from_database(name='Cold-formed steel framing', database_entry_name='Cold-formed steel framing')
+    framing_spacing             = Q(12, INCH)
+    framing = MetalFraming.from_parameters(framing_name,
+                                        framing_material_property,
+                                        framing_spacing,
+                                        section_id="400S137-43")
+    
 framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing, 'encl_curtainwall')
-
-# framing_name                = 'tomas_metal_framing'
-# framing_material_property   = EnvelopeMaterialPropertyMass.from_idf('Cold-formed steel framing', constructions_path)
-# framing_spacing             = Q(12, INCH)
-# # framing_metal_thickness     = Q(.043, INCH)
-# # framing_width               = Q(1.5, INCH)
-# # framing_length              = Q(3.5, INCH)
-# # framing = MetalFraming.from_parameters(framing_name,
-# #                                        framing_material_property,
-# #                                        framing_spacing,
-# #                                        framing_metal_thickness,
-# #                                        framing_width,
-# #                                        framing_length)
-# framing = MetalFraming.from_parameters(framing_name,
-#                                        framing_material_property,
-#                                        framing_spacing,
-#                                        section_id="400S137-43")
-
-framed_wall = FramedWall.from_layers_framing('framed_wall_test', layers_, framing)
-
 
 # make a floor - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -213,6 +202,12 @@ s_floor = Structure.create(stype, flr)
 s = StatisticalStructure.create(s_floor, num_stories)
 s.build(mui_type)
 
+print(s.get_bom())
+s.customize_bom(assembly_name='generic structural element',
+                      material_name='Shell - Superstructure Hot-rolled sections', 
+                      qty=Q(3900, KILOGRAM))
+print(s.get_bom())
+
 # make a building - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
@@ -233,23 +228,35 @@ b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 # b.set_operational_energy_object(opp_obj)
 # b.write_idf()
 
-print(b.get_operational_impacts()) # default is 'total'
+# print(b.get_operational_impacts()) # default is 'total'
 
 # # # # run embodied - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
-print(b.get_emissions(scope='product'))
+# print(b.get_emissions(scope='product'))
 
-frame_wall_qtys = b.get_material_quantities_of_assembly("framed_wall_test")
-framed_wall_impacts = b.get_material_impacts_of_assembly_lcstage("framed_wall_test", impact_cat="GWP", lc_stage="A1-A3")
+# b.update_material_efficiency('High-80th%')
+
+print(b.get_impacts(scope='product'))
+
+frame_wall_qtys = b.get_material_quantities(assembly_names=["framed_wall_test"])
+framed_wall_impacts = b.get_impact_totals(assembly_names=["framed_wall_test"], 
+                                          impact_cat="GWP",
+                                          lc_stages=["A1-A3"])
 
 print(frame_wall_qtys)
 print(framed_wall_impacts)
 
-drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-drf_record.plot('cumulative radiative forcing')
+# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+# drf_record.plot('cumulative radiative forcing')
 
-# # # graph = BarChart.from_plotter(MatplotlibPlotter)
-# # # graph.draw(b.get_impacts_by_assembly_lcstage('GWP'), "Environmental impacts (by life cycle stage) of Building assemblies by material.", "Assemblies", "GWP (in kg CO2eq)")
-# # # graph.show()
+graph = BarChart.from_plotter(MatplotlibPlotter)
+graph.draw(b.get_impact_totals(impact_cat='GWP',
+                               lc_stages=["A1-A3", "A5", "C1-C4"], #"A1-A3", "A4", "A5", "B4", "C1-C4"
+                               as_df=False), 
+           "Environmental impacts of Building assemblies by life cycle stage.", 
+           "Life cycle stage", 
+           "GWP (in kg CO2eq)",
+           graph_type='stacked')
+graph.show()
 

@@ -70,7 +70,11 @@ class SensitivityAnalysis:
         base_val = getattr(obj, "get_" + param)()
 
         # check cache
-        current_params = (base_impact, impact_cat, sensitivity_type)
+        if "range" in kwargs:
+            current_params = (base_impact, impact_cat, sensitivity_type, kwargs["range"])
+        elif "options" in kwargs:
+            current_params = (base_impact, impact_cat, sensitivity_type, kwargs["options"])
+
         if (self.sensitivity_param_cache_last_params.get(obj.name, {}).get(param) == current_params): 
             return self.sensitivity_param_cache[obj.name][param]
 

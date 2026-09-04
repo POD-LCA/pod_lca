@@ -64,10 +64,12 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         
         # electricity mixin
         self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
+        self.electricity_combo = None
 
         # transportation mixin
         self.sctg_code = None
         self.transport_legs = None
+        self.transportation_combo = None
 
         # bio properties mixin
         self.dry_density = None
@@ -109,6 +111,21 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         super().set_unit(unit, force_set)
 
         return self
+
+
+    def set_impact_database_entry(self, database_item):
+        """Sets the database (impacts) entry corresponding to the item.
+            This method will also update the corresponding impact quanitities.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
+        super().set_impact_database_entry(database_item)
+
+        if database_item is None:
+            self.reset_electricity()
 
     def set_production_year(self, year):
         """Set the year of production for the item.

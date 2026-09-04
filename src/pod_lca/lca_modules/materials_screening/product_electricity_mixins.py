@@ -270,6 +270,16 @@ class ProductElectricityMixins:
         """
         return self.electricity["_current"]
 
+    def get_electricity_combo(self):
+        """Get the electricity parameters combination set, if any.
+
+        Returns
+        -------
+        str
+            Electricity parameter combination, None if not set.
+        """        
+        return self.electricity_combo
+
     def get_electricity_scenario(self):
         """Get the electricity scenario of custom electricity.
 
@@ -409,6 +419,11 @@ class ProductElectricityMixins:
                     product_record += getattr(self.electricity["custom"], method_name)()
 
         return self
-    
+
+    def reset_electricity(self):
+        """ Reset electricity data to default.
+        """
+        self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
+
 if __name__ == "__main__":
     pass

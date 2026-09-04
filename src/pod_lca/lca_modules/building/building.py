@@ -26,6 +26,7 @@ from ...units import Quantity as Q
 from ...units import WATT_HOUR
 from ...units import UNITS_MAP
 from ...utilities import DataImporter
+from ...utilities import ArrayMethods
 
 
 class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
@@ -340,6 +341,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.structure_type = structure_type
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
         
     def set_built_year(self, year):
@@ -351,6 +355,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Built year of the building.
         """
         self.built_year = year
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
     
@@ -364,6 +371,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.life_span = life_span
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
 
     def set_location(self, location):
@@ -376,6 +386,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.location = location
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
     
     def set_building_data_standard(self, standard):
@@ -387,6 +400,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             building strnadard used for 
         """
         self.building_data_standard = standard
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
+        return self
     
     def set_scenario(self, name):
         """ Create new scenario for the building.
@@ -460,7 +478,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         building_envelope.set_building(self)
 
         for envelope in self.building_envelope.envelopes.values():
-            envelope.set_materials_in_conmponents()
+            envelope.set_materials_in_components()
 
     def set_operational_energy_object(self, operational_energy_object):
         """ Set the operational energy object used in energy plus simulations.
@@ -610,6 +628,46 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         assembly : ~pod_lca.building.Assembly
             Structural or envelope element to be removed from the building."""
         self.get_assemblies().remove(assembly)
+
+    def find_assembly(self, assembly_name):
+        """ Find assembly in a building.
+
+        Parameters
+        ----------
+        assembly_name : str
+            Name of the assembly to be found.
+
+        Returns
+        -------
+        ~pod_lca.building.Assembly
+            Assembly found.
+        """
+        assemblies = self.get_assemblies()
+
+        return ArrayMethods.find(assemblies, 'get_name', assembly_name)
+
+    # ================================
+    # Model Customization Methods
+    # ================================ 
+    def update_material_efficiency(self, variability, material_name=None, assembly_name=None):
+        """ Set the variability level for the material impacts.
+
+        Parameters
+        ----------
+        variability : {'Baseline', 'High-80th%', 'Low-20th%'}
+            Level of variability.
+        material_name : str
+            Materials for which the variability is applied. If None, applied to all materials.
+        assembly_name: str
+            Assembly for which the variability is applied. If None, applied to all materials.
+        """
+        for assembly in self.get_assemblies():
+            if (assembly_name is None) or (assembly.get_name() == assembly_name):
+                for material in assembly.get_materials():
+                    if (material_name is None) or (material.get_name() == material_name):
+                        material.set_impact_variability_level(variability)
+
+        return self
 
     # ================================
     # LCA Methods

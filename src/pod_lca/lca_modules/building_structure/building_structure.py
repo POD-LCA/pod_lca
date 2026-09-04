@@ -5,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pandas import DataFrame
 
 class BuildingStructure:
     """ The structural assemblies of the building.
@@ -186,7 +187,39 @@ class BuildingStructure:
         structural_element.set_parent(self)
 
         return self
-    
+
+    # ================================
+    # Methods
+    # ================================
+    def get_bom(self, as_df=True):  
+        assemblies_all =  self.get_structural_elements()
+
+        results = {}
+        for assembly in assemblies_all:
+            assembly_name = assembly.get_name()
+
+            for material in assembly.get_materials():
+                key = (assembly_name, material.get_name())
+
+                if key  in results:
+                    qty, unit =  results[key ]
+                    results[key ] = (qty + material.get_qty() * material.get_unit().convert_to(unit), 
+                                     unit)
+                else:
+                    results[key ] = (material.get_qty(), material.get_unit())
+                        
+        if as_df:
+            return DataFrame([
+                {
+                    "Assembly": assembly_name,
+                    "Material": material_name, 
+                    "Amount": qty, 
+                    "Unit": unit.standard_notation
+                } 
+                for (assembly_name, material_name), (qty, unit) in results.items()
+            ])
+        else:                  
+            return results
 
 if __name__ == '__main__':
     pass    
