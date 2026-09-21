@@ -18,7 +18,7 @@ class Stackplot(AbstractPlot):
     # ================================
     # Methods
     # ================================
-    def draw(self, x_data, y_data, title, x_label, y_label, colors=None):
+    def draw(self, x_data, y_data, title, x_label, y_label, colors=None, total_line = True):
         """Draw the bar chart.
 
         Parameters
@@ -68,7 +68,7 @@ class Stackplot(AbstractPlot):
             negative_colors = [colors[index] for index in negative_indices]
             self.get_plot().draw_stackplot(x_data, negative_data, negative_labels, negative_colors)
 
-        if positive_indices and negative_indices:
+        if total_line:
             total_data = sum(y_data, axis=0)
             self.get_plot().draw_line(x_data, total_data, "Total", color="#000000")
 
