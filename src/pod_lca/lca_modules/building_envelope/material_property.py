@@ -136,7 +136,7 @@ class EnvelopeMaterialProperty(object):
     def get_thermal_resistance(self, thickness=None, building=None):
         if (self.thermal_resistance is None) or (isnan(self.thermal_resistance.value)):
             if building:
-                RSI_per_inch = building.material_impact_database.get_data_entry(self.database_entry_name)['RSI /inch (m2C/W)']
+                RSI_per_inch = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')['RSI /inch (m2C/W)']
 
                 thickness = thickness.convert_to(INCH)
                 thermal_resistance_val = RSI_per_inch * thickness.value 
@@ -148,7 +148,7 @@ class EnvelopeMaterialProperty(object):
     def get_roughness(self, building=None):
         if self.roughness is None:
             if building:
-                self.roughness = building.material_impact_database.get_data_entry(self.database_entry_name)['Roughness']
+                self.roughness = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')['Roughness']
             else:
                 raise ValueError
 
@@ -157,7 +157,7 @@ class EnvelopeMaterialProperty(object):
     def get_conductivity(self, building=None):
         if (self.conductivity is None) or (isnan(self.conductivity.value)):
             if building:
-                conductivity_val = building.material_impact_database.get_data_entry(self.database_entry_name)['Thermal conductivity']
+                conductivity_val = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')['Thermal conductivity']
                 self.conductivity = Q(conductivity_val, WATT/(METER*KELVIN)) 
             else:
                 raise ValueError
@@ -184,8 +184,8 @@ class EnvelopeMaterialProperty(object):
         if self.density is None:
             if building:
                 database = building.material_impact_database
-                density_val = database.get_data_entry(self.database_entry_name)[database.get_density_key()]
-                density_unit = database.get_data_entry(self.database_entry_name)[database.get_density_unit_key()]
+                density_val = database.get_data_entry(self.database_entry_name, 'Baseline')[database.get_density_key()]
+                density_unit = database.get_data_entry(self.database_entry_name, 'Baseline')[database.get_density_unit_key()]
 
                 self.density = Q(density_val, density_unit) 
             else:
@@ -211,7 +211,7 @@ class EnvelopeMaterialProperty(object):
         if self.specific_heat is None:
             if building:
                 database = building.material_impact_database
-                specific_heat_val = database.get_data_entry(self.database_entry_name)["Specific Heat J/kg-K"]
+                specific_heat_val = database.get_data_entry(self.database_entry_name, 'Baseline')["Specific Heat J/kg-K"]
 
                 self.specific_heat = Q(specific_heat_val, JOULE / (KILOGRAM * KELVIN)) 
             else:
@@ -222,7 +222,7 @@ class EnvelopeMaterialProperty(object):
     def get_thermal_absorptance(self, building=None):
         if self.thermal_absorptance is None:
             if building:
-                self.thermal_absorptance = building.material_impact_database.get_data_entry(self.database_entry_name)["Thermal Absorptance"]
+                self.thermal_absorptance = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')["Thermal Absorptance"]
             else:
                 raise ValueError
         
@@ -231,7 +231,7 @@ class EnvelopeMaterialProperty(object):
     def get_solar_absorptance(self, building=None):
         if self.solar_absorptance is None:
             if building:
-                self.solar_absorptance = building.material_impact_database.get_data_entry(self.database_entry_name)["Solar Absorptance"]
+                self.solar_absorptance = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')["Solar Absorptance"]
             else:
                 raise ValueError
         
@@ -240,7 +240,7 @@ class EnvelopeMaterialProperty(object):
     def get_visible_absorptance(self, building=None):
         if self.visible_absorptance is None:
             if building:
-                self.visible_absorptance = building.material_impact_database.get_data_entry(self.database_entry_name)["Visible Absorptance"]
+                self.visible_absorptance = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')["Visible Absorptance"]
             else:
                 raise ValueError
         
@@ -361,7 +361,7 @@ class EnvelopeMaterialPropertyAirGap(EnvelopeMaterialProperty):
     def get_thermal_resistance(self, thickness=None, building=None):
         if (self.thermal_resistance is None) or (isnan(self.thermal_resistance.value)):
             if building:
-                thermal_resistance_val = building.material_impact_database.get_data_entry(self.database_entry_name)['RSI /inch (m2C/W)']
+                thermal_resistance_val = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')['RSI /inch (m2C/W)']
                 self.thermal_resistance = Q(thermal_resistance_val, (SQUARE_METER * KELVIN) / WATT)
 
         return self.thermal_resistance
@@ -375,7 +375,7 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
     __type__ : str
         Contains the specific material property type. 
 
-    roughness :  str
+    roughness :  {'Rough', 'MediumRough', 'MediumSmooth', 'Smooth', 'VeryRough', 'VerySmooth'}
         Energy plus material roughness setting 
 
     thermal_resistance :  ~pod_lca.units.Quantity
@@ -546,7 +546,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.solar_transmittance is None:
             if building:
                 database = building.material_impact_database
-                self.solar_transmittance = database.get_data_entry(self.database_entry_name)["Solar Transmittance at Normal Incidence"]
+                self.solar_transmittance = database.get_data_entry(self.database_entry_name, 'Baseline')["Solar Transmittance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -556,7 +556,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.front_solar_reflectance is None:
             if building:
                 database = building.material_impact_database
-                self.front_solar_reflectance = database.get_data_entry(self.database_entry_name)["Front Side Visible Reflectance at Normal Incidence"]
+                self.front_solar_reflectance = database.get_data_entry(self.database_entry_name, 'Baseline')["Front Side Visible Reflectance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -566,7 +566,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.back_solar_reflectance is None:
             if building:
                 database = building.material_impact_database
-                self.back_solar_reflectance = database.get_data_entry(self.database_entry_name)["Back Side Solar Reflectance at Normal Incidence"]
+                self.back_solar_reflectance = database.get_data_entry(self.database_entry_name, 'Baseline')["Back Side Solar Reflectance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -576,7 +576,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.front_visible_reflectance is None:
             if building:
                 database = building.material_impact_database
-                self.front_visible_reflectance = database.get_data_entry(self.database_entry_name)["Front Side Visible Reflectance at Normal Incidence"]
+                self.front_visible_reflectance = database.get_data_entry(self.database_entry_name, 'Baseline')["Front Side Visible Reflectance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -586,7 +586,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.back_visible_reflectance is None:
             if building:
                 database = building.material_impact_database
-                self.back_visible_reflectance = database.get_data_entry(self.database_entry_name)["Back Side Visible Reflectance at Normal Incidence"]
+                self.back_visible_reflectance = database.get_data_entry(self.database_entry_name, 'Baseline')["Back Side Visible Reflectance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -596,7 +596,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.visible_transmittance is None:
             if building:
                 database = building.material_impact_database
-                self.visible_transmittance = database.get_data_entry(self.database_entry_name)["Visible Transmittance at Normal Incidence"]
+                self.visible_transmittance = database.get_data_entry(self.database_entry_name, 'Baseline')["Visible Transmittance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -606,7 +606,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.infrared_transmittance is None:
             if building:
                 database = building.material_impact_database
-                self.infrared_transmittance = database.get_data_entry(self.database_entry_name)["Infrared Transmittance at Normal Incidence"]
+                self.infrared_transmittance = database.get_data_entry(self.database_entry_name, 'Baseline')["Infrared Transmittance at Normal Incidence"]
             else:
                 raise ValueError
         
@@ -616,7 +616,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.front_infrared_hemispherical_emissivity is None:
             if building:
                 database = building.material_impact_database
-                self.front_infrared_hemispherical_emissivity = database.get_data_entry(self.database_entry_name)["Front Side Infrared Hemispherical Emissivity"]
+                self.front_infrared_hemispherical_emissivity = database.get_data_entry(self.database_entry_name, 'Baseline')["Front Side Infrared Hemispherical Emissivity"]
             else:
                 raise ValueError
         
@@ -626,7 +626,7 @@ class WindowMaterialPropertyGlazing(EnvelopeMaterialProperty):
         if self.back_infrared_hemispherical_emissivity is None:
             if building:
                 database = building.material_impact_database
-                self.back_infrared_hemispherical_emissivity = database.get_data_entry(self.database_entry_name)["Back Side Infrared Hemispherical Emissivity"]
+                self.back_infrared_hemispherical_emissivity = database.get_data_entry(self.database_entry_name, 'Baseline')["Back Side Infrared Hemispherical Emissivity"]
             else:
                 raise ValueError
         

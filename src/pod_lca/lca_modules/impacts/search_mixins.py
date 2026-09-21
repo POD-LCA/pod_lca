@@ -4,6 +4,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pathlib import Path
+import platform
+
 from functools import lru_cache
 from numpy import abs
 from numpy import concatenate
@@ -72,7 +75,7 @@ def import_nltk_dependencies(use_wordnet=False):
     ensure_nltk_data()
 
 def ensure_nltk_data(use_wordnet=False):
-    NLTK_DATA_DIR = config["file_paths"]["impacts"]["NLTK_DATA_DIR"]
+    NLTK_DATA_DIR = get_nltk_data_dir()
     
     NLTK_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -94,6 +97,30 @@ def ensure_nltk_data(use_wordnet=False):
                 quiet=True,
             )
 
+def get_nltk_data_dir():
+    """Return a user-writable NLTK data directory."""
+
+    if platform.system() == "Darwin":
+        return (
+            Path.home()
+            / ".podlca"
+            / "nltk_data"
+        )
+
+    elif platform.system() == "Windows":
+        return (
+            Path.home()
+            / ".podlca"
+            / "nltk_data"
+        )
+
+    else:
+        return (
+            Path.home()
+            / ".podlca"
+            / "nltk_data"
+        )
+    
 @lru_cache(maxsize=50000)
 def _cached_synsets(word, pos=None):
     return wordnet.synsets(word, pos=pos)

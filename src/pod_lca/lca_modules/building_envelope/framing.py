@@ -52,6 +52,29 @@ class Framing(object):
         self.anciallary_materials.append(ancillary_mat)
         ancillary_mat.parent = self
 
+    def compute_bridge(self, Ra, Rb, rins, **kwargs):
+        """Computes the updated R and U given the thermal bridging
+        caused by framing. 
+
+        Parameters
+        ----------
+        Ra : ~pod_lca.units.Quantity
+            Assembly thermal resistance (exluding interior finish)l
+        Rb : ~pod_lca.units.Quantity
+            Interior finish thermal resistance
+        rins : ~pod_lca.units.Quantity
+            Framing insulation resistivity
+
+        Returns
+        -------
+        r : ~pod_lca.units.Quantity
+            Thermal resiastance of the assembly including the thermal bridge. 
+        u : ~pod_lca.units.Quantity
+            Thermal conductance of the assembly including the thermal bridge.  
+        """
+        pass
+
+    
 class WoodFraming(Framing):
 
     def __init__(self):
@@ -141,7 +164,7 @@ class MetalFraming(Framing):
         self.metal_thickness    = None
 
     @classmethod
-    def from_parameters(cls, name, material_property, spacing, metal_thickness=None, width=None, length=None, section_id=None): # TODO: Keep both defined width/length/thickness or defined section options or only the latter...?
+    def from_parameters(cls, name, material_property, spacing, section_id):
         from .common_layers import MetalStuds
         from .common_layers import Fastners
     
@@ -149,9 +172,6 @@ class MetalFraming(Framing):
         framing.name                = name
         framing.material_property   = material_property
         framing.spacing             = spacing
-        framing.metal_thickness     = metal_thickness
-        framing.width               = width
-        framing.length              = length
         framing.section_id          = section_id
         if section_id:
             stud_design_table = DataImporter.csv_to_pandas(config['file_paths']['building']['STEEL_STUD_DESIGN_TABLE'])
@@ -188,12 +208,11 @@ class MetalFraming(Framing):
             Thermal conductance of the assembly including the thermal bridge.  
 
         """
-
-
         # -------------------------------
         # Metal resistivity constant
         # -------------------------------
-        conductivity = self.material_property.conductivity
+        building = kwargs.get("bldg", None)
+        conductivity = self.material_property.get_conductivity(building)
         resistivity = 1.0 / conductivity
         
 

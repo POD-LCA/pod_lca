@@ -27,7 +27,7 @@ class Window(Construction):
         The width of the window
     length :  ~pod_lca.units.Quantity
         The length of the window
-    wwr :  ~pod_lca.units.Quantity
+    wwr :  float
         The window-to-wall ratio of the window
     """
     def __init__(self):
@@ -170,7 +170,6 @@ class Window(Construction):
 
         sk = 'window_{}'.format(wall_key)
         self.surfaces[sk] = Surface.from_polygon(sk, [p0, p1, p2, p3], surface_type = 'Window')
-
 
 
 if __name__ == '__main__':

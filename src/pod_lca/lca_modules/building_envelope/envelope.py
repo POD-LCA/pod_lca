@@ -5,6 +5,7 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
+from collections import defaultdict
 from math import isnan
 
 from . import Ceiling
@@ -64,11 +65,7 @@ class Envelope:
         self.shadings = {}
         self.floors = {}
         self.ceiling = {}
-        self.construction_map = {'Floor': self.floors,
-                                 'Ceiling': self.ceiling,
-                                 'Wall': self.walls,
-                                 'Window': self.windows,
-                                 'Shading': self.shadings}
+        self.construction_map = defaultdict(dict)
         
         self.wall_surface_keys = []
         self.window_surface_keys = []
@@ -351,11 +348,11 @@ class Envelope:
             pass
         
         if wall:
-            wall.set_parent(envelope)
+            envelope.add_construction(wall)
         if floor:
-            floor.set_parent(envelope)
+            envelope.add_construction(floor)
         if ceiling:
-            ceiling.set_parent(envelope)
+            envelope.add_construction(ceiling)
 
         return envelope
 
@@ -404,7 +401,7 @@ class Envelope:
             if dot_vectors(sn, to_inside) > 0:
                 srf.reverse_normal()
 
-    def set_materials_in_conmponents(self):
+    def set_materials_in_components(self):
         """ Sets all the materials for all constructions in the envelope. 
         """
         for construction in self.get_constructions(unique=True):

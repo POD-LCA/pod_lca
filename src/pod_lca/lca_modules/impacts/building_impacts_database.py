@@ -116,7 +116,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         return  ([self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_variability_key(), self.get_geography_key()],
                  [str, float, 'category', 'category', 'category']) 
     
-    def get_data_entry(self, material_name, variability_level='Baseline', geography_representation='US'):
+    def get_data_entry(self, material_name, variability_level, geography_representation='US'):
         """ Retrieve impacts for given flow.
         
         Parameters
@@ -124,7 +124,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         material_name : str
             Name of the material
         variability_level : {'Baseline', 'High-80th%', 'Low-20th%'}
-            The percintile of the value used.
+            The variablity percentile level.
         geography_representation : str
             geography representation of the place.
         

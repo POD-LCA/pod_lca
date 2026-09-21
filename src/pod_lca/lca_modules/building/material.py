@@ -50,6 +50,7 @@ class Material(Product):
 
         # LCA attributes
         self.material_database_entry = None
+        self.variability_level = 'Baseline'
         self.lca_data_flag = False  # temp test variable
         self.sctg_code = None
         self.eol_product = None
@@ -66,7 +67,7 @@ class Material(Product):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, name, qty, unit, material_database_entry, service_life_category=None):
+    def new(cls, name, qty, material_database_entry, service_life_category=None):
         """ Create new structural material.
         
         Parameters
@@ -75,10 +76,8 @@ class Material(Product):
             Assembly to whcih the material belong.
         name : str
             Name of the product.
-        qty : float
-            Product quantity.
-        unit : ~pod_lca.units.Unit
-            Unit of measurement.            
+        qty : ~pod_lca.units.Quantity
+            Product quantity.      
         material_database_entry : str
             Name of the impact database entry from which to use impacts.
         waste_rate : float
@@ -90,7 +89,6 @@ class Material(Product):
 
         material.set_name(name)
         material.set_qty(qty)
-        material.set_unit(unit)
         material.set_material_database_entry(material_database_entry)
         if service_life_category is not None:
             material.set_service_life_category(service_life_category)
@@ -124,8 +122,7 @@ class Material(Product):
         material = cls()
 
         material.set_name(other.get_name())
-        material.set_qty(other.get_qty())
-        material.set_unit(other.get_unit())
+        material.set_qty(Quantity(other.get_qty(), other.get_unit()))
         material.set_production_year(production_year)
 
         material.impacts = Impacts.from_parent(material)
@@ -154,7 +151,31 @@ class Material(Product):
         self.set_building()
 
         return self
-    
+
+    def set_qty(self, qty):
+        if isinstance(qty, Quantity):
+            super().set_qty(qty.value)
+            super().set_unit(qty.unit)
+        else:
+            super().set_qty(qty)
+
+        # update replacement material qty
+        if self.replacement_product is None:
+             return None
+        else:
+            if isinstance(qty, Quantity):
+                self.replacement_product.set_qty(qty.value)
+                self.replacement_product.set_unit(qty.unit)
+            else:
+                self.replacement_product.set_qty(qty)
+
+        # update eol material qty
+        waste_product = self.get_waste_product()
+        if waste_product is not None:
+            waste_product.set_qty(qty)
+
+        return self
+
     def set_material_database_entry(self, material_database_entry):
         """Set material database entry name.
         
@@ -172,6 +193,7 @@ class Material(Product):
     def set_properties_from_database(self):
         """ Set properties from databases for LCA calculations."""
         database_entry_name = self.get_material_database_entry()
+
         replacement_materials = [] if self.get_replacement_materials() is None else self.get_replacement_materials()
 
         if database_entry_name in [None, '', 'N/A']:
@@ -186,7 +208,9 @@ class Material(Product):
                 replacement_product.set_impact_database_entry(database_entry_name)
 
             database = self.get_impact_database()
-            data_entry = database.get_data_entry(database_entry_name)
+            data_entry = database.get_data_entry(
+                database_entry_name,
+                variability_level=self.get_impact_variability_level())
 
             # set thickness
             if data_entry['Thickness unit'] in [None, '', 'N/A', 'Null']:
@@ -258,6 +282,17 @@ class Material(Product):
                     ValueError(f"Waste rate value not recognized for {self.get_name()}.")
 
             self.lca_data_flag = True
+
+    def set_impact_variability_level(self, variability_level):
+        """ Set the variability level for material impacts.
+
+        Parameters
+        ----------
+        variability_level : {'Baseline', 'High-80th%', 'Low-20th%'}
+            The variablity percentile level.
+        """
+        self.variability_level = variability_level
+        self.set_impact_database_entry(self.material_database_entry) 
 
     def set_name(self, name):
         """ Set name of the product/process.
@@ -468,6 +503,29 @@ class Material(Product):
         """
         return self.material_database_entry
 
+    def get_impact_variability_level(self):
+        """ Get the variability level for material impacts.
+
+        Returns
+        -------
+        str
+            The variablity percentile level.
+        """
+        return self.variability_level
+
+    def get_data_from_database(self, database_item):
+        """ Get the raw data from the database
+        
+        Parameters
+        ----------
+        database_item : str
+            Database entry name assigned to the material.
+        """
+        return self.get_impact_database().get_data_entry(
+            material_name=database_item,
+            variability_level=self.get_impact_variability_level()
+            ).fillna(0.0)
+    
     def get_project(self):
         """ Get the project (building) of the assembly.
         
@@ -497,7 +555,10 @@ class Material(Product):
             Waste rate of the material during construction of the assembly/building.
             Value between 0 and 100.
         """
-        return self.waste_rate
+        if self.waste_rate:
+            return self.waste_rate
+        else:
+            return 0.0
     
     def get_service_life_category(self):
         """ Get the service life category.
@@ -625,7 +686,24 @@ class Material(Product):
     
     # ================================
     # Inventory Records Methods
-    # ================================
+    # ================================   
+    def update_inventory_records(self):
+        """Set inventory quantities, based on database item asigned to the building material and its quantity. If no database entry is asigned, impacts are not updated.
+
+        Notes
+        -----
+        1. Building material data do not include separated out electricity impacts. Therefore, no setting of electricity impacts.
+
+        Raises
+        ------
+        ValueError
+            Mineral carbonation potential not recognized.
+        """
+        if self.get_impact_database_entry() is not None:
+            super(Product, self).update_inventory_records() 
+            
+        return self
+    
     def get_product_impacts(self):
         """ Get A1-A3 impacts of the material.
         
@@ -889,3 +967,9 @@ class Material(Product):
                                                     replacement.get_construction_emissions())
                             emissions += replacement_emission
             return emissions
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return super().get_cache_key() + (self.get_impact_variability_level(),)
