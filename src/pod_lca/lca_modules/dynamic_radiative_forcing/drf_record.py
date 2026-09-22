@@ -346,7 +346,7 @@ class DynamicRadiativeForcingRecord:
 
         Parameters
         ----------
-        data_category : {'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing'}
+        data_category : {'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'}
             Category of data to be reported. Default is 'radiative forcing'.
         xy_pairs : bool
             If true, provide data as xy pairs, else as sperate lists. Default is True.
