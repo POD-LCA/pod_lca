@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 
 
 # **********Step 1: Select time horizon settings and output data to plot **********
-# Instructions: Select the start year, time horizon, time step, and results to plot.
+# Instructions: Select the start year, time horizon, time step, and results to plot. 
 start_year = 0 # select start year
 time_horizon = 250 # select time horizon (years)
 time_step = 1 / 12 # select time step (years)
@@ -23,8 +23,11 @@ plot_PTandRT_separately = True # if True, plot the product trajectory (PT) and r
 plot_annotations = True # if True, annotate the net results at the requested time points. If False, do not annotate the net results.
 annotation_years = [20, 100, 250] # list of years at which to annotate the net results. Only used if plot_annotations is True.
 show_ghg_stacks = False # if True, show the GHG stacks for the PT and RT separately. If False, do not show the GHG stacks.
+
+
 # **********Step 2: Create the Product Trajectory (PT) DLCI**********
 # [Instructions: Choose one example DLCI (A, B, or C) to run. The other example DLCIs should be commented out.] 
+# (Try using only emission_01 for a simple example)
 
 # ========== Example A: Creating emissions object individually (example emissions/emission profiles provided - replace with your emissions)===========
 emission_01 = Emissions.from_dict(record_dict={"CO2": 3})
@@ -90,8 +93,10 @@ test_DLCI_file_path = "examples/drf_example_dlci.csv"
 PT_record.add_emissions_from_csv(test_DLCI_file_path)
 '''
 # ===========================================================================================
+
 # **********Step 3: Create the Reference Trajectory (RT) DLCI**********
 # [Instructions: Choose one example DLCI (A, B, or C) to run. The other example DLCIs should be commented out.] 
+# (Try using only emission_01 for a simple example)
 
 # ========== Example A: Creating emissions object individually ===========
 emission_01 = Emissions.from_dict(record_dict={"CO2": 1})
@@ -141,6 +146,7 @@ test_DLCI_file_path = "examples/drf_example_dlci.csv"
 RT_record.add_emissions_from_csv(test_DLCI_file_path)
 '''
 # ===========================================================================================
+
 # ********** Step 4: Dynamic Radiative Forcing Record evaluation and plot settings: **********
 PT_record.set_data() # product and reference trajectories are stored as a POD|LCA DRF_record object
 RT_record.set_data()
@@ -257,9 +263,8 @@ for result in results_to_plot:
             annotations.append(annotation)
             Net_plot.plot(annotation_time, annotation_value, 'D', markerfacecolor=Net_colors[3], markeredgecolor=Net_colors[0], markersize=6, alpha=0.9)
 
+    # Show the GHG stacks for the PT and RT, if requested
     if show_ghg_stacks:
-        # PT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = PT_colors)
-        # RT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = RT_colors)
         Net_plot.stackplot(PT_df['time'], [PT_df[ghg] for ghg in ghgs], labels=[f'PT {ghg}' for ghg in ghgs], colors=PT_colors, alpha=0.15, hatch='.', edgecolor=PT_colors[0])
         Net_plot.stackplot(RT_df['time'], [RT_df[ghg] for ghg in ghgs], labels=[f'RT {ghg}' for ghg in ghgs], colors=RT_colors, alpha=0.15, hatch='o', edgecolor=RT_colors[0])
   
