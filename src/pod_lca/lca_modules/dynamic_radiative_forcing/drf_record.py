@@ -38,7 +38,7 @@ class DynamicRadiativeForcingRecord:
         Time horizon in years.
     time_step : int or float
         Time step of the record. The same time step is used for both for integration and for reporting.
-    emissions_list : list of ~pod_lca.impacts.Emissions
+    emissions_lst : list of ~pod_lca.impacts.Emissions
         List of emissions considered in the record.
     data_years : numpy.array of int or float
         Years in the record.
@@ -336,7 +336,7 @@ class DynamicRadiativeForcingRecord:
         list of ~pod_lca.impacts.Emissions
             List of emissions considered in the record.
         """
-        return self.emissions_list
+        return self.emissions_lst
 
     def get_time_step(self):
         """Set the time step for time series record.
@@ -435,9 +435,9 @@ class DynamicRadiativeForcingRecord:
             Emission(s) to be assigned to the record
         """
         if isinstance(emissions, list):
-            self.emissions_list.extend(emissions)
+            self.emissions_lst.extend(emissions)
         elif isinstance(emissions, Emissions):
-            self.emissions_list.append(emissions)
+            self.emissions_lst.append(emissions)
 
         return self
 
@@ -540,7 +540,7 @@ class DynamicRadiativeForcingRecord:
                     # parent = emission.get_parent()
                     # parent.set_life_cycle_stage(stage=stage)
 
-                self.emissions_list.append(emission)
+                self.emissions_lst.append(emission)
 
         return self
 
