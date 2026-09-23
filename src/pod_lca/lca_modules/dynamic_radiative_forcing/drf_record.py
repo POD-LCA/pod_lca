@@ -56,7 +56,7 @@ class DynamicRadiativeForcingRecord:
         self.time_horizon = None
         self.start_year = None
         self.time_step = None
-        self.emissions_list = []
+        self.emissions_lst = []
         self.data_years = None
         self.data_emission_intensity = None
         self.data_concentrations = None
