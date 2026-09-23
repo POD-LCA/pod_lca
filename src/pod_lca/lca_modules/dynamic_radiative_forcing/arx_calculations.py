@@ -444,9 +444,11 @@ class ARXCalculation:
         # Define climate response function parameters for AGTP calculation (per IPCCAR5, Ch.8SM, Table 8.SM.9 (section 8.SM.11.2)
         c = array([0.631, 0.429]) # climate sensitivity [K / (w/m2)]
         d = array([8.4, 409.5]) # climate time response [years]
+
+        root, ext = os.path.splitext(config["file_paths"]["drf"]["TEMPERATURE_RESPONSE_PARAMETERS"])
+        agtp_parameters = DataImporter.json_to_dict(root + "_" + cls._ipcc_annual_report + ext)
         agtp_fn = zeros(len(years))
-        for i in range(len(c)):
-            agtp_fn += (c[i] / d[i]) * np_exp(-years / d[i])
+        agtp_fn = (agtp_parameters["c1"] / agtp_parameters["d1"]) * np_exp(-years / agtp_parameters["d1"]) + (agtp_parameters["c2"] / agtp_parameters["d2"]) * np_exp(-years / agtp_parameters["d2"])
 
         return years, agtp_fn
 
