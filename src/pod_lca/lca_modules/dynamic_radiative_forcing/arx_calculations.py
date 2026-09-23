@@ -172,9 +172,7 @@ class ARXCalculation:
                 return np_exp(-1 * at_year / life_time)
 
     @classmethod
-    def get_radiative_forcing(
-        cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01
-    ):
+    def get_radiative_forcing(cls, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01):
         """Get the radiative forcing (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
 
         Parameters
@@ -276,9 +274,7 @@ class ARXCalculation:
         return years, concentrations
 
     @classmethod
-    def get_radiative_forcing_time_series(
-        cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5
-    ):
+    def get_radiative_forcing_time_series(cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5):
         """Get the dynamic radiative forcing values (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) as a time-series, given that a 1kg of gas emitted on start year.
 
         Parameters
@@ -303,7 +299,7 @@ class ARXCalculation:
         numpy.array
             Atmospheric concentration values at the end of the year.
         numpy.array
-            Radiative forcing values at the end of the year.
+            Radiative forcing values at the end of the year (in W/m^2 for instantaneous, W-yr/m^2 for cumulative).
         """
         radiative_efficiency = cls.get_radiative_efficiency(greenhouse_gas, ref_unit="Wm-2kg-1")
         years, concentrations = cls.get_concentration_time_series(greenhouse_gas, time_horizon, time_step, cumulative)
@@ -348,7 +344,7 @@ class ARXCalculation:
 
         Note
         ----
-        1. For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
+        1. For the calculation of CH4 oxidation, if applicable, a convolution time step of 0.01 is used.
 
         Parameters
         ----------
@@ -380,7 +376,7 @@ class ARXCalculation:
 
         Note
         ----
-        1. For the calculation fo CH4 fossil, oxidation factor (alpha) of 0.5, and convolution time step of 0.01 is used.
+        1. For the calculation of CH4 oxidation, if applicable, a convolution time step of 0.01 is used.
 
         Parameters
         ----------
@@ -395,42 +391,40 @@ class ARXCalculation:
         return agwp_gas / agwp_CO2
 
     @classmethod
-    def get_dynamic_GWP_time_series(
-            cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5
-        ):
-            """Get the dynamic GWP values (in kgCO2e) as a time-series, given that a 1kg of gas emitted on start year.
+    def get_dynamic_GWP_time_series(cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5):
+        """Get the dynamic GWP values (in kgCO2e) as a time-series, given that a 1kg of gas emitted on start year.
 
-            Parameters
-            ----------
-            greenhouse_gas: {'CO2', 'CH4', 'N2O'}
-                Name of the gas.
-            time_horizon : int
-                Time horizon in years.
-            time_step : float
-                Time step in years.
-            cumulative : bool
-                Cumulative radiative forcing if true, else instantaneous values.
-            CH4_oxidation : bool
-                If true, account for oxidation of CH4 to CO2.
-            alpha : float
-                Fraction of CH4 oxidized: 0.5-1.0.
-    
-            Returns
-            -------
-            numpy.array
-                Years of the time series.
-            numpy.array
-                Atmospheric concentration values at the end of the year.
-            numpy.array
-                Radiative forcing values at the end of the year.
-            """
-            years, _, cumulative_rf = cls.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha)
-            years, _, cumulative_rf_CO2 = cls.get_radiative_forcing_time_series("CO2", time_horizon, time_step, cumulative, CH4_oxidation, alpha)
-            dynamic_GWP = zeros(len(years))
-            dynamic_GWP[0] = 0 # avoid divide by zero at t=start when cumulative_rf_CO2 = 0
-            dynamic_GWP[1:] = cumulative_rf[1:] / cumulative_rf_CO2[1:]
+        Parameters
+        ----------
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the gas.
+        time_horizon : int
+            Time horizon in years.
+        time_step : float
+            Time step in years.
+        cumulative : bool
+            Cumulative radiative forcing if true, else instantaneous values.
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2.
+        alpha : float
+            Fraction of CH4 oxidized: 0.5-1.0.
 
-            return years, dynamic_GWP
+        Returns
+        -------
+        numpy.array
+            Years of the time series.
+        numpy.array
+            Atmospheric concentration values at the end of the year.
+        numpy.array
+            Radiative forcing values at the end of the year.
+        """
+        years, _, cumulative_rf = cls.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha)
+        years, _, cumulative_rf_CO2 = cls.get_radiative_forcing_time_series("CO2", time_horizon, time_step, cumulative, CH4_oxidation, alpha)
+        dynamic_GWP = zeros(len(years))
+        dynamic_GWP[0] = 0 # avoid divide by zero at t=start when cumulative_rf_CO2 = 0
+        dynamic_GWP[1:] = cumulative_rf[1:] / cumulative_rf_CO2[1:]
+
+        return years, dynamic_GWP
 
     @classmethod
     def get_temp_response(cls, time_horizon, time_step):
@@ -467,15 +461,15 @@ class ARXCalculation:
         time_horizon : int
             Time horizon in years.
         """
-        # Get the temperature response function
         years, temp_response = cls.get_temp_response(time_horizon, time_step)
 
-        #Get instantaneous radiative forcing time series
         _, _, irf_for_agtp = cls.get_radiative_forcing_time_series(
-            greenhouse_gas, time_horizon, time_step, cumulative=False)
+            greenhouse_gas, 
+            time_horizon, 
+            time_step, 
+            cumulative=False)
         irf_for_agtp[0] = 0 
                     
-        #Calculate AGTP as convolution of instantaneous radiative forcing and temperature response function
         agtp = convolve(irf_for_agtp, temp_response, mode="full")[:len(years)] * time_step
 
         return years, agtp

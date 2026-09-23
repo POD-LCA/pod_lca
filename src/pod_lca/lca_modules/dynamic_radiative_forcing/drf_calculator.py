@@ -99,9 +99,7 @@ class DynamicRadiativeForcing:
         """
         return self.calculator.get_atmospheric_concentration(greenhouse_gas, at_year, cumulative)
 
-    def get_radiative_forcing(
-        self, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01
-    ):
+    def get_radiative_forcing(self, greenhouse_gas, at_year, cumulative=False, CH4_oxidation=True, alpha=0.5, convolution_time_step=0.01):
         """Get the radiative forcing (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) of the greenhouse gas at a given year, given that a 1kg of gas emitted on start year.
 
         Parameters
@@ -166,9 +164,7 @@ class DynamicRadiativeForcing:
         )  # TODO: check the at_years variable
         return years, concentrations
 
-    def get_radiative_forcing_time_series(
-        self, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5
-    ):
+    def get_radiative_forcing_time_series(self, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5):
         """Get the daynamic radiative forcing values (in W/m^2 for instantaneous, W-yr/m^2 for cumulative) as a time-series, given that a 1kg of gas emitted on start year.
 
         Parameters
@@ -189,11 +185,11 @@ class DynamicRadiativeForcing:
         Returns
         -------
         :class:`numpy.ndarray`
-            Years of the time series
+            Years of the time series.
         :class:`numpy.ndarray`
-            Atmospheric concentration values at the end of the year
+            Atmospheric concentration values at the end of the year.
         :class:`numpy.ndarray`
-            Radiative forcing values at the end of the year
+            Radiative forcing values at the end of the year (in W/m^2 for instantaneous, W-yr/m^2 for cumulative).
 
         Raises
         ------
@@ -248,41 +244,39 @@ class DynamicRadiativeForcing:
 
         return agwp_gas / agwp_CO2
 
-    def get_dynamic_GWP_time_series(
-            self, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5
-        ):
-            """Get the dynamic GWP values (in kgCO2e) as a time-series, given that a 1kg of gas emitted on start year.
+    def get_dynamic_GWP_time_series(self, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5):
+        """Get the dynamic GWP values (in kgCO2e) as a time-series, given that a 1kg of gas emitted on start year.
 
-            Parameters
-            ----------
-            greenhouse_gas: {'CO2', 'CH4', 'N2O'}
-                Name of the greenhouse gas.
-            time_horizon : int
-                Time horizon in years.
-            time_step : float
-                Time step in years.
-            cumulative : bool
-                Cumulative radiative forcing if true, else instantaneous values.
-            CH4_oxidation : bool
-                If true, account for oxidation of CH4 to CO2
-            alpha : float
-                Fraction of CH4 oxidized: 0.5-1.0
-    
-            Returns
-            -------
-            :class:`numpy.ndarray`
-                Years of the time serie
-            :class:`numpy.ndarray`
-                Dynamic GWP values at the end of the year
-    
-            Raises
-            ------
-            ValueError
-                Reference unit not recognized.
-            """
-            return self.calculator.get_dynamic_GWP_time_series(
-                greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha
-            )
+        Parameters
+        ----------
+        greenhouse_gas: {'CO2', 'CH4', 'N2O'}
+            Name of the greenhouse gas.
+        time_horizon : int
+            Time horizon in years.
+        time_step : float
+            Time step in years.
+        cumulative : bool
+            Cumulative radiative forcing if true, else instantaneous values.
+        CH4_oxidation : bool
+            If true, account for oxidation of CH4 to CO2
+        alpha : float
+            Fraction of CH4 oxidized: 0.5-1.0
+
+        Returns
+        -------
+        :class:`numpy.ndarray`
+            Years of the time series.
+        :class:`numpy.ndarray`
+            Dynamic GWP values at the end of the year.
+
+        Raises
+        ------
+        ValueError
+            Reference unit not recognized.
+        """
+        return self.calculator.get_dynamic_GWP_time_series(
+            greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha
+        )
 
     def get_AGTP_time_series(self, greenhouse_gas, time_horizon, time_step):
         """Get the Absolute Global Temperature Potential (AGTP) of a greenhouse gas, for the given time_horizon.
@@ -299,12 +293,12 @@ class DynamicRadiativeForcing:
         Returns
         -------
         :class:`numpy.ndarray`
-            Years of the time series
+            Years of the time series.
         :class:`numpy.ndarray`
-            AGTP values at the end of the year
+            AGTP values at the end of the year.
         """
-
         return self.calculator.get_AGTP_time_series(greenhouse_gas, time_horizon, time_step)
+
 
 if __name__ == "__main__":
     pass

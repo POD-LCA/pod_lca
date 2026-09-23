@@ -14,11 +14,11 @@ from scipy import optimize
 
 from ..analysis import DataDistribution
 from ..analysis import ExponentDecay 
+from ..analysis import InverseSquareRoot
+from ..analysis import Linear
 from ..analysis import LogNorm 
 from ..analysis import Norm 
 from ..analysis import Uniform 
-from ..analysis import Linear
-from ..analysis import InverseSquareRoot
 
 
 class TemporalEmissionProfiles(DataDistribution):
@@ -169,6 +169,7 @@ class UniformEmissionProfile(TemporalEmissionProfiles, Uniform):
         pulse.set_start(at)
 
         return pulse
+
 
 class NormEmissionProfile(TemporalEmissionProfiles, Norm):
     """A normal data distribution."""
@@ -337,6 +338,7 @@ class ExponentDecayEmissionProfile(TemporalEmissionProfiles, ExponentDecay):
         else:
             raise RuntimeError("Parameter could not be determined.")
 
+
 class LinearEmissionProfile(TemporalEmissionProfiles, Linear):
     """A linear data distribution."""
 
@@ -364,6 +366,7 @@ class LinearEmissionProfile(TemporalEmissionProfiles, Linear):
 
     #TODO: test linear emission profile with real examples and add other options for generating distribution as needed
 
+
 class InverseSquareRootEmissionProfile(TemporalEmissionProfiles, InverseSquareRoot):
     """An inverse square root data distribution."""
 
@@ -388,6 +391,7 @@ class InverseSquareRootEmissionProfile(TemporalEmissionProfiles, InverseSquareRo
         return invsqrt
 
     #TODO: test sqrt emission profile with real examples and add other options for generating distribution as needed
+
 
 if __name__ == "__main__":
     pass

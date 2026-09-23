@@ -5,7 +5,9 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from math import exp
-import numpy as np
+from numpy import any as np_any
+from numpy import asarray
+from numpy import zeros_like
 from scipy import stats
 
 from . import DataDistribution
@@ -104,6 +106,7 @@ class ExponentDecay(DataDistribution):
 
         return expon
 
+
 class Linear(DataDistribution):
     """A linear data distribution."""
 
@@ -135,24 +138,24 @@ class Linear(DataDistribution):
                 self.end = self.start + self.step
 
             def pdf(self, x):
-                x_arr = np.asarray(x, dtype=float)
-                density = np.zeros_like(x_arr, dtype=float)
+                x_arr = asarray(x, dtype=float)
+                density = zeros_like(x_arr, dtype=float)
                 within = (x_arr >= self.start) & (x_arr <= self.end)
 
-                if np.any(within):
+                if np_any(within):
                     x_rel = (x_arr[within] - self.start) / self.step
                     density[within] = ((1 - 0.5 * self.slope) + self.slope * x_rel) / self.step
 
                 return density
 
             def cdf(self, x):
-                x_arr = np.asarray(x, dtype=float)
-                cumulative = np.zeros_like(x_arr, dtype=float)
+                x_arr = asarray(x, dtype=float)
+                cumulative = zeros_like(x_arr, dtype=float)
                 below = x_arr < self.start
                 above = x_arr > self.end
                 within = ~below & ~above
 
-                if np.any(within):
+                if np_any(within):
                     x_rel = (x_arr[within] - self.start) / self.step
                     cumulative[within] = (1 - 0.5 * self.slope) * x_rel + 0.5 * self.slope * x_rel ** 2
 
@@ -166,6 +169,7 @@ class Linear(DataDistribution):
         linear.dist_name = "linear"
 
         return linear
+
 
 class InverseSquareRoot(DataDistribution):
     """An inverse square root data distribution."""
@@ -187,7 +191,6 @@ class InverseSquareRoot(DataDistribution):
         invsqrt.dist_name = "invsqrt"
 
         return invsqrt  
-
 
 
 if __name__ == "__main__":
