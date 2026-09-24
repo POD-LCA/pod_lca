@@ -12,9 +12,11 @@ from pod_lca.impacts import InverseSquareRootEmissionProfile
 import pandas as pd
 from matplotlib import pyplot as plt
 
+# ========== Example A: Creating emissions object individually (example emissions/emission profiles provided - replace with your emissions)===========
 
 # **********Step 1: Select time horizon settings and output data to plot **********
 # Instructions: Select the start year, time horizon, time step, and results to plot. 
+
 start_year = 0 # select start year
 time_horizon = 250 # select time horizon (years)
 time_step = 1 / 12 # select time step (years)
@@ -26,10 +28,8 @@ show_ghg_stacks = False # if True, show the GHG stacks for the PT and RT separat
 
 
 # **********Step 2: Create the Product Trajectory (PT) DLCI**********
-# [Instructions: Choose one example DLCI (A, B, or C) to run. The other example DLCIs should be commented out.] 
 # (Try using only emission_01 for a simple example)
 
-# ========== Example A: Creating emissions object individually (example emissions/emission profiles provided - replace with your emissions)===========
 emission_01 = Emissions.from_dict(record_dict={"CO2": 3})
 pulse = UniformEmissionProfile.unit_pulse(at=0)
 emission_01.set_temporal_emission_profile(pulse)
@@ -70,35 +70,7 @@ PT_record = DynamicRadiativeForcingRecord.from_emissions(
      time_step=time_step
 )
 
-# ====== Example B: Creating a DRF record from a list of emissions dictionaries =======
-'''test_emissions_list_of_dicts = [
-    {"greenhouse_gas": "CO2", "qty": 3, "emission_profile": {"profile_type": "pulse", "start": 10}},
-    {"greenhouse_gas": "CH4", "qty": 0.01, "emission_profile": {"profile_type": "uniform", "start": 20, "range": 10}}
-]
-
-PT_record = DynamicRadiativeForcingRecord()
-PT_record.set_start_year(start_year)
-PT_record.set_time_horizon(time_horizon)
-PT_record.set_time_step(time_step)
-PT_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
-'''
-# ====== Example C: Creating a DRF record from a CSV file of emissions dictionaries =========
-'''PT_record = DynamicRadiativeForcingRecord()
-PT_record.set_start_year(start_year)
-PT_record.set_time_horizon(time_horizon)
-PT_record.set_time_step(time_step)
-
-# Set DLCI File path
-test_DLCI_file_path = "examples/drf_example_dlci.csv"
-PT_record.add_emissions_from_csv(test_DLCI_file_path)
-'''
-# ===========================================================================================
-
 # **********Step 3: Create the Reference Trajectory (RT) DLCI**********
-# [Instructions: Choose one example DLCI (A, B, or C) to run. The other example DLCIs should be commented out.] 
-# (Try using only emission_01 for a simple example)
-
-# ========== Example A: Creating emissions object individually ===========
 emission_01 = Emissions.from_dict(record_dict={"CO2": 1})
 pulse = UniformEmissionProfile.unit_pulse(at=0)
 emission_01.set_temporal_emission_profile(pulse)
@@ -122,30 +94,6 @@ RT_record = DynamicRadiativeForcingRecord.from_emissions(
      time_horizon=time_horizon, 
      time_step=time_step
 )
-
-# ====== Example B: Creating a DRF record from a list of emissions dictionaries =======
-'''test_emissions_list_of_dicts = [
-    {"greenhouse_gas": "CO2", "qty": 1, "emission_profile": {"profile_type": "pulse", "start": 10}},
-    {"greenhouse_gas": "CH4", "qty": 0.02, "emission_profile": {"profile_type": "uniform", "start": 20, "range": 10}}
-]
-
-RT_record = DynamicRadiativeForcingRecord()
-RT_record.set_start_year(start_year)
-RT_record.set_time_horizon(time_horizon)
-RT_record.set_time_step(time_step)
-RT_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
-'''
-# ====== Example C: Creating a DRF record from a CSV file of emissions dictionaries =========
-'''RT_record = DynamicRadiativeForcingRecord()
-RT_record.set_start_year(start_year)
-RT_record.set_time_horizon(time_horizon)
-RT_record.set_time_step(time_step)
-
-# Set DLCI File path
-test_DLCI_file_path = "examples/drf_example_dlci.csv"
-RT_record.add_emissions_from_csv(test_DLCI_file_path)
-'''
-# ===========================================================================================
 
 # ********** Step 4: Dynamic Radiative Forcing Record evaluation and plot settings: **********
 PT_record.set_data() # product and reference trajectories are stored as a POD|LCA DRF_record object
@@ -275,9 +223,9 @@ for result in results_to_plot:
 
 
 # Save the DRF records to CSV files:
-PT_output_file = "src/pod_lca/data/CCLIMB_PT_record_temp.csv"
-RT_output_file = "src/pod_lca/data/CCLIMB_RT_record_temp.csv"
-Net_output_file = "src/pod_lca/data/CCLIMB_Net_record_temp.csv"
+PT_output_file = "temp/CCLIMB_PT_record_temp.csv"
+RT_output_file = "temp/CCLIMB_RT_record_temp.csv"
+Net_output_file = "temp/CCLIMB_Net_record_temp.csv"
 
 PT_record.save(PT_output_file)
 RT_record.save(RT_output_file)

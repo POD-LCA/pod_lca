@@ -1,16 +1,16 @@
-from pod_lca.impacts import Emissions
+
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
+from pod_lca.impacts import Emissions
 from pod_lca.impacts import ExponentDecayEmissionProfile
 from pod_lca.impacts import UniformEmissionProfile
-from pod_lca.impacts import NormEmissionProfile
 from pod_lca.impacts import LogNormEmissionProfile
 from pod_lca.impacts import LinearEmissionProfile
 from pod_lca.impacts import InverseSquareRootEmissionProfile
 
-# Instructions: Choose one example DLCI (A, B, or C) to run. The other examples should be commented out. 
+
 # Change plot settings below the example DLCI, then click run to generate the plot and results file. 
 
-# ========== Example A: Creating emissions object individually ===========
+# Creating emissions object individually
 emission_01 = Emissions.from_dict(record_dict={"CO2": 1})
 pulse = UniformEmissionProfile.unit_pulse(at=2035)
 emission_01.set_temporal_emission_profile(pulse)
@@ -57,29 +57,6 @@ drf_record = DynamicRadiativeForcingRecord.from_emissions(
      time_step=1 / 12
 )
 
-# ====== Example B: Creating a DRF record from a list of emissions dictionaries =======
-'''test_emissions_list_of_dicts = [
-    {"greenhouse_gas": "CO2", "qty": 1, "emission_profile": {"profile_type": "pulse", "start": 10}},
-    {"greenhouse_gas": "CH4", "qty": 0.01, "emission_profile": {"profile_type": "uniform", "start": 20, "range": 10}}
-]
-
-drf_record = DynamicRadiativeForcingRecord()
-drf_record.set_start_year(0)
-drf_record.set_time_horizon(100)
-drf_record.set_time_step(1 / 12)
-drf_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
-'''
-# ====== Example C: Creating a DRF record from a CSV file of emissions dictionaries =========
-'''drf_record = DynamicRadiativeForcingRecord()
-drf_record.set_start_year(0)
-drf_record.set_time_horizon(100)
-drf_record.set_time_step(1 / 12)
-
-# Set DLCI File path
-test_DLCI_file_path = "examples/drf_example_dlci.csv"
-drf_record.add_emissions_from_csv(test_DLCI_file_path)
-'''
-# ===========================================================================================
 # Dynamic Radiative Forcing Record evaluation and plot settings:
 drf_record.set_data()
 
@@ -93,12 +70,12 @@ colors = ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3',
           ]
 
 drf_record.plot(
-     "AGTP", "stackplot", group_by="greenhouse_gas", colors = colors
- )
-# plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
-# plot types: 'lineplot', 'stackplot'
-# group_by options: "greenhouse_gas", "material", "lca_stage"
+    "AGTP", # plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
+    "stackplot", # plot types: 'lineplot', 'stackplot'
+    group_by="greenhouse_gas", # group_by options: "greenhouse_gas", "material", "lca_stage"
+    colors = colors
+)
 
 # Save the DRF record to a CSV file:
-output_file = "src/pod_lca/data/drf_record_temp.csv"
+output_file = "temp/drf_record_temp.csv"
 drf_record.save(output_file)
