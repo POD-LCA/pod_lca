@@ -356,7 +356,6 @@ class ARXCalculation:
             If true, account for oxidation of CH4 to CO2.
         """
         root, ext = os.path.splitext(config["file_paths"]["drf"]["INDIRECT_EFFECTS_FACTORS"])
-
         indirect_factors = DataImporter.json_to_dict(root + "_" + cls._ipcc_annual_report + ext)
 
         agwp = cls.get_radiative_forcing(
@@ -391,7 +390,7 @@ class ARXCalculation:
         return agwp_gas / agwp_CO2
 
     @classmethod
-    def get_dynamic_GWP_time_series(cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=0.5):
+    def get_dynamic_GWP_time_series(cls, greenhouse_gas, time_horizon, time_step, cumulative=True, CH4_oxidation=True, alpha=None):
         """Get the dynamic GWP values (in kgCO2e) as a time-series, given that a 1kg of gas emitted on start year.
 
         Parameters
@@ -407,7 +406,7 @@ class ARXCalculation:
         CH4_oxidation : bool
             If true, account for oxidation of CH4 to CO2.
         alpha : float
-            Fraction of CH4 oxidized: 0.5-1.0.
+            Fraction of CH4 oxidized: 0.5-1.0. If None, the value picked from the IPCC report.
 
         Returns
         -------
@@ -418,6 +417,11 @@ class ARXCalculation:
         numpy.array
             Radiative forcing values at the end of the year.
         """
+        if alpha is None:
+            root, ext = os.path.splitext(config["file_paths"]["drf"]["INDIRECT_EFFECTS_FACTORS"])
+            indirect_factors = DataImporter.json_to_dict(root + "_" + cls._ipcc_annual_report + ext)
+            alpha = indirect_factors["alpha"]
+
         years, _, cumulative_rf = cls.get_radiative_forcing_time_series(greenhouse_gas, time_horizon, time_step, cumulative, CH4_oxidation, alpha)
         years, _, cumulative_rf_CO2 = cls.get_radiative_forcing_time_series("CO2", time_horizon, time_step, cumulative, CH4_oxidation, alpha)
         dynamic_GWP = zeros(len(years))
