@@ -41,5 +41,5 @@ drf_record.plot(
 )
 
 # Save the DRF record to a CSV file:
-output_file = "temp/drf_record_temp.csv"
+output_file = "examples/drf_record_temp.csv"
 drf_record.save(output_file)

@@ -175,9 +175,9 @@ for result in results_to_plot:
 
 
 # Save the DRF records to CSV files:
-PT_output_file = "temp/CCLIMB_PT_record_temp.csv"
-RT_output_file = "temp/CCLIMB_RT_record_temp.csv"
-Net_output_file = "temp/CCLIMB_Net_record_temp.csv"
+PT_output_file = "examples/CCLIMB_PT_record_temp.csv"
+RT_output_file = "examples/CCLIMB_RT_record_temp.csv"
+Net_output_file = "examples/CCLIMB_Net_record_temp.csv"
 
 PT_record.save(PT_output_file)
 RT_record.save(RT_output_file)

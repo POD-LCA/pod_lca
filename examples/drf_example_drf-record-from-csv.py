@@ -7,6 +7,13 @@ from pod_lca.impacts import LogNormEmissionProfile
 from pod_lca.impacts import LinearEmissionProfile
 from pod_lca.impacts import InverseSquareRootEmissionProfile
 
+from pod_lca.materials_screening import Master
+from pod_lca.materials_screening import Model
+from pod_lca.materials_screening import Project
+
+project = Project.new()
+model = Model.in_project(project)
+
 # Change plot settings below the example DLCI, then click run to generate the plot and results file. 
 
 # Creating a DRF record from a CSV file of emissions dictionaries
@@ -18,6 +25,15 @@ drf_record.set_time_step(1 / 12)
 # Set DLCI File path
 test_DLCI_file_path = "examples/drf_example_dlci.csv"
 drf_record.add_emissions_from_csv(test_DLCI_file_path)
+
+emissions_list = drf_record.get_emissions_list()
+for emission in emissions_list:
+    emission_profile = emission.get_temporal_emission_profile()
+    name = emission_profile.get_name()
+    lca_stage = emission_profile.get_attr()
+    parent = Master.new(None, name, model, lca_stage, None, None, None)
+    emission.set_parent(parent)
+
 
 # Dynamic Radiative Forcing Record evaluation and plot settings:
 drf_record.set_data()
@@ -34,10 +50,10 @@ colors = ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3',
 drf_record.plot(
     "AGTP", # plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
     "stackplot", # plot types: 'lineplot', 'stackplot'
-    group_by="greenhouse_gas", # group_by options: "greenhouse_gas", "material", "lca_stage"
+    group_by="lca_stage", # group_by options: "greenhouse_gas", "material", "lca_stage"
     colors = colors
 )
 
 # Save the DRF record to a CSV file:
-output_file = "temp/drf_record_temp.csv"
+output_file = "examples/drf_record_temp.csv"
 drf_record.save(output_file)

@@ -465,13 +465,6 @@ class DynamicRadiativeForcingRecord:
 
                     (Note: '**' indicates an optional parameters.)
         """
-        from ..materials_screening import Master
-        from ..materials_screening import Model
-        from ..materials_screening import Project
-
-        project = Project.new()
-        model = Model.in_project(project)
-
         for emission_dict in emissions:
             greenhouse_gas = emission_dict.get("greenhouse_gas")
             emission_qty = emission_dict.get("qty")
@@ -525,20 +518,13 @@ class DynamicRadiativeForcingRecord:
 
                 if emission_dict.get("name") is not None and emission_dict.get("name") != "":
                     name = emission_dict.get("name")
-                    emission.set_parent(Master.new(None, name, model, None, None, None, None))
-                    # parent = emission.get_parent()
-                    # parent.set_name(self, name=name)
+                    emission_profile = emission.get_temporal_emission_profile()
+                    emission_profile.set_name(name)
 
-                    if emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
-                        parent = emission.get_parent()
-                        stage = emission_dict.get("lca_stage")
-                        parent.set_life_cycle_stage(stage=stage)
-
-                elif emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
+                if emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
                     stage = emission_dict.get("lca_stage")
-                    emission.set_parent(Master.new(None, None, model, stage, None, None, None))
-                    # parent = emission.get_parent()
-                    # parent.set_life_cycle_stage(stage=stage)
+                    emission_profile = emission.get_temporal_emission_profile()
+                    emission_profile.set_attr_name(stage)
 
                 self.emissions_lst.append(emission)
 

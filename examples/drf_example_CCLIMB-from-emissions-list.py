@@ -24,7 +24,7 @@ results_to_plot = ['emission intensity','atmospheric concentration','instantaneo
 plot_PTandRT_separately = True # if True, plot the product trajectory (PT) and reference trajectory (RT) separately, in addition to the net results. If False, only plot the net results.
 plot_annotations = True # if True, annotate the net results at the requested time points. If False, do not annotate the net results.
 annotation_years = [20, 100, 250] # list of years at which to annotate the net results. Only used if plot_annotations is True.
-show_ghg_stacks = False # if True, show the GHG stacks for the PT and RT separately. If False, do not show the GHG stacks.
+show_ghg_stacks = True # if True, show the GHG stacks for the PT and RT separately. If False, do not show the GHG stacks.
 
 # **********Step 2: Create the Product Trajectory (PT) DLCI**********
 test_emissions_list_of_dicts = [
@@ -110,9 +110,7 @@ for result in results_to_plot:
 
     # Plot PT and RT separately, if requested
     if plot_PTandRT_separately:
-        # PT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = PT_colors)
-        # RT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = RT_colors)
-
+        #TODO add code to handle grouping stacks by product or lca_stage
         PT_result = PT_record.get_data(data_category=result, xy_pairs=False)[1]
         RT_result = RT_record.get_data(data_category=result, xy_pairs=False)[1]
         PT_result[f"{result}"] = 0
@@ -178,9 +176,9 @@ for result in results_to_plot:
 
 
 # Save the DRF records to CSV files:
-PT_output_file = "temp/CCLIMB_PT_record_temp.csv"
-RT_output_file = "temp/CCLIMB_RT_record_temp.csv"
-Net_output_file = "temp/CCLIMB_Net_record_temp.csv"
+PT_output_file = "examples/CCLIMB_PT_record_temp.csv"
+RT_output_file = "examples/CCLIMB_RT_record_temp.csv"
+Net_output_file = "examples/CCLIMB_Net_record_temp.csv"
 
 PT_record.save(PT_output_file)
 RT_record.save(RT_output_file)
