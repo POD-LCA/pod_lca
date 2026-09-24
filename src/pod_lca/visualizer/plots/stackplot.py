@@ -1,7 +1,7 @@
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
 __license__ = "MIT License"
-__email__ = "mhtaba@uw.edu; kiun@uw.edu"
+__email__ = "mhtaba@uw.edu; kiun@uw.edu, etel5501@uw.edu"
 __version__ = "0.1.0"
 
 from ...utilities import config
@@ -18,7 +18,7 @@ class Stackplot(AbstractPlot):
     # ================================
     # Methods
     # ================================
-    def draw(self, x_data, y_data, title, x_label, y_label, colors=None, total_line = True):
+    def draw(self, x_data, y_data, title, x_label, y_label, colors=None, total_line=True):
         """Draw the bar chart.
 
         Parameters
@@ -37,6 +37,8 @@ class Stackplot(AbstractPlot):
             Y-label of the barchart.
         colors : list of str
             Colors of each stack.
+        total_line : bool
+            Whether to plot the total line on top of the stackplot.
         """
         self.get_plot().clear_plot()
 
@@ -51,9 +53,11 @@ class Stackplot(AbstractPlot):
             label_lst = [None] * len(y_data)
 
         if colors is None:
-            color_idxs = [i % len(config["Preferences"]["COLOUR_ORDER_LIST"]) for i in range(len(y_data))]
-            colors = [config["Preferences"]["COLOUR_ORDER_LIST"][i] for i in color_idxs]
+            color_lst = config["Preferences"]["COLOUR_ORDER_LIST"]
+            color_idxs = [i % len(color_lst) for i in range(len(y_data))]
+            colors = [color_lst[i] for i in color_idxs]
 
+        # seperate positive and negative series to plot them separately
         positive_indices = [index for index, series in enumerate(y_data) if sum(series) >= 0]
         negative_indices = [index for index, series in enumerate(y_data) if sum(series) < 0]
 

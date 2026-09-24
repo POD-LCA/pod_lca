@@ -36,23 +36,21 @@ class LinePlot(AbstractPlot):
         colors : str or list of str
             Colors of the line plots.
         """
+        if colors is None:
+            colors = config["Preferences"]["COLOUR_ORDER_LIST"]
+        
         self.get_plot().clear_plot()
 
         if isinstance(data, dict):
-            if colors is None:
-                colors = config["Preferences"]["COLOUR_ORDER_LIST"]
             counter = 0
             for label, xy_data in data.items():
                 x_data, y_data = zip(*xy_data)
-                if colors==None:
-                    colors = config["Preferences"]["COLOUR_ORDER_LIST"]
-                # self.get_plot().draw_line(x_data, y_data, label, colors[counter])
                 color = colors[counter % len(colors)]
                 self.get_plot().draw_line(x_data, y_data, label, color)
                 counter += 1
         elif isinstance(data, list):
-            if colors is None:
-                colors = config["Preferences"]["COLOUR_ORDER_LIST"][0]
+            if isinstance(colors, list):
+                colors = colors[0]
             self.get_plot().draw_line(data[0], data[1], None, colors)
 
         self.get_plot().set_title(title)
