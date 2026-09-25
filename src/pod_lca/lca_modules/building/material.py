@@ -309,6 +309,24 @@ class Material(Product):
 
         return self
 
+    def set_eol_material(self, eol_material, is_bio_based=None, is_composite=None):
+        """ Set the end-of-life product corresponding to the material.
+
+        Parameters
+        ----------
+        eol_material : str
+            EOL product name.
+        is_bio_based : bool
+            Flag to identify if the material is bio-based.
+        is_composite : bool
+            Flag to identify if the material is a composite.    
+        """
+        self.eol_product = eol_material
+        self.bio_based = is_bio_based if is_bio_based is not None else True
+        self.composite = is_composite if is_composite is not None else True
+
+        return self
+
     def set_waste_rate(self, waste_rate=None, waste_rate_category=None):
         """ Set the waste rate of the material.
         
@@ -518,6 +536,16 @@ class Material(Product):
         """
         return self.get_building()
 
+    def get_eol_material(self):
+        """ Get the end-of-life product corresponding to the material.
+
+        Returns
+        -------
+        str
+            End-of-life product name corresponding to the material.      
+        """
+        return self.eol_product  
+    
     def get_waste_rate(self):
         """ Get the waste rate of the material.
         
