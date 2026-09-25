@@ -5,11 +5,14 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from ..units import BTU
+from ..units import CENTI
 from ..units import CUBIC_FEET
 from ..units import CUBIC_METER
 from ..units import DAY
 from ..units import FEET
+from ..units import GRAM
 from ..units import HOUR
+from ..units import INCH
 from ..units import ITEM
 from ..units import INCH
 from ..units import JOULE
@@ -21,13 +24,22 @@ from ..units import KILOMETER
 from ..units import LITER
 from ..units import MEGA
 from ..units import METER
+from ..units import MILE
+from ..units import MILI
 from ..units import SQUARE_FEET
 from ..units import SQUARE_METER
+from ..units import OUNCE
+from ..units import POUND
 from ..units import M_TON
+from ..units import S_TON
 from ..units import TON_KILOMETER
 from ..units import UNITS_MAP
 from ..units import US_GALLON
+from ..units import YARD
 from ..units import WATT_HOUR
+from ..units import US_DOLLAR
+from ..units import WATT
+from ..units import KELVIN
 
 # This file contains a mapping of strings to their corresponding unit objects.
 # This is to be used for conversions strings in import files (CSV, JSON, etc.) to their corresponding unit objects in the code.
@@ -35,28 +47,45 @@ from ..units import WATT_HOUR
 
 UNITS_MAP.update(
     {
+        "hr": HOUR,
         "d": DAY,
         "h": HOUR,
         "kg": KILOGRAM,
+        "g": GRAM,
         "t": M_TON,
+        "oz": OUNCE,
+        "lb": POUND,
+        "tn": S_TON,
         "km": KILOMETER,
+        "mile": MILE,
+        "mm" : MILI * METER,
+        "cm": CENTI * METER,
         "m": METER,
         "ft": FEET,
         "in": INCH,
+        "yd": YARD,
         "tonne": M_TON,
         "metric ton": M_TON,
         "tkm": TON_KILOMETER,
         "t*km": TON_KILOMETER,
         "kgkm": KILOGRAM * KILOMETER,
+        "m²": SQUARE_METER,
         "m2": SQUARE_METER,
         "ft2": SQUARE_FEET,
+        "ft²": SQUARE_FEET,
         "l": LITER,
         "m3": CUBIC_METER,
+        "Nm3": CUBIC_METER, # gas volume under temperature of 0°C and an absolute pressure of 1 atm
+        "m³": CUBIC_METER,
         "ft3": CUBIC_FEET,
+        "ft³": CUBIC_FEET,
         "gal": US_GALLON,
+        "US gal": US_GALLON,
+        "J": JOULE,
         "MJ": MEGA * JOULE,
         "kWh": KILO * WATT_HOUR,
         "MWh": MEGA * WATT_HOUR,
+        "Btu": BTU,
         "kBtu/ft2": KILO * BTU / SQUARE_FEET,
         "kWh/ft2": KILO * WATT_HOUR / SQUARE_FEET,
         "Item(s)": ITEM,
@@ -66,7 +95,10 @@ UNITS_MAP.update(
         "kg/m": KILOGRAM / METER,
         "kg/m2": KILOGRAM / SQUARE_METER,
         "kg/ft2": KILOGRAM / SQUARE_FEET,
+        "g/ft2": GRAM / SQUARE_FEET,
         "kg/m3": KILOGRAM / CUBIC_METER,
         "kg/item": KILOGRAM / ITEM,
+        "USD": US_DOLLAR,
+        "W/m*K": WATT/(METER*KELVIN),
     }
 )

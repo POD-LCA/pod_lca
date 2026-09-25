@@ -4,10 +4,16 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import bool_ as np_bool
+
+from ..analysis import PedigreeScore
 from ..carbon_storage import CarbonStorage
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ...units import KG_CARBON_DIOXIDE
+from ...units import Unit
 from ...utilities import log
+from ...utilities import config
 
 
 class Master:
@@ -63,6 +69,9 @@ class Master:
         self.qty = 0.0
         self.unit = None
 
+        self.thickness = None
+        self.thickness_unit = None
+
         # total inventories
         self.impacts = None
         self.carbon_storage = None
@@ -77,7 +86,7 @@ class Master:
 
         self.is_hotspot = False
         self.data_distributions = {}
-        self.pedigree_score = None
+        self.pedigree_score = PedigreeScore.from_parent(self)
 
     # ================================
     # Constructors
@@ -231,9 +240,10 @@ class Master:
         else:
             database = self.get_impact_database()
 
-            unit_inventories = database.get_data_entry(database_item).fillna(0.0)
-            self.inventories_declared_unit = unit_inventories[database.get_unit_key()]
-            self.inventories_declared_qty = unit_inventories[database.get_qty_key()]
+            unit_inventories = self.get_data_from_database(database_item)
+            self.set_inventories_declared_qty(
+                qty=unit_inventories[database.get_qty_key()], 
+                unit=unit_inventories[database.get_unit_key()])
 
             impacts = {key: unit_inventories[key] for key in self.unit_impacts.get_categories()}
             self.unit_impacts.update_qty(impacts)
@@ -241,25 +251,39 @@ class Master:
             emissions = {key: unit_inventories[key] for key in self.unit_emissions.get_categories()}
             self.unit_emissions.update_qty(emissions)
 
-            self.update_unit_carbon_storage()
-            
+            carbon_storage = {key: unit_inventories[key] for key in self.unit_carbon_storage.get_categories()}
+            self.unit_carbon_storage.update_qty(carbon_storage)
+            self.update_mineral_carbon_storage(database_item)
+            self.update_bio_carbon_storage(database_item)
+
             del unit_inventories
 
         return self
+    
+    def set_inventories_declared_qty(self, qty, unit):
+        """Set the declared quantity of the product/process.
 
-    def update_unit_carbon_storage(self):
-        """Compute the carbon storage of the product. To be implemented in child classes.
-
-        Returns
-        -------
-        dict
-            Carbon storage quantity of the product.
+        Parameters
+        ----------
+        qty : float
+            Declared quantity of the product/process.
+        unit : ~pod_lca.units.Unit
+            Unit corresponding to the declared quantity.
         """
-        carbon_storage = self.unit_carbon_storage.get_record_dict()
-        for category in carbon_storage:
-            carbon_storage[category] = 0.0
-        self.unit_carbon_storage.update_qty(carbon_storage)
+        if isinstance(qty, str):
+            try:
+                qty = float(qty)
+            except:
+                raise TypeError("Declared quantity should be a number.")
         
+        if isinstance(qty, (float, int)):
+            self.inventories_declared_qty = qty
+
+        if isinstance(unit, Unit):
+            self.inventories_declared_unit = unit
+        else:
+            self.inventories_declared_unit = None
+
         return self
         
     def set_qty(self, qty):
@@ -286,7 +310,7 @@ class Master:
 
         return self
 
-    def set_unit(self, unit):
+    def set_unit(self, unit, force_set=False):
         """Set unit of measurement for the product/process.
 
         Parameters
@@ -299,18 +323,18 @@ class Master:
         ValueError
             Incompatible units.
         """
-        if self.get_unit() is None:
+        if (self.get_unit() is None) or force_set:
             self.unit = unit
         else:
-            value_in = self.get_qty()
             unit_in = self.get_unit()
 
-            conversion_factor = unit_in.convert_to(unit)
+            try:
+                new_qty = self.get_qty(unit)
 
-            if conversion_factor is not None:
                 self.unit = unit
-                self.set_qty(value_in * conversion_factor)
-            else:
+                self.set_qty(new_qty)
+            except:
+                log(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}). New unit set without resetting quantity.", "Warn")
                 raise ValueError(f"The new unit ({unit}) is incompatible with the existing unit ({unit_in}).")
 
         return self
@@ -399,15 +423,66 @@ class Master:
         """
         return self.impact_database_entry
 
-    def get_qty(self):
+    def get_qty(self, unit=None):
         """Retrieve the quantity of the product/process.
+
+        Paramereters
+        ------------
+        unit : ~pod_lca.units.Unit
+            If given, quantity will be converted to the given unit.
 
         Returns
         -------
         float
             Quantity of the product/process.
         """
-        return self.qty
+        if not unit:
+            return self.qty
+
+        defined_unit = self.get_unit()
+
+        # try direct conversion
+        try:
+            conversion_factor = defined_unit.convert_to(unit)
+            qty = self.get_qty()
+            return qty * conversion_factor
+        except:
+            pass        
+
+        # try conversion through density unit, if defined
+        density_unit = self.get_density_unit()
+        if density_unit is not None:
+            try:
+                conversion_factor = defined_unit.convert_to(unit * self.get_density_unit())
+                qty = (self.qty / self.get_density())
+                return qty * conversion_factor
+            except:
+                pass
+
+            try:
+                conversion_factor = (defined_unit * self.get_density_unit()).convert_to(unit)
+                qty = (self.qty * self.get_density())
+                return qty * conversion_factor
+            except:
+                pass
+
+            try:
+                conversion_factor = (defined_unit / (self.thickness_unit * self.get_density_unit())).convert_to(unit)
+                qty = (self.qty / (self.thickness * self.get_density()))
+                return qty * conversion_factor
+            except:
+                pass            
+
+            try:
+                conversion_factor = (defined_unit / self.thickness_unit).convert_to(unit)
+                qty = (self.qty / self.thickness)
+                return qty * conversion_factor
+            except:
+                pass   
+
+        raise ImportError(
+            f"{self.get_name()} (of units {defined_unit}) and the LCA data chosen ({self.get_impact_database_entry()} of units {unit}) are of incompatible units."
+        )
 
     def get_unit(self):
         """Retrieve the unit of measurement of the product/process.
@@ -428,6 +503,13 @@ class Master:
             Impacts of the product/process.
         """
         self.update_inventory_records()
+
+        carbonation_effects_impact_cat = config["setup"]["impacts"]["ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
+        mineral_carbonation_effect = self.get_carbon_storage().get_mineral_carbon_storage_qty(KG_CARBON_DIOXIDE)
+
+        adjusted_impact = self.impacts.get_record(carbonation_effects_impact_cat) - mineral_carbonation_effect
+
+        self.impacts.update_qty({carbonation_effects_impact_cat: adjusted_impact})
 
         return self.impacts
 
@@ -523,6 +605,9 @@ class Master:
     # ================================
     # Methods
     # ================================
+    def get_data_from_database(self, database_item):
+        return self.get_impact_database().get_data_entry(database_item).fillna(0.0)
+
     def update_inventory_records(self):
         """Sets inventory quantities, based on database item asigned to the product/process
             and the product/process quantity.
@@ -533,48 +618,26 @@ class Master:
         ImportError
             Incompatible units of Master object and database entry.
         """
-        if self.get_unit().get_qty_measured() == self.inventories_declared_unit.get_qty_measured():
-            conversion_factor = self.get_unit().convert_to(self.inventories_declared_unit)
-            qty = self.qty * conversion_factor
-        else:
-            if self.inventories_declared_unit.get_qty_measured() == "mass":
-                conversion_factor = self.get_weight_unit().convert_to(self.inventories_declared_unit)
-                qty = self.get_weight_qty() * conversion_factor
-            elif self.get_density_unit() is not None:
-                if (
-                    self.get_unit().get_qty_measured()
-                    == (self.inventories_declared_unit * self.get_density_unit()).get_qty_measured()
-                ):
-                    conversion_factor = self.get_unit().convert_to(
-                        self.inventories_declared_unit * self.get_density_unit()
-                    )
-                    qty = (self.qty / self.get_density()) * conversion_factor
-                else:
-                    raise ImportError(
-                        f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units."
-                    )
-            else:
-                raise ImportError(
-                    f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.inventories_declared_unit}) are of incompatible units."
-                )
+        if self.inventories_declared_unit is not None:
+            qty = self.get_qty(self.inventories_declared_unit)
 
-        impacts = {
-            key: self.unit_impacts.get_record(key) * qty / self.inventories_declared_qty
-            for key in self.impacts.record_attr_dict
-        }
-        self.impacts.update_qty(impacts)
+            impacts = {
+                key: self.unit_impacts.get_record(key) * qty  / self.inventories_declared_qty
+                for key in self.impacts.record_attr_dict
+            }
+            self.impacts.update_qty(impacts)
 
-        emissions = {
-            key: self.unit_emissions.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty
-            for key in self.emissions.record_attr_dict
-        }
-        self.emissions.update_qty(emissions)
+            emissions = {
+                key: self.unit_emissions.get_record(key) * qty / self.inventories_declared_qty
+                for key in self.emissions.record_attr_dict
+            }
+            self.emissions.update_qty(emissions)
 
-        carbon_storage = {
-            key: self.unit_carbon_storage.get_record(key) * conversion_factor * self.qty / self.inventories_declared_qty
-            for key in self.carbon_storage.record_attr_dict
-        }
-        self.carbon_storage.update_qty(carbon_storage)
+            carbon_storage = {
+                key: self.unit_carbon_storage.get_record(key) * qty / self.inventories_declared_qty
+                for key in self.carbon_storage.record_attr_dict
+            }
+            self.carbon_storage.update_qty(carbon_storage)
 
         return self
 
@@ -610,14 +673,14 @@ class Master:
                     model_carbon_storages[stage].remove(carbon_storage_obj)
                     break
         else:
-            if impact_obj in model_impacts:
-                model_impacts.remove(impact_obj)
+            if impact_obj in model_impacts[stage]:
+                model_impacts[stage].remove(impact_obj)
 
-            if emission_obj in model_emissions:
-                model_emissions.remove(emission_obj)
+            if emission_obj in model_emissions[stage]:
+                model_emissions[stage].remove(emission_obj)
 
-            if carbon_storage_obj in model_carbon_storages:
-                model_carbon_storages.remove(carbon_storage_obj)
+            if carbon_storage_obj in model_carbon_storages[stage]:
+                model_carbon_storages[stage].remove(carbon_storage_obj)
 
         return self
 
@@ -645,6 +708,130 @@ class Master:
             )
 
         return self
+
+    def update_mineral_carbon_storage(self, database_item):
+        """ Update mineral carbon storage record of the item.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
+        if database_item:
+            data_entry = self.get_data_from_database(database_item)
+        else:
+            self.carbon_storage.set_mineral_carbonation_potential(False)
+            self.unit_carbon_storage.set_mineral_carbonation_potential(False)
+
+            return self
+
+        # mineral carbonation potential
+        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER"]
+        if key in data_entry.index:
+            if isinstance(data_entry[key], (bool, np_bool)):
+                mnrl_potential = data_entry[key]
+            elif isinstance(data_entry[key], str):
+                if data_entry[key].lower() in ["yes", "true"]:
+                    mnrl_potential = True
+                elif data_entry[key].lower() in ["no", "false"]:
+                    mnrl_potential = False
+                else:
+                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+            else:
+                raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
+        
+        else:
+            mnrl_potential = False
+
+        self.unit_carbon_storage.set_mineral_carbonation_potential(mnrl_potential)
+        self.carbon_storage.set_mineral_carbonation_potential(mnrl_potential)
+
+        # mineral carbonation content
+        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
+        val = data_entry[key]
+
+        self.unit_carbon_storage.update_qty({key: val})
+
+        return self
+    
+    def update_bio_carbon_storage(self, database_item):
+        """ Update the biogenic carbon storage parameters of the item.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
+        if database_item:
+            data_entry = self.get_data_from_database(database_item)
+        else:
+            self.unit_carbon_storage.set_biogenic_carbon_storage_potential(False)
+            self.carbon_storage.set_biogenic_carbon_storage_potential(False)
+
+            return self
+        
+        # bio carbon potential
+        key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER"]
+        if key in data_entry.index:
+            val = data_entry[key]
+            if isinstance(val, (bool, np_bool)):
+                bio_potential = data_entry[key]
+            elif isinstance(val, str):
+                if val.lower() in ["yes", "true"]:
+                    bio_potential = True
+                elif val.lower() in ["no", "false"]:
+                    bio_potential = False
+                else:
+                    raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+            else:
+                raise ValueError(f"Biogenic carbon storage potential {data_entry[key]} not recognized")
+        else:
+            bio_potential = False
+
+        self.unit_carbon_storage.set_biogenic_carbon_storage_potential(bio_potential)
+        self.carbon_storage.set_biogenic_carbon_storage_potential(bio_potential)
+        
+        if bio_potential:
+            # bio carbon percentage
+            key = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER"]
+            if key in data_entry.index:
+                val = data_entry[key]
+                if isinstance(val, (float, int)):
+                    pct = val
+                else:
+                    pct = 0.0
+            else:
+                raise ValueError(f"Biogenic carbon percentage {data_entry[key]} not recognized")
+
+            self.unit_carbon_storage.set_biogenic_carbon_composition(pct)
+
+            # moisture content
+            key = config["setup"]["impacts"]["BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER"]
+            if key in data_entry.index:
+                val = data_entry[key]
+                if isinstance(val, (float, int)):
+                    mc = val
+                else:
+                    mc = 0.0
+            else:
+                raise ValueError(f"Biogenic material moisture content {data_entry[key]} not recognized")
+
+            self.set_moisture_content(mc)
+
+            # update carbon content from parameters
+            self.unit_carbon_storage.update_biogenic_carbon_content()
+
+        return self
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_impact_database_entry()
+        )
 
 
 if __name__ == "__main__":

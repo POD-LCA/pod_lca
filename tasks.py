@@ -5,6 +5,7 @@ from shutil import rmtree
 import importlib.util
 import inspect
 import os
+import sys
 
 
 @task
@@ -71,7 +72,7 @@ def fix(c):
 
 @task
 def docs(c, out="md"):
-    """Build Sphinx HTML docs"""
+    """Build Sphinx docs"""
     if out == "html":
         c.run("sphinx-build -b html docs/source docs/_build/html")
     elif out == "md":
@@ -87,9 +88,22 @@ def load_test_module(filepath):
 
     return module
 
+@task
+def unittests(c, verbose=True):
+    """Run unit tests in tests/unit_tests using pytest."""
+    test_path = os.path.join("tests", "unit_tests")
+    
+    cmd = f"pytest {test_path}"
+    if verbose:
+        cmd += " -vv"
+    
+    if sys.platform == "win32":
+        c.run(cmd)  
+    else:
+        c.run(cmd, pty=True)
 
 @task
-def test(c):
+def tests(c):
     """Discover every *_test_script.py file, import it, and run its test_* functions."""
     test_files = list(Path("tests").rglob("*_test_script.py"))
 
@@ -120,6 +134,13 @@ def test(c):
 
 @task(pre=[clean])
 @task
-def package(c):
-    """Build only the wheel."""
+def package(c, version_bump="patch"):
+    """Build only the wheel.
+    
+    Parameters
+    ----------
+    version_bump : str
+        One of 'major', 'minor', or 'patch' to indicate the type of version bump.
+    """
+    # c.run(f"bump-my-version bump {version_bump} ")
     c.run("python -m build --wheel")

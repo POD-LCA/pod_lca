@@ -5,30 +5,20 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from . import Foundation
-from . import Beam
-from . import Column
-from . import Slab
-from . import Wall
-from . import RoofStructure
-from . import StructuralMaterial
-from ...units import UNITS_MAP
-from ...utilities import DataImporter
-from ...utilities import config
-from ...utilities import log
-
+from pandas import DataFrame
 
 class BuildingStructure:
     """ The structural assemblies of the building.
     
     Attributes
     ----------
-    parent : ~pod_lca.building.Building
+    building : ~pod_lca.building.Building
         The building to which the structure belong.
+    structures : dict of dict
+        A dictionary of structures belonging to the building structure keyed by an id.
+        Interior dict: {"structure": <`~pod_la.building_structure.Structure '>, "no_floors": <int>}
     structural_system :
         Major vertical gravity system of the structure.
-    structural_material : {'Concrete', 'Steel', 'CLT'}
-        Primary structural material of the building.
     foundations : list of ~pod_lca.building_structure.Foundation
         Structural foundation elements.
     beams : list of ~pod_lca.building_structure.Beam
@@ -37,127 +27,99 @@ class BuildingStructure:
         Column elements in the structure.
     slabs : list of ~pod_lca.building_structure.Slab
         Floor slabs in the structure.
+    structural_walls : list of ~pod_lca.building_structure.Wall
+        Structural walls in the structure.
+    roof_structure : list of ~pod_lca.building_structure.RoofStructure
+        Roof structure of the building.
+    unclassified : list of ~pod_lca.building_structure.StructuralElement
+        Structural elements not classified under any of the above.
     """
 
     def __init__(self):
-        self.parent = None
+        self.building = None
+        self.structures = {}
         self.structural_system = None
-        self.structural_material = None
+        
+        # structural elements
         self.foundations = []
         self.beams = []
         self.columns = []
         self.slabs = []
+        self.structural_walls = []
         self.roof_structure = []
+        self.unclassified = [] 
 
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def from_template(cls, building, building_type, structure_type):
-        """ Create a structure from a template model.
+    def create(cls, structures, no_floors):
+        """ Create building structure from structure configurations.
         
         Parameters
         ----------
-        building : ~pod_lca.building.Building
-            Building for which the structure belong.
-        building_type : {'Commercial', 'Residential'}
-            Type of building.
-        structure_type : {'BP_Steel'. 'LS_steel', 'SS_Steel', "BP_Concrete', 'LS_Concrete', 'SS_Concrete', 'BP_Wood', 'LS_Wood', 'SS_Wood'}
-            Template used for building structure.  
+        structures : (list of) ~pod_la.building_structure.Structure 
+            Definition  of the structure at floor levels
+        no_floors : (list of) int
+            Number of flows subject to the structure defintion.
 
         Returns
         -------
         ~pod_lca.building_structure.BuildingStructure
-            Structure created.
+            The structure of the building
         """
-        structure = cls()
-        structure.set_parent(building)
+        building_structure = cls()
 
-        bill_of_materials_all = DataImporter.csv_to_pandas(config['file_paths']['building']['TEMPLATE_BOM_STRUCTURE'])
-        bill_of_materials = bill_of_materials_all[(bill_of_materials_all['building_type'].str.lower() == building_type.lower()) & 
-                                                  (bill_of_materials_all['structure_type'].str.lower() == structure_type.lower())].drop(['building_type', 'structure_type'], axis=1).to_dict('index')
-        if not bill_of_materials:
-            log("The structure is empty.", 'warn')
+        building_structure.set_structure(structures, no_floors)
 
-
-        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
-
-        column_foundation = Foundation.create('wall foundation', structure, None)
-        wall_foundation = Foundation.create('column foundation', structure, None)
-        slab_on_grade = Slab.create('slab on grade', structure, None)
-        elevated_slab = Slab.create('elevated slab', structure, None)
-        structural_beam = Beam.create('structural framing: beams', structure, None)
-        structural_girders = Beam.create('structural framing: girders', structure, None)
-        structural_columns = Column.create('structural walls', structure, None)
-        structural_walls = Wall.create('structural columns', structure, None)
-        roof_structure = RoofStructure.create('roof structure', structure, None)
-
-        for item in bill_of_materials.values():
-                
-            building_assembly = item['assembly'].lower().replace(" ", "_")
-            match building_assembly:
-                case 'column_foundation' | 'concrete_footing':
-                    assembly_obj = column_foundation
-                case 'wall_foundation':
-                    assembly_obj = wall_foundation
-                case 'slab_on_grade':
-                    assembly_obj = slab_on_grade
-                case 'elevated_slabs' | 'floor_framing':
-                    assembly_obj = elevated_slab
-                case 'structural_framing:_beams':
-                    assembly_obj = structural_beam
-                case 'structural_framing:_girders':
-                    assembly_obj = structural_girders
-                case 'structural_columns':
-                    assembly_obj = structural_columns
-                case 'structural_walls':
-                    assembly_obj = structural_walls
-                case 'roof_framing' | 'roof_decking':
-                    assembly_obj = roof_structure
-                case _:
-                    ValueError("Building assmebly not recognized.")
-
-            building_material = StructuralMaterial.new(
-                parent=assembly_obj,
-                name=item['material'] + '_in_' + building_assembly, 
-                qty=float(item['qty']),
-                unit=UNITS_MAP[item['unit']],
-                material_database_entry=default_database_entry_map[item['material']]['impact database entry'],
-                product_year=building.get_built_year()
-            )
-            
-            assembly_obj.add_material(building_material)
-
-        # remove unused assembly
-        del_list = [comp for comp in building.get_assemblies() if not comp.get_materials()]
-        for assembly in del_list:
-            building.remove_assembly(assembly)
-
-        return structure
-
-    @classmethod
-    def from_geometry(cls, building):
-        pass
-
+        return building_structure
+    
     # ================================
     # Setters
     # ================================
-    def set_parent(self, parent):
+    def set_building(self, building):
         """ Set the parent building of the structure.
         
         Parameters
         ----------
-        parent : ~pod_lca.building.Building
+        building : ~pod_lca.building.Building
             The building to which the structure belong.
         """
-        self.parent = parent
+        self.building = building
+
+        for structural_element in self.get_structural_elements():     
+            structural_element.set_building()
 
         return self
 
+    def set_structure(self, structures, no_floors):
+        """ Set structure definitions of the building structure.
+
+        Parameters
+        ----------
+        structures : (list of) ~pod_la.building_structure.Structure 
+            Definition  of the structure at floor levels
+        no_floors : (list of) int
+            Number of flows subject to the structure defintion.
+        """
+        if not isinstance(structures, list):
+            structures = [structures]
+        if not isinstance(no_floors, list):
+            no_floors = [no_floors]
+
+        id = 0
+        for structure, num in zip(structures, no_floors):
+            self.structures[id] = {
+                "structure": structure,
+                "no_floors": num
+            }
+            id += 1
+
+        return self
     # ================================
     # Getters
     # ================================
-    def get_parent(self):
+    def get_building(self):
         """ Get the parent building of the structure.
         
         Returns
@@ -165,18 +127,99 @@ class BuildingStructure:
         ~pod_lca.building.Building
             The building to which the structure belong.
         """
-        return self.parent
+        return self.building
     
-    def get_assemblies(self):
-        """ Get a list of all structural elements (i.e., structural assemblies) of the building.
+    def get_structures(self):
+        """ Set structure definitions of the building structure.
+
+        Returns
+        -------
+        dict of dict
+            A dictionary of structures belonging to the building structure keyed by an id.
+            Interior dict: {"structure": <`~pod_la.building_structure.Structure '>, "no_floors": <int>}            
+        """
+        return self.structures
+
+    def get_structural_elements(self):
+        """ Get a list of all structural elements (i.e., assemblies) of the building.
         
         Returns
         -------
         list of ~pod_lca.building_structure.StructuralElement
             All the structural elements in the structure.
         """
-        return  self.foundations + self.beams + self.columns + self.slabs
-    
+        return self.foundations + \
+               self.beams + \
+               self.columns + \
+               self.slabs + \
+               self.structural_walls + \
+               self.roof_structure + \
+               self.unclassified
+
+    # ================================
+    # Add
+    # ================================
+    def build(self):
+        """ Build the building structure. (implemented at inherited classes)
+        """
+        pass
+
+    def add_structural_elements(self, structural_elements):
+        """Add assemblies to the building structure.
+        
+        Parameters
+        ----------
+        structural_elements : list of ~pod_lca.buildings.StructuralElement
+            Structural elements to be added to the building structure.
+        """
+        for structural_element in structural_elements:
+            self.add_structural_element(structural_element)
+
+    def add_structural_element(self, structural_element):
+        """Add structural element to the building structure.
+        
+        Parameters
+        ----------
+        structural_element : ~pod_lca.buildings.StructuralElement
+            Assembly to be added to the building structure.        
+        """
+        getattr(self, structural_element.get_element_type()).append(structural_element)
+        structural_element.set_parent(self)
+
+        return self
+
+    # ================================
+    # Methods
+    # ================================
+    def get_bom(self, as_df=True):  
+        assemblies_all =  self.get_structural_elements()
+
+        results = {}
+        for assembly in assemblies_all:
+            assembly_name = assembly.get_name()
+
+            for material in assembly.get_materials():
+                key = (assembly_name, material.get_name())
+
+                if key  in results:
+                    qty, unit =  results[key ]
+                    results[key ] = (qty + material.get_qty() * material.get_unit().convert_to(unit), 
+                                     unit)
+                else:
+                    results[key ] = (material.get_qty(), material.get_unit())
+                        
+        if as_df:
+            return DataFrame([
+                {
+                    "Assembly": assembly_name,
+                    "Material": material_name, 
+                    "Amount": qty, 
+                    "Unit": unit.standard_notation
+                } 
+                for (assembly_name, material_name), (qty, unit) in results.items()
+            ])
+        else:                  
+            return results
 
 if __name__ == '__main__':
     pass    

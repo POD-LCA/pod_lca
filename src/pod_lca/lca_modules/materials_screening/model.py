@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 import csv
 import gc
 import os
+from copy import copy
 
 from . import Electricity
 from . import Fuel
@@ -14,9 +15,10 @@ from . import Process
 from . import Product
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ..impacts import UniformEmissionProfile
+from ..impacts import Impacts
 from ..transportation import TransportationManager
-from ..transportation import USDomesticTransportationManager
-from ..transportation import USGlobalTransportationManager
+from ..transportation import USTransportationManager
+from ...units import KG_CARBON_DIOXIDE
 from ...units import UNITS_MAP
 from ...units import KILO
 from ...units import WATT_HOUR
@@ -98,10 +100,7 @@ class Model:
         model = cls()
 
         model.set_project(project)
-        if name is not None:
-            model.set_name(name)
-        else:
-            model.set_name(f"Model_{len(project.models)}")
+        model.set_name(project.check_model_names(name))
 
         model.set_location(project.get_location())
         model.set_transportation_manager(transport_scope)
@@ -134,12 +133,13 @@ class Model:
         model = cls()
 
         model.set_project(project)
-        project.models[name] = model
-
+        
         if name is not None:
-            model.set_name(name)
+            model.set_name(project.check_model_names(name))
         else:
             model.set_name(os.path.splitext(os.path.basename(file_path))[0])
+
+        project.models[model.get_name()] = model
 
         tmp_transportation_map = {}
         with open(file_path, mode="r", encoding="utf-8-sig") as file:
@@ -234,6 +234,13 @@ class Model:
         """
         self.location = location
 
+        for product in self.get_products():
+            if isinstance(product, Electricity):
+                product.set_location(location_obj=location)
+
+        if self.get_transportation_manager() is not None:
+            self.get_transportation_manager().set_project_destination(location)
+
         return self
 
     def set_transportation_manager(self, logistic_type="local"):
@@ -249,17 +256,13 @@ class Model:
         ValueError
             Logistic type not recognized.
         """
+        name = self.get_name()
         if self.get_project().get_location() is None:
-            self.transportation_manager = TransportationManager.new("transportation")
+            self.transportation_manager = TransportationManager.new(name)
         elif self.get_project().get_location().get_country_code() == "US":
-            if logistic_type == "local":
-                self.transportation_manager = USDomesticTransportationManager.new("transportation")
-            elif logistic_type == "global":
-                self.transportation_manager = USGlobalTransportationManager.new("transportation")
-            else:
-                raise ValueError(f"Logistic type {logistic_type} not recognized.")
+            self.transportation_manager = USTransportationManager.new(name)
         else:
-            self.transportation_manager = TransportationManager.new("transportation")
+            self.transportation_manager = TransportationManager.new(name)
 
         return self
 
@@ -313,7 +316,7 @@ class Model:
         """
         return self.products
 
-    def get_all_items(self):
+    def get_all_items(self, products=True, processes=True, transportation=True):
         """Retrieve all the products and processes in the model.
 
         Returns
@@ -322,7 +325,15 @@ class Model:
             All products and processess in the model.
 
         """
-        return self.get_products() + self.get_processes() + self.get_transportation_manager().get_transportation_legs()
+        items = []
+        if products:
+            items.extend(self.get_products())
+        if processes:
+            items.extend(self.get_processes())
+        if transportation:
+            items.extend(self.get_transportation_manager().get_transportation_legs())
+
+        return items
 
     def get_transportation_manager(self):
         """Retrieve the logistics manager of the model.
@@ -334,18 +345,74 @@ class Model:
         """
         return self.transportation_manager
 
-    def get_impacts(self):
+    def get_impacts(self, transportation_grouping="not_grouped", plus_minus_accounting=True):
         """Retrieve all the impacts in the model categorized by life cycle stage.
+
+        Parameters
+        ----------
+        transportation_grouping : {'not_grouped', 'with_material', 'all_transportation'}, optional
+            Method for grouping transportation impacts. Default is 'not_grouped'.
+        plus_minus_accounting : bool
+            If true, carbon storage and release are accounted for as negative and positive impacts, respectively, at corresponding life cycle stages. Default is True.
 
         Returns
         -------
         dict
             Impacts of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Impacts`}
         """
-        for item in self.get_all_items():
+        # A1 and A3 impacts
+        self.impacts["A1"] = []
+        self.impacts["A3"] = []
+        for item in self.get_all_items(transportation=False):
+            current_params = item.get_cache_key()
+
+            if isinstance(item, Product):
+                if plus_minus_accounting:
+                    A1_impacts = copy(item.get_impacts("A1"))
+                    if A1_impacts:
+                        if not ((item._last_params["A1"] == current_params) and item._cache_is_computed["A1"]):
+                            item.update_inventory_records()
+                        self.impacts["A1"].append(A1_impacts)
+                    A3_impacts = copy(item.get_impacts("A3"))
+                    if A3_impacts:
+                        if not ((item._last_params["A3"] == current_params) and item._cache_is_computed["A3"]):
+                            item.update_inventory_records()
+                        self.impacts["A3"].append(A3_impacts)
+                else:
+                    self.impacts[item.get_life_cycle_stage()].append(item.get_impacts())
+            else:
+                self.impacts[item.get_life_cycle_stage()].append(item.get_impacts())
+
+        # A2 impacts
+        for item in self.get_all_items(products=False, processes=False, transportation=True):
             item.update_inventory_records()
 
-        self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
+        match transportation_grouping:
+
+            case "not_grouped":
+                self.impacts["A2"] = self.get_transportation_manager().get_impacts_list()
+
+            case "with_material":
+                transportation_manager = self.get_transportation_manager()
+
+                combined_impacts_list = []
+                for impact in self.impacts["A1"]:
+                    product = impact.get_parent()
+                    if product.get_transportation() is not None:
+                        combined_impact = impact + transportation_manager.get_impacts(product)
+                        combined_impact.set_parent(product)
+                        combined_impacts_list.append(combined_impact)
+                    else:
+                        combined_impacts_list.append(impact)
+                
+                self.impacts["A2"] = []
+                self.impacts["A1"] = combined_impacts_list
+
+            case "all_transportation":
+                self.impacts["A2"] = [self.get_transportation_manager().get_impacts()]
+
+        # remove None impacts
+        self.impacts = {key: [item for item in value if item is not None] for key, value in self.impacts.items()}
 
         return self.impacts
 
@@ -358,7 +425,13 @@ class Model:
             Emissions of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.Emissions`}
         """
         for item in self.get_all_items():
-            item.update_inventory_records()
+            if isinstance(item, Product):
+                current_params = item.get_cache_key()
+                lc_stage = item.get_life_cycle_stage()
+                if not ((item._last_params[lc_stage] == current_params) and item._cache_is_computed[lc_stage]):
+                    item.update_inventory_records()
+            else:
+                item.update_inventory_records()
 
         self.emissions["A2"] = [self.get_transportation_manager().get_emissions()]
 
@@ -373,9 +446,51 @@ class Model:
             Carbon Storage of products and processes categorized by life cycle stage {**life cycle stage** (:class:`str`): :class:`list` of :class:`~pod_lca.impacts.CarbonStorage`}
         """
         for item in self.get_all_items():
-            item.update_inventory_records()
+            if isinstance(item, Product):
+                current_params = item.get_cache_key()
+                if not ((item._last_params["A1"] == current_params) and item._cache_is_computed["A1"]):
+                    item.update_inventory_records()
+            else:
+                item.update_inventory_records()
 
         return self.carbon_storage
+    
+    def get_total_carbon_storage_effects(self, _type="total", unit=KG_CARBON_DIOXIDE):
+        """Retrieve the total carbon storage effects in the model.
+
+        Parameters
+        ----------
+        _type : {"total", "biogenic", "mineral"}
+            Type of carbon storage effect to retrieve. Default is "total".
+
+        Returns
+        -------
+        float
+            Total carbon storage effect.
+        """
+        carbon_storage_records = self.get_carbon_storage()
+
+        if _type == "biogenic" or _type == "total":
+            bio_total = sum(
+                record.get_biogenic_carbon_storage_qty(unit)
+                for record in carbon_storage_records["A1"]
+            )
+
+            if _type == "biogenic":     
+                return bio_total
+
+        if _type == "mineral" or _type == "total":
+            mnrl_total = sum(
+                record.get_mineral_carbon_storage_qty(unit)
+                for record in carbon_storage_records["A1"]
+            )
+
+            if _type == "mineral":
+                return mnrl_total
+
+        total = bio_total + mnrl_total
+        
+        return total
 
     # ================================
     # Methods to add items to the model
@@ -448,6 +563,10 @@ class Model:
         n = len(self.get_products())
         product = Product.new(n, name, self, stage, qty, unit, impacts_from)
 
+        product.set_electricity_product()
+
+        if "sctg_code" in kwargs:
+            product.set_sctg_code(kwargs["sctg_code"])
         if "density" in kwargs:
             product.set_density(kwargs["density"])
             product.set_density_unit(kwargs["density_unit"])
@@ -547,10 +666,10 @@ class Model:
         """
         items = [item for item in self.get_products() + self.get_processes() if item.get_name() == name]
 
-        if len(items) == 0:
-            return None
+        if items:
+            return items[0]
         else:
-            return items
+            None
 
     def delete_item(self, obj):
         """Removes products or processes, along with the impact objects, from the model.
@@ -565,6 +684,8 @@ class Model:
         elif isinstance(obj, Process):
             self.get_processes().remove(obj)
 
+        self.get_transportation_manager().remove_good(obj)
+
         obj.remove_inventory_records_from_model(obj.get_life_cycle_stage())
 
         del obj
@@ -572,7 +693,7 @@ class Model:
         gc.collect()
 
     # ================================
-    # Clculator Methods
+    # Calculator Methods
     # ================================
     def get_total_impact(self, impact_cat):
         """Calculate the total impact of the products and processes in the model.
@@ -592,7 +713,11 @@ class Model:
         AttributeError
             Impact category not recognized.
         """
-        impacts_dict = self.get_impacts()
+        impacts_dict = self.get_impacts(
+            transportation_grouping="not_grouped",
+            plus_minus_accounting=False,
+        )
+        
         impacts_lst = []
         for key, lst in impacts_dict.items():
             impacts_lst.extend(lst)
@@ -625,11 +750,11 @@ class Model:
         AttributeError
             impact category doe not exist in the current project
         """
-        impacts_dict = self.get_impacts()
-
         if impact_cat not in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys():
             raise AttributeError(f"{impact_cat} does not exist in the current project.")
         else:
+            impacts_dict = self.get_impacts()
+
             data = {}
             for stage in impacts_dict.keys():
                 impact_lst = impacts_dict[stage]
@@ -639,6 +764,63 @@ class Model:
 
             sorted_data = sorted(data.items())
             sorted_dict = dict(sorted_data)
+
+            del impacts_dict
+
+            return sorted_dict
+
+    def get_total_stored_biogenic_carbon(self):
+        """ Returns the total biogenic carbon storage of the model, in kg CO2.
+        
+        Returns
+        -------
+        float
+            total biogenic carbon storage of the model, in kg CO2
+        """
+        biogenic_carbon_stored = 0.0
+        for item in self.get_all_items(transportation=False):
+            biogenic_carbon_stored += item.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
+
+        return biogenic_carbon_stored
+
+    def get_impacts_by_LCstages_with_hotspots(self, impact_cat):
+        """Returns impact data by life cycle stage for given model and impact category, with hotspot impacts separated.
+
+        Parameters
+        ----------
+        impact_cat : str
+            Name of impact category.
+
+        Returns
+        -------
+        dict
+            Impacts dictionary where {**Life Cycle stage** (:class:`str`) : **quantity of impact** (:class:`float`)}.
+
+        Raises
+        ------
+        AttributeError
+            impact category doe not exist in the current project
+        """
+        if impact_cat not in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys():
+            raise AttributeError(f"{impact_cat} does not exist in the current project.")
+        else:
+            impacts_dict = self.get_impacts()
+
+            data = {}
+            for stage in impacts_dict.keys():
+                impact_lst = impacts_dict[stage]
+                data[stage] = {"other": 0.0}
+                for impact in impact_lst:
+                    parent_product = impact.get_parent()
+                    if parent_product.is_hotspot:
+                        data[stage][parent_product.get_name()] = impact.get_record(impact_cat)
+                    else:
+                        data[stage]["other"] += impact.get_record(impact_cat)
+
+            sorted_data = sorted(data.items())
+            sorted_dict = dict(sorted_data)
+
+            del impacts_dict
 
             return sorted_dict
 
@@ -674,7 +856,7 @@ class Model:
         KeyError
             Impact category not recognized.
         """
-        IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTOR"])
+        IMPACT_NORMALIZATION_FACTOR = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_NORMALIZATION_FACTORS"])
         for impact_cat in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"].keys():
             if impact_cat not in IMPACT_NORMALIZATION_FACTOR:
                 raise KeyError(f"Impact category '{impact_cat}' not found in weights.")
@@ -697,8 +879,8 @@ class Model:
 
         Parameters
         ----------
-        source : {'from_database', 'by_location'}
-            Source of electricity inventories data. Default 'from_database'
+        source : {'default', 'custom'}
+            Source of electricity inventories data. Default 'default'
         """
         for product in self.get_products():
             if not isinstance(product, Electricity):

@@ -5,30 +5,29 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import gc
-
+import math
+from copy import copy
 from numpy import bool_ as np_bool
 
 from . import Master
-from . import Electricity
-from ..carbon_storage import CarbonStorage
-from ..carbon_storage import get_carbon_percentage
-from ..carbon_storage import get_moisture_content
-from ..carbon_storage import get_biogenic_carbon_content
-from ..impacts import Emissions
-from ..impacts import Impacts
+from . import ProductBioPropertiesMixin
+from . import ProductElectricityMixins
+from . import ProductTransportationMixins
 from ..impacts import UniformEmissionProfile
 from ...units import CUBIC_METER
 from ...units import KG_CARBON_DIOXIDE
-from ...units import KILOMETER
 from ...units import KILOGRAM
+from ...units import METER
+from ...units import Quantity
 from ...units import Unit
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
+from ...utilities import config
 
 
-class Product(Master):
+class Product(Master, ProductElectricityMixins, ProductTransportationMixins, ProductBioPropertiesMixin):
     """Product object, inheriting from the Master object, represent a product.
 
     Attributes
@@ -37,8 +36,8 @@ class Product(Master):
         The year the product was produced.
     electricity : dict
         Dictionary containing A3 electricity impacts of the production of the material. Keys as follows; \n
-        - `'from_database'`: contains unit electricity impacts retrieved from the database;
-        - `'by_location'`: contains corresponding electricity impacts by location, retrieved from electricity sub-package.
+        - `'default'`: contains unit electricity impacts retrieved from the database;
+        - `'custom'`: contains custom electricity impacts retrieved from electricity sub-package.
         - `'_current'`: indicates which of the above is in use for impacts.
         - `'_tag'`: prefix used in the database to identify grouped impacts of electricity.
     weight : float
@@ -69,20 +68,31 @@ class Product(Master):
 
     def __init__(self):
         super().__init__()
+        self.is_material = True
         self.production_year = None
-        self.electricity = {"from_database": None, "by_location": None, "_current": None, "_tag": None}
         self.weight = 0.0
         self.weight_unit = None
         self.density = None
         self.density_unit = None
-        self.mineral_carbonation_potential = None
-        self.is_material = True
+        
+        # electricity mixin
+        self.electricity = {"default": None, "custom": None, "_current": None, "_tag": None}
+        self.electricity_combo = None
+
+        # transportation mixin
         self.sctg_code = None
         self.transport_legs = None
-        self.eol_material = None
-        self.waste_obj: None
-        self.bio_based = None
-        self.bio_percentage = None
+        self.transportation_combo = None
+
+        # bio properties mixin
+        self.dry_density = None
+        self.dry_mass = None
+        self.moisture_content = 0.0
+
+        # cache
+        self._cache_impacts = {"A1": None, "A3": None, None: None}
+        self._cache_is_computed = {"A1": False, "A3": False, None: False}
+        self._last_params = {"A1": False, "A3": False, None: False}
 
     def __str__(self):
         return f"Product(name={self.get_name()}, LC stage={self.get_life_cycle_stage()}, qty={self.get_qty()} {self.get_unit().get_standard_notation()})"
@@ -102,7 +112,7 @@ class Product(Master):
 
         return self
 
-    def set_unit(self, unit):
+    def set_unit(self, unit, force_set=False):
         """Set unit of measurement for the product.
             If the unit of measurement is of mass dimensions, same unit is set as weight unit of the product.
 
@@ -111,41 +121,47 @@ class Product(Master):
         unit : ~pod_lca.units.Unit
             Unit of measurement.
         """
-        super().set_unit(unit)
+        super().set_unit(unit, force_set)
 
         return self
+
+    def set_impact_database_entry(self, database_item):
+        """Sets the database (impacts) entry corresponding to the item.
+            This method will also update the corresponding impact quanitities.
+
+        Parameters
+        ----------
+        database_item : str
+            The name of the database item which gives the item impacts.
+        """
+        super().set_impact_database_entry(database_item)
+
+        if database_item is None:
+            self.reset_electricity()
 
     def set_production_year(self, year):
         """Set the year of production for the item.
 
         Parameters
         ----------
-        year : int
+        year : int or str
             Year of production.
         """
-        if isinstance(year, int):
-            self.production_year = year
+        if isinstance(year, str):
+            year = int(year)
 
-            if self.electricity["by_location"] is not None:
-                self.electricity["by_location"].set_year(year)
+        self.production_year = year
 
-            if self.emissions is not None:
-                pulse = UniformEmissionProfile.unit_pulse(at=year)
-                self.get_emissions().set_temporal_emission_profile(pulse)
-
-            if self.get_transportation() is not None:
-                for leg in self.get_transportation():
-                    leg.get_emissions().set_temporal_emission_profile(pulse)
-
-            if self.emissions is not None:
-                pulse = UniformEmissionProfile.unit_pulse(at=year)
-                self.get_emissions().set_temporal_emission_profile(pulse)
+        if self.emissions is not None:
+            pulse = UniformEmissionProfile.unit_pulse(at=year)
+            self.get_emissions().set_temporal_emission_profile(pulse)
 
             if self.get_transportation() is not None:
                 for leg in self.get_transportation():
                     leg.get_emissions().set_temporal_emission_profile(pulse)
-        else:
-            log("Year not set as input is None.", "Warn")
+
+        if self.electricity["custom"] is not None:
+            self.electricity["custom"].set_year(year)
 
         return self
 
@@ -184,80 +200,21 @@ class Product(Master):
             except:
                 raise TypeError(f"Density of {self.get_name()} should be a numerical value.")
         elif isinstance(density, (float, int)):
+            if math.isnan(density):
+                density = None
             self.density = density
             self.density_unit = density_unit
         elif density is None:
+            database = self.get_impact_database()
             if self.get_impact_database_entry() is not None:
-                database = self.get_project().get_impact_database()
                 unit_inventories = database.get_data_entry(self.get_impact_database_entry())
                 if database.get_density_unit_key() is not None:
-                    self.density_unit = unit_inventories[database.get_density_unit_key()]
-                    self.density = float(unit_inventories[database.get_density_key()])
-                else:
-                    log("Density unit key not found in database.", level="Warn")
-            else:
-                log("Cannot set density without database entry.", level="Warn")
+                    self.set_density(density=unit_inventories[database.get_density_key()],
+                                     density_unit=unit_inventories[database.get_density_unit_key()])
         else:
             raise ValueError("Density input not recognized.")
         
-        self.update_unit_carbon_storage()
-
-        return self
-
-    def set_transportation(
-        self,
-        travel_dist=None,
-        dist_unit=None,
-        transport_scenario=None,
-        return_trip_factor=None,
-        mode_name=None,
-        mode_efficiency=None,
-    ):
-        """Set transport processes the product is subject to.
-
-        Parameters
-        ----------
-        travel_dist : float
-            Transportation distance for goods
-        dist_unit : ~pod_lca.units.Unit Obj
-            Unit of measurement of distances.
-        transportation_scenario : str
-            Transportation scenario considered.
-        return_trip_factor : float
-            Return trip factor.
-        mode_name : str
-            Name of the transportation mode..
-        mode_efficiency : str
-            Efficiency of the transportation mode.
-        """
-        if (not self.get_unit().get_qty_measured() == "mass") and (self.get_density() is None):
-            self.set_density()
-
-        if travel_dist is None:
-            transport_scenario = "Local" if transport_scenario is None else transport_scenario
-            mode_efficiency = "Median" if mode_efficiency is None else mode_efficiency
-            mode_name = "Truck" if mode_name is None else mode_name
-
-        dist_unit = KILOMETER if dist_unit is None else dist_unit
-
-        transportation_manager = self.get_transportation_manager()
-        if transportation_manager.get_impact_database() is not None:
-            transportation_manager.add_good(
-                self,
-                travel_dist=travel_dist,
-                shipping_dest=self.get_project().get_location(),
-                shipping_org=None,
-                transport_scenario=transport_scenario,
-                distance_unit=dist_unit,
-                return_trip_factor=None,
-                mode_name=mode_name,
-                mode_efficiency=mode_efficiency,
-            )
-
-        if self.get_production_year() is not None:
-            pulse = UniformEmissionProfile.unit_pulse(at=self.get_production_year())
-            for leg in self.get_transportation():
-                leg.get_emissions().set_temporal_emission_profile(pulse)
+        self.unit_carbon_storage.update_biogenic_carbon_content()
 
         return self
 
@@ -302,136 +259,6 @@ class Product(Master):
 
         del eol_mix_data
         gc.collect()
-
-        return self
-
-    def set_electricity_source(self, source="from_database"):
-        """Set the source of electricity inventories.
-
-        Parameters
-        ----------
-        source : {'from_database', 'by_location'}
-            Source of electricity inventories data. Default 'from_database'.
-        """
-        if source in [key for key in self.electricity if not key.startswith("_")]:
-            if self.electricity["from_database"] is not None:
-                original_source = self.electricity["_current"]
-                try:
-                    self.electricity["_current"] = source
-                    self.get_impacts()
-                except:
-                    self.electricity["_current"] = original_source
-                    log(
-                        f"Cannot set electricity data to '{source}'. Electricity source reveted to '{self.electricity['_current']}'.",
-                        "Warn",
-                    )
-        else:
-            raise KeyError(f"Source of electricty ({source} not recognized.)")
-
-        return self
-
-    def set_electricity_database_tag(self):
-        """Find the tag used to identify electricity data in the database."""
-        if self.get_impact_database_entry() is not None:
-            database = self.get_impact_database()
-            data_set = database.get_data_entry(self.get_impact_database_entry())
-
-            electricity_tag = None
-            for key in ["Electricity_", "electricity_", "elec_", "Elec_"]:
-                if key + database.get_qty_key() in data_set:
-                    electricity_tag = key
-                    self.electricity["_tag"] = electricity_tag
-                    break
-
-        return self
-
-    def set_mineral_carbonation_potential(self, potential):
-        """Set mineral carbonation potential of the product.
-
-        Parameters
-        ----------
-        potential : bool
-            Mineral carbonation potential of the product.
-        """
-        if isinstance(potential, (bool, np_bool)):
-            self.mineral_carbonation_potential = potential
-        else:
-            raise ValueError("Mineral carbonation potential needs to be a boolean.")
-
-        return self
-
-    def set_mineral_carbon_intensity(self, qty, unit=KG_CARBON_DIOXIDE, per=None):
-        """Set accelerated carbonation uptake to the 'Mineral C' entry.
-
-        Parameters
-        ----------
-        qty : float
-            Quantity of accelerated carbonation uptake.
-        unit : ~pod_lca.units.Unit
-            Unit of accelerated carbonation uptake.
-        per : dict or ~pod_lca.units.Unit
-            Parent quantity for which the mineral carbon intensity is declared.
-            If dict, {'per': {'qty': (:class:`int` or :class:`float`), 'unit': (:class:`~pod_lca.units.Unit`)}}
-            If Unit object only, the quantity is taken as 1.0;
-            If None, taken as per unit of parent objects declared unit.
-        """
-        key = config["setup"]["impacts"]["ACCELERATED_CARBONATION_INVENTORY"]
-        if key in self.unit_carbon_storage.record_attr_dict:
-            if self.get_mineral_carbonation_potential():
-                mineral_carbon_unit = UNITS_MAP[self.unit_carbon_storage.record_attr_dict[key]]
-                input_unit = unit
-                conversion_factor_1 = input_unit.convert_to(mineral_carbon_unit)
-
-                if per is None:
-                    conversion_factor_2 = 1.0 * self.inventories_declared_qty
-                elif isinstance(per, Unit):
-                    conversion_factor_2 = per.convert_to(self.inventories_declared_unit) * self.inventories_declared_qty
-                elif isinstance(per, dict):
-                    conversion_factor_2 = (
-                        per["unit"].convert_to(self.inventories_declared_unit)
-                        * self.inventories_declared_qty
-                        / per["qty"]
-                    )
-                else:
-                    raise TypeError
-
-                setattr(self.unit_carbon_storage, key, qty * conversion_factor_1 * conversion_factor_2)
-            else:
-                raise Warning(
-                    f"Product {self.get_name()} does not have accelerated carbonation potential. Product.set_mineral_carbonation_potential(True) to override."
-                )
-
-        return self
-
-    def set_sctg_code(self, code=None):
-        """Set the Standard Classification of Transported Goods (SCTG) code for the material.
-
-        Parameters
-        ----------
-        code : str
-            Standard Classification of Transported Goods (SCTG) code of the material
-        """
-        if code is None:
-            data_material = DataImporter.csv_to_pandas(config["file_paths"]["transportation"]["CFS_SCTG_CODE"])
-            if self.get_name() in data_material["material"].values:
-                sctg = data_material[data_material["material"] == self.get_name()].iloc[0, 1]
-                self.sctg_code = str(sctg)
-            else:
-                log("Material not found in the dataset", "Warn")
-        else:
-            self.sctg_code = code
-
-        return self
-    
-    def set_eol_material(self, eol_material):
-        """ Set the end-of-life product corresponding to the material.
-
-        Parameters
-        ----------
-        eol_material : str
-            EOL product name.
-        """
-        self.eol_material = eol_material
 
         return self
     
@@ -480,55 +307,6 @@ class Product(Master):
         """
         return self.production_year
 
-    def get_electricity(self):
-        """Get the electricity product of the item.
-
-        Returns
-        -------
-        ~pod_lca.electricity.Electricity
-            Electricity used in the production of the item.
-        """
-        return self.electricity[self.get_electricity_source()]
-
-    def get_electricity_source(self):
-        """Get the source of electricity inventories.
-
-        Returns
-        -------
-        str
-            Source of electricity inventories data.
-        """
-        return self.electricity["_current"]
-
-    def get_electricity_database_tag(self):
-        """Find the tag used to identify electricity data in the database.
-
-        Returns
-        -------
-        str
-            Tag used to identify electricity data in the database.
-        """
-        return self.electricity["_tag"]
-
-    def get_electricity_qty(self):
-        """Get electricity quantity used for the production of product quantity.
-
-        Returns
-        -------
-        float
-            Quantity of the electricity
-        """
-        database = self.get_project().get_impact_database()
-        data_set = database.get_data_entry(self.get_impact_database_entry())
-
-        qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
-
-        declared_unit = database.get_data_entry(self.get_impact_database_entry())[database.get_unit_key()]
-        declared_qty = database.get_data_entry(self.get_impact_database_entry())[database.get_qty_key()]
-        conversion_factor = self.get_unit().convert_to(declared_unit)
-
-        return qty * (self.get_qty() * conversion_factor / declared_qty)
-
     def get_weight(self):
         """Retrieve the mass of the product.
 
@@ -538,26 +316,33 @@ class Product(Master):
             Mass of the product.
         """
         if self.get_unit().get_qty_measured() == "mass":
-            return self.get_qty()
+            return Quantity(self.get_qty(), self.get_unit())
         else:
             if self.get_density() is None:
                 return None
             else:
-                return self.get_qty() * self.get_density()
+                test_unit_mult, factor = (self.unit * self.get_density_unit()).simplify()
+                test_unit_div, factor = (self.unit / self.get_density_unit()).simplify()
+                if (test_unit_mult).get_qty_measured() == "mass":
+                    val = self.get_qty() * self.get_density() * factor
+                    unit = test_unit_mult
+                    return Quantity(val, unit)
+                elif (test_unit_div).get_qty_measured() == "mass":
+                    val = (self.get_qty() / self.get_density()) * factor
+                    unit = test_unit_div * factor
+                    return Quantity(val, unit)
+                else:
+                    return None
 
-    def get_weight_unit(self):
-        """Retrieve the unit of measurement of mass of the product.
-            This is used for the definition of density of the product.
+    def get_thickness(self):
+        """Retrieve thickness of the product.
 
         Returns
         -------
-        ~pod_lca.units.Unit
-            Unit of measurement of mass of the product.
+        float
+            Thickness of product.
         """
-        if self.get_unit().get_qty_measured() == "mass":
-            return self.get_unit()
-        else:
-            return self.get_unit() * self.get_density_unit()
+        return self.thickness
 
     def get_density(self):
         """Retrieve density of the product.
@@ -579,61 +364,15 @@ class Product(Master):
             Unit of measurement of the denisty of product.
         """
         return self.density_unit
-
-    def get_transportation_manager(self):
-        """Get the transportation manager corresponding to the product.
-
-        Returns
-        -------
-        ~pod_lca.transportation.TransportationManager
-            Transportation manager
-        """
-        return self.get_model().get_transportation_manager()
-
-    def get_transportation(self):
-        """Retrieve transport processes the product is subject to, if any.
+    
+    def get_thickness_unit(self):
+        """Retrieve thickness unit of the product.
 
         Returns
         -------
-        list of ~pod_lca.transportation.TransportationLeg
-            Transportation legs the product is subject to.
+        ~pod_lca.units.Unit
+            Unit of measurement of the thickness of product.
         """
-        transportation_manager = self.get_transportation_manager()
-
-        return transportation_manager.get_transportation_leg(self)
-
-    def get_mineral_carbonation_potential(self):
-        """Set mineral carbonation potential of the product.
-
-        Returns
-        -------
-        bool
-            Mineral carbonation potential of the product.
-        """
-        return self.mineral_carbonation_potential
-
-    def get_sctg_code(self, digits=2):
-        """Get the Standard Classification of Transported Goods (SCTG) code for the material.
-
-        Parameters
-        ----------
-        digits : int
-            Significant digits of the Standard Classification of Transported Goods (SCTG) code of the material
-
-        Raises
-        ------
-        ValueError
-            SCTG code length shorter that digits requested.
-        """
-        if self.sctg_code is not None:
-            if digits <= len(str(self.sctg_code)):
-                return int(str(self.sctg_code)[:digits])
-            else:
-                raise ValueError(
-                    f"SCTG code length ({len(str(self.sctg_code))}) shorter than digits requested ({digits})."
-                )
-        else:
-            return self.sctg_code
 
     def get_bio_based(self):
         """ Get the bio-based nature of the material.
@@ -654,16 +393,6 @@ class Product(Master):
             Percentage of biogenic content in the bio-based material (0 - 100).   
         """
         return self.bio_percentage
-
-    def get_eol_material(self):
-        """ Get the end-of-life product corresponding to the material.
-
-        Returns
-        -------
-        str
-            End-of-life product name corresponding to the material.      
-        """
-        return self.eol_material  
     
     def get_eol_manager(self):
         """Return the place where end-of-life transport dataset reside.
@@ -674,6 +403,91 @@ class Product(Master):
             End-of-life transport data for materials screening project is at project level.
         """
         return self.get_project()
+
+    def get_impacts(self, lc_stage=None):
+        """Retrieve the impacts of the product.
+
+        Parameters
+        ----------
+        lc_stage : {None, 'A1', 'A3'}
+            Life cycle stage for which the impact value is requested. Default, None.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            Impacts of the product/process.
+        """
+        # check for cached result
+        current_params = self.get_cache_key()
+        if (self._last_params[lc_stage] == current_params) and self._cache_is_computed[lc_stage]:
+            log("Returning cached result.", "Info")
+            return self._cache_impacts[lc_stage]
+
+        # update inventory records and impacts
+        if lc_stage is None:
+            impacts = super().get_impacts()
+
+            self._cache_impacts[lc_stage] = copy(impacts)
+            self._cache_is_computed[lc_stage] = True
+            self._last_params[lc_stage] = current_params
+
+            return impacts
+        else:
+            impacts = super().get_impacts()
+
+            all_carbon_storage_effects_impact_cat = config["setup"]["impacts"]["ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
+            bio_carbon_storage_effects_impact_cat = config["setup"]["impacts"]["BIOGENIC_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY"]
+
+            base_impact = impacts.get_record(all_carbon_storage_effects_impact_cat)
+
+            biogenic_carbon_effect = self.get_carbon_storage().get_biogenic_carbon_storage_qty(KG_CARBON_DIOXIDE) 
+
+            if (self.get_life_cycle_stage() == "A1"):
+                if (lc_stage == "A1"):
+                    adjusted_impact = base_impact - biogenic_carbon_effect
+                    adjusted_impact_biogenic = -biogenic_carbon_effect
+
+                elif (lc_stage == "A3") and (self.get_model()):
+                    adjusted_impact = biogenic_carbon_effect
+                    adjusted_impact_biogenic = biogenic_carbon_effect
+
+                    for impact in impacts.get_categories(): 
+                        if impact not in [all_carbon_storage_effects_impact_cat, bio_carbon_storage_effects_impact_cat]:
+                            impacts.update_qty({impact: 0.0})
+
+            elif (self.get_life_cycle_stage() == lc_stage):
+                adjusted_impact = base_impact
+                adjusted_impact_biogenic = 0.0
+
+            else:
+                self._cache_impacts[lc_stage] = None
+                self._cache_is_computed[lc_stage] = True
+                self._last_params[lc_stage] = current_params
+                return None
+
+            impacts.update_qty({all_carbon_storage_effects_impact_cat: adjusted_impact}) 
+            impacts.update_qty({bio_carbon_storage_effects_impact_cat: adjusted_impact_biogenic})
+
+            self._cache_impacts[lc_stage] = copy(impacts)
+            self._cache_is_computed[lc_stage] = True
+            self._last_params[lc_stage] = current_params
+
+            return impacts
+
+    def get_carbon_storage(self):
+        """Retrieve the carbon storage of the product/process.
+
+        Returns
+        -------
+        ~pod_lca.impacts.CarbonStorage
+            Carbon storage of the product/process.
+        """
+        current_params = self.get_cache_key()
+        if not ((self._last_params["A1"] == current_params) and self._cache_is_computed["A1"]):
+            self.update_inventory_records()
+
+        return self.carbon_storage
+
 
     def get_eol_process_impact_database(self):
         """ Get the end-of-life process impact database giving the C2-C4 impacts of the building materials.
@@ -706,183 +520,35 @@ class Product(Master):
         ValueError
             Mineral carbonation potential not recognized.
         """
-        super().update_inventory_records()
-        self.update_electricity_records()
-
-        # mineral carbonation potential
-        if self.get_mineral_carbonation_potential() is None and self.get_impact_database_entry() is not None:
-            data_entry = self.get_impact_database().get_data_entry(self.get_impact_database_entry())
-            key = config["setup"]["impacts"]["ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER"]
-            if key in data_entry.index:
-                if isinstance(data_entry[key], (bool, np_bool)):
-                    potential = data_entry[key]
-                elif isinstance(data_entry[key], str):
-                    if data_entry[key].lower() in ["yes", "true"]:
-                        potential = True
-                    elif data_entry[key].lower() in ["no", "false"]:
-                        potential = False
-                    else:
-                        raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-                else:
-                    raise ValueError(f"Mineral carbonation potential {data_entry[key]} not recognized")
-
-                self.set_mineral_carbonation_potential(potential)
-
-        return self
-
-    def update_electricity_records(self):
-        """Set electricity objects from database and location. This is done only if the database seperates electricity data (i.e., quantity, unit, and inventories). The electricity data in the database should be prefixed with one of **'Electricity_'**, **'electricity_'**, **'elec_'**, or **'Elec_'**.
-
-        Raises
-        ------
-        KeyError
-            Inventory type not recognized.
-        """
         if self.get_impact_database_entry() is not None:
-            if self.get_electricity_database_tag() is None:
-                self.set_electricity_database_tag()
-
-            database = self.get_impact_database()
-            data_set = database.get_data_entry(self.get_impact_database_entry())
-
-            electricity_tag = self.get_electricity_database_tag()
-
-            if electricity_tag is not None:
-                # electricity quantity and unit
-                electricity_qty = self.get_electricity_qty()
-                if electricity_qty > 0.0:
-                    electricity_unit = UNITS_MAP[data_set[electricity_tag + database.get_unit_key()]]
-                else:
-                    electricity_unit = UNITS_MAP[config["setup"]["electricity"]["DEFAULT_DECLARED_UNIT"]]
-
-                # electricity by location
-                if self.electricity["by_location"] is None:
-                    electricity_by_location = Electricity.new(
-                        id=None,
-                        name=self.get_name() + "_electricity",
-                        model=self.get_model(),
-                        stage=None,
-                        qty=electricity_qty,
-                        unit=electricity_unit,
-                        year=self.get_project().get_year(),
-                    )
-                    self.electricity["by_location"] = electricity_by_location
-
-                else:
-                    self.electricity["by_location"].set_qty(electricity_qty)
-                    self.electricity["by_location"].set_unit(electricity_unit)
-                    if self.get_project().get_year() is not None:
-                        self.electricity["by_location"].set_year(self.get_project().get_year())
-
-                # electricity from database
-                if self.electricity["from_database"] is None:
-                    database_electricity_qty = data_set[self.get_electricity_database_tag() + database.get_qty_key()]
-                    for data_type, DATA_HEADERS_DICT in database.__class__.DATA_IMPORTS.items():
-                        record_dict = {}
-                        for cat in DATA_HEADERS_DICT:
-                            if (database_electricity_qty > 0.0) and (electricity_tag + cat in list(data_set.index)):
-                                record_dict[cat] = data_set[electricity_tag + cat] / database_electricity_qty
-                            else:
-                                record_dict[cat] = 0.0
-
-                        if data_type == "impacts":
-                            impacts = Impacts.from_dict(record_dict)
-                        elif data_type == "emissions":
-                            emissons = Emissions.from_dict(record_dict)
-                        elif data_type == "carbon_storage":
-                            carbon_storage = CarbonStorage.from_dict(record_dict)
-                        else:
-                            raise KeyError(f"Record type {data_type} not recognized.")
-
-                    electiricity_from_data = Electricity.from_unit_inventories(
-                        name=self.get_name() + "_electricity",
-                        qty=electricity_qty,
-                        unit=electricity_unit,
-                        impacts=impacts,
-                        emissions=emissons,
-                        carbon_storage=carbon_storage,
-                    )
-                    self.electricity["from_database"] = electiricity_from_data
-                else:
-                    self.electricity["from_database"].set_qty(electricity_qty)
-                    self.electricity["from_database"].set_unit(electricity_unit)
-
-            if self.get_electricity_source() is None:
-                self.electricity["_current"] = "from_database"
-            elif self.get_electricity_source() == "by_location":
-                for record_type in database.__class__.DATA_IMPORTS:
-                    method_name = "get_" + str(record_type)
-                    product_record = getattr(self, record_type)
-                    product_record -= getattr(self.electricity["from_database"], method_name)()
-                    product_record += getattr(self.electricity["by_location"], method_name)()
-
+            super().update_inventory_records()
+            self.update_electricity_records()
+            
         return self
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_impact_database_entry(),
+            self.get_life_cycle_stage(),
+            self.get_electricity_source(),
+            self.get_electricity_scenario(),
+            self.get_electricity_year(),
+            self.get_electricity_geographical_scope(),
+            self.get_electricity_location_regional(),
+            self.get_electricity_location_local(),
+            self.get_moisture_content(),
+            self.get_dry_density() if (self.get_impact_database_entry() and isinstance(self.inventories_declared_unit, Unit)) else None,
+            self.unit_carbon_storage.get_mineral_carbonation_potential(),
+            self.unit_carbon_storage.get_biogenic_carbon_storage_potential(),
+            self.unit_carbon_storage.get_biogenic_carbon_composition(),
+            self.unit_carbon_storage.get_mineral_carbon_storage_qty(),
+        )
     
-    def update_unit_carbon_storage(self):
-        """ Compute the unit carbon storage of the product.
-
-        Notes
-        -----
-        1. Biogenic carbon storage is recorded under the tag containing "bio" in the configuration file.
-
-        Returns
-        -------
-        dict
-            Carbon storage quantity of the product.
-        """
-        carbon_storage = self.unit_carbon_storage.get_record_dict()
-        
-        database = self.get_impact_database()
-        database_item = self.get_impact_database_entry()
-
-        # Biogenic carbon storage
-        bio_tag = CarbonStorage.get_bio_tag()
-        if database_item is not None:
-            if "Stored Biogenic Carbon" in database.get_data_entry(database_item):
-                if database.get_data_entry(database_item)["Stored Biogenic Carbon"] is not None:
-                    self.set_bio_based(True)
-                    bio_percentage = self.get_bio_percentage()
-                    species = database.get_data_entry(database_item)["Biomaterial Species"]
-                    region = database.get_data_entry(database_item)["Region"]
-                    material_form = database.get_data_entry(database_item)["Biomaterial Form"]
-
-                    if isinstance(species, str) and isinstance(region, str) and isinstance(material_form, str):
-                        moisture_content = get_moisture_content(species.strip(), region.strip(), material_form.strip())
-                        carbon_percentage = get_carbon_percentage(species.strip(), region.strip(), material_form.strip())
-                        
-                        if self.get_unit().get_qty_measured() == "mass":
-                            unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(wet_mass=1.0,
-                                                                                                            wet_mass_unit=self.get_unit(),
-                                                                                                            moisture_content=moisture_content,
-                                                                                                            carbon_percentage_dry=carbon_percentage) 
-                        else:
-                            if self.get_density() is None:
-                                self.set_density()          
-                            unit_biogenic_carbon_content, biogenic_carbon_unit = get_biogenic_carbon_content(volume=1.0,
-                                                                                                            volume_unit=self.get_unit(),
-                                                                                                            wet_density=self.get_density(),
-                                                                                                            wet_density_unit=self.get_density_unit(),
-                                                                                                            moisture_content=moisture_content,
-                                                                                                            carbon_percentage_dry=carbon_percentage) 
-
-                        conversion_factor = biogenic_carbon_unit.convert_to(UNITS_MAP[config["setup"]["INVENTORY_ITEMS"]["CARBON_STORAGE"][bio_tag]])
-                        carbon_storage[bio_tag] = unit_biogenic_carbon_content * conversion_factor * bio_percentage / 100.0
-                    else:
-                        log("Biogenic carbon content cannot be determined due to missing species, region, or material form in database.", level="Warn")
-                else:
-                    log("Biogenic carbon content cannot be determined due to missing stored biogenic carbon tag in database.", level="Warn")
-            else:
-                log("Biogenic carbon content cannot be determined due to missing data header in database.", level="Warn")
-        else:
-            log("Biogenic carbon content cannot be determined due to missing database entry.", level="Warn")
-
-        # Mineral carbonation uptake
-        carbon_storage["Mineral C"] = 0.0 # TODO: update logic for mineral carbonation uptake if any
-
-        self.unit_carbon_storage.update_qty(carbon_storage)
-
-        return self
-
 
 class Fuel(Product):
     """Fuel product.

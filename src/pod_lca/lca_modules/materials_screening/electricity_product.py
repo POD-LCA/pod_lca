@@ -9,8 +9,10 @@ from ..carbon_storage import CarbonStorage
 from ..electricity import ElectricitySupply
 from ..impacts import Emissions
 from ..impacts import Impacts
+from ..location import Location
 from ..analysis import DataDistribution
 from ...utilities import config
+from ...utilities import log
 
 
 class Electricity(Master):
@@ -33,13 +35,18 @@ class Electricity(Master):
         self.electricity_supplier = None
         self.year = None
         self.geographical_scope = None
+        self.location = None
         self.scenario = None
 
+        # cache
+        self._cache_impacts = None
+        self._cache_is_computed = None
+        self._last_params = None
     # ================================
     # Constructors
     # ================================
     @classmethod
-    def new(cls, id, name, model, stage, qty, unit, year=None):
+    def new(cls, id, name, model, stage, qty, unit, location=None, year=None, geographical_scope='Regional'):
         """Create a new electricity product in a model.
 
         Parameters
@@ -58,6 +65,10 @@ class Electricity(Master):
             Quantity of the item
         unit : ~pod_lca.units.Unit
             Unit corresponding to the quantity.
+        location : ~pod_lca.location.Location, optional
+            Location object to set, by default None
+        geographical_scope: {'National'. 'Regional', 'Local'}
+            Geographical scope considered for electricity data.
         """
         item = cls()
 
@@ -71,8 +82,12 @@ class Electricity(Master):
         item.emissions = Emissions.from_parent(item)
         item.carbon_storage = CarbonStorage.from_parent(item)
 
-        electricity_supplier = ElectricitySupply.from_location(model.get_location(), year)
+        if location is None:
+            location = model.get_location()
+        electricity_supplier = ElectricitySupply.from_location(location, year)
         item.set_supplier(electricity_supplier)
+
+        item.set_geographical_scope(geographical_scope)
 
         return item
 
@@ -170,6 +185,32 @@ class Electricity(Master):
             self.get_supplier().set_geographical_scope(geographical_scope)
 
         return self
+    
+    def set_location(self, **kwargs):
+        """Set location object for electricity supply.
+
+        Other Parameters
+        ----------------
+        location_obj : ~pod_lca.location.Location, optional
+            Location object to set, by default None
+        zip_code : str, optional
+            Zip code to set, by default None
+        state : str, optional
+            US State to set, by default None
+        """
+        location_obj = None
+        if "location_obj" in kwargs:
+            location_obj = kwargs["location_obj"]
+        if "zip_code" in kwargs:
+            location_obj = Location.from_US_zip(kwargs["zip_code"])
+        if "state" in kwargs:
+            location_obj = Location.from_US_state(kwargs["state"])
+
+        self.location = location_obj
+        if self.get_supplier() is not None:
+            self.get_supplier().set_location(location_obj)
+
+        return self
 
     def set_scenario(self, scenario):
         """Set scenario name. This will be used with cambium data.
@@ -230,6 +271,8 @@ class Electricity(Master):
         int
             Year of electricity consumption.
         """
+        if (self.year is None) and (self.get_supplier() is not None):
+            self.year = self.get_supplier().get_year()
         return self.year
 
     def get_geographical_scope(self):
@@ -240,8 +283,23 @@ class Electricity(Master):
         str
             Spatial resolution of the electricity supply: 'National', 'Regional', 'Local'.
         """
+        if (self.geographical_scope is None) and (self.get_supplier() is not None):
+            self.geographical_scope = self.get_supplier().get_geographical_scope()
         return self.geographical_scope
 
+    def get_location(self):
+        """Get location object for electricity supply.
+
+        Returns
+        -------
+        ~pod_lca.location.Location
+            Location object.
+        """
+        if (self.location is None) and (self.get_supplier() is not None):
+            return self.get_supplier().get_location()
+        else:
+            return self.location
+    
     def get_scenario(self):
         """Get scenario name. This will what used with cambium data.
 
@@ -250,6 +308,8 @@ class Electricity(Master):
         str
             Electricity consmuption scenario considered: e.g., 'MidCase', 'LowRECost', 'HighRECost', 'HighDemandGrowth', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050', 'Decarb100by2035'.
         """
+        if (self.scenario is None) and (self.get_supplier() is not None):
+            self.scenario = self.get_supplier().get_scenario()
         return self.scenario
 
     def get_data_distribution(self, attr):
@@ -286,6 +346,28 @@ class Electricity(Master):
         else:
             return self.data_distributions[attr]
 
+    def get_impacts(self):
+        """Retrieve the impacts of the product.
+
+        Returns
+        -------
+        ~pod_lca.impacts.Impacts
+            Impacts of the product/process.
+        """
+        # check for cached result
+        current_params = self.get_cache_key()
+        if (self._last_params == current_params) and self._cache_is_computed:
+            log("Returning cached result.", "Info")
+            return self._cache_impacts
+        else:
+            impacts = super().get_impacts()
+
+            self._cache_is_computed = True
+            self._last_params = current_params
+            self._cache_impacts = impacts
+
+            return impacts
+
     # ================================
     # Methods
     # ================================
@@ -298,6 +380,21 @@ class Electricity(Master):
         super().update_inventory_records()
 
         return self
+
+
+    # ================================
+    # Cache Methods
+    # ================================
+    def get_cache_key(self):
+        return (
+            self.get_qty(),
+            self.get_unit().standard_notation if self.get_unit() else None,
+            self.get_scenario(),
+            self.get_year(),
+            self.get_geographical_scope(),
+            self.get_location().get_state() if self.get_location() else None,
+            self.get_location().get_zip() if self.get_location() else None,
+        )
 
 
 if __name__ == "__main__":

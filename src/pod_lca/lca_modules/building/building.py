@@ -5,27 +5,28 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from math import sqrt
+
+from . import Assembly
+from . import BuildingFloor
 from . import ConstructionMixins
 from . import DataMixins
 from . import EndOfLifeMixins
 from . import EnvelopeMixins
-from . import Floor
+from . import Material
 from . import OperationalMixins
 from . import ProductScopeMixins
 from . import Scenario
 from . import TemplateModels
 from . import TransportationMixins
 from . import UseMixins
-from ..building_envelope import Envelope
-from ..building_structure import BuildingStructure
-from ..building_structure import ConcreteStructure
 from ..dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from ...units import MEGA
-from ...units import METER
+from ...units import Quantity as Q
 from ...units import WATT_HOUR
-from ...utilities import centroid
-from ...utilities import geometric_key
-from ...utilities import config
+from ...units import UNITS_MAP
+from ...utilities import DataImporter
+from ...utilities import ArrayMethods
 
 
 class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, UseMixins, ConstructionMixins, TransportationMixins, ProductScopeMixins, EnvelopeMixins):
@@ -35,14 +36,20 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
     ----------
     name : str
         Name of the building.
-    building_type : {'Commercial', 'Residential'}
-        Type of building.
     structure_type : {'Concrete', 'Steel', 'CLT'}
         Major vertical gravity system of the structure.
     built_year: int
         Built year of the building.
+    life_span : int
+        Useful life of the building.
     location : ~pod_lca.location.Location
         Location of the building site.
+    structure : ~pod_lca.building_structure.BuildingStructure
+        Structural assemblies of the building.
+    building_envelope : ~pod_lca.building_envelope.BuildingEnvelope
+        Envelope assemblies of the building
+    operational_object : ~pod_lca.operational.OperationalEnergyObject
+        Operational energy object to handle operational energy simulations
     assemblies : list of ~pod_lca.building.Assembly 
         Structural and Fascade elements that make up the building.
     material_impact_database: ~pod_lca.impacts.ImpactsDatabase
@@ -55,28 +62,42 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         End-of-life transportation dataset.
     transportation_manager: ~pod_lca.transportation.TransportationManager
         Manager of inward transportation of material for the construction of the building.
-    construction_energy_product : 
-
     building_data_standard: {'RICS', 'ASHRAE'}
         building strnadard used for 
-
-    """
+    construction_energy_product : ~pod_lca.electricity.Electricity
+        Electricity consumption during the building construction.
+    operational_electricity_product : ~pod_lca.building.OperationalElectricityProduct
+        Electricity consumption during the building operations.
+    operational_energy_method : {'eplus', 'EUIs'}
+        method fro computing operational energy.
+    weather_file_path : str
+        File path to the weather file to be used in operational energy simulations.
+    idf_file_path : str
+        File path to save the intemediary idf file from Python library to Eplus.
+    eplus_folder_path: str
+        Folder path to Eplus executable file.
+    eplus_out_folder : str
+        Folder path to save the raw Eplus results.
+    energy_plus_results : dict
+        Energy plus results output from the operational energy simulations.
+    energy_plus_units : dict
+        Units of the energy plus results.
+    """     
 
     def __init__(self):
         self.name = None
-        self.building_type = None
         self.structure_type = None
         self.built_year = None
         self.life_span = None
         self.location = None
 
-        self.floors = {}
+        self.floors = {} # FIXME: used in operational and plotters...
+        self.floor_obj = None
+
         self.structure = None
-        self.envelope = None
+        self.building_envelope = None
         self.operational_object = None
         self.assemblies = []
-        self.surface_cpt_dict = {}
-        self.constructions = {}
 
         self.material_impact_database = None
         self.transport_impact_database = None
@@ -86,11 +107,13 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.building_data_standard = None
 
         self.construction_energy_product = None
-        self.operational_energy_product = None
+        self.operational_electricity_product = None
 
-        self.run_eplus = False
-        self.idf_constructions_data = {}
-        self.idf_material_properties = {}
+        self.operational_energy_method = 'eplus'
+        self.weather_file_path = None
+        self.idf_file_path = None
+        self.eplus_folder_path = None
+        self.eplus_out_folder = None
         self.energy_plus_results = None
         self.energy_plus_units = None
 
@@ -100,7 +123,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
     # Constructors
     # ================================
     @classmethod
-    def new(cls, name, type, location, built_year, life_span):
+    def new(cls, name, location, built_year, life_span):
         """ Build a building.
         
         Parameters
@@ -124,118 +147,175 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         building = cls()
 
         building.set_name(name)
-        building.set_building_type(type)
         building.set_location(location)
         building.set_built_year(built_year)
         building.set_life_span(life_span)
 
         return building
-     
+    
     @classmethod
-    def from_parameters(cls, name, type, location, built_year, life_span, no_floors, f2f_height, floor_plan, geometry_units=METER, **kwargs):
+    def from_assemblies(cls, name, location, built_year, life_span, structure, building_envelope=None, **kwargs):
         """ Build a building.
         
         Parameters
         ----------
         name : str
             Name of the building.
-        type : {'Commercial', 'Residential'}
-            Type of building.
         location : ~pod_lca.location.Location
             Location of the building site.
         built_year: int
             Built year of the building.
         life_span: int
             Life span of the building in years.
-        no_floors : int
-            Number of floors in the building.
-        f2f_height : float
-            Floor to floor height.
-        floor_plan : list of tuples of float
-            A polygon defining the floor plan geometry [(x1, y1), (x2, y2), ... , (xn, yn)].
-        floors_below_grade : int
-            Number of floors below grade.
-        geometry_units : ~pod_lca.units.Unit
-            Unit of measurement used in geometry definitions.
+        structure : ~pod_lca.building_structure.BuildingStructure
+            Structure of the building.
+        building_envelope : ~pod_lca.building_envelope.BuildingEnvelope
+            Envelope of the building.
 
         Other Parameters
         ----------------
-        floors_below_grade : int, optional
-            Number of floors below grade. If not provided, it will be set to 1 if no_floors > 2, else 0.
         logistic_type : {'local', 'global'}
             Transportation scope of the building material in construction.
         construction_energy_use: float
             Construction energy use for the building.
         construction_energy_use_unit: str
             Unit for construction energy use. E.g., 'MWh', 'kWh', etc
-        building_standard : {'RICS', 'ASHRAE'}
-            Standard used for service lives and waste rates.
-        
+
+
         Returns
         -------
         ~pod_lca.buildings.Building
             Building built.
-        """
-        building = cls.new(name, type, location, built_year, life_span)
+        """    
+        building = cls.new(name, location, built_year, life_span)
         building.set_databases(kwargs.get('building_standard', 'ASHRAE'))
         building.set_building_level_products(logistic_type=kwargs.get('logistic_type', 'local'),
                                              construction_electricity_consumption=kwargs.get('construction_energy_use', 0.0),
                                              electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
-
-        floors_below_grade = kwargs.get('floors_below_grade', 1 if no_floors > 2 else 0)
-        building.add_floors(no_floors, floors_below_grade, f2f_height, floor_plan,  geometry_units)
-
-        building.make_structure('from geometry', building_type='commercial', structure_type='concrete')
-        building.make_envelope('from geometry', 'commercial', None, None, None) # TODO: Does the type of enclosure: opaque, enclosure:transparent, roofing get selected here... for the eplus model
+        
+        building.set_structure(structure)
+        if building_envelope:
+            building.set_building_envelope(building_envelope)
+            building.operational_energy_method = 'eplus'
+        else:
+            building.operational_energy_method = 'EUIs'
 
         return building
-
+     
     @classmethod
-    def from_geometry(cls, name, type, location, built_year, life_span, geometry, **kwargs):
-        """ Build a building.
+    def from_csv(cls, name, location, built_year, life_span, csv_path, **kwargs):
+        """ Build a building from a csv file.
         
         Parameters
         ----------
         name : str
             Name of the building.
-        type : {'Commercial', 'Residential'}
-            Type of building.
         location : ~pod_lca.location.Location
             Location of the building site.
         built_year: int
             Built year of the building.
         life_span: int
             Life span of the building in years.
-        geometry : 
-            Geometry details of the building
+        csv_path : str
+            File path to the csv file containing the building data.
 
         Other Parameters
         ----------------
-        logistic_type : {'local', 'global'}
-            Transportation scope of the building material in construction. Default is 'local'.
+        building_type: {'residential', 'commercial'}
+            Type of building.
+        building_standard: {'RICS', 'ASHRAE'}
+            Standard used for service lives and waste rates.
+        no_floors: int
+            Number of floors in the building.
+        floor_plan: list of tuple of float
+            List of (x, y) coordinates defining the floor plan of the building
+        floor_area: float
+            Total floor area of the building. If floor_plan is not provided, a square floor plan will be created based on the provided floor_area.
+        f2f_height: float
+            Floor to floor height of each story in the building.
+        geometry_units: {'m', 'ft'}
+            Units used for building geometry.
         construction_energy_use: float
             Construction energy use for the building.
         construction_energy_use_unit: str
             Unit for construction energy use. E.g., 'MWh', 'kWh', etc
         building_standard : {'RICS', 'ASHRAE'}
             Standard used for service lives and waste rates. Default is 'ASHRAE'.
-
+        logistic_type: {'Local', 'Global'}
+            Logistic type for building material transportation. 
+        
         Returns
         -------
-        ~pod_lca.building.Building
+        ~pod_lca.buildings.Building
             Building built.
-        """
-        building = cls.new(name, type, location, built_year, life_span)
+        """    
+        building = cls.new(name,
+                           location=location, 
+                           built_year=built_year, 
+                           life_span=life_span)
         building.set_databases(kwargs.get('building_standard', 'ASHRAE'))
-        building.set_building_level_products(logistic_type=kwargs.get('logistic_type', 'local'),
-                                             construction_electricity_consumption=kwargs.get('construction_energy_use', 0.0),
-                                             electricity_unit=kwargs.get('construction_energy_use_unit', MEGA * WATT_HOUR))
 
-        building.make_structure()
-        building.make_envelope()
+        # set default geometry
+        no_floors = kwargs.get('no_floors', 1)
+        if 'floor_plan' in kwargs:
+            floor_plan = kwargs['floor_plan']
+        else:
+            if 'floor_area' in kwargs:
+                side_length = sqrt(kwargs['floor_area'] / no_floors)
+                floor_plan = [(0.0 , 0.0), (0.0, side_length), (side_length, side_length), (side_length, 0.0)]
+            else:
+                raise ValueError('Either floor plan or floor area must be provided to define the floor geometry.')
+        geometry_units = kwargs.get('geometry_units', 'm')
+
+        # set floors
+        f2f_height = kwargs.get('f2f_height', 3.0 if geometry_units == 'm' else 10.0)
+        floor_plan_poly = [(Q(coords[0], UNITS_MAP[geometry_units]),
+                            Q(coords[1], UNITS_MAP[geometry_units])) for coords in floor_plan]
+        floor = BuildingFloor.from_floor_plan(floor_plan=floor_plan_poly,
+                                              floor_height=Q(f2f_height, UNITS_MAP[geometry_units]),
+                                              usage=kwargs['building_type'])
+        building.floor_obj = floor
+        
+        building.operational_energy_method = 'EUIs' 
+
+        # set building level products
+        construction_energy_use = kwargs["construction_energy_use"] if "construction_energy_use" in kwargs else 0.0
+        energy_units = UNITS_MAP[kwargs["construction_energy_use_unit"]] if "construction_energy_use" in kwargs else MEGA * WATT_HOUR
+        building.set_building_level_products(
+            logistic_type=kwargs.get('logistic_type', 'local'), 
+            construction_electricity_consumption=construction_energy_use, 
+            electricity_unit=energy_units)
+        
+        # set BOM
+        bill_of_materials = DataImporter.csv_to_pandas(csv_path)
+        bill_of_materials['impact_database_entry'] = bill_of_materials['impact_database_entry'].astype(object).where(bill_of_materials['impact_database_entry'].notnull(), None)
+
+        assemblies = {}
+        for item in bill_of_materials.itertuples():
+            building_assembly = item.assembly.lower().replace(" ", "_")
+
+            if building_assembly not in assemblies:
+                assembly_obj = Assembly.from_materials(building_assembly)
+                building.add_assembly(assembly_obj)
+                assembly_obj.set_parent(building)
+
+                assemblies[building_assembly] = assembly_obj
+            else:
+                assembly_obj = assemblies[building_assembly]
+
+            building_material = Material.new(
+                name=item.material + '_in_' + building_assembly, 
+                qty=float(item.qty),
+                unit=UNITS_MAP[item.unit],
+                material_database_entry=item.impact_database_entry,
+            )
+            building_material.set_service_life_category(item.PODLCA_RSL_category)
+            building_material.set_building()
+
+            assembly_obj.add_material(building_material)
 
         return building
-    
+
     # ================================
     # Setters
     # ================================     
@@ -250,18 +330,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.name =  name
 
         return self
-    
-    def set_building_type(self, building_type):
-        """ Set building type.
-        
-        Parameters
-        ----------
-        type : {'Commercial', 'Residential'}
-            Type of building.
-        """
-        self.building_type = building_type
-
-        return self
 
     def set_structure_type(self, structure_type):
         """ Set the major vertical gravity system of the structure
@@ -272,6 +340,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Major vertical gravity system of the structure.
         """
         self.structure_type = structure_type
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
         
@@ -285,6 +356,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.built_year = year
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
     
     def set_life_span(self, life_span):
@@ -296,6 +370,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Life span of the building in years.
         """
         self.life_span = life_span
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
 
         return self
 
@@ -309,6 +386,9 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         self.location = location
 
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
         return self
     
     def set_building_data_standard(self, standard):
@@ -320,6 +400,11 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             building strnadard used for 
         """
         self.building_data_standard = standard
+
+        if self.get_operational_electricity_product():
+            self.get_operational_electricity_product()._inventories_uptodate = False
+
+        return self
     
     def set_scenario(self, name):
         """ Create new scenario for the building.
@@ -369,6 +454,43 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         self.set_construction_energy_product(construction_electricity_consumption, electricity_unit)
 
         return self
+    
+    def set_structure(self, structure):
+        """ Set the building structure object.
+        
+        Parameters
+        ----------
+        structure : ~pod_lca.building_structure.BuildingStructure
+            Structural assemblies of the building.
+        """
+        self.structure = structure
+        structure.set_building(self)
+
+    def set_building_envelope(self, building_envelope):
+        """ Set the building envelope object.
+        
+        Parameters
+        ----------
+        building_envelope : ~pod_lca.building_envelope.BuildingEnvelope
+            Envelope assemblies of the building
+        """
+        self.building_envelope = building_envelope
+        building_envelope.set_building(self)
+
+        for envelope in self.building_envelope.envelopes.values():
+            envelope.set_materials_in_components()
+
+    def set_operational_energy_object(self, operational_energy_object):
+        """ Set the operational energy object used in energy plus simulations.
+        
+        Parameters
+        ----------
+        operational_object : ~pod_lca.operational.OperationalEnergyObject
+            Operational energy object to handle operational energy simulations
+        """
+        self.operational_object = operational_energy_object
+        operational_energy_object.set_building(self)
+
     # ================================
     # Getters
     # ================================
@@ -381,16 +503,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Name of the building.
         """
         return self.name
-
-    def get_building_type(self):
-        """ Get building type.
-        
-        Returns
-        -------
-        str
-            Type of building.
-        """
-        return self.building_type
 
     def get_structure_type(self):
         """ Get the major vertical gravity system of the structure
@@ -443,29 +555,36 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         return self.building_data_standard
 
-    def get_floor(self, floor_no):
-        """ Get the floor specified.
-
-        Parameters
-        ----------
-        floor_no : int
-            Floor id
-        """
-        return self.floors[str(floor_no)]
-    
-    def get_no_floors(self):
-        """ Get number of floors in the building.
-        """
-        return len(self.floors)
-
     def get_structure(self):
-
+        """ Get the building structure object.
+        
+        Returns
+        -------
+        ~pod_lca.building_structure.BuildingStructure
+            Structural assemblies of the building.
+        """
         return self.structure
     
     def get_envelope(self):
-
+        """ Get the building envelope object.
+        
+        Returns
+        -------
+        ~pod_lca.building_envelope.BuildingEnvelope
+            Envelope assemblies of the building
+        """
         return self.envelope
 
+    def get_operational_energy_object(self):
+        """ Get the operational energy object used in energy plus simulations.
+        
+        Returns
+        -------
+        ~pod_lca.operational.OperationalEnergyObject
+            Operational energy object to handle operational energy simulations
+        """
+        return self.operational_object
+    
     def get_assemblies(self):
         """ Get a list of building assemblies.
 
@@ -489,133 +608,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
     # ================================
     # Assembly Methods
     # ================================ 
-    def add_floors(self, no_floors, floors_below_grade, f2f_height, floor_plan, geometry_units):
-        """ Add floors to the building.
-        
-        Parameters
-        ----------
-        no_floors : int
-            Number of floors in the building.
-        floors_below_grade : int
-            Number of floors below grade.
-        f2f_height : float
-            Floor to floor height.
-        floor_plan : list of tuples of float
-            A polygon defining the floor plan geometry [(x1, y1), (x2, y2), ... , (xn, yn)].
-        geometry_units : ~pod_lca.units.Unit
-            Unit of measurement used in geometry definitions.        
-        """ 
-        for num in range(no_floors):
-            z = (f2f_height * num) - (floors_below_grade * f2f_height)
-            floor_plan_poly = [(coords[0], coords[1], z) for coords in floor_plan]
-
-            floor_no = num +1
-            below_grade = True if floor_no <= floors_below_grade else False
-            on_ground = True if floor_no == floors_below_grade + 1 else False
-            is_last = True if floor_no == no_floors else False
-            self.add_floor(floor_no, floor_plan_poly, f2f_height, geometry_units, below_grade, on_ground, is_last)
-
-        return self
-
-    def add_floor(self, floor_no, floor_plan, floor_height, geometry_unit, below_grade, on_ground, is_last):
-        """ Add a floor to the building.
-
-        Parameters
-        ----------      
-        floor_no : int
-            Floor number. 
-        floor_plan : list of tuples of float
-            A polygon defining the floor plan geometry [(x1, y1, z), (x2, y2, z), ... , (xn, yn, z)].  
-        floor_height : float
-            Floor height.   
-        geometry_unit : ~pod_lca.units.Unit
-            Unit of measurement     
-        below_grade : bool
-            True, if the floor is above grade.
-        on_ground : bool
-            True, if the floor is on the ground.
-        is_last : bool
-
-        """
-        floor = Floor.from_floor_plan(floor_no, floor_plan, floor_height, geometry_unit)
-        floor.is_last = is_last
-
-        if below_grade:
-            floor.set_floor_below_grade()
-        if on_ground:
-            floor.set_floor_on_ground()
-
-        self.floors[str(floor_no)] = floor
-        
-        return self
-
-    def make_structure(self, method, building_type, structure_type):
-        """ Create the structure of the building.
-        
-        Parameters
-        ----------
-        method : {'from geometry', 'from template'}
-            Method of structure generation.
-        building_type : {'Commercial', 'Residential'}
-            Type of building.
-        structure_type : {'BP_Steel'. 'LS_steel', 'SS_Steel', "BP_Concrete', 'LS_Concrete', 'SS_Concrete', 'BP_Wood', 'LS_Wood', 'SS_Wood'}
-            Template used for building structure.     
-        """
-        if structure_type == 'Concrete':
-            structure_obj = ConcreteStructure
-        else:
-            structure_obj = BuildingStructure
-
-        if method == 'from geometry':
-            structure = structure_obj.from_geometry(self)
-        elif method == 'from template':
-            structure = structure_obj.from_template(self, building_type, structure_type)
-        else:
-            raise ValueError('Method of creating structure is not recognized.')
-        
-        self.structure = structure
-
-        return self
-
-    def make_envelope(self,  method, building_type, envelope_opaque, envelope_translucent, roofing, **kwargs):
-        """ Create the envelope of the building.
-        
-        Parameters
-        ----------
-        method : {'from geometry', 'from template'}
-            Method of structure generation.
-        building_type : {'Commercial', 'Residential'}
-            Type of building.
-        envelope_opaque : {'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 
-                            'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 'Rainscreen, Formed Steel Panel', 'Brick, wood framing'}
-            Template used for building opaque enclosure.
-        envelope_translucent : {'Glazing, double pane IGU', 'Glazing, triple pane IGU', 'Operable window', 'Glazing, operable window'}
-            Template used for building translucent enclosure.
-        roofing : {'EPDM roofing', 'Asphalt shingle roofing'}
-            Template used for building roofing.
-
-        Other Parameters
-        ----------------
-        operational_sys_path: str
-            File path to operational systems IDF file.         
-        """
-        # FIXME: consolidate the different thinkings in envelope by geometry and from template
-        if method == 'from geometry':
-            self.read_constructions_data()
-            self.read_material_properties_data()
-            operational_sys_path = config['file_paths']['operational']['SYSTEMS']
-            envelope = self.create_envelopes_from_template(operational_sys_path)
-        elif method == 'from template':
-            envelope = Envelope.from_template(self, building_type, envelope_opaque, envelope_translucent, roofing)
-        else:
-            raise ValueError('Method of creating envelope is not recognized.')
-        
-        
-        
-        self.envelope = envelope
-
-        return self
-
     def add_assembly(self, assembly):
         """ Add a assembly to the building.
         
@@ -625,7 +617,6 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Structural or envelope element to be added to the building.
         """
         self.get_assemblies().append(assembly)
-        assembly.set_building(self)
 
         return self
     
@@ -638,28 +629,45 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             Structural or envelope element to be removed from the building."""
         self.get_assemblies().remove(assembly)
 
-    def update_envelope_surfaces(self):
-        for fk in self.floors:
-            floor = self.floors[fk]
-            for sk in floor.envelope.surfaces:
-                srf = floor.envelope.surfaces[sk]
-                if 'wall' in sk:
-                    if floor.is_below_grade:
-                        srf.outside_boundary_condition = 'Ground'
-                    else:
-                        srf.outside_boundary_condition = 'Outdoors'
-                elif sk == 'floor':
-                    if floor.is_on_ground:
-                        srf.outside_boundary_condition = 'Ground'
-                    else:
-                        srf.outside_boundary_condition = 'Adiabatic'
-                elif sk == 'ceiling':
-                    if floor.is_last:
-                        srf.outside_boundary_condition = 'Outdoors'
-                    else:
-                        srf.outside_boundary_condition = 'Adiabatic'
-                cpt = centroid(self.floors[fk].envelope.surfaces[sk].polygon)
-                self.surface_cpt_dict[geometric_key(cpt)] = {}
+    def find_assembly(self, assembly_name):
+        """ Find assembly in a building.
+
+        Parameters
+        ----------
+        assembly_name : str
+            Name of the assembly to be found.
+
+        Returns
+        -------
+        ~pod_lca.building.Assembly
+            Assembly found.
+        """
+        assemblies = self.get_assemblies()
+
+        return ArrayMethods.find(assemblies, 'get_name', assembly_name)
+
+    # ================================
+    # Model Customization Methods
+    # ================================ 
+    def update_material_efficiency(self, variability, material_name=None, assembly_name=None):
+        """ Set the variability level for the material impacts.
+
+        Parameters
+        ----------
+        variability : {'Baseline', 'High-80th%', 'Low-20th%'}
+            Level of variability.
+        material_name : str
+            Materials for which the variability is applied. If None, applied to all materials.
+        assembly_name: str
+            Assembly for which the variability is applied. If None, applied to all materials.
+        """
+        for assembly in self.get_assemblies():
+            if (assembly_name is None) or (assembly.get_name() == assembly_name):
+                for material in assembly.get_materials():
+                    if (material_name is None) or (material.get_name() == material_name):
+                        material.set_impact_variability_level(variability)
+
+        return self
 
     # ================================
     # LCA Methods

@@ -296,7 +296,7 @@ class WasteProcess:
         ~pod_lca.units.Unit
             Unit of measurement.
         """
-        return self.get_parent().get_weight_unit()
+        return self.get_parent().get_weight().unit
 
     def get_life_cycle_stage(self):
         """Retrieve the life cycle stage corresponding to the waste process.

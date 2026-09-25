@@ -5,7 +5,7 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from numpy import isnan
+from pandas import isna
 
 from . import ImpactsDatabase
 from ...utilities import config
@@ -113,9 +113,10 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         list of str
             Database headers.
         """
-        return  [self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_variability_key(), self.get_geography_key()] 
+        return  ([self.get_primary_key(), self.get_qty_key(), self.get_unit_key(), self.get_variability_key(), self.get_geography_key()],
+                 [str, float, 'category', 'category', 'category']) 
     
-    def get_data_entry(self, material_name, variability_level='Baseline', geography_representation='US'):
+    def get_data_entry(self, material_name, variability_level, geography_representation='US'):
         """ Retrieve impacts for given flow.
         
         Parameters
@@ -123,7 +124,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         material_name : str
             Name of the material
         variability_level : {'Baseline', 'High-80th%', 'Low-20th%'}
-            The percintile of the value used.
+            The variablity percentile level.
         geography_representation : str
             geography representation of the place.
         
@@ -150,7 +151,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
 
             if len(row_id) == 1:
                 data = self.data.iloc[row_id[0]].copy(deep=False)
-                if 'DRF Category' in data and not isnan(data["DRF Category"]):
+                if 'DRF Category' in data and not isna(data["DRF Category"]):
                     data = BuildingMaterialImpactsDatabase.emissions_from_drf_category(data)
                 return data
             elif len(row_id) == 0:
@@ -191,7 +192,7 @@ class BuildingMaterialImpactsDatabase(ImpactsDatabase):
         impacts_cat = drf_categories['CF']['Value']
         impact_val = data[impacts_cat]
         for emission in config['setup']['INVENTORY_ITEMS']['EMISSION_INVENTORIES']:
-            if emission in drf_categories['CF'] and isnan(data[emission]):
+            if emission in drf_categories['CF'] and isna(data[emission]):
                 data.loc[emission] = impact_val * (float(drf_categories[str(drf_category)][emission]) / 100) / float(drf_categories['CF'][emission])
 
         # TODO: incorporate 'Value' variable

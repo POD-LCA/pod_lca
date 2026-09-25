@@ -11,24 +11,18 @@ template_model_data = {
     "enclosure-opaque":"Curtain wall: aluminum spandrel", # 'Curtain wall: steel spandrel', 'Curtain wall: aluminum spandrel', 'MV - Brick', 'MV - Granite', 'Insulated Metal Panel', 'EIFS (XPS)', 'Rainscreen, GFRC', 'Rainscreen, Thin Brick', 'Rainscreen, Wood', 'Rainscreen, Formed Steel Panel', 'Brick, wood framing'
     "enclosure-translucent":"Glazing, double pane IGU", # 'Glazing, double pane IGU', 'Glazing, triple pane IGU', 'Operable window'
     "roof": "EPDM roofing", # 'EPDM roofing'
-    "no_floors":6,
-    "f2f_height":3.0,
-    "floor_plan":[[0.0 , 0.0], [0.0, 180.0], [120.0, 180.0], [120.0, 0.0]],
-    "floors_below_grade":1,
-    "wwr":0.7,
-    "geometry_units":"ft",
-    "logistic_type":"local",
     "construction_energy_use":80,
     "construction_energy_use_unit":"MWh"
 }
 
-my_building = Building.from_template_model(name='template building',
+my_building = Building.from_template_model(name='buildings_podlca',
                                            location=my_location, 
                                            built_year=2025,
                                            life_span=60,
                                            **template_model_data)
+my_building.operational_energy_method = 'EUIs' 
 
-print(my_building.get_impacts(scope='product',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
+print(my_building.get_impacts(scope='all',)) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 
 drf_record = my_building.get_drf_record(time_horizon=100, time_step=1/12)
 drf_record.plot('cumulative radiative forcing')

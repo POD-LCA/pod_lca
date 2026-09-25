@@ -7,13 +7,17 @@ __version__ = "0.1.0"
 from .structural_material import StructuralMaterial
 from .structural_elements import StructuralElement
 from .structural_elements import Foundation
+from .structural_elements import GenericElement
 from .structural_elements import Beam
 from .structural_elements import Column
 from .structural_elements import Slab
 from .structural_elements import Wall
 from .structural_elements import RoofStructure
+from .structure import Structure
 from .building_structure import BuildingStructure
+from .template_structure import TemplateStructure
+from .statistical_structure import StatisticalStructure
 from .concrete_building_structure import ConcreteStructure
 from .clt_building_structure import CLTStructure
 
-__all__ = ["StructuralElement", "BuildingStructure"]
+__all__ = ["StructuralMaterial", "StructuralElement", "BuildingStructure", "Structure"]

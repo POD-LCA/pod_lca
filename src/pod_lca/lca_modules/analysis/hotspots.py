@@ -4,7 +4,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
-from pod_lca.utilities import ArrayMethods
+from ..materials_screening import Model
+from ...utilities import ArrayMethods
+from ...utilities import config
 
 
 class HotSpotAnalysis:
@@ -29,12 +31,11 @@ class HotSpotAnalysis:
             str += "No hotspot analysis has been run yet."
         else:
             for impact_category in hotspots:
-                for obj in hotspots[impact_category]:
-                    if impact_category == "weighted":
-                        impact_val = obj.get_impacts().get_weighted_impact()
-                    else:
-                        impact_val = obj.get_impacts().get_record(impact_category)
-                    str += f"{obj.get_name()}: {impact_category} = {impact_val:.2f} {obj.get_impacts().get_categories(units=True)[1][impact_category]} \n"
+                for transport_grouping in hotspots[impact_category]:
+                    str += f"Impact category: {impact_category}; Transportation grouped: {transport_grouping}\n"
+                    str += "-" * 50 + "\n"
+                    for obj in hotspots[impact_category][transport_grouping]:
+                        str += f"{obj['item'].get_name()}: {impact_category} = {obj['val']:.2f} {config['setup']['INVENTORY_ITEMS']['IMPACT_CATEGORIES'][impact_category]} \n"
 
         return str
 
@@ -72,22 +73,29 @@ class HotSpotAnalysis:
 
         return self
 
-    def set_hotspots(self, hotspots, impact_category):
+    def set_hotspots(self, impact_category, transportation_grouping):
         """Set attribute in hotspots to identify as hotspots.
 
         Parameters
         ----------
-        hotspots : list of ~pod_lca.materials_screening.Master
-            List of hotspot object of the model.
         impact_category : str
             Impact category for which the hotspot analysis was run.
+        transportation_grouping : {'not_grouped', 'with_material', 'all_transportation'}, optional
+            Method for grouping transportation impacts.
         """
-        self.hotspots[impact_category] = hotspots
+        if impact_category not in self.hotspots:
+            self.hotspots[impact_category] = {}
+            self.run(impact_category, transportation_grouping)
+        elif transportation_grouping not in self.hotspots[impact_category]:
+            self.run(impact_category, transportation_grouping)
 
         all_items = self.model.get_all_items()
 
         ArrayMethods.set_value(all_items, "is_hotspot", False)
-        ArrayMethods.set_value(hotspots, "is_hotspot", True)
+        if transportation_grouping == 'all_transportation':
+            self.model.get_transportation_manager().is_hotspot = False
+
+        ArrayMethods.set_value([hotspot['item'] for hotspot in self.hotspots[impact_category][transportation_grouping]], "is_hotspot", True)
 
         return self
 
@@ -111,13 +119,15 @@ class HotSpotAnalysis:
         """
         return self.hotspots
 
-    def get_hotspots_by_impact_category(self, impact_category):
+    def get_hotspots_by_impact_category(self, impact_category, transportation_grouping="not_grouped"):
         """Get hotspots of the model, by the impact category.
 
         Parameters
         ----------
         impact_category : str
             Impact category.
+        transportation_grouping : {'not_grouped', 'with_material', 'all_transportation'}, optional
+            Method for grouping transportation impacts. Default is 'not_grouped'.
 
         Returns
         ----------
@@ -125,14 +135,14 @@ class HotSpotAnalysis:
             List of hotspot object of the model.None if hotspots are not set.
         """
         if impact_category not in self.hotspots:
-            self.run(impact_category)
+            self.run(impact_category, )
 
         return self.hotspots[impact_category]
 
     # ================================
     # Methods
     # ================================
-    def run(self, impact_category="GWP"):
+    def run(self, impact_category="GWP", transportation_grouping="with_material"):
         """Determines the hotspot of the model.
             The hotspots are the largest group out of \n
             - top 20% contributors to the impact or
@@ -140,17 +150,21 @@ class HotSpotAnalysis:
 
         Parameters
         ----------
-        model : str
-            Name of the model considered.
         impact_category : str
             Impact category considered.
+        transportation_grouping : {'not_grouped', 'with_material', 'all_transportation'}, optional
+            Method for grouping transportation impacts. Default is 'not_grouped'.
 
         Return
         -------
         list of ~pod_lca.materials_screening.Master
             Hotspot objects.
         """
-        impacts = self.model.get_impacts()
+        if isinstance(self.model, Model):
+            impacts = self.model.get_impacts(transportation_grouping=transportation_grouping, 
+                                             plus_minus_accounting=False)
+        else:
+            impacts = self.model.get_impacts()
 
         impacts_lst = []
         for key, list in impacts.items():
@@ -168,9 +182,15 @@ class HotSpotAnalysis:
 
             biggest_contribution = max(val_lst)
             if biggest_contribution == 0.0:
+                self.hotspots[impact_category] = []
                 return None
             max_index = val_lst.index(biggest_contribution)
-            hot_spots.append(impacts_lst[max_index].get_parent())
+            hot_spots.append(
+                {
+                    "item":impacts_lst[max_index].get_parent(),
+                    "val":biggest_contribution
+                }
+                )
             contributions_in_hotspots = biggest_contribution
 
             all_found = (
@@ -186,7 +206,12 @@ class HotSpotAnalysis:
                 if biggest_contribution == 0.0:
                     break
                 max_index = val_lst.index(biggest_contribution)
-                hot_spots.append(impacts_lst[max_index].get_parent())
+                hot_spots.append(
+                    {
+                    "item":impacts_lst[max_index].get_parent(),
+                    "val":biggest_contribution
+                    }
+                    )
                 contributions_in_hotspots += biggest_contribution
 
                 all_found = (
@@ -195,10 +220,17 @@ class HotSpotAnalysis:
                     else False
                 )
 
-            self.set_hotspots(hot_spots, impact_category)
+            if impact_category not in self.hotspots:
+                self.hotspots[impact_category] = {}
+            self.hotspots[impact_category][transportation_grouping] = hot_spots
+
+            self.set_hotspots(impact_category, transportation_grouping)
 
             return hot_spots
-
+        
+        else:
+            self.hotspots[impact_category][transportation_grouping] = []
+            return None
 
 if __name__ == "__main__":
     pass

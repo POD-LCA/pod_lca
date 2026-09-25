@@ -5,76 +5,226 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from . import EnvelopeMaterial
+from ..building.assembly import Assembly
+from ..building_envelope import EnvelopeMaterialProperty
 from ..building_envelope import Layer
-from pod_lca.lca_modules.building.assembly import Assembly
-from ...units import CUBIC_METER
-from ...utilities import DataImporter
+from ...units import METER
+from ...units import SQUARE_METER
+from ...units import Quantity as Q
+from ...units import UNITS_MAP
 from ...utilities import config
+from ...utilities import DataImporter
+
+from pod_lca.lca_modules.operational.read_write import find_constructions
+from pod_lca.lca_modules.operational.read_write import find_materials
+from pod_lca.lca_modules.operational.read_write import find_no_mass_materials
+from pod_lca.lca_modules.operational.read_write import find_materials_air_gap
+from pod_lca.lca_modules.operational.read_write import find_glazing_materials
+from pod_lca.lca_modules.operational.read_write import find_gas_materials
 
 
 class Construction(Assembly):
+    """ The structural assemblies of the building.
+    
+    Attributes
+    ----------
+    layer_order : list
+        List of layer keys ordered from the outside to the inside.
+    layers : (dict of) ~pod_lca.building_envelope.Layer
+        Dictionary of all the layers in the construction. 
+    surfaces : (dict of) ~pod_lca.building_envelope.Surface
+        Surfaces objects for the consrtruction. 
+
+    """
     def __init__(self):
         super().__init__()
-        self.layer_order = {}
+        self.layer_order = []
         self.layers = {}
-        self.surfaces = []
-
+        self.surfaces = {}
+        
     @classmethod
-    def from_idf(cls, name, building, surfaces, service_life):
-        data = building.idf_constructions_data['constructions'][name]
-        construction = cls.create(data['name'], building)
-        construction.layer_order = data['layers']
-        construction.get_layers(building)
-        construction.surfaces = surfaces
-        construction.set_service_life(35) # TODO: implement reading POD|LCA RSL Category from constructions
-        construction.add_materials(building, service_life)
-        for surface in surfaces:
-            surface.add_construction(construction)
+    def from_idf(cls, name, idf_path):
+        """ Create an envelope construction from IDF data.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the construction to be imported from the IDF, as written in the file.
+        idf_path : str
+            Path to the IDF file.  
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Construction
+            The created construction. 
+        """
+        cdata = find_constructions(idf_path, {})['constructions'][name]
+        layers = cdata['layers']
+        ldata = find_materials(idf_path, {})
+        ldata = find_no_mass_materials(idf_path, ldata)
+        ldata = find_materials_air_gap(idf_path, ldata)
+        ldata = find_glazing_materials(idf_path, ldata)
+        ldata = find_gas_materials(idf_path, ldata)
+        ldata = ldata['materials']
+
+        layers_ = {}
+        for i in range(len(layers)):
+            mdata = ldata[layers[i]]
+            if 'thickness' in ldata[layers[i]]:
+                thickness = ldata[layers[i]]['thickness']
+            else:
+                thickness = Q(0, METER)
+            l = Layer.from_data(mdata, thickness, None)
+            layers_[i] = l
+
+        construction = cls.from_layers(name, layers_)
         return construction
     
-    def add_materials(self, building, service_life):
+    @classmethod
+    def from_database(cls, name):
+        """ Create an envelope construction from podlca database.
         
-        default_database_entry_map = DataImporter.csv_to_dict(config['file_paths']['building']['TEMPLATE_MATERIALS_DEFAULT_MAP'], 'template model material')
+        Parameters
+        ----------
+        name : str
+            Name of the construction to be imported from the database, as written in the file.
 
+        Returns
+        -------
+        ~pod_lca.building_envelope.Construction
+            The created construction. 
+        """
+        construction_database = config["file_paths"]["operational"]["CONSTRUCTIONS"]
+        layers = DataImporter.json_to_dict(construction_database)[name]
+
+        layers_ = {}
+        for layer_id in layers:
+            layer = layers[layer_id]
+            try:
+                int(layer_id)
+            except ValueError:
+                continue
+
+            thickness_val = layer.get("thickness", None)
+            thickness_unit = layer.get("thickness_unit", None)
+            if thickness_val and thickness_unit:
+                thickness = Q(float(thickness_val), UNITS_MAP[thickness_unit])
+            else:
+                thickness = Q(0.0, METER)
+            mat_type = "MaterialProperty" + layer.get("type", "Mass")
+
+            additional_data = {key: value for key, value in layer.items() if key not in ['name', 'database_entry_name']}
+            data = {"name": layer["name"], 
+                    "database_entry_name": layer["database_entry_name"],
+                    "additional": additional_data}
+            mat_prop = EnvelopeMaterialProperty.make_envelope_material_property_from_type(data, mat_type, "from_database")
+
+            l = Layer.from_database(
+                layer["name"], 
+                thickness, 
+                mat_prop)
+            layers_[int(layer_id)] = l
+
+        construction = cls.from_layers(name, layers_)
+
+        construction.set_service_life_category(layers["service_life_category"])
+
+        return construction
+
+    @classmethod
+    def from_layers(cls, name, layers):
+        """ Create an envelope construction from a list of layers.
+        
+        Parameters
+        ----------
+        name : str
+            Name of the construction to be created.
+        layers : (list of) ~pod_lca.building_envelope.Layer
+            The layers to be included in the construction.  
+
+        Returns
+        -------
+        ~pod_lca.building_envelope.Construction
+            The created construction. 
+        """
+        construction = cls.from_materials(name)
+        construction.layer_order = [lk for lk in layers]
+        construction.layers = layers
+
+        for lk in construction.layers:
+            construction.layers[lk].parent_construction = construction
+
+        return construction
+
+    def update_layer_properties(self):
+        pass
+
+    def get_layers(self):
+        return [self.layers[lk] for lk in self.layers]
+
+    def set_building(self):
+        """Set data from building level."""
+        building = self.get_building()
+        if building is not None:
+            building.add_assembly(self)
+
+            materials = self.get_materials()
+            for material in materials:
+                material.set_building()
+
+    def set_materials(self):
+        """Set the materials for the construction. 
+
+        Notes
+        -----
+        1. Material impacts initial set at 'Baseline' level.
+        """
+        mat_impact_database = self.get_building().material_impact_database
+        database_unit_key = mat_impact_database.get_unit_key()
+        
         area = self.area
-        for lk in self.layers:
-            mat_type = self.layers[lk].material_property.__type__
-            if mat_type != 'EnvelopeMaterialAirGap' and mat_type != 'WindowMaterialGas':
-                mat_name = self.layers[lk].material_property.name
-                quantity = area * self.layers[lk].thickness #FIXME: not all impacts are declared per volume... 
-                material = EnvelopeMaterial.new(parent=self,
-                                                name=mat_name,
+        for layer in self.get_constituent_materials():
+            mat_type = layer.material_property.__type__
+            if (not layer.is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
+                mat_name = layer.material_property.name
+                database_entry_name = layer.material_property.database_entry_name
+
+                database_data = mat_impact_database.get_data_entry(database_entry_name, 'Baseline')
+                database_declared_qty_in = database_data[database_unit_key].get_qty_measured()
+                quantity = layer.get_quantity(area, database_declared_qty_in)
+
+                material = EnvelopeMaterial.new(name=mat_name,
                                                 qty=quantity,
-                                                unit=CUBIC_METER,
-                                                material_database_entry=default_database_entry_map[mat_name]['impact database entry'],
-                                                product_year=building.get_built_year())
-                                                            
+                                                material_database_entry=database_entry_name,)
+
                 self.add_material(material)
 
     @property
     def area(self):
-        area = 0
-        for s in self.surfaces:
-            area += s.area
-        return area
+        """ Returns the surface area of the construction.
 
-    def get_layers(self, building):
-        for mk in self.layer_order:
-            name = self.layer_order[mk]
-            layer = Layer.from_idf(name, building)
-            self.layers[mk] = layer
+        Notes
+        -----
+        1. Assumes to fully cover (once) the surfaces assigned to.
+        
+        Returns
+        -------
+        ~pod_lca.units.Quantity
+            The surface area of the construction. 
+        """
+        if self.surfaces:
+            area = 0
+            for sk in self.surfaces:
+                area += self.surfaces[sk].area
+            return area
+        else:
+            return Q(0, SQUARE_METER)
 
-if __name__ == '__main__':
-    pass
+    def get_constituent_materials(self):
+        constituent_materials = []
+        for layer in self.layers.values():
+            constituent_materials.append(layer)
+            if layer.anciallary_materials:
+                constituent_materials.extend(layer.anciallary_materials)
 
-    # from pod_lca.utilities import config
-
-
-    # for i in range(50): print('')
-
-
-    # name = 'Typical Insulated Steel Framed Exterior Wall-R16'
-    # path = config['file_paths']['operational']['CONSTRUCTIONS']
-    # c = Construction.from_idf(name, path)
-
-    # print(c.layers['3'].material.name)
+        return constituent_materials

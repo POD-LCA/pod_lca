@@ -10,13 +10,6 @@ from ..building import Material
 
 class StructuralMaterial(Material):
     """ Structural material (contextual) that makes up assemblies in the building.
-    
-    Attributes
-    ----------
-    comp_strength : float
-        Compressive strength of the building material.
-    tens_strength : float
-        Compressive strength of the building material.
     """
     def __init__(self):
         super().__init__()

@@ -6,9 +6,12 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 import os
+import platform
 import subprocess
 import shutil
+import tempfile
 from collections import defaultdict
+from pathlib import Path
 
 from . import OperationalElectricityProduct
 from ..impacts import Emissions
@@ -21,14 +24,12 @@ from ..operational.light import  DaylightingReferencePoint
 from ..operational.node_list import  NodeList
 from ..operational.read_write import read_results_file
 from ..operational.read_write import write_idf_from_building
-from ...units import FEET
-from ...units import METER
-from ...units import SQUARE_FEET
-from ...units import SQUARE_METER
+from ...units import Quantity as Q
 from ...units import UNITS_MAP
 from ...units import WATT_HOUR
 from ...utilities import config
 from ...utilities import DataImporter
+from ...utilities import log
 
     
 class OperationalMixins:
@@ -38,12 +39,12 @@ class OperationalMixins:
     def set_operational_electricity_product(self, unit=None):
         """ Set the operational electricity product of the building
         """
-        self.operational_energy_product = OperationalElectricityProduct.create(self, unit)
+        self.operational_electricity_product = OperationalElectricityProduct.create(self, unit)
 
     def get_operational_electricity_product(self):
-        """ Set the operational electricity product of the building
+        """ Get the operational electricity product of the building
         """
-        return self.operational_energy_product
+        return self.operational_electricity_product
 
     def get_operational_electricity_usasge(self, method='EUI', summed_at='year', group_by_category=True, group_by_zone=False, unit=WATT_HOUR):
         """ Get the operational electricity demands of the building.
@@ -69,31 +70,31 @@ class OperationalMixins:
         electricity_usage = defaultdict(lambda: defaultdict(float))
 
         if method == 'EUIs': 
-            eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[self.get_building_type()]
-            eui = float(eui_data['eui'])
-            
-            total_area = 0.0
-            for floor_no in range(1, self.get_no_floors() + 1):
-                total_area += self.get_floor(floor_no).get_area()
-
-                if floor_no == self.get_no_floors():
-                    floor_geom_unit = self.get_floor(floor_no).get_geometry_unit()
-                    if  floor_geom_unit is METER:
-                        area_unit = SQUARE_METER
-                    elif floor_geom_unit is FEET:
-                        area_unit = SQUARE_FEET
-                    else:
-                        raise TypeError("Building Geometry to be in meters or feet.")
+            electricity_usage_quantity = Q(0, unit)
+            if self.building_envelope:
+                for envelope in self.building_envelope.get_envelopes():
+                    building_type = envelope.floor_plan_obj.get_usage()
+                    eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
+    
+                    floor_area = envelope.floor_plan_obj.get_area()
+                    eui = Q(float(eui_data['eui']), UNITS_MAP[eui_data['unit']])
                 
-            eui_unit = UNITS_MAP[eui_data['unit']]
-            energy_unit = eui_unit * area_unit
-            conversion_factor = energy_unit.convert_to(unit)
+                electricity_usage_quantity += floor_area * eui
+                
+            elif self.floor_obj:
+                building_type = self.floor_obj.get_usage()
+                eui_data = DataImporter.csv_to_dict(config['file_paths']['building']['EUI'], 'building_type')[building_type]
+
+                floor_area = self.floor_obj.get_area()
+                eui = Q(float(eui_data['eui']), UNITS_MAP[eui_data['unit']])
+                
+                electricity_usage_quantity += floor_area * eui
 
             if summed_at == 'year':
-                electricity_usage['year']['total'] = eui * total_area * conversion_factor
+                electricity_usage['year']['total'] = electricity_usage_quantity.value
             elif summed_at == 'month':
                 for month in range(12):  
-                    electricity_usage[str(month + 1).zfill(2)]['total'] = eui * total_area * conversion_factor / 12
+                    electricity_usage[str(month + 1).zfill(2)]['total'] = electricity_usage_quantity.value / 12
             else:
                 raise ValueError('Summed at time not recognized.')
 
@@ -128,21 +129,13 @@ class OperationalMixins:
 
         return electricity_usage
 
-    def write_idf(self):
-        """ Write idf file.
-        """
-        self.make_layers_dict()
-        write_idf_from_building(self)
-
-    def run_operational_energy_model(self, eplus_path, idf_path, weather, delete=True):
+    def run_operational_energy_model(self):
         """ Run operational energy model to get operational energy use and emissions.
         """
-        idf = os.path.join(idf_path, 'pod_lca_operational.idf')
-        exe = os.path.join(eplus_path, 'energyplus')
-        out = os.path.join(idf_path, '{}_eplus_out'.format(self.name))
-
-        if delete:
-            self.delete_result_files(out)
+        weather = self.get_weather_file_path()
+        idf = self.get_idf_file_path()
+        exe = self.get_energyplus_path()
+        out = self.get_eplus_out_folder()
 
         print(exe, '-w', weather,'--output-directory', out, idf)
         subprocess.call([exe, '-w', weather,'--output-directory', out, idf])
@@ -151,8 +144,176 @@ class OperationalMixins:
 
         self.get_operational_electricity_product()._inventories_uptodate = False
 
-        return self   
-       
+        return self
+    
+    # ================================
+    # File Path Methods
+    # ================================ 
+    def set_weather_file_path(self, file_path):
+        """ Set file path to the weather file to be used in operational energy simulations.
+
+        Parameters
+        ----------
+        file_path : str
+            File path.
+        """        
+        self.weather_file_path = file_path
+
+    def set_idf_file_path(self, file_path):
+        """ Set file path to save the intemediary idf file from Python library to Eplus.
+        
+        Parameters
+        ----------
+        file_path : str
+            File path.
+        """
+        self.idf_file_path = file_path
+
+    def set_eplus_path(self, folder_path):
+        """ Set folder (or file) path to Eplus executable file. 
+        
+        Parameters
+        ----------
+        folder_path : str
+            Folder path.
+        """
+        self.eplus_folder_path = folder_path
+
+    def set_eplus_out_folder(self, folder_path):
+        """ Set folder path to save the raw Eplus results 
+        
+        Parameters
+        ----------
+        folder_path : str
+            Folder path.
+        """
+        if folder_path:
+            shutil.rmtree(folder_path)
+        Path(folder_path).mkdir(exist_ok=True)
+        
+        self.eplus_out_folder = folder_path
+
+    def get_weather_file_path(self):
+        """ Get file path to the weather file to be used in operational energy simulations.
+
+        Returns
+        -------
+        str
+            File path.
+        """
+        if self.weather_file_path is None:
+            climate_zone = self.get_location().get_climate_zone()
+            return config["file_paths"]["weather_files"][climate_zone]
+        else:
+            return self.weather_file_path
+        
+    def get_idf_file_path(self):
+        """ Returns the intemediary idf file from Python library to build the eplus model. 
+            If the user has not set a file path, a temporary file is created.
+
+        Returns
+        -------
+        str
+            File path.
+        """
+        if self.idf_file_path is None:
+            temp_file = tempfile.NamedTemporaryFile(
+                suffix=".idf",
+                delete=False
+            )
+            temp_file.close()
+
+            self.idf_file_path = temp_file.name
+            
+        return self.idf_file_path
+    
+    def get_energyplus_path(self):
+        """ Get the file path to the EnergyPlus executable file.
+        Works for both Windows and macOS.
+        
+        Args:
+            version (str): The version string in 'X-Y-Z' format.
+            user_path (str): Optional manual override path.
+        """
+        ep_version = config["setup"]["operational"]["EPLUS_VERSION"]
+        v_dash = ep_version.replace(".", "-")
+        
+        exe_name = "energyplus.exe" if platform.system() == "Windows" else "energyplus"
+
+        # check user set path
+        if self.eplus_folder_path:
+            p = Path(self.eplus_folder_path)
+            full_path = p / exe_name if p.is_dir() else p
+            if full_path.exists():
+                return str(full_path)
+
+        # Look in Standard Installation Folders (Version Specific)
+        standard_dirs = []
+        if platform.system() == "Windows":
+            standard_dirs.append(Path(f"C:/EnergyPlusV{v_dash}"))
+        elif platform.system() == "Darwin":
+            standard_dirs.append(Path(f"/Applications/EnergyPlus-{v_dash}"))
+
+        for folder in standard_dirs:
+            candidate = folder / exe_name
+            if candidate.exists():
+                return str(candidate)
+
+        # Check System PATH (Fallback)
+        system_match = shutil.which(exe_name)
+        if system_match:
+            return system_match
+        
+        log("Energyplus executable not found", "Fatal")
+
+        return None
+
+    def get_eplus_out_folder(self):
+        """ Returns the folder path to save eplus output files. 
+            If the user has not set a file path, a temporary file is created.
+    
+        Returns
+        -------
+        str
+            Folder path.
+        """
+        if self.eplus_out_folder is None:
+            temp_folder = tempfile.TemporaryDirectory()
+            self.eplus_out_folder = temp_folder.name
+            
+        return self.eplus_out_folder
+              
+    # ================================
+    # Operational Energy Methods
+    # ================================ 
+    def write_idf(self):
+        """ Write idf file.
+        """
+
+        self.building_envelope.make_envelope_connectivity_network()
+        self.building_envelope.set_outside_boundary_conditions()
+
+        self.make_constructions_dict()
+        self.make_layers_dict()
+        self.building_envelope.set_cycle_directions()
+        self.set_zone_systems()
+        write_idf_from_building(self)
+
+    def make_constructions_dict(self):
+        self.constructions = {}
+        for ek in self.building_envelope.envelopes:
+            env = self.building_envelope.envelopes[ek]
+
+            for sk in env.surfaces:
+                con = env.surfaces[sk].construction
+                if con:
+                    self.constructions[con.name] = con
+
+        windows = self.building_envelope.envelopes[ek].windows
+        for wk in windows:
+            con = windows[wk]
+            self.constructions[con.name] = con
+
     def make_layers_dict(self):
         """ Makes a dictionary containing all unique layers, with names, materials and
         thicknesses.
@@ -163,15 +324,17 @@ class OperationalMixins:
         None
         
         """
+        self.layers = {}
         for ck in self.constructions:
-            lkeys = self.constructions[ck].layers.keys()
-            for lk in lkeys:
-                name = self.constructions[ck].layers[lk]['name']
-                thick = self.constructions[ck].layers[lk]['thickness']
+            cstr = self.constructions[ck]
+            cstr.update_layer_properties()
+            layers = cstr.get_layers()
+            for layer in layers:
+                name = layer.name
+                thick = layer.thickness
                 lname = '{} {}mm'.format(name, round(thick*1000, 1))
-                self.layers[lname] = {'layer_name': lname,
-                                                 'material_name': name,
-                                                 'thickness': thick}
+                self.layers[lname] = {'layer': layer}
+                layer.name = lname
 
     def set_zone_systems(self):
 
@@ -193,48 +356,48 @@ class OperationalMixins:
         dlc = self.operational_object.daylighting_controls[dlc_key]
         # dlr = self.daylighting_reference_points[dlr_key]
 
-        for zk in self.floors:
-            envelope = self.floors[zk].envelope
+        for ek in self.building_envelope.envelopes:
+            envelope = self.building_envelope.envelopes[ek]
             zname = envelope.name
 
-            self.operational_object.node_lists[zk] = NodeList.from_data(deepcopy(inl.data))
-            inlname = '{}_{}'.format(self.operational_object.node_lists[zk].name, zname)
-            self.operational_object.node_lists[zk].name = inlname
-            self.operational_object.node_lists[zk].nodes['0'] = 'inlet_node_{}'.format(zname)
+            self.operational_object.node_lists[ek] = NodeList.from_data(deepcopy(inl.data))
+            inlname = '{}_{}'.format(self.operational_object.node_lists[ek].name, zname)
+            self.operational_object.node_lists[ek].name = inlname
+            self.operational_object.node_lists[ek].nodes['0'] = 'inlet_node_{}'.format(zname)
 
             self.operational_object.node_lists[zname] = NodeList.from_data(deepcopy(enl.data))
             enlname = '{}_{}'.format(self.operational_object.node_lists[zname].name, zname)
             self.operational_object.node_lists[zname].name = enlname
             self.operational_object.node_lists[zname].nodes['0'] = 'exhaust_node_{}'.format(zname)
 
-            self.operational_object.ideal_air_loads[zk] = IdealAirLoad.from_data(deepcopy(ial.data))
-            ialname = '{} {}'.format(zname, self.operational_object.ideal_air_loads[zk].name)
-            self.operational_object.ideal_air_loads[zk].name = ialname
-            self.operational_object.ideal_air_loads[zk].zone_supply_air_node_name = inlname
-            self.operational_object.ideal_air_loads[zk].zone_exhaust_air_node_name = enlname
+            self.operational_object.ideal_air_loads[ek] = IdealAirLoad.from_data(deepcopy(ial.data))
+            ialname = '{} {}'.format(zname, self.operational_object.ideal_air_loads[ek].name)
+            self.operational_object.ideal_air_loads[ek].name = ialname
+            self.operational_object.ideal_air_loads[ek].zone_supply_air_node_name = inlname
+            self.operational_object.ideal_air_loads[ek].zone_exhaust_air_node_name = enlname
 
-            self.operational_object.equipment_lists[zk] = EquipmentList.from_data(eql.data)
-            elname =  '{}_{}'.format(self.operational_object.equipment_lists[zk].name, zname)
-            self.operational_object.equipment_lists[zk].name = elname
-            self.operational_object.equipment_lists[zk].zone_equipment_name1 = ialname
+            self.operational_object.equipment_lists[ek] = EquipmentList.from_data(eql.data)
+            elname =  '{}_{}'.format(self.operational_object.equipment_lists[ek].name, zname)
+            self.operational_object.equipment_lists[ek].name = elname
+            self.operational_object.equipment_lists[ek].zone_equipment_name1 = ialname
 
-            self.operational_object.equipment_connections[zk] = EquipmentConnection.from_data(eqc.data)
-            self.operational_object.equipment_connections[zk].name = zname
-            self.operational_object.equipment_connections[zk].zone_conditioning_equipment_list = elname
-            self.operational_object.equipment_connections[zk].zone_air_inlet_node = inlname
-            self.operational_object.equipment_connections[zk].zone_air_exhaust_node = enlname
-            self.operational_object.equipment_connections[zk].zone_air_node += '_{}'.format(zname)
+            self.operational_object.equipment_connections[ek] = EquipmentConnection.from_data(eqc.data)
+            self.operational_object.equipment_connections[ek].name = zname
+            self.operational_object.equipment_connections[ek].zone_conditioning_equipment_list = elname
+            self.operational_object.equipment_connections[ek].zone_air_inlet_node = inlname
+            self.operational_object.equipment_connections[ek].zone_air_exhaust_node = enlname
+            self.operational_object.equipment_connections[ek].zone_air_node += '_{}'.format(zname)
 
-            self.operational_object.daylighting_controls[zk] = DaylightingControls.from_data(deepcopy(dlc.data))
+            self.operational_object.daylighting_controls[ek] = DaylightingControls.from_data(deepcopy(dlc.data))
             dc_name = 'daylighting_controls_{}'.format(zname)
             dc_ref_pt_name = 'daylighting_ref_pt_{}'.format(zname)
             x, y, z = envelope.centroid
-            self.operational_object.daylighting_controls[zk].name = dc_name
-            self.operational_object.daylighting_controls[zk].zone_name = zname
-            self.operational_object.daylighting_controls[zk].glare_reference_point = dc_ref_pt_name
-            rp_key = list(self.operational_object.daylighting_controls[zk].reference_points.keys())[0]
-            self.operational_object.daylighting_controls[zk].reference_points = {0: self.operational_object.daylighting_controls[zk].reference_points[rp_key]}
-            self.operational_object.daylighting_controls[zk].reference_points[0]['ref_pt_name'] = dc_ref_pt_name
+            self.operational_object.daylighting_controls[ek].name = dc_name
+            self.operational_object.daylighting_controls[ek].zone_name = zname
+            self.operational_object.daylighting_controls[ek].glare_reference_point = dc_ref_pt_name
+            rp_key = list(self.operational_object.daylighting_controls[ek].reference_points.keys())[0]
+            self.operational_object.daylighting_controls[ek].reference_points = {0: self.operational_object.daylighting_controls[ek].reference_points[rp_key]}
+            self.operational_object.daylighting_controls[ek].reference_points[0]['ref_pt_name'] = dc_ref_pt_name
             dl_rpt = DaylightingReferencePoint.from_data({'name': dc_ref_pt_name,
                                                                  'zone_name': zname,
                                                                  'x': x,
@@ -251,17 +414,6 @@ class OperationalMixins:
         del self.operational_object.ideal_air_loads[ial_key]
         del self.operational_object.daylighting_controls[dlc_key]
         del self.operational_object.daylighting_reference_points[dlr_key]
-
-    def delete_result_files(self, out_path):
-        """ Deletes energy+ result files.
-
-        Parameters:
-            out_path (str): Path to the energy+ output folder.
-
-        Returns:
-            None
-        """
-        shutil.rmtree(out_path)
 
     # ================================
     # Inventory Records Methods
@@ -283,6 +435,9 @@ class OperationalMixins:
             B6 impacts of the building.
         """
         if not self.get_operational_electricity_product()._inventories_uptodate:
+            self.get_operational_electricity_product().update_inventory_records()
+
+        if (self.operational_energy_method == 'eplus' and self.get_operational_energy_object().is_dirty):
             self.get_operational_electricity_product().update_inventory_records()
 
         if objs:
@@ -311,6 +466,9 @@ class OperationalMixins:
             B6 emissions of the building.
         """
         if not self.get_operational_electricity_product()._inventories_uptodate:
+            self.get_operational_electricity_product().update_inventory_records()
+
+        if (self.operational_energy_method == 'eplus' and self.get_operational_energy_object().is_dirty):
             self.get_operational_electricity_product().update_inventory_records()
 
         if objs:

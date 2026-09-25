@@ -8,6 +8,9 @@ from pod_lca.lca_modules.building_envelope.construction import Construction
 
 
 class Floor(Construction):
+    """Floor construction object based on the 
+    ~pod_lca.building_envelope.Construction class. 
+    """
     def __init__(self):
         super().__init__()
         self.__type__ = 'Floor'

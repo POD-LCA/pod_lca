@@ -77,6 +77,7 @@ class Location:
         self.balancing_authority = None
         self.cambium_gea_region = None
         self.reeds_balancing_area = None
+        self.climate_zone = None
 
     def __str__(self):
         return f"{self.get_city()}, {self.get_state()} {self.get_zip()}, {self.get_country()} {self.get_cordinates()}"
@@ -145,6 +146,9 @@ class Location:
         location.zipcode = zipcode
         location.regionality = "Local"
 
+        location.set_city(zip_code=zipcode)
+        location.set_state(zip_code=zipcode)
+
         if set_all_location_data:
             try:
                 string = zipcode + ", USA"
@@ -164,8 +168,6 @@ class Location:
                     location.get_cordinates(), addressdetails=True, zoom=15, language="en"
                 )  # zoom level 14 = neighbourhood
 
-                location.set_city(location_data)
-                location.set_state(location_data)
                 location.set_cfs_area()
                 location.set_faf_domestic_region()
                 location.set_us_coast()
@@ -205,9 +207,11 @@ class Location:
             raise ValueError(f"{state} not recognized as a US State.")
 
         location.regionality = "Regional"
+        location.set_zip(None, state=state)
         location.set_cfs_area()
         location.set_faf_domestic_region()
         location.set_us_coast()
+        
 
         if set_all_location_data:
             try:
@@ -223,6 +227,7 @@ class Location:
                 )
                 location.set_regionality(location_data)
                 location.set_cordinates(location_data)
+                location.set_zip(location_data)
 
                 location_data = geolocator.reverse(
                     location.get_cordinates(), addressdetails=True, zoom=15, language="en"
@@ -367,54 +372,90 @@ class Location:
 
         return self
 
-    def set_zip(self, geopy_location):
+    def set_zip(self, geopy_location, state=None):
         """Set the zipcode of the location.
 
         Parameters
         ----------
         geopy_location : geopy.location.Location
             Geopy location object.
+        state : str
+            US state name.
         """
-        try:
-            if "postcode" in geopy_location.raw["address"]:
-                self.zipcode = geopy_location.raw["address"]["postcode"]
+        if geopy_location is not None:
+            try:
+                if "postcode" in geopy_location.raw["address"]:
+                    self.zipcode = geopy_location.raw["address"]["postcode"]
+                else:
+                    self.zipcode = self.get_closest_zip(geopy_location)
+            except:
+                self.zipcode = None
+        elif state is not None:
+            us_state_zip = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_STATE_ZIP"])
+            state_zips = us_state_zip[us_state_zip["State"] == state]["ZIP"].tolist()
+            if len(state_zips) > 0:
+                self.zipcode = str(state_zips[0])
             else:
-                self.zipcode = self.get_closest_zip(geopy_location)
-        except:
-            self.zipcode = None
+                self.zipcode = None
 
         return self
 
-    def set_city(self, geopy_location):
+    def set_city(self, geopy_location=None, zip_code=None):
         """Set the city of the location.
 
         Parameters
         ----------
         geopy_location : geopy.location.Location
             Geopy location object.
+        zip_code : str
+            US ZIP code of the location.
         """
-        try:
-            self.city = geopy_location.raw["address"]["city"]
-        except:
-            self.city = None
+        if geopy_location is not None:
+            try:
+                self.city = geopy_location.raw["address"]["city"]
+                return self
+            except:
+                self.city = None
+
+        if zip_code is not None:
+            try:
+                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"],
+                                                  dtype={"USZIP": str})
+                self.city = data.loc[data["USZIP"] == zip_code, "City"].iloc[0]
+            except:
+                self.city = None
 
         return self
 
-    def set_state(self, geopy_location):
+    def set_state(self, geopy_location=None, zip_code=None):
         """Set the state of the location.
 
         Parameters
         ----------
         geopy_location : geopy.location.Location
             Geopy location object.
+        zip_code : str
+            US ZIP code of the location.
         """
-        try:
-            self.state = geopy_location.raw["address"]["state"]
+        if geopy_location is not None:
+            try:
+                self.state = geopy_location.raw["address"]["state"]
 
-            us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])
-            self.state_abbr = us_states[self.state]
-        except:
-            self.state = None
+                us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])
+                self.state_abbr = us_states[self.state]
+            except:
+                self.state = None
+
+        if zip_code is not None:
+            try:
+                data = DataImporter.csv_to_pandas(config["file_paths"]["location"]["US_ZIP_STATE"],
+                                                  dtype={"USZIP": str})
+                self.state = data.loc[data["USZIP"] == zip_code, "State"].iloc[0]
+
+                us_states = DataImporter.json_to_dict(config["file_paths"]["location"]["US_STATES"])
+                self.state_abbr = us_states[self.state]
+            except:
+                self.city = None
 
         return self
 
@@ -582,6 +623,10 @@ class Location:
 
         return self
 
+    def set_climate_zone(self):
+        map = DataImporter.csv_to_dict(config["file_paths"]["location"]["CLIMATE_ZONE_ZIPCODE_MAP_PATH"], "ZIP")
+        self.climate_zone = map[self.get_zip()]["Climate Zone"]
+        
     # ================================
     # Getters
     # ================================
@@ -788,6 +833,11 @@ class Location:
             log("State name not found in annual precipitation data.")
             return 0
 
+    def get_climate_zone(self):
+        if self.climate_zone == None:
+            self.set_climate_zone()
+        return self.climate_zone
+    
     # ================================
     # Methods
     # ================================

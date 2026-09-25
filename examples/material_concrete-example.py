@@ -17,9 +17,7 @@ project = Project()
 
 concrete_yard = Location.from_str("Seattle, Washington")
 project.set_location(concrete_yard)
-
-project.set_impact_database(r"src/pod_lca/data/impacts_podlca_material-data.csv")
-project.set_transportation_mode_impact_database(r"src/pod_lca/data/transportation_podlca_emission.csv")
+project.set_databases()
 
 concrete_model = project.add_model("concrete_01")
 
@@ -106,7 +104,7 @@ print(concrete_model)
 print(project)
 print(electricity)
 
-concrete_model.set_products_electricity_source("by_location")
+concrete_model.set_products_electricity_source("custom")
 
 # Hotspot analysis
 hotspot_analysis = HotSpotAnalysis.from_model(concrete_model)

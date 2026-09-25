@@ -9,6 +9,7 @@ setup:
       EP: kg N eq
       ODP: kg CFC-11 eq
       POCP: kg O3 eq
+      NREF: MJ
     EMISSION_INVENTORIES:
       CO2: kg
       CH4: kg
@@ -16,6 +17,8 @@ setup:
     CARBON_STORAGE:
       Biogenic C: kg C
       Mineral C: kg CO2 # accelerated carbonation uptake
+  transportation:
+    DEFAULT_SCTG_CODE: "40" # miscellaneous manufactured products
   electricity:
     DEFAULT_REIGIONAL_RESOLUTION: National # Options: National, Regional, Local
     DEFAULT_COUNTRY: USA
@@ -32,11 +35,16 @@ setup:
       Incinerate: C4
       Landfill: C4
   impacts:
-    IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391'
+    IMPACT_SOURCE_DATABASE: 'FLCAC' # Options: 'FLCAC' or 'ecoinvent391' or 'BAFU'
     PRIMARY_IMPACT_CATEGORY: GWP
-    CARBONATION_EFFECTS_IMPACT_CATEGORY: GWP
+    ALL_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY: GWP
+    BIOGENIC_CARBON_STORAGE_EFFECTS_IMPACT_CATEGORY: GWP_biogenic
     ACCELERATED_CARBONATION_INVENTORY: Mineral C
-    ACCELERATE_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
+    BIOGENIC_CARBON_STORAGE_INVENTORY: Biogenic C
+    ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER: Mineral Carbonation Potential
+    BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER: Stored Biogenic Carbon
+    BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER: '%C (dry mass basis)'
+    BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER: '%H2O (mass % moisture)'
   drf:
     IPCC_REPORT_VERSION: AR5
   operational:
@@ -62,13 +70,15 @@ file_paths:
     FAF_DATA_PATH: data/transportation_faf_dataset.csv
     FAF_DISTANCE_BANDS: data/transportation_podlca_faf-dist-band.scv
     CFS_STATE_CODE: data/transportation_cfs_state-code.json
-    CFS_SCTG_CODE: data/transportation_bt_material-sctg.csv
+    BT_SCTG_CODE: data/transportation_bt_material-sctg.csv
+    SCTG_CODE_LIST: data/transportation_cf_sctg-codes.csv
     MARINE_DATA_PATH: data/transportation_podlca_marine.csv
     CFS_MODE_CODE: data/transportation_cfs_mode-codes.json
     FAF_MODE_CODE: data/transportation_faf_mode-codes.json
     ELECTRIC_VEHICLES: data/transportation_podlca_electric-vehicles.csv
     WASTE_TRANSPORT: data/transportation_podlca_waste-transport.csv
     MODE_IMPACTS: data/transportation_podlca_emission.csv
+    NAICS_SCTG_MAP: data/transportation_podlca_naics-to-sctg-map.csv
   electricity:
     CAMBIUM_NATIONAL_DATA: data/electricity_cambium_consumption-national.csv
     CAMBIUM_REGIONAL_DATA: data/electricity_cambium_consumption-regional.csv
@@ -86,12 +96,14 @@ file_paths:
     EOL_STORED_CARBON_EMISSIONS: data/eol_podlca_stored-carbon-emissions.csv
     EOL_WOOD_LANDFILL_METHANE: data/eol_podlca_wood-landfill-methane.csv
   impacts:
-    IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.csv
-    IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.csv
-    IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.csv
+    IMPACT_NORMALIZATION_FACTORS: data/impacts_clf_normalization-factors.json
+    IMPACT_WEIGHTING_FACTOR_EPA: data/impacts_epa_weighting-factors.json
+    IMPACT_WEIGHTING_FACTOR_NIST: data/impacts_nist_weighting-factors.json
   location:
     US_STATES: data/location_faa_us-states.json
     US_STATE_COORDS: data/location_podlca_us-state-coords.csv
+    US_STATE_ZIP: data/location_podlca_us-state-zip.csv
+    US_ZIP_STATE: data/location_scpike_uszip-state.csv
     FAF_DOMESTIC_REGION: data/transportation_faf_domestic-region.json
     FAF_FOREIGN_REGION: data/transportation_faf_foreign-region.json
     FAF_CITY_REPRESENTATION: data/transportation_podlca_faf-city-representation.json
@@ -101,11 +113,27 @@ file_paths:
     FERC_BA_ZIPCODE_MAP_PATH: data/location_doe_ba-zip-mapping.csv
     GEA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
     REEDS_BA_ZIPCODE_MAP_PATH: data/location_cambium_gea-reeds-zip-mapping.csv
-    NOAA_ANNUAL_PRECIPITATION_STATES: data/location_noaa_annual-precipitation-us-states.csv
+    CLIMATE_ZONE_ZIPCODE_MAP_PATH: data/location_olsonkundig_climate-zones.csv
   operational:
-    CONSTRUCTIONS: data/operational_constructions.idf
+    CONSTRUCTIONS: data/operational_podlca_constructions-database.json
     SYSTEMS: data/operational_systems.idf
-    SEATTLE: data/operational_weather_seattle.epw
+  weather_files:
+    1A: data/USA_FL_Miami.Intl.AP.722020_TMY3.epw
+    2A: data/USA_FL_Tampa-MacDill.AFB.747880_TMY3.epw
+    2B: data/USA_AZ_Tucson-Davis-Monthan.AFB.722745_TMY3.epw
+    3A: data/USA_GA_Atlanta-Hartsfield.Jackson.Intl.AP.722190_TMY3.epw
+    3B: data/USA_TX_El.Paso.Intl.AP.722700_TMY3.epw
+    3C: data/USA_CA_San.Deigo-Brown.Field.Muni.AP.722904_TMY3.epw
+    4A: data/USA_NY_New.York-John.F.Kennedy.Intl.AP.744860_TMY3.epw
+    4B: data/USA_NM_Albuquerque.Intl.Sunport.723650_TMY3.epw
+    4C: data/USA_WA_Seattle-Tacoma.Intl.AP.727930_TMY3.epw
+    5A: data/USA_NY_Buffalo.Niagara.Intl.AP.725280_TMY3.epw
+    5B: data/USA_CO_Denver-Aurora-Buckley.AFB.724695_TMY3.epw
+    5C: data/USA_WA_Port.Angeles-William.R.Fairchild.Intl.AP.727885_TMY3.epw
+    6A: data/USA_MN_Rochester.Intl.AP.726440_TMY3.epw
+    6B: data/USA_MT_Great.Falls.Intl.AP.727750_TMY3.epw
+    7: data/USA_MN_International.Falls.Intl.AP.727470_TMY3.epw
+    8: data/USA_AK_Fairbanks.Intl.AP.702610_TMY3.epw
   drf:
     PERTUBATION_LIFETIMES: data/drf_ipcc_pertubation-lifetimes.json
     RADIATIVE_EFFICIENCY: data/drf_ipcc_radiative-efficiency.json
@@ -114,6 +142,7 @@ file_paths:
     INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
   building:
     DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
+    TEMPLATE_GEOMETRY: data/buildings_podlca_geometry.json
     TEMPLATE_BOM_STRUCTURE: data/buildings_podlca_template-models-structure.csv
     TEMPLATE_BOM_ENCLOSURE_OPAQUE: data/buildings_podlca_template-models-enclosure-opaque.csv
     TEMPLATE_BOM_ENCLOSURE_TRANSLUCENT: data/buildings_podlca_template-models-enclosure-translucent.csv
@@ -125,6 +154,9 @@ file_paths:
     ASHRAE_WASTE_RATE: data/building_ashrae_waste-rate.csv
     DRF_CATEGORIES: data/buildings_podlca_drf-categoris.csv
     EUI: data/building_podlca_eui.csv
+    SAMPLE_BUILDING_STRUCTURES: data/buildings_podlca_sample-structures.csv
+    IDF_IMPACT_DATA_PRODUCT_MAP: data/building_podlca_idf-to-database-material-mapping.csv
+    STEEL_STUD_DESIGN_TABLE: data/buildings_ _steel-stud-sizing.csv
   carbon:
     BIO_MATERIAL_DATA: data\\carbon_podlca_bio-material-data.csv
 Keys and Credentials:
@@ -132,11 +164,11 @@ Keys and Credentials:
 
 Preferences:
   COLOUR_PALETTES:
-    blue: ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3']
+    blue: ['#1B75BC', '#4182E4', '#6BA4F8', '#91C2FF', '#C2E0FF']
     orange: ['#7F1C00', '#9C2B00', '#ED7D31', '#F4B183', '#FCE4D6']
-    grey: ['#3F3F3F', '#595959', '#A5A5A5', '#D9D9D9', '#F2F2F2']
+    grey: ['#7F8C8D', '#95A5A6', '#BDC3C7', '#D5DBDB', '#EAECEE']
     yellow: ['#7F6000', '#9F7700', '#FFC000', '#FFD966', '#FFF2CC']
-    green: ['#1F4D1F', '#2D6A2D', '#70AD47', '#A9D08E', '#E2EFDA']
+    green: ['#2E8B57', '#4CAF50', '#72D175', '#A3E7A5', '#D4F5D5']
     red: ['#7F0000', '#9C0000', '#C00000', '#E26B6B', '#F4CCCC']
     purple: ['#3F1C59', '#5B2A8F', '#7030A0', '#B4A7D6', '#EAD1DC']
   COLOUR_ORDER_LIST: [blue, green, grey, yellow, orange, red, purple]

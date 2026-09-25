@@ -5,6 +5,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ...utilities import DataImporter
+from ...utilities import config
+
 
 class Assembly:
     """ Assemblies which the building is made up of.
@@ -17,32 +20,30 @@ class Assembly:
         Building to which the assembly belong.
     materials : list of ~pod_lca.building.BuildingMaterial
         Materials making up the assembly.
+    service_life_category : str
+        Service life category at assembly level. A temporary parameter for use when assembly is added to a building.
     service_life : float
         Service life of the assembly in years.
     """
 
     def __init__(self):
         self.name = None
-        self.building = None
+        self.parent = None
         self.materials = []
+        self.service_life_category = None
         self.service_life = None
 
     # ================================
     # Constructors
     # ================================        
     @classmethod
-    def create(cls, name, building, **kwargs):
+    def from_materials(cls, name, materials=None):
         """ Create a building assembly from its constituent materials.
         
         Parameters
         ----------
         name : str
             Name of the assembly.
-        building : ~pod_lca.building.Building
-            Building to which the assembly belong.
-
-        Other Parameters
-        ----------------
         materials : list of material.Model  or Product Objs
             Materials making up the assembly.
         service_life : float
@@ -55,12 +56,9 @@ class Assembly:
         """
         assembly = cls()
 
-        building.add_assembly(assembly)
         assembly.set_name(name)
-        if "materials" in kwargs:
-            assembly.set_materials(kwargs["materials"])
-        if "service_life" in kwargs:
-            assembly.set_service_life(kwargs["service_life"])
+        if materials is not None:
+            assembly.set_materials(materials)
 
         return assembly
 
@@ -79,17 +77,22 @@ class Assembly:
 
         return self
     
-    def set_building(self, building):
-        """ Set the building of the assembly.
+    def set_parent(self, parent):
+        """ Set the parent (structure/envelope) of the assembly.
         
         Parameters
         ----------
-        building : ~pod_lca.building.Building
+        parent : ~pod_lca.building.Envelope or ~pod_lca.building.BuildingStructure
             Building to which the assembly belong.
         """
-        self.building = building
+        self.parent = parent
+        self.set_building()
 
         return self
+    
+    def set_building(self):
+        """Set data from building level."""
+        pass
     
     def set_materials(self, materials):
         """ Set the materials constituiting the building assembly.
@@ -99,10 +102,20 @@ class Assembly:
         materials : list of ~pod_lca.building.BuildingMaterial
             Materials making up the assembly.
         """
-        if materials is not None:
-            for material in materials:
-                self.add_material(material)
+        for material in materials:
+            self.add_material(material)
+
         return self
+
+    def set_service_life_category(self, service_life_category):
+        """ Set the service life category.
+        
+        Parameters
+        ----------       
+        service_life_category : str
+            Service life category at assembly level.
+        """
+        self.service_life_category = service_life_category
     
     def set_service_life(self, service_life):
         """ Set the service life of the material.
@@ -133,6 +146,16 @@ class Assembly:
         """
         return self.name
 
+    def get_parent(self):
+        """ Set the parent (structure/envelope) of the assembly.
+
+        Returns
+        -------
+        ~pod_lca.building.Envelope or ~pod_lca.building.BuildingStructure
+            Structure/envelope to which the assembly belong.
+        """
+        return self.parent
+
     def get_building(self):
         """ Get the building of the assembly.
         
@@ -141,8 +164,16 @@ class Assembly:
         ~pod_lca.building.Building
             Building to which the assembly belong.
         """
-        return self.building
-    
+        from .building import Building
+        
+        if self.parent is not None:
+            if isinstance(self.parent, Building):
+                return self.parent
+            else:
+                return self.parent.get_building()
+        else:
+            return None
+
     def get_materials(self):
         """ Get the materials constituiting the building assembly.
         
@@ -153,6 +184,16 @@ class Assembly:
         """
         return self.materials
 
+    def get_service_life_category(self):
+        """ Get the service life category.
+        
+        Returns
+        -------        
+        str
+            Service life category at assembly level.        
+        """
+        return self.service_life_category
+    
     def get_service_life(self):
         """ Get the service life of the assembly.
         
@@ -161,16 +202,27 @@ class Assembly:
         float
             Service life of the material in years.
         """
-        if self.service_life is None:
-            tmp_service_life = self.get_building().get_life_span()
-            for material in self.get_materials():
-                if material.get_service_life() is not None:
-                    tmp_service_life = min(tmp_service_life, material.get_service_life())
+        if (self.service_life is None)and self.get_service_life_category():
+            service_life = self.get_service_life_category()
+
+            building_standard = self.get_building().get_building_data_standard()
+            service_life_mapping = DataImporter.csv_to_dict(config['file_paths']['building'][building_standard.upper() + '_SERVICE_LIFE'], 'POD|LCA RSL Category')
             
-            return tmp_service_life
-        
-        else:
-            return self.service_life
+            if service_life in service_life_mapping:
+                if isinstance(service_life_mapping[service_life]['service_life'], (int, float)):
+                    self.service_life = float(service_life_mapping[service_life]['service_life'])
+                elif isinstance(service_life_mapping[service_life]['service_life'], str):
+                    if service_life_mapping[service_life]['service_life'].lower() in ['life of building', 'building life span', 'building lifespan']:
+                        self.service_life = self.get_building().get_life_span()
+                    else:
+                        try:
+                            self.service_life = float(service_life_mapping[service_life]['service_life'])
+                        except ValueError:
+                            raise ValueError(f"Service life value '{service_life_mapping[service_life]['service_life']}' not recognized for category '{service_life}' in '{building_standard}' service life database.")
+                else:
+                    raise ValueError(f"Service life value type not recognized for category '{service_life}' in '{building_standard}' service life database.")
+
+        return self.service_life
     
     # ================================
     # Methods
@@ -184,14 +236,9 @@ class Assembly:
             Material from whcih the assembly is composed of.
         """
         self.materials.append(material)
-
+        
         material.set_parent(self)
-
-        if material.get_production_year() is None:
-            material.set_production_year(self.get_building().get_built_year())
-        if material.get_service_life() is None:
-            material.set_service_life(self.get_service_life())
-
+        
         return self
 
     # ================================

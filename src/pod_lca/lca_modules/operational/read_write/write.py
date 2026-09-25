@@ -6,10 +6,8 @@ __license__ = "MIT License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-import os
-import pod_lca
 from pod_lca.utilities import config
-
+from pod_lca.units import METER, CUBIC_METER, WATT, KELVIN, JOULE, KILOGRAM, SQUARE_METER
 
 def write_idf_from_building(building):
     """
@@ -23,32 +21,34 @@ def write_idf_from_building(building):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "w")  # TODO: if temp folder not existing
+    file_path = building.get_idf_file_path()
+
+    fh = open(file_path, "w")
     fh.close()
-    write_pre()
-    write_building()
-    write_global_vars()
-    write_run_period()
-    write_zones(building)
-    write_windows(building)
-    write_layers(building)
-    write_constructions(building)
-    write_shadings(building)
+    write_pre(file_path)
+    write_building(file_path)
+    write_global_vars(file_path)
+    write_run_period(file_path)
+    write_zones(building, file_path)
+    write_windows(building, file_path)
+    write_layers(building, file_path)
+    write_constructions(building, file_path)
+    write_shadings(building, file_path)
 
-    write_simulation_control(building)
-    write_schedules(building)
-    write_infiltration_rates(building)
-    write_thermostats(building)
-    write_hvac(building)
-    write_node_lists(building)
-    write_outdoor_airs(building)
-    write_daylight(building)
-    write_internal_gains(building)
+    write_simulation_control(building, file_path)
+    write_schedules(building, file_path)
+    write_infiltration_rates(building, file_path)
+    write_thermostats(building, file_path)
+    write_hvac(building, file_path)
+    write_node_lists(building, file_path)
+    write_outdoor_airs(building, file_path)
+    write_daylight(building, file_path)
+    write_internal_gains(building, file_path)
 
-    write_output_items(building)
+    write_output_items(building, file_path)
 
 
-def write_pre():
+def write_pre(file_path):
     """
     Writes the preamble to the .idf file from the building data.
     Parameters
@@ -63,7 +63,7 @@ def write_pre():
     ep_version = config["setup"]["operational"]["EPLUS_VERSION"]
     num_timesteps = config["setup"]["operational"]["NUM_TIMESTEPS"]
 
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "w")
+    fh = open(file_path, "w")
     fh.write("\n")
     fh.write("Version,\n")
     fh.write("  {};\t\t\t\t\t!- Version Identifier\n".format(ep_version))
@@ -74,7 +74,7 @@ def write_pre():
     fh.close()
 
 
-def write_building():
+def write_building(file_path):
     """
     Writes the building basic data to the .idf file from the building datastructure.
     Parameters
@@ -89,7 +89,7 @@ def write_building():
     terrain = config["setup"]["operational"]["TERRAIN"]
     solar_distribution = config["setup"]["operational"]["SOLAR_DISTRIBUTION"]
 
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("Building,\n")
     fh.write("  {},\t\t\t\t\t!- Name\n".format("pod_lca_building"))
     fh.write("  0,\t\t\t\t\t !- North Axis (deg)\n")
@@ -103,7 +103,7 @@ def write_building():
     fh.close()
 
 
-def write_global_vars():
+def write_global_vars(file_path):
     """
     Writes the global variables to the .idf file from the building data.
     Parameters
@@ -115,7 +115,7 @@ def write_global_vars():
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("GlobalGeometryRules,\n")
     fh.write("  UpperLeftCorner,\t\t\t\t\t!- Starting Vertex Position\n")
@@ -125,7 +125,7 @@ def write_global_vars():
     fh.close()
 
 
-def write_run_period():
+def write_run_period(file_path):
     """
     Writes the run period  to the .idf file from the building data.
     Parameters
@@ -137,7 +137,7 @@ def write_run_period():
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("  RunPeriod,\n")
     fh.write("    Run Period 1,            !- Name\n")
     fh.write("    1,                       !- Begin Month\n")
@@ -156,7 +156,7 @@ def write_run_period():
     fh.close()
 
 
-def write_zones(building):
+def write_zones(building, file_path):
     """
     Writes all zones to the .idf file from the building data.
     Parameters
@@ -168,15 +168,14 @@ def write_zones(building):
     -------
     None
     """
-    for fkey in building.floors:
-        envelope = building.floors[fkey].envelope
-        write_zone(envelope)
-        write_zone_surfaces(envelope)
-    write_all_zone_list(building)
-    # write_zone_lists(building)
+    for ek in building.building_envelope.envelopes:
+        envelope = building.building_envelope.envelopes[ek]
+        write_zone(envelope, file_path)
+        write_zone_surfaces(building, envelope, file_path)
+    write_all_zone_list(building, file_path)
 
 
-def write_zone(envelope):
+def write_zone(envelope, file_path):
     """
     Writes a single zone to the .idf file from the building data.
     Parameters
@@ -190,7 +189,11 @@ def write_zone(envelope):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+
+    eh =envelope.height.convert_to(METER).value
+    ev = envelope.volume.convert_to(CUBIC_METER).value
+
+    fh = open(file_path, "a")
     fh.write("Zone,\n")
     fh.write("  {},         !- Name\n".format(envelope.name))
     fh.write("  0,          !- Direction of Relative North (deg)\n")
@@ -199,8 +202,8 @@ def write_zone(envelope):
     fh.write("  {},          !- Z Origin (m)\n".format(envelope.origin[2]))
     fh.write("  1,          !- Type\n")
     fh.write("  1,          !- Multiplier\n")
-    fh.write("  {},           !- Ceiling Height (m)\n".format(envelope.height))
-    fh.write("  {},           !- Volume (m3)\n".format(envelope.volume))
+    fh.write("  {},           !- Ceiling Height (m)\n".format(eh))
+    fh.write("  {},           !- Volume (m3)\n".format(ev))
     fh.write("  ,           !- Floor Area (m2)\n")
     fh.write("  ,           !- Zone Inside Convection Algorithm\n")
     fh.write("  ,           !- Zone Outside Convection Algorithm\n")
@@ -209,7 +212,7 @@ def write_zone(envelope):
     fh.close()
 
 
-def write_zone_surfaces(envelope):
+def write_zone_surfaces(building, envelope, file_path):
     """
     Writes all zone surfaces to the .idf file from the building data.
     Parameters
@@ -223,14 +226,14 @@ def write_zone_surfaces(envelope):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     sks = envelope.surfaces.keys()
     for sk in sks:
-        write_building_surface(envelope, sk)
+        write_building_surface(building, envelope, sk, file_path)
     fh.close()
 
 
-def write_building_surface(envelope, sk):
+def write_building_surface(building, envelope, sk, file_path):
     """
     Writes a building surface to the .idf file from the building data.
     Parameters
@@ -246,11 +249,12 @@ def write_building_surface(envelope, sk):
     -------
     None
     """
+    srf = envelope.surfaces[sk]
+    st  = srf.surface_type
+    ct  = srf.construction.name
+    ob  = srf.outside_boundary_condition
+    obo = srf.outside_boundary_condition_object
 
-    st = envelope.surfaces[sk].construction.__type__
-    ct = envelope.surfaces[sk].construction.name
-    ob = envelope.surfaces[sk].outside_boundary_condition
-    obo = envelope.surfaces[sk].outside_boundary_condition_object
 
     if ob == "Adiabatic" or ob == "Surface" or ob == "Ground":
         se = "NoSun"
@@ -259,14 +263,18 @@ def write_building_surface(envelope, sk):
         se = "SunExposed"
         we = "WindExposed"
 
-    if not obo:
+    if obo:
+        env_name = building.building_envelope.envelopes[obo['envelope']].name
+        obo = "{}_{}".format(env_name, obo['surface'])
+    else:
         obo == ""
-
+    
+    envelope.surfaces[sk].convert_polygon_to_unit(METER)
     num_vert = len(envelope.surfaces[sk].polygon)
 
     sname = "{}_{}".format(envelope.name, sk)
 
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("BuildingSurface:Detailed,\n")
     fh.write("  {},                    !- Name\n".format(sname))
@@ -293,13 +301,13 @@ def write_building_surface(envelope, sk):
     fh.close()
 
 
-def write_all_zone_list(building):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_all_zone_list(building, file_path):
+    fh = open(file_path, "a")
     fh.write("ZoneList,\n")
     fh.write("  all_zones_list, !- Name\n")
-    for i, fkey in enumerate(building.floors):
-        env = building.floors[fkey].envelope
-        if i == len(building.floors) - 1:
+    for i, fkey in enumerate(building.building_envelope.envelopes):
+        env = building.building_envelope.envelopes[fkey]
+        if i == len(building.building_envelope.envelopes) - 1:
             divider = ";"
         else:
             divider = ","
@@ -309,7 +317,7 @@ def write_all_zone_list(building):
     fh.close()
 
 
-def write_windows(building):
+def write_windows(building, file_path):
     """
     Writes all windows  to the .idf file from the building data.
     Parameters
@@ -321,17 +329,20 @@ def write_windows(building):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
 
-    for fk in building.floors:
-        envelope = building.floors[fk].envelope
+    for ek in building.building_envelope.envelopes:
+        envelope = building.building_envelope.envelopes[ek]
         if envelope.windows:
-            for wk in building.floors[fk].envelope.windows:
-                window = building.floors[fk].envelope.windows[wk]
+            for wk in building.building_envelope.envelopes[ek].windows:
+                window = building.building_envelope.envelopes[ek].windows[wk]
 
                 con = window.name
                 bsn = "{}_{}".format(envelope.name, window.wall_key)
-                polygon = window.surfaces[0].polygon
+                sk = list(window.surfaces.keys())[0]
+                srf = window.surfaces[sk]
+                srf.convert_polygon_to_unit(METER)
+                polygon = srf.polygon
                 wname = "{}_{}".format(envelope.name, wk)
 
                 fh.write("\n")
@@ -357,7 +368,7 @@ def write_windows(building):
     fh.close()
 
 
-def write_layers(building):
+def write_layers(building, file_path):
     """
     Writes all layers to the .idf file from the building data.
     Parameters
@@ -369,57 +380,30 @@ def write_layers(building):
     -------
     None
     """
-    layers = {}
-    constructions = {}
-    for fk in building.floors:
-        env = building.floors[fk].envelope
-        for ck in env.walls:
-            con = env.walls[ck]
-            constructions[con.name] = con
-        for ck in env.floors:
-            con = env.floors[ck]
-            constructions[con.name] = con
-        for ck in env.ceiling:
-            con = env.ceiling[ck]
-            constructions[con.name] = con
-        for ck in env.windows:
-            con = env.windows[ck]
-            constructions[con.name] = con
+    
+    for lk in building.layers:
+        layer = building.layers[lk]['layer']
+        mat = layer.material_property
+        thick = layer.thickness.convert_to(METER)
+        lay_name = lk
 
-    for ck in constructions:
-        l = constructions[ck].layers
-        for lk in l:
-            layers[l[lk].name] = l[lk]
-
-    for lk in layers:
-        l = layers[lk]
-        # mat_name = l.material.name
-        mat = l.material_property
-        thick = l.thickness
-        print(lk)
-        print(l.thickness)
-        print(mat.__type__)
-        if thick:
-            lay_name = "{} {}mm".format(l.name, round(thick * 1000, 1))
-        else:
-            lay_name = l.name
-        print(lay_name)
-        print("")
-        if mat.__type__ == "Material":
-            write_material(mat, thick, lay_name)
-        elif mat.__type__ == "MaterialNoMass":
-            write_materials_nomass(mat, lay_name)
-        elif mat.__type__ == "EnvelopeMaterialAirGap":
-            write_material_air_gap(mat, lay_name)
-        elif mat.__type__ == "WindowMaterialGlazing":
-            write_material_glazing(mat, thick, lay_name)
-        elif mat.__type__ == "WindowMaterialGas":
-            write_material_gas(mat, thick, lay_name)
+        if mat.__type__ == "MaterialPropertyMass":
+            write_material(mat, thick, lay_name, building, file_path)
+        elif mat.__type__ == "MaterialPropertyNoMass":
+            write_materials_nomass(mat, lay_name, thick, building, file_path)
+        elif mat.__type__ == "EnvelopeMaterialPropertyAirGap":
+            write_material_air_gap(mat, lay_name, thick, building, file_path)
+        elif mat.__type__ == "WindowMaterialPropertyGlazing":
+            write_material_glazing(mat, thick, lay_name, building, file_path)
+        elif mat.__type__ == "WindowMaterialPropertyGas":
+            write_material_gas(mat, thick, lay_name, file_path)
         # elif mat.__type__ == 'WindowMaterialGlazingSimple':
         #     write_materials_glazing_simple(building, mat)
+        else:
+            raise ValueError('materyal type {} has not been implemented yet'.format(mat.__type__))
 
 
-def write_material(mat, thickness, layer_name):
+def write_material(mat, thickness, layer_name, building=None, file_path=None):
     """
     Writes a material to the .idf file from the building data.
     Parameters
@@ -432,30 +416,33 @@ def write_material(mat, thickness, layer_name):
         The thickness of the material layer
     layer_name: str
         The name of the material layer, including the thickness modifier
+    building: object
+        The building to access the building data to be used
 
     Returns
     -------
     None
     """
+
     if thickness:
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("\n")
         fh.write("Material,\n")
         fh.write("  {},     !- Name\n".format(layer_name))
-        fh.write("  {},     !- Roughness\n".format(mat.roughness))
-        fh.write("  {},     !- Thickness (m)\n".format(thickness))
-        fh.write("  {},     !- Conductivity (W/m-K)\n".format(mat.conductivity))
-        fh.write("  {},     !- Density (kg/m3)\n".format(mat.density))
-        fh.write("  {},     !- Specific Heat (J/kg-K)\n".format(mat.specific_heat))
-        fh.write("  {},     !- Thermal Absorptance\n".format(mat.thermal_absorptance))
-        fh.write("  {},     !- Solar Absorptance\n".format(mat.solar_absorptance))
-        fh.write("  {};     !- Visible Absorptance\n".format(mat.visible_absorptance))
+        fh.write("  {},     !- Roughness\n".format(mat.get_roughness(building)))
+        fh.write("  {},     !- Thickness (m)\n".format(thickness.convert_to(METER).value))
+        fh.write("  {},     !- Conductivity (W/m-K)\n".format(mat.get_conductivity(building).convert_to(WATT/(METER*KELVIN)).value))
+        fh.write("  {},     !- Density (kg/m3)\n".format(mat.get_density(building, KILOGRAM/CUBIC_METER, thickness).value))
+        fh.write("  {},     !- Specific Heat (J/kg-K)\n".format(mat.get_specific_heat(building).convert_to(JOULE/(KILOGRAM*KELVIN)).value))
+        fh.write("  {},     !- Thermal Absorptance\n".format(mat.get_thermal_absorptance(building)))
+        fh.write("  {},     !- Solar Absorptance\n".format(mat.get_solar_absorptance(building)))
+        fh.write("  {};     !- Visible Absorptance\n".format(mat.get_visible_absorptance(building)))
         fh.write("\n")
         fh.write("\n")
         fh.close()
 
 
-def write_materials_nomass(mat, layer_name):
+def write_materials_nomass(mat, layer_name, thickness, building, file_path):
     """
     Writes a no mass material to the .idf file from the building data.
     Parameters
@@ -469,32 +456,33 @@ def write_materials_nomass(mat, layer_name):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("Material:NoMass,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
-    fh.write("  {},     !- Roughness\n".format(mat.roughness))
-    fh.write("  {},     !- Thermal Resistance (m2-K/W)\n".format(mat.thermal_resistance))
-    fh.write("  {},     !- Thermal Absorptance\n".format(mat.thermal_absorptance))
-    fh.write("  {},     !- Solar Absorptance\n".format(mat.solar_absorptance))
-    fh.write("  {};     !- Visible Absorptance\n".format(mat.visible_absorptance))
+    fh.write("  {},     !- Roughness\n".format(mat.get_roughness(building)))
+    fh.write("  {},     !- Thermal Resistance (m2-K/W)\n".format(mat.get_thermal_resistance(thickness, building).convert_to(SQUARE_METER*KELVIN/WATT).value))
+    fh.write("  {},     !- Thermal Absorptance\n".format(mat.get_thermal_absorptance(building)))
+    fh.write("  {},     !- Solar Absorptance\n".format(mat.get_solar_absorptance(building)))
+    fh.write("  {};     !- Visible Absorptance\n".format(mat.get_visible_absorptance(building)))
     fh.write("\n")
     fh.write("\n")
     fh.close()
 
 
-def write_material_air_gap(mat, layer_name):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_material_air_gap(mat, layer_name, thickness, building, file_path):
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("Material:AirGap,\n")
     fh.write("  {},     !- Name\n".format(layer_name))
-    fh.write("  {};     !- Resistance (M**2K/W)\n".format(mat.resistance))
+    fh.write("  {};     !- Resistance (M**2K/W)\n".format(mat.get_thermal_resistance(thickness, building).convert_to(SQUARE_METER*KELVIN/WATT).value))
     fh.write("\n")
     fh.write("\n")
     fh.close()
 
 
-def write_material_glazing(mat, thickness, layer_name):
+def write_material_glazing(mat, thickness, layer_name, building, file_path):
     """
     Writes a glazing material to the .idf file from the building data.
     Parameters
@@ -512,35 +500,35 @@ def write_material_glazing(mat, thickness, layer_name):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("WindowMaterial:Glazing,\n")
     fh.write("  {},         !- Name\n".format(layer_name))
     fh.write("  {},         !- Optical Data Type\n".format(mat.optical_data_type))
     fh.write("  {},         !- Window Glass Spectral Data Set Name\n".format(mat.win_glass_spectral_data_name))
-    fh.write("  {},         !- Thickness (m)\n".format(thickness))
-    fh.write("  {},         !- Solar Transmittance at Normal Incidence\n".format(mat.solar_transmittance))
-    fh.write("  {},         !- Front Side Solar Reflectance at Normal Incidence\n".format(mat.front_solar_reflectance))
-    fh.write("  {},         !- Back Side Solar Reflectance at Normal Incidence\n".format(mat.back_solar_reflectance))
-    fh.write("  {},         !- Visible Transmittance at Normal Incidence\n".format(mat.visible_transmittance))
+    fh.write("  {},         !- Thickness (m)\n".format(thickness.convert_to(METER).value))
+    fh.write("  {},         !- Solar Transmittance at Normal Incidence\n".format(mat.get_solar_transmittance(building)))
+    fh.write("  {},         !- Front Side Solar Reflectance at Normal Incidence\n".format(mat.get_front_solar_reflectance(building)))
+    fh.write("  {},         !- Back Side Solar Reflectance at Normal Incidence\n".format(mat.get_back_solar_reflectance(building)))
+    fh.write("  {},         !- Visible Transmittance at Normal Incidence\n".format(mat.get_visible_transmittance(building)))
     fh.write(
-        "  {},         !- Front Side Visible Reflectance at Normal Incidence\n".format(mat.front_visible_reflectance)
+        "  {},         !- Front Side Visible Reflectance at Normal Incidence\n".format(mat.get_front_visible_reflectance(building))
     )
     fh.write(
-        "  {},         !- Back Side Visible Reflectance at Normal Incidence\n".format(mat.back_visible_reflectance)
+        "  {},         !- Back Side Visible Reflectance at Normal Incidence\n".format(mat.get_back_visible_reflectance(building))
     )
-    fh.write("  {},         !- Infrared Transmittance at Normal Incidence\n".format(mat.infrared_transmittance))
+    fh.write("  {},         !- Infrared Transmittance at Normal Incidence\n".format(mat.get_infrared_transmittance(building)))
     fh.write(
         "  {},         !- Front Side Infrared Hemispherical Emissivity\n".format(
-            mat.front_infrared_hemispherical_emissivity
+            mat.get_front_infrared_hemispherical_emissivity(building)
         )
     )
     fh.write(
         "  {},         !- Back Side Infrared Hemispherical Emissivity\n".format(
-            mat.back_infrared_hemispherical_emissivity
+            mat.get_back_infrared_hemispherical_emissivity(building)
         )
     )
-    fh.write("  {},         !- Conductivity (W/m-K)\n".format(mat.conductivity))
+    fh.write("  {},         !- Conductivity (W/m-K)\n".format(mat.get_conductivity(building)))
     fh.write(
         "  {},         !- Dirt Correction Factor for Solar and Visible Transmittance\n".format(
             mat.dirt_correction_factor
@@ -551,7 +539,7 @@ def write_material_glazing(mat, thickness, layer_name):
     fh.close()
 
 
-def write_material_gas(mat, thickness, layer_name):
+def write_material_gas(mat, thickness, layer_name, file_path):
     """
     Writes a gas material to the .idf file from the building data.
     Parameters
@@ -568,17 +556,17 @@ def write_material_gas(mat, thickness, layer_name):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("WindowMaterial:Gas,\n")
     fh.write("  {},         !- Name\n".format(layer_name))
     fh.write("  {},         !- Gas Type\n".format(mat.gas_type))
-    fh.write("  {};         !- Thickness (m)\n".format(thickness))
+    fh.write("  {};         !- Thickness (m)\n".format(thickness.convert_to(METER).value))
     fh.write("\n")
     fh.close()
 
 
-def write_constructions(building):
+def write_constructions(building, file_path):
     """
     Writes all constructions to the .idf file from the building data.
     Parameters
@@ -590,29 +578,17 @@ def write_constructions(building):
     -------
     None
     """
-    constructions = {}
-    for fk in building.floors:
-        env = building.floors[fk].envelope
-        for ck in env.walls:
-            con = env.walls[ck]
-            constructions[con.name] = con
-        for ck in env.floors:
-            con = env.floors[ck]
-            constructions[con.name] = con
-        for ck in env.ceiling:
-            con = env.ceiling[ck]
-            constructions[con.name] = con
-        for ck in env.windows:
-            con = env.windows[ck]
-            constructions[con.name] = con
 
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
-    for ck in constructions:
-        name = constructions[ck].name
-        layers = [constructions[ck].layers[lk] for lk in constructions[ck].layers]
-        types = [layer.material_property.__type__ for layer in layers]
-        thicks = [layer.thickness for layer in layers]
+    for ck in building.constructions:
+        con = building.constructions[ck]
+        name = con.name
+        if con.__type__ == 'FramedWall':
+            layers = [con.virtual_layers[lk] for lk in con.virtual_layer_order]
+        else:
+            layers = [con.layers[lk] for lk in con.layer_order]
+
         lnames = [layer.name for layer in layers]
         fh.write("Construction,\n")
         fh.write("  {},\t\t\t\t\t!- Name\n".format(name))
@@ -621,21 +597,13 @@ def write_constructions(building):
                 sep = ";"
             else:
                 sep = ","
-            if thicks[i] == None:
-                lname = layer
-            elif thicks[i] > 0:
-                lname = "{} {}mm".format(layer, round(thicks[i] * 1000, 1))
-            elif thicks[i] <= 0 and types[i] == "Material":
-                continue
-            else:
-                lname = "{}".format(layer)
-            fh.write("  {}{}\t\t\t\t\t!- Layer {}\n".format(lname, sep, i))
+            fh.write("  {}{}\t\t\t\t\t!- Layer {}\n".format(layer, sep, i))
         fh.write("\n")
     fh.write("\n")
     fh.close()
 
 
-def write_shadings(building):
+def write_shadings(building, file_path):
     """
     Writes all shading devices to the .idf file from the building data.
     Parameters
@@ -656,10 +624,10 @@ def write_shadings(building):
     for i in range(len(shadings)):
         env = shadings[i][0]
         shading = shadings[i][1]
-        write_shading(env, shading, i)
+        write_shading(env, shading, i, file_path)
 
 
-def write_shading(envelope, shading, key):
+def write_shading(envelope, shading, key, file_path):
     """
     Writes a single shading device to the .idf file from the building data.
     Parameters
@@ -673,7 +641,7 @@ def write_shading(envelope, shading, key):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     sname = "{}_{}".format(envelope.name, shading.name)
     surfaces = shading.surfaces
@@ -695,8 +663,8 @@ def write_shading(envelope, shading, key):
     fh.close()
 
 
-def write_spaces(building):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_spaces(building, file_path):
+    fh = open(file_path, "a")
     fh.write("\n")
     for fk in building.floors:
         floor = building.floors[fk]
@@ -713,9 +681,9 @@ def write_spaces(building):
     fh.close()
 
 
-def write_simulation_control(building):
+def write_simulation_control(building, file_path):
 
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("\n")
     fh.write("SimulationControl,\n")
     fh.write("  No,       !- Do Zone Sizing Calculation\n")
@@ -730,26 +698,26 @@ def write_simulation_control(building):
     fh.close()
 
 
-def write_schedules(building):
+def write_schedules(building, file_path):
     # building.find_set_schedules()
     # for sk in building.set_schedules:
     for sk in building.operational_object.schedules:
         schedule = building.operational_object.schedules[sk]
         stype = schedule.type
         if stype == "compact":
-            write_schedule_compact(building, schedule)
+            write_schedule_compact(building, schedule, file_path)
         elif stype == "day_interval":
-            write_schedule_day_interval(building, schedule)
+            write_schedule_day_interval(building, schedule, file_path)
         elif stype == "week_daily":
-            write_schedule_week_daily(building, schedule)
+            write_schedule_week_daily(building, schedule, file_path)
         elif stype == "year":
-            write_schedule_year(building, schedule)
+            write_schedule_year(building, schedule, file_path)
         elif stype == "schedule_type_limits":
-            write_schedule_type_limits(building, schedule)
+            write_schedule_type_limits(building, schedule, file_path)
 
 
-def write_schedule_compact(building, schedule):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_schedule_compact(building, schedule, file_path):
+    fh = open(file_path, "a")
     fh.write("Schedule:Compact,\n")
     fh.write("  {},  !- Name\n".format(schedule.name))
     fh.write("  {}, !- Schedule Type Limits Name\n".format(schedule.type_limits))
@@ -761,11 +729,11 @@ def write_schedule_compact(building, schedule):
     fh.close()
 
 
-def write_schedule_day_interval(building, schedule):
+def write_schedule_day_interval(building, schedule, file_path):
 
     time_values = schedule.time_values
     sep = ","
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("Schedule:Day:Interval,\n")
     fh.write("  {},   !- Name\n".format(schedule.name))
     fh.write("  {},   !- Schedule Type Limits Name\n".format(schedule.type_limits))
@@ -779,8 +747,8 @@ def write_schedule_day_interval(building, schedule):
     fh.close()
 
 
-def write_schedule_week_daily(building, schedule):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_schedule_week_daily(building, schedule, file_path):
+    fh = open(file_path, "a")
     fh.write("Schedule:Week:Daily,\n")
 
     fh.write("  {},         !- Name\n".format(schedule.name))
@@ -800,8 +768,8 @@ def write_schedule_week_daily(building, schedule):
     fh.close()
 
 
-def write_schedule_year(building, schedule):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_schedule_year(building, schedule, file_path):
+    fh = open(file_path, "a")
 
     fh.write("Schedule:Year,\n")
     fh.write("  {},     !- Name\n".format(schedule.name))
@@ -816,8 +784,8 @@ def write_schedule_year(building, schedule):
     fh.close()
 
 
-def write_schedule_type_limits(building, schedule):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_schedule_type_limits(building, schedule, file_path):
+    fh = open(file_path, "a")
     fh.write("ScheduleTypeLimits,\n")
     fh.write("  {},     !- Name\n".format(schedule.name))
     fh.write("  {},     !- Lower Limit Value\n".format(schedule.lower_limit))
@@ -857,11 +825,11 @@ def write_schedule_type_limits(building, schedule):
     fh.close()
 
 
-def write_infiltration_rates(building):
+def write_infiltration_rates(building, file_path):
     for ik in building.operational_object.infiltrations:
         i = building.operational_object.infiltrations[ik]
 
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("  ZoneInfiltration:DesignFlowRate,\n")
         fh.write("    {},       !- Name\n".format(i.name))
         fh.write("    {},       !- Zone or ZoneList Name\n".format(i.zone_name))
@@ -880,12 +848,12 @@ def write_infiltration_rates(building):
         fh.close()
 
 
-def write_thermostats(building):
+def write_thermostats(building, file_path):
 
     for tk in building.operational_object.zone_control_thermostats:
         t = building.operational_object.zone_control_thermostats[tk]
 
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("ZoneControl:Thermostat,\n")
         fh.write("  {},    !- Name\n".format(t.name))
         fh.write("  {},    !- Zone or ZoneList Name\n".format("all_zones_list"))
@@ -915,11 +883,11 @@ def write_thermostats(building):
     fh.close()
 
 
-def write_hvac(building):
+def write_hvac(building, file_path):
 
     for ik in building.operational_object.ideal_air_loads:
         i = building.operational_object.ideal_air_loads[ik]
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("ZoneHVAC:IdealLoadsAirSystem,\n")
         fh.write("  {},     !- Name\n".format(i.name))
         fh.write("  {},     !- Availability Schedule Name\n".format(i.availability_schedule_name))
@@ -989,7 +957,7 @@ def write_hvac(building):
 
     for ek in building.operational_object.equipment_lists:
         el = building.operational_object.equipment_lists[ek]
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("ZoneHVAC:EquipmentList,\n")
         fh.write("  {},     !- Name\n".format(el.name))
         fh.write("  {},     !- Load Distribution Scheme\n".format(el.load_distribution_scheme))
@@ -1015,7 +983,7 @@ def write_hvac(building):
 
     for ek in building.operational_object.equipment_connections:
         ec = building.operational_object.equipment_connections[ek]
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("ZoneHVAC:EquipmentConnections,\n")
         fh.write("  {},     !- Zone Name\n".format(ec.name))
         fh.write("  {},     !- Zone Conditioning Equipment List Name\n".format(ec.zone_conditioning_equipment_list))
@@ -1027,8 +995,8 @@ def write_hvac(building):
         fh.close()
 
 
-def write_node_lists(building):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_node_lists(building, file_path):
+    fh = open(file_path, "a")
 
     for nlk in building.operational_object.node_lists:
         nl = building.operational_object.node_lists[nlk]
@@ -1045,8 +1013,8 @@ def write_node_lists(building):
     fh.close()
 
 
-def write_outdoor_airs(building):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_outdoor_airs(building, file_path):
+    fh = open(file_path, "a")
     for oak in building.operational_object.outdoor_airs:
         oa = building.operational_object.outdoor_airs[oak]
         fh.write("DesignSpecification:OutdoorAir,\n")
@@ -1066,8 +1034,8 @@ def write_outdoor_airs(building):
     fh.close()
 
 
-def write_daylight(building):
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+def write_daylight(building, file_path):
+    fh = open(file_path, "a")
     for dck in building.operational_object.daylighting_controls:
         dc = building.operational_object.daylighting_controls[dck]
         fh.write("Daylighting:Controls,\n")
@@ -1126,11 +1094,11 @@ def write_daylight(building):
     fh.close()
 
 
-def write_internal_gains(building):
+def write_internal_gains(building, file_path):
 
     for pk in building.operational_object.peoples:
         p = building.operational_object.peoples[pk]
-        fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+        fh = open(file_path, "a")
         fh.write("People,\n")
         fh.write("  {},     !- Name\n".format(p.name))
         fh.write("  {},     !- Zone or ZoneList Name\n".format(p.zone_name))
@@ -1180,7 +1148,7 @@ def write_internal_gains(building):
     fh.close()
 
 
-def write_output_items(building):
+def write_output_items(building, file_path):
     """
     Writes the output items to the .idf file from the building data.
     Parameters
@@ -1192,7 +1160,7 @@ def write_output_items(building):
     -------
     None
     """
-    fh = open(os.path.join(pod_lca.TEMP, "pod_lca_operational.idf"), "a")
+    fh = open(file_path, "a")
     fh.write("Output:Variable,*,Zone Mean Air Temperature,timestep;\n")
     fh.write("\n")
 

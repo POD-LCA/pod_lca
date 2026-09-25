@@ -16,7 +16,7 @@ from ..operational import find_materials_air_gap
 from ..operational import find_no_mass_materials
 from ..operational import find_gas_materials
 from ..operational import find_glazing_materials
-from ..operational import OperationalObject
+from ..operational import OperationalEnergyObject
 from ...utilities import config
 
 
@@ -46,7 +46,7 @@ class EnvelopeMixins():
         for fk in self.floors:
             floor = self.floors[fk]
             e = Envelope.from_floor(floor)
-            floor.add_envelope(e)
+            floor.set_envelope(e)
 
             # add walls - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -96,5 +96,5 @@ class EnvelopeMixins():
                     env.add_window(window, wall_key)
 
 
-        self.operational_object = OperationalObject.from_idf(operational_sys_path)
+        self.operational_object = OperationalEnergyObject.from_idf(operational_sys_path)
         self.set_zone_systems()

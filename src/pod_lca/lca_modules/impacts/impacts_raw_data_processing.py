@@ -1,15 +1,15 @@
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "MIT License"
 __email__ = "etel5501@uw.edu;kiun@uw.edu"
 __version__ = "0.1.0"
 
-from . import openLCA
-from ...units import JOULE
-from ...units import MEGA
-from ...utilities import config
-from ...utilities import DataExporter
-from ...utilities import DataImporter
+from pod_lca.impacts import openLCA
+from pod_lca.units import JOULE
+from pod_lca.units import MEGA
+from pod_lca.utilities import config
+from pod_lca.utilities import DataExporter
+from pod_lca.utilities import DataImporter
 
 
 # ================================================
@@ -40,6 +40,54 @@ openLCA_client = openLCA.set_connection()
 process_list_all = openLCA.get_process_list(openLCA_client)
 if IMPACT_SOURCE_DATABASE == "FLCAC":
     process_list = process_list_all
+elif IMPACT_SOURCE_DATABASE == "BAFU":
+    filter_by = ["agricultural/plant production",
+                "biomass",
+                "building components",
+                "building processes",
+                "cardboard",
+                "chemicals",
+                "compressed air/generation",
+                "construction",
+                "construction materials",
+                "construction processes", 
+                "electricity",
+                "electricity by fuel",
+                "electronics/photovoltaic",
+                "energy supply, kbob recommendation",
+                "flooring",
+                "fuels",
+                "glass",
+                "heat",
+                "heating",
+                "insulation materials",
+                "mechanical/other energy",
+                "metals",
+                "minerals",
+                "natural gas",
+                "oil",
+                "paper+ board",
+                "photovoltaic",
+                "pipeline",
+                "plastics",
+                "textiles",
+                "transport systems",
+                "underground deposit", 
+                "ventilation",
+                "wastewater treatment",
+                "water",
+                "wind power",
+                "wood",
+                "construction waste", # EOL data 
+                "incineration", # EOL data 
+                "landfarming", # EOL data
+                "landfill", # EOL data
+                "Others", # EOL data
+                "recycling", # EOL data
+                "waste management" # EOL data
+                ]
+ 
+    process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     filter_by = [
         "01",
@@ -64,7 +112,7 @@ elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     process_list = openLCA.filter_processes_by(process_list_all, filter_by)
 
 # inventories (impacts and emissions)
-impact_categories = DataImporter.json_to_dict("./data/impacts_" + IMPACT_SOURCE_DATABASE + "_categories.json")
+impact_categories = DataImporter.json_to_dict("src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_categories.json")
 for impact_category in impact_categories.keys():
     if impact_category not in config["setup"]["INVENTORY_ITEMS"]["IMPACT_CATEGORIES"]:
         raise ValueError(
@@ -80,7 +128,7 @@ for impact_category in impact_categories.keys():
             )
 
 emission_inventories = DataImporter.json_to_dict(
-    "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_emission-inventories.json"
+    "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_emission-inventories.json"
 )
 for emission in emission_inventories.keys():
     if emission not in config["setup"]["INVENTORY_ITEMS"]["EMISSION_INVENTORIES"]:
@@ -101,15 +149,20 @@ if IMPACT_SOURCE_DATABASE == "FLCAC":
     impact_method_uuid = "0ed73bce-2198-4148-8c4d-8b2ce68b6e1a"
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     impact_method_uuid = "5d5b2a0c-0a99-48d4-93e9-2f2b9d852655"
+elif IMPACT_SOURCE_DATABASE == "BAFU":
+    impact_method_uuid = "188468cc-78ac-465e-89fd-5e196de09c21"
 
 # impact groupings
-renewable_fuels_process_list = DataImporter.csv_to_list(
-    "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_renewable-fuels-group.csv", column_header="UUID"
-)
-nonrenewable_fuels_process_list = DataImporter.csv_to_list(
-    "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_nonrenewable-fuels-group.csv", column_header="UUID"
-)
-heating_values = DataImporter.csv_to_dict("./data/impacts_" + IMPACT_SOURCE_DATABASE + "_heating-values.csv", "UUID")
+if IMPACT_SOURCE_DATABASE == "BAFU":
+    pass #TODO: renewable and nonrenewable fuel combustion groups not yet set up for the BAFU database
+else:
+    renewable_fuels_process_list = DataImporter.csv_to_list(
+        "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_renewable-fuels-group.csv", column_header="UUID"
+    )
+    nonrenewable_fuels_process_list = DataImporter.csv_to_list(
+        "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_nonrenewable-fuels-group.csv", column_header="UUID"
+    )
+    heating_values = DataImporter.csv_to_dict("src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE.lower() + "_heating-values.csv", "UUID")
 
 if IMPACT_SOURCE_DATABASE == "FLCAC":
     group_by = [
@@ -130,7 +183,7 @@ if IMPACT_SOURCE_DATABASE == "FLCAC":
 
 elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
     electricity_process_list = DataImporter.csv_to_list(
-        "./data/impacts_ecoinvent391_electricity-group.csv", column_header="UUID"
+        "src/pod_lca/data/impacts_ecoinvent391_electricity-group.csv", column_header="UUID"
     )
     group_by = [
         {
@@ -153,6 +206,19 @@ elif IMPACT_SOURCE_DATABASE == "ecoinvent391":
         },
     ]
 
+elif IMPACT_SOURCE_DATABASE == "BAFU":
+    bafu_electricity_process_list = []
+    for process in process_list:
+        if process.name.startswith("Electricity"):
+            bafu_electricity_process_list.append(process.id)
+
+    group_by = [{
+            "name": "electricity",
+            "ids": bafu_electricity_process_list, 
+            "unit": MEGA * JOULE,
+            "conversion_map": None,
+        }]
+
 
 results = openLCA.generate_impacts_dir(
     openLCA_client, process_list, impact_categories | emission_inventories, impact_method_uuid, group_by
@@ -162,12 +228,12 @@ results = openLCA.generate_impacts_dir(
 # wood chips: (uuids: d47a4435-3089-4263-af99-8611eed2698c, 7fe99768-d571-4bc2-a272-7df585bd0d48)
 if IMPACT_SOURCE_DATABASE == "ecoinvent391":
     uuid_list_with_wood_chips = DataImporter.csv_to_list(
-        "./data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv", column_header="UUID"
+        "src/pod_lca/data/impacts_ecoinvent391_uuid-list-with-wood-chips.csv", column_header="UUID"
     )
     process_list = openLCA.get_process_list(openLCA_client, uuid_list_with_wood_chips)
 
     renewable_fuels_process_list = DataImporter.csv_to_list(
-        "./data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv", column_header="UUID"
+        "src/pod_lca/data/impacts_ecoinvent391_renewable-fuels-group-no-wood-chips.csv", column_header="UUID"
     )
 
     group_by = [
@@ -191,5 +257,5 @@ if IMPACT_SOURCE_DATABASE == "ecoinvent391":
                 ]
 
 # save results
-save_path = "./data/impacts_" + IMPACT_SOURCE_DATABASE + "_categorized-data.csv"
+save_path = "src/pod_lca/data/impacts_" + IMPACT_SOURCE_DATABASE + "_categorized-data.csv"
 DataExporter.dict_to_csv(results, save_path)

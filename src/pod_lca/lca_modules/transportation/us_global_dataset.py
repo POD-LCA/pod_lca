@@ -41,9 +41,28 @@ class USGlobalDataset(TransportDataset):
         self.force_default_mode_foreign_value = "Ocean"
         self.force_default_mode_domestic_value = "Truck"
 
-        self.faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'])
-        self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH']) 
-        self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_RAIL_DATA_PATH'])
+        self.faf  = DataImporter.csv_to_pandas(config['file_paths']['transportation']['FAF_DATA_PATH'],
+                                               dtype_map={
+                                                   'fr_orig': int, 
+                                                   'dms_dest': int, 
+                                                   'fr_inmode': int, 
+                                                   'dms_mode': int, 
+                                                   'sctg2': int, 
+                                                   'avr_dom_dist_km': float
+                                               })
+        self.marine = DataImporter.csv_to_pandas(config['file_paths']['transportation']['MARINE_DATA_PATH'],
+                                                 dtype_map={
+                                                     "Region,Coast": 'category',
+                                                     "USA Port": 'category',
+                                                     "Foreign Port": 'category',
+                                                     "Distance_km": float,
+                                                     "Distance (nautical miles)": float
+                                                 }) 
+        self.cfaf = DataImporter.csv_to_pandas(config['file_paths']['transportation']['CFAF_RAIL_DATA_PATH'],
+                                               dtype_map={
+                                                   "SCTG_2digits": int,
+                                                   "Average_Distance_per_Shipment": float
+                                               })
     
     def find_most_common_US_destination(self, material=None):
         """ Find the most common US destination state in the FAF dataset.

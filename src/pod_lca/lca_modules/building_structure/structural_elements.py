@@ -15,8 +15,8 @@ class StructuralElement(Assembly):
     
     Attributes
     ----------
-    floor :
-        Floor to which the element belong.
+    element_type : str
+        Element type.
     material : list of ~pod_lca.building.BuildingMaterial
         List of materials the building assembly made up of.
     geometry :
@@ -29,22 +29,37 @@ class StructuralElement(Assembly):
 
     def __init__(self):
         super().__init__()
-        self.floor = None
+        self.element_type = 'Generic'
         self.material = None
         self.geometry = None
         self.supports = None
         self.loading = None
 
     @classmethod
-    def from_template(cls, service_life, volume, materials):
-        pass
+    def from_materials(cls, name, materials):
+        """Create a structural element.
 
-    @classmethod
-    def from_geometry(cls, geometry):
-        pass
+        Parameters
+        ----------
+        name : str
+            Name of the structural element.
+        materials : list of ~pod_lca.building_structure.StructuralMaterial
+            Materials that make up the structural element.
+        """
+        structural_element = super().from_materials(name, materials)
 
-    def set_floor(self):
-        pass
+        return structural_element
+
+    def set_building(self):
+        """Set data from building level.
+        """
+        building = self.get_building()
+        if building is not None:
+            building.add_assembly(self)
+            self.set_service_life(self.get_service_life_category())
+
+            for material in self.get_materials():
+                material.set_building()
 
     def set_service_life(self, part):
         """ Set the service life of the assembly.
@@ -55,114 +70,100 @@ class StructuralElement(Assembly):
             Part of the structure the assembly belongs to
         """
         building = self.get_building()
-        building_standard = building.get_building_data_standard()
+        if building is not None:
+            building_standard = building.get_building_data_standard()
 
-        match building_standard:
-            case 'RICS':
-                data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_SERVICE_LIFE'], 'POD|LCA RSL Category')
-            case 'ASHRAE':
-                data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_SERVICE_LIFE'], 'POD|LCA RSL Category')
+            match building_standard:
+                case 'RICS':
+                    data = DataImporter.csv_to_dict(config['file_paths']['building']['RICS_SERVICE_LIFE'], 'POD|LCA RSL Category')
+                case 'ASHRAE':
+                    data = DataImporter.csv_to_dict(config['file_paths']['building']['ASHRAE_SERVICE_LIFE'], 'POD|LCA RSL Category')
 
-        service_life = data[part]['service_life']
-        
-        return super().set_service_life(service_life)
-
+            service_life = data[part]['service_life']
+            
+            return super().set_service_life(service_life)
+        else:
+            return None
+    
     def get_capacity(self):
         pass
 
     def size_member(self):
         pass
 
+    def get_element_type(self):
+        """ Get the type of element.
 
-class Foundation(StructuralElement):
+        Returns
+        -------
+        str
+            Type identifier of the structural element.
+        """
+        return self.element_type
 
+
+class GenericElement(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = "superstructure"
+        self.element_type = "unclassified"
 
-    @classmethod
-    def create(cls, name, structure, materials):
 
-        foundation_element = super().create(name, structure.get_parent(), materials=materials)
-        foundation_element.set_service_life('substructure')
-        structure.foundations.append(foundation_element)
+class Foundation(StructuralElement):
 
-        return foundation_element
+    def __init__(self):
+        super().__init__()
+        self.service_life_category = "substructure"
+        self.element_type = "foundations"
+
 
 class LateralStabilitySystem(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+
 
 class Beam(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "beams"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        beam = super().create(name, structure.get_parent(), materials=materials)
-        beam.set_service_life('superstructure')
-        structure.beams.append(beam)
-
-        return beam
 
 class Column(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "columns"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        column = super().create(name, structure.get_parent(), materials=materials)
-        column.set_service_life('superstructure')
-        structure.columns.append(column)
-
-        return column
 
 class Slab(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "slabs"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        slab = super().create(name, structure.get_parent(), materials=materials)
-        slab.set_service_life('superstructure')
-        structure.slabs.append(slab)
-
-        return slab
 
 class Wall(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "structural_walls"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        wall = super().create(name, structure.get_parent(), materials=materials)
-        wall.set_service_life('superstructure')
-        structure.columns.append(wall)
-
-        return wall
 
 class RoofStructure(StructuralElement):
 
     def __init__(self):
         super().__init__()
+        self.service_life_category = 'superstructure'
+        self.element_type = "roof_structure"
 
-    @classmethod
-    def create(cls, name, structure, materials):
-
-        roof = super().create(name, structure.get_parent(), materials=materials)
-        roof.set_service_life('superstructure')
-        structure.roof_structure.append(roof)
-
-        return roof
 
 if __name__ == '__main__':
     pass

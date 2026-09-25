@@ -4,7 +4,9 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from numpy import nan
 from pandas import concat
+from pandas import DataFrame
 
 from . import expand_search_terms
 from . import rank_entries
@@ -79,7 +81,7 @@ class ImpactsDatabase:
         """
         new_db = cls()
         new_db.set_name(name)
-        new_db.set_primary_key("Flow")
+        new_db.set_primary_key("Name")
         new_db.set_unit_key("Unit")
         new_db.set_qty_key("Qty")
 
@@ -142,29 +144,43 @@ class ImpactsDatabase:
             else:
                 mapped_headers.extend(list(DATA_HEADERS_DICT.keys()))
 
-        data_headers = self.get_required_headers() + mapped_headers
+        reqd_headers, reqd_headers_dtype = self.get_required_headers()
+
+        data_headers = reqd_headers + mapped_headers
+        data_types = reqd_headers_dtype + [float] * len(mapped_headers)
         if "density_headers" in kwargs:
             if isinstance(kwargs["density_headers"], list):
                 data_headers = data_headers + kwargs["density_headers"]
                 self.density_key = kwargs["density_headers"][0]
                 self.density_unit_key = kwargs["density_headers"][1]
+                data_types = data_types + [float, 'category']
             elif isinstance(kwargs["density_headers"], str):
                 raise ValueError("Density headers should be a list of two; density value, and the units respectively.")
 
+        data_type_mapping = dict(zip(data_headers, data_types))
         if "additional_headers" in kwargs:
-            if isinstance(kwargs["additional_headers"], list):
-                data_headers = data_headers + kwargs["additional_headers"]
-            elif isinstance(kwargs["additional_headers"], str):
-                data_headers = data_headers + [kwargs["additional_headers"]]
+            if isinstance(kwargs["additional_headers"], dict):
+                data_headers = data_headers + list(kwargs["additional_headers"].keys())
+                data_type_mapping.update(kwargs["additional_headers"])
+            elif isinstance(kwargs["additional_headers"], list):
+                data_headers = data_headers + [kwargs["additional_headers"][0]]
+                data_type_mapping[kwargs["additional_headers"][0]] = kwargs["additional_headers"][1]
 
         if "grouped_data" in kwargs:
             new_headers = []
             for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
                 for cat in DATA_HEADERS_DICT:
-                    new_headers.append(kwargs["grouped_data"] + "_" + cat)
+                    header = kwargs["grouped_data"] + "_" + cat
+                    new_headers.append(header)
+                    data_type_mapping[header] = float
 
-            new_headers.append(kwargs["grouped_data"] + "_" + self.get_qty_key())
-            new_headers.append(kwargs["grouped_data"] + "_" + self.get_unit_key())
+            qty_header = kwargs["grouped_data"] + "_" + self.get_qty_key()
+            new_headers.append(qty_header)
+            data_type_mapping[qty_header] = float
+
+            unit_header = kwargs["grouped_data"] + "_" + self.get_unit_key()
+            new_headers.append(unit_header)
+            data_type_mapping[unit_header] = 'category'
 
             data_headers = data_headers + new_headers
 
@@ -173,11 +189,12 @@ class ImpactsDatabase:
         if "multipliers" not in kwargs:
             multipliers = [1.0] * len(mapped_headers)
         multipliers = (
-            [None] * len(self.get_required_headers()) + multipliers + [None] * (no_headers - 3 - len(multipliers))
+            [None] * len(self.get_required_headers()[0]) + multipliers + [None] * (no_headers - 3 - len(multipliers))
         )
+        multipliers_dict = dict(zip(data_headers, multipliers))
 
         # import data
-        data = DataImporter.csv_to_pandas(file_path, data_headers, multipliers)
+        data = DataImporter.csv_to_pandas(file_path, data_headers, multipliers_dict, data_type_mapping)
 
         data[self.get_unit_key()] = data[self.get_unit_key()].map(UNITS_MAP)
         if self.get_density_unit_key() is not None:
@@ -189,12 +206,15 @@ class ImpactsDatabase:
             if map_name in kwargs:
                 data.rename(columns=kwargs[map_name], inplace=True)
 
-        # set missing data to 0.0
+        # set missing data to defaults
         for data_categroy, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
             for header in DATA_HEADERS_DICT:
                 if header not in data.columns:
-                    data[header] = 0.0
-                    log(f"{header} {data_categroy} not found in the data. Setting to 0.0.", level="Warn")
+                    if data_type_mapping[header] == 'category':
+                        data[header] = None
+                    else:
+                        data[header] = nan
+                    log(f"{header} {data_categroy} not found in the data. Setting to default: {data[header]}", level="Warn")
 
         # loading data to existing dataset
         if self.get_data_all() is None:
@@ -257,7 +277,7 @@ class ImpactsDatabase:
         for data_type, DATA_HEADERS_DICT in self.__class__.DATA_IMPORTS.items():
             for category in DATA_HEADERS_DICT:
                 if category not in tmp_data:
-                    tmp_data[category] = 0.0
+                    tmp_data[category] = None
                     log(f"{category} {data_type} not found in the data. Setting to 0.0.", level="Warn")
 
         # set data to database
@@ -301,6 +321,30 @@ class ImpactsDatabase:
 
         return self
 
+    def set_density_key(self, key):
+        """ Set density key of the database.
+        
+        Parameters
+        ----------
+        key : str
+            Data header corresponding to the density of the database entries.        
+        """
+        self.density_key = key
+
+        return self
+    
+    def set_density_unit_key(self, key):
+        """ Set density unit key of the database.
+        
+        Parameters
+        ----------
+        key : str
+            Data header corresponding to the density unit of the database entries.        
+        """
+        self.density_unit_key = key
+
+        return self
+    
     # =================================
     # Getters
     # =================================
@@ -358,7 +402,6 @@ class ImpactsDatabase:
         ImportError
             Multiple matching entries.
         """
-        # print(flow_name)
         if self.data is not None:
             row_id = self.data.index[self.data[self.get_primary_key()] == flow_name]
             if len(row_id) == 1:
@@ -429,12 +472,13 @@ class ImpactsDatabase:
         list of str
             Headers of the columns to be imported, other than name, unit, and impact categories.
         """
-        return [self.get_primary_key(), self.get_qty_key(), self.get_unit_key()]
+        return ([self.get_primary_key(), self.get_qty_key(), self.get_unit_key()],
+                [str, float, 'category'])
 
     # =================================
     # Search Methods
     # =================================
-    def find(self, product, additional_headers=None, shortlist=False, printout=True):
+    def find(self, product, additional_headers=None, shortlist=False, printout=True, use_wordnet=False):
         """Search for a product in the database. Search is done on the primary data column of the database.
 
         Parameters
@@ -447,6 +491,8 @@ class ImpactsDatabase:
             If true, shortlist the matching product list based on impacts.
         printout : bool
             Print the results if true.
+        use_wordnet : bool
+            If true, search uses wordnet corpus for stemming and lemmatization to expand the search terms.
 
         Returns
         -------
@@ -459,22 +505,29 @@ class ImpactsDatabase:
         if additional_headers is not None:
             valid_headers = [header for header in additional_headers if header in self.data.columns]
             if valid_headers:
+                for header in valid_headers:
+                    if self.data[header].dtype.name == "category":
+                        self.data[header] = self.data[header].cat.add_categories([""])
+                        self.data[header] = self.data[header].fillna("")
+                    else:
+                        product_support_data = self.data[valid_headers].fillna("")
+
                 product_support_data = self.data[valid_headers].astype(str).agg(" ".join, axis=1)
 
         documents = products_all if product_support_data is None else concat([products_all, product_support_data])
         vocab = set(" ".join(documents).lower().split())
-        expanded = expand_search_terms(product, data_set=vocab)
+        expanded = expand_search_terms(product, data_set=vocab, use_wordnet=use_wordnet)
 
         ranked = rank_entries(products_all, expanded, product_support_data)
         if ranked.empty:
             log("No data found", "Info")
-            return []
+            return DataFrame()
 
         if shortlist:
             impact_map = self.data.set_index(self.get_primary_key())[
                 config["setup"]["impacts"]["PRIMARY_IMPACT_CATEGORY"]
             ].to_dict()
-            scores = ranked["product"].map(impact_map)
+            scores = ranked["item"].map(impact_map)
 
             search_result = adaptive_kmeans_cutoff(ranked, scores)
 
@@ -488,6 +541,72 @@ class ImpactsDatabase:
                 print(ranked.to_string(index=False))
 
             return ranked
+
+    def add_new_entry(self, data):
+        """ Add new custom data entry.
+        
+        Parameters
+        ----------
+        data : dict
+            Data dictionary keyed by corresponding headers in the databse
+
+        Returns
+        -------
+        bool
+            True if new entry added, False otherwise.
+        """
+        primary_key = self.get_primary_key()
+        if data[primary_key] in self.data[primary_key].values:
+            log("Primary key already exist. New entry not added.")
+            return False
+
+        local_data_copy = data.copy()
+        if isinstance(local_data_copy[self.get_unit_key()], str):
+            local_data_copy["Unit"] = UNITS_MAP[local_data_copy["Unit"]]
+
+        new_row_df = DataFrame([local_data_copy])
+        self.data = concat([self.data, new_row_df], ignore_index=True)
+
+        del local_data_copy
+
+        return True
+
+    def update_entry(self, data):
+        """ Update an existing entry in the database.
+        
+        Parameters
+        ----------
+        data : dict
+            Data dictionary keyed by corresponding headers in the databse        
+        """
+        primary_key = self.get_primary_key()
+        if data[primary_key] in self.data[primary_key].values:
+            row = self.data[primary_key] == data[primary_key]
+
+            local_data_copy = data.copy()
+            if isinstance(local_data_copy[self.get_unit_key()], str):
+                local_data_copy[self.get_unit_key()] = UNITS_MAP[local_data_copy[self.get_unit_key()]]
+            for key in local_data_copy.keys():
+                if isinstance(local_data_copy[key], str):
+                    if key.endswith("_" + self.get_unit_key()):
+                        local_data_copy[key] = UNITS_MAP[local_data_copy[key]]
+
+            self.data.loc[row, list(local_data_copy.keys())] = list(local_data_copy.values())
+
+            del local_data_copy
+
+            return True
+        
+    def delete_entry(self, flow_name):
+        """ Delete an entry from the database.
+        
+        Parameters
+        ----------
+        flow_name : str
+            Primary identifier name.
+        """
+        idx = self.data[self.data[self.get_primary_key()] == flow_name].index[0]
+        self.data = self.data.drop(idx)
 
 
 if __name__ == "__main__":

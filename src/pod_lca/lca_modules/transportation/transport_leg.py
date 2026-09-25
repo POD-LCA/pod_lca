@@ -5,11 +5,13 @@ __email__ = "mhtaba@uw.edu"
 __version__ = "0.1.0"
 
 from . import ElectricTransportMode
+from ..analysis import PedigreeScore
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..location import Location
 from . import TransportMode
 from ...units import KILOMETER
+from ...utilities import log
 
 
 class TransportationLeg:
@@ -48,18 +50,23 @@ class TransportationLeg:
     def __init__(self):
         self.manager = None
         self.name = None
+
         self.material = None
-        self.travel_dist = None
-        self.dist_unit = None
-        self.return_trip_factor = None
         self.shipping_destination = None
         self.shipping_origin = None
         self.mode = None
+
+        self.travel_dist = None
+        self.dist_unit = None
+        self.return_trip_factor = None
+
         self.impacts = None
         self.emissions = None
-        self.pedigree_score = None
+        
         self.next = None
         self.previous = None
+
+        self.pedigree_score = PedigreeScore.from_parent(self)
 
     def __str__(self):
         str = (
@@ -167,7 +174,7 @@ class TransportationLeg:
             raise TypeError("Travel distance must be a number.")
 
         self.dist_unit = KILOMETER if dist_unit is None else dist_unit
-        self.return_trip_factor = return_trip_factor
+        self.return_trip_factor = 1.0 if return_trip_factor is None else return_trip_factor
 
         return self
 
@@ -259,10 +266,13 @@ class TransportationLeg:
         self.next = next
         next.previous = self
 
+        next.set_pedigree_score(self.get_pedigree_score())
+
         return self
 
     def set_pedigree_score(self, pedigree_score):
-        """Set a pedigree score (data quality score) to the transportation leg.
+        """Set a pedigree score (data quality score) to the transportation leg. 
+        All the following transportation legs for the material also assigned the same pedigree score.    
 
         Parameters
         ----------
@@ -270,6 +280,9 @@ class TransportationLeg:
             Data quality indicator for the transportation leg.
         """
         self.pedigree_score = pedigree_score
+
+        if self.get_next():
+            self.get_next().set_pedigree_score(pedigree_score)
 
         return self
     # ================================
@@ -438,40 +451,45 @@ class TransportationLeg:
         ImportError
             Incompatible units.
         """
-        inventories_declared_unit = self.get_mode().get_declared_unit()
-        computed_unit = self.get_material().get_weight_unit() * self.get_dist_unit()
-        conversion_factor = computed_unit.convert_to(inventories_declared_unit)
+        if self.get_material().get_weight() is None:
+            self.impacts.clear_qty()
+            self.emissions.clear_qty()
+            log("No material weight to set transportation impacts.")
+        else:
+            inventories_declared_unit = self.get_mode().get_declared_unit() 
+            computed_unit = self.get_material().get_weight().unit * self.get_dist_unit()
+            conversion_factor = computed_unit.convert_to(inventories_declared_unit)
 
-        travel_dist = self.get_travel_dist()
-        transport_material_qty = self.get_material().get_weight()
-        return_trip_factor = self.get_return_trip_factor()
+            travel_dist = self.get_travel_dist()
+            transport_material_qty = self.get_material().get_weight().value
+            return_trip_factor = self.get_return_trip_factor()
 
-        if conversion_factor is None:
-            raise ImportError(
-                f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.declared_unit}) are of incompatible units."
-            )
+            if conversion_factor is None:
+                raise ImportError(
+                    f"{self.get_name()} (of units {self.get_unit()}) and the LCA data chosen ({self.get_impact_database_entry()} of units {self.declared_unit}) are of incompatible units."
+                )
 
-        impacts = {
-            key: self.get_mode().get_unit_impacts().get_record(key)
-            * conversion_factor
-            * transport_material_qty
-            * travel_dist
-            * return_trip_factor
-            for key in self.impacts.record_attr_dict
-        }
-        self.impacts.update_qty(impacts)
+            impacts = {
+                key: self.get_mode().get_unit_impacts().get_record(key)
+                * conversion_factor
+                * transport_material_qty
+                * travel_dist
+                * return_trip_factor
+                for key in self.impacts.record_attr_dict
+            }
+            self.impacts.update_qty(impacts)
 
-        emissions = {
-            key: self.get_mode().get_unit_emissions().get_record(key)
-            * conversion_factor
-            * transport_material_qty
-            * travel_dist
-            * return_trip_factor
-            for key in self.emissions.record_attr_dict
-        }
-        self.emissions.update_qty(emissions)
+            emissions = {
+                key: self.get_mode().get_unit_emissions().get_record(key)
+                * conversion_factor
+                * transport_material_qty
+                * travel_dist
+                * return_trip_factor
+                for key in self.emissions.record_attr_dict
+            }
+            self.emissions.update_qty(emissions)
 
-        return self
+            return self
 
 
 if __name__ == "__main__":

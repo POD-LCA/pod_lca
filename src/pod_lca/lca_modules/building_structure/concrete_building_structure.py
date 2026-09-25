@@ -9,26 +9,16 @@ from . import BuildingStructure
 
 
 class ConcreteStructure(BuildingStructure):
-
+    """ Concrete structure from first principles."""
 
     def __init__(self):
-        self.structural_system = None
-        self.structural_material = None
-        self.foundation = []
-        self.lateral_stability_system = []
-        self.beams = []
-        self.columns = []
-        self.slabs = []
+        super().__init__()
 
 
-    @classmethod
-    def from_geometry(cls, building):
-        structure = cls()
-
-        # TODO: write the logic of making the structure.
-
-
-        return structure
+    def build(self):
+        """Built Concrete Structure from first principles.
+        """
+        pass # TODO: To be implemented
 
 
 if __name__ == '__main__':

@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from pathlib import Path
 import pickle
+import re
 
 from . import Model
 from ..impacts import EOLImpactsDatabase
@@ -114,17 +115,18 @@ class Project:
         if isinstance(file_path, (str, Path)):
             impact_database = ImpactsDatabase.new("impact database")
             impact_database.set_primary_key('Name')
-            impact_database.set_qty_key('qty')
-            impact_database.set_unit_key('unit')
+            impact_database.set_qty_key('Qty')
+            impact_database.set_unit_key('Unit')
             impact_database.set_data(file_path, 
-                                     grouped_data="electricity",
+                                     grouped_data="Electricity",
                                      density_headers=["Density", "Density unit"],
-                                     additional_headers=["Biomaterial Species",
-                                                         "Region",
-                                                         "Biomaterial Form", 
-                                                         "Stored Biogenic Carbon", 
-                                                         "%C (dry mass basis)",
-                                                         "Mineral Carbonation Potential"])
+                                     additional_headers={"Biomaterial Species":'category',
+                                                         "Region":'category',
+                                                         "Biomaterial Form":'category', 
+                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_POTENTIAL_DATABASE_HEADER']:'boolean', 
+                                                         config['setup']['impacts']['BIOGENIC_CARBON_STORAGE_PERCENTAGE_DATABASE_HEADER']:float,
+                                                         config['setup']['impacts']['BIOGENIC_MATERIAL_MOISTURE_CONTENT_DATABASE_HEADER']:float,
+                                                         config['setup']['impacts']['ACCELERATED_CARBONATION_POTENTIAL_DATABASE_HEADER']:'boolean',})
             self.impact_database = impact_database
         else:
             raise TypeError("Database input not recognized")
@@ -148,12 +150,14 @@ class Project:
             raise TypeError("Database input not recognized")
 
         return self
-
+      
     def set_eol_process_impact_database(self, file_path=None, **kwargs):
         """ Set the impact database for end-of-life impacts. If file path not given, default database will be used.
         
         Parameters
         ----------
+        file_path : str
+            Filepath of the csv file containing impact data.
         file_path : str
             Filepath of the csv file containing impact data.
 
@@ -315,11 +319,22 @@ class Project:
         """
         if file_path is None:
             model = Model.in_project(self, model_name)
-            self.models[model_name] = model
+            self.models[model.get_name()] = model
         else:
             model = Model.from_CSV(file_path, self, model_name)
 
         return model
+    
+    def remove_model(self, model_name):
+        """Remove a model from the project.
+        
+        Parameters
+        ----------
+        model_name : str
+            Name of the model to be deleted.
+        """
+        if model_name in self.models:
+            del self.models[model_name]
 
     def get_model(self, model_name):
         """Retrieve a model.
@@ -558,6 +573,78 @@ class Project:
 
         return data
 
+    # ================================
+    # Helper Methods
+    # ================================
+    def check_model_names(self, name):
+        """ Check a if a model name already exist in a model and returns a recomended name.
+        
+        Parameters
+        ----------
+        name : str
+            Name checked.
+
+        Returns
+        -------
+        str
+            Recommended name.
+        """
+        if name is not None:
+            exact_match, has_numbered, largest_suffix_no = Project._find_name_model_name_match(self.get_model_names(), name)
+            if exact_match:
+                if has_numbered:
+                    name = name + '_' + str(largest_suffix_no + 1)
+                else:
+                    name = name + '_2'
+                log(f"Model of similar name exist. Model renamed as {name}.", "Info")
+        else:
+            _, has_numbered, largest_suffix_no = Project._find_name_model_name_match(self.get_model_names(), "Model")
+            if has_numbered:
+                name = "Model_" + str(largest_suffix_no + 1)
+            else:
+                name = "Model_1"
+        
+        return name
+
+    def _find_name_model_name_match(values, search_name):
+        """ Look for matches in the list of names.
+        
+        Parameters
+        ----------
+        values : list of str
+            List of names to where matches are searched for.
+        search_name : str
+            Name to match
+
+        Returns
+        -------
+        bool
+            True if exact match is found.
+        bool
+            True if a numbered version of the search_name is found (e.g., search_name_01).
+        str
+            Of the numbered matches, the largest match.
+        """
+
+        exact_match = False
+        numbered_matches = []
+
+        pattern = re.compile(rf"^{re.escape(search_name)}_(\d+)$")
+
+        for v in values:
+            if v == search_name:
+                exact_match = True
+                continue
+
+            m = pattern.match(v)
+            if m:
+                numbered_matches.append(int(m.group(1)))
+
+        has_numbered = len(numbered_matches) > 0
+        largest_suffix_no = max(numbered_matches) if has_numbered else None
+
+        return exact_match, has_numbered, largest_suffix_no
+    
 
 if __name__ == "__main__":
     pass

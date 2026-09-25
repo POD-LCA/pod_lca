@@ -7,6 +7,14 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 import re
+from pod_lca.units import METER, WATT, KELVIN, KILOGRAM, CUBIC_METER, JOULE, SQUARE_METER
+from pod_lca.units import Quantity as Q
+
+WmK = WATT / (METER * KELVIN)
+Wm2K = WATT / (SQUARE_METER * KELVIN)
+kgm3 = KILOGRAM / CUBIC_METER
+JkK = JOULE / (KILOGRAM * KELVIN)
+m2KW = (SQUARE_METER * KELVIN) / WATT
 
 
 def get_idf_data(filepath):
@@ -138,6 +146,53 @@ def find_windows(filepath, data):
         }
 
 
+def find_material_by_name(filepath, name):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+
+    for i, line in enumerate(lines):
+        mtype = line.split(",")[0].lower()
+        if "material" in mtype:
+            mat_name = lines[i + 1].split(",")[0].lower().strip()
+            if mat_name == name.lower():
+                if mtype == 'material':
+                    data = read_material(filepath, i)
+                elif mtype == 'material:airgap':
+                    data  = read_material_air_gap(filepath, i)
+                elif mtype == 'material:nomass':
+                    data = read_material_no_mass(filepath, i)
+                else:
+                    raise NameError('Material \'{}\' not found in {} IDF file'.format(name, filepath))
+                return data
+            
+
+def read_material(filepath, i):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+    name = lines[i + 1].split(",")[0].strip()
+    rough = lines[i + 2].split(",")[0].strip()
+    thick = Q(float(lines[i + 3].split(",")[0]), METER)
+    cond = Q(float(lines[i + 4].split(",")[0]), WmK)
+    dens = Q(float(lines[i + 5].split(",")[0]), kgm3)
+    sphe = Q(float(lines[i + 6].split(",")[0]), JkK)
+    thra = float(lines[i + 7].split(",")[0])
+    slea = float(lines[i + 8].split(",")[0])
+    vsba = float(lines[i + 9].split(";")[0])
+
+    return {"__type__": "MaterialPropertyMass",
+            "name": name,
+            "roughness": rough,
+            "thickness": thick,
+            "conductivity": cond,
+            "density": dens,
+            "specific_heat": sphe,
+            "thermal_absorptance": thra,
+            "solar_absorptance": slea,
+            "visible_absorptance": vsba}
+
+
 def find_materials(filepath, data):
     fh = open(filepath, "r")
     lines = fh.readlines()
@@ -152,27 +207,21 @@ def find_materials(filepath, data):
     data["materials"] = {}
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        rough = lines[i + 2].split(",")[0].strip()
-        thick = float(lines[i + 3].split(",")[0])
-        cond = float(lines[i + 4].split(",")[0])
-        dens = float(lines[i + 5].split(",")[0])
-        sphe = float(lines[i + 6].split(",")[0])
-        thra = float(lines[i + 7].split(",")[0])
-        slea = float(lines[i + 8].split(",")[0])
-        vsba = float(lines[i + 9].split(";")[0])
+        data["materials"][name] = read_material(filepath, i)
+    return data
 
-        data["materials"][name] = {
-            "__type__": "Material",
+
+def read_material_air_gap(filepath, i):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+
+    name = lines[i + 1].split(",")[0].strip()
+    resi = Q(float(lines[i + 2].split(";")[0].strip()), m2KW)
+
+    return {"__type__": "MaterialPropertyAirGap",
             "name": name,
-            "roughness": rough,
-            "thickness": thick,
-            "conductivity": cond,
-            "density": dens,
-            "specific_heat": sphe,
-            "thermal_absorptance": thra,
-            "solar_absorptance": slea,
-            "visible_absorptance": vsba,
-        }
+            "thermal_resistance": resi,}
 
 
 def find_materials_air_gap(filepath, data):
@@ -188,13 +237,36 @@ def find_materials_air_gap(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        resi = lines[i + 2].split(",")[0].strip()
+        data["materials"][name] = read_material_air_gap(filepath, i)
+    return data
 
-        data["materials"][name] = {
-            "__type__": "MaterialAirGap",
-            "name": name,
-            "resistance": resi,
-        }
+
+def read_material_no_mass(filepath, i):
+    fh = open(filepath, "r")
+    lines = fh.readlines()
+    fh.close()
+
+    name = lines[i + 1].split(",")[0].strip()
+    # rough = lines[i + 2].split(",")[0].strip()
+    # thres = Q(float(lines[i + 3].split(",")[0]), m2KW)
+    # thabs = float(lines[i + 4].split(",")[0])
+    # slra = float(lines[i + 5].split(",")[0])
+    # if ";" not in lines[i + 6]:
+    #     visa = float(lines[i + 6].split(",")[0])
+    #     thic = Q(float(lines[i + 7].split(";")[0]), METER)
+    # else:
+    #     visa = float(lines[i + 6].split(";")[0])
+    #     thic = None
+
+    # return {"__type__": "MaterialPropertyNoMass",
+    #         "name": name,
+    #         "roughness": rough,
+    #         "thermal_resistance": thres,
+    #         "thermal_absorptance": thabs,
+    #         "solar_absorptance": slra,
+    #         "visible_absorptance": visa,
+    #         "thickness": thic}
+    raise KeyError('Reading No Mass materials from IDF has been deleted. {} material cant be read.'.format(name))
 
 
 def find_no_mass_materials(filepath, data):
@@ -208,30 +280,10 @@ def find_no_mass_materials(filepath, data):
         if line[0].lower() == "material:nomass":
             i_lines.append(i)
 
-    # data['materials_no_mass'] = {}
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        rough = lines[i + 2].split(",")[0].strip()
-        thres = float(lines[i + 3].split(",")[0])
-        thabs = float(lines[i + 4].split(",")[0])
-        slra = float(lines[i + 5].split(",")[0])
-        if ";" not in lines[i + 6]:
-            visa = float(lines[i + 6].split(",")[0])
-            thic = float(lines[i + 7].split(";")[0])
-        else:
-            visa = float(lines[i + 6].split(";")[0])
-            thic = None
-
-        data["materials"][name] = {
-            "__type__": "MaterialNoMass",
-            "name": name,
-            "roughness": rough,
-            "thermal_resistance": thres,
-            "thermal_absorptance": thabs,
-            "solar_absorptance": slra,
-            "visible_absorptance": visa,
-            "thickness": thic,
-        }
+        data["materials"][name] = read_material_no_mass(filepath, i)
+    return data
 
 
 def find_gas_materials(filepath, data):
@@ -249,14 +301,15 @@ def find_gas_materials(filepath, data):
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         gtype = lines[i + 2].split(",")[0].strip()
-        thick = float(lines[i + 3].split(";")[0])
+        thick = Q(float(lines[i + 3].split(";")[0]), METER)
 
         data["materials"][name] = {
-            "__type__": "WindowMaterialGas",
+            "__type__": "WindowMaterialPropertyGas",
             "name": name,
             "gas_type": gtype,
             "thickness": thick,
         }
+    return data
 
 
 def find_glazing_materials(filepath, data):
@@ -273,7 +326,7 @@ def find_glazing_materials(filepath, data):
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
         odtype = lines[i + 2].split(",")[0].strip()
-        thick = float(lines[i + 4].split(",")[0])
+        thick = Q(float(lines[i + 4].split(",")[0]), METER)
         soltr = float(lines[i + 5].split(",")[0])
         fref = float(lines[i + 6].split(",")[0])
         bref = float(lines[i + 7].split(",")[0])
@@ -283,12 +336,12 @@ def find_glazing_materials(filepath, data):
         inftr = float(lines[i + 11].split(",")[0])
         finfhem = float(lines[i + 12].split(",")[0])
         binfhem = float(lines[i + 13].split(",")[0])
-        cond = float(lines[i + 14].split(",")[0])
+        cond = Q(float(lines[i + 14].split(",")[0]), WmK)
         dirt = float(lines[i + 15].split(",")[0])
         soldif = lines[i + 16].split(";")[0].strip()
 
         data["materials"][name] = {
-            "__type__": "WindowMaterialGlazing",
+            "__type__": "WindowMaterialPropertyGlazing",
             "name": name,
             "optical_data_type": odtype,
             "thickness": thick,
@@ -305,6 +358,8 @@ def find_glazing_materials(filepath, data):
             "dirt_correction_factor": dirt,
             "solar_diffusing": soldif,
         }
+    
+    return data
 
 
 def find_constructions(filepath, data):
@@ -322,17 +377,19 @@ def find_constructions(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        layers = {}
+        layers = []
         for j in range(100):
             layer = lines[i + 2 + j]
             if ";" in layer:
                 layer = layer.split(";")[0].strip()
-                layers[str(j)] = layer
+                layers.append(layer)
                 break
             else:
                 layer = layer.split(",")[0].strip()
-                layers[str(j)] = layer
+                layers.append(layer)
         data["constructions"][name] = {"name": name, "layers": layers}
+        
+    return data
 
 
 def find_glazing_material_simple(filepath, data):
@@ -348,7 +405,7 @@ def find_glazing_material_simple(filepath, data):
 
     for i in i_lines:
         name = lines[i + 1].split(",")[0].strip()
-        ufac = float(lines[i + 2].split(",")[0])
+        ufac = Q(float(lines[i + 2].split(",")[0]), Wm2K)
         solh = float(lines[i + 3].split(",")[0])
         vist = lines[i + 4].split(";")[0]
 
@@ -1173,22 +1230,4 @@ def find_space_lists(filepath, data):
 
 
 if __name__ == "__main__":
-    import os
-    import compas_eplus
-
-    for i in range(50):
-        print("")
-
-    file = "doe_midrise_apt.idf"
-    path = os.path.join(compas_eplus.DATA, "idf_examples", file)
-
-    data = get_idf_data(path)
-    # print(data.keys())
-
-    object = "daylighting:referencepoint"
-
-    for k in data[object]:
-        print(k)
-        for j in data[object][k]:
-            print(j)
-        print("")
+    pass

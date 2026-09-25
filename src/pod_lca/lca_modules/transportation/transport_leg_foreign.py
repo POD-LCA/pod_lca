@@ -267,7 +267,7 @@ class ForeignLeg(TransportationLeg):
         ~pod_lca.transportation.TransportDataset
             Dataset used.
         """
-        return self.get_manager().get_dataset()
+        return self.get_manager().get_dataset()["global"]
 
     # ================================
     # Dataset Methods
@@ -295,7 +295,7 @@ class ForeignLeg(TransportationLeg):
         if not self.check_mode_origin_compatibility():
             raise ValueError("The transportation origin and transportation mode are inconsistant.")
 
-        conversion_factor = self.get_dist_unit().convert_to(KILOMETER)
+        conversion_factor = KILOMETER.convert_to(self.get_dist_unit())
         datasets_filtered = dataset.filter_datasets(
             self.get_material(),
             self.get_shipping_destination(),
@@ -346,7 +346,7 @@ class LinkedDomesticLeg(TransportationLeg):
         dist = self.get_travel_dist()
         convertion_factor = self.get_dist_unit().convert_to(MILE)
 
-        return 1.5 if dist * convertion_factor < 500 and self.get_mode().get_name() == "Truck" else 1.0
+        return 1.5 if ((dist * convertion_factor < 500) and (self.get_mode().get_name() == "Truck")) else 1.0
 
 
 if __name__ == "__main__":

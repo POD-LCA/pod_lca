@@ -4,7 +4,10 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from ..units import STANDARD_COMPOUNDS
 from ..units import UNIT_CONVERSIONS
+from ..units import UNIT_NAME_OVERRIDES
+from ..units import UNIT_NOTATION_OVERRIDES
 from ..units.metric_prefixes import KILO
 from ..units.units import Unit
 
@@ -28,10 +31,9 @@ from ..units.units import Unit
 # to add their commonly used units here and import from this central source.
 
 # A method is defined for obtaining the conversion factor for converting a unit to another within the same category.
-# In this note the special case of 'area' and 'volume', when conversion across metric and imperial units are envisaged.
-# Although you can define a new unit of measurement (say) METER * METER this would be categorized as 'length-length'
-# and thus cannot be converted to ACRE, which is categorized as 'area'. Thus, the users are encouraged to use the
-# predeefined unit of SQUARE_METER instead. The similar is applied to 'volume' calculations
+# POWER_RULES are used to convert compound units measuring length-length to area and length-length-length to volume.
+# POWER_RULES are limited to length units of meter and feet as only there powers recognized under the area and volume
+# units respectively.
 
 # REF: [1]  National Institute of Standards and Technology (NIST) Handbook 44 (2024). Specifications, Tolerances, and
 #           Other Technical Requirements for Weighing and Measuring Devices.
@@ -104,13 +106,16 @@ TON_MILE = M_TON * MILE
 # AREA UNITS
 # ==================================
 
-SQUARE_METER = Unit.from_basics("square meter", "m2", "area")
-SQUARE_FEET = Unit.from_basics("square feet", "ft2", "area")
+SQUARE_METER = Unit.from_basics("square meter", "m²", "area")
+SQUARE_FEET = Unit.from_basics("square feet", "ft²", "area")
 ACRE = Unit.from_basics("acre", "acre", "area")
 HECTARE = Unit.from_basics("hectare", "ha", "area")
 
 UNIT_CONVERSIONS["area"] = {"square meter": 4046.8564224, "square feet": 43560, "acre": 1.0, "hectare": 0.40468564224}
 # REF [1] pp. C-14/15
+
+STANDARD_COMPOUNDS[SQUARE_METER] = {METER: 2}
+STANDARD_COMPOUNDS[SQUARE_FEET] = {FEET: 2}
 
 # ==================================
 # VOLUME UNITS
@@ -118,8 +123,8 @@ UNIT_CONVERSIONS["area"] = {"square meter": 4046.8564224, "square feet": 43560, 
 
 LITER = Unit.from_basics("liter", "l", "volume")
 US_GALLON = Unit.from_basics("US gallon", "US gal", "volume")
-CUBIC_METER = Unit.from_basics("cubic meter", "m3", "volume")
-CUBIC_FEET = Unit.from_basics("cubic feet", "ft3", "volume")
+CUBIC_METER = Unit.from_basics("cubic meter", "m³", "volume")
+CUBIC_FEET = Unit.from_basics("cubic feet", "ft³", "volume")
 
 UNIT_CONVERSIONS["volume"] = {
     "liter": 28.316846592,
@@ -128,6 +133,9 @@ UNIT_CONVERSIONS["volume"] = {
     "cubic feet": 1.0,
 }
 # REF [1] pp. C-17/18
+
+STANDARD_COMPOUNDS[CUBIC_METER] = {METER: 3}
+STANDARD_COMPOUNDS[CUBIC_FEET] = {FEET: 3}
 
 # ==================================
 # POWER UNITS
@@ -155,6 +163,9 @@ UNIT_CONVERSIONS["energy"] = {
 # REF [2] pp.55
 # REF [2] pp.45 - footnote 9 - BTU
 
+STANDARD_COMPOUNDS[WATT_HOUR] = {WATT: 1, HOUR: 1}
+# STANDARD_COMPOUNDS[WATT] = {JOULE: 1, SECOND: -1}
+
 # ==================================
 # DISCRETE COUNTING UNITS
 # ==================================
@@ -172,3 +183,43 @@ KG_CARBON = Unit.from_basics("kg of Carbon", "kg C", "carbon storage")
 KG_CARBON_DIOXIDE = Unit.from_basics("kg of Carbon dioxide", "kg CO2", "carbon storage")
 
 UNIT_CONVERSIONS["carbon storage"] = {"kg of Carbon": 1.0, "kg of Carbon dioxide": 44.01 / 12.01}
+
+
+# ==================================
+# TEMPERATURE UNITS
+# ==================================
+
+CELSIUS = Unit.from_basics("celsius", "°C", "temperature")
+KELVIN = Unit.from_basics("kelvin", "K", "temperature")
+FAHRENHEIT = Unit.from_basics("fahrenheit", "°F", "temperature")
+
+UNIT_CONVERSIONS["temperature"] = {
+    "celsius": 1.0,
+    "kelvin": 1.0,
+    "fahrenheit": 1.8,
+}
+
+# ==================================
+# CURRENCY / MONEY UNITS
+# ==================================
+
+US_DOLLAR = Unit.from_basics("US dollar", "USD", "currency")
+
+UNIT_CONVERSIONS["currency"] = {
+    "US dollar":1.0,
+}
+
+
+
+# ==================================
+# NAME OVERRIDES
+# ==================================
+# The compound units created using the above basic units are automatically named based on their composition.
+# {prefix name, if any}({basic units in numerator separated by hyphens}) per ({basic units in denominator separated by hyphens})
+# Some common compound units may not follow this naming structure.
+# Their names can be overriden by adding in the NAME_OVERRIDES directory keyed by the compound name given in the above structure
+# and the replacement common name as the value
+
+UNIT_NAME_OVERRIDES['milijoule per (gram-kelvin)'] = "joule per (kilogram-kelvin)"
+UNIT_NOTATION_OVERRIDES['mJ/(g-K)'] = "J/(kg-K)"
+

@@ -60,13 +60,13 @@ class Impacts(Records):
             Weighing method not recognied.
         """
         if method == "TRACI_EPA":
-            weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_EPA"])
+            weights = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_WEIGHTING_FACTOR_EPA"])
         elif method == "TRACI_NIST":
-            weights = DataImporter.json_to_dict(config["file_paths"]["IMPACT_WEIGHTING_FACTOR_NIST"])
+            weights = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_WEIGHTING_FACTOR_NIST"])
         else:
             raise KeyError("Weighing method not recognized")
 
-        normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["IMPACT_NORMALIZATION_FACTORS"])
+        normalisation_factors = DataImporter.json_to_dict(config["file_paths"]["impacts"]["IMPACT_NORMALIZATION_FACTORS"])
 
         for impact_cat in self.record_attr_dict:
             if impact_cat not in weights:
@@ -85,48 +85,6 @@ class Impacts(Records):
                 return None
 
         return weighted_impact
-
-    def get_adjusted_GWP(self):
-        """Get GWP values adjusted for biogenic and accelerated carbonation effects.
-
-        Returns
-        -------
-        float
-            Adjusted GWP value
-
-        Raises
-        ------
-        KeyError
-            Impact category not recognied.
-        """
-        key = config["setup"]["impacts"]["CARBONATION_EFFECTS_IMPACT_CATEGORY"]
-
-        # check key
-        if key in self.get_categories():
-            if (
-                not UNITS_MAP[self.get_categories(units=True)[1][key]].get_qty_measured()
-                == KG_CARBON_DIOXIDE.get_qty_measured()
-            ):
-                raise KeyError(f"Impact category {key} incompatible to account for carbonation effects.")
-        else:
-            raise KeyError(f"{key} not in impact categories of config.")
-
-        # adjust GWP #FIXME is this relevant with neschanges to carbon storage
-        if key in self.record_attr_dict:
-            gwp_qty = self.get_record(key)
-            carbon_storage_record = self.get_parent().get_carbon_storage()
-            if carbon_storage_record is not None:
-                for record, unit in carbon_storage_record.record_attr_dict.items():
-                    input_unit = UNITS_MAP[unit]
-                    conversion_factor = input_unit.convert_to(KG_CARBON_DIOXIDE)
-
-                    qty = carbon_storage_record.get_record(record)
-
-                    if isinstance(qty, (float, int)):
-                        if not isnan(qty):
-                            gwp_qty = gwp_qty - (qty * conversion_factor)
-
-            return gwp_qty
 
 
 if __name__ == "__main__":

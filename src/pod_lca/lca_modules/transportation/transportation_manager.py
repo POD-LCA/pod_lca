@@ -24,12 +24,16 @@ class TransportationManager:
         Dictionary mapping products to their corresponding transportation legs: {**product** (:class:`~pod_lca.materials_screening.Product`) : **transport leg** (:class:`~pod_lca.transportation.TransportationLeg`)}.
     mode_impact_database : ~pod_lca.impacts.TranportationModeImpactsDatabase
         Database containing unit impacts for transportation modes.
+    is_hotspot : bool
+        Flag indicating if the transportation manager is a hotspot, where transportation manager is part of another project.
     """
 
     def __init__(self):
         self.name = None
         self.transport_legs = {}
         self.mode_impact_database = None
+
+        self.is_hotspot = False
 
     def __str__(self):
         str = "=" * 75 + "\n" + f"Project: {self.get_name()}\n" + "=" * 75 + "\n"
@@ -100,29 +104,27 @@ class TransportationManager:
 
         return self
 
-    def set_project_origin(self, origin: str):
+    def set_project_origin(self, origin):
         """Set the origin location of the project.
 
         Parameters
         ----------
-        origin : str
+        origin : ~pod_lca.location.Location
             Origin location of the project.
         """
         for leg in self.get_transportation_legs():
-            leg.set_shipping_org(origin)
-        # TODO consider having a project level variable for origin
+            leg.set_shipping_origin(origin)
 
-    def set_project_destination(self, destination: str):
+    def set_project_destination(self, destination):
         """Set the destination location of the project.
 
         Parameters
         ----------
-        destination : str
+        destination : ~pod_lca.location.Location
             Destination location of the project.
         """
         for leg in self.get_transportation_legs():
-            leg.set_shipping_dest(destination)
-        # TODO consider having a project level variable for origin
+            leg.set_shipping_destination(destination)
 
     def set_scenario(self, transportation_scenario):
         pass  # TODO: set project level scenario
@@ -215,11 +217,24 @@ class TransportationManager:
             if product not in self.transport_legs:
                 raise ValueError(f"Product '{product}' not found in the project.")
 
-            impact = Impacts.from_parent(self)
+            impact = Impacts.from_parent(product)
             for leg in self.transport_legs[product]:
                 impact += leg.get_impacts()
 
             return impact
+
+    def get_impacts_list(self):
+        """Retrieve the impacts of the project as a list.
+
+        Returns
+        -------
+        list of ~pod_lca.impacts.Impact
+            List of impacts of the project.
+        """
+        impacts_lst = []
+        for leg in self.get_transportation_legs():
+            impacts_lst.append(leg.get_impacts())
+        return impacts_lst
 
     def get_emissions(self, product=None):
         """Retrieve the emissions of the product.
@@ -256,6 +271,18 @@ class TransportationManager:
 
             return impact
 
+    def get_emissions_list(self):
+        """Retrieve the emissions of the project as a list.
+
+        Returns
+        -------
+        list of ~pod_lca.impacts.Emission
+            List of emissions of the project.
+        """
+        emissions_lst = []
+        for leg in self.get_transportation_legs():
+            emissions_lst.append(leg.get_emissions())
+        return emissions_lst
     # ================================
     # Model Methods
     # ================================
@@ -337,6 +364,18 @@ class TransportationManager:
             leg.set_transport_scenario(transport_scenario)
 
         return self
+    
+    def remove_good(self, good):
+        """Remove a good and its corresponding transportation legs from the project.
+
+        Parameters
+        ----------
+        good : ~pod_lca.materials_screening.Product
+            Good to be removed.
+        """
+        if good in self.transport_legs:
+            del self.transport_legs[good]
+            return self
 
     # ================================
     # Project Methods

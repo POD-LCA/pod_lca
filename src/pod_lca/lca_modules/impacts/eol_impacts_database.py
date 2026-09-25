@@ -108,13 +108,14 @@ class EOLImpactsDatabase(ImpactsDatabase):
         list of str
             Database headers.
         """
-        return [
+        return ([
             self.get_primary_key(),
             self.get_qty_key(),
             self.get_unit_key(),
             self.get_process_key(),
             self.get_life_cycle_stage_key(),
-        ]
+        ],
+        [str, float, 'category', 'category', 'category'])
 
     def get_data_entry(self, material_name, process_name, life_cycle_stage):
         """Retrieve impacts for given flow.

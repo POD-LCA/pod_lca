@@ -4,6 +4,8 @@ __license__ = "MIT License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+import math
+
 
 class Records:
     """Records object keep record of the inventory (e.g., impacts, emissions, carbon storage) created by a product or a process.
@@ -40,7 +42,8 @@ class Records:
             return NotImplemented
 
         summed_records = {
-            attr: getattr(self, attr, 0.0) + getattr(other, attr, 0.0)
+            attr: self._safe_value(getattr(self, attr, 0.0))
+                + self._safe_value(getattr(other, attr, 0.0))
             for attr in self.__class__.record_attr_dict.keys()
         }
 
@@ -66,7 +69,8 @@ class Records:
             return NotImplemented
 
         difference_records = {
-            attr: getattr(self, attr, 0.0) - getattr(other, attr, 0.0)
+            attr: self._safe_value(getattr(self, attr, 0.0)) 
+                - self._safe_value(getattr(other, attr, 0.0))
             for attr in self.__class__.record_attr_dict.keys()
         }
 
@@ -92,7 +96,7 @@ class Records:
             return NotImplemented
 
         multiplied_records = {
-            attr: getattr(self, attr, 0.0) * scalar for attr in self.__class__.record_attr_dict.keys()
+            attr: self._safe_value(getattr(self, attr, 0.0)) * scalar for attr in self.__class__.record_attr_dict.keys()
         }
 
         new_record = self.__class__()
@@ -115,6 +119,16 @@ class Records:
         """Reflexive multiplication of a record by a scalar."""
         return self.__mul__(scalar)
 
+    def __copy__(self):
+        """Make a copy of the record object."""
+        new_record = self.__class__()
+        new_record.__dict__.update(self.__dict__)
+
+        return new_record
+
+    @staticmethod
+    def _safe_value(value):
+        return 0.0 if isinstance(value, float) and math.isnan(value) else value
     # ========================
     # Constructors
     # ========================
@@ -169,7 +183,7 @@ class Records:
         ~pod_lca.impacts.Records
             Copy of the object.
         """
-        new_obj = cls()
+        new_obj = record_obj.__class__.__new__(record_obj.__class__)
         new_obj.__dict__.update(record_obj.__dict__)
 
         return new_obj

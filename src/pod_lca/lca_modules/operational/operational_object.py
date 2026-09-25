@@ -42,7 +42,7 @@ from pod_lca.lca_modules.operational.read_write.read_idf import find_schedule_we
 from pod_lca.lca_modules.operational.read_write.read_idf import find_schedule_year
 
 
-class OperationalObject(object):
+class OperationalEnergyObject(object):
     def __init__(self):
         self.name = None
         self.daylighting_controls = None
@@ -61,6 +61,8 @@ class OperationalObject(object):
         self.outdoor_airs = None
         self.schedules = None
         self.daylighting_controls_height = 0.8
+
+        self.is_dirty = True
 
     @classmethod
     def from_idf(cls, path):
@@ -124,3 +126,12 @@ class OperationalObject(object):
         oo.outdoor_airs = {ok: OutdoorAir.from_data(data["outdoor_air"][ok]) for ok in data["outdoor_air"]}
         oo.schedules = {sk: Schedule.from_data(data["schedules"][sk]) for sk in data["schedules"]}
         return oo
+
+    def set_building(self, parent):
+        self.building = parent
+
+    def set_dirty(self, state=True):
+        """ is_dirty flag indicate changes to the operation object which were not in the previous model run.
+            Call this method whenever the OperationalEnergyObject is updated.
+        """
+        self.is_dirty = state

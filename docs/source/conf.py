@@ -5,6 +5,7 @@
 
 import os
 import re
+import shutil
 import sys
 
 sys.path.insert(0, os.path.abspath("../../src"))
@@ -43,8 +44,26 @@ language = "Python"
 html_theme = "piccolo_theme"  # https://piccolo-theme.readthedocs.io/en/latest/index.html
 html_static_path = ["../_static"]
 
-
 # -- For gitbook markdown- ---------------------------------------------------
+def rename_md_files_by_header(app, exception):
+    if exception:
+        return  # skip if build failed
+
+    out_dir = os.path.join(app.outdir)
+    for fname in os.listdir(out_dir):
+        if not fname.endswith(".md"):
+            continue
+        path = os.path.join(out_dir, fname)
+        with open(path, "r", encoding="utf-8") as f:
+            first_line = f.readline().strip()
+        if first_line.startswith("# "):
+            title = first_line[2:].strip()
+            # Clean title for file system (remove slashes, etc.)
+            safe_title = "".join(c if c.isalnum() or c in " _-" else "_" for c in title)
+            new_path = os.path.join(out_dir, f"{safe_title}.md")
+            if new_path != path:
+                shutil.move(path, new_path)
+
 def add_gitbook_prefix(app, exception):
     if exception:
         return
@@ -52,7 +71,7 @@ def add_gitbook_prefix(app, exception):
     if app.builder.name != "markdown":
         return
 
-    group_prefix = "api-documentation/"  # your GitBook group name
+    group_prefix = "python-libraru/"  # your GitBook group name
     build_dir = app.outdir
 
     for root, _, files in os.walk(build_dir):
@@ -90,4 +109,5 @@ def add_gitbook_prefix(app, exception):
 
 
 def setup(app):
+    app.connect("build-finished", rename_md_files_by_header)
     app.connect("build-finished", add_gitbook_prefix)
