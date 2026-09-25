@@ -25,24 +25,17 @@ show_ghg_stacks = False # if True, show the GHG stacks for the PT and RT separat
 
 
 # **********Step 2: Create the Product Trajectory (PT) DLCI**********
-PT_record = DynamicRadiativeForcingRecord()
-PT_record.set_start_year(start_year)
-PT_record.set_time_horizon(time_horizon)
-PT_record.set_time_step(time_step)
-
-# Set DLCI File path
 test_DLCI_file_path = "examples/drf_example_dlci.csv"
-PT_record.add_emissions_from_csv(test_DLCI_file_path)
+PT_record = DynamicRadiativeForcingRecord.from_csv(test_DLCI_file_path, 
+                                                   start_year=start_year, 
+                                                   time_horizon=time_horizon, 
+                                                   time_step=time_step)
 
 # **********Step 3: Create the Reference Trajectory (RT) DLCI**********
-RT_record = DynamicRadiativeForcingRecord()
-RT_record.set_start_year(start_year)
-RT_record.set_time_horizon(time_horizon)
-RT_record.set_time_step(time_step)
-
-# Set DLCI File path
-test_DLCI_file_path = "examples/drf_example_dlci.csv"
-RT_record.add_emissions_from_csv(test_DLCI_file_path)
+RT_record = DynamicRadiativeForcingRecord.from_csv(test_DLCI_file_path, 
+                                                   start_year=start_year, 
+                                                   time_horizon=time_horizon, 
+                                                   time_step=time_step)
 
 # ********** Step 4: Dynamic Radiative Forcing Record evaluation and plot settings: **********
 PT_record.set_data() # product and reference trajectories are stored as a POD|LCA DRF_record object

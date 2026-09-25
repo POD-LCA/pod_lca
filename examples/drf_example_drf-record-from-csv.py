@@ -24,14 +24,11 @@ model = Model.in_project(project)
 # Change plot settings below the example DLCI, then click run to generate the plot and results file. 
 
 # Creating a DRF record from a CSV file of emissions dictionaries
-drf_record = DynamicRadiativeForcingRecord()
-drf_record.set_start_year(0)
-drf_record.set_time_horizon(100)
-drf_record.set_time_step(1 / 12)
-
-# Set DLCI File path
 test_DLCI_file_path = "examples/drf_example_dlci.csv"
-drf_record.add_emissions_from_csv(test_DLCI_file_path)
+drf_record = DynamicRadiativeForcingRecord.from_csv(test_DLCI_file_path, 
+                                                   start_year=0, 
+                                                   time_horizon=100, 
+                                                   time_step=1/12)
 
 emissions_list = drf_record.get_emissions_list()
 for emission in emissions_list:

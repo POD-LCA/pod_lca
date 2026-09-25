@@ -123,6 +123,89 @@ class DynamicRadiativeForcingRecord:
 
         return cls.from_emissions(emissions_list, start_year, time_horizon, time_step)
 
+    @classmethod
+    def from_csv(cls, file_path, start_year=2025, time_horizon=100, time_step=1 / 12):
+        """Assign a list of emissions to the dynamic radiative forcing record from a csv file.
+
+        Notes
+        -----
+        CSV file should have headers: 
+            "Greenhouse Gas Type" : 'CO2', 'CH4', or 'N2O', 
+            "Quantity (kg)" : float, 
+            "Temporal Emission Profile" : 'pulse', 'uniform', 'normal', 'exponential decay', 'lognormal', 'linear', or 'inverse square root'
+            "Start Time (year)" : float,
+            **"Duration (years)" : float, (required for uniform, normal, lognormal, linear, or inverse square root profiles)
+            **"Decay Rate (1/years)", (required for exponential decay profile)
+            **"Skew", (required for lognormal profile)
+            **"Slope (1/years)" (required for linear profile)
+
+        Parameters
+        ----------
+        file_path : str
+            Location of the csv file containing emission data.
+        start_year : int
+            Start year of the record.
+        time_horizon : int or float
+            Time horizon of the record, in years.
+        time_step : int or float
+            Time step of the record, in years.
+
+        Returns
+        -------
+        ~pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord
+            DRF record object.
+        """
+        record = cls()
+
+        record.set_start_year(start_year)
+        record.set_time_horizon(time_horizon)
+        record.set_time_step(time_step)
+
+        emissions_data = DataImporter.csv_to_dict(file_path)
+        emissions_list_raw = list(emissions_data.values())
+        emissions_list_formatted = []
+        
+        # convert temporal emission profile parameter to separate dict for each emission
+        for emission_dict in emissions_list_raw:
+            emission_profile = {}
+            name = None
+            stage = None
+            for key, value in emission_dict.items():
+                if key == "Greenhouse Gas Type" and value != "":
+                    greenhouse_gas = value
+                elif key == "Quantity (kg)" and value != "":
+                    qty = float(value)
+                elif key == "Temporal Emission Profile" and value != "":
+                    emission_profile["profile_type"] = value
+                elif key == "Start Time (year)" and value != "":
+                    emission_profile["start"] = float(value)
+                elif key == "Duration (years)" and value != "":
+                    emission_profile["range"] = float(value)
+                elif key == "Decay Rate (1/years)" and value != "":
+                    emission_profile["decay_rate"] = float(value)
+                elif key == "Skew" and value != "":
+                    emission_profile["skew"] = float(value)
+                elif key == "Slope (1/years)" and value != "":
+                    emission_profile["slope"] = float(value)
+                elif key in ("Name", "Material","Product") and value != "":
+                    name = value
+                elif key == "LCA Stage" and value != "":
+                    stage = value
+                elif value == "":
+                    pass
+                else:
+                    # Preserve additional parameters so they can be used.
+                    emission_profile[key] = value
+
+            emission_dict_formatted = {'greenhouse_gas': greenhouse_gas, 'qty': qty, 'emission_profile': emission_profile, 'name': name, 'lca_stage': stage}
+            emissions_list_formatted.append(emission_dict_formatted)
+
+        record.add_emissions_from_list_of_dicts(emissions_list_formatted)
+
+        return record
+
+    
+
     # ========================
     # Setters
     # ========================
@@ -527,66 +610,6 @@ class DynamicRadiativeForcingRecord:
                     emission_profile.set_attr_name(stage)
 
                 self.emissions_lst.append(emission)
-
-        return self
-
-    def add_emissions_from_csv(self, file_path):
-        """Assign a list of emissions to the dynamic radiative forcing record from a csv file.
-        Note: CSV file should have headers: 
-            "Greenhouse Gas Type" : 'CO2', 'CH4', or 'N2O', 
-            "Quantity (kg)" : float, 
-            "Temporal Emission Profile" : 'pulse', 'uniform', 'normal', 'exponential decay', 'lognormal', 'linear', or 'inverse square root'
-            "Start Time (year)" : float,
-            **"Duration (years)" : float, (required for uniform, normal, lognormal, linear, or inverse square root profiles)
-            **"Decay Rate (1/years)", (required for exponential decay profile)
-            **"Skew", (required for lognormal profile)
-            **"Slope (1/years)" (required for linear profile)
-
-        Parameters
-        ----------
-        file_path : str
-            Location of the csv file containing emission data.
-        """
-        emissions_data = DataImporter.csv_to_dict(file_path)
-        emissions_list_raw = list(emissions_data.values())
-        emissions_list_formatted = []
-        
-        #convert temporal emission profile parameter to separate dict for each emission
-        for emission_dict in emissions_list_raw:
-            emission_profile = {}
-            name = None
-            stage = None
-            for key, value in emission_dict.items():
-                if key == "Greenhouse Gas Type" and value != "":
-                    greenhouse_gas = value
-                elif key == "Quantity (kg)" and value != "":
-                    qty = float(value)
-                elif key == "Temporal Emission Profile" and value != "":
-                    emission_profile["profile_type"] = value
-                elif key == "Start Time (year)" and value != "":
-                    emission_profile["start"] = float(value)
-                elif key == "Duration (years)" and value != "":
-                    emission_profile["range"] = float(value)
-                elif key == "Decay Rate (1/years)" and value != "":
-                    emission_profile["decay_rate"] = float(value)
-                elif key == "Skew" and value != "":
-                    emission_profile["skew"] = float(value)
-                elif key == "Slope (1/years)" and value != "":
-                    emission_profile["slope"] = float(value)
-                elif key in ("Name", "Material","Product") and value != "":
-                    name = value
-                elif key == "LCA Stage" and value != "":
-                    stage = value
-                elif value == "":
-                    pass
-                else:
-                    # Preserve additional parameters so they can be used.
-                    emission_profile[key] = value
-
-            emission_dict_formatted = {'greenhouse_gas': greenhouse_gas, 'qty': qty, 'emission_profile': emission_profile, 'name': name, 'lca_stage': stage}
-            emissions_list_formatted.append(emission_dict_formatted)
-
-        self.add_emissions_from_list_of_dicts(emissions_list_formatted)
 
         return self
 
