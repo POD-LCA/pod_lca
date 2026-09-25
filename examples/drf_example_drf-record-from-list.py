@@ -17,11 +17,10 @@ test_emissions_list_of_dicts = [
     {"greenhouse_gas": "CH4", "qty": 0.01, "emission_profile": {"profile_type": "uniform", "start": 20, "range": 10}}
 ]
 
-drf_record = DynamicRadiativeForcingRecord()
-drf_record.set_start_year(0)
-drf_record.set_time_horizon(100)
-drf_record.set_time_step(1 / 12)
-drf_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
+drf_record = DynamicRadiativeForcingRecord.from_list_of_dicts(test_emissions_list_of_dicts, 
+                                                              start_year=0, 
+                                                              time_horizon=100, 
+                                                              time_step=1 / 12)
 
 # Dynamic Radiative Forcing Record evaluation and plot settings:
 drf_record.set_data()

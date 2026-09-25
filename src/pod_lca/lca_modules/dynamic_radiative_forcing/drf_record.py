@@ -125,7 +125,7 @@ class DynamicRadiativeForcingRecord:
 
     @classmethod
     def from_csv(cls, file_path, start_year=2025, time_horizon=100, time_step=1 / 12):
-        """Assign a list of emissions to the dynamic radiative forcing record from a csv file.
+        """Create a dynamic radiative forcing (DRF) record from a csv file.
 
         Notes
         -----
@@ -162,11 +162,9 @@ class DynamicRadiativeForcingRecord:
         record.set_time_step(time_step)
 
         emissions_data = DataImporter.csv_to_dict(file_path)
-        emissions_list_raw = list(emissions_data.values())
-        emissions_list_formatted = []
         
         # convert temporal emission profile parameter to separate dict for each emission
-        for emission_dict in emissions_list_raw:
+        for emission_dict in emissions_data.values():
             emission_profile = {}
             name = None
             stage = None
@@ -197,14 +195,63 @@ class DynamicRadiativeForcingRecord:
                     # Preserve additional parameters so they can be used.
                     emission_profile[key] = value
 
-            emission_dict_formatted = {'greenhouse_gas': greenhouse_gas, 'qty': qty, 'emission_profile': emission_profile, 'name': name, 'lca_stage': stage}
-            emissions_list_formatted.append(emission_dict_formatted)
-
-        record.add_emissions_from_list_of_dicts(emissions_list_formatted)
+            emission_dict = {
+                'greenhouse_gas': greenhouse_gas, 
+                'qty': qty, 
+                'emission_profile': emission_profile, 
+                'name': name, 
+                'lca_stage': stage
+                }
+            record.add_emission_from_dict(emission_dict)
 
         return record
 
-    
+    @classmethod
+    def from_list_of_dicts(cls, emissions, start_year=2025, time_horizon=100, time_step=1 / 12):
+        """Create a dynamic radiative forcing (DRF) record from a list of dictionaries.
+
+        Parameters
+        ----------
+        emissions : list of dicts
+            List of dictionaries containing emission data: 
+                  [{'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
+                    'qty': float [kg], 
+                    'emission_profile': 
+                        {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'inv_sqrt'),
+                            'start': int [year], 
+                            **'range': float [years],
+                            **'decay_rate': float [1/years],
+                            **'skew': float,
+                            **'slope': float}
+                    **'name': name of parent product or material (str),
+                    **'lca_stage': lca stage of emission (str)
+                    },
+                    {...}, 
+                    ...]
+
+                    (Note: '**' indicates an optional parameters.)
+        start_year : int
+            Start year of the record.
+        time_horizon : int or float
+            Time horizon of the record, in years.
+        time_step : int or float
+            Time step of the record, in years.
+
+        Returns
+        -------
+        ~pod_lca.dynamic_radiative_forcing.DynamicRadiativeForcingRecord
+            DRF record object.
+        """
+        record = cls()
+
+        record.set_start_year(start_year)
+        record.set_time_horizon(time_horizon)
+        record.set_time_step(time_step)
+
+        for emission_dict in emissions:
+            record.add_emission_from_dict(emission_dict)
+
+        return record
 
     # ========================
     # Setters
@@ -524,17 +571,17 @@ class DynamicRadiativeForcingRecord:
 
         return self
 
-    def add_emissions_from_list_of_dicts(self, emissions):
-        """Assign a list of emissions to the dynamic radiative forcing record from a dictionary.
+    def add_emission_from_dict(self, emission_dict):
+        """Assign an emission to the dynamic radiative forcing record from a dictionary.
 
         Parameters
         ----------
-        emissions : list of dicts
-            List of dictionaries containing emission data: 
-                  [{'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
-                    'qty': float [kg], 
-                    'emission_profile': 
-                        {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'inv_sqrt'),
+        emission_dict : dict
+            Dictionary containing emission data: 
+                  {'greenhouse_gas': ('CO2', 'CH4', or 'N2O'), 
+                   'qty': float [kg], 
+                   'emission_profile': 
+                       {'profile_type': ('pulse', 'uniform', 'normal', 'exp_decay', 'lognormal', 'linear', 'inv_sqrt'),
                             'start': int [year], 
                             **'range': float [years],
                             **'decay_rate': float [1/years],
@@ -548,68 +595,67 @@ class DynamicRadiativeForcingRecord:
 
                     (Note: '**' indicates an optional parameters.)
         """
-        for emission_dict in emissions:
-            greenhouse_gas = emission_dict.get("greenhouse_gas")
-            emission_qty = emission_dict.get("qty")
-            emission_profile = emission_dict.get("emission_profile")
+        greenhouse_gas = emission_dict.get("greenhouse_gas")
+        emission_qty = emission_dict.get("qty")
+        emission_profile = emission_dict.get("emission_profile")
 
-            if emission_qty != 0:
-                emission = Emissions.from_dict({greenhouse_gas: emission_qty})
+        if emission_qty != 0:
+            emission = Emissions.from_dict({greenhouse_gas: emission_qty})
 
-                # Assign emission profile
-                profile_type = emission_profile.get("profile_type", "pulse").lower()
-                t_start = emission_profile.get("start")
+            # Assign emission profile
+            profile_type = emission_profile.get("profile_type", "pulse").lower()
+            t_start = emission_profile.get("start")
 
-                if profile_type == "pulse":
-                    pulse = UniformEmissionProfile.unit_pulse(at=t_start)
-                    emission.set_temporal_emission_profile(pulse)
+            if profile_type == "pulse":
+                pulse = UniformEmissionProfile.unit_pulse(at=t_start)
+                emission.set_temporal_emission_profile(pulse)
 
-                elif profile_type == "uniform":
-                    t_range = emission_profile.get("range")
-                    uniform = UniformEmissionProfile.from_params(start=t_start, range=t_range)
-                    emission.set_temporal_emission_profile(uniform)
+            elif profile_type == "uniform":
+                t_range = emission_profile.get("range")
+                uniform = UniformEmissionProfile.from_params(start=t_start, range=t_range)
+                emission.set_temporal_emission_profile(uniform)
 
-                elif profile_type == "normal":
-                    t_range = emission_profile.get("range")
-                    norm = NormEmissionProfile.from_range(start=t_start, range=t_range)
-                    emission.set_temporal_emission_profile(norm)
+            elif profile_type == "normal":
+                t_range = emission_profile.get("range")
+                norm = NormEmissionProfile.from_range(start=t_start, range=t_range)
+                emission.set_temporal_emission_profile(norm)
 
-                elif profile_type in ["exponential decay", "exponential_decay", "exp_decay"]:
-                    decay_rate = emission_profile.get("decay_rate")
-                    exp_decay = ExponentDecayEmissionProfile.from_decay_rate(start=t_start, decay_rate=decay_rate)
-                    emission.set_temporal_emission_profile(exp_decay)
+            elif profile_type in ["exponential decay", "exponential_decay", "exp_decay"]:
+                decay_rate = emission_profile.get("decay_rate")
+                exp_decay = ExponentDecayEmissionProfile.from_decay_rate(start=t_start, decay_rate=decay_rate)
+                emission.set_temporal_emission_profile(exp_decay)
 
-                elif profile_type == "lognormal":
-                    t_range = emission_profile.get("range")
-                    skew = emission_profile.get("skew", 0)
-                    lognorm = LogNormEmissionProfile.from_range(start=t_start, range=t_range, skew=skew)
-                    emission.set_temporal_emission_profile(lognorm)
+            elif profile_type == "lognormal":
+                t_range = emission_profile.get("range")
+                skew = emission_profile.get("skew", 0)
+                lognorm = LogNormEmissionProfile.from_range(start=t_start, range=t_range, skew=skew)
+                emission.set_temporal_emission_profile(lognorm)
 
-                elif profile_type == "linear":
-                    t_range = emission_profile.get("range")
-                    slope = emission_profile.get("slope")
-                    linear = LinearEmissionProfile.from_params(start=t_start, range=t_range, slope=slope)
-                    emission.set_temporal_emission_profile(linear)
+            elif profile_type == "linear":
+                t_range = emission_profile.get("range")
+                slope = emission_profile.get("slope")
+                linear = LinearEmissionProfile.from_params(start=t_start, range=t_range, slope=slope)
+                emission.set_temporal_emission_profile(linear)
 
-                elif profile_type in ["inverse square root", "inverse_square_root", "inv_sqrt"]:
-                    t_range = emission_profile.get("range")
-                    invsqrt = InverseSquareRootEmissionProfile.from_range(start=t_start, range=t_range)
-                    emission.set_temporal_emission_profile(invsqrt)
+            elif profile_type in ["inverse square root", "inverse_square_root", "inv_sqrt"]:
+                t_range = emission_profile.get("range")
+                invsqrt = InverseSquareRootEmissionProfile.from_range(start=t_start, range=t_range)
+                emission.set_temporal_emission_profile(invsqrt)
 
-                else:
-                    raise ValueError(f"Emission profile type {profile_type} is not recognized.")
+            else:
+                raise ValueError(f"Emission profile type {profile_type} is not recognized.")
 
-                if emission_dict.get("name") is not None and emission_dict.get("name") != "":
-                    name = emission_dict.get("name")
-                    emission_profile = emission.get_temporal_emission_profile()
-                    emission_profile.set_name(name)
+            if emission_dict.get("name") is not None and emission_dict.get("name") != "":
+                name = emission_dict.get("name")
+                emission_profile = emission.get_temporal_emission_profile()
+                emission_profile.set_name(name)
 
-                if emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
-                    stage = emission_dict.get("lca_stage")
-                    emission_profile = emission.get_temporal_emission_profile()
-                    emission_profile.set_attr_name(stage)
+            if emission_dict.get("lca_stage") is not None and emission_dict.get("lca_stage") != "":
+                stage = emission_dict.get("lca_stage")
+                emission_profile = emission.get_temporal_emission_profile()
+                emission_profile.set_attr_name(stage)
 
-                self.emissions_lst.append(emission)
+            self.emissions_lst.append(emission)
 
         return self
 

@@ -30,11 +30,10 @@ test_emissions_list_of_dicts = [
     {"greenhouse_gas": "CH4", "qty": 0.01, "emission_profile": {"profile_type": "uniform", "start": 20, "range": 10}}
 ]
 
-PT_record = DynamicRadiativeForcingRecord()
-PT_record.set_start_year(start_year)
-PT_record.set_time_horizon(time_horizon)
-PT_record.set_time_step(time_step)
-PT_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
+PT_record = DynamicRadiativeForcingRecord.from_list_of_dicts(test_emissions_list_of_dicts, 
+                                                             start_year=start_year, 
+                                                             time_horizon=time_horizon, 
+                                                             time_step=time_step)
 
 # **********Step 3: Create the Reference Trajectory (RT) DLCI**********
 test_emissions_list_of_dicts = [
@@ -42,11 +41,10 @@ test_emissions_list_of_dicts = [
     {"greenhouse_gas": "CH4", "qty": 0.02, "emission_profile": {"profile_type": "uniform", "start": 20, "range": 10}}
 ]
 
-RT_record = DynamicRadiativeForcingRecord()
-RT_record.set_start_year(start_year)
-RT_record.set_time_horizon(time_horizon)
-RT_record.set_time_step(time_step)
-RT_record.add_emissions_from_list_of_dicts(test_emissions_list_of_dicts)
+RT_record = DynamicRadiativeForcingRecord.from_list_of_dicts(test_emissions_list_of_dicts, 
+                                                             start_year=start_year, 
+                                                             time_horizon=time_horizon, 
+                                                             time_step=time_step)
 
 # ********** Step 4: Dynamic Radiative Forcing Record evaluation and plot settings: **********
 PT_record.set_data() # product and reference trajectories are stored as a POD|LCA DRF_record object
