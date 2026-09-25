@@ -1,3 +1,11 @@
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "etel5501@uw.edu"
+__version__ = "0.1.0"
+
+from pathlib import Path
+
 from pod_lca.impacts import Emissions
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 from pod_lca.impacts import ExponentDecayEmissionProfile
@@ -6,7 +14,6 @@ from pod_lca.impacts import NormEmissionProfile
 from pod_lca.impacts import LogNormEmissionProfile
 from pod_lca.impacts import LinearEmissionProfile
 from pod_lca.impacts import InverseSquareRootEmissionProfile
-
 from pod_lca.materials_screening import Master
 from pod_lca.materials_screening import Model
 from pod_lca.materials_screening import Project
@@ -55,5 +62,7 @@ drf_record.plot(
 )
 
 # Save the DRF record to a CSV file:
-output_file = "examples/drf_record_temp.csv"
+output_file = "temp/drf_record_temp.csv"
+file_path = Path(output_file)
+file_path.parent.mkdir(parents=True, exist_ok=True)
 drf_record.save(output_file)

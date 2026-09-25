@@ -1,17 +1,14 @@
-# Internal imports
-from pod_lca.impacts import Emissions
-from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
-from pod_lca.impacts import ExponentDecayEmissionProfile
-from pod_lca.impacts import UniformEmissionProfile
-from pod_lca.impacts import NormEmissionProfile
-from pod_lca.impacts import LogNormEmissionProfile
-from pod_lca.impacts import LinearEmissionProfile
-from pod_lca.impacts import InverseSquareRootEmissionProfile
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "etel5501@uw.edu"
+__version__ = "0.1.0"
 
-# External imports
-import pandas as pd
 from matplotlib import pyplot as plt
+from pathlib import Path
+import pandas as pd
 
+from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
 
 # ====== Example C: Creating a DRF record from a CSV file of emissions dictionaries =========
 
@@ -175,9 +172,12 @@ for result in results_to_plot:
 
 
 # Save the DRF records to CSV files:
-PT_output_file = "examples/CCLIMB_PT_record_temp.csv"
-RT_output_file = "examples/CCLIMB_RT_record_temp.csv"
-Net_output_file = "examples/CCLIMB_Net_record_temp.csv"
+output_folder = Path("temp")
+output_folder.mkdir(parents=True, exist_ok=True)
+
+PT_output_file = output_folder / "CCLIMB_PT_record_temp.csv"
+RT_output_file = output_folder / "CCLIMB_RT_record_temp.csv"
+Net_output_file = output_folder / "CCLIMB_Net_record_temp.csv"
 
 PT_record.save(PT_output_file)
 RT_record.save(RT_output_file)
