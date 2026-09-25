@@ -54,7 +54,7 @@ colors = ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3',
 drf_record.plot(
     "AGTP", # plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
     "stackplot", # plot types: 'lineplot', 'stackplot'
-    group_by="lca_stage", # group_by options: "greenhouse_gas", "material", "lca_stage"
+    group_by="product", # group_by options: "greenhouse_gas", "product", "lca_stage"
     colors = colors
 )
 

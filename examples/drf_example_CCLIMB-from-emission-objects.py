@@ -34,31 +34,28 @@ show_ghg_stacks = False # if True, show the GHG stacks for the PT and RT separat
 # **********Step 2: Create the Product Trajectory (PT) DLCI**********
 # (Try using only emission_01 for a simple example)
 
-emission_01 = Emissions.from_dict(record_dict={"CO2": 3})
-pulse = UniformEmissionProfile.unit_pulse(at=0)
+emission_01 = Emissions.from_dict(record_dict={"CO2": 3}) # {GHG : Quantity [kg]}
+pulse = UniformEmissionProfile.unit_pulse(at=0) # pulse emission profile
 emission_01.set_temporal_emission_profile(pulse)
 
 emission_02 = Emissions.from_dict(record_dict={"CH4": 3})
-pulse = UniformEmissionProfile.unit_pulse(at=0)
+pulse = UniformEmissionProfile.from_params(start=0, range=10) # uniform emission profile
 emission_02.set_temporal_emission_profile(pulse)
 
 emission_03 = Emissions.from_dict(record_dict={"N2O": 0.1})
-norm = NormEmissionProfile.from_range(start=50, range=10)
+norm = NormEmissionProfile.from_range(start=50, range=10) # normal emission profile
 emission_03.set_temporal_emission_profile(norm)
 
 emission_04 = Emissions.from_dict(record_dict={"CH4": 0.01})
-expon = ExponentDecayEmissionProfile.from_decay_rate(start=60, decay_rate=10)
+expon = ExponentDecayEmissionProfile.from_decay_rate(start=60, decay_rate=10) # exponential decay emission profile
 # expon = ExponentDecay.from_range(start=2085, range=10)
 emission_04.set_temporal_emission_profile(expon)
 
 emission_05 = Emissions.from_dict(record_dict={"CO2": 1})
-linear = LinearEmissionProfile.from_params(start=10, range=50, slope=-0.1)
+linear = LinearEmissionProfile.from_params(start=10, range=50, slope=-0.1) # linear emission profile
 # linear = LinearEmissionProfile.from_percent_decrease(start=2035, step=50, percent_decrease=50)
 emission_05.set_temporal_emission_profile(linear)
 
-emission_06 = Emissions.from_dict(record_dict={"CO2": 1})
-invsqrt = InverseSquareRootEmissionProfile.from_range(start=50, range=40)
-emission_06.set_temporal_emission_profile(invsqrt)
 
 PT_record = DynamicRadiativeForcingRecord.from_emissions(
     [
@@ -67,7 +64,6 @@ PT_record = DynamicRadiativeForcingRecord.from_emissions(
      emission_03,
      emission_04, 
      emission_05,
-     emission_06,
      ], 
      start_year=start_year, 
      time_horizon=time_horizon, 
@@ -80,13 +76,12 @@ pulse = UniformEmissionProfile.unit_pulse(at=0)
 emission_01.set_temporal_emission_profile(pulse)
 
 emission_02 = Emissions.from_dict(record_dict={"CH4": 1})
-pulse = UniformEmissionProfile.unit_pulse(at=0)
+pulse = UniformEmissionProfile.from_params(start=0, range=20)
 emission_02.set_temporal_emission_profile(pulse)
 
 emission_03 = Emissions.from_dict(record_dict={"CH4": 1})
 pulse = UniformEmissionProfile.unit_pulse(at=30)
 emission_03.set_temporal_emission_profile(pulse)
-emission_03.methane_bio_oxidation = 0.0 # example: CH4 non-fossil accounting for zero CH4 oxidation
 
 RT_record = DynamicRadiativeForcingRecord.from_emissions(
     [
@@ -152,16 +147,13 @@ for result in results_to_plot:
                     label = f'Net {result}',
                     title=f'CCLIMB {result} analysis', 
                     xlabel='Year', 
-                    ylabel=f'Net {result} [{result_unit}]', 
+                    ylabel=f'{result[0].upper() + result[1:]} [{result_unit}]', 
                     xlim=(start_year, start_year + time_horizon),
                     grid=False)
 
 
     # Plot PT and RT separately, if requested
     if plot_PTandRT_separately:
-        # PT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = PT_colors)
-        # RT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = RT_colors)
-
         PT_result = PT_record.get_data(data_category=result, xy_pairs=False)[1]
         RT_result = RT_record.get_data(data_category=result, xy_pairs=False)[1]
         PT_result[f"{result}"] = 0

@@ -522,10 +522,10 @@ class DynamicRadiativeForcingRecord:
             return self.data_years, data_y
 
     def get_grouped_data(self, data_category="atmospheric concentration", group_by="greenhouse_gas"):
-        """Get a data series aggregated by greenhouse gas, material, or LCA stage."""
-        valid_groups = {"greenhouse_gas", "material", "lca_stage"}
+        """Get a data series aggregated by greenhouse gas, product, or LCA stage."""
+        valid_groups = {"greenhouse_gas", "product", "lca_stage"}
         if group_by not in valid_groups:
-            raise ValueError("Grouping must be 'greenhouse_gas', 'material', or 'lca_stage'.")
+            raise ValueError("Grouping must be 'greenhouse_gas', 'product', or 'lca_stage'.")
         if self.data_years is None:
             self.set_data()
 
@@ -534,7 +534,7 @@ class DynamicRadiativeForcingRecord:
             parent = emission.get_parent()
             if group_by == "greenhouse_gas":
                 labels = emission_data[data_category].keys()
-            elif group_by == "material":
+            elif group_by == "product":
                 material = parent.get_name() if parent is not None else None
                 labels = [material or "Unspecified material"]
             else:
@@ -675,7 +675,7 @@ class DynamicRadiativeForcingRecord:
             Time step for ticks along x axis.
         colors : list of str
             Colors of each line or stack.
-        group_by : {'greenhouse_gas', 'material', 'lca_stage'}
+        group_by : {'greenhouse_gas', 'product', 'lca_stage'}
             Grouping used for line or stack labels and colors.
 
         Raises

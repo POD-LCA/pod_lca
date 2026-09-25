@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 
 from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
+from pod_lca.materials_screening import Master, Model, Project
 
 # ====== Example C: Creating a DRF record from a CSV file of emissions dictionaries =========
 
@@ -21,21 +22,32 @@ results_to_plot = ['emission intensity','atmospheric concentration','instantaneo
 plot_PTandRT_separately = True # if True, plot the product trajectory (PT) and reference trajectory (RT) separately, in addition to the net results. If False, only plot the net results.
 plot_annotations = True # if True, annotate the net results at the requested time points. If False, do not annotate the net results.
 annotation_years = [20, 100, 250] # list of years at which to annotate the net results. Only used if plot_annotations is True.
-show_ghg_stacks = False # if True, show the GHG stacks for the PT and RT separately. If False, do not show the GHG stacks.
+show_stacks = False # if True, show the GHG stacks for the PT and RT separately. If False, do not show the GHG stacks.
+group_by = 'lca_stage' # select grouping of contribution stacks: 'greenhouse_gas', 'product', or 'lca_stage'
 
 
 # **********Step 2: Create the Product Trajectory (PT) DLCI**********
-test_DLCI_file_path = "examples/drf_example_dlci.csv"
-PT_record = DynamicRadiativeForcingRecord.from_csv(test_DLCI_file_path, 
+ex_DLCI_file_path = "examples/drf_example_dlci.csv"
+PT_record = DynamicRadiativeForcingRecord.from_csv(ex_DLCI_file_path, 
                                                    start_year=start_year, 
                                                    time_horizon=time_horizon, 
                                                    time_step=time_step)
 
 # **********Step 3: Create the Reference Trajectory (RT) DLCI**********
-RT_record = DynamicRadiativeForcingRecord.from_csv(test_DLCI_file_path, 
+ex_DLCI_file_path_2 = "examples/drf_example_dlci_2.csv"
+RT_record = DynamicRadiativeForcingRecord.from_csv(ex_DLCI_file_path_2, 
                                                    start_year=start_year, 
                                                    time_horizon=time_horizon, 
                                                    time_step=time_step)
+
+# Attach material and LCA stage metadata so grouped data can use the CSV fields.
+project = Project.new()
+model = Model.in_project(project)
+for record in (PT_record, RT_record):
+    for emission in record.get_emissions_list():
+        emission_profile = emission.get_temporal_emission_profile()
+        parent = Master.new(None, emission_profile.get_name(), model, emission_profile.get_attr(), None, None, None)
+        emission.set_parent(parent)
 
 # ********** Step 4: Dynamic Radiative Forcing Record evaluation and plot settings: **********
 PT_record.set_data() # product and reference trajectories are stored as a POD|LCA DRF_record object
@@ -46,6 +58,7 @@ Net_record = pd.DataFrame() # Net results are stored as a pandas dataframe
 # Net results are calculated as the difference between the product and reference trajectories for each data category and GHG:
 data_categories = ['emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP']
 ghgs = ['CO2', 'CH4', 'N2O']
+time_values = PT_record.get_data(data_category=data_categories[0], xy_pairs=False)[0]
 for data_category in data_categories:
     PT_data = PT_record.get_data(data_category=data_category, xy_pairs=False)
     RT_data = RT_record.get_data(data_category=data_category, xy_pairs=False)
@@ -57,8 +70,8 @@ for data_category in data_categories:
         Net_data_total += Net_data_ghg # Add the net data for each GHG to the total net data
         Net_record[f"{data_category}_{ghg}"] = Net_data_ghg # Add the net data as a column for each GHG
     Net_record[f"{data_category}"] = Net_data_total # Add the total net data as a column
-# Net_record['time'] = PT_data[0]
-Net_record.insert(0, 'time', PT_data[0])
+
+Net_record.insert(0, 'time', time_values)
 
 # Select plot colors
 PT_colors = ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3',
@@ -90,45 +103,23 @@ for result in results_to_plot:
                     label = f'Net {result}',
                     title=f'CCLIMB {result} analysis', 
                     xlabel='Year', 
-                    ylabel=f'Net {result} [{result_unit}]', 
+                    ylabel=f'{result[0].upper() + result[1:]} [{result_unit}]', 
                     xlim=(start_year, start_year + time_horizon),
                     grid=False)
 
 
     # Plot PT and RT separately, if requested
     if plot_PTandRT_separately:
-        # PT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = PT_colors)
-        # RT_record.plot(result, "stackplot", group_by="greenhouse_gas", colors = RT_colors)
-
-        PT_result = PT_record.get_data(data_category=result, xy_pairs=False)[1]
-        RT_result = RT_record.get_data(data_category=result, xy_pairs=False)[1]
-        PT_result[f"{result}"] = 0
-        RT_result[f"{result}"] = 0
-
-        for ghg in ghgs:
-            PT_result_ghg = PT_result[ghg]
-            RT_result_ghg = RT_result[ghg]
-            PT_result[f"{result}"] += PT_result_ghg
-            RT_result[f"{result}"] += RT_result_ghg
-
-        PT_df = pd.DataFrame.from_dict(PT_result)
-        RT_df = pd.DataFrame.from_dict(RT_result)
-
-        PT_df.insert(0, 'time', PT_data[0])
-        RT_df.insert(0, 'time', RT_data[0])
-
-        Net_plot.plot(PT_df['time'], PT_df[result], 
-                                 label=f'Product Trajectory {result}',
-                                 color=PT_colors[0],
-                                 linestyle='--',
-                                 alpha=0.5)
-        
-        
-        Net_plot.plot(RT_df['time'], RT_df[result], 
-                                 label=f'Reference Trajectory {result}',
-                                 color=RT_colors[0],
-                                 linestyle='--',
-                                 alpha=0.5)
+        PT_data = PT_record.get_data(data_category=result, xy_pairs=False)
+        RT_data = RT_record.get_data(data_category=result, xy_pairs=False)
+        PT_values = [sum(PT_data[1][ghg][i] for ghg in ghgs) for i in range(len(PT_data[0]))]
+        RT_values = [sum(RT_data[1][ghg][i] for ghg in ghgs) for i in range(len(RT_data[0]))]
+        Net_plot.plot(PT_data[0], PT_values,
+                      label=f'Product Trajectory {result}',
+                      color=PT_colors[0], linestyle='--', alpha=0.5)
+        Net_plot.plot(RT_data[0], RT_values,
+                      label=f'Reference Trajectory {result}',
+                      color=RT_colors[0], linestyle='--', alpha=0.5)
 
     # Annotate the net result at the requested time points if requested.
     if plot_annotations:
@@ -154,9 +145,45 @@ for result in results_to_plot:
             Net_plot.plot(annotation_time, annotation_value, 'D', markerfacecolor=Net_colors[3], markeredgecolor=Net_colors[0], markersize=6, alpha=0.9)
 
     # Show the GHG stacks for the PT and RT, if requested
-    if show_ghg_stacks:
-        Net_plot.stackplot(PT_df['time'], [PT_df[ghg] for ghg in ghgs], labels=[f'PT {ghg}' for ghg in ghgs], colors=PT_colors, alpha=0.15, hatch='.', edgecolor=PT_colors[0])
-        Net_plot.stackplot(RT_df['time'], [RT_df[ghg] for ghg in ghgs], labels=[f'RT {ghg}' for ghg in ghgs], colors=RT_colors, alpha=0.15, hatch='o', edgecolor=RT_colors[0])
+    if show_stacks:
+        if group_by == 'greenhouse_gas':
+            PT_data = PT_record.get_data(data_category=result, xy_pairs=False)
+            RT_data = RT_record.get_data(data_category=result, xy_pairs=False)
+            PT_df = pd.DataFrame(PT_data[1])
+            RT_df = pd.DataFrame(RT_data[1])
+            PT_df.insert(0, 'time', PT_data[0])
+            RT_df.insert(0, 'time', RT_data[0])
+            Net_plot.stackplot(PT_df['time'], [PT_df[ghg] for ghg in ghgs], labels=[f'PT {ghg}' for ghg in ghgs], colors=PT_colors, alpha=0.15, hatch='.', edgecolor=PT_colors[0])
+            Net_plot.stackplot(RT_df['time'], [RT_df[ghg] for ghg in ghgs], labels=[f'RT {ghg}' for ghg in ghgs], colors=RT_colors, alpha=0.15, hatch='o', edgecolor=RT_colors[0])
+
+        else:
+            PT_grouped = PT_record.get_grouped_data(data_category=result, group_by=group_by)
+            RT_grouped = RT_record.get_grouped_data(data_category=result, group_by=group_by)
+            PT_groups = list(PT_grouped)
+            RT_groups = list(RT_grouped)
+            PT_grouped_values = [[value for _, value in PT_grouped[group]] for group in PT_groups]
+            RT_grouped_values = [[value for _, value in RT_grouped[group]] for group in RT_groups]
+
+            if PT_grouped_values:
+                Net_plot.stackplot(
+                    time_values,
+                    *PT_grouped_values,
+                    labels=[f'PT {group}' for group in PT_groups],
+                    colors=[PT_colors[i % len(PT_colors)] for i in range(len(PT_grouped_values))],
+                    alpha=0.15,
+                    hatch='.',
+                    edgecolor=PT_colors[0],
+                )
+            if RT_grouped_values:
+                Net_plot.stackplot(
+                    time_values,
+                    *RT_grouped_values,
+                    labels=[f'RT {group}' for group in RT_groups],
+                    colors=[RT_colors[i % len(RT_colors)] for i in range(len(RT_grouped_values))],
+                    alpha=0.15,
+                    hatch='o',
+                    edgecolor=RT_colors[0],
+                )
   
     
     Net_plot.legend(loc='best', fontsize=10) # show legend

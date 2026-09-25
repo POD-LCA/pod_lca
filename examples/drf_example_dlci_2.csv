@@ -1,0 +1,4 @@
+Material,LCA Stage,Greenhouse Gas Type,Quantity (kg),Temporal Emission Profile,Start Time (year),Duration (years),Decay Rate (1/years),Skew,Slope (1/years)
+Ex. Material A,A1,CO2,2,Pulse,0,,,,
+Ex. Material B,A1,CH4,2,Pulse,0,,,,
+Ex. Fuel Combustion,A3,N2O,2,Pulse,0,,,,
