@@ -39,7 +39,7 @@ meth_diphenyl_d = CLT_model.add_product(
     stage="A1",
     qty=3.22,
     unit=KILOGRAM,
-    impacts_from="Methyl methacrylate, MMA; at plant",
+    impacts_from="Methylene diphenyl diisocyanate, MDI, at plant, US PNW",
     sctg_code=28,
 )
 prop_glycol = CLT_model.add_product(
@@ -47,7 +47,7 @@ prop_glycol = CLT_model.add_product(
     stage="A1",
     qty=2.77,
     unit=KILOGRAM,
-    impacts_from="Ethylene glycol (process emission)",
+    impacts_from="Ethylene glycol; at plant",
     sctg_code=28,
 )
 dummy_PUR_1 = CLT_model.add_product(name="PUR_1", stage="A1", qty=0.05, unit=KILOGRAM, impacts_from=None, sctg_code=28)
