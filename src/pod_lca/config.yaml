@@ -138,6 +138,7 @@ file_paths:
     MOLECULER_WEIGHT: data/drf_none_moleculer-weight.json
     CO2_IRF_PARAMETERS: data/drf_ipcc_co2-irf-parameters.json
     INDIRECT_EFFECTS_FACTORS: data/drf_ipcc_indirect-contributions.json
+    TEMPERATURE_RESPONSE_PARAMETERS: data/drf_ipcc_temp-response.json
   building:
     DEFAULT_IMPACT_DATABASE: data/impacts_podlca_building-materials-data.csv
     TEMPLATE_GEOMETRY: data/buildings_podlca_geometry.json

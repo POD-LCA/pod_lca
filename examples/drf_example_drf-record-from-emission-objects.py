@@ -1,0 +1,90 @@
+__author__ = ["POD/LCA Team"]
+__copyright__ = "University of Washington"
+__license__ = "MIT License"
+__email__ = "etel5501@uw.edu"
+__version__ = "0.1.0"
+
+from pathlib import Path
+
+from pod_lca.dynamic_radiative_forcing import DynamicRadiativeForcingRecord
+from pod_lca.impacts import Emissions
+from pod_lca.impacts import ExponentDecayEmissionProfile
+from pod_lca.impacts import UniformEmissionProfile
+from pod_lca.impacts import LogNormEmissionProfile
+from pod_lca.impacts import LinearEmissionProfile
+from pod_lca.impacts import InverseSquareRootEmissionProfile
+
+
+# Change plot settings below the example DLCI, then click run to generate the plot and results file. 
+
+# Creating emissions object individually
+emission_01 = Emissions.from_dict(record_dict={"CO2": 1})
+pulse = UniformEmissionProfile.unit_pulse(at=2035)
+emission_01.set_temporal_emission_profile(pulse)
+
+emission_02 = Emissions.from_dict(record_dict={"CH4": 1})
+pulse = UniformEmissionProfile.unit_pulse(at=2025)
+emission_02.set_temporal_emission_profile(pulse)
+
+emission_03 = Emissions.from_dict(record_dict={"CH4": 1})
+pulse = UniformEmissionProfile.unit_pulse(at=2025)
+emission_03.set_temporal_emission_profile(pulse)
+emission_03.methane_bio_oxidation = 0.0 # example: CH4 non-fossil accounting for zero CH4 oxidation
+
+emission_04 = Emissions.from_dict(record_dict={"N2O": 0.005})
+lognorm = LogNormEmissionProfile.from_range(start=2075, range=10)
+emission_04.set_temporal_emission_profile(lognorm)
+
+emission_05 = Emissions.from_dict(record_dict={"CH4": 0.01})
+expon = ExponentDecayEmissionProfile.from_decay_rate(start=2085, decay_rate=10)
+# expon = ExponentDecay.from_range(start=2085, range=10)
+emission_05.set_temporal_emission_profile(expon)
+
+emission_06 = Emissions.from_dict(record_dict={"CO2": 1})
+linear = LinearEmissionProfile.from_params(start=2035, range=50, slope=-0.1)
+# linear = LinearEmissionProfile.from_percent_decrease(start=2035, step=50, percent_decrease=50)
+emission_06.set_temporal_emission_profile(linear)
+
+emission_07 = Emissions.from_dict(record_dict={"CO2": 1})
+invsqrt = InverseSquareRootEmissionProfile.from_range(start=2085, range=40)
+emission_07.set_temporal_emission_profile(invsqrt)
+
+drf_record = DynamicRadiativeForcingRecord.from_emissions(
+    [
+     emission_01, 
+     emission_02, 
+     emission_03,
+     # emission_04, 
+     # emission_05,
+     # emission_06,
+     # emission_07
+     ], 
+     start_year=2025, 
+     time_horizon=100, 
+     time_step=1 / 12
+)
+
+# Dynamic Radiative Forcing Record evaluation and plot settings:
+drf_record.set_data()
+
+# Select plot color scheme
+colors = ['#002060', '#00337F', '#4472C4', '#8FAADC', '#D9E2F3',
+          '#3F1C59', '#5B2A8F', '#7030A0', '#B4A7D6', '#EAD1DC',
+          '#7F0000', '#9C0000', '#C00000', '#E26B6B', '#F4CCCC',
+          '#7F1C00', '#9C2B00', '#ED7D31', '#F4B183', '#FCE4D6',
+          '#7F6000', '#9F7700', '#FFC000', '#FFD966', '#FFF2CC',
+          '#1F4D1F', '#2D6A2D', '#70AD47', '#A9D08E', '#E2EFDA'
+          ]
+
+drf_record.plot(
+    "AGTP", # plot options: 'emission intensity', 'atmospheric concentration', 'instantaneous radiative forcing', 'cumulative radiative forcing', 'GWP-dynamic', 'AGTP'
+    "stackplot", # plot types: 'lineplot', 'stackplot'
+    group_by="greenhouse_gas", # group_by options: "greenhouse_gas", "product", "lca_stage"
+    colors = colors
+)
+
+# Save the DRF record to a CSV file:
+output_file = "temp/drf_record_temp.csv"
+file_path = Path(output_file)
+file_path.parent.mkdir(parents=True, exist_ok=True)
+drf_record.save(output_file)
