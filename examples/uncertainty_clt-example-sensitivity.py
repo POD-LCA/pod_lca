@@ -32,7 +32,7 @@ lumber = CLT_model.add_product(
     stage="A1",
     qty=1.21,
     unit=CUBIC_METER,
-    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW",
+    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; INW",
     sctg_code=26,
 )
 meth_diphenyl_d = CLT_model.add_product(
@@ -87,14 +87,15 @@ DQS = data_quality_assessment.get_model_DQS("GWP")
 print(data_quality_assessment)
 
 # Sensitivity Analysis
-result_range = SensitivityAnalysis.compute_sensitivity_of_param(
-    electricity,
-    "impact_database_entry",
+sensitivity_analysis = SensitivityAnalysis()
+result_range = sensitivity_analysis.compute_sensitivity_of_param(
+    obj=electricity,
+    param="impact_database_entry",
     impact_cat="GWP",
     options=["Electricity_NWPP(eGrid)_[USLCI]", "Electricity_UnknownHigh_[USLCI]", "Electricity_UnknownLow_[USLCI]"],
 )
-result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber, "qty", impact_cat="GWP", range=(0.96, 1.46))
-result_range = SensitivityAnalysis.compute_sensitivity_of_params(
+result_range = sensitivity_analysis.compute_sensitivity_of_param(lumber, "qty", impact_cat="GWP", range=(0.96, 1.46))
+result_range = sensitivity_analysis.compute_sensitivity_of_params(
     CLT_model,
     [
         {"obj": lumber.get_transportation()[0], "param": "travel_dist", "range": (20, 200)},
@@ -104,4 +105,8 @@ result_range = SensitivityAnalysis.compute_sensitivity_of_params(
     impact_cat="GWP",
 )
 
-result_range = SensitivityAnalysis.compute_sensitivity_of_param(lumber, "electricity_scenario", impact_cat="GWP", options=['MidCase', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050'])
+result_range = sensitivity_analysis.compute_sensitivity_of_param(
+    lumber, 
+    "electricity_scenario", 
+    impact_cat="GWP", 
+    options=['MidCase', 'LowNGPrice', 'HighNGPrice', 'Decarb95by2050'])

@@ -19,5 +19,9 @@ data = {
 }
 
 graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw(data, "Nutrient and Mineral Content of Fruits vs. Vegetables (mg per 100g).", "", "quantity (in miligrams)", 'grouped')
+graph.draw(data, 
+           "Nutrient and Mineral Content of Fruits vs. Vegetables (mg per 100g).", 
+           "", 
+           "quantity (in miligrams)", 
+           'stacked')
 graph.show()

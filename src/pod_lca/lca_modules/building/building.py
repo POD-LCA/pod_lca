@@ -305,8 +305,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
             building_material = Material.new(
                 name=item.material + '_in_' + building_assembly, 
-                qty=float(item.qty),
-                unit=UNITS_MAP[item.unit],
+                qty=Q(float(item.qty), UNITS_MAP[item.unit]),
                 material_database_entry=item.impact_database_entry,
             )
             building_material.set_service_life_category(item.PODLCA_RSL_category)

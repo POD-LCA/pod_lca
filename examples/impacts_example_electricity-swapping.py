@@ -22,7 +22,7 @@ epoxy = CLT_model.add_product(
     stage="A1",
     qty=1,
     unit=KILOGRAM,
-    impacts_from="Aluminum, primary, ingot, at plant, 1998",
+    impacts_from="Aluminum ingot; production mix; at plant",
 )
 
 print(epoxy.get_impacts())

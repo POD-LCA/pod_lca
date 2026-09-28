@@ -1,4 +1,4 @@
-﻿NAICS Category,NAICS Sub-category,Name,UUID,Location,Process Type,Description,Qty,Unit,Density Needed?,Density,Density unit,Density reference/notes,GWP,AP,EP,ODP,POCP,NREF,CO2,CH4,N2O,Electricity contribution available?,electricity_GWP,electricity_AP,electricity_EP,electricity_ODP,electricity_POCP,electricity_NREF,electricity_CO2,electricity_CH4,electricity_N2O,electricity_Qty,electricity_Unit,Compound/Substance Name,InChIKey,Kingdom,Superclass,Class,Subclass,Stored Biogenic Carbon,Biomaterial Species | Region,Biomaterial Part/Form/Product,Dry/Green,%C (dry mass basis),%H2O (mass % moisture),Dry Density (0% moisture) [kg/unit],Biogenic C,Biogenic CO2 Content [kg CO2/unit],Growth Model Type,Rotation period [yrs],Mineral Carbonation Potential,Mineral C
+﻿NAICS Category,NAICS Sub-category,Name,UUID,Location,Process Type,Description,Qty,Unit,Density Needed?,Density,Density unit,Density reference/notes,GWP,AP,EP,ODP,POCP,NREF,CO2,CH4,N2O,Electricity contribution available?,Electricity_GWP,Electricity_AP,Electricity_EP,Electricity_ODP,Electricity_POCP,Electricity_NREF,Electricity_CO2,Electricity_CH4,Electricity_N2O,Electricity_Qty,Electricity_Unit,Compound/Substance Name,InChIKey,Kingdom,Superclass,Class,Subclass,Stored Biogenic Carbon,Biomaterial Species | Region,Biomaterial Part/Form/Product,Dry/Green,%C (dry mass basis),%H2O (mass % moisture),Dry Density (0% moisture) [kg/unit],Biogenic C,Biogenic CO2 Content [kg CO2/unit],Growth Model Type,Rotation period [yrs],Mineral Carbonation Potential,Mineral C
 31-33: Manufacturing,3251: Basic Chemical Manufacturing,Acetic acid; at plant,e4a61018-9f98-3049-95c1-33b1acaa904e,RNA,UNIT_PROCESS,"Changed process on 12/9/2024 to reflect recovered energy as avoided natural gas combustion.
 Important note: although most of the data in the US LCI database has 
 undergone some sort of review, the database as a whole has not yet 
@@ -13011,34 +13011,49 @@ Please email comments to lci@nrel.gov.",1,kg,FALSE,0,N/A,0,1.734032994,0.0078374
 "11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,Roundwood sawlogs; softwood; green; at logyard; INW,8fbcd255-c08f-342c-ab90-c1902d8767dd,US,UNIT_PROCESS,This unit process represents the processing of 1 cubic meter final products. This unit process begins with logs in the mill yard and includes: sorting and storage of logs; in-yard transportation of logs from the point of unloading to the deck. The process technologies are an aggregation of those applied in US Inland North West (INW).,1,m3,TRUE,902,kg/m3,See POD|LCA biomaterial data,25.94902713,0.137224126,0.017954486,0.00000012,4.620906629,321.6064295,25.10935003,0.016852126,0.001380079,TRUE,3.725990711,0.007059149,0.000641206,6.18E-08,0.155402974,56.7735529,3.492118857,0.007923677,0.0000394,14.73264,MJ,0,0,0,0,0,0,TRUE,Miscellaneous Softwood | INW,Roundwood,Green,0.502,1,451,226.402,829.638,Normal,50,FALSE,0
 "11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,Roundwood sawlogs; softwood; green; at logyard; NE-NC,12e5d835-6ce8-3bb7-a7b9-08d9bf19d43c,US,UNIT_PROCESS,This unit process represents the processing of 1 cubic meter final products. This unit process begins with logs in the mill yard and includes: sorting and storage of logs; in-yard transportation of logs from the point of unloading to the deck. The process technologies are an aggregation of those applied in US North East North Central (NE-NC).,1,m3,TRUE,760,kg/m3,See POD|LCA biomaterial data,28.60848359,0.199479721,0.023195223,0.000000111,6.928272857,350.681511,27.85422255,0.014613526,0.001295797,TRUE,3.268572635,0.006192538,0.000562489,5.42E-08,0.13632506,49.80379604,3.06341186,0.006950933,0.0000346,12.924,MJ,0,0,0,0,0,0,TRUE,Miscellaneous Softwood | NE-NC,Roundwood,Green,0.511,1,380,194.066,711.144,Normal,80,FALSE,0
 "11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,Roundwood sawlogs; softwood; green; at logyard; PNW,f788d97e-6f5f-34b6-98d3-b104137429cb,US,UNIT_PROCESS,This unit process represents the processing of 1 cubic meter final products. This unit process begins with logs in the mill yard and includes: sorting and storage of logs; in-yard transportation of logs from the point of unloading to the deck. The process technologies are an aggregation of those applied in US Pacific North West (PNW).,1,m3,TRUE,760,kg/m3,See POD|LCA biomaterial data,22.9012686,0.209138652,0.021187443,4.76E-08,5.956585433,250.6486679,20.78426684,0.067603287,0.000844573,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Softwood | PNW,Roundwood,Green,0.502,1,380,190.76,699.03,Normal,50,FALSE,0
-"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-SE",e594cd02-a8cb-43c8-a42b-0c62e4d467e5,SE,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
-
+"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-SE",e594cd02-a8cb-43c8-a42b-0c62e4d467e5,SE,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
+
+
+
 There was no nursery and tree planting stage in the system boundary as natural regeneration is more common in the management of hardwood forests than use of plantation silviculture. The following activities are included in the system boundary: felling, skidding, processing, and loading. Input description notes describe the breakdown of inputs across these activities.
-
+
+
 LCI inputs of fuel consumed were taken as an average of manual and mechanized harvesting in uneven-aged forests and even-aged forests. Fuel input data on individual harvesting processes is available in Table S2-S5 of Zhao et al., 2024.
-
+
+
 ",1,m3,TRUE,596.232,kg/m3,See POD|LCA biomaterial data,10.38648493,0.11689113,0.011624763,2.33E-08,4.109830089,123.5011012,10.23799416,0.003202892,0.000221425,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Hardwood | SE,Roundwood,Dry,0.502,0.12,532.35,267.293,979.481,Normal,75,FALSE,0
-"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Northcentral",7df37d12-80b4-4268-93d3-b0203d7b86e3,US-Northcentral,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
-
+"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Northcentral",7df37d12-80b4-4268-93d3-b0203d7b86e3,US-Northcentral,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
+
+
+
 There was no nursery and tree planting stage in the system boundary as natural regeneration is more common in the management of hardwood forests than use of plantation silviculture. The following activities are included in the system boundary: felling, skidding, processing, and loading. Input description notes describe the breakdown of inputs across these activities.
-
+
+
 LCI inputs of fuel consumed were taken as an average of manual and mechanized harvesting in uneven-aged forests and even-aged forests. Fuel input data on individual harvesting processes is available in Table S2-S5 of Zhao et al., 2024.
-
+
+
 ",1,m3,TRUE,511.486631,kg/m3,See POD|LCA biomaterial data,13.07033831,0.146969331,0.014615346,2.94E-08,5.167784217,156.4464004,12.88318196,0.004043516,0.000278383,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Hardwood | NE-NC,Roundwood,Dry,0.5,0.12,456.684492,228.388,836.915,Normal,80,FALSE,0
-"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Eastern",dc70292a-8c6a-4080-a088-52eebb5cda2f,US-Eastern,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
-
+"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Eastern",dc70292a-8c6a-4080-a088-52eebb5cda2f,US-Eastern,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
+
+
+
 There was no nursery and tree planting stage in the system boundary as natural regeneration is more common in the management of hardwood forests than use of plantation silviculture. The following activities are included in the system boundary: felling, skidding, processing, and loading. Input description notes describe the breakdown of inputs across these activities.
-
+
+
 LCI inputs of hardwood harvesting in four sub-regions of eastern US were averaged to generate an LCI of eastern US hardwood harvesting. Fuel input data on individual harvesting processes is available in Table S2-S5 of Zhao et al., 2024.
 
-""
+""
+
 ",1,m3,TRUE,571.5027027,kg/m3,See POD|LCA biomaterial data,11.77311584,0.131901863,0.01311438,2.67E-08,4.639579317,144.8511233,11.6034086,0.003691699,0.00024977,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Hardwood | E,Roundwood,Dry,0.502,0.12,510.2702703,256.207,938.856,Normal,75,FALSE,0
-"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Northeast",289da5ab-e130-4fa4-b9ec-1dc224d1ecf6,US-Northeast,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
-
+"11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Northeast",289da5ab-e130-4fa4-b9ec-1dc224d1ecf6,US-Northeast,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
+
+
+
 There was no nursery and tree planting stage in the system boundary as natural regeneration is more common in the management of hardwood forests than use of plantation silviculture. The following activities are included in the system boundary: felling, skidding, processing, and loading. Input description notes describe the breakdown of inputs across these activities.
 
 LCI inputs of fuel consumed were taken as an average of manual and mechanized harvesting in uneven-aged forests and even-aged forests. Fuel input data on individual harvesting processes is available in Table S2-S5 of Zhao et al., 2024.
-
+
+
 ",1,m3,TRUE,511.486631,kg/m3,See POD|LCA biomaterial data,9.858460762,0.110783639,0.01101649,2.22E-08,3.895643406,118.5719802,9.717132472,0.003057052,0.000209831,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Hardwood | NE-NC,Roundwood,Dry,0.5,0.12,456.684492,228.388,836.915,Normal,80,FALSE,0
 "11: Agriculture, Forestry, Fishing and Hunting",1133: Logging,"Roundwood, hardwood; average harvesting; at forest road | US-Mid-Atlantic",c2b60c16-f5cb-4f7e-8742-fa06ef93e3c6,US-Mid-Atlantic,UNIT_PROCESS,"This gate-to-gate process is for 1 m3 of hardwood harvested, extracted, and processed at the landing site. Harvested roundwood is ready to be transported for further processing.
 
@@ -14634,8 +14649,10 @@ Additional details on the process can be found in Gu and Bergman (2016).",1,m3,T
 ",1,kg,FALSE,0,N/A,0,0.239848442,0.001802202,0.000148182,2.64E-09,0.060434118,3.41726929,0.224182171,0.000387133,0.000018,TRUE,0.074658205,0.000141445,0.0000128,1.24E-09,0.003113831,1.137579742,0.069972081,0.000158768,0.00000079,0.2952,MJ,0,0,0,0,0,0,FALSE,N/A,N/A,N/A,0,0,0,0,0,N/A,0,FALSE,0
 22: Utilities,"2213: Water, Sewage and Other Systems","Wood combusted; at boiler, at hardwood lumber mill | US-SE",c5b5e9ba-7b41-45a9-b89c-13054b2ead9c,US-SE expanded,UNIT_PROCESS,"This unit process represents the combustion of 1 kg wood residue either generated on-site or purchased from outside the system boundary.  The energy output is steam and is used to heat the kilns that dry wood. Respondents in this study reported that a small fraction of dry planar shavings was used for fuel. Sawmills in this study did not purchase wood for their boilers. Instead they relied 100% on the wood fuel sources from within their manufacturing operations.
 ",1,kg,FALSE,0,N/A,0,0.308495317,0.00222554,0.000140323,4.03E-09,0.055809558,4.201788244,0.288793844,0.00052129,0.000019,TRUE,0.074658205,0.000141445,0.0000128,1.24E-09,0.003113831,1.137579742,0.069972081,0.000158768,0.00000079,0.2952,MJ,0,0,0,0,0,0,FALSE,N/A,N/A,N/A,0,0,0,0,0,N/A,0,FALSE,0
-22: Utilities,"2213: Water, Sewage and Other Systems","Wood combusted; at boiler, at pallet facility",a55482f2-abf9-4396-ba6e-43344eb54193,US,UNIT_PROCESS,"This unit process represents the combustion of 1 kg wood residue generated on-site.
-
+22: Utilities,"2213: Water, Sewage and Other Systems","Wood combusted; at boiler, at pallet facility",a55482f2-abf9-4396-ba6e-43344eb54193,US,UNIT_PROCESS,"This unit process represents the combustion of 1 kg wood residue generated on-site.
+
+
+
 Coproducts include wood ash.",1,kg,FALSE,0,N/A,0,0.013159438,0.000894756,0.000053,1.26E-11,0.03223237,0.220049116,0.008685028,0.0000384,0.0000128,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,FALSE,N/A,N/A,N/A,0,0,0,0,0,N/A,0,FALSE,0
 22: Utilities,"2213: Water, Sewage and Other Systems","Wood combusted; at boiler, at softwood lumber mill | US-Pacific coast",7a741a48-c6fb-4df4-80eb-8f3282c0237a,US-Pacific coast,UNIT_PROCESS,"This unit process represents the combustion of 1 kg wood residue either generated on-site or purchased from outside the system boundary.  The energy output is steam and is used to heat the kilns that dry wood. Softwood lumber sawmill respondents provided information on how much woodfuel was used in the boiler. Of the wood fuel burned, 92 percent was produced on site and the rest was purchased from outside. Material and energy inputs for combustion of woodfuel and emissions at the boiler were updated withe data from a LCA study of wood fired boilers used in the wood products industry by Puettmann and Milota, 2017. 
 
@@ -14705,10 +14722,13 @@ undergone a formal validation process.
 Please email comments to lci@nrel.gov.",1,kg,FALSE,0,N/A,0,0.015472805,0.002385878,0.001004394,0.000000296,0.071518332,0.860838725,0.009137576,0.000191481,0.000000942,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,FALSE,N/A,N/A,N/A,0,0,0,0,0,N/A,0,FALSE,0
 31-33: Manufacturing,3219: Other Wood Product Manufacturing,"Wood pallet; assembled, treated; at pallet facility",2db49b0e-43d9-4a14-8688-7d7d6bae6a2c,US,UNIT_PROCESS,"This gate-to-gate unit process is for 100,000 lb (45.4 metric tons) of pallet loads of product delivered which is equivalent to 2.13 treated and assembled pallets ready for use. The studied system includes supplementary processes such as heat and chemical (fungicide) treatment, painting, and stamping. ",1,kg,TRUE,17.5,kg/Item(s),Product flow properties,0.279655065,0.001206621,0.000147041,1.77E-09,0.042841213,3.664929753,0.266857759,0.000328927,0.0000133,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Wood | US,Lumber,Dry,0.478,0.12,484.50075,231.64,848.832,Normal,50,FALSE,0
 31-33: Manufacturing,3219: Other Wood Product Manufacturing,Wood pallet; assembled; at pallet facility,c0bec04c-5e8a-4e1c-a6ad-b9a396be1ecb,US,UNIT_PROCESS,"This gate-to-gate unit process is for 100,000 lb (45.4 metric tons) of pallet loads of product delivered which is equivalent to 2.13 pallets assembled, and ready to be treated. The studied system includes nailing and assembling of wood boards.
-
+
+
 ",1,kg,TRUE,17.5,kg/Item(s),Product flow properties,0.27581199,0.001202156,0.000145171,1.63E-09,0.042688431,3.618529439,0.263155783,0.000326212,0.0000131,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Wood | US,Lumber,Dry,0.478,0.12,484.50075,231.64,848.832,Normal,50,FALSE,0
-31-33: Manufacturing,3219: Other Wood Product Manufacturing,Wood pallet; repaired/remanufactured; at pallet repair facility,5a24670b-1589-4653-8d23-22647f4dcec5,US,UNIT_PROCESS,"This gate-to-gate unit process is for a pallet repaired/remanufactured. The studied system includes transportation from the user to the pallet repair facility and repair/remanufacturing. The use stage is not included in the system boundary. 
-
+31-33: Manufacturing,3219: Other Wood Product Manufacturing,Wood pallet; repaired/remanufactured; at pallet repair facility,5a24670b-1589-4653-8d23-22647f4dcec5,US,UNIT_PROCESS,"This gate-to-gate unit process is for a pallet repaired/remanufactured. The studied system includes transportation from the user to the pallet repair facility and repair/remanufacturing. The use stage is not included in the system boundary. 
+
+
+
 Coproducts include sawdust, hogged material, wood chips, scrap wood, and wood fuel. ",1,kg,TRUE,16.58,kg/Item(s),Product flow properties,0.01554425,0.0000287,0.00000612,3.41E-11,0.000880768,0.185410969,0.014948352,0.0000128,0.000000895,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Wood | US,Lumber,Dry,0.478,0.12,484.50075,231.64,848.832,Normal,50,FALSE,0
 31-33: Manufacturing,3219: Other Wood Product Manufacturing,"Wood, average lumber mix for pallets; at pallet facility",055314eb-d9b4-43a5-aff2-dc736b0a9052,US,UNIT_PROCESS,This gate-to-gate unit process is for 1 m3 of mixed lumber used for wood pallet manufacturing. ,1,m3,TRUE,589.3334595,kg/m3,See POD|LCA biomaterial data,87.55700242,0.486848614,0.051146172,0.000000789,18.00843696,1255.127413,82.88944801,0.133575048,0.003430562,FALSE,0,0,0,0,0,0,0,0,0,0,N/A,0,0,0,0,0,0,TRUE,Miscellaneous Wood | US,Lumber,Dry,0.478,0.12,484.50075,231.64,848.832,Normal,50,FALSE,0
 22: Utilities,"2213: Water, Sewage and Other Systems","Wood; particleboard, generated on-site; combusted in industrial boiler",80fa4691-56d0-3019-a021-30c3b187e63e,US,UNIT_PROCESS,"Important note: although most of the data in the US LCI database has 

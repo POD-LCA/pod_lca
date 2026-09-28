@@ -14,6 +14,7 @@ from . import Slab
 from . import StructuralMaterial
 from . import Wall
 from ...units import UNITS_MAP
+from ...units import Quantity as Q
 from ...utilities import config
 from ...utilities import DataImporter
 from ...utilities import log
@@ -77,8 +78,7 @@ class TemplateStructure(BuildingStructure):
 
             building_material = StructuralMaterial.new(
                 name=item['material'] + '_in_' + building_assembly, 
-                qty=float(item['qty']),
-                unit=UNITS_MAP[item['unit']],
+                qty=Q(float(item['qty']), UNITS_MAP[item['unit']]),
                 material_database_entry=default_database_entry_map[item['material']]['impact database entry'],
             )
             

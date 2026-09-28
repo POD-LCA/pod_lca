@@ -17,21 +17,19 @@ from pod_lca.units import WATT_HOUR
 
 project = Project()
 
-concrete_yard = Location.from_str("98126, seattle")
-project.set_location(concrete_yard)
-
-custom_impact_database = ImpactsDatabase.new("My database")
-custom_impact_database.set_data(r"src/pod_lca/data/impacts_podlca_material-data.csv")
-project.set_impact_database(custom_impact_database)
+factory = Location.from_str("Seattle, Washington")
+project.set_location(factory)
+project.set_year(2025)
+project.set_databases()
 
 concrete_model = project.add_model("concrete_01")
 
 portland_cement = concrete_model.add_product(
-    name="Portland cement", stage="A1", qty=367.410, unit=KILOGRAM, impacts_from="Portland Cement"
+    name="Portland cement", stage="A1", qty=367.410, unit=KILOGRAM, impacts_from="Portland Cement, PCA EPD 2020"
 )
 fly_ash = concrete_model.add_product(name="Fly ash", stage="A1", qty=367.410, unit=KILOGRAM, impacts_from="Fly Ash")
 slag_cement = concrete_model.add_product(
-    name="Slag cement", stage="A1", qty=11.340, unit=KILOGRAM, impacts_from="Slag cement"
+    name="Slag cement", stage="A1", qty=11.340, unit=KILOGRAM, impacts_from="Slag cement, industry average 2020"
 )
 water_mixing = concrete_model.add_product(
     name="Water for mixing", stage="A1", qty=185.519, unit=KILOGRAM, impacts_from="Tap water_ROW_[ecoinvent]"

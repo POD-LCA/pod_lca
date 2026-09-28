@@ -30,7 +30,7 @@ lumber = CLT_model.add_product(
     stage="A1",
     qty=1.21,
     unit=CUBIC_METER,
-    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW",
+    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; INW",
     sctg_code=26,
 )
 meth_diphenyl_d = CLT_model.add_product(

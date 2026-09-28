@@ -31,7 +31,7 @@ lumber = CLT_model.add_product(
     stage="A1",
     qty=1.21,
     unit=CUBIC_METER,
-    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; PNW",
+    impacts_from="Sawn lumber; softwood; planed; kiln dried; packaged; at planer; INW",
     sctg_code=26,
 )
 meth_diphenyl_d = CLT_model.add_product(
@@ -81,8 +81,9 @@ hot_spots_GWP = hotspot_analysis.run(impact_category="GWP", transportation_group
 print(hotspot_analysis)
 
 graph = BarChart.from_plotter(MatplotlibPlotter)
-graph.draw({"Impacts": CLT_model.get_impacts_by_LCstages_with_hotspots("GWP")},
+graph.draw({"Impacts": CLT_model.get_impacts_by_LCstages("GWP")},
             "Parameter by category",
             "Category",
-            "Parameter (unit)")
+            "Parameter (unit)",
+            graph_type="stacked")
 graph.show()
