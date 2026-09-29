@@ -423,9 +423,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         ValueError
             Mineral carbonation potential not recognized.
         """
-        if self.get_impact_database_entry() is not None:
-            super().update_inventory_records()
-            self.update_electricity_records()
+        super().update_inventory_records()
+        self.update_electricity_records()
             
         return self
 
