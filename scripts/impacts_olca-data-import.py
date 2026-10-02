@@ -7,7 +7,7 @@ from pod_lca.units import MEGA
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
-__license__ = "MIT License"
+__license__ = "Modified BSD License"
 __email__ = "etel5501@uw.edu, kiun@uw.edu"
 __version__ = "0.1.0"
 

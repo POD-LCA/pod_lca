@@ -1,6 +1,6 @@
 __author__ = ["POD/LCA Team"]
 __copyright__ = "University of Washington"
-__license__ = "MIT License"
+__license__ = "Modified BSD License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
@@ -23,5 +23,5 @@ graph.draw(data,
            "Nutrient and Mineral Content of Fruits vs. Vegetables (mg per 100g).", 
            "", 
            "quantity (in miligrams)", 
-           'stacked')
+           'grouped')
 graph.show()

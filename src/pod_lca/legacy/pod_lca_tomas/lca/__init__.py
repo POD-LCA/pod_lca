@@ -5,7 +5,7 @@ import os
 
 __author__ = ["POD/LCA Team"]
 __copyright__ = "Univrsity of Washington"
-__license__ = "MIT License"
+__license__ = "Modified BSD License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
