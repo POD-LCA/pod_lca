@@ -88,6 +88,7 @@ class Electricity(Master):
         item.set_supplier(electricity_supplier)
 
         item.set_geographical_scope(geographical_scope)
+        item.add_inventory_records_to_model()
 
         return item
 

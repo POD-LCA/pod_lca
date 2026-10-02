@@ -109,6 +109,7 @@ def test_add_model_from_csv_and_retrieve_by_name(named_project, tmp_path):
     assert named_project.get_model("Baseline") is model
     assert named_project.get_model_names() == ["Baseline"]
 
+
 def test_project_adds_and_names_models(named_project):
     baseline = named_project.add_model("Baseline")
     renamed_baseline = named_project.add_model("Baseline")

@@ -193,8 +193,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
             self.density = density
             self.density_unit = density_unit
         elif density is None:
-            database = self.get_impact_database()
             if self.get_impact_database_entry() is not None:
+                database = self.get_impact_database()
                 unit_inventories = database.get_data_entry(self.get_impact_database_entry())
                 if database.get_density_unit_key() is not None:
                     self.set_density(density=unit_inventories[database.get_density_key()],
