@@ -54,7 +54,7 @@ class ProductBioPropertiesMixin:
 
         Returns
         -------
-        float
+        ~pod_lca.Quantity
             Dry density of the product (mass per unit measurement of product).
         """
         if self.inventories_declared_unit.get_qty_measured() == "mass":
@@ -69,7 +69,7 @@ class ProductBioPropertiesMixin:
 
         Returns
         -------
-        float
+        ~pod_lca.Quantity
             Dry mass of the product.
         """   
         if self.get_unit().get_qty_measured() == "mass":
