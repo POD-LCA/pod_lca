@@ -173,26 +173,26 @@ class FramedWall(Construction):
 
             if classification == "exterior_cladding":
                 # Ra += self.compute_layer_r(material_property, thickness)
-                Ra += layer.get_r(thickness, bldg)
+                Ra += layer.get_r(bldg)
 
             elif classification == "air_gap":
                 # Ra += self.compute_layer_r(material_property, None)
-                Ra += layer.get_r(None, bldg)
+                Ra += layer.get_r(bldg)
 
             elif classification == "exterior_insulation":
-                Ra += layer.get_r(thickness, bldg)
-                ri += layer.get_resistivity(thickness, bldg)
+                Ra += layer.get_r(bldg)
+                ri += layer.get_resistivity(bldg)
 
             elif classification == "sheathing":
                 di = thickness
-                Ra += layer.get_r(thickness, bldg)
-                ri += layer.get_resistivity(thickness, bldg)
+                Ra += layer.get_r(bldg)
+                ri += layer.get_resistivity(bldg)
 
             elif classification == "framing_insulation":
-                rins = layer.get_resistivity(thickness, bldg)
+                rins = layer.get_resistivity(bldg)
 
             elif classification == "interior_finish":
-                Rb += layer.get_r(thickness, bldg)
+                Rb += layer.get_r(bldg)
                 # interior_finish_material = material_property
                 interior_finish_thickness = thickness
 

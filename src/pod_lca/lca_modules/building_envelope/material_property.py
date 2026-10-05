@@ -133,7 +133,7 @@ class EnvelopeMaterialProperty(object):
 
         return material_prop
     
-    def get_thermal_resistance(self, thickness=None, building=None):
+    def get_thermal_resistance(self, thickness, building=None):
         if (self.thermal_resistance is None) or (isnan(self.thermal_resistance.value)):
             if building:
                 RSI_per_inch = building.material_impact_database.get_data_entry(self.database_entry_name, 'Baseline')['RSI /inch (m2C/W)']
@@ -304,7 +304,7 @@ class EnvelopeMaterialPropertyMass(EnvelopeMaterialProperty):
         material.visible_absorptance = data['visible_absorptance']
         return material       
 
-    def get_thermal_resistance(self, thickness=None, building=None):
+    def get_thermal_resistance(self, thickness, building=None):
         resistivity =  self.get_conductivity(building).invert()
         return resistivity * thickness
 

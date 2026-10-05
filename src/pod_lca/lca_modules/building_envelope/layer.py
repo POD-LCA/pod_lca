@@ -170,7 +170,7 @@ class Layer(object):
         layer.classification = classification
         return layer
     
-    def get_r(self, thickness=None, building=None):
+    def get_r(self, building=None):
         """Returns the thermal resistance of the layer
 
         Parameters
@@ -184,9 +184,7 @@ class Layer(object):
         ~pod_lca.units.Quantity
             The thermal resistance of the layer. 
         """
-        if thickness is None:
-            thickness = self.thickness
-        return self.material_property.get_thermal_resistance(thickness, building)
+        return self.material_property.get_thermal_resistance(self.thickness, building)
 
     def get_resistivity(self, thickness=None, building=None):
         """Returns the thermal resistivity of the layer
