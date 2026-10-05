@@ -40,7 +40,8 @@ class ConstructionMixins:
                                                            stage='A5', 
                                                            qty=energy_use_qty, 
                                                            unit=energy_use_unit, 
-                                                           year=self.get_built_year())
+                                                           year=self.get_built_year(),
+                                                           add_records_to_model=False)
 
         return self
     
@@ -72,7 +73,8 @@ class ConstructionMixins:
                 impacts += material.get_construction_impacts()
 
         # building level impacts
-        impacts += self.construction_energy_product.get_impacts() 
+        if self.construction_energy_product:
+            impacts += self.construction_energy_product.get_impacts() 
 
         return impacts
 
@@ -91,7 +93,8 @@ class ConstructionMixins:
                 emissions += material.get_construction_emissions()
 
         # building level emission
-        emissions += self.construction_energy_product.get_emissions()
+        if self.construction_energy_product:
+            emissions += self.construction_energy_product.get_emissions()
 
         pulse = UniformEmissionProfile.unit_pulse(at=self.get_built_year())
         emissions.set_temporal_emission_profile(pulse)
