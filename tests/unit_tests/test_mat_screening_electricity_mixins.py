@@ -227,6 +227,7 @@ def test_set_electricity_product_builds_custom_and_database_inventory_products(m
         qty=3.0,
         unit=UNITS_MAP["MWh"],
         year=2035,
+        add_records_to_model=False,
     )
     assert electricity.from_unit_inventories.call_args.kwargs == {
         "name": "Cement_electricity",

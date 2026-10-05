@@ -33,6 +33,7 @@ def test_electricity_new_builds_item_and_registers_it(monkeypatch):
         WATT_HOUR,
         year=2035,
         geographical_scope="Regional",
+        add_records_to_model=True,
     )
 
     assert item.get_id() == 7

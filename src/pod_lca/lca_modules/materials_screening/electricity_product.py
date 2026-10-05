@@ -46,7 +46,7 @@ class Electricity(Master):
     # Constructors
     # ================================
     @classmethod
-    def new(cls, id, name, model, stage, qty, unit, location=None, year=None, geographical_scope='Regional'):
+    def new(cls, id, name, model, stage, qty, unit, location=None, year=None, geographical_scope='Regional', add_records_to_model=False):
         """Create a new electricity product in a model.
 
         Parameters
@@ -88,7 +88,8 @@ class Electricity(Master):
         item.set_supplier(electricity_supplier)
 
         item.set_geographical_scope(geographical_scope)
-        item.add_inventory_records_to_model()
+        if add_records_to_model:
+            item.add_inventory_records_to_model()
 
         return item
 

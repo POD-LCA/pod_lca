@@ -607,7 +607,7 @@ class Model:
             Electricity object created.
         """
         n = len(self.get_products())
-        electricity = Electricity.new(n, name, self, stage, qty, unit)
+        electricity = Electricity.new(n, name, self, stage, qty, unit, add_records_to_model=True)
 
         pulse = UniformEmissionProfile.unit_pulse(at=self.get_project().get_year())
         electricity.get_emissions().set_temporal_emission_profile(pulse)
