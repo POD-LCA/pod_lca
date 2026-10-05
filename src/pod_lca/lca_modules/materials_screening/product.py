@@ -272,7 +272,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
                     return Quantity(val, unit)
                 elif (test_unit_div).get_qty_measured() == "mass":
                     val = (self.get_qty() / self.get_density()) * factor
-                    unit = test_unit_div * factor
+                    unit = test_unit_div
                     return Quantity(val, unit)
                 else:
                     return None
