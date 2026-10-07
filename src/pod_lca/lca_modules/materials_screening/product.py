@@ -125,8 +125,6 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         super().set_impact_database_entry(database_item)
 
         self.reset_electricity()
-        if database_item:
-            self.update_electricity_records()
 
     def set_production_year(self, year):
         """Set the year of production for the item.
