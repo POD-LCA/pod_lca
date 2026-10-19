@@ -181,7 +181,7 @@ class FramedWall(Construction):
 
             elif classification == "exterior_insulation":
                 Ra += layer.get_r(bldg)
-                ri += layer.get_resistivity(bldg)
+                ri += layer.get_resistivity(building=bldg)
 
             elif classification == "sheathing":
                 di = thickness
@@ -189,7 +189,7 @@ class FramedWall(Construction):
                 ri += layer.get_resistivity(bldg)
 
             elif classification == "framing_insulation":
-                rins = layer.get_resistivity(bldg)
+                rins = layer.get_resistivity(building=bldg)
 
             elif classification == "interior_finish":
                 Rb += layer.get_r(bldg)

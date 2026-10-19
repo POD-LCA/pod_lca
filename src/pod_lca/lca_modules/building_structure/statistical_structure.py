@@ -48,7 +48,7 @@ class StatisticalStructure(BuildingStructure):
                 omniclass_element = row['omniclass_element']
                 mat_type_podlca = row['mat_type_podlca']
                 mat_type = row['mat_type']
-                mui_gfa = Q(row['mui_gfa'], KILOGRAM/SQUARE_METER)
+                mui_gfa = Q(float(row['mui_gfa']), KILOGRAM/SQUARE_METER)
 
                 quantity = floor_area * mui_gfa
                 building_material = StructuralMaterial.new(
