@@ -58,9 +58,15 @@ class ConstructionMixins:
     # ================================
     # Inventory Records Methods
     # ================================ 
-    def get_construction_impacts(self):
+    def get_construction_impacts(self, objs=False):
         """ Get A5 impacts of the building.
-          
+
+        Parameters
+        ----------
+        objs : bool, optional
+            If True, return a list of impacts objects for each material. 
+            If False, return a single impacts object for the entire building. Default is False.
+
         Returns
         -------
         ~pod_lca.impacts.Impacts
@@ -76,11 +82,19 @@ class ConstructionMixins:
         if self.construction_energy_product:
             impacts += self.construction_energy_product.get_impacts() 
 
-        return impacts
+        if objs:
+            return [impacts]
+        else:
+            return impacts
 
-    def get_construction_emissions(self):
+    def get_construction_emissions(self, objs=False):
         """ Get A5 impacts of the building.
-                
+
+        Parameters
+        ----------
+        objs : bool, optional
+            If True, return a list of emissions objects for each material. 
+            If False, return a single emissions object for the entire building. Default is False.                
         Returns
         -------
         ~pod_lca.impacts.Emissions
@@ -99,7 +113,10 @@ class ConstructionMixins:
         pulse = UniformEmissionProfile.unit_pulse(at=self.get_built_year())
         emissions.set_temporal_emission_profile(pulse)
 
-        return emissions
+        if objs:
+            return [emissions]
+        else:
+            return emissions
 
 
 if __name__ == '__main__':

@@ -4,6 +4,8 @@ __license__ = "Modified BSD License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
+from pandas import DataFrame
+
 
 class ArrayMethods:
 
@@ -101,7 +103,42 @@ class ArrayMethods:
             return matches
         else:
             return None
-    
+
+    @staticmethod
+    def objects_to_dataframe(objects, attributes):
+        """Convert a list of objects into a DataFrame using the specified attributes.
+
+        Nested attributes can be accessed using dot notation, e.g. 'material.name'.
+
+        Parameters
+        ----------
+        objects: list of object
+            List of objects to extract data from.
+        attributes: list of str
+            Attribute paths to include in the DataFrame.
+
+        Returns
+        -------
+        ~pandas.DataFrame
+            A DataFrame with one column per attribute path.
+        """
+
+        def get_nested_attribute(obj, path):
+            for attr in path.split("."):
+                if obj is None:
+                    return None
+                obj = getattr(obj, attr, None)
+            return obj
+
+        data = [
+            {
+                attr: get_nested_attribute(obj, attr)
+                for attr in attributes
+            }
+            for obj in objects
+        ]
+
+        return DataFrame(data)   
 
 if __name__ == "__main__":
     pass

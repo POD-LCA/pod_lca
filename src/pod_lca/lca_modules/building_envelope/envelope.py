@@ -7,6 +7,7 @@ __version__ = "0.1.0"
 
 from collections import defaultdict
 from math import isnan
+from pandas import DataFrame
 
 from . import Ceiling
 from . import EnvelopeMaterial
@@ -501,7 +502,7 @@ class Envelope:
         if unique:
             return set(constructions_lst)
         else:
-            return self.construction_lst
+            return constructions_lst
 
     def set_to_height(self, height):
         """ Moves the envelope to a given height.  
@@ -530,6 +531,36 @@ class Envelope:
             sk = list(win.surfaces.keys())[0]
             for i, pt in enumerate(win.surfaces[sk].polygon):
                 win.surfaces[sk].polygon[i] = [pt[0], pt[1], pt[2] + height]
+
+    def get_bom(self, as_df=True):  
+        assemblies_all =  self.get_constructions()
+
+        results = {}
+        for assembly in assemblies_all:
+            assembly_name = assembly.get_name()
+
+            for material in assembly.get_materials():
+                key = (assembly_name, material.get_name())
+
+                if key  in results:
+                    qty, unit =  results[key ]
+                    results[key ] = (qty + material.get_qty() * material.get_unit().convert_to(unit), 
+                                     unit)
+                else:
+                    results[key ] = (material.get_qty(), material.get_unit())
+                        
+        if as_df:
+            return DataFrame([
+                {
+                    "Assembly": assembly_name,
+                    "Material": material_name, 
+                    "Amount": qty, 
+                    "Unit": unit.standard_notation
+                } 
+                for (assembly_name, material_name), (qty, unit) in results.items()
+            ])
+        else:                  
+            return results
 
     # ================================
     # Add

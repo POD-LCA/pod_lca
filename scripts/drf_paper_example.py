@@ -26,6 +26,8 @@ from pod_lca.lca_modules.building_envelope.material_property import WindowMateri
 from pod_lca.lca_modules.location import Location
 from pod_lca.units import INCH, METER, FEET
 from pod_lca.units import Quantity as Q
+from pod_lca.utilities import ArrayMethods
+from pod_lca.utilities import DataExporter
 from pod_lca.visualizer import BarChart
 from pod_lca.visualizer import MatplotlibPlotter
 
@@ -50,7 +52,6 @@ floor_plan = [[zero,zero,zero],
               [x,y,zero],
               [x,zero,zero]]
 flr = BuildingFloor.from_floor_plan(floor_plan, floor_to_floor, btype)
-# TODO: setting varying floor heights
 
 # =================================
 # Set Structure
@@ -109,6 +110,7 @@ c = Ceiling.from_database('Generic Interior Ceiling')
 # =================================
 # Windows
 # =================================
+# set wwr to all walls in a floor
 for i in range(len(floor_plan)):
     wall_key = f'wall_{i-1}'
     wwr = .4
@@ -140,30 +142,38 @@ b = Building.from_assemblies(bname, location, built_year, life_span, s, be)
 b.operational_energy_method = 'eplus' # {'eplus', 'EUIs'}, default is 'eplus'
 
 # =================================
-# Print BOM
+# Export BOM
 # =================================
-print(s.get_bom())
-# TODO: add saving to CSV
+DataExporter.df_to_csv(b.get_bom(), "bill_of_materials.csv")
 
 # =================================
 # Get Operational Impacts
 # =================================
 print(b.get_operational_impacts()) # default is 'total'
 print(b.get_operational_emissions()) 
-# TODO: add saving to CSV
 
 # =================================
 # Get Embodied Impacts
 # =================================
 print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 print(b.get_emissions(scope='product'))
-# TODO: add saving to CSV
+
+emission_data = ArrayMethods.objects_to_dataframe(
+    objects=b.get_emissions(scope='all', objs=True),
+    attributes=['CO2', 
+                'CH4', 
+                'N2O', 
+                'temporal_emission_profile.dist_name',
+                'temporal_emission_profile.start',
+                'parent.name'])
+
+DataExporter.df_to_csv(emission_data, "all_emissions.csv")
 
 # =================================
-# Get Embodied Impacts
+# Plots
 # =================================
-# drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
-# drf_record.plot('cumulative radiative forcing')
+drf_record = b.get_drf_record(time_horizon=100, time_step=1/12)
+drf_record.plot('cumulative radiative forcing')
 
 graph = BarChart.from_plotter(MatplotlibPlotter)
 graph.draw(b.get_impact_totals(impact_cat='GWP',

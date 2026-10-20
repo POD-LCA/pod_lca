@@ -6,6 +6,7 @@ __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
 from copy import deepcopy
+from pandas import DataFrame
 
 from . import Envelope
 from ...utilities import geometric_key
@@ -143,6 +144,13 @@ class BuildingEnvelope:
         """
         return list(self.envelopes.values())
 
+    def get_all_constructions(self):
+        assemblies_all = [] 
+        for envelope in self.get_envelopes():
+            assemblies_all.extend(envelope.get_constructions())
+
+        return assemblies_all
+
     def set_building(self, parent):
         """ Set the parent building of the envelope.
         
@@ -231,3 +239,33 @@ class BuildingEnvelope:
 
                 srf.outside_boundary_condition = obc
                 srf.outside_boundary_condition_object = obco
+
+    def get_bom(self, as_df=True): 
+        assemblies_all = self.get_all_constructions()
+
+        results = {}
+        for assembly in assemblies_all:
+            assembly_name = assembly.get_name()
+
+            for material in assembly.get_materials():
+                key = (assembly_name, material.get_name())
+
+                if key  in results:
+                    qty, unit =  results[key ]
+                    results[key ] = (qty + material.get_qty() * material.get_unit().convert_to(unit), 
+                                     unit)
+                else:
+                    results[key ] = (material.get_qty(), material.get_unit())
+                        
+        if as_df:
+            return DataFrame([
+                {
+                    "Assembly": assembly_name,
+                    "Material": material_name, 
+                    "Amount": qty, 
+                    "Unit": unit.standard_notation
+                } 
+                for (assembly_name, material_name), (qty, unit) in results.items()
+            ])
+        else:                  
+            return results

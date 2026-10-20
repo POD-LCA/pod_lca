@@ -6,6 +6,7 @@ __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
 
 from math import sqrt
+from pandas import concat
 
 from . import Assembly
 from . import BuildingFloor
@@ -592,7 +593,13 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         list of ~pod_lca.building.Assembly
             Structural and Fascade elements that make up the building.
         """
-        return self.assemblies
+        assemblies = []
+        if self.structure:
+            assemblies.extend(self.structure.get_structural_elements())
+        if self.building_envelope:
+            assemblies.extend(self.building_envelope.get_all_constructions())
+
+        return assemblies
 
     def get_scenario(self, name):
         """ Retrieve a building scenario.
@@ -671,7 +678,10 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
     # ================================
     # LCA Methods
     # ================================ 
-    def get_impacts(self, scope='all', lc_stage=None):
+    def get_bom(self):
+        return concat([self.structure.get_bom(as_df=True), self.building_envelope.get_bom(as_df=True)], axis=0)
+
+    def get_impacts(self, scope='all', lc_stage=None, objs=False):
         """ Get impacts.
          
         Parameters
@@ -696,25 +706,25 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
         """
         # TODO: use cache with each part to avoid redoing calculations ---  same for emissions
         if scope == 'all':
-            return (self.get_product_impacts() + self.get_transportation_impacts()
-                    + self.get_construction_impacts() + self.get_replacement_impacts()
-                    + self.get_operational_impacts() + self.get_eol_impacts(lc_stage))
+            return (self.get_product_impacts(objs) + self.get_transportation_impacts(objs)
+                    + self.get_construction_impacts(objs) + self.get_replacement_impacts(objs)
+                    + self.get_operational_impacts('total', objs) + self.get_eol_impacts(lc_stage))
         elif scope == 'product':
-            return self.get_product_impacts()
+            return self.get_product_impacts(objs)
         elif scope == 'transportation':
-            return self.get_transportation_impacts()
+            return self.get_transportation_impacts(objs)
         elif scope == 'construction':
-            return self.get_construction_impacts()
+            return self.get_construction_impacts(objs)
         elif scope == 'replacement':
-            return self.get_replacement_impacts()
+            return self.get_replacement_impacts(objs)
         elif scope == 'operational energy':
-            return self.get_operational_impacts()
+            return self.get_operational_impacts('total', objs)
         elif scope in ['end of life', 'end-of-life']:
-            return self.get_eol_impacts(lc_stage)
+            return self.get_eol_impacts(lc_stage, objs)
         else:
             raise ValueError('LCA scope not recognized')
 
-    def get_emissions(self, scope='all', lc_stage=None):
+    def get_emissions(self, scope='all', lc_stage=None, objs=False):
         """ Get emissions.
          
         Parameters
@@ -738,21 +748,21 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
             LCA emissions.
         """
         if scope == 'all':
-            return (self.get_product_emissions() + self.get_transportation_emissions()
-                    + self.get_construction_emissions() + self.get_replacement_emissions()
-                    + self.get_operational_emissions() + self.get_eol_emissions(lc_stage))
+            return (self.get_product_emissions(objs) + self.get_transportation_emissions(objs)
+                    + self.get_construction_emissions(objs) + self.get_replacement_emissions(objs)
+                    + self.get_operational_emissions('total', objs) + self.get_eol_emissions(lc_stage, objs))
         elif scope == 'product':
-            return self.get_product_emissions()
+            return self.get_product_emissions(objs)
         elif scope == 'transportation':
-            return self.get_transportation_emissions()
+            return self.get_transportation_emissions(objs)
         elif scope == 'construction':
-            return self.get_construction_emissions()
+            return self.get_construction_emissions(objs)
         elif scope == 'replacement':
-            return self.get_replacement_emissions()
+            return self.get_replacement_emissions(objs)
         elif scope == 'operational energy':
-            return self.get_operational_emissions()
+            return self.get_operational_emissions('total', objs)
         elif scope == 'end of life':
-            return self.get_eol_emissions(lc_stage)
+            return self.get_eol_emissions(lc_stage, objs)
         else:
             raise ValueError('LCA scope not recognized')
 

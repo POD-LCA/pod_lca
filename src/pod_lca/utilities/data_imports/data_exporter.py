@@ -13,6 +13,18 @@ class DataExporter:
     # ========================
     # CSV
     # ========================
+    def df_to_csv(input_df, file_path):
+        """Transfer data from a Pandas dataframe to a CSV file.
+
+        Parameters
+        ----------
+        input_df : ~pandas.DataFrame
+            A Pandas DataFrame object.
+        file_path : str
+            Location of the CSV file.
+        """
+        input_df.to_csv(file_path, index=False)
+
     def dict_to_csv(input_dict, file_path, append=False):
         """Transfer data from a dictionary to a CSV file.
 
