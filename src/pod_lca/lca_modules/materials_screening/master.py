@@ -224,8 +224,8 @@ class Master:
         self.impact_database_entry = database_item
 
         if database_item is None:
-            self.inventories_declared_unit = self.get_unit()
-            self.inventories_declared_qty = 1.0
+            self.inventories_declared_unit = None
+            self.inventories_declared_qty = None
 
             impacts = {key: 0.0 for key in self.unit_impacts.get_categories()}
             self.unit_impacts.update_qty(impacts)
@@ -523,6 +523,42 @@ class Master:
         """
         return self.get_project().get_impact_database()
 
+    def get_inventories_declared_unit(self, safe=True):
+        """Retrieve the declared unit of database entry. If no database entry is not set and safety is set, returns the product unit.
+
+        Parameters
+        ----------
+        safe : bool
+            If true, provide a safe value instead of None.
+        
+        Returns
+        -------
+        ~pod_lca.units.Units
+            Unit of measurement of the product/process.
+        """
+        if not self.inventories_declared_unit and safe:
+            return self.get_unit()
+        
+        return self.inventories_declared_unit
+
+    def get_inventories_declared_qty(self, safe=True):
+        """Retrieve the declared quantity of database entry. If no database entry is not set and safety is set, return 1.0.
+
+        Parameters
+        ----------
+        safe : bool
+            If true, provide a safe value instead of None.
+        
+        Returns
+        -------
+        float
+            Unit of measurement of the product/process.
+        """
+        if not self.inventories_declared_qty and safe:
+            return 1.0
+        
+        return self.inventories_declared_qty
+
     def get_emissions(self):
         """Retrieve the emissions of the product/process.
 
@@ -618,26 +654,26 @@ class Master:
         ImportError
             Incompatible units of Master object and database entry.
         """
-        if self.inventories_declared_unit is not None:
-            qty = self.get_qty(self.inventories_declared_unit)
+        qty = self.get_qty(self.get_inventories_declared_unit())
+        mult_factor = qty  / self.get_inventories_declared_qty()
 
-            impacts = {
-                key: self.unit_impacts.get_record(key) * qty  / self.inventories_declared_qty
-                for key in self.impacts.record_attr_dict
-            }
-            self.impacts.update_qty(impacts)
+        impacts = {
+            key: self.unit_impacts.get_record(key) * mult_factor
+            for key in self.impacts.record_attr_dict
+        }
+        self.impacts.update_qty(impacts)
 
-            emissions = {
-                key: self.unit_emissions.get_record(key) * qty / self.inventories_declared_qty
-                for key in self.emissions.record_attr_dict
-            }
-            self.emissions.update_qty(emissions)
+        emissions = {
+            key: self.unit_emissions.get_record(key) * mult_factor
+            for key in self.emissions.record_attr_dict
+        }
+        self.emissions.update_qty(emissions)
 
-            carbon_storage = {
-                key: self.unit_carbon_storage.get_record(key) * qty / self.inventories_declared_qty
-                for key in self.carbon_storage.record_attr_dict
-            }
-            self.carbon_storage.update_qty(carbon_storage)
+        carbon_storage = {
+            key: self.unit_carbon_storage.get_record(key) * mult_factor
+            for key in self.carbon_storage.record_attr_dict
+        }
+        self.carbon_storage.update_qty(carbon_storage)
 
         return self
 

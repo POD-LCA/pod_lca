@@ -253,7 +253,7 @@ class Electricity(Master):
     # ================================
     def get_impact_database_entry(self):
         """Electricity does not directly read from database."""
-        pass
+        return "Electricity Module"
 
     def get_supplier(self):
         """Get the electricity supplier.

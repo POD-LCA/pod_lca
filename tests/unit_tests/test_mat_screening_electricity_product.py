@@ -46,8 +46,8 @@ def test_electricity_new_builds_item_and_registers_it(monkeypatch):
     assert item.unit_impacts is unit_impacts
     assert item.unit_emissions is unit_emissions
     assert item.unit_carbon_storage is carbon_storage
-    assert item.inventories_declared_unit == WATT_HOUR
-    assert item.inventories_declared_qty == 1.0
+    assert item.get_inventories_declared_unit() == WATT_HOUR
+    assert item.get_inventories_declared_qty() == 1.0
     from_location.assert_called_once_with(location, 2035)
     supplier.set_geographical_scope.assert_called_once_with("Regional")
     add_inventory_records.assert_called_once_with()
@@ -69,9 +69,9 @@ def test_electricity_from_unit_inventories_initializes_declared_inventories():
     assert item.unit_impacts is impacts
     assert item.unit_emissions is emissions
     assert item.unit_carbon_storage is carbon_storage
-    assert item.inventories_declared_unit == WATT_HOUR
-    assert item.inventories_declared_qty == 1.0
-    assert item.get_impact_database_entry() is None
+    assert item.get_inventories_declared_unit() == WATT_HOUR
+    assert item.get_inventories_declared_qty() == 1.0
+    assert item.get_impact_database_entry() == 'Electricity Module'
 
 
 def test_electricity_setters_forward_changes_to_supplier(monkeypatch):

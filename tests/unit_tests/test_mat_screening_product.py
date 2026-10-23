@@ -132,8 +132,8 @@ def test_master_set_qty_and_unit_conversion_are_supported():
 def test_master_set_impact_database_entry_none_zeroes_records(dummy_model):
     item = Master.new(3, "Glass", dummy_model, "A3", 1.0, KILOGRAM, None)
 
-    assert item.inventories_declared_qty == 1.0
-    assert item.inventories_declared_unit == KILOGRAM
+    assert item.get_inventories_declared_qty() == 1.0
+    assert item.get_inventories_declared_unit() == KILOGRAM
     assert all(quantity == 0.0 for quantity in item.get_impacts().get_record_dict().values())
     assert all(quantity == 0.0 for quantity in item.get_emissions().get_record_dict().values())
     assert all(quantity == 0.0 for quantity in item.get_carbon_storage().get_record_dict().values())
@@ -160,8 +160,8 @@ def test_master_set_impact_database_entry(monkeypatch):
     item.set_impact_database_entry("Aluminum_Impact_Entry")
 
     assert item.get_impact_database_entry() == "Aluminum_Impact_Entry"
-    assert item.inventories_declared_qty == 2.0
-    assert item.inventories_declared_unit == KILOGRAM
+    assert item.get_inventories_declared_qty() == 2.0
+    assert item.get_inventories_declared_unit() == KILOGRAM
     assert all(
         item.unit_impacts.get_record(category) == 1.0
         for category in item.unit_impacts.get_categories()

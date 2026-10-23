@@ -57,12 +57,12 @@ class ProductBioPropertiesMixin:
         ~pod_lca.Quantity
             Dry density of the product (mass per unit measurement of product).
         """
-        if self.inventories_declared_unit.get_qty_measured() == "mass":
-            return self.inventories_declared_qty / (1 + self.get_moisture_content())
+        if self.get_inventories_declared_unit().get_qty_measured() == "mass":
+            return self.get_inventories_declared_qty() / (1 + self.get_moisture_content())
         elif self.get_density():
             return Q(self.get_density() / (1 + self.get_moisture_content()), self.get_density_unit())
         else:
-            return Q(0.0, KILOGRAM / self.inventories_declared_unit)
+            return Q(0.0, KILOGRAM / self.get_inventories_declared_unit())
     
     def get_dry_mass(self):
         """Get dry mass of the product. This is used for biogenic carbon storage calculation.

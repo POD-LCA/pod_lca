@@ -174,7 +174,7 @@ class CarbonStorage(Records):
         if self.get_biogenic_carbon_storage_potential():
             parent = self.get_parent()
 
-            unit_dry_mass = parent.get_dry_density() * Q(1, parent.inventories_declared_unit)
+            unit_dry_mass = parent.get_dry_density() * Q(1, parent.get_inventories_declared_unit())
             carbon_content = get_biogenic_carbon_content(
                 carbon_composition=self.get_biogenic_carbon_composition(),
                 dry_mass=unit_dry_mass)
