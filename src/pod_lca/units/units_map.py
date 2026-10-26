@@ -96,6 +96,7 @@ UNITS_MAP.update(
         "kg/ft2": KILOGRAM / SQUARE_FEET,
         "g/ft2": GRAM / SQUARE_FEET,
         "kg/m3": KILOGRAM / CUBIC_METER,
+        "kg/m³": KILOGRAM / CUBIC_METER,
         "kg/item": KILOGRAM / ITEM,
         "USD": US_DOLLAR,
         "W/m*K": WATT/(METER*KELVIN),
