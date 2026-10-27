@@ -1,5 +1,5 @@
 __author__ = ["POD/LCA Team"]
-__copyright__ = "Univrsity of Washington"
+__copyright__ = "University of Washington"
 __license__ = "Modified BSD License"
 __email__ = "kiun@uw.edu"
 __version__ = "0.1.0"
@@ -171,7 +171,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         Parameters
         ----------
         density : str or float
-            Denisty of product (mass per unit mesurement of product).
+            Density of product (mass per unit measurement of product).
         density_unit : ~pod_lca.units.unit
             Unit of measurement of density.
 
@@ -262,7 +262,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         elif self.get_unit().get_qty_measured() == "energy":
             return None
         else:
-            if self.get_density() is None:
+            if self.get_density() is None or self.get_density_unit() is None:
                 return None
             else:
                 test_unit_mult, factor = (self.unit * self.get_density_unit()).simplify()
@@ -295,7 +295,7 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         Returns
         -------
         float
-            Denisty of product (mass per unit mesurement of product).
+            Density of product (mass per unit measurement of product).
         """
         return self.density
 
@@ -307,6 +307,10 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         ~pod_lca.units.Unit
             Unit of measurement of the denisty of product.
         """
+        if self.density_unit is not None and not isinstance(self.density_unit, Unit):
+            if math.isnan(self.density_unit):
+                self.density_unit = None
+
         return self.density_unit
     
     def get_thickness_unit(self):
