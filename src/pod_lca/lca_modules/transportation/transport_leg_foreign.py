@@ -134,7 +134,7 @@ class ForeignLeg(TransportationLeg):
         self._invalidate_cache()
         return self
 
-    def set_mode(self, mode, efficiency):
+    def set_mode(self, mode, efficiency, set_domestic=True):
         """Set the transportation mode of the transportation leg.
 
         Parameters
@@ -151,7 +151,8 @@ class ForeignLeg(TransportationLeg):
         """
         if isinstance(mode, TransportMode):
             self.mode = mode
-            self.get_next().set_mode(mode)
+            if set_domestic:
+                self.get_next().set_mode(mode)
 
         else:
             mode_efficiency = "Median" if efficiency is None else efficiency
@@ -161,15 +162,16 @@ class ForeignLeg(TransportationLeg):
             self.mode = foreign_mode_obj
 
         # set domestic mode
-        mode_name = mode if isinstance(mode, str) else self.mode.get_name()
-        if mode_name in ["Rail", "Air"]:
-            domestic_mode_obj = TransportMode.new(foreign_mode_name, mode_efficiency)
-            self.get_next().set_mode(domestic_mode_obj)
-        elif mode_name in ["Truck", "Ocean"]:
-            domestic_mode_obj = TransportMode.new("Truck", mode_efficiency)
-            self.get_next().set_mode(domestic_mode_obj)
-        else:
-            raise ValueError("Transportation mode not recognized.")
+        if set_domestic:
+            mode_name = mode if isinstance(mode, str) else self.mode.get_name()
+            if mode_name in ["Rail", "Air"]:
+                domestic_mode_obj = TransportMode.new(foreign_mode_name, mode_efficiency)
+                self.get_next().set_mode(domestic_mode_obj)
+            elif mode_name in ["Truck", "Ocean"]:
+                domestic_mode_obj = TransportMode.new("Truck", mode_efficiency)
+                self.get_next().set_mode(domestic_mode_obj)
+            else:
+                raise ValueError("Transportation mode not recognized.")
 
         self.mode.set_parent(self)
         self.mode.set_inventory_records()
