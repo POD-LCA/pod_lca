@@ -307,9 +307,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         ~pod_lca.units.Unit
             Unit of measurement of the denisty of product.
         """
-        if self.density_unit is not None and not isinstance(self.density_unit, Unit):
-            if math.isnan(self.density_unit):
-                self.density_unit = None
+        if not isinstance(self.density_unit, Unit):
+            self.density_unit = None
 
         return self.density_unit
     
