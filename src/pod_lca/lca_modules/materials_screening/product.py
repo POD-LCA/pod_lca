@@ -259,6 +259,8 @@ class Product(Master, ProductElectricityMixins, ProductTransportationMixins, Pro
         """
         if self.get_unit().get_qty_measured() == "mass":
             return Quantity(self.get_qty(), self.get_unit())
+        elif self.get_unit().get_qty_measured() == "energy":
+            return None
         else:
             if self.get_density() is None:
                 return None
