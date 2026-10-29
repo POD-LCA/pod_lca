@@ -49,6 +49,7 @@ class Material(Product):
         self.name = None
 
         # LCA attributes
+        self.life_cycle_stage = 'A1-A3'
         self.material_database_entry = None
         self.variability_level = 'Baseline'
         self.lca_data_flag = False  # temp test variable
@@ -176,6 +177,18 @@ class Material(Product):
 
         return self
 
+    def set_life_cycle_stage(self, stage):
+        """Set life cycle stage of the product/process.
+
+        Parameters
+        ----------
+        stage : {'A1-A3', 'B4'}
+            Life cycle stage of the product/process.
+        """
+        self.life_cycle_stage = stage
+
+        return self
+    
     def set_material_database_entry(self, material_database_entry):
         """Set material database entry name.
         
@@ -467,6 +480,7 @@ class Material(Product):
 
             if material_end_year < building_end_year:
                 self.replacement_product = Material.copy(self, material_end_year)
+                self.replacement_product.set_life_cycle_stage('B4')
                 self.replacement_product.set_parent(self.get_parent())
                 self.replacement_product.set_service_life(self.get_service_life())
                 self.replacement_product.set_replacement_material()

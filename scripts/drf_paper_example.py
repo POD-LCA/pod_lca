@@ -165,7 +165,8 @@ emission_data = ArrayMethods.objects_to_dataframe(
                 'N2O', 
                 'temporal_emission_profile.dist_name',
                 'temporal_emission_profile.start',
-                'parent.name'])
+                'parent.name',
+                'parent.life_cycle_stage'])
 
 DataExporter.df_to_csv(emission_data, "all_emissions.csv")
 
