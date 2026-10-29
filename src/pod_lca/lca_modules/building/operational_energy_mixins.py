@@ -434,17 +434,18 @@ class OperationalMixins:
         ~pod_lca.impacts.Impacts
             B6 impacts of the building.
         """
-        if not self.get_operational_electricity_product()._inventories_uptodate:
-            self.get_operational_electricity_product().update_inventory_records()
+        operational_electricity_product = self.get_operational_electricity_product()
+        if not operational_electricity_product._inventories_uptodate:
+            operational_electricity_product.update_inventory_records()
 
         if (self.operational_energy_method == 'eplus' and self.get_operational_energy_object().is_dirty):
-            self.get_operational_electricity_product().update_inventory_records()
+            operational_electricity_product.update_inventory_records()
 
         if objs:
-            return self.get_operational_electricity_product().get_impacts(category)
+            return operational_electricity_product.get_impacts(category)
         else:
-            impacts = Impacts.from_parent(self)
-            for impact in self.get_operational_electricity_product().get_impacts(category):
+            impacts = Impacts.from_parent(operational_electricity_product)
+            for impact in operational_electricity_product.get_impacts(category):
                 impacts += impact
 
             return impacts
@@ -465,17 +466,18 @@ class OperationalMixins:
         ~pod_lca.impacts.Emissions
             B6 emissions of the building.
         """
-        if not self.get_operational_electricity_product()._inventories_uptodate:
-            self.get_operational_electricity_product().update_inventory_records()
+        operational_electricity_product = self.get_operational_electricity_product()
+        if not operational_electricity_product._inventories_uptodate:
+            operational_electricity_product.update_inventory_records()
 
         if (self.operational_energy_method == 'eplus' and self.get_operational_energy_object().is_dirty):
-            self.get_operational_electricity_product().update_inventory_records()
+            operational_electricity_product.update_inventory_records()
 
         if objs:
-            return self.get_operational_electricity_product().get_emissions(category)
+            return operational_electricity_product.get_emissions(category)
         else:
-            emissions = Emissions.from_parent(self)
-            for emission in self.get_operational_electricity_product().get_emissions(category):
+            emissions = Emissions.from_parent(operational_electricity_product)
+            for emission in operational_electricity_product.get_emissions(category):
                 emissions += emission
 
             return emissions

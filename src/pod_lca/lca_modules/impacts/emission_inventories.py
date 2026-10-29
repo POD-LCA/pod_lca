@@ -42,45 +42,6 @@ class Emissions(Records):
         return new_record
 
     # ========================
-    # Constructors
-    # ========================
-    @classmethod
-    def from_parent(cls, parent):
-        """Create an record object from a parent object.
-
-        Parameters
-        ----------
-        parent : ~pod_lca.materials_screening.Master
-            The product or process object to which this record belong.
-
-        Returns
-        -------
-        ~pod_lca.impacts.Emissions
-            Record created.
-        """
-        record_obj = super().from_parent(parent)
-
-        return record_obj
-
-    @classmethod
-    def from_dict(cls, record_dict):
-        """Create an record object from a dictionary.
-
-        Parameters
-        ----------
-        record_dict : dict
-            Dictionary of records {**record catergory** (:class:`str`): **record quantity** (:class:`float`)}
-
-        Returns
-        -------
-        ~pod_lca.impacts.Record
-            Records created.
-        """
-        record_obj = super().from_dict(record_dict)
-
-        return record_obj
-
-    # ========================
     # Setters
     # ========================
     def set_temporal_emission_profile(self, time_profile):

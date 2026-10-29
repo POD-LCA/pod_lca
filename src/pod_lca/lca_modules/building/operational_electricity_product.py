@@ -40,6 +40,7 @@ class OperationalElectricityProduct:
         self.building = None
         self.unit = None
         self.electricity_supplier = None
+        self.life_cycle_stage = 'B1'
         self.impacts = None
         self.emissions = None
 
@@ -254,8 +255,8 @@ class OperationalElectricityProduct:
         electricity_impacts, electricity_emissions = elec_supp.get_inventories_in_bulk_for_years(list(range(start_year, end_year)))
         for year in range(start_year, end_year):
 
-            unit_impacts = Impacts.from_dict(electricity_impacts.loc[year].to_dict())
-            unit_emissions = Emissions.from_dict(electricity_emissions.loc[year].to_dict())
+            unit_impacts = Impacts.from_dict(electricity_impacts.loc[year].to_dict(), self)
+            unit_emissions = Emissions.from_dict(electricity_emissions.loc[year].to_dict(), self)
 
             # set impacts
             heating_impacts = unit_impacts * h_usage

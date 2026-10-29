@@ -48,8 +48,12 @@ class Records:
         }
 
         new_record = self.__class__()
-        new_record.set_parent(None)
         new_record.update_qty(summed_records)
+
+        if other.get_parent() == self.get_parent():
+            new_record.set_parent(self.parent)
+        else:
+            new_record.set_parent(None)
 
         return new_record
 
@@ -75,8 +79,12 @@ class Records:
         }
 
         new_record = self.__class__()
-        new_record.set_parent(None)
         new_record.update_qty(difference_records)
+
+        if other.get_parent() == self.get_parent():
+            new_record.set_parent(self.parent)
+        else:
+            new_record.set_parent(None)
 
         return new_record
 
@@ -155,13 +163,15 @@ class Records:
         return record_obj
 
     @classmethod
-    def from_dict(cls, record_dict):
+    def from_dict(cls, record_dict, parent=None):
         """Create an record object from a dictionary.
 
         Parameters
         ----------
         record_dict : dict
             Dictionary of records {**record catergory** (:class:`str`): **record quantity** (:class:`float`)}
+        parent : ~pod_lca.materials_screening.Master
+            The product or process object to which this record belong.
 
         Returns
         -------
@@ -169,7 +179,7 @@ class Records:
             Record created.
         """
         record_obj = cls()
-        record_obj.set_parent(None)
+        record_obj.set_parent(parent)
         record_obj.update_qty(record_dict)
 
         return record_obj
