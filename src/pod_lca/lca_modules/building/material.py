@@ -505,6 +505,7 @@ class Material(Product):
 
             if material_end_year < building_end_year:
                 self.replacement_product = Material.copy(self, material_end_year)
+                self.replacement_product.set_name("replacement of " + self.get_name())
                 self.replacement_product.set_life_cycle_stage('B4')
                 self.replacement_product.set_parent(self.get_parent())
                 self.replacement_product.set_service_life(self.get_service_life())
