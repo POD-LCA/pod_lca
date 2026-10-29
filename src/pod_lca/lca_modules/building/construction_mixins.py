@@ -100,23 +100,30 @@ class ConstructionMixins:
         ~pod_lca.impacts.Emissions
             A4-A5 emissions of the building.
         """
-        emissions = Emissions.from_parent(self)
+        if objs:
+            emissions = []
+        else:
+            emissions = Emissions.from_parent(self)
 
         for assembly in self.get_assemblies():
             for material in assembly.get_materials():
-                emissions += material.get_construction_emissions()
+                if objs:
+                    emissions.append(material.get_construction_emissions())
+                else:
+                    emissions += material.get_construction_emissions()
 
         # building level emission
         if self.construction_energy_product:
-            emissions += self.construction_energy_product.get_emissions()
+            if objs:
+                emissions.append(material.get_construction_emissions())
+            else:
+                emissions += self.construction_energy_product.get_emissions()
 
-        pulse = UniformEmissionProfile.unit_pulse(at=self.get_built_year())
-        emissions.set_temporal_emission_profile(pulse)
+        if not objs:
+            pulse = UniformEmissionProfile.unit_pulse(at=self.get_built_year())
+            emissions.set_temporal_emission_profile(pulse)
 
-        if objs:
-            return [emissions]
-        else:
-            return emissions
+        return emissions
 
 
 if __name__ == '__main__':

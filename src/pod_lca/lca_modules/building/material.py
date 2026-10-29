@@ -12,6 +12,7 @@ from ..eol.waste import Waste
 from ..impacts import Emissions
 from ..impacts import Impacts
 from ..impacts import UniformEmissionProfile
+from ..materials_screening import Master
 from ..materials_screening import Product
 from ...units import KILOGRAM
 from ...units import UNITS_MAP
@@ -63,6 +64,7 @@ class Material(Product):
         # impact objects
         self.waste_obj = None
         self.replacement_product = None
+        self.construction_waste = None
 
     # ================================
     # Constructors
@@ -367,6 +369,29 @@ class Material(Product):
 
         if self.waste_rate > 100 or self.waste_rate < 0:
             raise ValueError('Waste rate to be given as a value between 0 and 100.')
+
+        self.set_construction_waste_product()
+
+        return self
+
+    def set_construction_waste_product(self):
+        """ Set constructions waste as a product, along with its impacts and emissions.
+        """
+        if self.construction_waste is None:
+            self.construction_waste = Master()
+            self.construction_waste.set_name("construction waste of " + self.get_name())
+            self.construction_waste.set_life_cycle_stage('A5')
+
+        impacts = (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * (self.get_waste_rate()/100)
+        impacts.set_parent(self.construction_waste)
+
+        emissions = (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * (self.get_waste_rate() / 100)
+        pulse = UniformEmissionProfile.unit_pulse(at=self.get_building().get_built_year())
+        emissions.set_temporal_emission_profile(pulse)
+        emissions.set_parent(self.construction_waste)
+
+        self.construction_waste.impacts = impacts
+        self.construction_waste.emissions = emissions
 
         return self
 
@@ -896,7 +921,8 @@ class Material(Product):
         ~pod_lca.impacts.Impacts
             A5 impacts of the building.
         """
-        return (self.get_product_impacts() + self.get_transportation_impacts() + self.get_eol_impacts()) * (self.get_waste_rate()/100)
+        self.set_construction_waste_product()
+        return self.construction_waste.impacts
 
     def get_construction_emissions(self):
         """ Get A5 impacts of the building.
@@ -906,12 +932,8 @@ class Material(Product):
         ~pod_lca.impacts.Emissions
             A4-A5 emissions of the building.
         """
-        emission = (self.get_product_emissions() + self.get_transportation_emissions() + self.get_eol_emissions()) * (self.get_waste_rate() / 100)
-
-        pulse = UniformEmissionProfile.unit_pulse(at=self.get_building().get_built_year())
-        emission.set_temporal_emission_profile(pulse)
-
-        return emission
+        self.set_construction_waste_product()
+        return self.construction_waste.emissions
     
     def get_replacement_impacts(self, objs=False):
         """ Get B6 impacts of the building.
