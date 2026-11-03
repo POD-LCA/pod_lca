@@ -100,5 +100,7 @@ UNITS_MAP.update(
         "kg/item": KILOGRAM / ITEM,
         "USD": US_DOLLAR,
         "W/m*K": WATT/(METER*KELVIN),
+        "W/mK": WATT/(METER*KELVIN),
+        "BTU/hr.ft.°F": BTU/(HOUR*FEET*KELVIN),
     }
 )

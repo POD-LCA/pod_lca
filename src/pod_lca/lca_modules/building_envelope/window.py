@@ -57,8 +57,8 @@ class Window(Construction):
 
         Parameters
         ----------
-        wwr :  ~pod_lca.units.Quantity
-            The window-to-wall ratio of the window
+        wwr :  float
+            The window-to-wall ratio of the window (0 < wwr < 1).
         """
         self.wwr = wwr
 

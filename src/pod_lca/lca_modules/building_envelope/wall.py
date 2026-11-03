@@ -28,7 +28,7 @@ class Wall(Construction):
         self.__type__ = 'Wall'
 
 
-class FramedWall(Construction):
+class FramedWall(Wall):
     """Framed Wall construction object based on the 
     ~pod_lca.building_envelope.Construction class.
     
