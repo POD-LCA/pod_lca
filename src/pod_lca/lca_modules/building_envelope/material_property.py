@@ -427,7 +427,7 @@ class EnvelopeMaterialPropertyNoMass(EnvelopeMaterialProperty):
     def get_thermal_resistance(self, thickness, building=None):
         return thickness / self.get_conductivity(building)
 
-    def get_resistivity(self, thickness=None, building=None):
+    def get_resistivity(self, thickness, building=None):
         """Returns the thermal resistivity of the layer
 
         Parameters
