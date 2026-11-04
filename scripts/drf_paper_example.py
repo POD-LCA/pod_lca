@@ -158,8 +158,9 @@ print(b.get_operational_emissions())
 print(b.get_impacts(scope='product')) # {'all', 'product', 'transportation', 'construction', 'replacement', 'operational energy', 'end of life'}
 print(b.get_emissions(scope='product'))
 
+emissions = b.get_emissions(scope='all', objs=True)
 emission_data = ArrayMethods.objects_to_dataframe(
-    objects=b.get_emissions(scope='all', objs=True),
+    objects=emissions,
     attributes=['CO2', 
                 'CH4', 
                 'N2O', 
@@ -168,6 +169,9 @@ emission_data = ArrayMethods.objects_to_dataframe(
                 'parent.name',
                 'parent.life_cycle_stage'])
 
+emission_data['parent.name'] = [
+    getattr(emission.parent, 'name', None) if getattr(emission.parent, 'name', None) is not None else getattr(emission.parent, 'process_name', None) for emission in emissions
+]
 DataExporter.df_to_csv(emission_data, "all_emissions.csv")
 
 # =================================
@@ -185,4 +189,3 @@ graph.draw(b.get_impact_totals(impact_cat='GWP',
            "GWP (in kg CO2eq)",
            graph_type='stacked')
 graph.show()
-

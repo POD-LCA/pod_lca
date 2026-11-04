@@ -38,6 +38,9 @@ class EndOfLifeMixins:
             Header of the life cycle stage identifier column in the csv file. Default is 'LCA Stage'.
         transport_dataset : ~pod_lca.transportation.TransportDataset
             Transportation dataset corresponding to the end-of-life impacts.
+        emission_headers_map : dict
+            Mapping from emission CSV headers to inventory names. Defaults to mapping
+            'CO2-fossil' to 'CO2', 'CH4-fossil' to 'CH4', and 'N2O' to 'N2O'.
         """
         if file_path is None:
             file_path = config['file_paths']['eol']['EOL_PROCESS_IMPACTS']
@@ -46,13 +49,17 @@ class EndOfLifeMixins:
             primary_key = kwargs['primary_key'] if 'primary_key' in kwargs else 'Material'
             process_key = kwargs['process_key'] if 'process_key' in kwargs else 'Process'
             lc_stage_key = kwargs['lc_stage_key'] if 'lc_stage_key' in kwargs else 'LCA Stage'
+            emission_headers_map = kwargs.get(
+                'emission_headers_map',
+                {'CO2-fossil': 'CO2', 'CH4-fossil': 'CH4', 'N2O': 'N2O'}
+            )
 
             eol_impact_database = EOLImpactsDatabase.new("EOL database")
 
             eol_impact_database.set_primary_key(primary_key)
             eol_impact_database.set_process_key(process_key)
             eol_impact_database.set_life_cycle_stage_key(lc_stage_key)
-            eol_impact_database.set_data(file_path)
+            eol_impact_database.set_data(file_path, emission_headers_map=emission_headers_map)
 
             self.eol_impact_database = eol_impact_database
 
