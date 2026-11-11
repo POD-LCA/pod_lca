@@ -29,6 +29,7 @@ class ProductTransportationMixins:
         return_trip_factor=None,
         mode_name=None,
         mode_efficiency=None,
+        life_cycle_stage=None,
     ):
         """Set transport processes the product is subject to.
 
@@ -78,6 +79,9 @@ class ProductTransportationMixins:
             pulse = UniformEmissionProfile.unit_pulse(at=self.get_production_year())
             for leg in self.get_transportation():
                 leg.get_emissions().set_temporal_emission_profile(pulse)
+
+        if life_cycle_stage:
+            self.set_transport_life_cycle_stage(life_cycle_stage)
 
         return self
 
@@ -147,6 +151,17 @@ class ProductTransportationMixins:
             transportation_leg.set_mode(efficiency=efficiency)
         else:
             pass # TODO: raise error  
+
+    def set_transport_life_cycle_stage(self, life_cycle_stage):
+        """Set the life cycle stage of the transportation leg.
+
+        Parameters
+        ----------
+        life_cycle_stage : {A2, A4, C2}
+            Life cycle stage of the transportation leg.
+        """
+        for transportation_leg in self.get_transportation():
+            transportation_leg.set_life_cycle_stage(life_cycle_stage)
 
     # ================================
     # Getters

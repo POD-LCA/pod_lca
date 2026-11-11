@@ -147,7 +147,7 @@ class USTransportationManager(TransportationManager):
             LinkClass = DomesticLeg
 
         # create transport leg
-        leg = LinkClass.in_project(good, self, "transport_" + good.get_name())
+        leg = LinkClass.in_project(good, self, "Transportation of " + good.get_name())
 
         leg.set_mode(mode_name, mode_efficiency)
 

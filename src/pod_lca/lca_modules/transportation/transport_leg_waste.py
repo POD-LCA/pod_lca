@@ -39,6 +39,8 @@ class WasteTransportLeg(TransportationLeg):
         self.eol_pathway = None
         self.distance_cut_off = None
 
+        self.life_cycle_stage = "C2"
+
         self._cache_travel_dist = None
         self._last_params = None
 
@@ -68,7 +70,7 @@ class WasteTransportLeg(TransportationLeg):
 
         waste_transportation_leg.set_material(material)
         waste_transportation_leg.set_manager(manager)
-        waste_transportation_leg.set_name(material.get_name())
+        waste_transportation_leg.set_name("Transportation of " + material.get_name())
 
         waste_transportation_leg.impacts = Impacts.from_parent(waste_transportation_leg)
         waste_transportation_leg.emissions = Emissions.from_parent(waste_transportation_leg)

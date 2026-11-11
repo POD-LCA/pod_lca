@@ -6,6 +6,7 @@ __version__ = "0.1.0"
 
 from math import isnan
 
+from . import DemolitionProcess
 from . import WasteProcess
 from ..impacts import Impacts
 from ..impacts import Emissions
@@ -22,7 +23,7 @@ class Waste(Product):
     Attributes
     ----------
     parent : ~pod_lca.buildings.Assembly or ~pod_lca.materials_screening.Product
-        The thing being was converted to waste.
+        The thing being converted to waste.
     waste_processes : list of ~pod_lca.eol.WasteProcess
         List of processes the waste will be subjected to. These processes are in parallel.
     process_mix : dict
@@ -39,10 +40,11 @@ class Waste(Product):
     def __init__(self):
         super().__init__()
         self.parent = None
+        self.demolition_process = None
         self.waste_processes = None
         self.process_mix = None
-        self.impacts = {"C1": Impacts.from_parent(self), "C2": [], "C3": [], "C4": [], "D": []}
-        self.emissions = {"C1": Emissions.from_parent(self), "C2": [], "C3": [], "C4": [], "D": []}
+        self.impacts = {"C1": [], "C2": [], "C3": [], "C4": [], "D": []}
+        self.emissions = {"C1": [], "C2": [], "C3": [], "C4": [], "D": []}
         self.bio_based = True
 
         # cache
@@ -92,12 +94,13 @@ class Waste(Product):
         waste_item = cls()
 
         waste_item.set_parent(parent)
-        waste_item.set_name("Waste " + database_item)
+        waste_item.set_name("Waste from " + parent.get_name())
         waste_item.set_bio_based(bio_based)
         waste_item.set_impact_database_entry(database_item)
         waste_item.set_qty(qty)
         waste_item.set_unit(unit)
 
+        waste_item.set_demolition_process()
         waste_item.set_process_mix(process_mix)
         waste_item.set_waste_processess()
 
@@ -138,6 +141,11 @@ class Waste(Product):
         self._inventory_records_uptodata = False
 
         return self
+
+    def set_demolition_process(self):
+        """Set demolitions process for the waste product. This is the C1 stage of the life cycle.
+        """
+        self.demolition_process = DemolitionProcess.new(self)
 
     def set_waste_processess(self):
         """Set waste processe for the waste product. Also sets the process mix.
@@ -432,34 +440,17 @@ class Waste(Product):
             if not self._inventory_records_uptodata:
                 self._inventory_records_uptodata = True
 
-                # C1 impacts
-                demolition_impact_database = self.get_demolition_impact_database()
-                database_entry = demolition_impact_database.get_data_entry(self.get_impact_database_entry())
-                declared_unit = database_entry[demolition_impact_database.get_unit_key()]
-                declared_qty = database_entry[demolition_impact_database.get_qty_key()]
-                conversion_factor = declared_unit.convert_to(self.get_unit())
-
-                impacts_data = {
-                    key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
-                    for key in self.impacts["C1"].record_attr_dict
-                }
-                emissions_data = {
-                    key: database_entry[key] * conversion_factor * self.get_qty() / declared_qty
-                    for key in self.emissions["C1"].record_attr_dict
-                }
-
-                self.impacts["C1"].update_qty(impacts_data)
-                self.emissions["C1"].update_qty(emissions_data)
-
                 impacts = self.impacts
                 for key in impacts.keys():
-                    if key != "C1":
-                        impacts[key] = []
+                    impacts[key] = []
 
                 emissions = self.emissions
                 for key in emissions.keys():
-                    if key != "C1":
-                        emissions[key] = []
+                    emissions[key] = []
+
+                # C1 impacts
+                impacts["C1"].append(self.demolition_process.get_impacts())
+                emissions["C1"].append(self.demolition_process.get_emissions())
 
                 for process in self.get_waste_processes():
                     # C3-C4 impacts

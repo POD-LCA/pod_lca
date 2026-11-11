@@ -23,6 +23,8 @@ class TransportationLeg:
         Refers to the transportation manager.
     name : str
         Name of the logistic leg.
+    life_cycle_stage : {A2, A4, C2}
+        Life cycle stage of the transportation leg.
     material : str
         name of the material.
     travel_dist : float
@@ -50,6 +52,7 @@ class TransportationLeg:
     def __init__(self):
         self.manager = None
         self.name = None
+        self.life_cycle_stage = None
 
         self.material = None
         self.shipping_destination = None
@@ -134,6 +137,18 @@ class TransportationLeg:
             Name of the transportation leg.
         """
         self.name = name
+
+        return self
+
+    def set_life_cycle_stage(self, life_cycle_stage):
+        """Set the life cycle stage of the transportation leg.
+
+        Parameters
+        ----------
+        life_cycle_stage : {A2, A4, C2}
+            Life cycle stage of the transportation leg.
+        """
+        self.life_cycle_stage = life_cycle_stage
 
         return self
 

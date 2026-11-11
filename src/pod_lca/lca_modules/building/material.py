@@ -261,10 +261,10 @@ class Material(Product):
                 log(f"SCTG code not specified for {self.get_name()}. Skipping SCTG setting.", level='Warn')
             else:
                 self.set_sctg_code(int(sctg_code))
-                self.set_transportation()
+                self.set_transportation(life_cycle_stage="A4")
                 for replacement_product in replacement_materials:
                     replacement_product.set_sctg_code(sctg_code)
-                    replacement_product.set_transportation()    
+                    replacement_product.set_transportation(life_cycle_stage="B4")
 
             # set eol material
             eol_material = data_entry['eol material']

@@ -40,7 +40,7 @@ class OperationalElectricityProduct:
         self.building = None
         self.unit = None
         self.electricity_supplier = None
-        self.life_cycle_stage = 'B1'
+        self.life_cycle_stage = 'B6'
         self.impacts = None
         self.emissions = None
 

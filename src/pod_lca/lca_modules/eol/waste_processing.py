@@ -44,6 +44,7 @@ class WasteProcess:
     """
 
     def __init__(self):
+        self.name = None
         self.parent = None
         self.process_name = None
         self.qty = 0.0
@@ -94,6 +95,7 @@ class WasteProcess:
         """
         waste_process = cls()
 
+        waste_process.set_name(parent.get_name() + "-" + process_name)
         waste_process.set_parent(parent)
         waste_process.set_life_cycle_stage(life_cycle_stage)
         waste_process.set_process_name(process_name)
@@ -112,6 +114,18 @@ class WasteProcess:
     # ================================
     # Setters
     # ================================
+    def set_name(self, name):
+        """Set name of the waste process.
+
+        Parameters
+        ----------
+        name : str
+            Name of the waste process.
+        """
+        self.name = name
+
+        return self
+    
     def set_parent(self, parent):
         """Set parent Waste object of the Waste Processing.
 
@@ -195,6 +209,16 @@ class WasteProcess:
     # ================================
     # Getters
     # ================================
+    def get_name(self):
+        """Get name of the waste process.
+
+        Returns
+        -------
+        str
+            Name of the waste process.
+        """
+        return self.name
+    
     def get_parent(self):
         """Get parent Waste object of the Waste Processing.
 
@@ -214,16 +238,6 @@ class WasteProcess:
             Name of the process: e.g., 'Landfill', 'Recycle', 'Compost'
         """
         return self.process_name
-
-    def get_name(self):
-        """Get name of the process identifying the parent and process.
-
-        Returns
-        -------
-        str
-            Name identifyer.
-        """
-        return self.get_parent().get_name() + "_" + self.get_process_name()
 
     def get_qty(self):
         """Get quantity of the parent subjected to this waste process.
