@@ -60,6 +60,7 @@ class Material(Product):
         self.waste_rate = None
         self.service_life_category = None
         self.service_life = None
+        self.is_replacement = False
 
         # impact objects
         self.waste_obj = None
@@ -116,6 +117,8 @@ class Material(Product):
             Material to be copied.
         production_year : int
             Year of the emissions from the material.
+        is_replacement : bool
+            Flag to indicate if the material is a replacement material. Default is False.
 
         Returns
         -------
@@ -505,11 +508,12 @@ class Material(Product):
 
             if material_end_year < building_end_year:
                 self.replacement_product = Material.copy(self, material_end_year)
-                self.replacement_product.set_name("replacement of " + self.get_name())
+                self.replacement_product.set_name("Replacement of " + self.get_name())
                 self.replacement_product.set_life_cycle_stage('B4')
                 self.replacement_product.set_parent(self.get_parent())
                 self.replacement_product.set_service_life(self.get_service_life())
                 self.replacement_product.set_replacement_material()
+                self.is_replacement = True
 
     def set_building(self):
         """Set data from building level."""
