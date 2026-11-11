@@ -267,7 +267,7 @@ class Material(Product):
                 self.set_transportation(life_cycle_stage="A4")
                 for replacement_product in replacement_materials:
                     replacement_product.set_sctg_code(sctg_code)
-                    replacement_product.set_transportation(life_cycle_stage="B4")
+                    replacement_product.set_transportation(life_cycle_stage="A4")
 
             # set eol material
             eol_material = data_entry['eol material']
