@@ -118,6 +118,7 @@ class BuildingEnvelope:
             Story to set the envelope to.
         """
         self.envelopes[floor_number] = envelope
+        envelope.floor_no = floor_number
 
     def get_envelope(self, floor_number):
         """ Get the envelope for a given floor number.
@@ -160,6 +161,7 @@ class BuildingEnvelope:
             The building to which the structure belong.
         """
         self.building = parent
+        self.building.no_floors = len(self.envelopes)
 
         envelopes = self.get_envelopes()
         for envelope in envelopes:

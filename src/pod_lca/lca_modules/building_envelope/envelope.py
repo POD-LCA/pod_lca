@@ -59,6 +59,7 @@ class Envelope:
     def __init__(self):
         self.name = None
         self.building = None
+        self.floor_no = None
         self.floor_plan_obj = None
         self.surfaces = {}
 
@@ -338,6 +339,7 @@ class Envelope:
             elif s.surface_type == 'Ceiling':
                 if ceiling:
                     s.add_construction(ceiling)
+                    envelope.ceiling[sk] = ceiling
 
         if windows:
             for wall_key in windows:

@@ -14,6 +14,7 @@ from ...units import Quantity as Q
 from ...units import UNITS_MAP
 from ...utilities import config
 from ...utilities import DataImporter
+from ...utilities import log
 
 from pod_lca.lca_modules.operational.read_write import find_constructions
 from pod_lca.lca_modules.operational.read_write import find_materials
@@ -208,6 +209,8 @@ class Construction(Assembly):
                                                 material_database_entry=database_entry_name,)
 
                 self.add_material(material)
+
+                log(f"Constituent material {mat_name} of construction {self.name} added.", "Info")
 
     @property
     def area(self):

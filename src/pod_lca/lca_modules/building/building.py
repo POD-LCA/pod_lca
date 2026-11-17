@@ -94,6 +94,7 @@ class Building (TemplateModels, DataMixins, EndOfLifeMixins, OperationalMixins, 
 
         self.floors = {} # FIXME: used in operational and plotters...
         self.floor_obj = None
+        self.no_floors = None
 
         self.structure = None
         self.building_envelope = None
