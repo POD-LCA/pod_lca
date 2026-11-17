@@ -202,10 +202,11 @@ class Layer(object):
         """
         return self.material_property.get_resistivity(thickness, building)
         
-    def set_structural(self, is_structural):
+    def set_structural(self, structural_element):
         """Sets the layer as structural. 
         """
-        self.is_structural = is_structural
+        self.is_structural = True
+        self.structural_element = structural_element
 
     def add_ancillary_material(self, ancillary_mat):
         """Add an ancillary material to the layer.

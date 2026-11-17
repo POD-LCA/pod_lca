@@ -11,6 +11,7 @@ class Ceiling(Construction):
     """Ceiling construction object based on the 
     ~pod_lca.building_envelope.Construction class. 
     """
+    construction_type = 'Ceiling'
+
     def __init__(self):
         super().__init__()
-        self.__type__ = 'Ceiling'

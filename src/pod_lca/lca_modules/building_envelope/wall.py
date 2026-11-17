@@ -23,9 +23,10 @@ class Wall(Construction):
     """Wall construction object based on the 
     ~pod_lca.building_envelope.Construction class. 
     """
+    construction_type = 'Wall'
+
     def __init__(self):
         super().__init__()
-        self.__type__ = 'Wall'
 
 
 class FramedWall(Wall):

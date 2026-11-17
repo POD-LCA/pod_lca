@@ -16,6 +16,7 @@ class Shading(Construction):
     """Shading construction object based on the 
     ~pod_lca.building_envelope.Construction class. 
     """
+    construction_type = 'Shading'
+
     def __init__(self):
         super().__init__()
-        self.__type__ = 'Shading'

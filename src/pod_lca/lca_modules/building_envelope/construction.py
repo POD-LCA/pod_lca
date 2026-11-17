@@ -33,14 +33,18 @@ class Construction(Assembly):
     layers : (dict of) ~pod_lca.building_envelope.Layer
         Dictionary of all the layers in the construction. 
     surfaces : (dict of) ~pod_lca.building_envelope.Surface
-        Surfaces objects for the consrtruction. 
-
+        Surfaces objects for the consrtruction.
     """
+    construction_type = 'Generic Construction'
+
     def __init__(self):
         super().__init__()
+        self.__type__ = self.construction_type
+
         self.layer_order = []
         self.layers = {}
         self.surfaces = {}
+        
         
     @classmethod
     def from_idf(cls, name, idf_path):
@@ -125,6 +129,9 @@ class Construction(Assembly):
                 mat_prop)
             layers_[int(layer_id)] = l
 
+            if "is_structural" in layer and layer["is_structural"]:
+                l.set_structural(cls.construction_type)
+
         construction = cls.from_layers(name, layers_)
 
         construction.set_service_life_category(layers["service_life_category"])
@@ -184,6 +191,9 @@ class Construction(Assembly):
         
         area = self.area
         for layer in self.get_constituent_materials():
+            if layer.is_structural: # structural layers are counted in the building structure, not the envelope
+                continue 
+
             mat_type = layer.material_property.__type__
             if (not layer.is_structural) and (mat_type != 'EnvelopeMaterialAirGap') and (mat_type != 'WindowMaterialGas'):
                 mat_name = layer.material_property.name

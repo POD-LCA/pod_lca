@@ -30,10 +30,11 @@ class Window(Construction):
     wwr :  float
         The window-to-wall ratio of the window
     """
+    construction_type = 'Window'
+
     def __init__(self):
         super().__init__()
         self.surfaces = {}
-        self.__type__ = 'Window'
         self.wall_key = None # the wall this window is related to
         self.width = None
         self.height = None

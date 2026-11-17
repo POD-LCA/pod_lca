@@ -11,6 +11,7 @@ class Floor(Construction):
     """Floor construction object based on the 
     ~pod_lca.building_envelope.Construction class. 
     """
+    construction_type = 'Floor'
+
     def __init__(self):
         super().__init__()
-        self.__type__ = 'Floor'
