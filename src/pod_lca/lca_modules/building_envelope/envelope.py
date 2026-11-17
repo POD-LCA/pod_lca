@@ -5,7 +5,6 @@ __license__ = "Modified BSD License"
 __email__ = "tmendeze@uw.edu"
 __version__ = "0.1.0"
 
-from collections import defaultdict
 from math import isnan
 from pandas import DataFrame
 
@@ -68,12 +67,21 @@ class Envelope:
         self.shadings = {}
         self.floors = {}
         self.ceiling = {}
-        self.construction_map = defaultdict(dict)
         
         self.wall_surface_keys = []
         self.window_surface_keys = []
         self.origin = [0, 0, 0]
 
+    @property
+    def construction_map(self):
+        return {
+            'Floor': self.floors,
+            'Ceiling': self.ceiling,
+            'Wall': self.walls,
+            'Window': self.windows,
+            'Shading': self.shadings
+        }
+    
     @classmethod
     def from_data(cls, data):
         """ Create an envelope from a data dictionary. The data dictionary 
@@ -108,14 +116,6 @@ class Envelope:
         for wk in data['windows']:
             win = Window.from_data(data['windows'][wk])
             envelope.windows[wk] = win
-
-        envelope.construction_map = {
-            'Floor': envelope.floors,
-            'Ceiling': envelope.ceiling,
-            'Wall': envelope.walls,
-            'Window': envelope.windows,
-            'Shading': envelope.shadings
-        }
 
         return envelope
 
@@ -589,8 +589,12 @@ class Envelope:
         construction : ~pod_lca.buildings.Construction
             Constructio to be added to the building envelope.
         """
-        con_dict = self.construction_map[construction.__type__]
-        key = '{}_{}'.format(construction.__type__.lower(), len(con_dict))
+        const_type = construction.__type__
+        if const_type == "FramedWall":
+            const_type = "Wall"
+            
+        con_dict = self.construction_map[const_type]
+        key = '{}_{}'.format(const_type.lower(), len(con_dict))
         con_dict[key] = construction
 
         construction.set_parent(self)

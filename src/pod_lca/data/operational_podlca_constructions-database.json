@@ -15,7 +15,8 @@
             "name": "Normalweight concrete 6000 psi",
             "database_entry_name": "Ready-mixed concrete, USA, National, 6000 psi",
             "thickness": "0.2032",
-            "thickness_unit": "m"
+            "thickness_unit": "m",
+            "is_structural": true
         },
         "service_life_category" : "fin_accessfloortile"
     },
@@ -24,7 +25,8 @@
             "name": "Normalweight concrete 6000 psi",
             "database_entry_name": "Ready-mixed concrete, USA, National, 6000 psi",
             "thickness": "0.2032",
-            "thickness_unit": "m"
+            "thickness_unit": "m",
+            "is_structural": true
         },
         "1": {
             "name": "Air Gap",
